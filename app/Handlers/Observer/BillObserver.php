@@ -38,15 +38,15 @@ class BillObserver
     public function created(Bill $bill): void
     {
         //        Log::debug('Observe "created" of a bill.');
-        $this->updateNativeAmount($bill);
+        $this->updatePrimaryCurrencyAmount($bill);
     }
 
-    private function updateNativeAmount(Bill $bill): void
+    private function updatePrimaryCurrencyAmount(Bill $bill): void
     {
-        if (!Amount::convertToNative($bill->user)) {
+        if (!Amount::convertToPrimary($bill->user)) {
             return;
         }
-        $userCurrency            = app('amount')->getNativeCurrencyByUserGroup($bill->user->userGroup);
+        $userCurrency            = app('amount')->getPrimaryCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {
@@ -57,7 +57,7 @@ class BillObserver
             $bill->native_amount_max = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_max);
         }
         $bill->saveQuietly();
-        Log::debug('Bill native amounts are updated.');
+        Log::debug('Bill primary currency amounts are updated.');
     }
 
     public function deleting(Bill $bill): void
@@ -76,6 +76,6 @@ class BillObserver
     public function updated(Bill $bill): void
     {
         //        Log::debug('Observe "updated" of a bill.');
-        $this->updateNativeAmount($bill);
+        $this->updatePrimaryCurrencyAmount($bill);
     }
 }

@@ -29,14 +29,14 @@ export default class Get {
      * @returns {Promise<AxiosResponse<any>>}
      */
     list(params) {
-        return api.get('/api/v2/subscriptions', {params: params});
+        return api.get('/api/v1/subscriptions', {params: params});
     }
 
     paid(params) {
-        return api.get('/api/v2/subscriptions/sum/paid', {params: params});
+        return api.get('/api/v1/subscriptions/sum/paid', {params: params});
     }
 
     unpaid(params) {
-        return api.get('/api/v2/subscriptions/sum/unpaid', {params: params});
+        return api.get('/api/v1/subscriptions/sum/unpaid', {params: params});
     }
 }

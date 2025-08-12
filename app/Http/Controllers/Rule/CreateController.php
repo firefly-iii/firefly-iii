@@ -270,6 +270,7 @@ class CreateController extends Controller
         $data     = $request->getRuleData();
 
         $rule     = $this->ruleRepos->store($data);
+        session()->flash('success_url', route('rules.select-transactions', [$rule->id]));
         session()->flash('success', (string) trans('firefly.stored_new_rule', ['title' => $rule->title]));
         app('preferences')->mark();
 

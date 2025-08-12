@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.3.0 - 2025-08-xx
+
+> ⚠️ Firefly III v6.3.0 introduces a lot of API changes that deal with multi-currency support. Make sure your beloved apps are updated to support this.
+
+### Added
+
+- [Issue 6836](https://github.com/firefly-iii/firefly-iii/issues/6836) (Send email about coming/past-due bills) reported by @elgatho
+- [Issue 9640](https://github.com/firefly-iii/firefly-iii/issues/9640) (UI Improvements for Rules) reported by @siriuspal
+- [Issue 9650](https://github.com/firefly-iii/firefly-iii/issues/9650) (Extra line in bills overview) reported by @poudenes
+- Add Arabic as language, translations follow.
+
+### Changed
+
+- [Issue 10071](https://github.com/firefly-iii/firefly-iii/issues/10071) (Allow toggling password field to text) reported by @ragul-engg
+- Renamed all instances of "default" and "native" currency to "primary" currency. This influences translations and API endpoints. The database is not changed because that's difficult to do reliably.
+
+### Removed
+
+- Any API-field called `default_*` or `native_*`. Use `primary_*` instead.
+- All v2 endpoints.
+
+### Fixed
+- [Issue 9849](https://github.com/firefly-iii/firefly-iii/issues/9849) ("Display native amounts" not taken into account in report's pie charts) reported by @polter-rnd 
+- [Issue 10565](https://github.com/firefly-iii/firefly-iii/issues/10565) (Unable to delete reconciliation transaction) reported by @berta24
+- [Issue 10600](https://github.com/firefly-iii/firefly-iii/issues/10600) (Show attachmen iccon when listing tranactions) reported by @JcMinarro
+- [Discussion 10618](https://github.com/orgs/firefly-iii/discussions/10618) (Starting balance includes transactions that occur at 00:00 on the 1st of month) started by @jteez
+- [Issue 10646](https://github.com/firefly-iii/firefly-iii/issues/10646) (Webhooks fire even if disabled) reported by @lvu
+- [Issue 10656](https://github.com/firefly-iii/firefly-iii/issues/10656) (spent info "per day" shows the period total) reported by @frank-bg
+- [Issue 10678](https://github.com/firefly-iii/firefly-iii/issues/10678) (Transactions from asset to liability account do not appear on category reports.) reported by @slackspace-io
+- [Issue 10687](https://github.com/firefly-iii/firefly-iii/issues/10687) (Creating new Piggy Bank via API fails (Unexpected empty currency)) reported by @Madnex
+- [Issue 10700](https://github.com/firefly-iii/firefly-iii/issues/10700) (Setting financial year date is inconsistent due to timezone calculations) reported by @AgeManning
+- [Issue 10702](https://github.com/firefly-iii/firefly-iii/issues/10702) (Wrong order of months in category report) reported by @kapuett
+- [Issue 10703](https://github.com/firefly-iii/firefly-iii/issues/10703) (Fire more than 5 webhooks in batch or through the cron job, and document it.) reported by @JC5
+- [Issue 10704](https://github.com/firefly-iii/firefly-iii/issues/10704) (Some triggers with rule automation seems to have an issue) reported by @Alienlog
+- [Issue 10706](https://github.com/firefly-iii/firefly-iii/issues/10706) (Add KRW in Default Currency List) reported by @readingsnail
+- [Issue 10708](https://github.com/firefly-iii/firefly-iii/issues/10708) (Incomplete display of a rule when a trigger negates "description caontains") reported by @dethegeek
+- [Issue 10709](https://github.com/firefly-iii/firefly-iii/issues/10709) (has_any_external_id search parameter invalid) reported by @Alienlog
+- Tag overview will no longer search for tags dated < 1970.
+
+### API
+
+- All remaining API v2 endpoints are deprecated and removed in favour of the API v1 endpoints.
+- All API read endpoints now support multi-currency. Fields such as the balance and amount fields will also be available as `pc_*`-fields. Objects with currency information also come with new `primary_currency_*` fields.
+- All API read endpoints are DB optimized and should be faster.
+- All documentation should be in sync again.
+- [More info in the docs](https://docs.firefly-iii.org/references/firefly-iii/api/).
+
 ## 6.2.21 - 2025-07-18
 
 ### Added

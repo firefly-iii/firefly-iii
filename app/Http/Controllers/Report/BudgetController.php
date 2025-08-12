@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use FireflyIII\Support\Facades\Navigation;
 use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -290,11 +291,12 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get();
+            // return $cache->get();
         }
 
-        $periods   = app('navigation')->listOfPeriods($start, $end);
-        $keyFormat = app('navigation')->preferredCarbonFormat($start, $end);
+        $periods   = Navigation::listOfPeriods($start, $end);
+        $keyFormat = Navigation::preferredCarbonFormat($start, $end);
+
         // list expenses for budgets in account(s)
         $expenses  = $this->opsRepository->listExpenses($start, $end, $accounts);
 
@@ -303,6 +305,17 @@ class BudgetController extends Controller
             foreach ($currency['budgets'] as $budget) {
                 $count = 0;
                 foreach ($budget['transaction_journals'] as $journal) {
+                    // #10678
+                    // skip transactions between two asset / liability accounts.
+                    if (
+                        in_array($journal['source_account_type'], config('firefly.valid_currency_account_types'), true)
+                        && in_array($journal['destination_account_type'], config('firefly.valid_currency_account_types'), true)
+                    ) {
+                        continue;
+                    }
+
+
+
                     ++$count;
                     $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
                     $dateKey                           = $journal['date']->format($keyFormat);

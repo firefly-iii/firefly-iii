@@ -68,8 +68,8 @@
                 >
                     ~ {{ formatAmountBySymbol((entry.amount_max + entry.amount_min)/2, entry.currency_symbol, entry.currency_decimal_places) }}
 
-                    {% if '0' != entry.native_amount_max %}
-                    (~ {{ formatAmountBySymbol((entry.native_amount_max + entry.native_amount_min)/2, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                    {% if '0' != entry.pc_amount_max %}
+                    (~ {{ formatAmountBySymbol((entry.pc_amount_max + entry.pc_amount_min)/2, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                     {% endif %}
                 </span>
                     </td>
@@ -183,6 +183,21 @@
                         </td>
                         <td style="text-align: right;"> <!-- amount -->
                             {{ formatAmountBySymbol(sum.avg, sum.currency_symbol, sum.currency_decimal_places) }}
+                        </td>
+                        <td>&nbsp;</td> <!-- paid in period -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td><!-- repeats -->
+                    </tr>
+                {% endif %}
+                {% if '0' != sum.total_left_to_pay %}
+                    <tr>
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- handle -->
+                        <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- buttons -->
+                        <td colspan="2" style="text-align: right;"> <!-- title -->
+                            <small>{{ 'sum'|_ }} ({{ sum.currency_name }}) ({{ 'left_to_pay_active_bills'|_ }})</small>
+                        </td>
+                        <td style="text-align: right;"> <!-- amount -->
+                            {{ formatAmountBySymbol(sum.total_left_to_pay, sum.currency_symbol, sum.currency_decimal_places) }}
                         </td>
                         <td>&nbsp;</td> <!-- paid in period -->
                         <td class="hidden-sm hidden-xs">&nbsp;</td> <!-- next expected match -->

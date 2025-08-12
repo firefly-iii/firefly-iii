@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\BudgetLimit\StoreRequest;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -73,6 +74,13 @@ class StoreController extends Controller
 
         $budgetLimit        = $this->blRepository->store($data);
         $manager            = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin              = auth()->user();
+        $enrichment         = new BudgetLimitEnrichment();
+        $enrichment->setUser($admin);
+        $budgetLimit        = $enrichment->enrichSingle($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer        = app(BudgetLimitTransformer::class);

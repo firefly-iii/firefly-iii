@@ -29,7 +29,9 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -84,6 +86,13 @@ class IndexController extends Controller
         // split collection
         $total       = $collection->count();
         $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrences = $enrichment->enrich($recurrences);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);

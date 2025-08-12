@@ -182,7 +182,7 @@ trait AugumentData
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($budget->id);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('get-limits');
 
         if ($cache->has()) {
@@ -193,35 +193,35 @@ trait AugumentData
 
         $budgetCollection = new Collection([$budget]);
 
-        // merge sets based on a key, in case of convert to native
+        // merge sets based on a key, in case of convert to primary currency
         $limits           = new Collection();
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             Log::debug(sprintf('Now at budget limit #%d', $entry->id));
-            $currency            = $entry->transactionCurrency;
-            if ($this->convertToNative) {
+            $currency        = $entry->transactionCurrency;
+            if ($this->convertToPrimary) {
                 // the sumExpenses method already handles this.
-                $currency = $this->defaultCurrency;
+                $currency = $this->primaryCurrency;
             }
 
             // clone because these objects change each other.
-            $currentStart        = clone $entry->start_date;
-            $currentEnd          = null === $entry->end_date ? null : clone $entry->end_date;
+            $currentStart    = clone $entry->start_date;
+            $currentEnd      = null === $entry->end_date ? null : clone $entry->end_date;
 
             if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }
-            // native amount.
-            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToNative);
-            $spent               = $expenses[$currency->id]['sum'] ?? '0';
-            $entry->native_spent = $spent;
+            // primary currency amount.
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToPrimary);
+            $spent           = $expenses[$currency->id]['sum'] ?? '0';
+            $entry->pc_spent = $spent;
 
             // normal amount:
-            $expenses            = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
-            $spent               = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
-            $entry->spent        = $spent;
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $spent           = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
+            $entry->spent    = $spent;
 
             $limits->push($entry);
         }

@@ -12,7 +12,6 @@
                         <td style="text-align: right;">{{ period.total_transactions }}</td>
                     </tr>
                 {% endif %}
-
                 {% for entry in period.spent %}
                     {% if entry.amount != 0 %}
                         <tr>

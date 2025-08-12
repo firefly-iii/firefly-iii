@@ -86,7 +86,7 @@ class CorrectsAmounts extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $repository->setUser($journal->user);
-            $native         = Amount::getNativeCurrencyByUserGroup($journal->userGroup);
+            $primary        = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
 
             /** @var null|Transaction $source */
             $source         = $journal->transactions()->where('amount', '<', 0)->first();
@@ -104,8 +104,8 @@ class CorrectsAmounts extends Command
             if (null === $sourceAccount || null === $destAccount) {
                 continue;
             }
-            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $native;
-            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $native;
+            $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $primary;
+            $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $primary;
 
             if ($sourceCurrency->id === $destCurrency->id) {
                 Log::debug('Both accounts have the same currency. Removing foreign currency info.');

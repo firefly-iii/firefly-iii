@@ -43,35 +43,35 @@ class PeriodController extends Controller
      */
     public function total(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $response        = [];
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $accounts         = $request->getAssetAccounts();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
+        $response         = [];
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary          = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // same code as many other sumExpense methods. I think this needs some kind of generic method.
             $amount                                    = '0';
             $currencyId                                = (int) $journal['currency_id'];
             $currencyCode                              = $journal['currency_code'];
-            if ($convertToNative) {
+            if ($convertToPrimary) {
                 $amount = Amount::getAmountFromJournal($journal);
-                if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
-                    $currencyId   = $default->id;
-                    $currencyCode = $default->code;
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id !== (int) $journal['foreign_currency_id']) {
+                    $currencyId   = $primary->id;
+                    $currencyCode = $primary->code;
                 }
-                if ($default->id !== (int) $journal['currency_id'] && $default->id === (int) $journal['foreign_currency_id']) {
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id === (int) $journal['foreign_currency_id']) {
                     $currencyId   = $journal['foreign_currency_id'];
                     $currencyCode = $journal['foreign_currency_code'];
                 }
                 Log::debug(sprintf('[a] Add amount %s %s', $currencyCode, $amount));
             }
-            if (!$convertToNative) {
+            if (!$convertToPrimary) {
                 // ignore the amount in foreign currency.
                 Log::debug(sprintf('[b] Add amount %s %s', $currencyCode, $journal['amount']));
                 $amount = $journal['amount'];

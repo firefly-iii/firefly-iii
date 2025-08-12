@@ -62,14 +62,14 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected const string CONTENT_TYPE            = 'application/vnd.api+json';
-    protected const string JSON_CONTENT_TYPE       = 'application/json';
-    protected array               $accepts         = ['application/json', 'application/vnd.api+json'];
+    protected const string CONTENT_TYPE             = 'application/vnd.api+json';
+    protected const string JSON_CONTENT_TYPE        = 'application/json';
+    protected array               $accepts          = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
     protected array               $allowedSort;
-    protected bool                $convertToNative = false;
-    protected TransactionCurrency $nativeCurrency;
+    protected bool                $convertToPrimary = false;
+    protected TransactionCurrency $primaryCurrency;
     protected ParameterBag        $parameters;
 
     /**
@@ -83,9 +83,9 @@ abstract class Controller extends BaseController
             function ($request, $next) {
                 $this->parameters = $this->getParameters();
                 if (auth()->check()) {
-                    $language              = Steam::getLanguage();
-                    $this->convertToNative = Amount::convertToNative();
-                    $this->nativeCurrency  = Amount::getNativeCurrency();
+                    $language               = Steam::getLanguage();
+                    $this->convertToPrimary = Amount::convertToPrimary();
+                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
                     app()->setLocale($language);
                 }
 

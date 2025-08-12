@@ -84,7 +84,7 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $defaultCurrency   = $this->defaultCurrency;
+        $primaryCurrency   = $this->primaryCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
@@ -116,7 +116,7 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
+            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'primaryCurrency', 'budgets')
         );
     }
 
@@ -129,7 +129,7 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $defaultCurrency   = $this->defaultCurrency;
+        $primaryCurrency   = $this->primaryCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
@@ -210,7 +210,7 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'defaultCurrency', 'budgets')
+            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'primaryCurrency', 'budgets')
         );
     }
 

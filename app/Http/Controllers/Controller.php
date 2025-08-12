@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -33,6 +34,7 @@ use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
 
@@ -55,12 +57,12 @@ abstract class Controller extends BaseController
 
     // fails on PHP < 8.4
     public protected(set) string $name;
-    protected bool                 $convertToNative = false;
+    protected bool                 $convertToPrimary = false;
     protected string               $dateTimeFormat;
-    protected ?TransactionCurrency $defaultCurrency;
+    protected ?TransactionCurrency $primaryCurrency;
     protected string               $monthAndDayFormat;
     protected string               $monthFormat;
-    protected string               $redirectUrl     = '/';
+    protected string               $redirectUrl      = '/';
 
     /**
      * Controller constructor.
@@ -125,22 +127,30 @@ abstract class Controller extends BaseController
                 $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
                 $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
                 $darkMode                = 'browser';
-                $this->defaultCurrency   = null;
+                $this->primaryCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    $this->defaultCurrency = Amount::getNativeCurrency();
-                    $language              = Steam::getLanguage();
-                    $locale                = Steam::getLocale();
-                    $darkMode              = app('preferences')->get('darkMode', 'browser')->data;
-                    $this->convertToNative = Amount::convertToNative();
-                    $page                  = $this->getPageName();
-                    $shownDemo             = $this->hasSeenDemo();
+                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                    $language               = Steam::getLanguage();
+                    $locale                 = Steam::getLocale();
+                    $darkMode               = app('preferences')->get('darkMode', 'browser')->data;
+                    $this->convertToPrimary = Amount::convertToPrimary();
+                    $page                   = $this->getPageName();
+                    $shownDemo              = $this->hasSeenDemo();
                     View::share('language', $language);
                     View::share('locale', $locale);
-                    View::share('convertToNative', $this->convertToNative);
+                    View::share('convertToPrimary', $this->convertToPrimary);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
+
+                    // lottery to send any remaining webhooks:
+                    if (7 === random_int(1, 10)) {
+                        // trigger event to send them:
+                        Log::debug('send event RequestedSendWebhookMessages through lottery');
+                        event(new RequestedSendWebhookMessages());
+                    }
+
                 }
                 View::share('darkMode', $darkMode);
 

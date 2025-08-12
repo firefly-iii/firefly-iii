@@ -30,9 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\Steam;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -40,8 +37,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    protected bool                       $convertToNative;
-    protected TransactionCurrency        $native;
+    protected bool                       $convertToPrimary;
+    protected TransactionCurrency        $primary;
     protected AccountRepositoryInterface $repository;
 
     /**
@@ -49,10 +46,10 @@ class AccountTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->parameters      = new ParameterBag();
-        $this->repository      = app(AccountRepositoryInterface::class);
-        $this->convertToNative = Amount::convertToNative();
-        $this->native          = Amount::getNativeCurrency();
+        $this->parameters       = new ParameterBag();
+        $this->repository       = app(AccountRepositoryInterface::class);
+        $this->convertToPrimary = Amount::convertToPrimary();
+        $this->primary          = Amount::getPrimaryCurrency();
     }
 
     /**
@@ -63,97 +60,105 @@ class AccountTransformer extends AbstractTransformer
     public function transform(Account $account): array
     {
         if (null === $account->meta) {
-            $account->meta = [];
+            $account->meta = [
+                'currency' => null,
+            ];
         }
 
         // get account type:
-        $accountType                                                  = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType                                                = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
-        $liabilityType                                                = '' === $liabilityType ? null : strtolower($liabilityType);
-
-        $liabilityDirection                                           = $account->meta['liability_direction'] ?? null;
-        // get account role (will only work if the type is asset).
-        $accountRole                                                  = $this->getAccountRole($account, $accountType);
+        $accountType                           = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType                         = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $liabilityType                         = '' === $liabilityType ? null : strtolower($liabilityType);
+        $liabilityDirection                    = $account->meta['liability_direction'] ?? null;
+        $accountRole                           = $this->getAccountRole($account, $accountType);
+        $hasCurrencySettings                   = null !== $account->meta['currency'];
+        $includeNetWorth                       = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
+        $longitude                             = $account->meta['location']['longitude'] ?? null;
+        $latitude                              = $account->meta['location']['latitude'] ?? null;
+        $zoomLevel                             = $account->meta['location']['zoom_level'] ?? null;
+        $order                                 = $account->order;
 
         // date (for balance etc.)
-        $date                                                         = $this->getDate();
+        $date                                  = $this->getDate();
         $date->endOfDay();
 
-        [$creditCardType, $monthlyPaymentDate]                        = $this->getCCInfo($account, $accountRole, $accountType);
-        [$openingBalance, $nativeOpeningBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType);
-        [$interest, $interestPeriod]                                  = $this->getInterest($account, $accountType);
-
-        $native                                                       = $this->native;
-        if (!$this->convertToNative) {
-            // reset native currency to NULL, not interesting.
-            $native = null;
+        // get primary currency as fallback:
+        $currency                              = $this->primary; // assume primary currency
+        if ($hasCurrencySettings) {
+            $currency = $account->meta['currency'];
         }
 
-        $decimalPlaces                                                = (int) $account->meta['currency']?->decimal_places;
-        $decimalPlaces                                                = 0 === $decimalPlaces ? 2 : $decimalPlaces;
-        $openingBalance                                               = Steam::bcround($openingBalance, $decimalPlaces);
-        $includeNetWorth                                              = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
-        $longitude                                                    = $account->meta['location']['longitude'] ?? null;
-        $latitude                                                     = $account->meta['location']['latitude'] ?? null;
-        $zoomLevel                                                    = $account->meta['location']['zoom_level'] ?? null;
-
         // no order for some accounts:
-        $order                                                        = $account->order;
         if (!in_array(strtolower($accountType), ['liability', 'liabilities', 'asset'], true)) {
             $order = null;
         }
-        // balance, native balance, virtual balance, native virtual balance?
-        Log::debug(sprintf('transform: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $finalBalance                                                 = Steam::finalAccountBalance($account, $date, $this->native, $this->convertToNative);
-        if ($this->convertToNative) {
-            $finalBalance['balance'] = $finalBalance[$account->meta['currency']?->code] ?? '0';
-        }
 
-        $currentBalance                                               = Steam::bcround($finalBalance['balance'] ?? '0', $decimalPlaces);
-        $nativeCurrentBalance                                         = $this->convertToNative ? Steam::bcround($finalBalance['native_balance'] ?? '0', $native->decimal_places) : null;
+        // get some listed information from the account meta-data:
+        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
+        $openingBalanceDate                    = $this->getOpeningBalance($account, $accountType);
+        [$interest, $interestPeriod]           = $this->getInterest($account, $accountType);
 
         return [
-            'id'                             => (string) $account->id,
-            'created_at'                     => $account->created_at->toAtomString(),
-            'updated_at'                     => $account->updated_at->toAtomString(),
-            'active'                         => $account->active,
-            'order'                          => $order,
-            'name'                           => $account->name,
-            'type'                           => strtolower($accountType),
-            'account_role'                   => $accountRole,
-            'currency_id'                    => $account->meta['currency_id'] ?? null,
-            'currency_code'                  => $account->meta['currency']?->code,
-            'currency_symbol'                => $account->meta['currency']?->symbol,
-            'currency_decimal_places'        => $account->meta['currency']?->decimal_places,
-            'native_currency_id'             => $native instanceof TransactionCurrency ? (string) $native->id : null,
-            'native_currency_code'           => $native?->code,
-            'native_currency_symbol'         => $native?->symbol,
-            'native_currency_decimal_places' => $native?->decimal_places,
-            'current_balance'                => $currentBalance,
-            'native_current_balance'         => $nativeCurrentBalance,
-            'current_balance_date'           => $date->toAtomString(),
-            'notes'                          => $account->meta['notes'] ?? null,
-            'monthly_payment_date'           => $monthlyPaymentDate,
-            'credit_card_type'               => $creditCardType,
-            'account_number'                 => $account->meta['account_number'] ?? null,
-            'iban'                           => '' === $account->iban ? null : $account->iban,
-            'bic'                            => $account->meta['BIC'] ?? null,
-            'virtual_balance'                => Steam::bcround($account->virtual_balance, $decimalPlaces),
-            'native_virtual_balance'         => $this->convertToNative ? Steam::bcround($account->native_virtual_balance, $native->decimal_places) : null,
-            'opening_balance'                => $openingBalance,
-            'native_opening_balance'         => $nativeOpeningBalance,
-            'opening_balance_date'           => $openingBalanceDate,
-            'liability_type'                 => $liabilityType,
-            'liability_direction'            => $liabilityDirection,
-            'interest'                       => $interest,
-            'interest_period'                => $interestPeriod,
-            'current_debt'                   => $account->meta['current_debt'] ?? null,
-            'include_net_worth'              => $includeNetWorth,
-            'longitude'                      => $longitude,
-            'latitude'                       => $latitude,
-            'zoom_level'                     => $zoomLevel,
-            'last_activity'                  => array_key_exists('last_activity', $account->meta) ? $account->meta['last_activity']->toAtomString() : null,
-            'links'                          => [
+            'id'                              => (string) $account->id,
+            'created_at'                      => $account->created_at->toAtomString(),
+            'updated_at'                      => $account->updated_at->toAtomString(),
+            'active'                          => $account->active,
+            'order'                           => $order,
+            'name'                            => $account->name,
+            'type'                            => strtolower($accountType),
+            'account_role'                    => $accountRole,
+
+            'object_group_id'                 => $account->meta['object_group_id'],
+            'object_group_order'              => $account->meta['object_group_order'],
+            'object_group_title'              => $account->meta['object_group_title'],
+
+            // currency information, structured for 6.3.0.
+            'object_has_currency_setting'     => $hasCurrencySettings,
+
+            // currency is object specific or primary, already determined above.
+            'currency_id'                     => (string) $currency['id'],
+            'currency_name'                   => $currency['name'],
+            'currency_code'                   => $currency['code'],
+            'currency_symbol'                 => $currency['symbol'],
+            'currency_decimal_places'         => $currency['decimal_places'],
+
+            'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_name'           => $this->primary->name,
+            'primary_currency_code'           => $this->primary->code,
+            'primary_currency_symbol'         => $this->primary->symbol,
+            'primary_currency_decimal_places' => $this->primary->decimal_places,
+
+            // balances, structured for 6.3.0.
+            'current_balance'                 => $account->meta['balances']['current_balance'],
+            'pc_current_balance'              => $account->meta['balances']['pc_current_balance'],
+
+            'opening_balance'                 => $account->meta['balances']['opening_balance'],
+            'pc_opening_balance'              => $account->meta['balances']['pc_opening_balance'],
+
+            'virtual_balance'                 => $account->meta['balances']['virtual_balance'],
+            'pc_virtual_balance'              => $account->meta['balances']['pc_virtual_balance'],
+
+            'debt_amount'                     => $account->meta['balances']['debt_amount'],
+            'pc_debt_amount'                  => $account->meta['balances']['pc_debt_amount'],
+
+            'current_balance_date'            => $date->toAtomString(),
+            'notes'                           => $account->meta['notes'] ?? null,
+            'monthly_payment_date'            => $monthlyPaymentDate,
+            'credit_card_type'                => $creditCardType,
+            'account_number'                  => $account->meta['account_number'],
+            'iban'                            => '' === $account->iban ? null : $account->iban,
+            'bic'                             => $account->meta['BIC'] ?? null,
+            'opening_balance_date'            => $openingBalanceDate,
+            'liability_type'                  => $liabilityType,
+            'liability_direction'             => $liabilityDirection,
+            'interest'                        => $interest,
+            'interest_period'                 => $interestPeriod,
+            'include_net_worth'               => $includeNetWorth,
+            'longitude'                       => $longitude,
+            'latitude'                        => $latitude,
+            'zoom_level'                      => $zoomLevel,
+            'last_activity'                   => $account->meta['last_activity']?->toAtomString(),
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => sprintf('/accounts/%d', $account->id),
@@ -209,16 +214,11 @@ class AccountTransformer extends AbstractTransformer
         return [$creditCardType, $monthlyPaymentDate];
     }
 
-    private function getOpeningBalance(Account $account, string $accountType): array
+    private function getOpeningBalance(Account $account, string $accountType): ?string
     {
-        $openingBalance       = null;
-        $openingBalanceDate   = null;
-        $nativeOpeningBalance = null;
+        $openingBalanceDate = null;
         if (in_array($accountType, ['asset', 'liabilities'], true)) {
-            // grab from meta.
-            $openingBalance       = $account->meta['opening_balance_amount'] ?? null;
-            $nativeOpeningBalance = null;
-            $openingBalanceDate   = $account->meta['opening_balance_date'] ?? null;
+            $openingBalanceDate = $account->meta['opening_balance_date'] ?? null;
         }
         if (null !== $openingBalanceDate) {
             $object             = Carbon::createFromFormat('Y-m-d H:i:s', $openingBalanceDate, config('app.timezone'));
@@ -227,15 +227,9 @@ class AccountTransformer extends AbstractTransformer
             }
             $openingBalanceDate = $object->toAtomString();
 
-            // NOW do conversion.
-            if ($this->convertToNative && null !== $account->meta['currency']) {
-                $converter            = new ExchangeRateConverter();
-                $nativeOpeningBalance = $converter->convert($account->meta['currency'], $this->native, $object, $openingBalance);
-            }
-
         }
 
-        return [$openingBalance, $nativeOpeningBalance, $openingBalanceDate];
+        return $openingBalanceDate;
     }
 
     private function getInterest(Account $account, string $accountType): array

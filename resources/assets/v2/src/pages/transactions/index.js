@@ -71,7 +71,7 @@ let index = function () {
         init() {
             // TODO need date range.
             // TODO handle page number
-            this.getTransactions(this.page);``
+            this.getTransactions(this.page);
 
             // Your Javascript code to create the grid
             // dataTable = createGrid(document.querySelector('#grid'), gridOptions);

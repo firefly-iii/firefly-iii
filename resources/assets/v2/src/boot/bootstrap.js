@@ -48,6 +48,10 @@ window.bootstrap = bootstrap;
 
 // always grab the preference "marker" from Firefly III.
 getFreshVariable('lastActivity').then((serverValue) => {
+    if(null === serverValue) {
+        console.log('Server value is null in getFreshVariable.');
+        throw new Error('401 in getFreshVariable.');
+    }
     const localValue = store.get('lastActivity');
     store.set('cacheValid', localValue === serverValue);
     store.set('lastActivity', serverValue);
@@ -78,6 +82,8 @@ getFreshVariable('lastActivity').then((serverValue) => {
             window.bootstrapped = true;
         });
     });
+}).catch((error) => {
+    console.error('Error while bootstrapping: ' + error);
 });
 window.axios = axios;
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

@@ -40,9 +40,9 @@ interface NetWorthInterface
      * Collect net worth based on the given set of accounts.
      *
      * Returns X arrays with the net worth in each given currency, and the net worth in
-     * of that amount in the native currency.
+     * of that amount in the primary currency.
      *
-     * Includes extra array with the total(!) net worth in the native currency.
+     * Includes extra array with the total(!) net worth in the primary currency.
      */
     public function byAccounts(Collection $accounts, Carbon $date): array;
 

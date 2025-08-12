@@ -48,37 +48,37 @@ trait ChartGeneration
     protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
-        $convertToNative = Amount::convertToNative();
-        $cache           = new CacheProperties();
+        $convertToPrimary = Amount::convertToPrimary();
+        $cache            = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.account-balance-chart');
         $cache->addProperty($accounts);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($convertToPrimary);
         if ($cache->has()) {
             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale          = app('steam')->getLocale();
+        $locale           = app('steam')->getLocale();
 
         /** @var GeneratorInterface $generator */
-        $generator       = app(GeneratorInterface::class);
+        $generator        = app(GeneratorInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos    = app(AccountRepositoryInterface::class);
+        $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $default         = app('amount')->getNativeCurrency();
-        $chartData       = [];
+        $primary          = app('amount')->getPrimaryCurrency();
+        $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             Log::debug(sprintf('Now at account #%d ("%s)', $account->id, $account->name));
-            $currency     = $accountRepos->getAccountCurrency($account) ?? $default;
-            $useNative    = $convertToNative && $default->id !== $currency->id;
-            $field        = $convertToNative ? 'native_balance' : 'balance';
-            $currency     = $useNative ? $default : $currency;
+            $currency     = $accountRepos->getAccountCurrency($account) ?? $primary;
+            $usePrimary   = $convertToPrimary && $primary->id !== $currency->id;
+            $field        = $convertToPrimary ? 'pc_balance' : 'balance';
+            $currency     = $usePrimary ? $primary : $currency;
             Log::debug(sprintf('Will use field %s', $field));
             $currentSet   = [
                 'label'           => $account->name,
@@ -87,7 +87,7 @@ trait ChartGeneration
             ];
 
             $currentStart = clone $start;
-            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToNative);
+            $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
             $previous     = array_values($range)[0];
             Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {
@@ -100,7 +100,7 @@ trait ChartGeneration
             }
             $chartData[]  = $currentSet;
         }
-        $data            = $generator->multiSet($chartData);
+        $data             = $generator->multiSet($chartData);
         $cache->store($data);
 
         return $data;

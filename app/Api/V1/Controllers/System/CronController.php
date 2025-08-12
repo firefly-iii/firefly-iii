@@ -54,6 +54,7 @@ class CronController extends Controller
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
         $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);
+        $return['webhooks']               = $this->webhookCronJob($config['force'], $config['date']);
 
         return response()->api($return);
     }

@@ -42,30 +42,30 @@ class PeriodController extends Controller
      */
     public function total(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $response        = [];
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $accounts         = $request->getAssetAccounts();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
+        $response         = [];
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary          = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::DEPOSIT->value])->setRange($start, $end)->setDestinationAccounts($accounts);
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // currency
             $currencyId                                = $journal['currency_id'];
             $currencyCode                              = $journal['currency_code'];
-            $field                                     = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
+            $field                                     = $convertToPrimary && $currencyId !== $primary->id ? 'pc_amount' : 'amount';
 
             // perhaps use default currency instead?
-            if ($convertToNative && $journal['currency_id'] !== $default->id) {
-                $currencyId   = $default->id;
-                $currencyCode = $default->code;
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id) {
+                $currencyId   = $primary->id;
+                $currencyCode = $primary->code;
             }
             // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
 

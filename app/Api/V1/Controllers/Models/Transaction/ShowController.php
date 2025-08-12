@@ -147,6 +147,7 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $selectedGroup = $enrichment->enrichSingle($selectedGroup);
 
+
         /** @var TransactionGroupTransformer $transformer */
         $transformer   = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);

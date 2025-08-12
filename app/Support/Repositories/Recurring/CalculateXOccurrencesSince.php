@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Repositories\Recurring;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CalculateXOccurrencesSince
@@ -37,7 +38,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXDailyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return   = [];
         $mutator  = clone $date;
         $total    = 0;
@@ -62,7 +63,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXMonthlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        app('log')->debug(sprintf('Now in %s(%s, %s, %d)', __METHOD__, $date->format('Y-m-d'), $afterDate->format('Y-m-d'), $count));
+        Log::debug(sprintf('Now in %s(%s, %s, %d)', __METHOD__, $date->format('Y-m-d'), $afterDate->format('Y-m-d'), $count));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;
@@ -70,24 +71,25 @@ trait CalculateXOccurrencesSince
         $dayOfMonth = (int) $moment;
         $dayOfMonth = 0 === $dayOfMonth ? 1 : $dayOfMonth;
         if ($mutator->day > $dayOfMonth) {
-            app('log')->debug(sprintf('%d is after %d, add a month. Mutator is now', $mutator->day, $dayOfMonth));
+            Log::debug(sprintf('%d is after %d, add a month. Mutator is now...', $mutator->day, $dayOfMonth));
             // day has passed already, add a month.
             $mutator->addMonth();
-            app('log')->debug(sprintf('%s', $mutator->format('Y-m-d')));
+            Log::debug(sprintf('%s', $mutator->toAtomString()));
         }
 
         while ($total < $count) {
             $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
             $mutator->day = $domCorrected;
-            app('log')->debug(sprintf('Mutator is now %s', $mutator->format('Y-m-d')));
+            $mutator->setTime(0, 0, 0);
             if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
-                app('log')->debug('Is added to the list.');
+                Log::debug(sprintf('Mutator is now %s and is added to the list.', $mutator->toAtomString()));
                 $return[] = clone $mutator;
                 ++$total;
             }
             ++$attempts;
             $mutator      = $mutator->endOfMonth()->addDay();
         }
+        Log::debug('Collected enough occurrences.');
 
         return $return;
     }
@@ -100,7 +102,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXNDomOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return     = [];
         $total      = 0;
         $attempts   = 0;
@@ -134,7 +136,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXWeeklyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $return        = [];
         $total         = 0;
         $attempts      = 0;
@@ -173,7 +175,7 @@ trait CalculateXOccurrencesSince
      */
     protected function getXYearlyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
-        app('log')->debug(sprintf('Now in %s(%s, %d, %d, %s)', __METHOD__, $date->format('Y-m-d'), $date->format('Y-m-d'), $count, $skipMod));
+        Log::debug(sprintf('Now in %s(%s, %d, %d, %s)', __METHOD__, $date->format('Y-m-d'), $date->format('Y-m-d'), $count, $skipMod));
         $return     = [];
         $mutator    = clone $date;
         $total      = 0;
@@ -181,19 +183,19 @@ trait CalculateXOccurrencesSince
         $date       = new Carbon($moment);
         $date->year = $mutator->year;
         if ($mutator > $date) {
-            app('log')->debug(
+            Log::debug(
                 sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'))
             );
             $date->addYear();
-            app('log')->debug(sprintf('Date is now %s', $date->format('Y-m-d')));
+            Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
         }
         $obj        = clone $date;
         while ($total < $count) {
-            app('log')->debug(sprintf('total (%d) < count (%d) so go.', $total, $count));
-            app('log')->debug(sprintf('attempts (%d) %% skipmod (%d) === %d', $attempts, $skipMod, $attempts % $skipMod));
-            app('log')->debug(sprintf('Obj (%s) gte afterdate (%s)? %s', $obj->format('Y-m-d'), $afterDate->format('Y-m-d'), var_export($obj->gte($afterDate), true)));
+            Log::debug(sprintf('total (%d) < count (%d) so go.', $total, $count));
+            Log::debug(sprintf('attempts (%d) %% skipmod (%d) === %d', $attempts, $skipMod, $attempts % $skipMod));
+            Log::debug(sprintf('Obj (%s) gte afterdate (%s)? %s', $obj->format('Y-m-d'), $afterDate->format('Y-m-d'), var_export($obj->gte($afterDate), true)));
             if (0 === $attempts % $skipMod && $obj->gte($afterDate)) {
-                app('log')->debug('All conditions true, add obj.');
+                Log::debug('All conditions true, add obj.');
                 $return[] = clone $obj;
                 ++$total;
             }

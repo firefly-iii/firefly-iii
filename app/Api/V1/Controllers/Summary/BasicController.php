@@ -127,56 +127,56 @@ class BasicController extends Controller
     {
         Log::debug('getBalanceInformation');
         // some config settings
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary          = Amount::getPrimaryCurrency();
         // prep some arrays:
-        $sums            = [];
-        $return          = [];
-        $currencies      = [
-            $default->id => $default,
+        $sums             = [];
+        $return           = [];
+        $currencies       = [
+            $primary->id => $primary,
         ];
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
-        $summarizer      = new TransactionSummarizer();
-        $set             = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
-        $incomes         = $summarizer->groupByCurrencyId($set, 'positive', false);
+        $collector        = app(GroupCollectorInterface::class);
+        $summarizer       = new TransactionSummarizer();
+        $set              = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
+        $incomes          = $summarizer->groupByCurrencyId($set, 'positive', false);
 
 
         // collect expenses of user.
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
-        $set             = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
-        $expenses        = $summarizer->groupByCurrencyId($set, 'negative', false);
+        $collector        = app(GroupCollectorInterface::class);
+        $set              = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
+        $expenses         = $summarizer->groupByCurrencyId($set, 'negative', false);
 
-        // if convert to native, do so right now.
-        if ($convertToNative) {
+        // if convert to primary, do so right now.
+        if ($convertToPrimary) {
             $newExpenses = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
             $newIncomes  = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
             $sums        = [
-                $default->id => [
-                    'currency_id'             => $default->id,
-                    'currency_code'           => $default->code,
-                    'currency_symbol'         => $default->symbol,
-                    'currency_decimal_places' => $default->decimal_places,
+                $primary->id => [
+                    'currency_id'             => $primary->id,
+                    'currency_code'           => $primary->code,
+                    'currency_symbol'         => $primary->symbol,
+                    'currency_decimal_places' => $primary->decimal_places,
                     'sum'                     => '0',
                 ],
             ];
@@ -188,36 +188,36 @@ class BasicController extends Controller
                 // loop over either one.
                 foreach ($array as $entry) {
 
-                    // if it is the native currency already.
-                    if ($entry['currency_id'] === $default->id) {
-                        $sums[$default->id]['sum'] = bcadd((string) $entry['sum'], $sums[$default->id]['sum']);
+                    // if it is the primary currency already.
+                    if ($entry['currency_id'] === $primary->id) {
+                        $sums[$primary->id]['sum'] = bcadd((string) $entry['sum'], $sums[$primary->id]['sum']);
 
                         // don't forget to add it to newExpenses and newIncome
                         if (0 === $index) {
-                            $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], (string) $entry['sum']);
+                            $newExpenses[$primary->id]['sum'] = bcadd($newExpenses[$primary->id]['sum'], (string) $entry['sum']);
                         }
                         if (1 === $index) {
-                            $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], (string) $entry['sum']);
+                            $newIncomes[$primary->id]['sum'] = bcadd($newIncomes[$primary->id]['sum'], (string) $entry['sum']);
                         }
 
                         continue;
                     }
 
                     $currencies[$entry['currency_id']] ??= $this->currencyRepos->find($entry['currency_id']);
-                    $convertedSum              = $converter->convert($currencies[$entry['currency_id']], $default, $start, $entry['sum']);
-                    $sums[$default->id]['sum'] = bcadd($sums[$default->id]['sum'], $convertedSum);
+                    $convertedSum              = $converter->convert($currencies[$entry['currency_id']], $primary, $start, $entry['sum']);
+                    $sums[$primary->id]['sum'] = bcadd($sums[$primary->id]['sum'], $convertedSum);
                     if (0 === $index) {
-                        $newExpenses[$default->id]['sum'] = bcadd($newExpenses[$default->id]['sum'], $convertedSum);
+                        $newExpenses[$primary->id]['sum'] = bcadd($newExpenses[$primary->id]['sum'], $convertedSum);
                     }
                     if (1 === $index) {
-                        $newIncomes[$default->id]['sum'] = bcadd($newIncomes[$default->id]['sum'], $convertedSum);
+                        $newIncomes[$primary->id]['sum'] = bcadd($newIncomes[$primary->id]['sum'], $convertedSum);
                     }
                 }
             }
             $incomes     = $newIncomes;
             $expenses    = $newExpenses;
         }
-        if (!$convertToNative) {
+        if (!$convertToPrimary) {
             foreach ([$expenses, $incomes] as $array) {
                 foreach ($array as $entry) {
                     $currencyId               = $entry['currency_id'];
@@ -233,7 +233,7 @@ class BasicController extends Controller
             }
         }
         // format amounts:
-        $keys            = array_keys($sums);
+        $keys             = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency = $currencies[$currencyId] ?? $this->currencyRepos->find($currencyId);
             if (null === $currency) {
@@ -248,10 +248,10 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
-                                             .' + '.app('amount')->formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
+                'sub_title'               => Amount::formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
+                                             .' + '.Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -261,7 +261,7 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
@@ -273,13 +273,13 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
         }
         if (0 === count($return)) {
-            $currency = $this->nativeCurrency;
+            $currency = $this->primaryCurrency;
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
@@ -289,10 +289,10 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => app('amount')->formatAnything($currency, '0', false)
-                                             .' + '.app('amount')->formatAnything($currency, '0', false),
+                'sub_title'               => Amount::formatAnything($currency, '0', false)
+                                             .' + '.Amount::formatAnything($currency, '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
@@ -302,7 +302,7 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
@@ -314,7 +314,7 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatAnything($currency, '0', false),
+                'value_parsed'            => Amount::formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => '',
             ];
@@ -333,26 +333,26 @@ class BasicController extends Controller
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
         $currencies   = [
-            $this->nativeCurrency->id => $this->nativeCurrency,
+            $this->primaryCurrency->id => $this->primaryCurrency,
         ];
 
-        if ($this->convertToNative) {
+        if ($this->convertToPrimary) {
             $converter       = new ExchangeRateConverter();
             $newPaidAmount   = [[
-                'id'             => $this->nativeCurrency->id,
-                'name'           => $this->nativeCurrency->name,
-                'symbol'         => $this->nativeCurrency->symbol,
-                'code'           => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
                 'sum'            => '0',
             ]];
 
             $newUnpaidAmount = [[
-                'id'             => $this->nativeCurrency->id,
-                'name'           => $this->nativeCurrency->name,
-                'symbol'         => $this->nativeCurrency->symbol,
-                'code'           => $this->nativeCurrency->code,
-                'decimal_places' => $this->nativeCurrency->decimal_places,
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
                 'sum'            => '0',
             ]];
             foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
@@ -360,25 +360,25 @@ class BasicController extends Controller
                     $currencyId                = (int) $item['id'];
                     if (0 === $index) {
                         // paid amount
-                        if ($currencyId === $this->nativeCurrency->id) {
+                        if ($currencyId === $this->primaryCurrency->id) {
                             $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], (string) $item['sum']);
 
                             continue;
                         }
                         $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
                         $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
 
                         continue;
                     }
                     // unpaid amount
-                    if ($currencyId === $this->nativeCurrency->id) {
+                    if ($currencyId === $this->primaryCurrency->id) {
                         $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], (string) $item['sum']);
 
                         continue;
                     }
                     $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->nativeCurrency, $start, $item['sum']);
+                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
                     $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
                 }
             }
@@ -405,7 +405,7 @@ class BasicController extends Controller
                 'currency_code'           => $info['code'],
                 'currency_symbol'         => $info['symbol'],
                 'currency_decimal_places' => $info['decimal_places'],
-                'value_parsed'            => app('amount')->formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
+                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'local_icon'              => 'check',
                 'sub_title'               => '',
             ];
@@ -424,7 +424,7 @@ class BasicController extends Controller
                 'currency_code'           => $info['code'],
                 'currency_symbol'         => $info['symbol'],
                 'currency_decimal_places' => $info['decimal_places'],
-                'value_parsed'            => app('amount')->formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
+                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
                 'local_icon'              => 'calendar-o',
                 'sub_title'               => '',
             ];
@@ -432,7 +432,7 @@ class BasicController extends Controller
         Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
 
         if (0 === count($return)) {
-            $currency = $this->nativeCurrency;
+            $currency = $this->primaryCurrency;
             unset($info, $amount);
 
             $return[] = [
@@ -443,7 +443,7 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
                 'local_icon'              => 'check',
                 'sub_title'               => '',
             ];
@@ -455,7 +455,7 @@ class BasicController extends Controller
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
                 'local_icon'              => 'calendar-o',
                 'sub_title'               => '',
             ];
@@ -493,14 +493,9 @@ class BasicController extends Controller
                 'currency_code'           => $currencies[$currencyId]->code,
                 'currency_symbol'         => $currencies[$currencyId]->symbol,
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
-                'value_parsed'            => app('amount')->formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
+                'value_parsed'            => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
                 'local_icon'              => 'money',
-                'sub_title'               => app('amount')->formatFlat(
-                    $currencies[$currencyId]->symbol,
-                    $currencies[$currencyId]->decimal_places,
-                    $availableBudget,
-                    false
-                ),
+                'sub_title'               => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
             ];
         }
         foreach ($spent as $row) {
@@ -529,18 +524,14 @@ class BasicController extends Controller
                 'currency_code'           => $row['currency_code'],
                 'currency_symbol'         => $row['currency_symbol'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
-                'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
+                'value_parsed'            => Amount::formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $leftToSpend, false),
                 'local_icon'              => 'money',
-                'sub_title'               => app('amount')->formatFlat(
-                    $row['currency_symbol'],
-                    $row['currency_decimal_places'],
-                    $perDay,
-                    false
-                ),
+                'sub_title'               => Amount::formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $perDay, false),
             ];
         }
         unset($leftToSpend);
         if (0 === count($return)) {
+            $days  = (int) $start->diffInDays($end, true) + 1;
             // a small trick to get every expense in this period, regardless of budget.
             $spent = $this->opsRepository->sumExpenses($start, $end, null, new Collection());
             foreach ($spent as $row) {
@@ -563,21 +554,16 @@ class BasicController extends Controller
                     'currency_code'           => $row['currency_code'],
                     'currency_symbol'         => $row['currency_symbol'],
                     'currency_decimal_places' => $row['currency_decimal_places'],
-                    'value_parsed'            => app('amount')->formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $spentInCurrency, false),
+                    'value_parsed'            => Amount::formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $spentInCurrency, false),
                     'local_icon'              => 'money',
-                    'sub_title'               => app('amount')->formatFlat(
-                        $row['currency_symbol'],
-                        $row['currency_decimal_places'],
-                        $perDay,
-                        false
-                    ),
+                    'sub_title'               => Amount::formatFlat($row['currency_symbol'], $row['currency_decimal_places'], $perDay, false),
                 ];
             }
 
             //            $amount = '0';
             //            // $days
             //            // fill in by money spent, just count it.
-            //            $currency              = $this->nativeCurrency;
+            //            $currency              = $this->primaryCurrency;
             //            $return[$currency->id] = [
             //                'key'                     => sprintf('left-to-spend-in-%s', $currency->code),
             //                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currency->symbol]),
@@ -587,9 +573,9 @@ class BasicController extends Controller
             //                'currency_code'           => $currency->code,
             //                'currency_symbol'         => $currency->symbol,
             //                'currency_decimal_places' => $currency->decimal_places,
-            //                'value_parsed'            => app('amount')->formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+            //                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
             //                'local_icon'              => 'money',
-            //                'sub_title'               => app('amount')->formatFlat(
+            //                'sub_title'               => Amount::formatFlat(
             //                    $currency->symbol,
             //                    $currency->decimal_places,
             //                    '0',
@@ -626,7 +612,7 @@ class BasicController extends Controller
         $netWorthSet    = $netWorthHelper->byAccounts($filtered, $end);
         $return         = [];
         foreach ($netWorthSet as $key => $data) {
-            if ('native' === $key) {
+            if ('pc' === $key) {
                 continue;
             }
             $amount   = $data['balance'];
@@ -642,21 +628,21 @@ class BasicController extends Controller
                 'currency_code'           => $data['currency_code'],
                 'currency_symbol'         => $data['currency_symbol'],
                 'currency_decimal_places' => $data['currency_decimal_places'],
-                'value_parsed'            => app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false),
+                'value_parsed'            => Amount::formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false),
                 'local_icon'              => 'line-chart',
                 'sub_title'               => '',
             ];
         }
         if (0 === count($return)) {
             $return[] = [
-                'key'                     => sprintf('net-worth-in-%s', $this->nativeCurrency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->nativeCurrency->symbol]),
+                'key'                     => sprintf('net-worth-in-%s', $this->primaryCurrency->code),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->primaryCurrency->symbol]),
                 'monetary_value'          => '0',
-                'currency_id'             => (string) $this->nativeCurrency->id,
-                'currency_code'           => $this->nativeCurrency->code,
-                'currency_symbol'         => $this->nativeCurrency->symbol,
-                'currency_decimal_places' => $this->nativeCurrency->decimal_places,
-                'value_parsed'            => app('amount')->formatFlat($this->nativeCurrency->symbol, $this->nativeCurrency->decimal_places, '0', false),
+                'currency_id'             => (string) $this->primaryCurrency->id,
+                'currency_code'           => $this->primaryCurrency->code,
+                'currency_symbol'         => $this->primaryCurrency->symbol,
+                'currency_decimal_places' => $this->primaryCurrency->decimal_places,
+                'value_parsed'            => Amount::formatFlat($this->primaryCurrency->symbol, $this->primaryCurrency->decimal_places, '0', false),
                 'local_icon'              => 'line-chart',
                 'sub_title'               => '',
             ];

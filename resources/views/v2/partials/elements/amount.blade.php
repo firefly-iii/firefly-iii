@@ -1,38 +1,38 @@
-@if($convertToNative)
-    <template x-if="convertToNative">
+@if($convertToPrimary)
+    <template x-if="convertToPrimary">
     <span>
-    <template x-if="{{ $native }}_raw < 0">
+    <template x-if="{{ $primary }}_raw < 0">
         <span class="text-danger">
-            <span x-text="{{ $native }}"></span>
+            <span x-text="{{ $primary }}"></span>
         </span>
     </template>
-    <template x-if="{{ $native }}_raw >= 0">
+    <template x-if="{{ $primary }}_raw >= 0">
         <template x-if="'transfer' === {{ $type }}">
             <span class="text-primary">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
         <template x-if="'transfer' !== {{ $type }}">
             <span class="text-success">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
     </template>
         </span>
     </template>
-    <template x-if="!convertToNative">
+    <template x-if="!convertToPrimary">
     <span>
     <template x-if="{{ $amount }}_raw < 0">
 
         <span>
         <template x-if="'transfer' === {{ $type }}">
             <span class="text-primary">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
         <template x-if="'transfer' !== {{ $type }}">
             <span class="text-danger">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
             </span>
@@ -43,12 +43,12 @@
         <span>
         <template x-if="'transfer' === {{ $type }}">
             <span class="text-primary">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
         <template x-if="'transfer' !== {{ $type }}">
             <span class="text-success">
-                <span x-text="{{ $native }}"></span>
+                <span x-text="{{ $primary }}"></span>
             </span>
         </template>
             </span>

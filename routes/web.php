@@ -120,6 +120,7 @@ Route::group(
         Route::get('flush', ['uses' => 'DebugController@flush', 'as' => 'flush']);
         Route::get('routes', ['uses' => 'DebugController@routes', 'as' => 'routes']);
         Route::get('debug', 'DebugController@index')->name('debug');
+        Route::get('debug/api-test', 'DebugController@apiTest')->name('api-test');
     }
 );
 

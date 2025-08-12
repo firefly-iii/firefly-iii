@@ -1,4 +1,4 @@
-<div class="col" x-data="subscriptions">
+<div class="col" x-data="subscriptions" x-bind="eventListeners">
     <template x-for="group in subscriptions">
         <div class="card mb-2">
             <div class="card-header">
@@ -9,15 +9,21 @@
                 </h3>
             </div>
             <div class="card-body">
+                <template x-for="pi in group.payment_info">
                 <div class="row mb-2">
-                    <template x-for="pie in group.payment_info">
-                        <div :class='group.col_size'>
-                            <canvas :id='"pie_" + group.id + "_" + pie.currency_code'
-                                    :width="group.width"
-                                    x-init="drawPieChart(group.id, group.title, pie)"></canvas>
+                    <div class="col">
+                        <div class="progress" role="progressbar" aria-label="Example with label"
+                             :aria-valuenow="(pi.paid*-1/pi.unpaid)*100" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-striped" :style="'width: ' + (pi.paid*-1/pi.unpaid)*100 + '%'">
+                                <span x-text="formatMoney(pi.paid*-1,pi.currency_code)"></span>
+                            </div>
                         </div>
-                    </template>
+                        <p>
+                        <small>~ <span x-text="formatMoney(pi.unpaid, pi.currency_code)"></span> {{ __('firefly.left_to_pay_lc') }}</small>
+                        </p>
+                    </div>
                 </div>
+                </template>
                 <div class="row mb-2">
                     <table class="table table-striped table-hover">
                         <thead>
@@ -30,9 +36,7 @@
                         <template x-for="bill in group.bills">
                             <tr>
                                 <td>
-                                    <a :href="'{{ route('subscriptions.show',[''])  }}/' + bill.id" :title="bill.name">
-                                        <span x-text="bill.name"></span>
-                                    </a>
+                                    <a :href="'{{ route('subscriptions.show',[''])  }}/' + bill.id" :title="bill.name"><span x-text="bill.name"></span></a>
                                     <template x-if="bill.paid">
                                         <small class="text-muted"><br>{{ __('firefly.paid')  }}</small>
                                     </template>
@@ -57,8 +61,17 @@
                                         <ul class="list-unstyled">
                                             <template x-for="transaction in bill.transactions">
                                                 <li>
-                                                    <span x-text="transaction.amount"></span>
-                                                    (<span x-text="transaction.percentage"></span>%)
+                                                    <span :title="transaction.amount" x-text="transaction.amount"></span>
+                                                    <template x-if="transaction.percentage < 0">
+                                                        <span>
+                                                        (<span :title="transaction.percentage + '% {{ __("firefly.less_than_expected") }}'" x-text="transaction.percentage"></span>%)
+                                                        </span>
+                                                    </template>
+                                                    <template x-if="transaction.percentage > 0">
+                                                        <span>
+                                                        (<span :title="transaction.percentage + '% {{ __("firefly.more_than_expected") }}'" x-text="transaction.percentage"></span>%)
+                                                        </span>
+                                                    </template>
                                                 </li>
                                             </template>
                                         </ul>

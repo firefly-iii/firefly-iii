@@ -23,10 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use JsonException;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
@@ -44,7 +45,6 @@ use Illuminate\View\View;
 
 use function Safe\json_decode;
 use function Safe\file_get_contents;
-use function Safe\strtotime;
 
 /**
  * Class PreferencesController.
@@ -112,7 +112,7 @@ class PreferencesController extends Controller
         $darkMode                       = Preferences::get('darkMode', 'browser')->data;
         $customFiscalYear               = Preferences::get('customFiscalYear', 0)->data;
         $fiscalYearStartStr             = Preferences::get('fiscalYearStart', '01-01')->data;
-        $convertToNative                = $this->convertToNative;
+        $convertToPrimary               = $this->convertToPrimary;
         if (is_array($fiscalYearStartStr)) {
             $fiscalYearStartStr = '01-01';
         }
@@ -198,7 +198,7 @@ class PreferencesController extends Controller
             'darkMode',
             'availableDarkModes',
             'notifications',
-            'convertToNative',
+            'convertToPrimary',
             'slackUrl',
             'locales',
             'locale',
@@ -265,22 +265,24 @@ class PreferencesController extends Controller
             Preferences::set('ntfy_auth', $all['ntfy_auth'] ?? false);
         }
 
-        // convert native
-        $convertToNative   = 1 === (int) $request->get('convertToNative');
-        if ($convertToNative && !$this->convertToNative) {
+        // convert primary
+        $convertToPrimary  = 1 === (int) $request->get('convertToPrimary');
+        if ($convertToPrimary && !$this->convertToPrimary) {
             // set to true!
-            Log::debug('User sets convertToNative to true.');
-            Preferences::set('convert_to_native', $convertToNative);
-            event(new UserGroupChangedDefaultCurrency(auth()->user()->userGroup));
+            Log::debug('User sets convertToPrimary to true.');
+            Preferences::set('convert_to_primary', true);
+            $singleton = PreferencesSingleton::getInstance();
+            $singleton->resetPreferences();
+            event(new UserGroupChangedPrimaryCurrency(auth()->user()->userGroup));
         }
-        Preferences::set('convert_to_native', $convertToNative);
+        Preferences::set('convert_to_primary', $convertToPrimary);
 
         // custom fiscal year
         $customFiscalYear  = 1 === (int) $request->get('customFiscalYear');
-        $string            = strtotime((string) $request->get('fiscalYearStart'));
-        if (false !== $string) {
-            $fiscalYearStart = Carbon::createFromTimestamp($string)->format('m-d');
-            Preferences::set('customFiscalYear', $customFiscalYear);
+        Preferences::set('customFiscalYear', $customFiscalYear);
+        $fiscalYearString  = (string) $request->get('fiscalYearStart');
+        if ('' !== $fiscalYearString) {
+            $fiscalYearStart = Carbon::parse($fiscalYearString, config('app.timezone'))->format('m-d');
             Preferences::set('fiscalYearStart', $fiscalYearStart);
         }
 

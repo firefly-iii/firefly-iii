@@ -63,8 +63,8 @@
                                         <span class="text-muted">
                                         {% endif %}
                                             {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
-                                        {% if currency.id == defaultCurrency.id %}
-                                            <span class="label label-success" id="default-currency">{{ 'native_currency_button'|_ }}</span>
+                                        {% if currency.id == primaryCurrency.id %}
+                                            <span class="label label-success" id="default-currency">{{ 'primary_currency_button'|_ }}</span>
                                         {% endif %}
                                         {% if currency.userGroupEnabled == false %}
 

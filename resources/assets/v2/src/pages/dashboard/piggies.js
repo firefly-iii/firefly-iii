@@ -29,14 +29,14 @@ const PIGGY_CACHE_KEY = 'ds_pg_data';
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     sankeyGrouping: 'account',
     piggies: [],
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         // needs user data.
-        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, {start: start, end: end});
+        const cacheKey = getCacheKey(PIGGY_CACHE_KEY, {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -96,14 +96,14 @@ export default () => ({
                     id: current.id,
                     name: current.attributes.name,
                     percentage: parseInt(current.attributes.percentage),
-                    amount: this.convertToNative ? current.attributes.native_current_amount : current.attributes.current_amount,
+                    amount: this.convertToPrimary ? current.attributes.pc_current_amount : current.attributes.current_amount,
                     // left to save
-                    left_to_save: this.convertToNative ? current.attributes.native_left_to_save : current.attributes.left_to_save,
+                    left_to_save: this.convertToPrimary ? current.attributes.pc_left_to_save : current.attributes.left_to_save,
                     // target amount
-                    target_amount: this.convertToNative ? current.attributes.native_target_amount : current.attributes.target_amount,
+                    target_amount: this.convertToPrimary ? current.attributes.pc_target_amount : current.attributes.target_amount,
                     // save per month
-                    save_per_month: this.convertToNative ? current.attributes.native_save_per_month : current.attributes.save_per_month,
-                    currency_code: this.convertToNative ? current.attributes.native_currency_code : current.attributes.currency_code,
+                    save_per_month: this.convertToPrimary ? current.attributes.pc_save_per_month : current.attributes.save_per_month,
+                    currency_code: this.convertToPrimary ? current.attributes.pc_currency_code : current.attributes.currency_code,
 
                 };
                 dataSet[groupName].piggies.push(piggy);
@@ -129,10 +129,10 @@ export default () => ({
     init() {
         // console.log('piggies init');
         apiData = [];
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
 
             afterPromises = true;
-            this.convertToNative = values[0];
+            this.convertToPrimary = values[0];
             this.loadPiggyBanks();
 
         });
@@ -144,12 +144,12 @@ export default () => ({
             apiData = [];
             this.loadPiggyBanks();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('piggies observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('piggies observe convertToPrimary');
+            this.convertToPrimary = newValue;
             this.loadPiggyBanks();
         });
     },

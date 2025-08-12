@@ -235,7 +235,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -355,7 +355,7 @@ trait AccountServiceTrait
 
         if (null === $currency) {
             // use default currency:
-            $currency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
@@ -395,7 +395,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency                                    = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -461,7 +461,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // submit to factory:
         $submission = [
@@ -578,7 +578,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency           = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -659,7 +659,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
+            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:

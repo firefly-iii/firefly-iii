@@ -228,7 +228,7 @@ class ConvertController extends Controller
             $date                        = today()->endOfDay();
             Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $role                        = 'l_'.$account->accountType->type;
             $key                         = (string) trans('firefly.opt_group_'.$role);
             $grouped[$key][$account->id] = $account->name.' ('.app('amount')->formatAnything($currency, $balance, false).')';
@@ -252,7 +252,7 @@ class ConvertController extends Controller
             $date                        = today()->endOfDay();
             Log::debug(sprintf('getAssetAccounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type';

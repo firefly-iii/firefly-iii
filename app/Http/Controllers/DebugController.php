@@ -157,6 +157,11 @@ class DebugController extends Controller
         return view('debug', compact('table', 'now', 'logContent'));
     }
 
+    public function apiTest()
+    {
+        return view('test.api-test');
+    }
+
     private function generateTable(): string
     {
         // system information:
@@ -281,16 +286,16 @@ class DebugController extends Controller
         setlocale(LC_ALL, (string) $original);
 
         return [
-            'user_id'           => auth()->user()->id,
-            'user_count'        => User::count(),
-            'user_flags'        => $userFlags,
-            'user_agent'        => $userAgent,
-            'native'            => Amount::getNativeCurrency(),
-            'convert_to_native' => Amount::convertToNative(),
-            'locale_attempts'   => $localeAttempts,
-            'locale'            => Steam::getLocale(),
-            'language'          => Steam::getLanguage(),
-            'view_range'        => Preferences::get('viewRange', '1M')->data,
+            'user_id'            => auth()->user()->id,
+            'user_count'         => User::count(),
+            'user_flags'         => $userFlags,
+            'user_agent'         => $userAgent,
+            'primary'            => Amount::getPrimaryCurrency(),
+            'convert_to_primary' => Amount::convertToPrimary(),
+            'locale_attempts'    => $localeAttempts,
+            'locale'             => Steam::getLocale(),
+            'language'           => Steam::getLanguage(),
+            'view_range'         => Preferences::get('viewRange', '1M')->data,
         ];
     }
 

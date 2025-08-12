@@ -30,6 +30,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
@@ -117,6 +118,13 @@ class ListController extends Controller
         $count       = $collection->count();
         $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        $piggyBanks  = $enrichment->enrich($piggyBanks);
+
         // make paginator:
         $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.piggy-banks', [$account->id]).$this->buildParams());
@@ -125,7 +133,7 @@ class ListController extends Controller
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($piggyBanks, $transformer, 'piggy_banks');
+        $resource    = new FractalCollection($piggyBanks, $transformer, 'piggy-banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

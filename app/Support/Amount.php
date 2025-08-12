@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Deprecated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use NumberFormatter;
@@ -66,13 +66,13 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string) $fmt->format((float) $rounded); // intentional float
+        $result  = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
-            if (1 === bccomp((string) $rounded, '0')) {
+            if (1 === bccomp((string)$rounded, '0')) {
                 return sprintf('<span class="text-success money-positive">%s</span>', $result);
             }
-            if (-1 === bccomp((string) $rounded, '0')) {
+            if (-1 === bccomp((string)$rounded, '0')) {
                 return sprintf('<span class="text-danger money-negative">%s</span>', $result);
             }
 
@@ -100,63 +100,78 @@ class Amount
      */
     public function getAmountFromJournal(array $journal): string
     {
-        $convertToNative = $this->convertToNative();
-        $currency        = $this->getNativeCurrency();
-        $field           = $convertToNative && $currency->id !== $journal['currency_id'] ? 'native_amount' : 'amount';
-        $amount          = $journal[$field] ?? '0';
+        $convertToPrimary = $this->convertToPrimary();
+        $currency         = $this->getPrimaryCurrency();
+        $field            = $convertToPrimary && $currency->id !== $journal['currency_id'] ? 'pc_amount' : 'amount';
+        $amount           = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToNative && null !== $journal['foreign_amount'] && $currency->id === (int) $journal['foreign_currency_id']) {
+        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
             $amount = $journal['foreign_amount'];
             // Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
 
-        return (string) $amount;
+        return (string)$amount;
     }
 
-    public function convertToNative(?User $user = null): bool
+    public function convertToPrimary(?User $user = null): bool
     {
+        $instance = PreferencesSingleton::getInstance();
         if (!$user instanceof User) {
-            return true === Preferences::get('convert_to_native', false)->data && true === config('cer.enabled');
-            //            Log::debug(sprintf('convertToNative [a]: %s', var_export($result, true)));
+            $pref = $instance->getPreference('convert_to_primary_no_user');
+            if (null === $pref) {
+                $res = true === Preferences::get('convert_to_primary', false)->data && true === config('cer.enabled');
+                $instance->setPreference('convert_to_primary_no_user', $res);
+
+                return $res;
+            }
+
+            return $pref;
+        }
+        $key      = sprintf('convert_to_primary_%d', $user->id);
+        $pref     = $instance->getPreference($key);
+        if (null === $pref) {
+            $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === config('cer.enabled');
+            $instance->setPreference($key, $res);
+
+            return $res;
         }
 
-        return true === Preferences::getForUser($user, 'convert_to_native', false)->data && true === config('cer.enabled');
-        // Log::debug(sprintf('convertToNative [b]: %s', var_export($result, true)));
+        return $pref;
     }
 
-    public function getNativeCurrency(): TransactionCurrency
+    public function getPrimaryCurrency(): TransactionCurrency
     {
         if (auth()->check()) {
             /** @var User $user */
             $user = auth()->user();
             if (null !== $user->userGroup) {
-                return $this->getNativeCurrencyByUserGroup($user->userGroup);
+                return $this->getPrimaryCurrencyByUserGroup($user->userGroup);
             }
         }
 
         return $this->getSystemCurrency();
     }
 
-    public function getNativeCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
+    public function getPrimaryCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
     {
-        $cache  = new CacheProperties();
-        $cache->addProperty('getNativeCurrencyByGroup');
+        $cache   = new CacheProperties();
+        $cache->addProperty('getPrimaryCurrencyByGroup');
         $cache->addProperty($userGroup->id);
         if ($cache->has()) {
             return $cache->get();
         }
 
-        /** @var null|TransactionCurrency $native */
-        $native = $userGroup->currencies()->where('group_default', true)->first();
-        if (null === $native) {
-            $native = $this->getSystemCurrency();
+        /** @var null|TransactionCurrency $primary */
+        $primary = $userGroup->currencies()->where('group_default', true)->first();
+        if (null === $primary) {
+            $primary = $this->getSystemCurrency();
             // could be the user group has no default right now.
-            $userGroup->currencies()->sync([$native->id => ['group_default' => true]]);
+            $userGroup->currencies()->sync([$primary->id => ['group_default' => true]]);
         }
-        $cache->store($native);
+        $cache->store($primary);
 
-        return $native;
+        return $primary;
     }
 
     public function getSystemCurrency(): TransactionCurrency
@@ -170,9 +185,9 @@ class Amount
      */
     public function getAmountFromJournalObject(TransactionJournal $journal): string
     {
-        $convertToNative   = $this->convertToNative();
-        $currency          = $this->getNativeCurrency();
-        $field             = $convertToNative && $currency->id !== $journal->transaction_currency_id ? 'native_amount' : 'amount';
+        $convertToPrimary  = $this->convertToPrimary();
+        $currency          = $this->getPrimaryCurrency();
+        $field             = $convertToPrimary && $currency->id !== $journal->transaction_currency_id ? 'pc_amount' : 'amount';
 
         /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
@@ -180,9 +195,9 @@ class Amount
             return '0';
         }
         $amount            = $sourceTransaction->{$field} ?? '0';
-        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
+        if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
-            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+            $amount = (string)$sourceTransaction->foreign_amount; // hard coded to be foreign amount.
         }
 
         return $amount;
@@ -194,24 +209,6 @@ class Amount
         $user = auth()->user();
 
         return $user->currencies()->orderBy('code', 'ASC')->get();
-    }
-
-    #[Deprecated]
-    public function getDefaultCurrency(): TransactionCurrency
-    {
-        return $this->getNativeCurrency();
-    }
-
-    #[Deprecated(message: 'use getDefaultCurrencyByUserGroup instead')]
-    public function getDefaultCurrencyByUser(User $user): TransactionCurrency
-    {
-        return $this->getDefaultCurrencyByUserGroup($user->userGroup);
-    }
-
-    #[Deprecated]
-    public function getDefaultCurrencyByUserGroup(UserGroup $userGroup): TransactionCurrency
-    {
-        return $this->getNativeCurrencyByUserGroup($userGroup);
     }
 
     /**

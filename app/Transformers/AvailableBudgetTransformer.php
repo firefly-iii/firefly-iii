@@ -26,32 +26,24 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
-use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class AvailableBudgetTransformer
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                          $convertToNative;
-    private readonly TransactionCurrency           $default;
-    private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
-    private readonly OperationsRepositoryInterface $opsRepository;
-    private readonly BudgetRepositoryInterface     $repository;
+    private readonly bool                $convertToPrimary;
+    private readonly TransactionCurrency $primary;
 
     /**
      * CurrencyTransformer constructor.
      */
     public function __construct()
     {
-        $this->repository         = app(BudgetRepositoryInterface::class);
-        $this->opsRepository      = app(OperationsRepositoryInterface::class);
-        $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
-        $this->default            = Amount::getNativeCurrency();
-        $this->convertToNative    = Amount::convertToNative();
+        $this->primary          = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     /**
@@ -59,60 +51,47 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function transform(AvailableBudget $availableBudget): array
     {
-        $this->repository->setUser($availableBudget->user);
+        $currency = $availableBudget->meta['currency'];
+        $amount   = Steam::bcround($availableBudget->amount, $currency->decimal_places);
+        $pcAmount = null;
 
-        $currency = $availableBudget->transactionCurrency;
-        $default  = $this->default;
-        if (!$this->convertToNative) {
-            $default = null;
+        if ($this->convertToPrimary) {
+            $pcAmount = Steam::bcround($availableBudget->native_amount, $this->primary->decimal_places);
         }
-        $data     = [
-            'id'                             => (string) $availableBudget->id,
-            'created_at'                     => $availableBudget->created_at->toAtomString(),
-            'updated_at'                     => $availableBudget->updated_at->toAtomString(),
-            'currency_id'                    => (string) $currency->id,
-            'currency_code'                  => $currency->code,
-            'currency_symbol'                => $currency->symbol,
-            'currency_decimal_places'        => $currency->decimal_places,
-            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
-            'amount'                         => app('steam')->bcround($availableBudget->amount, $currency->decimal_places),
-            'native_amount'                  => $this->convertToNative ? app('steam')->bcround($availableBudget->native_amount, $currency->decimal_places) : null,
-            'start'                          => $availableBudget->start_date->toAtomString(),
-            'end'                            => $availableBudget->end_date->endOfDay()->toAtomString(),
-            'spent_in_budgets'               => [],
-            'spent_no_budget'                => [],
-            'links'                          => [
+
+        return [
+            'id'                              => (string) $availableBudget->id,
+            'created_at'                      => $availableBudget->created_at->toAtomString(),
+            'updated_at'                      => $availableBudget->updated_at->toAtomString(),
+
+            // currencies according to 6.3.0
+            'object_has_currency_setting'     => true,
+            'currency_id'                     => (string) $currency->id,
+            'currency_name'                   => $currency->name,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
+
+            'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_name'           => $this->primary->name,
+            'primary_currency_code'           => $this->primary->code,
+            'primary_currency_symbol'         => $this->primary->symbol,
+            'primary_currency_decimal_places' => $this->primary->decimal_places,
+
+            'amount'                          => $amount,
+            'pc_amount'                       => $pcAmount,
+            'start'                           => $availableBudget->start_date->toAtomString(),
+            'end'                             => $availableBudget->end_date->endOfDay()->toAtomString(),
+            'spent_in_budgets'                => $availableBudget->meta['spent_in_budgets'],
+            'pc_spent_in_budgets'             => $availableBudget->meta['pc_spent_in_budgets'],
+            'spent_outside_budgets'           => $availableBudget->meta['spent_outside_budgets'],
+            'pc_spent_outside_budgets'        => $availableBudget->meta['pc_spent_outside_budgets'],
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => '/available_budgets/'.$availableBudget->id,
                 ],
             ],
         ];
-        $start    = $this->parameters->get('start');
-        $end      = $this->parameters->get('end');
-        if (null !== $start && null !== $end) {
-            $data['spent_in_budgets'] = $this->getSpentInBudgets();
-            $data['spent_no_budget']  = $this->spentOutsideBudgets();
-        }
-
-        return $data;
-    }
-
-    private function getSpentInBudgets(): array
-    {
-        $allActive = $this->repository->getActiveBudgets();
-        $sums      = $this->opsRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'), null, $allActive);
-
-        return array_values($sums);
-    }
-
-    private function spentOutsideBudgets(): array
-    {
-        $sums = $this->noBudgetRepository->sumExpenses($this->parameters->get('start'), $this->parameters->get('end'));
-
-        return array_values($sums);
     }
 }

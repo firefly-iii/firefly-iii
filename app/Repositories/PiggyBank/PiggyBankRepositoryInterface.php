@@ -80,7 +80,7 @@ interface PiggyBankRepositoryInterface
      */
     public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
-    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string;
+    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
     /**
      * Get all events.

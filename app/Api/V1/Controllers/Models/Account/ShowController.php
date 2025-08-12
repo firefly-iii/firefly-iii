@@ -96,8 +96,8 @@ class ShowController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
         $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
@@ -131,8 +131,8 @@ class ShowController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
         $account     = $enrichment->enrichSingle($account);
 
 

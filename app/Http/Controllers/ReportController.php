@@ -188,16 +188,7 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share(
-            'subTitle',
-            trans(
-                'firefly.report_default',
-                [
-                    'start' => $start->isoFormat($this->monthAndDayFormat),
-                    'end'   => $end->isoFormat($this->monthAndDayFormat),
-                ]
-            )
-        );
+        app('view')->share('subTitle', trans('firefly.report_default', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end'   => $end->isoFormat($this->monthAndDayFormat)]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
         $generator->setAccounts($accounts);
@@ -222,16 +213,7 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share(
-            'subTitle',
-            trans(
-                'firefly.report_double',
-                [
-                    'start' => $start->isoFormat($this->monthAndDayFormat),
-                    'end'   => $end->isoFormat($this->monthAndDayFormat),
-                ]
-            )
-        );
+        app('view')->share('subTitle', trans('firefly.report_double', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end'   => $end->isoFormat($this->monthAndDayFormat)]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Account', $start, $end);
         $generator->setAccounts($accounts);

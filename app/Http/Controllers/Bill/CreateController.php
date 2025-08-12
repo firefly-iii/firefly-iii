@@ -77,7 +77,7 @@ class CreateController extends Controller
             $periods[$current] = (string) trans('firefly.repeat_freq_'.$current);
         }
         $subTitle        = (string) trans('firefly.create_new_bill');
-        $defaultCurrency = $this->defaultCurrency;
+        $primaryCurrency = $this->primaryCurrency;
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -85,7 +85,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle', 'defaultCurrency'));
+        return view('bills.create', compact('periods', 'subTitle', 'primaryCurrency'));
     }
 
     /**

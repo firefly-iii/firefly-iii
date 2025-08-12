@@ -63,10 +63,10 @@ class CorrectsCurrencies extends Command
         $repos           = app(CurrencyRepositoryInterface::class);
 
         // first check if the user has any default currency (not necessarily the case, so can be forced).
-        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($userGroup);
+        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($userGroup);
 
         Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
-        $found           = [$defaultCurrency->id];
+        $found           = [$primaryCurrency->id];
 
         // get all meta entries
         $meta            = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')

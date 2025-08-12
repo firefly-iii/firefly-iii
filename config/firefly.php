@@ -78,8 +78,8 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.2.21',
-    'build_time'                   => 1752727463,
+    'version'                      => '6.3.0-beta.1',
+    'build_time'                   => 1755023090,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 26,
 
@@ -121,6 +121,7 @@ return [
     'languages'                    => [
         // currently enabled languages
         // 'af_ZA' => ['name_locale' => 'Afrikaans', 'name_english' => 'Afrikaans'],
+        'ar_SA' => ['name_locale' => 'العربية', 'name_english' => 'Arabic'],
         'bg_BG' => ['name_locale' => 'Български', 'name_english' => 'Bulgarian'],
         'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'],
         'da_DK' => ['name_locale' => 'Danish', 'name_english' => 'Danish'],
@@ -181,12 +182,12 @@ return [
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
-        'frontpageAccounts'  => [],
-        'listPageSize'       => 50,
-        'currencyPreference' => 'EUR',
-        'language'           => 'en_US',
-        'locale'             => 'equal',
-        'convertToNative'    => false,
+        'frontpageAccounts'   => [],
+        'listPageSize'        => 50,
+        'currencyPreference'  => 'EUR',
+        'language'            => 'en_US',
+        'locale'              => 'equal',
+        'convertToPrimary'    => false,
     ],
     'default_currency'             => 'EUR',
     'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),

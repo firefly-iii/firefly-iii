@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Bill\UpdateRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -66,6 +68,15 @@ class UpdateController extends Controller
         $data        = $request->getAll();
         $bill        = $this->repository->update($bill, $data);
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $bill        = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);

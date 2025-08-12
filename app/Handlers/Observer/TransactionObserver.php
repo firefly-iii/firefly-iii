@@ -45,15 +45,15 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
-        $this->updateNativeAmount($transaction);
+        $this->updatePrimaryCurrencyAmount($transaction);
     }
 
-    private function updateNativeAmount(Transaction $transaction): void
+    private function updatePrimaryCurrencyAmount(Transaction $transaction): void
     {
-        if (!Amount::convertToNative($transaction->transactionJournal->user)) {
+        if (!Amount::convertToPrimary($transaction->transactionJournal->user)) {
             return;
         }
-        $userCurrency                       = app('amount')->getNativeCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
+        $userCurrency                       = app('amount')->getPrimaryCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;
         // first normal amount
@@ -72,7 +72,7 @@ class TransactionObserver
         }
 
         $transaction->saveQuietly();
-        Log::debug('Transaction native amounts are updated.');
+        Log::debug('Transaction primary currency amounts are updated.');
     }
 
     public function deleting(?Transaction $transaction): void
@@ -90,6 +90,6 @@ class TransactionObserver
                 AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
             }
         }
-        $this->updateNativeAmount($transaction);
+        $this->updatePrimaryCurrencyAmount($transaction);
     }
 }

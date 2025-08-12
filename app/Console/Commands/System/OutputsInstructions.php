@@ -84,6 +84,7 @@ class OutputsInstructions extends Command
         $this->newLine();
         $this->showLogo();
         $this->newLine();
+        $this->newLine();
         $this->showLine();
 
         $this->boxed('');
@@ -141,6 +142,7 @@ class OutputsInstructions extends Command
         $this->line(sprintf('<fg=%s>             |_|    |_|_|  \___|_| |_|\__, |    |_____|_____|_____| </>', $colors[5]));
         $this->line(sprintf('<fg=%s>                                       __/ |                        </>', $colors[6]));
         $this->line(sprintf('<fg=%s>                                      |___/                         </>', $colors[7]));
+        $this->someQuote();
     }
 
     /**
@@ -232,5 +234,18 @@ class OutputsInstructions extends Command
         $this->donationText();
         $this->boxed('');
         $this->showLine();
+    }
+
+    private function someQuote(): void
+    {
+        $lines  = [
+            'Forgive yourself for not being at peace.',
+            'Doesn\'t look like anything to me.',
+            'Be proud of what you make.',
+            'Be there or forever wonder.',
+            'A year from now you will wish you had started today.',
+        ];
+        $random = random_int(0, count($lines) - 1);
+        $this->line(sprintf('       "%s"', $lines[$random]));
     }
 }

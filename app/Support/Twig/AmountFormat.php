@@ -52,7 +52,7 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmount',
             static function (string $string): string {
-                $currency = app('amount')->getNativeCurrency();
+                $currency = app('amount')->getPrimaryCurrency();
 
                 return app('amount')->formatAnything($currency, $string, true);
             },
@@ -65,7 +65,7 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmountPlain',
             static function (string $string): string {
-                $currency = app('amount')->getNativeCurrency();
+                $currency = app('amount')->getPrimaryCurrency();
 
                 return app('amount')->formatAnything($currency, $string, false);
             },
@@ -98,7 +98,7 @@ class AmountFormat extends AbstractExtension
 
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
-                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getNativeCurrency();
+                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrency();
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },
@@ -156,8 +156,8 @@ class AmountFormat extends AbstractExtension
                 /** @var null|TransactionCurrency $currency */
                 $currency = TransactionCurrency::whereCode($code)->first();
                 if (null === $currency) {
-                    Log::error(sprintf('Could not find currency with code "%s". Fallback to native currency.', $code));
-                    $currency = Amount::getNativeCurrency();
+                    Log::error(sprintf('Could not find currency with code "%s". Fallback to primary currency.', $code));
+                    $currency = Amount::getPrimaryCurrency();
                     Log::error(sprintf('Fallback currency is "%s".', $currency->code));
                 }
 

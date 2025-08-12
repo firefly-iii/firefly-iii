@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -76,17 +78,24 @@ class ShowController extends Controller
         // get list of budgets. Count it and split it.
         $collection  = $this->repository->get();
         $count       = $collection->count();
-        $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $recurrences = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrences = $enrichment->enrich($recurrences);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.recurrences.index').$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($piggyBanks, $transformer, 'recurrences');
+        $resource    = new FractalCollection($recurrences, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -101,6 +110,13 @@ class ShowController extends Controller
     public function show(Recurrence $recurrence): JsonResponse
     {
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrence  = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);

@@ -43,8 +43,8 @@ class FrontpageChartGenerator
 {
     use AugumentData;
 
-    public bool                           $convertToNative = false;
-    public TransactionCurrency            $defaultCurrency;
+    public bool                           $convertToPrimary = false;
+    public TransactionCurrency            $primaryCurrency;
     private AccountRepositoryInterface    $accountRepos;
     private array                         $currencies;
     private NoCategoryRepositoryInterface $noCatRepos;

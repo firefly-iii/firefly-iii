@@ -29,7 +29,7 @@ export function loadCurrencies() {
     return getter.list(params).then((response) => {
         let returnData = {
             defaultCurrency: {},
-            nativeCurrencies: [],
+            primaryCurrencies: [],
             foreignCurrencies: [],
             enabledCurrencies: [],
         };
@@ -55,7 +55,7 @@ export function loadCurrencies() {
                         returnData.defaultCurrency = obj;
                     }
                     returnData.enabledCurrencies.push(obj);
-                    returnData.nativeCurrencies.push(obj);
+                    returnData.primaryCurrencies.push(obj);
                     returnData.foreignCurrencies.push(obj);
                 }
             }

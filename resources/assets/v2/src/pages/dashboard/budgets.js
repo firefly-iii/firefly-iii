@@ -34,7 +34,7 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     loadChart() {
         if (true === this.loading) {
             return;
@@ -48,9 +48,19 @@ export default () => ({
         }
         this.getFreshData();
     },
+
+    eventListeners: {
+        ['@convert-to-primary.window'](event){
+            console.log('I heard that! (dashboard/budgets)');
+            this.convertToPrimary = event.detail;
+            chartData = null;
+            this.loadChart();
+        }
+    },
+
     drawChart(options) {
         if (null !== chart) {
-            chart.data.datasets = options.data.datasets;
+            chart.data = options.data;
             chart.update();
             return;
         }
@@ -59,8 +69,9 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_bdg_chart', {start: start, end: end});
-        const cacheValid = window.store.get('cacheValid');
+        const cacheKey = getCacheKey('ds_bdg_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
+        //const cacheValid = window.store.get('cacheValid');
+        const cacheValid = false;
         let cachedData = window.store.get(cacheKey);
 
         if (cacheValid && typeof cachedData !== 'undefined') {
@@ -80,7 +91,7 @@ export default () => ({
     },
     generateOptions(data) {
         currencies = [];
-        let options = getDefaultChartSettings('column');
+        let options = getDefaultChartSettings('bar');
         options.options.locale = window.store.get('locale').replace('_', '-');
         options.options.plugins = {
             tooltip: {
@@ -94,7 +105,7 @@ export default () => ({
                         if (label) {
                             label += ': ';
                         }
-                        return label + ' ' + formatMoney(context.parsed.y, currencies[context.parsed.x] ?? 'EUR');
+                        return label + ' ' + formatMoney(context.parsed.x, currencies[context.parsed.x] ?? 'EUR');
                     }
                 }
             }
@@ -103,28 +114,19 @@ export default () => ({
             labels: [],
             datasets: [
                 {
+                    label: i18next.t('firefly.budgeted'),
+                    data: [],
+                    borderWidth: 1,
+                    backgroundColor: getColors('budgeted', 'background'),
+                    borderColor: getColors('budgeted', 'border'),
+                },
+                {
+                    //label: i18next.t('firefly.budgeted'),
                     label: i18next.t('firefly.spent'),
                     data: [],
                     borderWidth: 1,
-                    stack: 1,
                     backgroundColor: getColors('spent', 'background'),
                     borderColor: getColors('spent', 'border'),
-                },
-                {
-                    label: i18next.t('firefly.left'),
-                    data: [],
-                    borderWidth: 1,
-                    stack: 1,
-                    backgroundColor: getColors('left', 'background'),
-                    borderColor: getColors('left', 'border'),
-                },
-                {
-                    label: i18next.t('firefly.overspent'),
-                    data: [],
-                    borderWidth: 1,
-                    stack: 1,
-                    backgroundColor: getColors('overspent', 'background'),
-                    borderColor: getColors('overspent', 'border'),
                 }
             ]
         };
@@ -134,24 +136,16 @@ export default () => ({
                 //         // convert to EUR yes no?
                 let label = current.label + ' (' + current.currency_code + ')';
                 options.data.labels.push(label);
-                if (this.convertToNative) {
-                    currencies.push(current.native_currency_code);
-                    // series 0: spent
-                    options.data.datasets[0].data.push(parseFloat(current.native_entries.spent) * -1);
-                    // series 1: left
-                    options.data.datasets[1].data.push(parseFloat(current.native_entries.left));
-                    // series 2: overspent
-                    options.data.datasets[2].data.push(parseFloat(current.native_entries.overspent));
-                }
-                if (!this.convertToNative) {
-                    currencies.push(current.currency_code);
-                    // series 0: spent
-                    options.data.datasets[0].data.push(parseFloat(current.entries.spent) * -1);
-                    // series 1: left
-                    options.data.datasets[1].data.push(parseFloat(current.entries.left));
-                    // series 2: overspent
-                    options.data.datasets[2].data.push(parseFloat(current.entries.overspent));
-                }
+                // label = current.label + ' (' + current.currency_code + ') b';
+                // options.data.labels.push(label);
+
+                currencies.push(current.currency_code);
+                // series 0: budgeted
+                options.data.datasets[0].data.push(parseFloat(current.entries.budgeted));
+                // series 1: spent
+                options.data.datasets[1].data.push(parseFloat(current.entries.spent) * -1);
+                // series 2: overspent
+                // options.data.datasets[2].data.push(parseFloat(current.entries.overspent));
             }
         }
         // the currency format callback for the Y axis is AlWAYS based on whatever the first currency is.
@@ -160,9 +154,10 @@ export default () => ({
         options.options.scales = {
             y: {
                 ticks: {
-                    callback: function (context) {
-                        return formatMoney(context, currencies[0] ?? 'EUR');
-                    }
+                    // callback: function (context) {
+                    //     return 'abc';
+                    //     return formatMoney(context, currencies[0] ?? 'EUR');
+                    // }
                 }
             }
         };
@@ -172,8 +167,8 @@ export default () => ({
 
 
     init() {
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
-            this.convertToNative = values[0];
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
+            this.convertToPrimary = values[0];
             afterPromises = true;
             if (false === this.loading) {
                 this.loadChart();
@@ -189,12 +184,12 @@ export default () => ({
                 this.loadChart();
             }
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('boxes observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('boxes observe convertToPrimary');
+            this.convertToPrimary = newValue;
             if (false === this.loading) {
                 this.loadChart();
             }

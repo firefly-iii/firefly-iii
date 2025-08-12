@@ -71,7 +71,7 @@ class BillRepository implements BillRepositoryInterface
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
-        $default   = app('amount')->getNativeCurrency();
+        $primary   = app('amount')->getPrimaryCurrency();
         $return    = [];
         $converter = new ExchangeRateConverter();
 
@@ -83,18 +83,18 @@ class BillRepository implements BillRepositoryInterface
             $currencyId = $bill->transaction_currency_id;
 
             $return[$currencyId] ??= [
-                'currency_id'                    => (string) $currency->id,
-                'currency_name'                  => $currency->name,
-                'currency_symbol'                => $currency->symbol,
-                'currency_code'                  => $currency->code,
-                'currency_decimal_places'        => $currency->decimal_places,
-                'native_currency_id'             => (string) $default->id,
-                'native_currency_name'           => $default->name,
-                'native_currency_symbol'         => $default->symbol,
-                'native_currency_code'           => $default->code,
-                'native_currency_decimal_places' => $default->decimal_places,
-                'sum'                            => '0',
-                'native_sum'                     => '0',
+                'currency_id'                     => (string) $currency->id,
+                'currency_name'                   => $currency->name,
+                'currency_symbol'                 => $currency->symbol,
+                'currency_code'                   => $currency->code,
+                'currency_decimal_places'         => $currency->decimal_places,
+                'primary_currency_id'             => (string) $primary->id,
+                'primary_currency_name'           => $primary->name,
+                'primary_currency_symbol'         => $primary->symbol,
+                'primary_currency_code'           => $primary->code,
+                'primary_currency_decimal_places' => $primary->decimal_places,
+                'sum'                             => '0',
+                'pc_sum'                          => '0',
             ];
 
             /** @var TransactionJournal $transactionJournal */
@@ -102,23 +102,23 @@ class BillRepository implements BillRepositoryInterface
                 /** @var null|Transaction $sourceTransaction */
                 $sourceTransaction = $transactionJournal->transactions()->where('amount', '<', 0)->first();
                 if (null !== $sourceTransaction) {
-                    $amount                            = $sourceTransaction->amount;
+                    $amount                        = $sourceTransaction->amount;
                     if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
                         // use foreign amount instead!
                         $amount = (string) $sourceTransaction->foreign_amount;
                     }
-                    // convert to native currency
-                    $nativeAmount                      = $amount;
-                    if ($currencyId !== $default->id) {
+                    // convert to primary currency
+                    $pcAmount                      = $amount;
+                    if ($currencyId !== $primary->id) {
                         // get rate and convert.
-                        $nativeAmount = $converter->convert($currency, $default, $transactionJournal->date, $amount);
+                        $pcAmount = $converter->convert($currency, $primary, $transactionJournal->date, $amount);
                     }
-                    if ((int) $sourceTransaction->foreign_currency_id === $default->id) {
+                    if ((int) $sourceTransaction->foreign_currency_id === $primary->id) {
                         // ignore conversion, use foreign amount
-                        $nativeAmount = (string) $sourceTransaction->foreign_amount;
+                        $pcAmount = (string) $sourceTransaction->foreign_amount;
                     }
-                    $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], (string) $amount);
-                    $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], (string) $nativeAmount);
+                    $return[$currencyId]['sum']    = bcadd($return[$currencyId]['sum'], (string) $amount);
+                    $return[$currencyId]['pc_sum'] = bcadd($return[$currencyId]['pc_sum'], (string) $pcAmount);
                 }
             }
         }
@@ -141,7 +141,7 @@ class BillRepository implements BillRepositoryInterface
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $bills     = $this->getActiveBills();
         $return    = [];
-        $default   = app('amount')->getNativeCurrency();
+        $primary   = app('amount')->getPrimaryCurrency();
         $converter = new ExchangeRateConverter();
 
         /** @var Bill $bill */
@@ -151,26 +151,26 @@ class BillRepository implements BillRepositoryInterface
             $total = $dates->count() - $count;
 
             if ($total > 0) {
-                $currency                          = $bill->transactionCurrency;
-                $currencyId                        = $bill->transaction_currency_id;
-                $average                           = bcdiv(bcadd((string) $bill->amount_max, (string) $bill->amount_min), '2');
-                $nativeAverage                     = $converter->convert($currency, $default, $start, $average);
+                $currency                      = $bill->transactionCurrency;
+                $currencyId                    = $bill->transaction_currency_id;
+                $average                       = bcdiv(bcadd((string) $bill->amount_max, (string) $bill->amount_min), '2');
+                $pcAverage                     = $converter->convert($currency, $primary, $start, $average);
                 $return[$currencyId] ??= [
-                    'currency_id'                    => (string) $currency->id,
-                    'currency_name'                  => $currency->name,
-                    'currency_symbol'                => $currency->symbol,
-                    'currency_code'                  => $currency->code,
-                    'currency_decimal_places'        => $currency->decimal_places,
-                    'native_currency_id'             => (string) $default->id,
-                    'native_currency_name'           => $default->name,
-                    'native_currency_symbol'         => $default->symbol,
-                    'native_currency_code'           => $default->code,
-                    'native_currency_decimal_places' => $default->decimal_places,
-                    'sum'                            => '0',
-                    'native_sum'                     => '0',
+                    'currency_id'                     => (string) $currency->id,
+                    'currency_name'                   => $currency->name,
+                    'currency_symbol'                 => $currency->symbol,
+                    'currency_code'                   => $currency->code,
+                    'currency_decimal_places'         => $currency->decimal_places,
+                    'primary_currency_id'             => (string) $primary->id,
+                    'primary_currency_name'           => $primary->name,
+                    'primary_currency_symbol'         => $primary->symbol,
+                    'primary_currency_code'           => $primary->code,
+                    'primary_currency_decimal_places' => $primary->decimal_places,
+                    'sum'                             => '0',
+                    'pc_sum'                          => '0',
                 ];
-                $return[$currencyId]['sum']        = bcadd($return[$currencyId]['sum'], bcmul($average, (string) $total));
-                $return[$currencyId]['native_sum'] = bcadd($return[$currencyId]['native_sum'], bcmul($nativeAverage, (string) $total));
+                $return[$currencyId]['sum']    = bcadd($return[$currencyId]['sum'], bcmul($average, (string) $total));
+                $return[$currencyId]['pc_sum'] = bcadd($return[$currencyId]['pc_sum'], bcmul($pcAverage, (string) $total));
             }
         }
         $converter->summarize();

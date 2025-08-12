@@ -65,13 +65,13 @@ class BillController extends Controller
      */
     public function bill(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $bills           = $request->getBills();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
-        $response        = [];
+        $accounts         = $request->getAssetAccounts();
+        $bills            = $request->getBills();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary          = Amount::getPrimaryCurrency();
+        $response         = [];
 
         // get all bills:
         if (0 === $bills->count()) {
@@ -79,25 +79,25 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $billId       = (int) $journal['bill_id'];
             $currencyId   = (int) $journal['currency_id'];
             $currencyCode = $journal['currency_code'];
             $field        = 'amount';
 
-            // use the native amount if the user wants to convert to native currency
-            if ($convertToNative && $currencyId !== $default->id) {
-                $currencyId   = $default->id;
-                $currencyCode = $default->code;
-                $field        = 'native_amount';
+            // use the primary amount if the user wants to convert to primary currency
+            if ($convertToPrimary && $currencyId !== $primary->id) {
+                $currencyId   = $primary->id;
+                $currencyCode = $primary->code;
+                $field        = 'pc_amount';
             }
             // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
             Log::debug(sprintf('Journal #%d in bill #%d will use %s (%s %s)', $journal['transaction_group_id'], $billId, $field, $currencyCode, $journal[$field] ?? '0'));
@@ -129,33 +129,33 @@ class BillController extends Controller
      */
     public function noBill(GenericRequest $request): JsonResponse
     {
-        $accounts        = $request->getAssetAccounts();
-        $start           = $request->getStart();
-        $end             = $request->getEnd();
-        $convertToNative = Amount::convertToNative();
-        $default         = Amount::getNativeCurrency();
-        $response        = [];
+        $accounts         = $request->getAssetAccounts();
+        $start            = $request->getStart();
+        $end              = $request->getEnd();
+        $convertToPrimary = Amount::convertToPrimary();
+        $primary          = Amount::getPrimaryCurrency();
+        $response         = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
-        $genericSet      = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             $currencyId   = (int) $journal['currency_id'];
             $currencyCode = $journal['currency_code'];
             $field        = 'amount';
 
-            // use the native amount if the user wants to convert to native currency
-            if ($convertToNative && $currencyId !== $default->id) {
-                $currencyId   = $default->id;
-                $currencyCode = $default->code;
-                $field        = 'native_amount';
+            // use the primary amount if the user wants to convert to primary currency
+            if ($convertToPrimary && $currencyId !== $primary->id) {
+                $currencyId   = $primary->id;
+                $currencyCode = $primary->code;
+                $field        = 'pc_amount';
             }
             // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
             Log::debug(sprintf('Journal #%d will use %s (%s %s)', $journal['transaction_group_id'], $field, $currencyCode, $journal[$field] ?? '0'));

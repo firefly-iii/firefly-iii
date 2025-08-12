@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\UserGroup;
@@ -38,17 +38,16 @@ use Illuminate\Support\Facades\Log;
 
 class PreferencesEventHandler
 {
-    public function resetNativeAmounts(UserGroupChangedDefaultCurrency $event): void
+    public function resetPrimaryCurrencyAmounts(UserGroupChangedPrimaryCurrency $event): void
     {
-        // Reset the native amounts for all objects that have it.
-        Log::debug('Resetting native amounts for all objects.');
+        // Reset the primary currency amounts for all objects that have it.
+        Log::debug('Resetting primary currency amounts for all objects.');
 
         $tables = [
             // !!! this array is also in the migration
             'accounts'          => ['native_virtual_balance'],
             'available_budgets' => ['native_amount'],
             'bills'             => ['native_amount_min', 'native_amount_max'],
-            // 'transactions' => ['native_amount', 'native_foreign_amount']
         ];
         foreach ($tables as $table => $columns) {
             foreach ($columns as $column) {
@@ -60,13 +59,13 @@ class PreferencesEventHandler
         $this->resetBudgets($event->userGroup);
         $this->resetTransactions($event->userGroup);
         // fire laravel command to recalculate them all.
-        if (Amount::convertToNative()) {
-            Log::debug('Will now convert to native.');
-            Artisan::call('correction:recalculate-native-amounts');
+        if (Amount::convertToPrimary()) {
+            Log::debug('Will now convert to primary currency.');
+            Artisan::call('correction:recalculate-pc-amounts');
 
             return;
         }
-        Log::debug('Will NOT convert to native.');
+        Log::debug('Will NOT convert to primary currency.');
     }
 
     private function resetPiggyBanks(UserGroup $userGroup): void
@@ -74,6 +73,7 @@ class PreferencesEventHandler
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $piggyBanks = $repository->getPiggyBanks();
+        Log::debug(sprintf('Resetting %d piggy bank(s).', $piggyBanks->count()));
 
         /** @var PiggyBank $piggyBank */
         foreach ($piggyBanks as $piggyBank) {
@@ -104,6 +104,8 @@ class PreferencesEventHandler
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $set        = $repository->getBudgets();
+
+        Log::debug(sprintf('Resetting %d budget(s).', $set->count()));
 
         /** @var Budget $budget */
         foreach ($set as $budget) {

@@ -141,14 +141,14 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
 
         Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
-        // use native amount if necessary?
-        $convertToNative  = Amount::convertToNative($this->user);
-        $default          = Amount::getNativeCurrency();
+        // use primary amount if necessary?
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary          = Amount::getPrimaryCurrency();
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $currencyId          = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? $default->id : $availableBudget->transaction_currency_id;
-            $field               = $convertToNative && $availableBudget->transaction_currency_id !== $default->id ? 'native_amount' : 'amount';
+            $currencyId          = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id ? $primary->id : $availableBudget->transaction_currency_id;
+            $field               = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
             $amount              = '' === (string) $availableBudget->{$field} ? '0' : (string) $availableBudget->{$field};
             $return[$currencyId] = bcadd($return[$currencyId], $amount);

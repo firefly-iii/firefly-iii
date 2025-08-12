@@ -26,30 +26,22 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class CategoryTransformer
  */
 class CategoryTransformer extends AbstractTransformer
 {
-    private readonly bool                          $convertToNative;
-    private readonly TransactionCurrency           $default;
-    private readonly OperationsRepositoryInterface $opsRepository;
-    private readonly CategoryRepositoryInterface   $repository;
+    private readonly TransactionCurrency $primaryCurrency;
 
     /**
      * CategoryTransformer constructor.
      */
     public function __construct()
     {
-        $this->opsRepository   = app(OperationsRepositoryInterface::class);
-        $this->repository      = app(CategoryRepositoryInterface::class);
-        $this->default         = Amount::getNativeCurrency();
-        $this->convertToNative = Amount::convertToNative();
+        $this->primaryCurrency = Amount::getPrimaryCurrency();
     }
 
     /**
@@ -57,36 +49,28 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
-        $this->opsRepository->setUser($category->user);
-        $this->repository->setUser($category->user);
-
-        $spent   = [];
-        $earned  = [];
-        $start   = $this->parameters->get('start');
-        $end     = $this->parameters->get('end');
-        if (null !== $start && null !== $end) {
-            $earned = $this->beautify($this->opsRepository->sumIncome($start, $end, null, new Collection([$category])));
-            $spent  = $this->beautify($this->opsRepository->sumExpenses($start, $end, null, new Collection([$category])));
-        }
-        $default = $this->default;
-        if (!$this->convertToNative) {
-            $default = null;
-        }
-        $notes   = $this->repository->getNoteText($category);
 
         return [
-            'id'                             => $category->id,
-            'created_at'                     => $category->created_at->toAtomString(),
-            'updated_at'                     => $category->updated_at->toAtomString(),
-            'name'                           => $category->name,
-            'notes'                          => $notes,
-            'native_currency_id'             => $default instanceof TransactionCurrency ? (string) $default->id : null,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
-            'spent'                          => $spent,
-            'earned'                         => $earned,
-            'links'                          => [
+            'id'                              => $category->id,
+            'created_at'                      => $category->created_at->toAtomString(),
+            'updated_at'                      => $category->updated_at->toAtomString(),
+            'name'                            => $category->name,
+            'notes'                           => $category->meta['notes'],
+
+            // category never has currency settings.
+            'object_has_currency_setting'     => false,
+            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_name'           => $this->primaryCurrency->name,
+            'primary_currency_code'           => $this->primaryCurrency->code,
+            'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+            'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
+            'spent'                           => $this->beautify($category->meta['spent']),
+            'pc_spent'                        => $this->beautify($category->meta['pc_spent']),
+            'earned'                          => $this->beautify($category->meta['earned']),
+            'pc_earned'                       => $this->beautify($category->meta['pc_earned']),
+            'transferred'                     => $this->beautify($category->meta['transfers']),
+            'pc_transferred'                  => $this->beautify($category->meta['pc_transfers']),
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => '/categories/'.$category->id,
@@ -99,7 +83,7 @@ class CategoryTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = app('steam')->bcround($data['sum'], (int) $data['currency_decimal_places']);
+            $data['sum'] = Steam::bcround($data['sum'], (int)$data['currency_decimal_places']);
             $return[]    = $data;
         }
 

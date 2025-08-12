@@ -29,7 +29,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -82,6 +84,15 @@ class ShowController extends Controller
         $count       = $collection->count();
         $budgets     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new BudgetEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $budgets     = $enrichment->enrich($budgets);
+
         // make paginator:
         $paginator   = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budgets.index').$this->buildParams());
@@ -102,6 +113,15 @@ class ShowController extends Controller
     public function show(Budget $budget): JsonResponse
     {
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new BudgetEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $budget      = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);

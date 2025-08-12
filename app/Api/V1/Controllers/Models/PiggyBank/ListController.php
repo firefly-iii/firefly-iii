@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEventEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
@@ -83,8 +84,8 @@ class ListController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
         $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
@@ -148,6 +149,13 @@ class ListController extends Controller
         $count       = $collection->count();
         $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEventEnrichment();
+        $enrichment->setUser($admin);
+        $events      = $enrichment->enrich($events);
+
         // make paginator:
         $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.piggy-banks.events', [$piggyBank->id]).$this->buildParams());
@@ -156,7 +164,7 @@ class ListController extends Controller
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($events, $transformer, 'piggy_bank_events');
+        $resource    = new FractalCollection($events, $transformer, sprintf('piggy-banks/%d/events', $piggyBank->id));
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

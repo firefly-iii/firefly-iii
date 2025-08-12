@@ -297,7 +297,7 @@ class TransactionJournalFactory
             $transactionFactory->setForeignCurrency($currency);
             $amount        = (string) $row['foreign_amount'];
             $foreignAmount = (string) $row['amount'];
-            Log::debug('Swap native/foreign amounts in transfer for new save method.');
+            Log::debug('Swap primary/foreign amounts in transfer for new save method.');
         }
 
         try {
@@ -488,7 +488,7 @@ class TransactionJournalFactory
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && !$currency instanceof TransactionCurrency) {
             // return user's default:
-            return app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+            return app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $result     = $preference ?? $currency;
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));

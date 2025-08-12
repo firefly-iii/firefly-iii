@@ -32,6 +32,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BudgetLimitTransformer;
@@ -116,6 +117,14 @@ class ListController extends Controller
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budgets.budget-limits', [$budget->id]).$this->buildParams());
+
+        // enrich
+        /** @var User $admin */
+        $admin        = auth()->user();
+        $enrichment   = new BudgetLimitEnrichment();
+        $enrichment->setUser($admin);
+        $budgetLimits = $enrichment->enrich($budgetLimits);
+
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer  = app(BudgetLimitTransformer::class);

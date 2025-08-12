@@ -65,6 +65,7 @@ return [
                 'interest_calc_half-year',
                 'interest_calc_quarterly',
                 'spent',
+                'budgeted',
                 'administration_owner',
                 'administration_you',
                 'administration_role_owner',
@@ -314,7 +315,7 @@ return [
             'list'    => [
                 'title',
                 'active',
-                'native_currency',
+                'primary_currency',
                 'trigger',
                 'response',
                 'delivery',
@@ -332,6 +333,7 @@ return [
     'languages' => [
         // currently enabled languages
         'af_ZA',
+        'ar_SA',
         'bg_BG',
         'cs_CZ',
         'da_DK',

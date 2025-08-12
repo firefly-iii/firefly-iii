@@ -121,9 +121,9 @@ export default {
                 this.administration = {
                     id: current.id,
                     title: current.attributes.title,
-                    currency_id: parseInt(current.attributes.native_currency_id),
-                    currency_code: current.attributes.native_currency_code,
-                    currency_name: current.attributes.native_currency_name,
+                    currency_id: parseInt(current.attributes.primary_currency_id),
+                    currency_code: current.attributes.primary_currency_code,
+                    currency_name: current.attributes.primary_currency_name,
                 };
                 this.pageTitle = this.administration.title;
             });
@@ -143,7 +143,7 @@ export default {
             // collect data
             let data = {
                 title: this.administration.title,
-                native_currency_id: parseInt(this.administration.currency_id),
+                primary_currency_id: parseInt(this.administration.currency_id),
             };
 
             // post!
@@ -154,7 +154,7 @@ export default {
 
                 this.error_message = error.response.data.message;
                 this.errors.title = error.response.data.errors.title;
-                this.errors.native_currency_id = error.response.data.errors.native_currency_id;
+                this.errors.primary_currency_id = error.response.data.errors.primary_currency_id;
 
                 // enable button again
                 $('#submitButton').prop("disabled", false);

@@ -32,6 +32,7 @@ use FireflyIII\Support\Cronjobs\BillWarningCronjob;
 use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
+use FireflyIII\Support\Cronjobs\WebhookCronjob;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
@@ -50,6 +51,7 @@ class Cron extends Command
         {--create-recurring : Create recurring transactions. Other tasks will be skipped unless also requested.}
         {--create-auto-budgets : Create auto budgets. Other tasks will be skipped unless also requested.}
         {--send-bill-warnings : Send bill warnings. Other tasks will be skipped unless also requested.}
+        {--send-webhook-messages : Sends any stray webhook messages (with a maximum of 5).}
         ';
 
     public function handle(): int
@@ -58,7 +60,8 @@ class Cron extends Command
                  && !$this->option('create-recurring')
                  && !$this->option('create-auto-budgets')
                  && !$this->option('send-bill-warnings')
-                 && !$this->option('check-version');
+                 && !$this->option('check-version')
+                 && !$this->option('send-webhook-messages');
         $date  = null;
 
         try {
@@ -116,6 +119,16 @@ class Cron extends Command
         if ($doAll || $this->option('send-bill-warnings')) {
             try {
                 $this->billWarningCronJob($force, $date);
+            } catch (FireflyException $e) {
+                app('log')->error($e->getMessage());
+                app('log')->error($e->getTraceAsString());
+                $this->friendlyError($e->getMessage());
+            }
+        }
+        // Fire webhook messages cron job.
+        if ($doAll || $this->option('send-webhook-messages')) {
+            try {
+                $this->webhookCronJob($force, $date);
             } catch (FireflyException $e) {
                 app('log')->error($e->getMessage());
                 app('log')->error($e->getTraceAsString());
@@ -237,6 +250,28 @@ class Cron extends Command
         }
         if ($autoBudget->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Send bill warnings" cron ran with success: %s', $autoBudget->message));
+        }
+    }
+
+    private function webhookCronJob(bool $force, ?Carbon $date): void
+    {
+        $webhook = new WebhookCronjob();
+        $webhook->setForce($force);
+        // set date in cron job:
+        if ($date instanceof Carbon) {
+            $webhook->setDate($date);
+        }
+
+        $webhook->fire();
+
+        if ($webhook->jobErrored) {
+            $this->friendlyError(sprintf('Error in "webhook" cron: %s', $webhook->message));
+        }
+        if ($webhook->jobFired) {
+            $this->friendlyInfo(sprintf('"Webhook" cron fired: %s', $webhook->message));
+        }
+        if ($webhook->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Webhook" cron ran with success: %s', $webhook->message));
         }
     }
 }

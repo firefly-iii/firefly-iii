@@ -13,13 +13,13 @@
                            x-text="account.name"></a>
 
                         <span class="small">
-                            <template x-for="balance in account.balance">
-                                <span>x</span>
+                            <template x-for="balance in account.balances">
+                                <template x-if="balance.type === 'current'">
+                                    <span class="text-muted">(<span x-text="balance.amount_formatted"></span>)
+                                        </span>
+                                </template>
                             </template>
-                            <template x-for="balance in account.native_balance">
-                                <span>Y</span>
-                            </template>
-                                            </span>
+                        </span>
                     </h3>
                 </div>
                 <div class="card-body p-0">
@@ -75,7 +75,7 @@
                                     <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
                                         <li>
-                                            @include('partials.elements.amount', ['convertToNative' => true,'type' => 'transaction.type','amount' => 'transaction.amount','native' => 'transaction.amount'])
+                                            @include('partials.elements.amount', ['convertToPrimary' => true,'type' => 'transaction.type','amount' => 'transaction.amount','primary' => 'transaction.amount'])
                                         </li>
                                     </template>
                                     </ul>

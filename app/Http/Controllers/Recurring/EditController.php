@@ -34,7 +34,10 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\ExpandedForm;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -92,13 +95,20 @@ class EditController extends Controller
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
         }
 
+        // enrich
+        /** @var User $admin */
+        $admin                            = auth()->user();
+        $enrichment                       = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrence                       = $enrichment->enrichSingle($recurrence);
+
         /** @var RecurrenceTransformer $transformer */
         $transformer                      = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
         $array                            = $transformer->transform($recurrence);
-        $budgets                          = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
-        $bills                            = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
+        $budgets                          = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills                            = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());
 
         /** @var RecurrenceRepetition $repetition */
         $repetition                       = $recurrence->recurrenceRepetitions()->first();

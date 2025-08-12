@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
  */
 class FrontpageChartGenerator
 {
-    public bool                                     $convertToNative = false;
+    public bool                                     $convertToPrimary = false;
     public TransactionCurrency                      $default;
     protected OperationsRepositoryInterface         $opsRepository;
     private readonly BudgetLimitRepositoryInterface $blRepository;
@@ -149,27 +149,27 @@ class FrontpageChartGenerator
      */
     private function processLimit(array $data, Budget $budget, BudgetLimit $limit): array
     {
-        $useNative = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
-        $currency  = $limit->transactionCurrency;
-        if ($useNative) {
-            Log::debug(sprintf('Processing limit #%d with (native) %s %s', $limit->id, $this->default->code, $limit->native_amount));
+        $usePrimary = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
+        $currency   = $limit->transactionCurrency;
+        if ($usePrimary) {
+            Log::debug(sprintf('Processing limit #%d with (primary currency) %s %s', $limit->id, $this->default->code, $limit->native_amount));
         }
-        if (!$useNative) {
+        if (!$usePrimary) {
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent     = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
+        $spent      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
 
         /** @var array $entry */
         foreach ($spent as $entry) {
             // only spent the entry where the entry's currency matches the budget limit's currency
-            // or when useNative is true.
-            if ($entry['currency_id'] === $limit->transaction_currency_id || $useNative) {
+            // or when usePrimary is true.
+            if ($entry['currency_id'] === $limit->transaction_currency_id || $usePrimary) {
                 Log::debug(sprintf('Process spent row (%s)', $entry['currency_code']));
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
-            if (!($entry['currency_id'] === $limit->transaction_currency_id || $useNative)) {
+            if (!($entry['currency_id'] === $limit->transaction_currency_id || $usePrimary)) {
                 Log::debug(sprintf('Skipping spent row (%s).', $entry['currency_code']));
             }
         }
@@ -196,10 +196,10 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $useNative                  = $this->convertToNative && $this->default->id !== $limit->transaction_currency_id;
+        $usePrimary                 = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
         $amount                     = $limit->amount;
         Log::debug(sprintf('Amount is "%s".', $amount));
-        if ($useNative && $limit->transaction_currency_id !== $this->default->id) {
+        if ($usePrimary && $limit->transaction_currency_id !== $this->default->id) {
             $amount = $limit->native_amount;
             Log::debug(sprintf('Amount is now "%s".', $amount));
         }

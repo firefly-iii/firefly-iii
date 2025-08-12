@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
  */
 class WholePeriodChartGenerator
 {
-    public bool $convertToNative;
+    public bool $convertToPrimary;
 
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {

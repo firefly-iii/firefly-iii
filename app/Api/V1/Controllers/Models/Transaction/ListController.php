@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEventEnrichment;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionLinkTransformer;
@@ -113,6 +114,14 @@ class ListController extends Controller
         }
         $count       = $collection->count();
         $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEventEnrichment();
+        $enrichment->setUser($admin);
+        $events      = $enrichment->enrich($events);
+
         // make paginator:
         $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.transactions.piggy-bank-events', [$transactionGroup->id]).$this->buildParams());

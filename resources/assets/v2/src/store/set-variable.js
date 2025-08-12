@@ -28,19 +28,25 @@ export function setVariable(name, value = null) {
     // then again, it's not that slow.
 
     // set in window.x
-    // window[name] = value;
+    window[name] = value;
 
     // set in store:
     window.store.set(name, value);
 
     // post to user preferences (because why not):
     let putter = new Put();
-    putter.put(name, value).then((response) => {
-    }).catch(() => {
+    return putter.put(name, value).then((response) => {
+        console.log('set "'+name+'" to value: ', value);
+        return Promise.resolve(response);
+    }).catch((error) => {
+        console.error(error);
         // preference does not exist (yet).
         // POST it
         let poster = (new Post);
-        poster.post(name, value).then((response) => {
+            poster.post(name, value).then((response) => {
+                console.log('POST "'+name+'" to value: ', value);
+                return Promise.resolve(response);
         });
     });
+
 }

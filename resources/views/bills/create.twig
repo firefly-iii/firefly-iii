@@ -17,7 +17,7 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
-                        {{ CurrencyForm.currencyList('transaction_currency_id', defaultCurrency.id) }}
+                        {{ CurrencyForm.currencyList('transaction_currency_id', primaryCurrency.id) }}
                         {{ ExpandedForm.amountNoCurrency('amount_min') }}
                         {{ ExpandedForm.amountNoCurrency('amount_max') }}
                         {{ ExpandedForm.date('date',phpdate('Y-m-d')) }}

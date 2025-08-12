@@ -138,6 +138,14 @@ return [
     'new_journals_subject'                        => 'Firefly III has created a new transaction|Firefly III has created :count new transactions',
     'new_journals_header'                         => 'Firefly III has created a transaction for you. You can find it in your Firefly III installation:|Firefly III has created :count transactions for you. You can find them in your Firefly III installation:',
 
+    // subscription is overdue.
+    'subscriptions_overdue_subject_multi'               => 'You have :count subscriptions that are overdue to be paid',
+    'subscriptions_overdue_subject_single'               => 'You have a subscription that is overdue to be paid',
+    'subscriptions_overdue_warning_intro_single' => 'You have one subscription that is overdue to be paid. At the following date(s) a payment was expected, but it has not yet arrived.',
+    'subscriptions_overdue_warning_intro_multi' => 'You have :count subscription(s) that are overdue to be paid. At the following date(s) a payment was expected, but it has not yet arrived.',
+    'subscriptions_overdue_please_action_single' => 'Perhaps you have simply not linked a transaction to this subscription. In that case, please do so. You will NOT get another warning about this overdue subscription. A new warning will be sent out for the NEXT due payment.',
+    'subscriptions_overdue_please_action_multi' => 'Perhaps you have simply not linked a transaction to these subscriptions. In that case, please do so. You will NOT get another warning about these overdue subscriptions. A new warning will be sent out for the NEXT due payments.',
+    'subscriptions_overdue_outro' => 'If you believe this message is wrong, please contact the Firefly III developer. Thank you for using Firefly III.',
     // bill warning
     'bill_warning_subject_end_date'               => 'Your subscription ":name" is due to end in :diff days',
     'bill_warning_subject_now_end_date'           => 'Your subscription ":name" is due to end TODAY',

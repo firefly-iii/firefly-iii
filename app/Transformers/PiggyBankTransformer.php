@@ -25,26 +25,23 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankTransformer
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-    private readonly AccountRepositoryInterface   $accountRepos;
-    private readonly PiggyBankRepositoryInterface $piggyRepos;
+    private TransactionCurrency                   $primaryCurrency;
 
     /**
      * PiggyBankTransformer constructor.
      */
     public function __construct()
     {
-        $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->piggyRepos   = app(PiggyBankRepositoryInterface::class);
+        $this->primaryCurrency = Amount::getPrimaryCurrency();
     }
 
     /**
@@ -54,74 +51,58 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function transform(PiggyBank $piggyBank): array
     {
-        $user             = $piggyBank->accounts()->first()->user;
-
-        // set up repositories
-        $this->accountRepos->setUser($user);
-        $this->piggyRepos->setUser($user);
-
-        // note
-        $notes            = $this->piggyRepos->getNoteText($piggyBank);
-        $notes            = '' === $notes ? null : $notes;
-
-        $objectGroupId    = null;
-        $objectGroupOrder = null;
-        $objectGroupTitle = null;
-
-        /** @var null|ObjectGroup $objectGroup */
-        $objectGroup      = $piggyBank->objectGroups->first();
-        if (null !== $objectGroup) {
-            $objectGroupId    = $objectGroup->id;
-            $objectGroupOrder = $objectGroup->order;
-            $objectGroupTitle = $objectGroup->title;
-        }
-
-        // get currently saved amount:
-        $currency         = $piggyBank->transactionCurrency;
-        $currentAmount    = $this->piggyRepos->getCurrentAmount($piggyBank);
-
         // Amounts, depending on 0.0 state of target amount
-        $percentage       = null;
-        $targetAmount     = $piggyBank->target_amount;
-        $leftToSave       = null;
-        $savePerMonth     = null;
-        if (0 !== bccomp($targetAmount, '0')) { // target amount is not 0.00
-            $leftToSave   = bcsub($piggyBank->target_amount, $currentAmount);
-            $percentage   = (int) bcmul(bcdiv($currentAmount, $targetAmount), '100');
-            $targetAmount = app('steam')->bcround($targetAmount, $currency->decimal_places);
-            $leftToSave   = app('steam')->bcround($leftToSave, $currency->decimal_places);
-            $savePerMonth = app('steam')->bcround($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places);
+        $percentage = null;
+        if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp($piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
+            $percentage = (int)bcmul(bcdiv($piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
         }
-        $startDate        = $piggyBank->start_date?->format('Y-m-d');
-        $targetDate       = $piggyBank->target_date?->format('Y-m-d');
+        $startDate  = $piggyBank->start_date?->toAtomString();
+        $targetDate = $piggyBank->target_date?->toAtomString();
 
         return [
-            'id'                      => (string) $piggyBank->id,
-            'created_at'              => $piggyBank->created_at->toAtomString(),
-            'updated_at'              => $piggyBank->updated_at->toAtomString(),
-            'name'                    => $piggyBank->name,
-            'accounts'                => $this->renderAccounts($piggyBank),
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
-            'target_amount'           => $targetAmount,
-            'percentage'              => $percentage,
-            'current_amount'          => $currentAmount,
-            'left_to_save'            => $leftToSave,
-            'save_per_month'          => $savePerMonth,
-            'start_date'              => $startDate,
-            'target_date'             => $targetDate,
-            'order'                   => $piggyBank->order,
-            'active'                  => true,
-            'notes'                   => $notes,
-            'object_group_id'         => null !== $objectGroupId ? (string) $objectGroupId : null,
-            'object_group_order'      => $objectGroupOrder,
-            'object_group_title'      => $objectGroupTitle,
-            'links'                   => [
+            'id'                              => (string)$piggyBank->id,
+            'created_at'                      => $piggyBank->created_at->toAtomString(),
+            'updated_at'                      => $piggyBank->updated_at->toAtomString(),
+            'name'                            => $piggyBank->name,
+            'percentage'                      => $percentage,
+            'start_date'                      => $startDate,
+            'target_date'                     => $targetDate,
+            'order'                           => $piggyBank->order,
+            'active'                          => true,
+            'notes'                           => $piggyBank->meta['notes'],
+            'object_group_id'                 => $piggyBank->meta['object_group_id'],
+            'object_group_order'              => $piggyBank->meta['object_group_order'],
+            'object_group_title'              => $piggyBank->meta['object_group_title'],
+            'accounts'                        => $piggyBank->meta['accounts'],
+
+            // currency settings, 6.3.0.
+            'object_has_currency_setting'     => true,
+            'currency_id'                     => (string)$piggyBank->meta['currency']->id,
+            'currency_name'                   => $piggyBank->meta['currency']->name,
+            'currency_code'                   => $piggyBank->meta['currency']->code,
+            'currency_symbol'                 => $piggyBank->meta['currency']->symbol,
+            'currency_decimal_places'         => $piggyBank->meta['currency']->decimal_places,
+
+            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_name'           => $this->primaryCurrency->name,
+            'primary_currency_code'           => $this->primaryCurrency->code,
+            'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+            'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
+
+
+            'target_amount'                   => $piggyBank->meta['target_amount'],
+            'pc_target_amount'                => $piggyBank->meta['pc_target_amount'],
+            'current_amount'                  => $piggyBank->meta['current_amount'],
+            'pc_current_amount'               => $piggyBank->meta['pc_current_amount'],
+            'left_to_save'                    => $piggyBank->meta['left_to_save'],
+            'pc_left_to_save'                 => $piggyBank->meta['pc_left_to_save'],
+            'save_per_month'                  => $piggyBank->meta['save_per_month'],
+            'pc_save_per_month'               => $piggyBank->meta['pc_save_per_month'],
+
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_banks/'.$piggyBank->id,
+                    'uri' => sprintf('/piggy-banks/%d', $piggyBank->id),
                 ],
             ],
         ];
@@ -132,10 +113,10 @@ class PiggyBankTransformer extends AbstractTransformer
         $return = [];
         foreach ($piggyBank->accounts()->get() as $account) {
             $return[] = [
-                'id'                    => (string) $account->id,
-                'name'                  => $account->name,
-                'current_amount'        => (string) $account->pivot->current_amount,
-                'native_current_amount' => (string) $account->pivot->native_current_amount,
+                'id'                => (string)$account->id,
+                'name'              => $account->name,
+                'current_amount'    => (string)$account->pivot->current_amount,
+                'pc_current_amount' => (string)$account->pivot->native_current_amount,
                 // TODO add balance, add left to save.
             ];
         }

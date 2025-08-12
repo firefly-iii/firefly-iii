@@ -25,256 +25,6 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 
 /*
- *
- * ____    ____  ___      .______        ______    __    __  .___________. _______     _______.
- * \   \  /   / |__ \     |   _  \      /  __  \  |  |  |  | |           ||   ____|   /       |
- *  \   \/   /     ) |    |  |_)  |    |  |  |  | |  |  |  | `---|  |----`|  |__     |   (----`
- *   \      /     / /     |      /     |  |  |  | |  |  |  |     |  |     |   __|     \   \
- *    \    /     / /_     |  |\  \----.|  `--'  | |  `--'  |     |  |     |  |____.----)   |
- *     \__/     |____|    | _| `._____| \______/   \______/      |__|     |_______|_______/
- */
-
-// AUTOCOMPLETE ROUTES
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Autocomplete',
-        'prefix'    => 'v2/autocomplete',
-        'as'        => 'api.v2.autocomplete.',
-    ],
-    static function (): void {
-        Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
-        // Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
-        // Route::get('tags', ['uses' => 'TagController@tags', 'as' => 'tags']);
-        // Route::get('transaction-descriptions', ['uses' => 'TransactionController@transactionDescriptions', 'as' => 'transaction-descriptions']);
-    }
-);
-
-// USER GROUP ROUTES
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\UserGroup',
-        'prefix'    => 'v2/user-groups',
-        'as'        => 'api.v2.user-groups.',
-    ],
-    static function (): void {
-        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        Route::get('{userGroup}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
-        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
-        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-    }
-);
-
-// CHART ROUTES
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
-        'prefix'    => 'v2/chart',
-        'as'        => 'api.v2.chart.',
-    ],
-    static function (): void {
-        // Route::get('account/dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'account.dashboard']);
-        // Route::get('budget/dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'budget.dashboard']);
-        // Route::get('category/dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'category.dashboard']);
-        Route::get('balance/balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
-    }
-);
-
-// CURRENCY ROUTES
-Route::group(
-    [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\TransactionCurrency',
-        'prefix'    => 'v2/currencies',
-        'as'        => 'api.v2.currencies.',
-    ],
-    static function (): void {
-        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        //        Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        //
-        //        Route::put('{userGroup}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-        //        Route::post('{userGroup}/use', ['uses' => 'UpdateController@useUserGroup', 'as' => 'use']);
-        //        Route::put('{userGroup}/update-membership', ['uses' => 'UpdateController@updateMembership', 'as' => 'updateMembership']);
-        //        Route::delete('{userGroup}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-    }
-);
-
-
-// V2 API route for Summary boxes
-// BASIC
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
-//        'prefix'    => 'v2/summary',
-//        'as'        => 'api.v2.summary.',
-//    ],
-//    static function (): void {
-//        // Route::get('basic', ['uses' => 'BasicController@basic', 'as' => 'basic']);
-//    }
-// );
-// // V2 API route for all kinds of Transaction lists.
-// // A lot of endpoints involve transactions. So any time Firefly III needs to list transactions
-// // it's coming from these endpoints.
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List',
-//        'prefix'    => 'v2',
-//        'as'        => 'api.v2.',
-//    ],
-//    static function (): void {
-//        // basic list
-//        // Route::get('transactions', ['uses' => 'TransactionController@list', 'as' => 'transactions.list']);
-//
-//        // list by parent or related object.
-//        // note how the check is done on the user group, not the user itself.
-//        // Route::get('accounts/{userGroupAccount}/transactions', ['uses' => 'AccountController@list', 'as' => 'accounts.transactions']);
-//    }
-// );
-
-// V2 API routes for auto complete
-//
-// // V2 API route for net worth endpoint(s);
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Summary',
-//        'prefix'    => 'v2/net-worth',
-//        'as'        => 'api.v2.net-worth.',
-//    ],
-//    static function (): void {
-//        // Route::get('', ['uses' => 'NetWorthController@get', 'as' => 'index']);
-//    }
-// );
-//
-// // // V2 API route for accounts.
-// // Route::group(
-// //    [
-// //        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Account',
-// //        'prefix'    => 'v2/accounts',
-// //        'as'        => 'api.v2.accounts.',
-// //    ],
-// //    static function (): void {
-// //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-// //        Route::get('{account}', ['uses' => 'ShowController@show', 'as' => 'show']);
-// //        Route::put('{account}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-// //    }
-// // );
-//
-// // V2 API route for subscriptions.
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Bill',
-//        'prefix'    => 'v2/subscriptions',
-//        'as'        => 'api.v2.subscriptions.',
-//    ],
-//    static function (): void {
-//        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//        //        Route::get('{userGroupBill}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        //        Route::get('sum/paid', ['uses' => 'SumController@paid', 'as' => 'sum.paid']);
-//        //        Route::get('sum/unpaid', ['uses' => 'SumController@unpaid', 'as' => 'sum.unpaid']);
-//    }
-// );
-//
-// // V2 API route for piggy banks.
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\PiggyBank',
-//        'prefix'    => 'v2/piggy-banks',
-//        'as'        => 'api.v2.piggy-banks.',
-//    ],
-//    static function (): void {
-//        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//    }
-// );
-//
-// // V2 API route for transaction currencies
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Currency',
-//        'prefix'    => 'v2/currencies',
-//        'as'        => 'api.v2.currencies.',
-//    ],
-//    static function (): void {
-//        //        Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-//    }
-// );
-//
-// // V2 API route for transactions
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model\Transaction',
-//        'prefix'    => 'v2/transactions',
-//        'as'        => 'api.v2.transactions.',
-//    ],
-//    static function (): void {
-//        //        Route::post('', ['uses' => 'StoreController@post', 'as' => 'store']);
-//        //        Route::get('{userGroupTransaction}', ['uses' => 'ShowController@show', 'as' => 'show']);
-//        //        Route::put('{userGroupTransaction}', ['uses' => 'UpdateController@update', 'as' => 'update']);
-//    }
-// );
-// // infinite (transactions) list:
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Transaction\List',
-//        'prefix'    => 'v2/infinite/transactions',
-//        'as'        => 'api.v2.infinite.transactions.',
-//    ],
-//    static function (): void {
-//        //        Route::get('', ['uses' => 'TransactionController@infiniteList', 'as' => 'list']);
-//    }
-// );
-//
-// // V2 API route for budgets and budget limits:
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\Model',
-//        'prefix'    => 'v2/budgets',
-//        'as'        => 'api.v2.budgets',
-//    ],
-//    static function (): void {
-//        //        Route::get('', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
-//        //        Route::get('{budget}', ['uses' => 'Budget\ShowController@show', 'as' => 'show']);
-//        //        Route::get('{budget}/limits', ['uses' => 'BudgetLimit\IndexController@index', 'as' => 'budget-limits.index']);
-//        //        Route::get('sum/budgeted', ['uses' => 'Budget\SumController@budgeted', 'as' => 'sum.budgeted']);
-//        //        Route::get('sum/spent', ['uses' => 'Budget\SumController@spent', 'as' => 'sum.spent']);
-//        // Route::get('{budget}/budgeted', ['uses' => 'Budget\ShowController@budgeted', 'as' => 'budget.budgeted']);
-//        // Route::get('{budget}/spent', ['uses' => 'Budget\ShowController@spent', 'as' => 'budget.spent']);
-//    }
-// );
-//
-// // V2 API route for system
-// Route::group(
-//    [
-//        'namespace' => 'FireflyIII\Api\V2\Controllers\System',
-//        'prefix'    => 'v2',
-//        'as'        => 'api.v2.system.',
-//    ],
-//    static function (): void {
-//        //        Route::get('preferences/{preference}', ['uses' => 'PreferencesController@get', 'as' => 'preferences.get']);
-//    }
-// );
-//
-
-
-// V2 JSON API ROUTES
-// JsonApiRoute::server('v2')->prefix('v2')
-//    ->resources(function (ResourceRegistrar $server): void {
-//        // ACCOUNTS
-//        $server->resource('accounts', AccountController::class)
-//            ->relationships(function (Relationships $relations): void {
-//                $relations->hasOne('user')->readOnly();
-//            })
-//        ;
-//
-//        // USERS
-//        $server->resource('users', JsonApiController::class)->readOnly()->relationships(function (Relationships $relations): void {
-//            $relations->hasMany('accounts')->readOnly();
-//        });
-//    })
-// ;
-
-/*
  * ____    ____  __     .______        ______    __    __  .___________. _______     _______.
  * \   \  /   / /_ |    |   _  \      /  __  \  |  |  |  | |           ||   ____|   /       |
  *  \   \/   /   | |    |  |_)  |    |  |  |  | |  |  |  | `---|  |----`|  |__     |   (----`
@@ -330,6 +80,21 @@ Route::group(
 );
 
 // CHART ROUTES.
+
+// chart balance
+
+// CHART ROUTES
+Route::group(
+    [
+        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
+        'prefix'    => 'v1/chart/balance',
+        'as'        => 'api.v1.chart.balance',
+    ],
+    static function (): void {
+        Route::get('balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
+    }
+);
+
 // Chart accounts
 Route::group(
     [

@@ -32,8 +32,10 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
+use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -79,6 +81,13 @@ class ShowController extends Controller
     public function show(Recurrence $recurrence)
     {
         $repos                  = app(AttachmentRepositoryInterface::class);
+
+        // enrich
+        /** @var User $admin */
+        $admin                  = auth()->user();
+        $enrichment             = new RecurringEnrichment();
+        $enrichment->setUser($admin);
+        $recurrence             = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer            = app(RecurrenceTransformer::class);

@@ -131,7 +131,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentNativeAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
@@ -171,7 +171,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $accountRepos    = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $defaultCurrency = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
@@ -186,14 +186,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             // matches source, which means amount will be removed from piggy:
             if ($account->id === $source->account_id) {
                 $operator = 'negative';
-                $currency = $accountRepos->getAccountCurrency($source->account) ?? $defaultCurrency;
+                $currency = $accountRepos->getAccountCurrency($source->account) ?? $primaryCurrency;
                 app('log')->debug(sprintf('Currency will draw money out of piggy bank. Source currency is %s', $currency->code));
                 ++$hits;
             }
             // matches destination, which means amount will be added to piggy.
             if ($account->id === $destination->account_id) {
                 $operator = 'positive';
-                $currency = $accountRepos->getAccountCurrency($destination->account) ?? $defaultCurrency;
+                $currency = $accountRepos->getAccountCurrency($destination->account) ?? $primaryCurrency;
                 app('log')->debug(sprintf('Currency will add money to piggy bank. Destination currency is %s', $currency->code));
                 ++$hits;
             }

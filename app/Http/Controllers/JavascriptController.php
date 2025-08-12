@@ -55,7 +55,7 @@ class JavascriptController extends Controller
         foreach ($accounts as $account) {
             $accountId                    = $account->id;
             $currency                     = (int) $repository->getMetaValue($account, 'currency_id');
-            $currency                     = 0 === $currency ? $this->defaultCurrency->id : $currency;
+            $currency                     = 0 === $currency ? $this->primaryCurrency->id : $currency;
             $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
@@ -95,9 +95,9 @@ class JavascriptController extends Controller
     public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
         $account                   = $repository->find((int) $request->get('account'));
-        $currency                  = $this->defaultCurrency;
+        $currency                  = $this->primaryCurrency;
         if ($account instanceof Account) {
-            $currency = $repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+            $currency = $repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         }
         $locale                    = app('steam')->getLocale();
         $accounting                = app('amount')->getJsConfig();

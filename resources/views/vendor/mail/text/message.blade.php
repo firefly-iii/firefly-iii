@@ -6,8 +6,14 @@
         @endcomponent
     @endslot
 
-    {{-- Body --}}
-    {{ $slot }}
+{{-- Body --}}
+{{ trans('email.greeting') }}
+
+{{ $slot }}
+
+{{ trans('email.closing') }}
+
+{{ trans('email.signature')}}
 
     {{-- Subcopy --}}
     @isset($subcopy)

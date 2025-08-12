@@ -63,23 +63,23 @@
                     {% for sum in group.sums %}
                         {% if group.transaction_type == 'Deposit' %}
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
-                            {% if convertToNative and 0 != sum.native_amount %}
-                                ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != sum.pc_amount %}
+                                ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             {% if loop.index != group.sums|length %},{% endif %}
 
                         {% elseif group.transaction_type == 'Transfer' %}
                             <span class="text-info money-transfer">
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
-                                {% if convertToNative and 0 != sum.native_amount %}
-                                    ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                {% if convertToPrimary and 0 != sum.pc_amount %}
+                                    ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                 {% endif %}
                                 {% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
                             {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
-                            {% if convertToNative and 0 != sum.native_amount %}
-                                ({{ formatAmountBySymbol(sum.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != sum.pc_amount %}
+                                ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             {% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
@@ -172,9 +172,9 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
-                        {# native amount of deposit #}
-                        {% if convertToNative and 0 != transaction.native_amount %}
-                            ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                        {# primary currency amount of deposit #}
+                        {% if convertToPrimary and 0 != transaction.pc_amount %}
+                            ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         {% endif %}
                         {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
@@ -187,9 +187,9 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
 
-                            {# native amount of transfer #}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {# primary currency amount of transfer #}
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             </span>
                         {# opening balance #}
@@ -199,16 +199,16 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
                         {# reconciliation #}
@@ -218,16 +218,16 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
                         {# liability credit #}
@@ -237,16 +237,16 @@
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
                             {% if null != transaction.foreign_amount %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
-                            {% if convertToNative and 0 != transaction.native_amount %}
-                                ({{ formatAmountBySymbol(transaction.native_amount*-1, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                            {% if convertToPrimary and 0 != transaction.pc_amount %}
+                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
 
@@ -260,9 +260,9 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
-                        {# native amount of withdrawal #}
-                        {% if convertToNative and 0 != transaction.native_amount %}
-                            ({{ formatAmountBySymbol(transaction.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                        {# primary currency amount of withdrawal #}
+                        {% if convertToPrimary and 0 != transaction.pc_amount %}
+                            ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         {% endif %}
                     {% endif %}
                 </td>
@@ -346,9 +346,11 @@
                             <ul class="dropdown-menu dropdown-menu-right" role="menu">
                                 <li><a href="{{ route('transactions.edit', [group.id]) }}"><span
                                             class="fa fa-fw fa-pencil"></span> {{ 'edit'|_ }}</a></li>
-                                {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
+                                {% if transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="{{ route('transactions.delete', [group.id]) }}"><span
                                             class="fa fa-fw fa-trash"></span> {{ 'delete'|_ }}</a></li>
+                                {% endif %}
+                                {% if transaction.transaction_type_type != 'Reconciliation' and transaction.transaction_type_type != 'Opening balance' and transaction.transaction_type_type != 'Liability credit' %}
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction"><span
                                             class="fa fa-copy fa-fw"></span> {{ 'clone'|_ }}</a></li>
                                 <li><a href="#" data-id="{{ group.id }}" class="clone-transaction-and-edit"><span

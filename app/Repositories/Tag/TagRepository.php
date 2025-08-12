@@ -140,8 +140,9 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
 
         if (null !== $year) {
+            $year = min(2038, max(1970, $year));
             app('log')->debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year.'-01-01 00:00:00')->where('tags.date', '<=', $year.'-12-31 23:59:59');
+            $tagQuery->where('tags.date', '>=', sprintf('%d-01-01 00:00:00', $year))->where('tags.date', '<=', sprintf('%d-12-31 23:59:59', $year));
         }
         $collection = $tagQuery->get();
         $return     = [];

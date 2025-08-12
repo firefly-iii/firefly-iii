@@ -84,7 +84,7 @@ class EditController extends Controller
         $title                      = $transactionGroup->transactionJournals()->count() > 1 ? $transactionGroup->title : $transactionGroup->transactionJournals()->first()->description;
         $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
         $subTitleIcon               = 'fa-plus';
-        $defaultCurrency            = $this->defaultCurrency;
+        $primaryCurrency            = $this->primaryCurrency;
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
         $parts                      = parse_url((string) $previousUrl);
@@ -130,7 +130,7 @@ class EditController extends Controller
                 'transactionGroup',
                 'allowedOpposingTypes',
                 'accountToTypes',
-                'defaultCurrency',
+                'primaryCurrency',
                 'previousUrl'
             )
         );

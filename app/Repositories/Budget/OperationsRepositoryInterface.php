@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
@@ -71,6 +71,12 @@ interface OperationsRepositoryInterface
         ?Collection          $accounts = null,
         ?Collection          $budgets = null,
         ?TransactionCurrency $currency = null,
-        bool                 $convertToNative = false
+        bool                 $convertToPrimary = false
     ): array;
+
+    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array;
+
+    public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array;
+
+    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array;
 }

@@ -91,7 +91,7 @@ class BudgetController extends Controller
         $cache          = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.budget.budget');
         $cache->addProperty($budget->id);
 
@@ -108,7 +108,7 @@ class BudgetController extends Controller
         while ($end >= $loopStart) {
             /** @var Carbon $loopEnd */
             $loopEnd                = app('navigation')->endOfPeriod($loopStart, $step);
-            $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to native.
+            $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to primary currency.
             $label                  = trim((string) app('navigation')->periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
@@ -157,7 +157,7 @@ class BudgetController extends Controller
         $cache                                  = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.budget.budget.limit');
         $cache->addProperty($budgetLimit->id);
         $cache->addProperty($budget->id);
@@ -170,14 +170,14 @@ class BudgetController extends Controller
         $amount                                 = $budgetLimit->amount ?? '0';
         $budgetCollection                       = new Collection([$budget]);
         $currency                               = $budgetLimit->transactionCurrency;
-        if ($this->convertToNative) {
+        if ($this->convertToPrimary) {
             $amount   = $budgetLimit->native_amount ?? $amount;
-            $currency = $this->defaultCurrency;
+            $currency = $this->primaryCurrency;
         }
 
         while ($start <= $end) {
             $current          = clone $start;
-            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency, $this->convertToNative);
+            $expenses         = $this->opsRepository->sumExpenses($current, $current, null, $budgetCollection, $budgetLimit->transactionCurrency, $this->convertToPrimary);
             $spent            = $expenses[$currency->id]['sum'] ?? '0';
             $amount           = bcadd((string) $amount, $spent);
             $format           = $start->isoFormat((string) trans('config.month_and_day_js', [], $locale));
@@ -205,7 +205,7 @@ class BudgetController extends Controller
         $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-asset');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
@@ -237,16 +237,16 @@ class BudgetController extends Controller
             $code                   = $journal['currency_code'];
             $name                   = $journal['currency_name'];
 
-            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id) {
-                $key    = sprintf('%d-%d', $journal['source_account_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
-                $amount = $journal['native_amount'];
+            // if convert to primary, use the primary things, unless it's the foreign amount which is in the primary currency.
+            if ($this->convertToPrimary && $journal['currency_id'] !== $this->primaryCurrency->id) {
+                $key    = sprintf('%d-%d', $journal['source_account_id'], $this->primaryCurrency->id);
+                $symbol = $this->primaryCurrency->symbol;
+                $code   = $this->primaryCurrency->code;
+                $name   = $this->primaryCurrency->name;
+                $amount = $journal['pc_amount'];
             }
 
-            if ($journal['foreign_currency_id'] === $this->defaultCurrency->id) {
+            if ($journal['foreign_currency_id'] === $this->primaryCurrency->id) {
                 $amount = $journal['foreign_amount'];
             }
 
@@ -288,7 +288,7 @@ class BudgetController extends Controller
         $budgetLimitId = $budgetLimit instanceof BudgetLimit ? $budgetLimit->id : 0;
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty($budgetLimitId);
         $cache->addProperty('chart.budget.expense-category');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
@@ -315,22 +315,22 @@ class BudgetController extends Controller
             $code                   = $journal['currency_code'];
             $name                   = $journal['currency_name'];
             $amount                 = $journal['amount'];
-            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id
+            // if convert to primary, use the primary things, unless it's the foreign amount which is in the primary currency.
+            if ($this->convertToPrimary && $journal['currency_id'] !== $this->primaryCurrency->id && $journal['foreign_currency_id'] !== $this->primaryCurrency->id
             ) {
-                $key    = sprintf('%d-%d', $journal['category_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
-                $amount = $journal['native_amount'];
+                $key    = sprintf('%d-%d', $journal['category_id'], $this->primaryCurrency->id);
+                $symbol = $this->primaryCurrency->symbol;
+                $code   = $this->primaryCurrency->code;
+                $name   = $this->primaryCurrency->name;
+                $amount = $journal['pc_amount'];
             }
 
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id
+            if ($this->convertToPrimary && $journal['currency_id'] !== $this->primaryCurrency->id && $journal['foreign_currency_id'] === $this->primaryCurrency->id
             ) {
-                $key    = sprintf('%d-%d', $journal['category_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
+                $key    = sprintf('%d-%d', $journal['category_id'], $this->primaryCurrency->id);
+                $symbol = $this->primaryCurrency->symbol;
+                $code   = $this->primaryCurrency->code;
+                $name   = $this->primaryCurrency->name;
                 $amount = $journal['foreign_amount'];
             }
 
@@ -371,7 +371,7 @@ class BudgetController extends Controller
         $cache         = new CacheProperties();
         $cache->addProperty($budget->id);
         $cache->addProperty($budgetLimitId);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.budget.expense-expense');
         $start         = session('first', today(config('app.timezone'))->startOfYear());
         $end           = today();
@@ -400,20 +400,20 @@ class BudgetController extends Controller
             $code                   = $journal['currency_code'];
             $name                   = $journal['currency_name'];
 
-            // if convert to native, use the native things, unless it's the foreign amount which is in the native currency.
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] !== $this->defaultCurrency->id) {
-                $key    = sprintf('%d-%d', $journal['destination_account_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
-                $amount = $journal['native_amount'];
+            // if convert to primary, use the primary things, unless it's the foreign amount which is in the primary currency.
+            if ($this->convertToPrimary && $journal['currency_id'] !== $this->primaryCurrency->id && $journal['foreign_currency_id'] !== $this->primaryCurrency->id) {
+                $key    = sprintf('%d-%d', $journal['destination_account_id'], $this->primaryCurrency->id);
+                $symbol = $this->primaryCurrency->symbol;
+                $code   = $this->primaryCurrency->code;
+                $name   = $this->primaryCurrency->name;
+                $amount = $journal['pc_amount'];
             }
 
-            if ($this->convertToNative && $journal['currency_id'] !== $this->defaultCurrency->id && $journal['foreign_currency_id'] === $this->defaultCurrency->id) {
-                $key    = sprintf('%d-%d', $journal['destination_account_id'], $this->defaultCurrency->id);
-                $symbol = $this->defaultCurrency->symbol;
-                $code   = $this->defaultCurrency->code;
-                $name   = $this->defaultCurrency->name;
+            if ($this->convertToPrimary && $journal['currency_id'] !== $this->primaryCurrency->id && $journal['foreign_currency_id'] === $this->primaryCurrency->id) {
+                $key    = sprintf('%d-%d', $journal['destination_account_id'], $this->primaryCurrency->id);
+                $symbol = $this->primaryCurrency->symbol;
+                $code   = $this->primaryCurrency->code;
+                $name   = $this->primaryCurrency->name;
                 $amount = $journal['foreign_amount'];
             }
 
@@ -450,27 +450,27 @@ class BudgetController extends Controller
      */
     public function frontpage(): JsonResponse
     {
-        $start                           = session('start', today(config('app.timezone'))->startOfMonth());
-        $end                             = session('end', today(config('app.timezone'))->endOfMonth());
+        $start                            = session('start', today(config('app.timezone'))->startOfMonth());
+        $end                              = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
-        $cache                           = new CacheProperties();
+        $cache                            = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty($this->convertToNative);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.budget.frontpage');
         if ($cache->has()) {
             return response()->json($cache->get());
         }
         Log::debug('Regenerate frontpage chart from scratch.');
-        $chartGenerator                  = app(FrontpageChartGenerator::class);
+        $chartGenerator                   = app(FrontpageChartGenerator::class);
         $chartGenerator->setUser(auth()->user());
         $chartGenerator->setStart($start);
         $chartGenerator->setEnd($end);
-        $chartGenerator->convertToNative = $this->convertToNative;
-        $chartGenerator->default         = $this->defaultCurrency;
+        $chartGenerator->convertToPrimary = $this->convertToPrimary;
+        $chartGenerator->default          = $this->primaryCurrency;
 
-        $chartData                       = $chartGenerator->generate();
-        $data                            = $this->generator->multiSet($chartData);
+        $chartData                        = $chartGenerator->generate();
+        $data                             = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

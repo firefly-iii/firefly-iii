@@ -27,6 +27,7 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Models\Category;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -345,7 +346,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value])
         ;
@@ -357,10 +358,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals        = $collector->getExtractedJournals();
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getNativeCurrency();
-        $array           = [];
+        $journals         = $collector->getExtractedJournals();
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary          = Amount::getPrimaryCurrency();
+        $array            = [];
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses
@@ -370,16 +371,16 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $currencySymbol            = $journal['currency_symbol'];
             $currencyCode              = $journal['currency_code'];
             $currencyDecimalPlaces     = $journal['currency_decimal_places'];
-            if ($convertToNative) {
+            if ($convertToPrimary) {
                 $amount = Amount::getAmountFromJournal($journal);
-                if ($default->id !== (int) $journal['currency_id'] && $default->id !== (int) $journal['foreign_currency_id']) {
-                    $currencyId            = $default->id;
-                    $currencyName          = $default->name;
-                    $currencySymbol        = $default->symbol;
-                    $currencyCode          = $default->code;
-                    $currencyDecimalPlaces = $default->decimal_places;
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id !== (int) $journal['foreign_currency_id']) {
+                    $currencyId            = $primary->id;
+                    $currencyName          = $primary->name;
+                    $currencySymbol        = $primary->symbol;
+                    $currencyCode          = $primary->code;
+                    $currencyDecimalPlaces = $primary->decimal_places;
                 }
-                if ($default->id !== (int) $journal['currency_id'] && $default->id === (int) $journal['foreign_currency_id']) {
+                if ($primary->id !== (int) $journal['currency_id'] && $primary->id === (int) $journal['foreign_currency_id']) {
                     $currencyId            = $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];
                     $currencySymbol        = $journal['foreign_currency_symbol'];
@@ -388,7 +389,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 }
                 Log::debug(sprintf('[a] Add amount %s %s', $currencyCode, $amount));
             }
-            if (!$convertToNative) {
+            if (!$convertToPrimary) {
                 // ignore the amount in foreign currency.
                 Log::debug(sprintf('[b] Add amount %s %s', $currencyCode, $journal['amount']));
                 $amount = $journal['amount'];
@@ -443,5 +444,75 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         }
 
         return $array;
+    }
+
+    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
+
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+        $collector->withCategoryInformation();
+
+        return $collector->getExtractedJournals();
+    }
+
+    public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
+        ;
+
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+
+        return $collector->getExtractedJournals();
+    }
+
+    public function collectTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
+        ;
+
+        if ($accounts instanceof Collection && $accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (!$categories instanceof Collection || 0 === $categories->count()) {
+            $categories = $this->getCategories();
+        }
+        $collector->setCategories($categories);
+
+        return $collector->getExtractedJournals();
+    }
+
+    public function sumCollectedTransactionsByCategory(array $expenses, Category $category, string $method, bool $convertToPrimary = false): array
+    {
+        Log::debug(sprintf('Start of %s.', __METHOD__));
+        $summarizer = new TransactionSummarizer($this->user);
+        $summarizer->setConvertToPrimary($convertToPrimary);
+
+        // filter $journals by range AND currency if it is present.
+        $expenses   = array_filter($expenses, static function (array $expense) use ($category): bool {
+            return $expense['category_id'] === $category->id;
+        });
+
+        return $summarizer->groupByCurrencyId($expenses, $method, false);
     }
 }

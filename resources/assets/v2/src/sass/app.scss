@@ -26,6 +26,30 @@ $danger: #CD5029 !default;
 $primary: #1E6581 !default;
 $success: #64B624 !default;
 
+// admin LTE
+@use "admin-lte/src/scss/adminlte" with (
+    $color-mode-type: $color-mode-type,
+    $link-decoration: $link-decoration,
+    $font-family-sans-serif: $font-family-sans-serif,
+    $danger: $danger,
+    $primary: $primary,
+    $success: $success
+);
+
+@use '@fortawesome/fontawesome-free/scss/variables' with (
+  $font-path: "@fortawesome/fontawesome-free/webfonts"
+);
+
+@use '@fortawesome/fontawesome-free/scss/fontawesome';
+@use '@fortawesome/fontawesome-free/scss/fa' as fa;
+@use '@fortawesome/fontawesome-free/scss/solid.scss' as fa-solid;
+@use '@fortawesome/fontawesome-free/scss/brands.scss' as fa-brands;
+@use '@fortawesome/fontawesome-free/scss/regular.scss' as fa-regular;
+
+
+// some local CSS
+.skip-links {display: none;}
+
 /*
 Remove bottom margin from unstyled lists
  */
@@ -56,16 +80,7 @@ h3.hover-expand:hover {
     appearance: auto;
 }
 
-// Bootstrap
-// @import "bootstrap/scss/bootstrap";
-
-// admin LTE
-@import "adminlte-filtered";
-
-
-// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
-
-// hover buttons
+// edit buttons
 .hidden-edit-button {
     cursor: pointer;
 }
@@ -73,12 +88,12 @@ td:not(:hover) .hidden-edit-button {
     visibility: hidden;
 }
 
+// Bootstrap
+// @import "bootstrap/scss/bootstrap";
 
 
-// Font awesome
-//@import "~font-awesome/css/font-awesome";
-$fa-font-path: "@fortawesome/fontawesome-free/webfonts";
-@import "@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "@fortawesome/fontawesome-free/scss/solid.scss";
-@import "@fortawesome/fontawesome-free/scss/brands.scss";
-@import "@fortawesome/fontawesome-free/scss/regular.scss";
+// @import "~bootstrap-sass/assets/stylesheets/bootstrap";
+
+// hover buttons
+
+

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionSummarizer
 {
-    private bool                $convertToNative = false;
+    private bool                $convertToPrimary = false;
     private TransactionCurrency $default;
     private User                $user;
 
@@ -44,9 +44,9 @@ class TransactionSummarizer
 
     public function setUser(User $user): void
     {
-        $this->user            = $user;
-        $this->default         = Amount::getNativeCurrencyByUserGroup($user->userGroup);
-        $this->convertToNative = Amount::convertToNative($user);
+        $this->user             = $user;
+        $this->default          = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->convertToPrimary = Amount::convertToPrimary($user);
     }
 
     public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
@@ -70,14 +70,14 @@ class TransactionSummarizer
             $foreignCurrencyCode          = null;
             $foreignCurrencyDecimalPlaces = null;
 
-            if ($this->convertToNative) {
-                //                Log::debug('convertToNative is true.');
-                // if convert to native, use the native amount yes or no?
-                $useNative  = $this->default->id !== (int) $journal['currency_id'];
+            if ($this->convertToPrimary) {
+                //                Log::debug('convertToPrimary is true.');
+                // if convert to primary currency, use the primary currency amount yes or no?
+                $usePrimary = $this->default->id !== (int) $journal['currency_id'];
                 $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
-                if ($useNative) {
-                    //                    Log::debug(sprintf('Journal #%d switches to native amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
-                    $field                 = 'native_amount';
+                if ($usePrimary) {
+                    //                    Log::debug(sprintf('Journal #%d switches to primary currency amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
+                    $field                 = 'pc_amount';
                     $currencyId            = $this->default->id;
                     $currencyName          = $this->default->name;
                     $currencySymbol        = $this->default->symbol;
@@ -94,8 +94,8 @@ class TransactionSummarizer
                     $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
                 }
             }
-            if (!$this->convertToNative) {
-                //                Log::debug('convertToNative is false.');
+            if (!$this->convertToPrimary) {
+                //                Log::debug('convertToPrimary is false.');
                 // use foreign amount?
                 $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {
@@ -156,11 +156,11 @@ class TransactionSummarizer
     public function groupByDirection(array $journals, string $method, string $direction): array
     {
 
-        $array           = [];
-        $idKey           = sprintf('%s_account_id', $direction);
-        $nameKey         = sprintf('%s_account_name', $direction);
-        $convertToNative = Amount::convertToNative($this->user);
-        $default         = Amount::getNativeCurrencyByUserGroup($this->user->userGroup);
+        $array            = [];
+        $idKey            = sprintf('%s_account_id', $direction);
+        $nameKey          = sprintf('%s_account_name', $direction);
+        $convertToPrimary = Amount::convertToPrimary($this->user);
+        $primary          = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
 
         Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));
@@ -171,18 +171,18 @@ class TransactionSummarizer
             $currencySymbol        = $journal['currency_symbol'];
             $currencyCode          = $journal['currency_code'];
             $currencyDecimalPlaces = $journal['currency_decimal_places'];
-            $field                 = $convertToNative && $currencyId !== $default->id ? 'native_amount' : 'amount';
+            $field                 = $convertToPrimary && $currencyId !== $primary->id ? 'pc_amount' : 'amount';
 
             // perhaps use default currency instead?
-            if ($convertToNative && $journal['currency_id'] !== $default->id) {
-                $currencyId            = $default->id;
-                $currencyName          = $default->name;
-                $currencySymbol        = $default->symbol;
-                $currencyCode          = $default->code;
-                $currencyDecimalPlaces = $default->decimal_places;
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id) {
+                $currencyId            = $primary->id;
+                $currencyName          = $primary->name;
+                $currencySymbol        = $primary->symbol;
+                $currencyCode          = $primary->code;
+                $currencyDecimalPlaces = $primary->decimal_places;
             }
             // use foreign amount when the foreign currency IS the default currency.
-            if ($convertToNative && $journal['currency_id'] !== $default->id && $default->id === $journal['foreign_currency_id']) {
+            if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
             $key                   = sprintf('%s-%s', $journal[$idKey], $currencyId);
@@ -202,9 +202,9 @@ class TransactionSummarizer
             $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) app('steam')->{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
 
-            // also do foreign amount, but only when convertToNative is false (otherwise we have it already)
-            // or when convertToNative is true and the foreign currency is ALSO not the default currency.
-            if ((!$convertToNative || $journal['foreign_currency_id'] !== $default->id) && 0 !== (int) $journal['foreign_currency_id']) {
+            // also do foreign amount, but only when convertToPrimary is false (otherwise we have it already)
+            // or when convertToPrimary is true and the foreign currency is ALSO not the default currency.
+            if ((!$convertToPrimary || $journal['foreign_currency_id'] !== $primary->id) && 0 !== (int) $journal['foreign_currency_id']) {
                 Log::debug(sprintf('Use foreign amount from transaction #%d: %s %s. Sum: %s', $journal['transaction_group_id'], $currencyCode, $journal['foreign_amount'], $array[$key]['sum']));
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
                 $array[$key] ??= [
@@ -224,9 +224,9 @@ class TransactionSummarizer
         return $array;
     }
 
-    public function setConvertToNative(bool $convertToNative): void
+    public function setConvertToPrimary(bool $convertToPrimary): void
     {
-        Log::debug(sprintf('Overrule convertToNative to become %s', var_export($convertToNative, true)));
-        $this->convertToNative = $convertToNative;
+        Log::debug(sprintf('Overrule convertToPrimary to become %s', var_export($convertToPrimary, true)));
+        $this->convertToPrimary = $convertToPrimary;
     }
 }

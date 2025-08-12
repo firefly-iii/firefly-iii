@@ -89,7 +89,7 @@ class UserGroupTransformer extends AbstractTransformer
             foreach ($members as $member) {
                 $mail                            = $member['user_email'];
                 $new[$groupId][$mail] ??= [
-                    'user_id'    => $member['user_id'],
+                    'user_id'    => (string) $member['user_id'],
                     'user_email' => $member['user_email'],
                     'you'        => $member['you'],
                     'roles'      => [],
@@ -105,21 +105,21 @@ class UserGroupTransformer extends AbstractTransformer
      */
     public function transform(UserGroup $userGroup): array
     {
-        $currency = Amount::getNativeCurrencyByUserGroup($userGroup);
+        $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
 
         return [
-            'id'                             => $userGroup->id,
-            'created_at'                     => $userGroup->created_at->toAtomString(),
-            'updated_at'                     => $userGroup->updated_at->toAtomString(),
-            'in_use'                         => $this->inUse[$userGroup->id] ?? false,
-            'can_see_members'                => $this->membershipsVisible[$userGroup->id] ?? false,
-            'title'                          => $userGroup->title,
-            'native_currency_id'             => (string) $currency->id,
-            'native_currency_name'           => $currency->name,
-            'native_currency_code'           => $currency->code,
-            'native_currency_symbol'         => $currency->symbol,
-            'native_currency_decimal_places' => $currency->decimal_places,
-            'members'                        => array_values($this->memberships[$userGroup->id] ?? []),
+            'id'                              => $userGroup->id,
+            'created_at'                      => $userGroup->created_at->toAtomString(),
+            'updated_at'                      => $userGroup->updated_at->toAtomString(),
+            'in_use'                          => $this->inUse[$userGroup->id] ?? false,
+            'can_see_members'                 => $this->membershipsVisible[$userGroup->id] ?? false,
+            'title'                           => $userGroup->title,
+            'primary_currency_id'             => (string) $currency->id,
+            'primary_currency_name'           => $currency->name,
+            'primary_currency_code'           => $currency->code,
+            'primary_currency_symbol'         => $currency->symbol,
+            'primary_currency_decimal_places' => $currency->decimal_places,
+            'members'                         => array_values($this->memberships[$userGroup->id] ?? []),
         ];
         // if the user has a specific role in this group, then collect the memberships.
     }

@@ -40,6 +40,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ShowController
@@ -81,7 +82,9 @@ class ShowController extends Controller
      *                                              */
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
-
+        if (0 === $account->id) {
+            throw new NotFoundHttpException();
+        }
         $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
 
         if (!$this->isEditableAccount($account)) {
@@ -108,27 +111,34 @@ class ShowController extends Controller
         $page             = (int) $request->get('page');
         $pageSize         = (int) app('preferences')->get('listPageSize', 50)->data;
         $accountCurrency  = $this->repository->getAccountCurrency($account);
-        $currency         = $accountCurrency ?? $this->defaultCurrency;
+        $currency         = $accountCurrency ?? $this->primaryCurrency;
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
         $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
-        Log::debug('Start period overview');
-        Timer::start('period-overview');
+        // go back max 3 years.
+        $threeYearsAgo    = clone $start;
+        $threeYearsAgo->startOfYear()->subYears(3);
+        if ($firstTransaction->lt($threeYearsAgo)) {
+            $firstTransaction = clone $threeYearsAgo;
+        }
 
+        Log::debug('Start period overview');
+        $timer            = Timer::getInstance();
+        $timer->start('period-overview');
         $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         Log::debug('End period overview');
-        Timer::stop('period-overview');
+        $timer->stop('period-overview');
 
         // if layout = v2, overrule the page title.
         if ('v1' !== config('view.layout')) {
             $subTitle = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         }
         Log::debug('Collect transactions');
-        Timer::start('collection');
+        $timer->start('collection');
 
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
@@ -136,6 +146,7 @@ class ShowController extends Controller
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
             ->setPage($page)
+            ->withAttachmentInformation()
             ->withAPIInformation()
             ->setRange($start, $end)
         ;
@@ -146,7 +157,7 @@ class ShowController extends Controller
 
 
         Log::debug('End collect transactions');
-        Timer::stop('collection');
+        $timer->stop('collection');
 
         // enrich data in arrays.
 
@@ -165,7 +176,7 @@ class ShowController extends Controller
         }
 
         Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $now->toIso8601String()));
-        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToNative, $accountCurrency);
+        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -212,7 +223,7 @@ class ShowController extends Controller
         $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page            = (int) $request->get('page');
         $pageSize        = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency        = $this->repository->getAccountCurrency($account) ?? $this->defaultCurrency;
+        $currency        = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         $subTitle        = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods         = new Collection();
 
@@ -232,7 +243,7 @@ class ShowController extends Controller
         $showAll         = true;
         // correct
         Log::debug(sprintf('showAll: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToNative, $accountCurrency);
+        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
             'accounts.show',

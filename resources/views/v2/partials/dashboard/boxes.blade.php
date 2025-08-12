@@ -1,8 +1,8 @@
-<div class="row mb-2" x-data="boxes">
+<div class="row mb-2" x-data="boxes" x-bind="eventListeners">
     <div class="col-xl-3 col-lg-6 col-md-12 col-sm-12">
         <div class="small-box text-bg-primary">
             <div class="inner balance-box">
-                <h3 class="hover-expand">
+                <h4 class="hover-expand">
                     <template x-if="0 === balanceBox.amounts.length">
                         <span>&nbsp;</span>
                     </template>
@@ -12,7 +12,7 @@
                                 :class="{ 'invisible': (balanceBox.amounts.length == index+1) }">, </span>
                         </span>
                     </template>
-                </h3>
+                </h4>
                 <template x-if="loading">
                     <p class="d-none d-xs-block">
                         <em class="fa-solid fa-spinner fa-spin"></em>
@@ -53,17 +53,17 @@
         <div class="small-box text-bg-success">
             <div class="inner">
                 <template x-if="0 === billBox.unpaid.length">
-                    <h3>&nbsp;</h3>
+                    <h4>&nbsp;</h4>
                 </template>
                 <template x-if="billBox.unpaid.length > 0">
-                <h3 class="hover-expand">
+                <h4 class="hover-expand">
                     <template x-for="(amount, index) in billBox.unpaid" :key="index">
                         <span>
                             <span x-text="amount"></span><span
                                 :class="{ 'invisible': (billBox.unpaid.length == index+1) }">, </span>
                         </span>
                     </template>
-                </h3>
+                </h4>
                 </template>
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
@@ -104,7 +104,7 @@
         <!--begin::Small Box Widget 3-->
         <div class="small-box text-bg-warning">
             <div class="inner">
-                <h3 class="hover-expand">
+                <h4 class="hover-expand">
                     <template x-if="0 === leftBox.left.length">
                         <span>&nbsp;</span>
                     </template>
@@ -114,7 +114,7 @@
                                 :class="{ 'invisible': (leftBox.left.length == index+1) }">, </span>
                         </span>
                     </template>
-                </h3>
+                </h4>
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">
@@ -153,14 +153,14 @@
         <!--begin::Small Box Widget 4-->
         <div class="small-box text-bg-danger">
             <div class="inner">
-                <h3 class="hover-expand">
+                <h4 class="hover-expand">
                     <template x-for="(amount, index) in netBox.net" :key="index">
                         <span>
                             <span x-text="amount"></span><span
                                 :class="{ 'invisible': (netBox.net.length == index+1) }">, </span>
                         </span>
                     </template>
-                </h3>
+                </h4>
 
                 <template x-if="loading">
                     <p class="d-none d-sm-block">

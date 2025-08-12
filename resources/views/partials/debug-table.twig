@@ -145,12 +145,12 @@
         <td>{{ user.user_flags | raw }}</td>
     </tr>
     <tr>
-        <td>Native currency</td>
-        <td>{{ user.native.code }}</td>
+        <td>Primary currency</td>
+        <td>{{ user.primary.code }}</td>
     </tr>
     <tr>
-        <td>Convert to native currency?</td>
-        <td>{% if user.convert_to_native %}Enabled{% else %}Disabled{% endif %}</td>
+        <td>Convert to primary currency?</td>
+        <td>{% if user.convert_to_primary %}Enabled{% else %}Disabled{% endif %}</td>
     </tr>
     <tr>
         <td>Session start</td>

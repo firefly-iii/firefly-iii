@@ -69,12 +69,12 @@
                     {% for key, balance in account.endBalances %}
                         <span title="{{ key }}">
                         {% if 'balance' == key %}
-                            {% if not convertToNative %}
+                            {% if not convertToPrimary %}
                                 {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.decimal_places)  }}
                             {% endif %}
-                        {% elseif 'native_balance' == key %}
-                            {% if convertToNative %}
-                                {{ formatAmountBySymbol(balance, defaultCurrency.symbol, defaultCurrency.decimal_places)  }}
+                        {% elseif 'pc_balance' == key %}
+                            {% if convertToPrimary %}
+                                {{ formatAmountBySymbol(balance, primaryCurrency.symbol, primaryCurrency.decimal_places)  }}
                             {% endif %}
                         {% else %}
                             ({{ formatAmountByCode(balance, key)  }})
@@ -117,7 +117,7 @@
                 <span style="margin-right:5px;">
                     {% for key, balance in account.differences %}
                         <span title="{{ key }}">
-                        {% if 'balance' == key or 'native_balance' == key %}
+                        {% if 'balance' == key or 'pc_balance' == key %}
                             {{ formatAmountBySymbol(balance, account.currency.symbol, account.currency.currency.decimal_places)  }}
 
                         {% else %}

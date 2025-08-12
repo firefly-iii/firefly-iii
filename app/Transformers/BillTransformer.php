@@ -24,266 +24,86 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use Carbon\Carbon;
-use Carbon\CarbonInterface;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Models\BillDateCalculator;
-use Illuminate\Support\Collection;
 
 /**
  * Class BillTransformer
  */
 class BillTransformer extends AbstractTransformer
 {
-    private readonly BillDateCalculator      $calculator;
-    private readonly bool                    $convertToNative;
-    private readonly TransactionCurrency     $default;
-    private readonly BillRepositoryInterface $repository;
+    private readonly TransactionCurrency $primary;
 
     /**
      * BillTransformer constructor.
      */
     public function __construct()
     {
-        $this->repository      = app(BillRepositoryInterface::class);
-        $this->calculator      = app(BillDateCalculator::class);
-        $this->default         = Amount::getNativeCurrency();
-        $this->convertToNative = Amount::convertToNative();
+        $this->primary = Amount::getPrimaryCurrency();
     }
 
     /**
      * Transform the bill.
-     *
-     * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
-     * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function transform(Bill $bill): array
     {
-        $default           = $this->parameters->get('defaultCurrency') ?? $this->default;
+        $currency = $bill->transactionCurrency;
 
-        $paidData          = $this->paidData($bill);
-        $lastPaidDate      = $this->getLastPaidDate($paidData);
-        $start             = $this->parameters->get('start') ?? today()->subYears(10);
-        $end               = $this->parameters->get('end') ?? today()->addYears(10);
-        $payDates          = $this->calculator->getPayDates($start, $end, $bill->date, $bill->repeat_freq, $bill->skip, $lastPaidDate);
-        $currency          = $bill->transactionCurrency;
-        $notes             = $this->repository->getNoteText($bill);
-        $notes             = '' === $notes ? null : $notes;
-        $objectGroupId     = null;
-        $objectGroupOrder  = null;
-        $objectGroupTitle  = null;
-        $this->repository->setUser($bill->user);
-
-        /** @var null|ObjectGroup $objectGroup */
-        $objectGroup       = $bill->objectGroups->first();
-        if (null !== $objectGroup) {
-            $objectGroupId    = $objectGroup->id;
-            $objectGroupOrder = $objectGroup->order;
-            $objectGroupTitle = $objectGroup->title;
-        }
-
-        $paidDataFormatted = [];
-        $payDatesFormatted = [];
-        foreach ($paidData as $object) {
-            $date                = Carbon::createFromFormat('!Y-m-d', $object['date'], config('app.timezone'));
-            if (!$date instanceof Carbon) {
-                $date = today(config('app.timezone'));
-            }
-            $object['date']      = $date->toAtomString();
-            $paidDataFormatted[] = $object;
-        }
-
-        foreach ($payDates as $string) {
-            $date                = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
-            if (!$date instanceof Carbon) {
-                $date = today(config('app.timezone'));
-            }
-            $payDatesFormatted[] = $date->toAtomString();
-        }
-        // next expected match
-        $nem               = null;
-        $nemDate           = null;
-        $nemDiff           = trans('firefly.not_expected_period');
-        $firstPayDate      = $payDates[0] ?? null;
-
-        if (null !== $firstPayDate) {
-            $nemDate = Carbon::createFromFormat('!Y-m-d', $firstPayDate, config('app.timezone'));
-            if (!$nemDate instanceof Carbon) {
-                $nemDate = today(config('app.timezone'));
-            }
-            $nem     = $nemDate->toAtomString();
-
-            // nullify again when it's outside the current view range.
-            if (
-                (null !== $this->parameters->get('start') && $nemDate->lt($this->parameters->get('start')))
-                || (null !== $this->parameters->get('end') && $nemDate->gt($this->parameters->get('end')))
-            ) {
-                $nem          = null;
-                $nemDate      = null;
-                $firstPayDate = null;
-            }
-        }
-
-        // converting back and forth is bad code but OK.
-        if (null !== $nemDate) {
-            if ($nemDate->isToday()) {
-                $nemDiff = trans('firefly.today');
-            }
-
-            $current = $payDatesFormatted[0] ?? null;
-            if (null !== $current && !$nemDate->isToday()) {
-                $temp2   = Carbon::createFromFormat('Y-m-d\TH:i:sP', $current);
-                if (!$temp2 instanceof Carbon) {
-                    $temp2 = today(config('app.timezone'));
-                }
-                $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);
-            }
-            unset($temp2);
-        }
 
         return [
-            'id'                             => $bill->id,
-            'created_at'                     => $bill->created_at->toAtomString(),
-            'updated_at'                     => $bill->updated_at->toAtomString(),
-            'currency_id'                    => (string) $bill->transaction_currency_id,
-            'currency_code'                  => $currency->code,
-            'currency_symbol'                => $currency->symbol,
-            'currency_decimal_places'        => $currency->decimal_places,
-            'native_currency_id'             => null === $default ? null : (string) $default->id,
-            'native_currency_code'           => $default?->code,
-            'native_currency_symbol'         => $default?->symbol,
-            'native_currency_decimal_places' => $default?->decimal_places,
-            'name'                           => $bill->name,
-            'amount_min'                     => app('steam')->bcround($bill->amount_min, $currency->decimal_places),
-            'amount_max'                     => app('steam')->bcround($bill->amount_max, $currency->decimal_places),
-            'native_amount_min'              => $this->convertToNative ? app('steam')->bcround($bill->native_amount_min, $default->decimal_places) : null,
-            'native_amount_max'              => $this->convertToNative ? app('steam')->bcround($bill->native_amount_max, $default->decimal_places) : null,
-            'date'                           => $bill->date->toAtomString(),
-            'end_date'                       => $bill->end_date?->toAtomString(),
-            'extension_date'                 => $bill->extension_date?->toAtomString(),
-            'repeat_freq'                    => $bill->repeat_freq,
-            'skip'                           => $bill->skip,
-            'active'                         => $bill->active,
-            'order'                          => $bill->order,
-            'notes'                          => $notes,
-            'object_group_id'                => null !== $objectGroupId ? (string) $objectGroupId : null,
-            'object_group_order'             => $objectGroupOrder,
-            'object_group_title'             => $objectGroupTitle,
+            'id'                              => $bill->id,
+            'created_at'                      => $bill->created_at->toAtomString(),
+            'updated_at'                      => $bill->updated_at->toAtomString(),
+            'name'                            => $bill->name,
 
-            // these fields need work:
-            'next_expected_match'            => $nem,
-            'next_expected_match_diff'       => $nemDiff,
-            'pay_dates'                      => $payDatesFormatted,
-            'paid_dates'                     => $paidDataFormatted,
-            'links'                          => [
+            // currencies according to 6.3.0
+            'object_has_currency_setting'     => true,
+            'currency_id'                     => (string) $bill->transaction_currency_id,
+            'currency_name'                   => $currency->name,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
+
+            'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_name'           => $this->primary->name,
+            'primary_currency_code'           => $this->primary->code,
+            'primary_currency_symbol'         => $this->primary->symbol,
+            'primary_currency_decimal_places' => $this->primary->decimal_places,
+
+            // amounts according to 6.3.0
+            'amount_min'                      => $bill->amounts['amount_min'],
+            'pc_amount_min'                   => $bill->amounts['pc_amount_min'],
+
+            'amount_max'                      => $bill->amounts['amount_max'],
+            'pc_amount_max'                   => $bill->amounts['pc_amount_max'],
+
+            'amount_avg'                      => $bill->amounts['average'],
+            'pc_amount_avg'                   => $bill->amounts['pc_average'],
+
+            'date'                            => $bill->date->toAtomString(),
+            'end_date'                        => $bill->end_date?->toAtomString(),
+            'extension_date'                  => $bill->extension_date?->toAtomString(),
+            'repeat_freq'                     => $bill->repeat_freq,
+            'skip'                            => $bill->skip,
+            'active'                          => $bill->active,
+            'order'                           => $bill->order,
+            'notes'                           => $bill->meta['notes'],
+            'object_group_id'                 => $bill->meta['object_group_id'],
+            'object_group_order'              => $bill->meta['object_group_order'],
+            'object_group_title'              => $bill->meta['object_group_title'],
+
+            'paid_dates'                      => $bill->meta['paid_dates'],
+            'pay_dates'                       => $bill->meta['pay_dates'],
+            'next_expected_match'             => $bill->meta['nem']?->toAtomString(),
+            'next_expected_match_diff'        => $bill->meta['nem_diff'],
+
+            'links'                           => [
                 [
                     'rel' => 'self',
                     'uri' => '/bills/'.$bill->id,
                 ],
             ],
         ];
-    }
-
-    /**
-     * Get the data the bill was paid and predict the next expected match.
-     */
-    protected function paidData(Bill $bill): array
-    {
-        app('log')->debug(sprintf('Now in paidData for bill #%d', $bill->id));
-        if (null === $this->parameters->get('start') || null === $this->parameters->get('end')) {
-            app('log')->debug('parameters are NULL, return empty array');
-
-            return [];
-        }
-
-        // 2023-07-1 sub one day from the start date to fix a possible bug (see #7704)
-        // 2023-07-18 this particular date is used to search for the last paid date.
-        // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
-        /** @var Carbon $start */
-        $start        = clone $this->parameters->get('start');
-        $searchStart  = clone $start;
-        $start->subDay();
-
-        /** @var Carbon $end */
-        $end          = clone $this->parameters->get('end');
-        $searchEnd    = clone $end;
-
-        // move the search dates to the start of the day.
-        $searchStart->startOfDay();
-        $searchEnd->endOfDay();
-
-        app('log')->debug(sprintf('Parameters are start: %s end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
-        app('log')->debug(sprintf('Search parameters are: start: %s', $searchStart->format('Y-m-d')));
-
-        // Get from database when bill was paid.
-        $set          = $this->repository->getPaidDatesInRange($bill, $searchStart, $searchEnd);
-        app('log')->debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
-
-        // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
-        app('log')->debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-        $lastPaidDate = $this->lastPaidDate($set, $start);
-        app('log')->debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
-
-        // At this point the "next match" is exactly after the last time the bill was paid.
-        $result       = [];
-        foreach ($set as $entry) {
-            $result[] = [
-                'transaction_group_id'   => (string) $entry->transaction_group_id,
-                'transaction_journal_id' => (string) $entry->id,
-                'date'                   => $entry->date->format('Y-m-d'),
-                'date_object'            => $entry->date,
-            ];
-        }
-
-        return $result;
-    }
-
-    /**
-     * Returns the latest date in the set, or start when set is empty.
-     */
-    protected function lastPaidDate(Collection $dates, Carbon $default): Carbon
-    {
-        if (0 === $dates->count()) {
-            return $default;
-        }
-        $latest = $dates->first()->date;
-
-        /** @var TransactionJournal $journal */
-        foreach ($dates as $journal) {
-            if ($journal->date->gte($latest)) {
-                $latest = $journal->date;
-            }
-        }
-
-        return $latest;
-    }
-
-    private function getLastPaidDate(array $paidData): ?Carbon
-    {
-        app('log')->debug('getLastPaidDate()');
-        $return = null;
-        foreach ($paidData as $entry) {
-            if (null !== $return) {
-                /** @var Carbon $current */
-                $current = $entry['date_object'];
-                if ($current->gt($return)) {
-                    $return = clone $current;
-                }
-                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
-            }
-            if (null === $return) {
-                /** @var Carbon $return */
-                $return = $entry['date_object'];
-                app('log')->debug(sprintf('Last paid date is: %s', $return->format('Y-m-d')));
-            }
-        }
-        app('log')->debug(sprintf('Last paid date is: "%s"', $return?->format('Y-m-d')));
-
-        return $return;
     }
 }

@@ -46,7 +46,8 @@ import {
 } from "chart.js";
 import 'chartjs-adapter-date-fns';
 import {showInternalsButton} from "../../support/page-settings/show-internals-button.js";
-import {showWizardButton} from "../../support/page-settings/show-wizard-button.js";
+import {setVariable} from "../../store/set-variable.js";
+import {getVariable} from "../../store/get-variable.js";
 
 // register things
 Chart.register({
@@ -66,7 +67,26 @@ Chart.register({
     Legend
 });
 
+let index = function () {
+    return {
+        convertToPrimary: false,
+        savePrimarySettings(event) {
+            let target = event.currentTarget || event.target;
+            setVariable('convert_to_primary',target.checked).then(() => {
+                console.log('Set convert to primary to: ', target.checked);
+                this.$dispatch('convert-to-primary', target.checked);
+            });
+        },
+        init() {
+            Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
+                this.convertToPrimary = values[0];
+            });
+        }
+    }
+};
+
 const comps = {
+    index,
     dates,
     boxes,
     accounts,

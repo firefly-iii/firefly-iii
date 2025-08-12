@@ -71,34 +71,34 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date            = session('end', today(config('app.timezone'))->endOfMonth());
+                $date             = session('end', today(config('app.timezone'))->endOfMonth());
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $info            = Steam::finalAccountBalance($account, $date);
-                $currency        = Steam::getAccountCurrency($account);
-                $default         = Amount::getNativeCurrency();
-                $convertToNative = Amount::convertToNative();
-                $useNative       = $convertToNative && $default->id !== $currency->id;
-                $currency ??= $default;
-                $strings         = [];
+                $info             = Steam::finalAccountBalance($account, $date);
+                $currency         = Steam::getAccountCurrency($account);
+                $primary          = Amount::getPrimaryCurrency();
+                $convertToPrimary = Amount::convertToPrimary();
+                $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
+                $currency ??= $primary;
+                $strings          = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
                         // balance in account currency.
-                        if (!$useNative) {
+                        if (!$usePrimary) {
                             $strings[] = app('amount')->formatAnything($currency, $balance, false);
                         }
 
                         continue;
                     }
-                    if ('native_balance' === $key) {
-                        // balance in native currency.
-                        if ($useNative) {
-                            $strings[] = app('amount')->formatAnything($default, $balance, false);
+                    if ('pc_balance' === $key) {
+                        // balance in primary currency.
+                        if ($usePrimary) {
+                            $strings[] = app('amount')->formatAnything($primary, $balance, false);
                         }
 
                         continue;
                     }
                     // for multi currency accounts.
-                    if ($useNative && $key !== $default->code) {
+                    if ($usePrimary && $key !== $primary->code) {
                         $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
                     }
                 }

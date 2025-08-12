@@ -224,9 +224,9 @@ trait TransactionValidation
 
         /** @var AccountRepository $accountRepository */
         $accountRepository   = app(AccountRepositoryInterface::class);
-        $defaultCurrency     = app('amount')->getNativeCurrency();
-        $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $defaultCurrency;
-        $destinationCurrency = $accountRepository->getAccountCurrency($destination) ?? $defaultCurrency;
+        $primaryCurrency     = app('amount')->getPrimaryCurrency();
+        $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $primaryCurrency;
+        $destinationCurrency = $accountRepository->getAccountCurrency($destination) ?? $primaryCurrency;
         // if both accounts have the same currency, continue.
         if ($sourceCurrency->code === $destinationCurrency->code) {
             Log::debug('Both accounts have the same currency, continue.');

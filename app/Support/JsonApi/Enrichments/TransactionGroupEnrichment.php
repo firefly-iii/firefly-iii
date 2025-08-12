@@ -45,28 +45,22 @@ use Override;
 
 class TransactionGroupEnrichment implements EnrichmentInterface
 {
-    private array          $attachmentCount;
+    private array          $attachmentCount = [];
     private Collection     $collection;
     private readonly array $dateFields;
-    private array          $journalIds;
-    private array          $locations;
-    private array          $metaData;      // @phpstan-ignore-line
-    private array          $notes; // @phpstan-ignore-line
-    private array          $tags;
+    private array          $journalIds      = [];
+    private array          $locations       = [];
+    private array          $metaData        = [];
+    private array          $notes           = [];
+    private array          $tags            = [];
     private User           $user;
-    private readonly TransactionCurrency $nativeCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private UserGroup      $userGroup;
 
     public function __construct()
     {
-        $this->notes           = [];
-        $this->journalIds      = [];
-        $this->tags            = [];
-        $this->metaData        = [];
-        $this->locations       = [];
-        $this->attachmentCount = [];
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
-        $this->nativeCurrency  = Amount::getNativeCurrency();
+        $this->primaryCurrency = Amount::getPrimaryCurrency();
     }
 
     #[Override]
@@ -198,9 +192,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $metaData         = $this->metaData;
         $locations        = $this->locations;
         $attachmentCount  = $this->attachmentCount;
-        $nativeCurrency   = $this->nativeCurrency;
+        $primaryCurrency  = $this->primaryCurrency;
 
-        $this->collection = $this->collection->map(function (array $item) use ($nativeCurrency, $notes, $tags, $metaData, $locations, $attachmentCount) {
+        $this->collection = $this->collection->map(function (array $item) use ($primaryCurrency, $notes, $tags, $metaData, $locations, $attachmentCount) {
             foreach ($item['transactions'] as $index => $transaction) {
                 $journalId                                        = (int) $transaction['transaction_journal_id'];
 
@@ -220,13 +214,13 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                     'zoom_level' => null,
                 ];
 
-                // native currency
-                $item['transactions'][$index]['native_currency']  = [
-                    'id'               => (string) $nativeCurrency->id,
-                    'code'             => $nativeCurrency->code,
-                    'name'             => $nativeCurrency->name,
-                    'symbol'           => $nativeCurrency->symbol,
-                    'decimal_places'   => $nativeCurrency->decimal_places,
+                // primary currency
+                $item['transactions'][$index]['primary_currency'] = [
+                    'id'               => (string) $primaryCurrency->id,
+                    'code'             => $primaryCurrency->code,
+                    'name'             => $primaryCurrency->name,
+                    'symbol'           => $primaryCurrency->symbol,
+                    'decimal_places'   => $primaryCurrency->decimal_places,
                 ];
 
                 // append meta data

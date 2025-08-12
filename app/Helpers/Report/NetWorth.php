@@ -55,7 +55,7 @@ class NetWorth implements NetWorthInterface
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
-     * (1, 4 and 8) and also in the 'native' currency for ease of use.
+     * (1, 4 and 8) and also in the 'primary' currency for ease of use.
      *
      * The set of accounts has to be fed to it.
      *
@@ -64,40 +64,40 @@ class NetWorth implements NetWorthInterface
     public function byAccounts(Collection $accounts, Carbon $date): array
     {
         // start in the past, end in the future? use $date
-        $convertToNative = Amount::convertToNative();
-        $ids             = implode(',', $accounts->pluck('id')->toArray());
-        $cache           = new CacheProperties();
+        $convertToPrimary = Amount::convertToPrimary();
+        $ids              = implode(',', $accounts->pluck('id')->toArray());
+        $cache            = new CacheProperties();
         $cache->addProperty($date);
-        $cache->addProperty($convertToNative);
+        $cache->addProperty($convertToPrimary);
         $cache->addProperty('net-worth-by-accounts');
         $cache->addProperty($ids);
         if ($cache->has()) {
             return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $default         = Amount::getNativeCurrency();
-        $netWorth        = [];
-        Log::debug(sprintf('NetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
-        $balances        = Steam::finalAccountsBalance($accounts, $date);
+        $primary          = Amount::getPrimaryCurrency();
+        $netWorth         = [];
+        Log::debug(sprintf('NetWorth: accountsBalancesOptimized("%s")', $date->format('Y-m-d H:i:s')));
+        $balances         = Steam::accountsBalancesOptimized($accounts, $date, null, $convertToPrimary);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             //            Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $default;
-            $useNative                          = $convertToNative && $default->id !== $currency->id;
-            $currency                           = $useNative ? $default : $currency;
+            $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $primary;
+            $usePrimary                         = $convertToPrimary && $primary->id !== $currency->id;
+            $currency                           = $usePrimary ? $primary : $currency;
             $currencyCode                       = $currency->code;
             $balance                            = '0';
-            $nativeBalance                      = '0';
+            $primaryBalance                     = '0';
             if (array_key_exists($account->id, $balances)) {
-                $balance       = $balances[$account->id]['balance'] ?? '0';
-                $nativeBalance = $balances[$account->id]['native_balance'] ?? '0';
+                $balance        = $balances[$account->id]['balance'] ?? '0';
+                $primaryBalance = $balances[$account->id]['pc_balance'] ?? '0';
             }
-            //            Log::debug(sprintf('Balance is %s, native balance is %s', $balance, $nativeBalance));
+            //            Log::debug(sprintf('Balance is %s, primary balance is %s', $balance, $primaryBalance));
             // always subtract virtual balance again.
             $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
-            $nativeBalance                      = '' !== (string) $account->native_virtual_balance ? bcsub($nativeBalance, (string) $account->native_virtual_balance) : $nativeBalance;
-            $amountToUse                        = $useNative ? $nativeBalance : $balance;
+            $primaryBalance                     = '' !== (string) $account->native_virtual_balance ? bcsub($primaryBalance, (string) $account->native_virtual_balance) : $primaryBalance;
+            $amountToUse                        = $usePrimary ? $primaryBalance : $balance;
             //            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
             $netWorth[$currencyCode] ??= [
@@ -143,8 +143,8 @@ class NetWorth implements NetWorthInterface
          */
         $accounts = $this->getAccounts();
         $return   = [];
-        Log::debug(sprintf('SumNetWorth: finalAccountsBalance("%s")', $date->format('Y-m-d H:i:s')));
-        $balances = Steam::finalAccountsBalance($accounts, $date);
+        Log::debug(sprintf('SumNetWorth: accountsBalancesOptimized("%s")', $date->format('Y-m-d H:i:s')));
+        $balances = Steam::accountsBalancesOptimized($accounts, $date);
         foreach ($accounts as $account) {
             $currency                     = $this->accountRepository->getAccountCurrency($account);
             $balance                      = $balances[$account->id]['balance'] ?? '0';

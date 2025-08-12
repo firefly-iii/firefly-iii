@@ -158,18 +158,18 @@
                                     <td style="width:33%;">{{ 'amount'|_ }}</td>
                                     <td>
                                         {{ formatAmountBySymbol(limit.amount, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
-                                        {% if convertToNative and 0 != limit.native_amount %}
-                                            ({{ formatAmountBySymbol(limit.native_amount, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                        {% if convertToPrimary and null != limit.native_amount %}
+                                            ({{ formatAmountBySymbol(limit.native_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% endif %}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td style="width:33%;">{{ 'spent'|_ }}</td>
                                     <td>
-                                        {% if convertToNative %}
+                                        {% if convertToPrimary %}
                                             {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}
-                                            {% if limit.native_spent %}
-                                                ({{ formatAmountBySymbol(limit.native_spent, defaultCurrency.symbol, defaultCurrency.decimal_places) }})
+                                            {% if limit.pc_spent %}
+                                                ({{ formatAmountBySymbol(limit.pc_spent, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                             {% endif %}
                                         {% else %}
                                             {{ formatAmountBySymbol(limit.spent, limit.transactionCurrency.symbol, limit.transactionCurrency.decimal_places) }}

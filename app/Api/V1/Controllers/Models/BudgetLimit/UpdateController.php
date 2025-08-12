@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -79,6 +80,13 @@ class UpdateController extends Controller
         $data['budget_id'] = $budget->id;
         $budgetLimit       = $this->blRepository->update($budgetLimit, $data);
         $manager           = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin             = auth()->user();
+        $enrichment        = new BudgetLimitEnrichment();
+        $enrichment->setUser($admin);
+        $budgetLimit       = $enrichment->enrich($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer       = app(BudgetLimitTransformer::class);

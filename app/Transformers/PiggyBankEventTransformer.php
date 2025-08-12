@@ -26,24 +26,25 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class PiggyBankEventTransformer
  */
 class PiggyBankEventTransformer extends AbstractTransformer
 {
-    private readonly PiggyBankRepositoryInterface $piggyRepos;
-    private readonly AccountRepositoryInterface   $repository;
+    private TransactionCurrency $primaryCurrency;
+    private bool                $convertToPrimary = false;
 
     /**
      * PiggyBankEventTransformer constructor.
      */
     public function __construct()
     {
-        $this->repository = app(AccountRepositoryInterface::class);
-        $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
+        $this->convertToPrimary = Amount::convertToPrimary();
     }
 
     /**
@@ -53,39 +54,43 @@ class PiggyBankEventTransformer extends AbstractTransformer
      */
     public function transform(PiggyBankEvent $event): array
     {
-        // get account linked to piggy bank
-        $account   = $event->piggyBank->accounts()->first();
-
-        // set up repositories.
-        $this->repository->setUser($account->user);
-        $this->piggyRepos->setUser($account->user);
-
-        // get associated currency or fall back to the default:
-        $currency  = $this->repository->getAccountCurrency($account) ?? app('amount')->getNativeCurrencyByUserGroup($account->user->userGroup);
-
-        // get associated journal and transaction, if any:
-        $journalId = $event->transaction_journal_id;
-        $groupId   = null;
-        if (0 !== (int) $journalId) {
-            $groupId   = (int) $event->transactionJournal->transaction_group_id;
-            $journalId = (int) $journalId;
+        $currency      = $event->meta['currency'] ?? $this->primaryCurrency;
+        $amount        = Steam::bcround($event->amount, $currency->decimal_places);
+        $primaryAmount = null;
+        if ($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
+            $primaryAmount = $amount;
+        }
+        if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
+            $primaryAmount = Steam::bcround($event->native_amount, $this->primaryCurrency->decimal_places);
         }
 
         return [
-            'id'                      => (string) $event->id,
-            'created_at'              => $event->created_at?->toAtomString(),
-            'updated_at'              => $event->updated_at?->toAtomString(),
-            'amount'                  => app('steam')->bcround($event->amount, $currency->decimal_places),
-            'currency_id'             => (string) $currency->id,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
-            'transaction_journal_id'  => null !== $journalId ? (string) $journalId : null,
-            'transaction_group_id'    => null !== $groupId ? (string) $groupId : null,
-            'links'                   => [
+            'id'                              => (string)$event->id,
+            'created_at'                      => $event->created_at?->toAtomString(),
+            'updated_at'                      => $event->updated_at?->toAtomString(),
+            'amount'                          => $amount,
+            'pc_amount'                       => $primaryAmount,
+
+            // currencies according to 6.3.0
+            'has_currency_setting'            => true,
+            'currency_id'                     => (string)$currency->id,
+            'currency_name'                   => $currency->name,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
+
+            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_name'           => $this->primaryCurrency->name,
+            'primary_currency_code'           => $this->primaryCurrency->code,
+            'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+            'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
+
+            'transaction_journal_id'          => null !== $event->transaction_journal_id ? (string)$event->transaction_journal_id : null,
+            'transaction_group_id'            => $event->meta['transaction_group_id'],
+            'links'                           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/piggy_bank_events/'.$event->id,
+                    'uri' => sprintf('/piggy-banks/%d/events/%s', $event->piggy_bank_id, $event->id),
                 ],
             ],
         ];

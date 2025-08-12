@@ -154,12 +154,18 @@ class TagController extends Controller
      */
     public function index(TagRepositoryInterface $repository)
     {
-        // start with oldest tag
+        // start with the oldest tag
         $first           = session('first', today()) ?? today();
         $oldestTagDate   = $repository->oldestTag() instanceof Tag ? $repository->oldestTag()->date : clone $first;
         $newestTagDate   = $repository->newestTag() instanceof Tag ? $repository->newestTag()->date : today();
         $oldestTagDate->startOfYear();
         $newestTagDate->endOfYear();
+
+        if ($oldestTagDate->year < 1970) {
+            $oldestTagDate = Carbon::create(1970, 1, 1, 0, 0, 0, config('app.timezone'));
+            request()->session()->flash('error', trans('firefly.bad_date_transaction'));
+        }
+
         $tags            = [];
         $tags['no-date'] = $repository->getTagsInYear(null);
 
@@ -246,6 +252,7 @@ class TagController extends Controller
 
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
             ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+            ->withAttachmentInformation()
         ;
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
@@ -277,6 +284,7 @@ class TagController extends Controller
         $collector    = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
             ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
+            ->withAttachmentInformation()
         ;
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);

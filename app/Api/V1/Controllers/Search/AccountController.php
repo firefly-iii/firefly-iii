@@ -88,8 +88,8 @@ class AccountController extends Controller
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setUser($admin);
-        $enrichment->setNative($this->nativeCurrency);
         $accounts    = $enrichment->enrich($accounts);
 
         /** @var AccountTransformer $transformer */

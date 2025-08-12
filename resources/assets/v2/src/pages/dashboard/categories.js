@@ -32,7 +32,18 @@ let afterPromises = false;
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
+
+    eventListeners: {
+        ['@convert-to-primary.window'](event){
+            console.log('I heard that! (dashboard/categories)');
+            this.convertToPrimary = event.detail;
+            chartData = null;
+            this.loadChart();
+        }
+    },
+
+
     generateOptions(data) {
         currencies = [];
         let options = getDefaultChartSettings('column');
@@ -43,11 +54,6 @@ export default () => ({
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
                 let code = current.currency_code;
-                // only use native code when doing auto conversion.
-                if (this.convertToNative) {
-                    code = current.native_currency_code;
-                }
-
                 if (!series.hasOwnProperty(code)) {
                     series[code] = {
                         name: code,
@@ -65,9 +71,6 @@ export default () => ({
                 let yAxis = 'y';
                 let current = data[i];
                 let code = current.currency_code;
-                if (this.convertToNative) {
-                    code = current.native_currency_code;
-                }
 
                 // loop series, add 0 if not present or add actual amount.
                 for (const ii in series) {
@@ -77,10 +80,6 @@ export default () => ({
                             // this series' currency matches this column's currency.
                             amount = parseFloat(current.amount);
                             yAxis = 'y' + current.currency_code;
-                            if (this.convertToNative) {
-                                amount = parseFloat(current.native_amount);
-                                yAxis = 'y' + current.native_currency_code;
-                            }
                         }
                         if (series[ii].data.hasOwnProperty(current.label)) {
                             // there is a value for this particular currency. The amount from this column will be added.
@@ -147,7 +146,7 @@ export default () => ({
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
-        const cacheKey = getCacheKey('ds_ct_chart', {start: start, end: end});
+        const cacheKey = getCacheKey('ds_ct_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
         const cacheValid = window.store.get('cacheValid');
         let cachedData = window.store.get(cacheKey);
@@ -183,8 +182,8 @@ export default () => ({
     },
     init() {
         // console.log('categories init');
-        Promise.all([getVariable('convertToNative', false),]).then((values) => {
-            this.convertToNative = values[0];
+        Promise.all([getVariable('convert_to_primary', false),]).then((values) => {
+            this.convertToPrimary = values[0];
             afterPromises = true;
             this.loadChart();
         });
@@ -195,11 +194,11 @@ export default () => ({
             this.chartData = null;
             this.loadChart();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            this.convertToNative = newValue;
+            this.convertToPrimary = newValue;
             this.loadChart();
         });
     },

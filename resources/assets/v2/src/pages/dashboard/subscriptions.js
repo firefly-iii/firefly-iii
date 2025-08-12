@@ -30,6 +30,105 @@ import i18next from "i18next";
 let afterPromises = false;
 let apiData = [];
 let subscriptionData = {};
+let convertToPrimary = false;
+
+function addObjectGroupInfo(data) {
+    let objectGroupId = parseInt(data.object_group_id);
+    if (!subscriptionData.hasOwnProperty(objectGroupId)) {
+        subscriptionData[objectGroupId] = {
+            id: objectGroupId,
+            title: null === data.object_group_title ? i18next.t('firefly.default_group_title_name_plain') : data.object_group_title,
+            order: parseInt(data.object_group_order),
+            payment_info: {},
+            bills: [],
+        };
+    }
+}
+
+function parsePayDates(list) {
+    let newList = [];
+    for(let i in list) {
+        if (list.hasOwnProperty(i)) {
+            let current = list[i];
+            // convert to date object:
+            newList.push(new Date(current));
+        }
+    }
+    return newList;
+}
+
+function parseBillInfo(data) {
+    let result = {
+        id: data.id,
+        name: data.attributes.name,
+        amount_min: data.attributes.amount_min,
+        amount_max: data.attributes.amount_max,
+        amount: (parseFloat(data.attributes.amount_max) + parseFloat(data.attributes.amount_min)) / 2,
+        currency_code: data.attributes.currency_code,
+        // paid transactions:
+        transactions: [],
+        // unpaid moments
+        pay_dates: parsePayDates(data.attributes.pay_dates),
+        paid: data.attributes.paid_dates.length > 0,
+    };
+    if(convertToPrimary) {
+        result.currency_code = data.attributes.primary_currency_code;
+    }
+
+
+    // set variables
+    result.expected_amount = formatMoney(result.amount, result.currency_code);
+    result.expected_times = i18next.t('firefly.subscr_expected_x_times', {
+        times: data.attributes.pay_dates.length,
+        amount: result.expected_amount
+    });
+    // console.log(result);
+    return result;
+}
+
+function parsePaidTransactions(paid_dates, bill) {
+    if( !paid_dates || paid_dates.length < 1) {
+        return [];
+    }
+    let result = [];
+    // add transactions (simpler version)
+    for (let i in paid_dates) {
+        if (paid_dates.hasOwnProperty(i)) {
+            const currentPayment = paid_dates[i];
+            // console.log(currentPayment);
+            // math: -100+(paid/expected)*100
+            let percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) ) / parseFloat(bill.amount)) * 100);
+            let currentTransaction = {
+                amount: formatMoney(currentPayment.amount, currentPayment.currency_code),
+                percentage: percentage,
+                date: format(new Date(currentPayment.date), 'PP'),
+                foreign_amount: null,
+            };
+            if (null !== currentPayment.foreign_currency_code) {
+                currentTransaction.foreign_amount =  currentPayment.foreign_amount;
+                currentTransaction.foreign_currency_code = currentPayment.foreign_currency_code;
+            }
+
+            result.push(currentTransaction);
+        }
+    }
+    return result;
+}
+
+function isInRange(bill) {
+    let start = new Date(window.store.get('start'));
+    let end = new Date(window.store.get('end'));
+    for(let i in bill.pay_dates) {
+        if (bill.pay_dates.hasOwnProperty(i)) {
+            let currentDate = bill.pay_dates[i];
+            //console.log(currentDate);
+            if (currentDate >= start && currentDate <= end) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
 
 function downloadSubscriptions(params) {
     const getter = new Get();
@@ -41,100 +140,38 @@ function downloadSubscriptions(params) {
             for (let i in data) {
                 if (data.hasOwnProperty(i)) {
                     let current = data[i];
-                    //console.log(current);
                     if (current.attributes.active && current.attributes.pay_dates.length > 0) {
-                        let objectGroupId = null === current.attributes.object_group_id ? 0 : current.attributes.object_group_id;
-                        let objectGroupTitle = null === current.attributes.object_group_title ? i18next.t('firefly.default_group_title_name_plain') : current.attributes.object_group_title;
-                        let objectGroupOrder = null === current.attributes.object_group_order ? 0 : current.attributes.object_group_order;
-                        if (!subscriptionData.hasOwnProperty(objectGroupId)) {
-                            subscriptionData[objectGroupId] = {
-                                id: objectGroupId,
-                                title: objectGroupTitle,
-                                order: objectGroupOrder,
-                                payment_info: {},
-                                bills: [],
-                            };
+                        // create or update object group
+                        let objectGroupId = parseInt(current.attributes.object_group_id);
+                        addObjectGroupInfo(current.attributes);
+
+                        // create and update the bill.
+                        let bill = parseBillInfo(current);
+
+                        // if not yet paid, and pay_dates is not in current rage, ignore it.
+                        if (false === bill.paid && !isInRange(bill)) {
+                            console.warn('Bill "'+bill.name+'" is not paid and not in range, ignoring: ');
+                            continue;
                         }
-                        // TODO this conversion needs to be inside some kind of a parsing class.
-                        let bill = {
-                            id: current.id,
-                            name: current.attributes.name,
-                            // amount
-                            amount_min: current.attributes.amount_min,
-                            amount_max: current.attributes.amount_max,
-                            amount: (parseFloat(current.attributes.amount_max) + parseFloat(current.attributes.amount_min)) / 2,
-                            currency_code: current.attributes.currency_code,
 
-                            // native amount
-                            // native_amount_min: current.attributes.native_amount_min,
-                            // native_amount_max: current.attributes.native_amount_max,
-                            // native_amount: (parseFloat(current.attributes.native_amount_max) + parseFloat(current.attributes.native_amount_min)) / 2,
-                            // native_currency_code: current.attributes.native_currency_code,
 
-                            // paid transactions:
-                            transactions: [],
-
-                            // unpaid moments
-                            pay_dates: current.attributes.pay_dates,
-                            paid: current.attributes.paid_dates.length > 0,
-                        };
-                        // set variables
-                        bill.expected_amount = formatMoney(bill.amount, bill.currency_code);
-                        bill.expected_times = i18next.t('firefly.subscr_expected_x_times', {
-                            times: current.attributes.pay_dates.length,
-                            amount: bill.expected_amount
-                        });
-
-                        // add transactions (simpler version)
-                        for (let iii in current.attributes.paid_dates) {
-                            if (current.attributes.paid_dates.hasOwnProperty(iii)) {
-                                const currentPayment = current.attributes.paid_dates[iii];
-                                let percentage = 100;
-                                // math: -100+(paid/expected)*100
-                                if (params.convertToNative) {
-                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.native_amount) * -1) / parseFloat(bill.native_amount)) * 100);
-                                }
-                                if (!params.convertToNative) {
-                                    percentage = Math.round(-100 + ((parseFloat(currentPayment.amount) * -1) / parseFloat(bill.amount)) * 100);
-                                }
-                                // TODO fix me
-                                currentPayment.currency_code = 'EUR';
-                                console.log('Currency code: "'+currentPayment+'"');
-                                console.log(currentPayment);
-                                let currentTransaction = {
-                                    amount: formatMoney(currentPayment.amount, currentPayment.currency_code),
-                                    percentage: percentage,
-                                    date: format(new Date(currentPayment.date), 'PP'),
-                                    foreign_amount: null,
-                                };
-                                if (null !== currentPayment.foreign_currency_code) {
-                                    currentTransaction.foreign_amount =  currentPayment.foreign_amount;
-                                    currentTransaction.foreign_currency_code = currentPayment.foreign_currency_code;
-                                }
-
-                                bill.transactions.push(currentTransaction);
-                            }
-                        }
+                        bill.transactions = parsePaidTransactions(current.attributes.paid_dates, bill);
 
                         subscriptionData[objectGroupId].bills.push(bill);
-                        if (0 === current.attributes.paid_dates.length) {
+                        if (false === bill.paid) {
                             // bill is unpaid, count the "pay_dates" and multiply with the "amount".
-                            // since bill is unpaid, this can only be in currency amount and native currency amount.
+                            // since bill is unpaid, this can only be in currency amount and primary currency amount.
                             const totalAmount = current.attributes.pay_dates.length * bill.amount;
-                            // const totalNativeAmount = current.attributes.pay_dates.length * bill.native_amount;
                             // for bill's currency
                             if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(bill.currency_code)) {
                                 subscriptionData[objectGroupId].payment_info[bill.currency_code] = {
                                     currency_code: bill.currency_code,
                                     paid: 0,
                                     unpaid: 0,
-                                    native_currency_code: bill.native_currency_code,
-                                    native_paid: 0,
-                                    //native_unpaid: 0,
                                 };
                             }
+
                             subscriptionData[objectGroupId].payment_info[bill.currency_code].unpaid += totalAmount;
-                            //subscriptionData[objectGroupId].payment_info[bill.currency_code].native_unpaid += totalNativeAmount;
                         }
 
                         if (current.attributes.paid_dates.length > 0) {
@@ -142,8 +179,6 @@ function downloadSubscriptions(params) {
                                 if (current.attributes.paid_dates.hasOwnProperty(ii)) {
                                     // bill is paid!
                                     // since bill is paid, 3 possible currencies:
-                                    // native, currency, foreign currency.
-                                    // foreign currency amount (converted to native or not) will be ignored.
                                     let currentJournal = current.attributes.paid_dates[ii];
                                     // new array for the currency
                                     if (!subscriptionData[objectGroupId].payment_info.hasOwnProperty(currentJournal.currency_code)) {
@@ -151,15 +186,10 @@ function downloadSubscriptions(params) {
                                             currency_code: bill.currency_code,
                                             paid: 0,
                                             unpaid: 0,
-                                            // native_currency_code: bill.native_currency_code,
-                                            // native_paid: 0,
-                                            //native_unpaid: 0,
                                         };
                                     }
                                     const amount = parseFloat(currentJournal.amount) * -1;
-                                    // const nativeAmount = parseFloat(currentJournal.native_amount) * -1;
                                     subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].paid += amount;
-                                    // subscriptionData[objectGroupId].payment_info[currentJournal.currency_code].native_paid += nativeAmount;
                                 }
                             }
                         }
@@ -180,8 +210,20 @@ function downloadSubscriptions(params) {
 
 export default () => ({
     loading: false,
-    convertToNative: false,
+    convertToPrimary: false,
     subscriptions: [],
+    formatMoney(amount, currencyCode) {
+        return formatMoney(amount, currencyCode);
+    },
+    eventListeners: {
+        ['@convert-to-primary.window'](event){
+            console.log('I heard that! (dashboard/subscriptions)');
+            this.convertToPrimary = event.detail;
+            convertToPrimary = event.detail;
+            this.startSubscriptions();
+        }
+    },
+
     startSubscriptions() {
         this.loading = true;
         let start = new Date(window.store.get('start'));
@@ -200,7 +242,7 @@ export default () => ({
         let params = {
             start: format(start, 'y-MM-dd'),
             end: format(end, 'y-MM-dd'),
-            // convertToNative: this.convertToNative,
+            // convertToPrimary: this.convertToPrimary,
             page: 1
         };
         downloadSubscriptions(params).then(() => {
@@ -220,6 +262,7 @@ export default () => ({
                     //console.log(group);
                 }
             }
+            console.log('Subscriptions: ', this.subscriptions);
 
             // then assign to this.subscriptions.
             this.loading = false;
@@ -269,8 +312,9 @@ export default () => ({
     },
 
     init() {
-        Promise.all([getVariable('convertToNative', false)]).then((values) => {
-            this.convertToNative = values[0];
+        Promise.all([getVariable('convert_to_primary', false)]).then((values) => {
+            this.convertToPrimary = values[0];
+            convertToPrimary = values[0];
             afterPromises = true;
 
             if (false === this.loading) {
@@ -287,11 +331,11 @@ export default () => ({
                 this.startSubscriptions();
             }
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            this.convertToNative = newValue;
+            this.convertToPrimary = newValue;
             if (false === this.loading) {
                 this.startSubscriptions();
             }

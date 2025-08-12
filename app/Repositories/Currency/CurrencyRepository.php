@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Preferences\UserGroupChangedDefaultCurrency;
+use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AccountMeta;
@@ -183,9 +183,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
         return $all->map(static function (TransactionCurrency $current) use ($local) {
             $hasId                     = $local->contains(static fn (TransactionCurrency $entry) => $entry->id === $current->id);
-            $isNative                  = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
+            $isPrimary                 = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id);
             $current->userGroupEnabled = $hasId;
-            $current->userGroupNative  = $isNative;
+            $current->userGroupNative  = $isPrimary;
 
             return $current;
         });
@@ -243,7 +243,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::debug('Grabbing default currency for this user...');
 
             /** @var null|TransactionCurrency $result */
-            $result = app('amount')->getNativeCurrencyByUserGroup($this->user->userGroup);
+            $result = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
@@ -428,7 +428,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function makeDefault(TransactionCurrency $currency): void
     {
-        $current = app('amount')->getNativeCurrencyByUserGroup($this->userGroup);
+        $current = app('amount')->getPrimaryCurrencyByUserGroup($this->userGroup);
         Log::debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
         $this->userGroup->currencies()->detach($currency->id);
         foreach ($this->userGroup->currencies()->get() as $item) {
@@ -437,8 +437,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $this->userGroup->currencies()->syncWithoutDetaching([$currency->id => ['group_default' => true]]);
         if ($current->id !== $currency->id) {
             Log::debug('Trigger on a different default currency.');
-            // clear all native amounts through an event.
-            event(new UserGroupChangedDefaultCurrency($this->userGroup));
+            // clear all primary currency amounts through an event.
+            event(new UserGroupChangedPrimaryCurrency($this->userGroup));
         }
     }
 }

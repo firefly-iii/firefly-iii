@@ -34,15 +34,15 @@ class AutoBudgetObserver
     public function created(AutoBudget $autoBudget): void
     {
         Log::debug('Observe "created" of an auto budget.');
-        $this->updateNativeAmount($autoBudget);
+        $this->updatePrimaryCurrencyAmount($autoBudget);
     }
 
-    private function updateNativeAmount(AutoBudget $autoBudget): void
+    private function updatePrimaryCurrencyAmount(AutoBudget $autoBudget): void
     {
-        if (!Amount::convertToNative($autoBudget->budget->user)) {
+        if (!Amount::convertToPrimary($autoBudget->budget->user)) {
             return;
         }
-        $userCurrency              = app('amount')->getNativeCurrencyByUserGroup($autoBudget->budget->user->userGroup);
+        $userCurrency              = app('amount')->getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                 = new ExchangeRateConverter();
@@ -51,12 +51,12 @@ class AutoBudgetObserver
             $autoBudget->native_amount = $converter->convert($autoBudget->transactionCurrency, $userCurrency, today(), $autoBudget->amount);
         }
         $autoBudget->saveQuietly();
-        Log::debug('Auto budget native amount is updated.');
+        Log::debug('Auto budget primary currency amount is updated.');
     }
 
     public function updated(AutoBudget $autoBudget): void
     {
         Log::debug('Observe "updated" of an auto budget.');
-        $this->updateNativeAmount($autoBudget);
+        $this->updatePrimaryCurrencyAmount($autoBudget);
     }
 }

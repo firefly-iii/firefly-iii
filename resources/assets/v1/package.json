@@ -18,7 +18,7 @@
         "@vue/compiler-sfc": "^3.5.11",
         "axios": "^1.11",
         "bootstrap-sass": "^3",
-        "cross-env": "^7.0",
+        "cross-env": "^10.0",
         "font-awesome": "^4.7.0",
         "jquery": "^3",
         "laravel-mix": "^6.0",

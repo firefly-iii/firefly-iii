@@ -105,7 +105,7 @@ class GroupCollector implements GroupCollectorInterface
             'category_id',
             'budget_id',
         ];
-        $this->stringFields         = ['amount', 'foreign_amount', 'native_amount', 'native_foreign_amount', 'source_balance_after', 'destination_balance_after'];
+        $this->stringFields         = ['amount', 'foreign_amount', 'pc_amount', 'pc_foreign_amount', 'source_balance_after', 'destination_balance_after'];
         $this->total                = 0;
         $this->fields               = [
             // group
@@ -138,7 +138,7 @@ class GroupCollector implements GroupCollectorInterface
             'source.amount as amount',
             'source.balance_after as source_balance_after',
             'source.balance_dirty as source_balance_dirty',
-            'source.native_amount as native_amount',
+            'source.native_amount as pc_amount',
             'source.transaction_currency_id as currency_id',
             'currency.code as currency_code',
             'currency.name as currency_name',
@@ -147,7 +147,7 @@ class GroupCollector implements GroupCollectorInterface
 
             // foreign currency info
             'source.foreign_amount as foreign_amount',
-            'source.native_foreign_amount as native_foreign_amount',
+            'source.native_foreign_amount as pc_foreign_amount',
             'source.foreign_currency_id as foreign_currency_id',
             'foreign_currency.code as foreign_currency_code',
             'foreign_currency.name as foreign_currency_name',
@@ -558,7 +558,6 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedJournal($augumentedJournal);
             }
         }
-
         $groups = $this->parseSums($groups);
 
         return new Collection($groups);
@@ -732,13 +731,13 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId                                             = (int) $transaction['currency_id'];
+                $currencyId                                         = (int) $transaction['currency_id'];
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
-                $nativeAmount                                           = (string) ('' === $transaction['native_amount'] ? '0' : $transaction['native_amount']);
-                $nativeForeignAmount                                    = (string) ('' === $transaction['native_foreign_amount'] ? '0' : $transaction['native_foreign_amount']);
-                $foreignAmount                                          = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
+                $pcAmount                                           = (string) ('' === $transaction['pc_amount'] ? '0' : $transaction['pc_amount']);
+                $pcForeignAmount                                    = (string) ('' === $transaction['pc_foreign_amount'] ? '0' : $transaction['pc_foreign_amount']);
+                $foreignAmount                                      = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -747,13 +746,13 @@ class GroupCollector implements GroupCollectorInterface
                     $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
                     $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                    $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
+                    $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-                $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['native_amount'], $nativeAmount);
+                $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['pc_amount'], $pcAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId                                             = (int) $transaction['foreign_currency_id'];
+                    $currencyId                                         = (int) $transaction['foreign_currency_id'];
 
                     // set default:
                     if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
@@ -762,10 +761,10 @@ class GroupCollector implements GroupCollectorInterface
                         $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
                         $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                        $groups[$groudId]['sums'][$currencyId]['native_amount']           = '0';
+                        $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']        = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
-                    $groups[$groudId]['sums'][$currencyId]['native_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $nativeForeignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $pcForeignAmount);
                 }
             }
         }

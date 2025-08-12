@@ -42,6 +42,7 @@ class CurrencyTransformer extends AbstractTransformer
             'updated_at'     => $currency->updated_at->toAtomString(),
             'native'         => $currency->userGroupNative,
             'default'        => $currency->userGroupNative,
+            'primary'        => $currency->userGroupNative,
             'enabled'        => $currency->userGroupEnabled,
             'name'           => $currency->name,
             'code'           => $currency->code,

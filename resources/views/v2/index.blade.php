@@ -7,7 +7,7 @@
             @include('partials.dashboard.boxes')
 
             <!-- row with account, budget and category data -->
-            <div class="row mb-2" x-data="accounts">
+            <div class="row mb-2" x-data="accounts" x-bind="eventListeners">
                 <!-- column with 3 charts -->
                 <div class="col-xl-8 col-lg-12 col-sm-12 col-xs-12">
                     <!-- row with account chart -->
@@ -37,11 +37,11 @@
                 <div class="col">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title"><a href="#" title="Something">recurring? rules? tags?</a></h3>
+                            <h3 class="card-title"><a href="#" title="Something">Income + sum</a></h3>
                         </div>
                         <div class="card-body">
                             <p>
-                                TODO
+                                List of income + sum
                             </p>
                         </div>
                     </div>
@@ -49,7 +49,7 @@
             </div>
         </div>
 
-        <div class="modal fade" id="internalsModal" tabindex="-1" aria-labelledby="internalsModalLabel"
+        <div x-data="index" class="modal fade" id="internalsModal" tabindex="-1" aria-labelledby="internalsModalLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -58,9 +58,17 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>
-                            Buttons.
-                        </p>
+                        <div class="row mb-3">
+                            <label class="col-sm-4 col-form-label">Convert to primary</label>
+                            <div class="col-sm-8">
+                                    <div class="form-check form-switch form-check-inline">
+                                        <label>
+                                            <input class="form-check-input" x-model="convertToPrimary" type="checkbox" @change="savePrimarySettings"> <span
+                                                >Yes no</span>
+                                        </label>
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ __('firefly.close') }}</button>

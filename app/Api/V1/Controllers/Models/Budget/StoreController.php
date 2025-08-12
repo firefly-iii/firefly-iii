@@ -28,7 +28,9 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Budget\StoreRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use League\Fractal\Resource\Item;
 
@@ -68,6 +70,13 @@ class StoreController extends Controller
         $budget      = $this->repository->store($request->getAll());
         $budget->refresh();
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new BudgetEnrichment();
+        $enrichment->setUser($admin);
+        $budget      = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);

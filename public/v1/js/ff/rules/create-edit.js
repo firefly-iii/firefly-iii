@@ -364,6 +364,8 @@ function updateTriggerInput(selectList) {
             createAutoComplete(inputResult, 'api/v1/autocomplete/transactions');
             break;
         case 'has_no_category':
+        case 'no_external_id':
+        case 'any_external_id':
         case 'has_any_category':
         case 'has_no_budget':
         case 'has_any_budget':

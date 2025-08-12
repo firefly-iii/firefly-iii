@@ -31,15 +31,25 @@ export default () => ({
     billBox: {paid: [], unpaid: []},
     leftBox: {left: [], perDay: []},
     netBox: {net: []},
-    convertToNative: false,
+    convertToPrimary: false,
     loading: false,
     boxData: null,
     boxOptions: null,
+    eventListeners: {
+        ['@convert-to-primary.window'](event){
+            this.convertToPrimary = event.detail;
+            this.accountList = [];
+            console.log('I heard that! (dashboard/boxes)');
+            this.boxData = null;
+            this.loadBoxes();
+        }
+    },
+
     getFreshData() {
         const start = new Date(window.store.get('start'));
         const end = new Date(window.store.get('end'));
         // TODO cache key is hard coded, problem?
-        const boxesCacheKey = getCacheKey('ds_boxes_data', {start: start, end: end});
+        const boxesCacheKey = getCacheKey('ds_boxes_data', {convertToPrimary: this.convertToPrimary, start: start, end: end});
         cleanupCache();
 
         //const cacheValid = window.store.get('cacheValid');
@@ -76,7 +86,7 @@ export default () => ({
                     continue;
                 }
                 let key = current.key;
-                console.log('NOT NATIVE');
+                // console.log('NOT PRIMARY CURRENCY');
                 if (key.startsWith('balance-in-')) {
                     this.balanceBox.amounts.push(formatMoney(current.monetary_value, current.currency_code));
                     continue;
@@ -153,10 +163,10 @@ export default () => ({
     init() {
         // console.log('boxes init');
         // TODO can be replaced by "getVariables"
-        Promise.all([getVariable('viewRange'), getVariable('convertToNative', false)]).then((values) => {
+        Promise.all([getVariable('viewRange'), getVariable('convert_to_primary', false)]).then((values) => {
             // console.log('boxes after promises');
             afterPromises = true;
-            this.convertToNative = values[1];
+            this.convertToPrimary = values[1];
             this.loadBoxes();
         });
         window.store.observe('end', () => {
@@ -167,12 +177,12 @@ export default () => ({
             this.boxData = null;
             this.loadBoxes();
         });
-        window.store.observe('convertToNative', (newValue) => {
+        window.store.observe('convert_to_primary', (newValue) => {
             if (!afterPromises) {
                 return;
             }
-            // console.log('boxes observe convertToNative');
-            this.convertToNative = newValue;
+            // console.log('boxes observe convertToPrimary');
+            this.convertToPrimary = newValue;
             this.loadBoxes();
         });
     },

@@ -117,13 +117,13 @@ class UpgradesCurrencyPreferences extends Command
 
         // set the default currency for the user and for the group:
         $preference      = $this->getPreference($user);
-        $defaultCurrency = TransactionCurrency::where('code', $preference)->first();
-        if (null === $defaultCurrency) {
+        $primaryCurrency = TransactionCurrency::where('code', $preference)->first();
+        if (null === $primaryCurrency) {
             // get EUR
-            $defaultCurrency = TransactionCurrency::where('code', 'EUR')->first();
+            $primaryCurrency = TransactionCurrency::where('code', 'EUR')->first();
         }
-        $user->currencies()->updateExistingPivot($defaultCurrency->id, ['user_default' => true]);
-        $user->userGroup->currencies()->updateExistingPivot($defaultCurrency->id, ['group_default' => true]);
+        $user->currencies()->updateExistingPivot($primaryCurrency->id, ['user_default' => true]);
+        $user->userGroup->currencies()->updateExistingPivot($primaryCurrency->id, ['group_default' => true]);
     }
 
     private function getPreference(User $user): string

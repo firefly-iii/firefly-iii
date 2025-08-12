@@ -110,8 +110,8 @@ class BillDateCalculator
             $currentStart      = clone $nextExpectedMatch;
 
             ++$loop;
-            if ($loop > 12) {
-                Log::debug('Loop is more than 12, so we break.');
+            if ($loop > 31) {
+                Log::debug('Loop is more than 31, so we break.');
 
                 break;
             }

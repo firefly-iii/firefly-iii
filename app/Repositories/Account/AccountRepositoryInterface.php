@@ -117,7 +117,7 @@ interface AccountRepositoryInterface
     /**
      * Returns the amount of the opening balance for this account.
      */
-    public function getOpeningBalanceAmount(Account $account, bool $convertToNative): ?string;
+    public function getOpeningBalanceAmount(Account $account, bool $convertToPrimary): ?string;
 
     /**
      * Return date of opening balance as string or null.

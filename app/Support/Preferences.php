@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Contracts\Encryption\EncryptException;
@@ -283,6 +284,12 @@ class Preferences
      */
     public function lastActivity(): string
     {
+        $instance     = PreferencesSingleton::getInstance();
+        $pref         = $instance->getPreference('last_activity');
+        if (null !== $pref) {
+            // Log::debug(sprintf('Found last activity in singleton: %s', $pref));
+            return $pref;
+        }
         $lastActivity = microtime();
         $preference   = $this->get('lastActivity', microtime());
 
@@ -292,13 +299,17 @@ class Preferences
         if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
+        $setting      = hash('sha256', (string) $lastActivity);
+        $instance->setPreference('last_activity', $setting);
 
-        return hash('sha256', (string) $lastActivity);
+        return $setting;
     }
 
     public function mark(): void
     {
         $this->set('lastActivity', microtime());
+        $instance = PreferencesSingleton::getInstance();
+        $instance->setPreference('last_activity', microtime());
         Session::forget('first');
     }
 
