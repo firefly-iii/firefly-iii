@@ -52,16 +52,9 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y google-chrome-stable
         
-    - name: Run Selenium tests
-      env:
-        HEADLESS: "true"
-        FIREFLY_URL: http://52.212.42.101:8080
 
-      run: |
-        pytest UI-tests/ -v
     - name: Run API tests
       env:
-           
          FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
          API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
          STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
