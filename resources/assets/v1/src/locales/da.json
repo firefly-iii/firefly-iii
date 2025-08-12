@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Klient Hemmelighed",
         "profile_oauth_client_secret_expl": "Her er din nye klient hemmelighed. Dette er den eneste tid, den vil blive vist, s\u00e5 mist det ikke! Du kan nu bruge denne hemmelighed til at lave API-anmodninger.",
         "profile_oauth_confidential": "Fortroligt",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Afh\u00e6ngigt af hvilken type transaktion du opretter kan kilden og\/eller destinationskontoen for efterf\u00f8lgende opsplitninger tilsides\u00e6ttes, uanset hvad der er defineret i den f\u00f8rste opdeling af transaktionen.",
         "multi_account_warning_withdrawal": "Husk, at kildekontoen for efterf\u00f8lgende opdelinger vil blive overstyret af hvad der er defineret i den f\u00f8rste opdeling af tilbagetr\u00e6kningen.",
         "multi_account_warning_deposit": "Husk, at destinationskontoen for efterf\u00f8lgende opdelinger vil blive tilsidesat af hvad der er defineret i den f\u00f8rste opsplitning af depositummet.",

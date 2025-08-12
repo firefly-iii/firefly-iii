@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Secret du client",
         "profile_oauth_client_secret_expl": "Voici votre nouveau secret de client. C'est la seule fois qu'il sera affich\u00e9, donc ne le perdez pas ! Vous pouvez maintenant utiliser ce secret pour faire des requ\u00eates d'API.",
         "profile_oauth_confidential": "Confidentiel",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Selon le type d'op\u00e9ration que vous cr\u00e9ez, le(s) compte(s) source et\/ou de destination des s\u00e9parations suivantes peuvent \u00eatre remplac\u00e9s par celui de la premi\u00e8re s\u00e9paration de l'op\u00e9ration.",
         "multi_account_warning_withdrawal": "Gardez en t\u00eate que le compte source des s\u00e9parations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re s\u00e9paration de la d\u00e9pense.",
         "multi_account_warning_deposit": "Gardez en t\u00eate que le compte de destination des s\u00e9parations suivantes peut \u00eatre remplac\u00e9 par celui de la premi\u00e8re s\u00e9paration du d\u00e9p\u00f4t.",

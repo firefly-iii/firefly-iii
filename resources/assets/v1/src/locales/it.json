@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Segreto del client",
         "profile_oauth_client_secret_expl": "Ecco il segreto del nuovo client. Questa \u00e8 l'unica occasione in cui viene mostrato pertanto non perderlo! Ora puoi usare questo segreto per effettuare delle richieste alle API.",
         "profile_oauth_confidential": "Riservato",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "A seconda del tipo di transazione che hai creato, il conto di origine e\/o destinazione delle successive suddivisioni pu\u00f2 essere sovrascritto da qualsiasi cosa sia definita nella prima suddivisione della transazione.",
         "multi_account_warning_withdrawal": "Ricorda che il conto di origine delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del prelievo.",
         "multi_account_warning_deposit": "Ricorda che il conto di destinazione delle successive suddivisioni verr\u00e0 sovrascritto da quello definito nella prima suddivisione del deposito.",
