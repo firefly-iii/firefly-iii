@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Kliens titkos k\u00f3dja",
         "profile_oauth_client_secret_expl": "Ez a kliens titkos k\u00f3dja. Ez az egyetlen alkalom, amikor meg van jelen\u00edtve, ne hagyd el! Ezzel a k\u00f3ddal v\u00e9gezhetsz API h\u00edv\u00e1sokat.",
         "profile_oauth_confidential": "Bizalmas",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Depending on the type of transaction you create, the source and\/or destination account of subsequent splits may be overruled by whatever is defined in the first split of the transaction.",
         "multi_account_warning_withdrawal": "Keep in mind that the source account of subsequent splits will be overruled by whatever is defined in the first split of the withdrawal.",
         "multi_account_warning_deposit": "Keep in mind that the destination account of subsequent splits will be overruled by whatever is defined in the first split of the deposit.",

@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Client secret",
         "profile_oauth_client_secret_expl": "Hier is je nieuwe client secret. Dit is de enige keer dat deze getoond wordt dus verlies deze niet! Je kan dit secret gebruiken om API-aanvragen te maken.",
         "profile_oauth_confidential": "Vertrouwelijk",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Afhankelijk van het type transactie wordt de bron- en\/of doelrekening overschreven door wat er in de eerste split staat.",
         "multi_account_warning_withdrawal": "De bronrekening wordt overschreven door wat er in de eerste split staat.",
         "multi_account_warning_deposit": "De doelrekening wordt overschreven door wat er in de eerste split staat.",

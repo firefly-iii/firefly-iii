@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Skrivna koda odjemalca",
         "profile_oauth_client_secret_expl": "Tukaj je skrivna koda va\u0161ega odjemalca. To je edini \u010das, da bo prikazana, zato je ne izgubite! Zdaj lahko uporabite to skrivno kodo za po\u0161iljanje zahtev API.",
         "profile_oauth_confidential": "Zaupno",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Odvisno od vrste transakcije, ki jo ustvarite, lahko izvorni in\/ali ciljni ra\u010dun poznej\u0161ih razdelitev preglasi tisto, kar je definirano v prvi razdelitvi transakcije.",
         "multi_account_warning_withdrawal": "Upo\u0161tevajte, da bo izvorni ra\u010dun poznej\u0161ih razdelitev preglasilo tisto, kar je definirano v prvi razdelitvi odliva.",
         "multi_account_warning_deposit": "Upo\u0161tevajte, da bo ciljni ra\u010dun poznej\u0161ih delitev preglasilo tisto, kar je opredeljeno v prvi delitvi priliva.",

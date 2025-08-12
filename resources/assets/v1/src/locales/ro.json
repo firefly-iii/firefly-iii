@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Secret client",
         "profile_oauth_client_secret_expl": "Aici este noul t\u0103u cod secret de client. Este singura dat\u0103 c\u00e2nd va fi afi\u0219at a\u0219a c\u0103 nu \u00eel pierzi! Acum po\u021bi folosi acest cod pentru a face cereri API.",
         "profile_oauth_confidential": "Confiden\u0163ial",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "\u00cen func\u021bie de tipul de tranzac\u021bie pe care o crea\u021bi, contul sursei \u0219i\/sau destina\u021biei frac\u021bion\u0103rilor ulterioare poate fi dep\u0103\u0219it cu orice se define\u0219te \u00een prima \u00eemp\u0103r\u021bire a tranzac\u021biei.",
         "multi_account_warning_withdrawal": "Re\u0163ine\u0163i faptul c\u0103 sursa scind\u0103rilor ulterioare va fi anulat\u0103 de orice altceva definit \u00een prima \u00eemp\u0103r\u0163ire a retragerii.",
         "multi_account_warning_deposit": "\u021aine\u021bi cont de faptul c\u0103 destina\u021bia scind\u0103rilor ulterioare va fi dep\u0103\u0219it\u0103 cu orice se define\u0219te la prima \u00eemp\u0103r\u021bire a depozitului.",

@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Secreto del Cliente",
         "profile_oauth_client_secret_expl": "Aqu\u00ed est\u00e1 su nuevo secreto de cliente. Esta es la \u00fanica vez que se mostrar\u00e1 as\u00ed que no lo pierda! Ahora puede usar este secreto para hacer solicitudes de API.",
         "profile_oauth_confidential": "Confidencial",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Dependiendo del tipo de transacci\u00f3n que cree, la cuenta de origen y\/o destino de divisiones posteriores puede ser anulada por lo que se define en la primera divisi\u00f3n de la transacci\u00f3n.",
         "multi_account_warning_withdrawal": "Tenga en cuenta que la cuenta de origen de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del gasto.",
         "multi_account_warning_deposit": "Tenga en cuenta que la cuenta de destino de las divisiones posteriores ser\u00e1 anulada por lo que se defina en la primera divisi\u00f3n del retiro.",

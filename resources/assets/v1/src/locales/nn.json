@@ -102,7 +102,7 @@
         "profile_oauth_client_secret_title": "Klient Hemmelegheit",
         "profile_oauth_client_secret_expl": "Her er din nye klienthemmelegheit. Dette er den einaste gongen han vert vist s\u00e5 ikkje mist han! Du kan bruka denne hemmeligheita til \u00e5 laga API-sp\u00f8rsm\u00e5l.",
         "profile_oauth_confidential": "Konfidensiell",
-        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as primary desktop or JavaScript SPA applications, are unable to hold secrets securely.",
+        "profile_oauth_confidential_help": "Require the client to authenticate with a secret. Confidential clients can hold credentials in a secure way without exposing them to unauthorized parties. Public applications, such as native desktop or JavaScript SPA applications, are unable to hold secrets securely.",
         "multi_account_warning_unknown": "Avhengig av kva type transaksjon du opprettar, Kjelde og\/eller m\u00e5lkonto for etterf\u00f8lgande delingar kan overstyrast av det som er definert i transaksjonens f\u00f8rste del.",
         "multi_account_warning_withdrawal": "Husk at kildekontoen for etterf\u00f8lgende oppsplitting skal overlates av kva som defineres i den f\u00f8rste delen av uttrekket.",
         "multi_account_warning_deposit": "Husk at mottakerkontoen for etterf\u00f8lgende oppsplitting skal overstyres av det som er definert i den f\u00f8rste delen av depositumet.",
