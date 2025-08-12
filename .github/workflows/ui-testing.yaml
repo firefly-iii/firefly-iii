@@ -1,5 +1,5 @@
 # .github/workflows/ui-testing.yaml
-name: Selenium UI Tests and API Tests
+name: Selenium UI Tests 
 
 on:
   pull_request:
