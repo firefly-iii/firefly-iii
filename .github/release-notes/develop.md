@@ -2,7 +2,11 @@ Welcome to the latest development release of Firefly III. This test release cont
 
 :warning: Please be careful with this pre-release, as it may not work as expected.
 
-This release was created on %date and may contain unexpected bugs. Data loss is rare but is entirely possible. A changelog is not included with this development release. 
+This release was created on %date and may contain unexpected bugs. Data loss is rare but is entirely possible. A changelog is not included with this development release.
+
+## Changelog
+
+The changelog for this release may not be up-to-date, so it is not included. However, [changelog.md](https://github.com/firefly-iii/firefly-iii/blob/develop/changelog.md) may already contain entries for the future release.
 
 ## Installation and upgrade instructions
 
