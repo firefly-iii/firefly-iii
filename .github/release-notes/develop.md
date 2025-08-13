@@ -2,7 +2,7 @@ Welcome to the latest development release of Firefly III. This test release cont
 
 :warning: Please be careful with this pre-release, as it may not work as expected.
 
-This release was created on %date and may contain unexpected bugs. Data loss is rare but is entirely possible. A changelog is not included with this development release.
+This release was created on %date and may contain unexpected bugs. Data loss is rare but is entirely possible.
 
 ## Changelog
 
