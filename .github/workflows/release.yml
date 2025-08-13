@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Import GPG key
@@ -233,15 +233,6 @@ jobs:
           git push
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
-      - name: Extract changelog
-        id: extract-changelog
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:extract-changelog'
-          output: 'output'
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ""
       - name: Generate release description
         id: release-description
         uses: JC5/firefly-iii-dev@main
@@ -251,11 +242,6 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""
-      - name: Describe new release
-        run: |
-          echo "Should have nothing to do here, but just in case."
-        env:
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Merge all into working branch
         run: |
           MERGE_INTO=develop
