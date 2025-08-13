@@ -13,4 +13,4 @@ The releases are signed, and you can verify them using the [Firefly III releases
 
 ## Support Firefly III
 
-Did you know you can support the development of Firefly III? You can donate in many ways, like GitHub Sponsors or Patreon. Please [follow this link](https://bit.ly/donate-to-Firefly-III) for more information.
+Did you know you can support the development of Firefly III? You can donate in many ways, like GitHub Sponsors or Patreon. Please [follow this link](https://bit.ly/donate-to-Firefly-III) for more information. Thank you for your consideration.

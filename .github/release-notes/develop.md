@@ -2,7 +2,7 @@ Welcome to the latest development release of Firefly III. This test release cont
 
 :warning: Please be careful with this pre-release, as it may not work as expected.
 
-This release was created on %date and may contain unexpected bugs. Data loss is rare but is entirely possible.
+This release was created on %date and may contain unexpected bugs. Data loss is rare but possible.
 
 ## Changelog
 
@@ -17,4 +17,4 @@ The releases are signed, and you can verify them using the [Firefly III releases
 
 ## Support Firefly III
 
-Did you know you can support the development of Firefly III? You can donate in many ways, like GitHub Sponsors or Patreon. Please [follow this link](https://bit.ly/donate-to-Firefly-III) for more information.
+Did you know you can support the development of Firefly III? You can donate in many ways, like GitHub Sponsors or Patreon. Please [follow this link](https://bit.ly/donate-to-Firefly-III) for more information. Thank you for your consideration.
