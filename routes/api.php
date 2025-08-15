@@ -617,15 +617,14 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        Route::get('default', ['uses' => 'ShowController@showDefault', 'as' => 'show.default']);
-        Route::get('native', ['uses' => 'ShowController@showDefault', 'as' => 'show.native']);
+        Route::get('primary', ['uses' => 'ShowController@showPrimary', 'as' => 'show.primary']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 
         Route::post('{currency_code}/enable', ['uses' => 'UpdateController@enable', 'as' => 'enable']);
         Route::post('{currency_code}/disable', ['uses' => 'UpdateController@disable', 'as' => 'disable']);
-        Route::post('{currency_code}/default', ['uses' => 'UpdateController@makeDefault', 'as' => 'default']);
+        Route::post('{currency_code}/primary', ['uses' => 'UpdateController@makePrimary', 'as' => 'update.primary']);
 
         Route::get('{currency_code}/accounts', ['uses' => 'ListController@accounts', 'as' => 'accounts']);
         Route::get('{currency_code}/available-budgets', ['uses' => 'ListController@availableBudgets', 'as' => 'available-budgets']);

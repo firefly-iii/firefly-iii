@@ -73,7 +73,7 @@ class StoreController extends Controller
     {
         $currency    = $this->repository->store($request->getAll());
         if (true === $request->boolean('default')) {
-            $this->repository->makeDefault($currency);
+            $this->repository->makePrimary($currency);
             app('preferences')->mark();
         }
         $manager     = $this->getManager();

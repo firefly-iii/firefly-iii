@@ -101,12 +101,12 @@ class UpdateController extends Controller
     /**
      * @throws FireflyException
      */
-    public function makeDefault(TransactionCurrency $currency): JsonResponse
+    public function makePrimary(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
         $user        = auth()->user();
         $this->repository->enable($currency);
-        $this->repository->makeDefault($currency);
+        $this->repository->makePrimary($currency);
 
         app('preferences')->mark();
 

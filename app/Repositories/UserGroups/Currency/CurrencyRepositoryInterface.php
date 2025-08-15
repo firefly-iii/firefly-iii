@@ -89,7 +89,7 @@ interface CurrencyRepositoryInterface
 
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 
-    public function makeDefault(TransactionCurrency $currency): void;
+    public function makePrimary(TransactionCurrency $currency): void;
 
     public function searchCurrency(string $search, int $limit): Collection;
 
