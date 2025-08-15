@@ -1,6 +1,7 @@
 Welcome to release %version of Firefly III. This **alpha** release contains the latest fixes, translations and features. It is probably buggy and may not work as expected. You can download the release below, and adventurous Docker users can find this release under the `alpha` tag.
 
-:warning: Please be careful with this alpha release, as it may not work as expected.
+> [!WARNING]
+> Please be careful with this alpha release, as it may not work as expected.
 
 Alpha releases are created to test new features and fixes before they are included in a stable release. They are not recommended for production use. This release was created on %date and may contain unexpected bugs. Data loss is rare but possible.
 
