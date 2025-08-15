@@ -74,12 +74,12 @@ class StoreByDateRequest extends FormRequest
                 }
                 foreach ($rates as $key => $entry) {
                     if ($key === $from->code) {
-                        $validator->errors()->add(sprintf('rates.%s', $key), sprintf('Cannot convert from "%s" to itself.', $key));
+                        $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.convert_to_itself', ['code' => $key]));
                         continue;
                     }
                     $to = TransactionCurrency::where('code', $key)->first();
                     if (null === $to) {
-                        $validator->errors()->add(sprintf('rates.%s', $key), sprintf('Invalid currency code "%s".', $key));
+                        $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                     }
                 }
             });
