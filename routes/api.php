@@ -76,20 +76,20 @@ Route::group(
         // get all
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         // get list of rates
-        Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        // get single rate
         Route::get('{userGroupExchangeRate}', ['uses' => 'ShowController@showSingleById', 'as' => 'show.single']);
-        Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'ShowController@showSingleByDate', 'as' => 'show.by-date'])->where(['start_date' => DATEFORMAT]);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'ShowController@showSingleByDate', 'as' => 'show.by-date'])->where(['start_date' => DATEFORMAT]);
 
         // delete all rates
-        Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+        Route::delete('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
         // delete single rate
         Route::delete('{userGroupExchangeRate}', ['uses' => 'DestroyController@destroySingleById', 'as' => 'destroy.single']);
-        Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'DestroyController@destroySingleByDate', 'as' => 'destroy.by-date'])->where(['start_date' => DATEFORMAT]);
+        Route::delete('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'DestroyController@destroySingleByDate', 'as' => 'destroy.by-date'])->where(['start_date' => DATEFORMAT]);
 
         // update single
         Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@updateById', 'as' => 'update']);
-        Route::put('rates/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'UpdateController@updateByDate', 'as' => 'update.by-date'])->where(['start_date' => DATEFORMAT]);
+        Route::put('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'UpdateController@updateByDate', 'as' => 'update.by-date'])->where(['start_date' => DATEFORMAT]);
+
         // post new rate
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::post('by-date/{date}', ['uses' => 'StoreController@storeByDate', 'as' => 'store.by-date'])->where(['start_date' => DATEFORMAT]);

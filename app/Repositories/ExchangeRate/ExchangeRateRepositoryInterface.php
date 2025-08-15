@@ -46,6 +46,7 @@ use Illuminate\Support\Collection;
 interface ExchangeRateRepositoryInterface
 {
     public function deleteRate(CurrencyExchangeRate $rate): void;
+    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void;
 
     public function getAll(): Collection;
 

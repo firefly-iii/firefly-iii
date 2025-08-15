@@ -59,22 +59,23 @@ class DestroyController extends Controller
 
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-        $date = $request->getDate();
-        if (!$date instanceof Carbon) {
-            throw new ValidationException('Date is required');
-        }
-        $rate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (!$rate instanceof CurrencyExchangeRate) {
-            throw new NotFoundHttpException();
-        }
-        $this->repository->deleteRate($rate);
+        $this->repository->deleteRates($from, $to);
 
         return response()->json([], 204);
     }
 
-    public function destroySingle(CurrencyExchangeRate $exchangeRate): JsonResponse
+    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
     {
         $this->repository->deleteRate($exchangeRate);
+
+        return response()->json([], 204);
+    }
+    public function destroySingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
+    {
+        $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if(null !== $exchangeRate) {
+            $this->repository->deleteRate($exchangeRate);
+        }
 
         return response()->json([], 204);
     }

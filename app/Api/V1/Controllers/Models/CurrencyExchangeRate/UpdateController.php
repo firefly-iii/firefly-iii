@@ -24,21 +24,24 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\UpdateRequest;
+use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\UpdateRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UpdateController extends Controller
 {
     use ValidatesUserGroupTrait;
 
     public const string RESOURCE_KEY = 'exchange-rates';
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
+    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
@@ -54,7 +57,7 @@ class UpdateController extends Controller
         );
     }
 
-    public function update(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
+    public function updateById(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
     {
         $date         = $request->getDate();
         $rate         = $request->getRate();
@@ -64,7 +67,24 @@ class UpdateController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    public function updateByDate(UpdateRequest $request, TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
+    {
+        $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if (null === $exchangeRate) {
+            throw new NotFoundHttpException();
+        }
+        $date         = $request->getDate();
+        $rate         = $request->getRate();
+        $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
+
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }

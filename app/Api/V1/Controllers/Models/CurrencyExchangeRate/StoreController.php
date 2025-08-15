@@ -24,14 +24,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use Carbon\Carbon;
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByDateRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class StoreController extends Controller
 {
@@ -52,6 +57,40 @@ class StoreController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse {
+
+        $data = $request->getAll();
+        $from = $request->getFromCurrency();
+        $collection = new Collection();
+        foreach($data['rates'] as $key => $rate) {
+            $to = TransactionCurrency::where('code', $key)->first();
+            if(null === $to) {
+                continue; // should not happen.
+            }
+            $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
+            if(null !== $existing) {
+                // update existing rate.
+                $existing =  $this->repository->updateExchangeRate($existing, $rate);
+                $collection->push($existing);
+                continue;
+            }
+            if(null === $existing) {
+                $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+                $collection->push($new);
+            }
+        }
+
+        $count       = $collection->count();
+        $paginator   = new LengthAwarePaginator($collection, $count, $count, 1);
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters); // give params to transformer
+
+        return response()
+            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+            ;
     }
 
     public function store(StoreRequest $request): JsonResponse
