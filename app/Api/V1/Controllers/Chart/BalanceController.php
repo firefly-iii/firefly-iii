@@ -12,7 +12,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
@@ -26,7 +25,7 @@ class BalanceController extends Controller
 {
     use CleansChartData;
     use CollectsAccountsFromFilter;
-    protected array $acceptedRoles   = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     private array                  $chartData;
     private GroupCollectorInterface    $collector;
@@ -89,7 +88,7 @@ class BalanceController extends Controller
         foreach ($data as $entry) {
             $this->chartData[] = $entry;
         }
-        $this->chartData= $this->clean($this->chartData);
+        $this->chartData = $this->clean($this->chartData);
 
         return response()->json($this->chartData);
     }

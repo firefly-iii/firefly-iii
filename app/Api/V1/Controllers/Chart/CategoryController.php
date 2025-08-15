@@ -81,7 +81,7 @@ class CategoryController extends Controller
     public function overview(DateRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start = $this->parameters->get('start');
+        $start      = $this->parameters->get('start');
 
         /** @var Carbon $end */
         $end        = $this->parameters->get('end');
@@ -92,25 +92,25 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::RECONCILIATION->value]);
-        $journals = $collector->getExtractedJournals();
+        $journals   = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
             // find journal:
-            $journalCurrencyId              = (int)$journal['currency_id'];
-            $currency                       = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
-            $currencies[$journalCurrencyId] = $currency;
-            $currencyId                     = (int)$currency->id;
-            $currencyName                   = (string)$currency->name;
-            $currencyCode                   = (string)$currency->code;
-            $currencySymbol                 = (string)$currency->symbol;
-            $currencyDecimalPlaces          = (int)$currency->decimal_places;
-            $amount                         = Steam::positive($journal['amount']);
-            $pcAmount                       = null;
+            $journalCurrencyId                = (int)$journal['currency_id'];
+            $currency                         = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
+            $currencies[$journalCurrencyId]   = $currency;
+            $currencyId                       = (int)$currency->id;
+            $currencyName                     = (string)$currency->name;
+            $currencyCode                     = (string)$currency->code;
+            $currencySymbol                   = (string)$currency->symbol;
+            $currencyDecimalPlaces            = (int)$currency->decimal_places;
+            $amount                           = Steam::positive($journal['amount']);
+            $pcAmount                         = null;
 
             // overrule if necessary:
             if ($this->convertToPrimary && $journalCurrencyId === $this->primaryCurrency->id) {
@@ -127,8 +127,8 @@ class CategoryController extends Controller
             }
 
 
-            $categoryName = $journal['category_name'] ?? (string)trans('firefly.no_category');
-            $key          = sprintf('%s-%s', $categoryName, $currencyCode);
+            $categoryName                     = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $key                              = sprintf('%s-%s', $categoryName, $currencyCode);
             // create arrays
             $return[$key] ??= [
                 'label'                           => $categoryName,
@@ -148,10 +148,10 @@ class CategoryController extends Controller
                 'yAxisID'                         => 0,
                 'type'                            => 'bar',
                 'entries'                         => [
-                    'spent' => '0'
+                    'spent' => '0',
                 ],
                 'pc_entries'                      => [
-                    'spent' => '0'
+                    'spent' => '0',
                 ],
             ];
 
@@ -161,10 +161,10 @@ class CategoryController extends Controller
                 $return[$key]['pc_entries']['spent'] = bcadd($return[$key]['pc_entries']['spent'], (string)$pcAmount);
             }
         }
-        $return = array_values($return);
+        $return     = array_values($return);
 
         // order by amount
-        usort($return, static fn(array $a, array $b) => (float)$a['entries']['spent'] < (float)$b['entries']['spent'] ? 1 : -1);
+        usort($return, static fn (array $a, array $b) => (float)$a['entries']['spent'] < (float)$b['entries']['spent'] ? 1 : -1);
 
         return response()->json($this->clean($return));
     }

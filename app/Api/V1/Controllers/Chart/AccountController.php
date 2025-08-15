@@ -65,7 +65,7 @@ class AccountController extends Controller
                 $this->chartData  = new ChartData();
                 $this->repository = app(AccountRepositoryInterface::class);
 
-                $userGroup = $this->validateUserGroup($request);
+                $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
 
                 return $next($request);
@@ -107,12 +107,12 @@ class AccountController extends Controller
         $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
 
 
-        $previous   = array_values($range)[0]['balance'];
-        $pcPrevious = null;
+        $previous     = array_values($range)[0]['balance'];
+        $pcPrevious   = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->default;
         }
-        $currentSet = [
+        $currentSet   = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
@@ -153,7 +153,7 @@ class AccountController extends Controller
 
 
             // do the same for the primary currency balance, if relevant:
-            $pcBalance = null;
+            $pcBalance                     = null;
             if ($this->convertToPrimary) {
                 $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
                 $pcPrevious                       = $pcBalance;
@@ -170,7 +170,7 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
 
         /** @var Preference $frontpage */
-        $frontpage = Preferences::get('frontpageAccounts', $defaultSet);
+        $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
         if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
             $frontpage->data = $defaultSet;

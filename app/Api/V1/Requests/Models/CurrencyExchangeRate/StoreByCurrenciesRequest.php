@@ -60,14 +60,17 @@ class StoreByCurrenciesRequest extends FormRequest
                     try {
                         $date = Carbon::createFromFormat('Y-m-d', $date);
                     } catch (InvalidFormatException $e) {
-                        $validator->errors()->add('date', trans('validation.date',['attribute' => 'date']));
+                        $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
+
                         return;
                     }
                     if (!is_numeric($rate)) {
-                        $validator->errors()->add('rate', trans('validation.number',['attribute' => 'rate']));
+                        $validator->errors()->add('rate', trans('validation.number', ['attribute' => 'rate']));
+
                         return;
                     }
                 }
-            });
+            }
+        );
     }
 }

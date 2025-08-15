@@ -91,17 +91,17 @@ class ShowController extends Controller
 
     public function showSingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
-        $transformer = new ExchangeRateTransformer();
+        $transformer  = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
-        $exchangeRate       = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if(null === $exchangeRate) {
+        $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if (null === $exchangeRate) {
             throw new NotFoundHttpException();
         }
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+        ;
     }
 }

@@ -40,7 +40,7 @@ class UpdateController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY = 'exchange-rates';
+    public const string RESOURCE_KEY                       = 'exchange-rates';
     protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
@@ -67,7 +67,8 @@ class UpdateController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     public function updateByDate(UpdateRequest $request, TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
@@ -80,11 +81,12 @@ class UpdateController extends Controller
         $rate         = $request->getRate();
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
 
-        $transformer = new ExchangeRateTransformer();
+        $transformer  = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }
