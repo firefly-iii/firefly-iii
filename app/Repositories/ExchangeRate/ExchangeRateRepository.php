@@ -118,6 +118,7 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $this->userGroup->currencyExchangeRates()
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
-            ->delete();
+            ->delete()
+        ;
     }
 }
