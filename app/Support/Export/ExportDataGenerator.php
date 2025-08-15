@@ -42,6 +42,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
@@ -84,6 +85,7 @@ class ExportDataGenerator
     private bool       $exportTransactions;
     private Carbon     $start;
     private User       $user;
+    private UserGroup $userGroup;
 
     public function __construct()
     {
@@ -906,4 +908,11 @@ class ExportDataGenerator
     {
         $this->start = $start;
     }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
+    }
+
+
 }

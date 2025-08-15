@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Data\Export;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
@@ -39,6 +40,7 @@ use function Safe\date;
 class ExportController extends Controller
 {
     private ExportDataGenerator $exporter;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**
      * ExportController constructor.
@@ -48,8 +50,10 @@ class ExportController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->exporter = app(ExportDataGenerator::class);
-                $this->exporter->setUser(auth()->user());
+                $this->exporter->setUserGroup($this->userGroup);
+                $this->exporter->setUser($this->user);
 
                 return $next($request);
             }
