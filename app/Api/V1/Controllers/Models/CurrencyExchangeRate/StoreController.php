@@ -43,7 +43,7 @@ class StoreController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY = 'exchange-rates';
+    public const string RESOURCE_KEY                       = 'exchange-rates';
     protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
@@ -63,8 +63,8 @@ class StoreController extends Controller
     public function storeByCurrencies(StoreByCurrenciesRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
 
-        $data       = $request->getAll();
-        $collection = new Collection();
+        $data        = $request->getAll();
+        $collection  = new Collection();
 
         foreach ($data as $date => $rate) {
             $date     = Carbon::createFromFormat('Y-m-d', $date);
@@ -73,9 +73,10 @@ class StoreController extends Controller
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
+
                 continue;
             }
-            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
             $collection->push($new);
         }
 
@@ -86,17 +87,18 @@ class StoreController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse
     {
 
-        $data       = $request->getAll();
-        $from       = $request->getFromCurrency();
-        $collection = new Collection();
+        $data        = $request->getAll();
+        $from        = $request->getFromCurrency();
+        $collection  = new Collection();
         foreach ($data['rates'] as $key => $rate) {
-            $to = TransactionCurrency::where('code', $key)->first();
+            $to       = TransactionCurrency::where('code', $key)->first();
             if (null === $to) {
                 continue; // should not happen.
             }
@@ -105,9 +107,10 @@ class StoreController extends Controller
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
+
                 continue;
             }
-            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $new      = $this->repository->storeExchangeRate($from, $to, $rate, $date);
             $collection->push($new);
         }
 
@@ -118,18 +121,19 @@ class StoreController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 
     public function store(StoreRequest $request): JsonResponse
     {
-        $date = $request->getDate();
-        $rate = $request->getRate();
-        $from = $request->getFromCurrency();
-        $to   = $request->getToCurrency();
+        $date        = $request->getDate();
+        $rate        = $request->getRate();
+        $from        = $request->getFromCurrency();
+        $to          = $request->getToCurrency();
 
         // already has rate?
-        $object = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if ($object instanceof CurrencyExchangeRate) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
@@ -144,6 +148,7 @@ class StoreController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE);
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
     }
 }

@@ -38,7 +38,7 @@ class StoreByDateRequest extends FormRequest
     public function getAll(): array
     {
         return [
-            'from' => $this->get('from'),
+            'from'  => $this->get('from'),
             'rates' => $this->get('rates', []),
         ];
     }
@@ -62,7 +62,7 @@ class StoreByDateRequest extends FormRequest
 
     public function withValidator(Validator $validator): void
     {
-        $from  = $this->getFromCurrency();
+        $from = $this->getFromCurrency();
 
         $validator->after(
             static function (Validator $validator) use ($from): void {
@@ -70,11 +70,13 @@ class StoreByDateRequest extends FormRequest
                 $rates = $data['rates'] ?? [];
                 if (0 === count($rates)) {
                     $validator->errors()->add('rates', 'No rates given.');
+
                     return;
                 }
                 foreach ($rates as $key => $entry) {
                     if ($key === $from->code) {
                         $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.convert_to_itself', ['code' => $key]));
+
                         continue;
                     }
                     $to = TransactionCurrency::where('code', $key)->first();
@@ -82,6 +84,7 @@ class StoreByDateRequest extends FormRequest
                         $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                     }
                 }
-            });
+            }
+        );
     }
 }

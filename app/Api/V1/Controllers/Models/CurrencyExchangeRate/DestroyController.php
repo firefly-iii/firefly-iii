@@ -28,13 +28,11 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class DestroyController extends Controller
 {
@@ -70,10 +68,11 @@ class DestroyController extends Controller
 
         return response()->json([], 204);
     }
+
     public function destroySingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if(null !== $exchangeRate) {
+        if (null !== $exchangeRate) {
             $this->repository->deleteRate($exchangeRate);
         }
 
