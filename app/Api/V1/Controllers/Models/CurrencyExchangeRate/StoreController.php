@@ -25,11 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
 use Carbon\Carbon;
+use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByCurrenciesRequest;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByDateRequest;
+use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreRequest;
-use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -43,7 +44,7 @@ class StoreController extends Controller
     use ValidatesUserGroupTrait;
 
     public const string RESOURCE_KEY = 'exchange-rates';
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
+    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
@@ -59,27 +60,23 @@ class StoreController extends Controller
         );
     }
 
-    public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse {
+    public function storeByCurrencies(StoreByCurrenciesRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
+    {
 
-        $data = $request->getAll();
-        $from = $request->getFromCurrency();
+        $data       = $request->getAll();
         $collection = new Collection();
-        foreach($data['rates'] as $key => $rate) {
-            $to = TransactionCurrency::where('code', $key)->first();
-            if(null === $to) {
-                continue; // should not happen.
-            }
+
+        foreach ($data as $date => $rate) {
+            $date     = Carbon::createFromFormat('Y-m-d', $date);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
-            if(null !== $existing) {
+            if (null !== $existing) {
                 // update existing rate.
-                $existing =  $this->repository->updateExchangeRate($existing, $rate);
+                $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
                 continue;
             }
-            if(null === $existing) {
-                $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
-                $collection->push($new);
-            }
+            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $collection->push($new);
         }
 
         $count       = $collection->count();
@@ -89,19 +86,50 @@ class StoreController extends Controller
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-            ;
+            ->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse
+    {
+
+        $data       = $request->getAll();
+        $from       = $request->getFromCurrency();
+        $collection = new Collection();
+        foreach ($data['rates'] as $key => $rate) {
+            $to = TransactionCurrency::where('code', $key)->first();
+            if (null === $to) {
+                continue; // should not happen.
+            }
+            $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
+            if (null !== $existing) {
+                // update existing rate.
+                $existing = $this->repository->updateExchangeRate($existing, $rate);
+                $collection->push($existing);
+                continue;
+            }
+            $new = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+            $collection->push($new);
+        }
+
+        $count       = $collection->count();
+        $paginator   = new LengthAwarePaginator($collection, $count, $count, 1);
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters); // give params to transformer
+
+        return response()
+            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function store(StoreRequest $request): JsonResponse
     {
-        $date        = $request->getDate();
-        $rate        = $request->getRate();
-        $from        = $request->getFromCurrency();
-        $to          = $request->getToCurrency();
+        $date = $request->getDate();
+        $rate = $request->getRate();
+        $from = $request->getFromCurrency();
+        $to   = $request->getToCurrency();
 
         // already has rate?
-        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        $object = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if ($object instanceof CurrencyExchangeRate) {
             // just update it, no matter.
             $rate = $this->repository->updateExchangeRate($object, $rate, $date);
@@ -116,7 +144,6 @@ class StoreController extends Controller
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+            ->header('Content-Type', self::CONTENT_TYPE);
     }
 }
