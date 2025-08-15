@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Log;
 trait ValidatesUserGroupTrait
 {
     protected ?UserGroup $userGroup = null;
+    protected ?User $user = null;
 
     /**
      * An "undocumented" filter
@@ -101,6 +102,7 @@ trait ValidatesUserGroupTrait
             if ($user->hasRoleInGroupOrOwner($group, $role)) {
                 Log::debug(sprintf('validateUserGroup: User has role "%s" in group #%d, return the group.', $role->value, $groupId));
                 $this->userGroup = $group;
+                $this->user = $user;
 
                 return $group;
             }

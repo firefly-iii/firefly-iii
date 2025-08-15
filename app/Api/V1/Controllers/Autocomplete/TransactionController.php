@@ -52,14 +52,13 @@ class TransactionController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user                  = auth()->user();
-                $userGroup             = $this->validateUserGroup($request);
+                $this->validateUserGroup($request);
                 $this->repository      = app(JournalRepositoryInterface::class);
                 $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-                $this->repository->setUser($user);
-                $this->groupRepository->setUser($user);
-                $this->groupRepository->setUserGroup($userGroup);
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
+                $this->groupRepository->setUser($this->user);
+                $this->groupRepository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }

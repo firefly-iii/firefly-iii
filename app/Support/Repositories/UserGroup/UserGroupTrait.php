@@ -72,8 +72,8 @@ trait UserGroupTrait
 
             return;
         }
-
-        throw new FireflyException(sprintf('Object is of class %s, not User.', $user::class));
+        $class = null === $user ? 'NULL' : $user::class;
+        throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }
 
     public function getUserGroup(): ?UserGroup

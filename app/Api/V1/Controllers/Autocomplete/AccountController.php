@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -47,6 +48,7 @@ class AccountController extends Controller
 
     // this array only exists to test if the constructor will use it properly.
     protected array $accepts = ['application/json', 'application/vnd.api+json'];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /** @var array<int, string> */
     private array                      $balanceTypes;
@@ -60,10 +62,10 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+                $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }

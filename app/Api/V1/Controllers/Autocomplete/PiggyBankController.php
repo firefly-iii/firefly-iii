@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -39,6 +40,7 @@ class PiggyBankController extends Controller
 {
     private AccountRepositoryInterface   $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_PIGGY_BANKS];
 
     /**
      * PiggyBankController constructor.
@@ -48,12 +50,13 @@ class PiggyBankController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user                    = auth()->user();
+                $this->validateUserGroup($request);
                 $this->piggyRepository   = app(PiggyBankRepositoryInterface::class);
                 $this->accountRepository = app(AccountRepositoryInterface::class);
-                $this->piggyRepository->setUser($user);
-                $this->accountRepository->setUser($user);
+                $this->piggyRepository->setUser($this->user);
+                $this->piggyRepository->setUserGroup($this->userGroup);
+                $this->accountRepository->setUser($this->user);
+                $this->accountRepository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }

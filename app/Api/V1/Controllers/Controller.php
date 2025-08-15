@@ -62,9 +62,9 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected const string CONTENT_TYPE             = 'application/vnd.api+json';
-    protected const string JSON_CONTENT_TYPE        = 'application/json';
-    protected array               $accepts          = ['application/json', 'application/vnd.api+json'];
+    protected const string CONTENT_TYPE      = 'application/vnd.api+json';
+    protected const string JSON_CONTENT_TYPE = 'application/json';
+    protected array $accepts = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
     protected array               $allowedSort;
@@ -106,8 +106,8 @@ abstract class Controller extends BaseController
      */
     private function getParameters(): ParameterBag
     {
-        $bag      = new ParameterBag();
-        $page     = (int) request()->get('page');
+        $bag  = new ParameterBag();
+        $page = (int)request()->get('page');
         if ($page < 1) {
             $page = 1;
         }
@@ -117,7 +117,7 @@ abstract class Controller extends BaseController
         $bag->set('page', $page);
 
         // some date fields:
-        $dates    = ['start', 'end', 'date'];
+        $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
             $date = null;
 
@@ -128,16 +128,16 @@ abstract class Controller extends BaseController
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-            $obj  = null;
+            $obj = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string) $date);
+                    $obj = Carbon::parse((string)$date);
                 } catch (InvalidFormatException $e) {
                     // don't care
                     Log::warning(
                         sprintf(
                             'Ignored invalid date "%s" in API controller parameter check: %s',
-                            substr((string) $date, 0, 20),
+                            substr((string)$date, 0, 20),
                             $e->getMessage()
                         )
                     );
@@ -158,7 +158,7 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $value = (int) $value;
+                $value = (int)$value;
                 if ($value < 1) {
                     $value = 1;
                 }
@@ -173,10 +173,10 @@ abstract class Controller extends BaseController
                 && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
-                $user     = auth()->user();
+                $user = auth()->user();
 
                 /** @var Preference $pageSize */
-                $pageSize = (int) app('preferences')->getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }
@@ -190,7 +190,7 @@ abstract class Controller extends BaseController
         $sortParameters = [];
 
         try {
-            $param = (string) request()->query->get('sort');
+            $param = (string)request()->query->get('sort');
         } catch (BadRequestException $e) {
             Log::error('Request field "sort" contains a non-scalar value. Value set to NULL.');
             Log::error($e->getMessage());
@@ -200,7 +200,7 @@ abstract class Controller extends BaseController
         if ('' === $param) {
             return $bag;
         }
-        $parts          = explode(',', $param);
+        $parts = explode(',', $param);
         foreach ($parts as $part) {
             $part      = trim($part);
             $direction = 'asc';
@@ -236,14 +236,14 @@ abstract class Controller extends BaseController
             $params[$key] = $value;
         }
 
-        return $return.http_build_query($params);
+        return $return . http_build_query($params);
     }
 
     final protected function getManager(): Manager
     {
         // create some objects:
         $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         return $manager;
@@ -251,14 +251,14 @@ abstract class Controller extends BaseController
 
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
 
         // TODO add stuff to path?
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects  = $paginator->getCollection();
+        $objects = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
@@ -279,8 +279,8 @@ abstract class Controller extends BaseController
     final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // $transformer->collectMetaData(new Collection([$object]));

@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,7 @@ use Illuminate\Http\JsonResponse;
 class RecurrenceController extends Controller
 {
     private RecurringRepositoryInterface $repository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_RECURRING];
 
     /**
      * RecurrenceController constructor.
@@ -45,9 +47,10 @@ class RecurrenceController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->repository = app(RecurringRepositoryInterface::class);
-
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }
