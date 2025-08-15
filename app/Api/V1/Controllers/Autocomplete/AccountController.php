@@ -35,7 +35,6 @@ use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 

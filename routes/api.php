@@ -618,6 +618,7 @@ Route::group(
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('primary', ['uses' => 'ShowController@showPrimary', 'as' => 'show.primary']);
+        Route::get('default', ['uses' => 'ShowController@showPrimary', 'as' => 'show.default']);
         Route::get('{currency_code}', ['uses' => 'ShowController@show', 'as' => 'show']);
         Route::put('{currency_code?}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{currency_code}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
