@@ -27,7 +27,7 @@ class BalanceController extends Controller
     use CollectsAccountsFromFilter;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                  $chartData;
+    private array                  $chartData = [];
     private GroupCollectorInterface    $collector;
     private AccountRepositoryInterface $repository;
 
@@ -40,11 +40,10 @@ class BalanceController extends Controller
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->collector  = app(GroupCollectorInterface::class);
-                $userGroup        = $this->validateUserGroup($request);
-                $this->repository->setUserGroup($userGroup);
-                $this->collector->setUserGroup($userGroup);
-                $this->chartData  = [];
-                // $this->default    = app('amount')->getPrimaryCurrency();
+                $this->repository->setUserGroup($this->userGroup);
+                $this->collector->setUserGroup($this->userGroup);
+                $this->repository->setUser($this->user);
+                $this->collector->setUser($this->user);
 
                 return $next($request);
             }

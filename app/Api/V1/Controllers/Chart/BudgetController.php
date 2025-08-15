@@ -63,13 +63,17 @@ class BudgetController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $userGroup           = $this->validateUserGroup($request);
-                $this->repository->setUserGroup($userGroup);
-                $this->opsRepository->setUserGroup($userGroup);
-                $this->blRepository->setUserGroup($userGroup);
+                $this->validateUserGroup($request);
+                $this->repository->setUserGroup($this->userGroup);
+                $this->opsRepository->setUserGroup($this->userGroup);
+                $this->blRepository->setUserGroup($this->userGroup);
+                $this->repository->setUser($this->user);
+                $this->opsRepository->setUser($this->user);
+                $this->blRepository->setUser($this->user);
 
                 return $next($request);
             }
@@ -157,12 +161,6 @@ class BudgetController extends Controller
         }
 
 
-        // if no limits
-        //        if (0 === $limits->count()) {
-        //             return as a single item in an array
-        //            $rows = $this->noBudgetLimits($budget, $start, $end);
-        //        }
-
         // is always an array
         $return     = [];
         foreach ($rows as $row) {
@@ -193,9 +191,9 @@ class BudgetController extends Controller
                 ],
                 'pc_entries'                      => [
                     'budgeted'  => $row['pc_budgeted'],
-                    'spent'     => '0',
-                    'left'      => '0',
-                    'overspent' => '0',
+                    'spent'     => $row['pc_spent'],
+                    'left'      => $row['pc_left'],
+                    'overspent' => $row['pc_overspent'],
                 ],
             ];
             $return[] = $current;

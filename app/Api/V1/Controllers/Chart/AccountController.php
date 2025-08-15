@@ -37,6 +37,7 @@ use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
+use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -48,10 +49,11 @@ class AccountController extends Controller
 {
     use ApiSupport;
     use CollectsAccountsFromFilter;
+    use CleansChartData;
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private ChartData                  $chartData;
+    private array                  $chartData;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -62,11 +64,9 @@ class AccountController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                $this->chartData  = new ChartData();
                 $this->repository = app(AccountRepositoryInterface::class);
-
-                $userGroup        = $this->validateUserGroup($request);
-                $this->repository->setUserGroup($userGroup);
+                $this->repository->setUserGroup($this->userGroup);
+                $this->repository->setUser($this->user);
 
                 return $next($request);
             }
@@ -84,7 +84,7 @@ class AccountController extends Controller
         // move date to end of day
         $queryParameters['start']->startOfDay();
         $queryParameters['end']->endOfDay();
-        Log::debug(sprintf('dashboard(), convert to primary: %s', var_export($this->convertToPrimary, true)));
+        // Log::debug(sprintf('dashboard(), convert to primary: %s', var_export($this->convertToPrimary, true)));
 
         // loop each account, and collect info:
         /** @var Account $account */
@@ -93,7 +93,7 @@ class AccountController extends Controller
             $this->renderAccountData($queryParameters, $account);
         }
 
-        return response()->json($this->chartData->render());
+        return response()->json($this->clean($this->chartData));
     }
 
     /**
@@ -110,7 +110,7 @@ class AccountController extends Controller
         $previous     = array_values($range)[0]['balance'];
         $pcPrevious   = null;
         if (!$currency instanceof TransactionCurrency) {
-            $currency = $this->default;
+            $currency = $this->primaryCurrency;
         }
         $currentSet   = [
             'label'                   => $account->name,
@@ -162,21 +162,6 @@ class AccountController extends Controller
 
             $currentStart->addDay();
         }
-        $this->chartData->add($currentSet);
-    }
-
-    private function getFrontPageAccountIds(): array
-    {
-        $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
-
-        /** @var Preference $frontpage */
-        $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
-
-        if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
-            $frontpage->data = $defaultSet;
-            $frontpage->save();
-        }
-
-        return $frontpage->data ?? $defaultSet;
+        $this->chartData[] = $currentSet;
     }
 }

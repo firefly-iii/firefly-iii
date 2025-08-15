@@ -61,9 +61,10 @@ class CategoryController extends Controller
             function ($request, $next) {
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $userGroup           = $this->validateUserGroup($request);
-                $this->accountRepos->setUserGroup($userGroup);
-                $this->currencyRepos->setUserGroup($userGroup);
+                $this->accountRepos->setUserGroup($this->userGroup);
+                $this->currencyRepos->setUserGroup($this->userGroup);
+                $this->accountRepos->setUser($this->user);
+                $this->currencyRepos->setUser($this->user);
 
                 return $next($request);
             }
