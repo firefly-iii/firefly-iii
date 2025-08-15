@@ -128,7 +128,7 @@ Route::group(
         'as'        => 'api.v1.chart.budget.',
     ],
     static function (): void {
-        Route::get('dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'dashboard']);
+        Route::get('overview', ['uses' => 'BudgetController@overview', 'as' => 'overview']);
     }
 );
 
@@ -139,7 +139,7 @@ Route::group(
         'as'        => 'api.v1.chart.category.',
     ],
     static function (): void {
-        Route::get('dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'dashboard']);
+        Route::get('overview', ['uses' => 'CategoryController@overview', 'as' => 'overview']);
     }
 );
 

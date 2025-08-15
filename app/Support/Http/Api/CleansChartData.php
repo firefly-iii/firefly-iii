@@ -61,7 +61,10 @@ trait CleansChartData
         if (array_key_exists('primary_currency_id', $array)) {
             $array['primary_currency_id'] = (string)$array['primary_currency_id'];
         }
-        $required = ['start_date', 'end_date', 'period', 'yAxisID'];
+        $required = [
+            'start_date', 'end_date', 'period', 'yAxisID','type','entries','pc_entries',
+            'currency_id', 'primary_currency_id'
+        ];
         foreach ($required as $field) {
             if (!array_key_exists($field, $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "%s"-variable.', $index, $field));
