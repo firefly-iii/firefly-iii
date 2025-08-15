@@ -284,9 +284,9 @@ export default {
             // console.log(parts);
 
             // delete A to B
-            axios.delete("./api/v1/exchange-rates/rates/" + parts.from + '/' + parts.to + '?date=' + format(parts.date, 'yyyy-MM-dd'));
+            axios.delete("./api/v1/exchange-rates/" + parts.from + '/' + parts.to + '/' + format(parts.date, 'yyyy-MM-dd'));
             // delete B to A.
-            axios.delete("./api/v1/exchange-rates/rates/" + parts.to + '/' + parts.from + '?date=' + format(parts.date, 'yyyy-MM-dd'));
+            axios.delete("./api/v1/exchange-rates/" + parts.to + '/' + parts.from + '/' + format(parts.date, 'yyyy-MM-dd'));
 
             this.rates.splice(index, 1);
         },
@@ -327,7 +327,7 @@ export default {
         downloadRates: function (page) {
             this.tempRates = {};
             this.loading = true;
-            axios.get("./api/v1/exchange-rates/rates/" + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
+            axios.get("./api/v1/exchange-rates/" + this.from_code + '/' + this.to_code + '?page=' + page).then((response) => {
                 for (let i in response.data.data) {
                     if (response.data.data.hasOwnProperty(i)) {
                         let current = response.data.data[i];

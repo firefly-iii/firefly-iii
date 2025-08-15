@@ -1,7 +1,7 @@
 <?php
 
 /*
- * UpdateRequest.php
+ * StoreRequest.php
  * Copyright (c) 2025 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -25,23 +25,20 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRequest extends FormRequest
+class StoreByCurrenciesRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    public function getDate(): ?Carbon
+    public function getAll(): array
     {
-        return $this->getCarbonDate('date');
-    }
-
-    public function getRate(): string
-    {
-        return (string) $this->get('rate');
+        return $this->all();
     }
 
     /**
@@ -50,10 +47,30 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date' => 'date|after:1970-01-02|before:2038-01-17',
-            'rate' => 'required|numeric|gt:0',
-            'from' => 'nullable|exists:transaction_currencies,code',
-            'to'   => 'nullable|exists:transaction_currencies,code',
+            '*' => 'required|numeric|min:0.0000000001',
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            static function (Validator $validator): void {
+                $data = $validator->getData() ?? [];
+                foreach ($data as $date => $rate) {
+                    try {
+                        $date = Carbon::createFromFormat('Y-m-d', $date);
+                    } catch (InvalidFormatException $e) {
+                        $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
+
+                        return;
+                    }
+                    if (!is_numeric($rate)) {
+                        $validator->errors()->add('rate', trans('validation.number', ['attribute' => 'rate']));
+
+                        return;
+                    }
+                }
+            }
+        );
     }
 }

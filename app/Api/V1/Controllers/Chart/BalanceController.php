@@ -7,11 +7,11 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Chart\ChartData;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
@@ -25,8 +25,9 @@ class BalanceController extends Controller
 {
     use CleansChartData;
     use CollectsAccountsFromFilter;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private ChartData                  $chartData;
+    private array                  $chartData;
     private GroupCollectorInterface    $collector;
     private AccountRepositoryInterface $repository;
 
@@ -42,7 +43,7 @@ class BalanceController extends Controller
                 $userGroup        = $this->validateUserGroup($request);
                 $this->repository->setUserGroup($userGroup);
                 $this->collector->setUserGroup($userGroup);
-                $this->chartData  = new ChartData();
+                $this->chartData  = [];
                 // $this->default    = app('amount')->getPrimaryCurrency();
 
                 return $next($request);
@@ -66,10 +67,6 @@ class BalanceController extends Controller
         $queryParameters = $request->getParameters();
         $accounts        = $this->getAccountList($queryParameters);
 
-        // prepare for currency conversion and data collection:
-        /** @var TransactionCurrency $primary */
-        $primary         = Amount::getPrimaryCurrency();
-
         // get journals for entire period:
 
         $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
@@ -81,7 +78,7 @@ class BalanceController extends Controller
 
         $object          = new AccountBalanceGrouped();
         $object->setPreferredRange($queryParameters['period']);
-        $object->setPrimary($primary);
+        $object->setPrimary($this->primaryCurrency);
         $object->setAccounts($accounts);
         $object->setJournals($journals);
         $object->setStart($queryParameters['start']);
@@ -89,9 +86,10 @@ class BalanceController extends Controller
         $object->groupByCurrencyAndPeriod();
         $data            = $object->convertToChartData();
         foreach ($data as $entry) {
-            $this->chartData->add($entry);
+            $this->chartData[] = $entry;
         }
+        $this->chartData = $this->clean($this->chartData);
 
-        return response()->json($this->chartData->render());
+        return response()->json($this->chartData);
     }
 }

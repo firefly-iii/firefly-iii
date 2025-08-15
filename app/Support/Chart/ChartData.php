@@ -26,6 +26,9 @@ namespace FireflyIII\Support\Chart;
 
 use FireflyIII\Exceptions\FireflyException;
 
+/**
+ * @deprecated
+ */
 class ChartData
 {
     private array $series;

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
@@ -33,6 +34,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ShowController
@@ -76,10 +78,26 @@ class ShowController extends Controller
         ;
     }
 
-    public function showSingle(CurrencyExchangeRate $exchangeRate): JsonResponse
+    public function showSingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
     {
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
+
+        return response()
+            ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))
+            ->header('Content-Type', self::CONTENT_TYPE)
+        ;
+    }
+
+    public function showSingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
+    {
+        $transformer  = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
+
+        $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if (null === $exchangeRate) {
+            throw new NotFoundHttpException();
+        }
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))

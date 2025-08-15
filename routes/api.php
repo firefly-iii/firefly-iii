@@ -33,6 +33,10 @@ use Illuminate\Support\Facades\Route;
  *     \__/      |_|    | _| `._____| \______/   \______/      |__|     |_______|_______/
  */
 
+if (!defined('DATEFORMAT')) {
+    define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
+}
+
 // Autocomplete controllers
 Route::group(
     [
@@ -69,24 +73,34 @@ Route::group(
         'as'        => 'api.v1.exchange-rates.',
     ],
     static function (): void {
+        // get all
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-        Route::get('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
-        Route::get('{userGroupExchangeRate}', ['uses' => 'ShowController@showSingle', 'as' => 'show.single']);
-        Route::delete('rates/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
-        Route::delete('{userGroupExchangeRate}', ['uses' => 'DestroyController@destroySingle', 'as' => 'destroy.single']);
-        Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@update', 'as' => 'update']);
+        // get list of rates
+        Route::get('{userGroupExchangeRate}', ['uses' => 'ShowController@showSingleById', 'as' => 'show.single']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'ShowController@showSingleByDate', 'as' => 'show.by-date'])->where(['start_date' => DATEFORMAT]);
+
+        // delete all rates
+        Route::delete('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'DestroyController@destroy', 'as' => 'destroy']);
+        // delete single rate
+        Route::delete('{userGroupExchangeRate}', ['uses' => 'DestroyController@destroySingleById', 'as' => 'destroy.single']);
+        Route::delete('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'DestroyController@destroySingleByDate', 'as' => 'destroy.by-date'])->where(['start_date' => DATEFORMAT]);
+
+        // update single
+        Route::put('{userGroupExchangeRate}', ['uses' => 'UpdateController@updateById', 'as' => 'update']);
+        Route::put('{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'UpdateController@updateByDate', 'as' => 'update.by-date'])->where(['start_date' => DATEFORMAT]);
+
+        // post new rate
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
+        Route::post('by-date/{date}', ['uses' => 'StoreController@storeByDate', 'as' => 'store.by-date'])->where(['start_date' => DATEFORMAT]);
+        Route::post('by-currencies/{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'StoreController@storeByCurrencies', 'as' => 'store.by-currencies']);
     }
 );
-
-// CHART ROUTES.
-
-// chart balance
 
 // CHART ROUTES
 Route::group(
     [
-        'namespace' => 'FireflyIII\Api\V2\Controllers\Chart',
+        'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
         'prefix'    => 'v1/chart/balance',
         'as'        => 'api.v1.chart.balance',
     ],
@@ -104,7 +118,6 @@ Route::group(
     ],
     static function (): void {
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
-        Route::get('dashboard', ['uses' => 'AccountController@dashboard', 'as' => 'dashboard']);
     }
 );
 
@@ -115,7 +128,7 @@ Route::group(
         'as'        => 'api.v1.chart.budget.',
     ],
     static function (): void {
-        Route::get('dashboard', ['uses' => 'BudgetController@dashboard', 'as' => 'dashboard']);
+        Route::get('overview', ['uses' => 'BudgetController@overview', 'as' => 'overview']);
     }
 );
 
@@ -126,7 +139,7 @@ Route::group(
         'as'        => 'api.v1.chart.category.',
     ],
     static function (): void {
-        Route::get('dashboard', ['uses' => 'CategoryController@dashboard', 'as' => 'dashboard']);
+        Route::get('overview', ['uses' => 'CategoryController@overview', 'as' => 'overview']);
     }
 );
 

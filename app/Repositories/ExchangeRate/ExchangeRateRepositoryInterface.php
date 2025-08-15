@@ -47,6 +47,8 @@ interface ExchangeRateRepositoryInterface
 {
     public function deleteRate(CurrencyExchangeRate $rate): void;
 
+    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void;
+
     public function getAll(): Collection;
 
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection;

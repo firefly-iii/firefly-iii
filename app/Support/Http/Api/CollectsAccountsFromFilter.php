@@ -67,7 +67,7 @@ trait CollectsAccountsFromFilter
         if ('all' === $queryParameters['preselected']) {
             return $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
         }
-        if ('assets' === $queryParameters['preselected']) {
+        if ('assets' === $queryParameters['preselected'] || 'Asset account' === $queryParameters['preselected']) {
             return $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
         }
         if ('liabilities' === $queryParameters['preselected']) {
