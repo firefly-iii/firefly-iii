@@ -71,9 +71,6 @@ class ListController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listAttachmentByAccount
-     *
      * @throws FireflyException
      */
     public function attachments(Account $account): JsonResponse
@@ -100,9 +97,6 @@ class ListController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listPiggyBankByAccount
-     *
      * @throws FireflyException
      */
     public function piggyBanks(Account $account): JsonResponse
@@ -140,9 +134,6 @@ class ListController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/accounts/listTransactionByAccount
-     *
      * Show all transaction groups related to the account.
      *
      * @throws FireflyException

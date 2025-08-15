@@ -61,8 +61,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportAccounts
      *
      * @throws FireflyException
      *
@@ -103,9 +101,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBills
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -118,9 +113,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportBudgets
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -133,9 +125,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportCategories
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -148,9 +137,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportPiggies
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -163,9 +149,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRecurring
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -178,9 +161,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportRules
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -193,9 +173,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTags
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -208,9 +185,6 @@ class ExportController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/exportTransactions
-     *
      * @throws FireflyException
      */
     public function transactions(ExportRequest $request): LaravelResponse

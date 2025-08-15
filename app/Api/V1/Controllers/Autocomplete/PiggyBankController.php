@@ -63,10 +63,6 @@ class PiggyBankController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesAC
-     */
     public function piggyBanks(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();
@@ -93,10 +89,6 @@ class PiggyBankController extends Controller
         return response()->api($response);
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getPiggiesBalanceAC
-     */
     public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();

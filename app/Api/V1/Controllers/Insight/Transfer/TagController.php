@@ -56,10 +56,6 @@ class TagController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransferNoTag
-     */
     public function noTag(GenericRequest $request): JsonResponse
     {
         $accounts         = $request->getAssetAccounts();
@@ -108,9 +104,6 @@ class TagController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightTransferTag
-     *
      * Transfers per tag, possibly filtered by tag and account.
      */
     public function tag(GenericRequest $request): JsonResponse

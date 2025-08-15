@@ -58,9 +58,6 @@ class BillController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseBill
-     *
      * Expenses per bill, possibly filtered by bill and account.
      */
     public function bill(GenericRequest $request): JsonResponse
@@ -122,9 +119,6 @@ class BillController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightExpenseNoBill
-     *
      * Expenses for no bill filtered by account.
      */
     public function noBill(GenericRequest $request): JsonResponse

@@ -64,10 +64,6 @@ class AccountController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeAsset
-     */
     public function asset(GenericRequest $request): JsonResponse
     {
         $start         = $request->getStart();
@@ -92,10 +88,6 @@ class AccountController extends Controller
         return response()->json($result);
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeRevenue
-     */
     public function revenue(GenericRequest $request): JsonResponse
     {
         $start           = $request->getStart();

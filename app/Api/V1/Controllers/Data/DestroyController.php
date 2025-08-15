@@ -69,12 +69,6 @@ class DestroyController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/destroyData
-     *
-     * @throws FireflyException
-     */
     public function destroy(DestroyRequest $request): JsonResponse
     {
         $objects         = $request->getObjects();
