@@ -46,7 +46,7 @@ class AccountController extends Controller
     use AccountFilter;
 
     // this array only exists to test if the constructor will use it properly.
-    protected array $accepts = ['application/json', 'application/vnd.api+json'];
+    protected array $accepts       = ['application/json', 'application/vnd.api+json'];
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /** @var array<int, string> */

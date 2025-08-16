@@ -30,7 +30,6 @@ use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

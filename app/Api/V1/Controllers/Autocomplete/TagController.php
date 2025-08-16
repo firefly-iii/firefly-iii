@@ -29,7 +29,6 @@ use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**

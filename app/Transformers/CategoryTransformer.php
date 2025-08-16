@@ -81,7 +81,7 @@ class CategoryTransformer extends AbstractTransformer
 
     private function beautify(?array $array): ?array
     {
-        if(null === $array) {
+        if (null === $array) {
             return null;
         }
         $return = [];

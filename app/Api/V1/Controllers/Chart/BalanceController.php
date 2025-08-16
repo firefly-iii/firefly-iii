@@ -25,7 +25,7 @@ class BalanceController extends Controller
 {
     use CleansChartData;
     use CollectsAccountsFromFilter;
-    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles            = [UserRoleEnum::READ_ONLY];
 
     private array                  $chartData = [];
     private GroupCollectorInterface    $collector;

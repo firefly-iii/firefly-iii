@@ -73,6 +73,7 @@ trait UserGroupTrait
             return;
         }
         $class = null === $user ? 'NULL' : $user::class;
+
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }
 

@@ -44,7 +44,6 @@ use Illuminate\Http\JsonResponse;
  */
 class PurgeController extends Controller
 {
-
     /**
      * TODO cleanup and use repositories.
      */
