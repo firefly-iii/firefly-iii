@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\User;
@@ -76,6 +77,16 @@ class ShowController extends Controller
      */
     public function index(Budget $budget): JsonResponse
     {
+        /** @var User $admin */
+        $admin        = auth()->user();
+        // enrich budget:
+        $enrichment   = new BudgetEnrichment();
+        $enrichment->setUser($admin);
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $budget = $enrichment->enrichSingle($budget);
+
+
         $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
@@ -87,8 +98,6 @@ class ShowController extends Controller
 
 
         // enrich
-        /** @var User $admin */
-        $admin        = auth()->user();
         $enrichment   = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
         $budgetLimits = $enrichment->enrich($budgetLimits);
