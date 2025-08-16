@@ -66,7 +66,7 @@ trait UserGroupTrait
         if ($user instanceof User) {
             $this->user      = $user;
             if (null === $user->userGroup) {
-                throw new FireflyException(sprintf('User #%d has no user group.', $user->id));
+                throw new FireflyException(sprintf('User #%d ("%s") has no user group.', $user->id, $user->email));
             }
             $this->userGroup = $user->userGroup;
 

@@ -45,21 +45,6 @@ final class CurrencyControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    #[Override]
-    protected function createAuthenticatedUser(): User
-    {
-        $userGroup           = UserGroup::create(['title' => 'Test Group']);
-
-
-        $user                = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-        ]);
-        $user->user_group_id = $userGroup->id;
-        $user->save();
-
-        return $user;
-    }
 
     private function createTestCurrencies(int $count, bool $enabled): void
     {

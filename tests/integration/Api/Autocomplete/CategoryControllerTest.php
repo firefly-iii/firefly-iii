@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Category;
+use FireflyIII\Models\UserRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\integration\TestCase;
 use FireflyIII\User;
 use FireflyIII\Models\UserGroup;
@@ -45,20 +47,7 @@ final class CategoryControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    #[Override]
-    protected function createAuthenticatedUser(): User
-    {
-        $userGroup           = UserGroup::create(['title' => 'Test Group']);
 
-        $user                = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-        ]);
-        $user->user_group_id = $userGroup->id;
-        $user->save();
-
-        return $user;
-    }
 
     private function createTestCategories(int $count, User $user): void
     {

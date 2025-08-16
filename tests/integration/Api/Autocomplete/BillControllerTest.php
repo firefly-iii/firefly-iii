@@ -45,20 +45,6 @@ final class BillControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    #[Override]
-    protected function createAuthenticatedUser(): User
-    {
-        $userGroup           = UserGroup::create(['title' => 'Test Group']);
-
-        $user                = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-        ]);
-        $user->user_group_id = $userGroup->id;
-        $user->save();
-
-        return $user;
-    }
 
     private function createTestBills(int $count, User $user): void
     {
@@ -96,7 +82,6 @@ final class BillControllerTest extends TestCase
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
-
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointThenReturnsBills(): void
