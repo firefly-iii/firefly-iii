@@ -49,7 +49,7 @@ final class PiggyBankControllerTest extends TestCase
 
     private function createTestPiggyBanks(int $count, User $user): void
     {
-        $type = AccountType::whereType(AccountTypeEnum::DEFAULT->value)->first();
+        $type     = AccountType::whereType(AccountTypeEnum::DEFAULT->value)->first();
         if (null === $type) {
             $type = AccountType::create(['type' => AccountTypeEnum::DEFAULT->value]);
         }
@@ -67,7 +67,7 @@ final class PiggyBankControllerTest extends TestCase
             $piggyBank = PiggyBank::create(
                 [
                     'user_id'                 => $user->id,
-                    'name'                    => 'Piggy bank ' . $i,
+                    'name'                    => 'Piggy bank '.$i,
                     'target_amount'           => 1000,
                     'transaction_currency_id' => $currency->id,
                     'target_date'             => now()->addDays(30),
@@ -78,7 +78,7 @@ final class PiggyBankControllerTest extends TestCase
             $account   = Account::create(
                 [
                     'user_id'         => $user->id,
-                    'name'            => 'Account ' . $i,
+                    'name'            => 'Account '.$i,
                     'user_group_id'   => $user->user_group_id,
                     'account_type_id' => $type->id,
                     'active'          => 1,
@@ -100,7 +100,7 @@ final class PiggyBankControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
@@ -111,7 +111,7 @@ final class PiggyBankControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(5, $user);
@@ -121,23 +121,23 @@ final class PiggyBankControllerTest extends TestCase
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Piggy bank 1']);
         $response->assertJsonStructure([
-                                           '*' => [
-                                               'id',
-                                               'name',
-                                           ],
-                                       ]);
+            '*' => [
+                'id',
+                'name',
+            ],
+        ]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(5, $user);
         $response = $this->get(route('api.v1.autocomplete.piggy-banks', [
             'query' => 'Piggy',
             'limit' => 3,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
@@ -146,14 +146,14 @@ final class PiggyBankControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(20, $user);
         $response = $this->get(route('api.v1.autocomplete.piggy-banks', [
             'query' => 'Piggy bank 1',
             'limit' => 20,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

@@ -835,8 +835,10 @@ class GroupCollector implements GroupCollectorInterface
                     if (count($product['transactions']) > 1) {
                         return $product['title'];
                     }
+
                     return 'zzz';
                 }
+
                 return 'zzz';
             });
         }

@@ -46,6 +46,7 @@ use Illuminate\Http\JsonResponse;
 class PurgeController extends Controller
 {
     protected array $acceptedRoles = [UserRoleEnum::FULL];
+
     public function __construct()
     {
         parent::__construct();
