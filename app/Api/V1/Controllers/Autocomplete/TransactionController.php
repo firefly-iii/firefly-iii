@@ -31,7 +31,6 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 

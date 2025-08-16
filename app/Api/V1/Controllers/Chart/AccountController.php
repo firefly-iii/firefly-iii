@@ -26,15 +26,11 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Chart\ChartData;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CleansChartData;
@@ -48,8 +44,8 @@ use Illuminate\Support\Facades\Log;
 class AccountController extends Controller
 {
     use ApiSupport;
-    use CollectsAccountsFromFilter;
     use CleansChartData;
+    use CollectsAccountsFromFilter;
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
@@ -102,17 +98,17 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency     = $this->repository->getAccountCurrency($account);
-        $currentStart = clone $params['start'];
-        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $currency          = $this->repository->getAccountCurrency($account);
+        $currentStart      = clone $params['start'];
+        $range             = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
 
 
-        $previous     = array_values($range)[0]['balance'];
-        $pcPrevious   = null;
+        $previous          = array_values($range)[0]['balance'];
+        $pcPrevious        = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->primaryCurrency;
         }
-        $currentSet   = [
+        $currentSet        = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.

@@ -64,6 +64,7 @@ class DestroyController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->validateUserGroup($request);
+
                 return $next($request);
             }
         );

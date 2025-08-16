@@ -913,6 +913,4 @@ class ExportDataGenerator
     {
         $this->userGroup = $userGroup;
     }
-
-
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
@@ -15,7 +17,7 @@ class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:reset-error-mail-limit';
+    protected $signature   = 'firefly-iii:reset-error-mail-limit';
 
     /**
      * The console command description.
@@ -41,6 +43,7 @@ class ResetsErrorMailLimit extends Command
         if (!file_exists($file)) {
             $this->friendlyInfo(sprintf('Created new limits file at "%s"', $file));
             file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+
             return CommandAlias::SUCCESS;
         }
         if (!is_writable($file)) {

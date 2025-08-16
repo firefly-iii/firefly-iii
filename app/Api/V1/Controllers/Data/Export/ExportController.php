@@ -61,7 +61,6 @@ class ExportController extends Controller
     }
 
     /**
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
