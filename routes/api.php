@@ -102,10 +102,10 @@ Route::group(
     [
         'namespace' => 'FireflyIII\Api\V1\Controllers\Chart',
         'prefix'    => 'v1/chart/balance',
-        'as'        => 'api.v1.chart.balance',
+        'as'        => 'api.v1.chart.balance.',
     ],
     static function (): void {
-        Route::get('balance', ['uses' => 'BalanceController@balance', 'as' => 'balance.balance']);
+        Route::get('balance', ['uses' => 'BalanceController@balance', 'as' => 'balance']);
     }
 );
 

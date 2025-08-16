@@ -38,6 +38,7 @@ class BalanceController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->collector  = app(GroupCollectorInterface::class);
                 $this->repository->setUserGroup($this->userGroup);

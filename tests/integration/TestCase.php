@@ -29,7 +29,6 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
-use Illuminate\Support\Facades\DB;
 use Tests\integration\Traits\CollectsValues;
 
 /**
@@ -42,7 +41,7 @@ abstract class TestCase extends BaseTestCase
     use RefreshDatabase;
 
     protected const MAX_ITERATIONS = 2;
-    protected $seed                = true;
+    protected $seed = true;
 
     public function dateRangeProvider(): array
     {
@@ -57,15 +56,20 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
+    protected function getAuthenticatedUser(): User
+    {
+        return User::where('email', 'james@firefly')->first();
+    }
+
     protected function createAuthenticatedUser(): User
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
-        $role = UserRole::where('title', 'owner')->first();
-        $user = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-            'user_group_id' => $group->id,
-        ]);
+        $role  = UserRole::where('title', 'owner')->first();
+        $user  = User::create([
+                                  'email'         => 'test@email.com',
+                                  'password'      => 'password',
+                                  'user_group_id' => $group->id,
+                              ]);
 
         GroupMembership::create(
             [
@@ -74,8 +78,6 @@ abstract class TestCase extends BaseTestCase
                 'user_role_id'  => $role->id,
             ]
         );
-
-
 
 
         return $user;

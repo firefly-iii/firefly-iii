@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
@@ -67,7 +68,6 @@ class BudgetController extends Controller
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
                 $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->validateUserGroup($request);
                 $this->repository->setUserGroup($this->userGroup);
                 $this->opsRepository->setUserGroup($this->userGroup);
                 $this->blRepository->setUserGroup($this->userGroup);
@@ -85,7 +85,7 @@ class BudgetController extends Controller
      *
      * @throws FireflyException
      */
-    public function overview(DateRequest $request): JsonResponse
+    public function overview(SameDateRequest $request): JsonResponse
     {
         $params  = $request->getAll();
 

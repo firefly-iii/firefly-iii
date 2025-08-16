@@ -49,7 +49,7 @@ class AccountController extends Controller
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                  $chartData;
+    private array                  $chartData = [];
     private AccountRepositoryInterface $repository;
 
     /**
@@ -61,6 +61,7 @@ class AccountController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
+                $this->validateUserGroup($request);
                 $this->repository->setUserGroup($this->userGroup);
                 $this->repository->setUser($this->user);
 
