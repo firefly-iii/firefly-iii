@@ -24,10 +24,14 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Autocomplete;
 
-use FireflyIII\Models\Budget;
+use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class BudgetControllerTest
@@ -36,29 +40,58 @@ use FireflyIII\User;
  *
  * @coversNothing
  */
-final class BudgetControllerTest extends TestCase
+final class PiggyBankControllerTest extends TestCase
 {
     /**
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\BudgetController
      */
     use RefreshDatabase;
 
-    private function createTestBudgets(int $count, User $user): void
+    private function createTestPiggyBanks(int $count, User $user): void
     {
+        $type     = AccountType::whereType(AccountTypeEnum::DEFAULT->value)->first();
+        if (null === $type) {
+            $type = AccountType::create(['type' => AccountTypeEnum::DEFAULT->value]);
+        }
+        $currency = TransactionCurrency::whereCode('EUR')->first();
+        if (null === $currency) {
+            $currency = TransactionCurrency::create(
+                [
+                    'code'   => 'EUR',
+                    'name'   => 'Euro',
+                    'symbol' => '€',
+                ]
+            );
+        }
         for ($i = 1; $i <= $count; ++$i) {
-            $budget = Budget::create([
-                'user_id'       => $user->id,
-                'name'          => 'Budget '.$i,
-                'user_group_id' => $user->user_group_id,
-                'active'        => 1,
-            ]);
+            $piggyBank = PiggyBank::create(
+                [
+                    'user_id'                 => $user->id,
+                    'name'                    => 'Piggy bank '.$i,
+                    'target_amount'           => 1000,
+                    'transaction_currency_id' => $currency->id,
+                    'target_date'             => now()->addDays(30),
+                    'user_group_id'           => $user->user_group_id,
+                    'active'                  => 1,
+                ]
+            );
+            $account   = Account::create(
+                [
+                    'user_id'         => $user->id,
+                    'name'            => 'Account '.$i,
+                    'user_group_id'   => $user->user_group_id,
+                    'account_type_id' => $type->id,
+                    'active'          => 1,
+                ]
+            );
+            $piggyBank->accounts()->save($account);
         }
     }
 
     public function testGivenAnUnauthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns401HttpCode(): void
     {
         // test API
-        $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
@@ -70,7 +103,7 @@ final class BudgetControllerTest extends TestCase
         $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
-        $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
 
@@ -81,12 +114,12 @@ final class BudgetControllerTest extends TestCase
         $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
-        $this->createTestBudgets(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
+        $this->createTestPiggyBanks(5, $user);
+        $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
-        $response->assertJsonFragment(['name' => 'Budget 1']);
+        $response->assertJsonFragment(['name' => 'Piggy bank 1']);
         $response->assertJsonStructure([
             '*' => [
                 'id',
@@ -100,9 +133,9 @@ final class BudgetControllerTest extends TestCase
         $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
-        $this->createTestBudgets(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget',
+        $this->createTestPiggyBanks(5, $user);
+        $response = $this->get(route('api.v1.autocomplete.piggy-banks', [
+            'query' => 'Piggy',
             'limit' => 3,
         ]), ['Accept' => 'application/json']);
 
@@ -116,9 +149,9 @@ final class BudgetControllerTest extends TestCase
         $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
-        $this->createTestBudgets(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget 1',
+        $this->createTestPiggyBanks(20, $user);
+        $response = $this->get(route('api.v1.autocomplete.piggy-banks', [
+            'query' => 'Piggy bank 1',
             'limit' => 20,
         ]), ['Accept' => 'application/json']);
 
@@ -126,6 +159,6 @@ final class BudgetControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         // Budget 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
-        $response->assertJsonMissing(['name' => 'Budget 2']);
+        $response->assertJsonMissing(['name' => 'Piggy bank 2']);
     }
 }

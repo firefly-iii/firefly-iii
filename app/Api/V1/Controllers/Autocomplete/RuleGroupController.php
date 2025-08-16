@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -36,6 +37,7 @@ use Illuminate\Http\JsonResponse;
 class RuleGroupController extends Controller
 {
     private RuleGroupRepositoryInterface $repository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
 
     /**
      * RuleGroupController constructor.
@@ -45,18 +47,16 @@ class RuleGroupController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->repository = app(RuleGroupRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getRuleGroupsAC
-     */
     public function ruleGroups(AutocompleteRequest $request): JsonResponse
     {
         $data     = $request->getData();

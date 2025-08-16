@@ -29,12 +29,16 @@ use FireflyIII\Models\Attachment;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Safe\Exceptions\FileinfoException;
+use Safe\Exceptions\FilesystemException;
+use Safe\Exceptions\StringsException;
 
-use function Safe\tempnam;
 use function Safe\file_put_contents;
 use function Safe\md5_file;
 use function Safe\mime_content_type;
+use function Safe\tempnam;
 
 class ScansAttachments extends Command
 {
@@ -46,6 +50,10 @@ class ScansAttachments extends Command
 
     /**
      * Execute the console command.
+     *
+     * @throws FilesystemException
+     * @throws StringsException
+     * @throws FileinfoException
      */
     public function handle(): int
     {
@@ -57,7 +65,7 @@ class ScansAttachments extends Command
             $fileName         = $attachment->fileName();
             $encryptedContent = $disk->get($fileName);
             if (null === $encryptedContent) {
-                app('log')->error(sprintf('No content for attachment #%d under filename "%s"', $attachment->id, $fileName));
+                Log::error(sprintf('No content for attachment #%d under filename "%s"', $attachment->id, $fileName));
 
                 continue;
             }
@@ -65,18 +73,13 @@ class ScansAttachments extends Command
             try {
                 $decryptedContent = Crypt::decrypt($encryptedContent); // verified
             } catch (DecryptException $e) {
-                app('log')->error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+                Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
                 $decryptedContent = $encryptedContent;
             }
             $tempFileName     = tempnam(sys_get_temp_dir(), 'FireflyIII');
-            if (false === $tempFileName) {
-                app('log')->error(sprintf('Could not create temporary file for attachment #%d', $attachment->id));
-
-                exit(1);
-            }
             file_put_contents($tempFileName, $decryptedContent);
-            $attachment->md5  = (string) md5_file($tempFileName);
-            $attachment->mime = (string) mime_content_type($tempFileName);
+            $attachment->md5  = (string)md5_file($tempFileName);
+            $attachment->mime = (string)mime_content_type($tempFileName);
             $attachment->save();
             $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }

@@ -74,7 +74,7 @@ class User extends Authenticatable
     use HasApiTokens;
     use Notifiable;
     use ReturnsIntegerIdTrait;
-    protected $fillable = ['email', 'password', 'blocked', 'blocked_code'];
+    protected $fillable = ['email', 'password', 'blocked', 'blocked_code', 'user_group_id'];
     protected $hidden   = ['password', 'remember_token'];
     protected $table    = 'users';
 

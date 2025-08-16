@@ -1,6 +1,7 @@
 Welcome to the latest development release of Firefly III. This test release contains the absolute latest fixes, translations and features. It is probably buggy and may not work as expected. You can download the release below, and adventurous Docker users can find this release under the `develop` tag.
 
-:warning: Please be careful with this pre-release, as it may not work as expected.
+> [!WARNING]
+> Please be careful with this pre-release, as it may not work as expected.
 
 This release was created on %date and may contain unexpected bugs. Data loss is rare but possible.
 

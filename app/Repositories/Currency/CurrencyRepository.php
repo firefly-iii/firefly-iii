@@ -417,7 +417,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
         // currency must be made default.
         if (true === $default) {
-            $this->makeDefault($currency);
+            $this->makePrimary($currency);
         }
 
         /** @var CurrencyUpdateService $service */
@@ -426,7 +426,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return $service->update($currency, $data);
     }
 
-    public function makeDefault(TransactionCurrency $currency): void
+    public function makePrimary(TransactionCurrency $currency): void
     {
         $current = app('amount')->getPrimaryCurrencyByUserGroup($this->userGroup);
         Log::debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));

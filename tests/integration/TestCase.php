@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace Tests\integration;
 
+use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Models\UserRole;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -54,14 +56,30 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
+    protected function getAuthenticatedUser(): User
+    {
+        return User::where('email', 'james@firefly')->first();
+    }
+
     protected function createAuthenticatedUser(): User
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
-
-        return User::create([
+        $role  = UserRole::where('title', 'owner')->first();
+        $user  = User::create([
             'email'         => 'test@email.com',
             'password'      => 'password',
             'user_group_id' => $group->id,
         ]);
+
+        GroupMembership::create(
+            [
+                'user_id'       => $user->id,
+                'user_group_id' => $group->id,
+                'user_role_id'  => $role->id,
+            ]
+        );
+
+
+        return $user;
     }
 }

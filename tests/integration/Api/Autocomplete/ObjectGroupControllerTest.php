@@ -28,8 +28,6 @@ use FireflyIII\Models\ObjectGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 use FireflyIII\User;
-use FireflyIII\Models\UserGroup;
-use Override;
 
 /**
  * Class ObjectGroupControllerTest
@@ -44,22 +42,6 @@ final class ObjectGroupControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\ObjectGroupController
      */
     use RefreshDatabase;
-
-    #[Override]
-    protected function createAuthenticatedUser(): User
-    {
-        $userGroup           = UserGroup::create(['title' => 'Test Group']);
-
-
-        $user                = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-        ]);
-        $user->user_group_id = $userGroup->id;
-        $user->save();
-
-        return $user;
-    }
 
     private function createTestObjectGroups(int $count, User $user): void
     {

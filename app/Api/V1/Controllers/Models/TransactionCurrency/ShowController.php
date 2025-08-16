@@ -126,7 +126,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function showDefault(): JsonResponse
+    public function showPrimary(): JsonResponse
     {
         /** @var User $user */
         $user        = auth()->user();

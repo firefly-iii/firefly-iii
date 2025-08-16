@@ -839,7 +839,7 @@ class GroupCollector implements GroupCollectorInterface
                     return 'zzz';
                 }
 
-                exit('here we are 2');
+                return 'zzz';
             });
         }
 

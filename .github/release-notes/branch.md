@@ -1,6 +1,7 @@
 Welcome to release %version of Firefly III. This branch-related release contains the latest fixes, translations and features. It is probably buggy and may not work as expected. You can download the release below, and adventurous Docker users can find this release under the `branch-*` tag.
 
-:warning: Please be careful with this branch release, as it may not work as expected.
+> [!WARNING]
+> Please be careful with this branch release, as it may not work as expected.
 
 Branch releases are created to test large new features that are developed alongside the normal release flow. They are not recommended for production use. This release was created on %date and may contain unexpected bugs. Data loss is rare but possible.
 

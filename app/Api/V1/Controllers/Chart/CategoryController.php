@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\UserRoleEnum;
@@ -59,11 +59,13 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $userGroup           = $this->validateUserGroup($request);
-                $this->accountRepos->setUserGroup($userGroup);
-                $this->currencyRepos->setUserGroup($userGroup);
+                $this->accountRepos->setUserGroup($this->userGroup);
+                $this->currencyRepos->setUserGroup($this->userGroup);
+                $this->accountRepos->setUser($this->user);
+                $this->currencyRepos->setUser($this->user);
 
                 return $next($request);
             }
@@ -78,7 +80,7 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function overview(DateRequest $request): JsonResponse
+    public function overview(SameDateRequest $request): JsonResponse
     {
         /** @var Carbon $start */
         $start      = $this->parameters->get('start');

@@ -57,9 +57,6 @@ class TagController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeTag
-     *
      * Expenses for no tag filtered by account.
      */
     public function noTag(GenericRequest $request): JsonResponse
@@ -109,9 +106,6 @@ class TagController extends Controller
     }
 
     /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/insight/insightIncomeNoTag
-     *
      * Expenses per tag, possibly filtered by tag and account.
      */
     public function tag(GenericRequest $request): JsonResponse

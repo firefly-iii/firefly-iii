@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Data\Bulk;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Bulk\TransactionRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use Illuminate\Http\JsonResponse;
@@ -44,23 +45,23 @@ class TransactionController extends Controller
 {
     private AccountRepositoryInterface $repository;
 
+    protected array $acceptedRoles = [UserRoleEnum::MANAGE_TRANSACTIONS];
+
     public function __construct()
     {
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
+                $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+                $this->repository->setUserGroup($this->userGroup);
+                $this->repository->setUser($this->user);
 
                 return $next($request);
             }
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/bulkUpdateTransactions
-     */
     public function update(TransactionRequest $request): JsonResponse
     {
         $query  = $request->getAll();

@@ -209,7 +209,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             $currency = $repository->find((int) $data['primary_currency_id']);
         }
         if (null !== $currency) {
-            $repository->makeDefault($currency);
+            $repository->makePrimary($currency);
         }
 
 

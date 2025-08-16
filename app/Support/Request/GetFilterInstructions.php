@@ -24,10 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
+use FireflyIII\Exceptions\FireflyException;
+
 trait GetFilterInstructions
 {
     private const string INVALID_FILTER = '%INVALID_JAMES_%';
 
+    /**
+     * @throws FireflyException
+     */
     final public function getFilterInstructions(string $key): array
     {
         $config  = config(sprintf('firefly.filters.allowed.%s', $key));
@@ -48,7 +53,7 @@ trait GetFilterInstructions
 
             switch ($filterType) {
                 default:
-                    exit(sprintf('Do not support filter type "%s"', $filterType));
+                    throw new FireflyException(sprintf('Do not support filter type "%s"', $filterType));
 
                 case 'boolean':
                     $filterValue = $this->booleanInstruction($filterValue);

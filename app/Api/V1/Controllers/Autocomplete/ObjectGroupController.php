@@ -26,9 +26,9 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,6 +37,7 @@ use Illuminate\Http\JsonResponse;
 class ObjectGroupController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**
      * CurrencyController constructor.
@@ -46,10 +47,10 @@ class ObjectGroupController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+                $this->validateUserGroup($request);
                 $this->repository = app(ObjectGroupRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }

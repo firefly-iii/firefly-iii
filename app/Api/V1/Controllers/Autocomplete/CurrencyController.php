@@ -27,9 +27,9 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 use Deprecated;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -38,6 +38,7 @@ use Illuminate\Http\JsonResponse;
 class CurrencyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /**
      * CurrencyController constructor.
@@ -47,10 +48,10 @@ class CurrencyController extends Controller
         parent::__construct();
         $this->middleware(
             function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+                $this->validateUserGroup($request);
                 $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser($user);
+                $this->repository->setUser($this->user);
+                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }

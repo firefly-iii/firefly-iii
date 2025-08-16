@@ -31,12 +31,18 @@
          failOnRisky="true"
          failOnWarning="true"
          processIsolation="false"
+         stopOnError="true"
          stopOnFailure="true">
     <php>
         <env name="APP_ENV" value="testing"/>
+        <env name="DB_CONNECTION" value="sqlite"/>
         <env name="APP_LOG_ENV" value="notice"/>
+        <env name="DB_DATABASE" value=""/>
+        <env name="APP_LOG_LEVEL" value="notice"/>
+        <env name="AUDIT_LOG_LEVEL" value="emergency" />
+
+
         <env name="QUERY_PARSER_IMPLEMENTATION" value="new"/>
-        <ini name="xdebug.mode" value="coverage"/>
     </php>
     <testsuites>
         <testsuite name="unit">

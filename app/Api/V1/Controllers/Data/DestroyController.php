@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
@@ -55,12 +56,20 @@ class DestroyController extends Controller
 {
     private bool $unused;
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/data/destroyData
-     *
-     * @throws FireflyException
-     */
+    protected array $acceptedRoles = [UserRoleEnum::FULL];
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                $this->validateUserGroup($request);
+
+                return $next($request);
+            }
+        );
+    }
+
     public function destroy(DestroyRequest $request): JsonResponse
     {
         $objects         = $request->getObjects();
