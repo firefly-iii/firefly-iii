@@ -79,8 +79,11 @@ class CategoryTransformer extends AbstractTransformer
         ];
     }
 
-    private function beautify(array $array): array
+    private function beautify(?array $array): ?array
     {
+        if(null === $array) {
+            return null;
+        }
         $return = [];
         foreach ($array as $data) {
             $data['sum'] = Steam::bcround($data['sum'], (int)$data['currency_decimal_places']);
