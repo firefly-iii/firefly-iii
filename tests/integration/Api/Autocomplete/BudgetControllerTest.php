@@ -25,11 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\UserGroup;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 use FireflyIII\User;
-use Override;
 
 /**
  * Class BudgetControllerTest

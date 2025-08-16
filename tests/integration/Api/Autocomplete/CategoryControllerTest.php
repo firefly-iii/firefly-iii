@@ -25,13 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Category;
-use FireflyIII\Models\UserRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use Tests\integration\TestCase;
 use FireflyIII\User;
-use FireflyIII\Models\UserGroup;
-use Override;
 
 /**
  * Class CategoryControllerTest
@@ -46,8 +42,6 @@ final class CategoryControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\CategoryController
      */
     use RefreshDatabase;
-
-
 
     private function createTestCategories(int $count, User $user): void
     {

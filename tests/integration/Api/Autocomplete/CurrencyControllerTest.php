@@ -28,8 +28,6 @@ use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 use FireflyIII\User;
-use FireflyIII\Models\UserGroup;
-use Override;
 
 /**
  * Class CurrencyControllerTest
@@ -44,7 +42,6 @@ final class CurrencyControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\CurrencyController
      */
     use RefreshDatabase;
-
 
     private function createTestCurrencies(int $count, bool $enabled): void
     {

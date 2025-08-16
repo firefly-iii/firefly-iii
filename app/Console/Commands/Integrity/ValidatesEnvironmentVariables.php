@@ -42,7 +42,7 @@ class ValidatesEnvironmentVariables extends Command
      *
      * @var string
      */
-    protected $signature = 'integrity:validates-environment-variables';
+    protected $signature   = 'integrity:validates-environment-variables';
 
     /**
      * Execute the console command.
@@ -67,9 +67,9 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateLanguage(): bool
     {
-        $language = config('firefly.default_language');
-        $locale   = config('firefly.default_locale');
-        $options  = array_keys(config('firefly.languages'));
+        $language  = config('firefly.default_language');
+        $locale    = config('firefly.default_locale');
+        $options   = array_keys(config('firefly.languages'));
 
         if (!in_array($language, $options, true)) {
             $this->friendlyError(sprintf('DEFAULT_LANGUAGE "%s" is not a valid language for Firefly III.', $language));
@@ -86,6 +86,7 @@ class ValidatesEnvironmentVariables extends Command
 
             return false;
         }
+
         return true;
     }
 
@@ -96,8 +97,10 @@ class ValidatesEnvironmentVariables extends Command
             $this->friendlyError(sprintf('AUTHENTICATION_GUARD "%s" is not a valid guard for Firefly III.', $guard));
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
             $this->friendlyError('Valid guards are: web, remote_user_guard');
+
             return false;
         }
+
         return true;
     }
 
@@ -107,8 +110,10 @@ class ValidatesEnvironmentVariables extends Command
         if ('' !== $token && 32 !== strlen($token)) {
             $this->friendlyError('STATIC_CRON_TOKEN must be empty or a 32-character string.');
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
+
             return false;
         }
+
         return true;
     }
 }

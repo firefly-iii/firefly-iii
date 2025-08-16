@@ -11771,16 +11771,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.3.4",
+            "version": "12.3.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "429095031bd38cb5070ca44166bd9dd5a9245dd6"
+                "reference": "f10ba5f12a256026ad3c7ee4894ffe47f60d7dc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/429095031bd38cb5070ca44166bd9dd5a9245dd6",
-                "reference": "429095031bd38cb5070ca44166bd9dd5a9245dd6",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f10ba5f12a256026ad3c7ee4894ffe47f60d7dc7",
+                "reference": "f10ba5f12a256026ad3c7ee4894ffe47f60d7dc7",
                 "shasum": ""
             },
             "require": {
@@ -11802,7 +11802,7 @@
                 "sebastian/cli-parser": "^4.0.0",
                 "sebastian/comparator": "^7.1.2",
                 "sebastian/diff": "^7.0.0",
-                "sebastian/environment": "^8.0.2",
+                "sebastian/environment": "^8.0.3",
                 "sebastian/exporter": "^7.0.0",
                 "sebastian/global-state": "^8.0.0",
                 "sebastian/object-enumerator": "^7.0.0",
@@ -11848,7 +11848,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.3.4"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.3.5"
             },
             "funding": [
                 {
@@ -11872,7 +11872,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-12T07:35:30+00:00"
+            "time": "2025-08-16T05:20:09+00:00"
         },
         {
             "name": "rector/rector",

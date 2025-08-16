@@ -28,8 +28,6 @@ use FireflyIII\Models\Bill;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 use FireflyIII\User;
-use FireflyIII\Models\UserGroup;
-use Override;
 
 /**
  * Class BillControllerTest
@@ -44,7 +42,6 @@ final class BillControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\Autocomplete\BillController
      */
     use RefreshDatabase;
-
 
     private function createTestBills(int $count, User $user): void
     {

@@ -41,7 +41,7 @@ abstract class TestCase extends BaseTestCase
     use RefreshDatabase;
 
     protected const MAX_ITERATIONS = 2;
-    protected $seed = true;
+    protected $seed                = true;
 
     public function dateRangeProvider(): array
     {
@@ -66,10 +66,10 @@ abstract class TestCase extends BaseTestCase
         $group = UserGroup::create(['title' => 'test@email.com']);
         $role  = UserRole::where('title', 'owner')->first();
         $user  = User::create([
-                                  'email'         => 'test@email.com',
-                                  'password'      => 'password',
-                                  'user_group_id' => $group->id,
-                              ]);
+            'email'         => 'test@email.com',
+            'password'      => 'password',
+            'user_group_id' => $group->id,
+        ]);
 
         GroupMembership::create(
             [
@@ -82,6 +82,4 @@ abstract class TestCase extends BaseTestCase
 
         return $user;
     }
-
-
 }

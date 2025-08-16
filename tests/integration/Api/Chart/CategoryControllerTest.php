@@ -1,11 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\integration\Api\Chart;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 
-class CategoryControllerTest extends TestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class CategoryControllerTest extends TestCase
 {
     use RefreshDatabase;
     private $user;
@@ -28,14 +35,15 @@ class CategoryControllerTest extends TestCase
         $response->assertStatus(422);
 
     }
+
     public function testGetOverviewChart(): void
     {
         $this->actingAs($this->user);
-        $params = [
+        $params   = [
             'start' => '2024-01-01',
             'end'   => '2024-01-31',
         ];
-        $response = $this->getJson(route('api.v1.chart.category.overview') . '?' . http_build_query($params));
+        $response = $this->getJson(route('api.v1.chart.category.overview').'?'.http_build_query($params));
         $response->assertStatus(200);
 
     }
