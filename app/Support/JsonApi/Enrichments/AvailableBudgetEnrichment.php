@@ -57,8 +57,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
 
 
-    private ?Carbon $start                                                = null;
-    private ?Carbon $end                                                  = null;
+    private ?Carbon $start = null;
+    private ?Carbon $end   = null;
 
     public function __construct()
     {
@@ -73,10 +73,12 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
-        $this->collectIds();
-        $this->collectCurrencies();
-        $this->collectSpentInfo();
-        $this->appendCollectedData();
+        if ($this->collection->count() > 0) {
+            $this->collectIds();
+            $this->collectCurrencies();
+            $this->collectSpentInfo();
+            $this->appendCollectedData();
+        }
 
         return $this->collection;
     }
@@ -85,7 +87,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -119,8 +121,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 
     private function collectSpentInfo(): void
     {
-        $start               = $this->collection->min('start_date');
-        $end                 = $this->collection->max('end_date');
+        $start               = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
+        $end                 = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
         $allActive           = $this->repository->getActiveBudgets();
         $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
         $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end, null, null, null);
@@ -139,14 +141,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
                 $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
                 $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
             }
-
-
-            // filter arrays on date.
-            // send them to sumCollection thing.
-            // save.
         }
-
-        // first collect, then filter and append.
     }
 
     private function appendCollectedData(): void
