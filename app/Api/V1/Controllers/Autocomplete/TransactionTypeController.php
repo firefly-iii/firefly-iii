@@ -49,8 +49,6 @@ class TransactionTypeController extends Controller
             function ($request, $next) {
                 $this->validateUserGroup($request);
                 $this->repository = app(TransactionTypeRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
 
                 return $next($request);
             }
