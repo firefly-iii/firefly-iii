@@ -15,7 +15,7 @@ on:
     - cron: '0 3 * * MON'
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -59,6 +59,26 @@ jobs:
           git config user.email release@firefly-iii.org
           git config advice.addIgnoredFile false
           git config push.autoSetupRemote true
+      - name: Install dependencies
+        run: |
+          rm -rf vendor composer.lock
+          composer update --no-dev --no-scripts --no-plugins -q
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run PHP Coding Standards Fixer
+        run: |
+          sudo chown -R runner:docker resources/lang
+          .ci/phpcs.sh || true
+      - name: Code cleanup
+        id: code-cleanup
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:code'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
       - name: Lint PHP
         run: |
           php_lint_file()
@@ -80,7 +100,10 @@ jobs:
           then
               exit 1
           fi
-      - name: Crowdin action
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download translations
         uses: crowdin/github-action@v2
         with:
           upload_sources: true
@@ -91,6 +114,36 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           CROWDIN_PROJECT_NR: ${{ secrets.CROWDIN_PROJECT_NR }}
           CROWDIN_TOKEN: ${{ secrets.CROWDIN_TOKEN }}
+      - name: Generate JSON v1
+        id: json-v1
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:json-translations v1'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
+      - name: Generate JSON v2
+        id: json-v2
+        uses: JC5/firefly-iii-dev@main
+        with:
+          action: 'ff3:json-translations v2'
+          output: ''
+        env:
+          FIREFLY_III_ROOT: /github/workspace
+          GH_TOKEN: ''
+  generate-js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build JS
+        run: |
+          npm install
+          npm run prod  --workspace=v1
+          npm run build --workspace=v2
+          npm update
+  build:
+    runs-on: ubuntu-latest
+    steps:
       - name: Cleanup changelog
         id: cleanup-changelog
         uses: JC5/firefly-iii-dev@main
@@ -119,48 +172,8 @@ jobs:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""
           FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
-      - name: Generate JSON v1
-        id: json-v1
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:json-translations v1'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Generate JSON v2
-        id: json-v2
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:json-translations v2'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Code cleanup
-        id: code-cleanup
-        uses: JC5/firefly-iii-dev@main
-        with:
-          action: 'ff3:code'
-          output: ''
-        env:
-          FIREFLY_III_ROOT: /github/workspace
-          GH_TOKEN: ''
-      - name: Build JS
-        run: |
-          npm install
-          npm run prod  --workspace=v1
-          npm run build --workspace=v2
-          npm update
-      - name: Run CI
-        run: |
-          rm -rf vendor composer.lock
-          composer update --no-dev --no-scripts --no-plugins -q
-          sudo chown -R runner:docker resources/lang
-          .ci/phpcs.sh || true
       - name: Calculate variables
         run: |
-
           # set some variables
           releaseName=$version
           originalName=$version
