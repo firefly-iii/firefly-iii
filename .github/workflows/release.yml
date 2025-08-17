@@ -103,7 +103,7 @@ jobs:
           fi
   translate:
     needs:
-      - validate
+      - prepare
     runs-on: ubuntu-latest
     steps:
       - name: Download translations
@@ -137,6 +137,7 @@ jobs:
           GH_TOKEN: ''
   generate-js:
     needs:
+      - prepare
       - translate
     runs-on: ubuntu-latest
     steps:
@@ -148,7 +149,7 @@ jobs:
           npm update
   cleanup-meta:
     needs:
-      - generate-js
+      - prepare
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup changelog
@@ -246,6 +247,10 @@ jobs:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
   build:
     needs:
+      - prepare
+      - validate
+      - translate
+      - generate-js
       - cleanup-meta
     runs-on: ubuntu-latest
     steps:
