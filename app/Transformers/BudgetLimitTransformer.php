@@ -57,12 +57,13 @@ class BudgetLimitTransformer extends AbstractTransformer
     public function includeBudget(BudgetLimit $limit)
     {
         // enrich budget
-        $budget = $limit->budget;
-        $enrichment   = new BudgetEnrichment();
+        $budget     = $limit->budget;
+        $enrichment = new BudgetEnrichment();
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($budget->user);
-        $budget = $enrichment->enrichSingle($budget);
+        $budget     = $enrichment->enrichSingle($budget);
+
         return $this->item($budget, new BudgetTransformer(), 'budgets');
     }
 
