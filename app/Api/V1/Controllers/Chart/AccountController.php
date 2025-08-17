@@ -130,6 +130,7 @@ class AccountController extends Controller
             'yAxisID'                 => 0,
             'period'                  => '1D',
             'entries'                 => [],
+            'pc_entries'              => [],
         ];
         if ($this->convertToPrimary) {
             $currentSet['pc_entries']                      = [];
