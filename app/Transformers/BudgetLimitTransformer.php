@@ -100,7 +100,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'currency_symbol'                 => $currency->symbol,
             'currency_decimal_places'         => $currency->decimal_places,
 
-            'primary_currency_id'             => (int)$this->primaryCurrency->id,
+            'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
             'primary_currency_code'           => $this->primaryCurrency->code,
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
