@@ -95,7 +95,7 @@ jobs:
 
           export -f php_lint_file
 
-          find . -path ./vendor -prune -o -name '*.php' | parallel -j 4 php_lint_file {}
+          find . -path ./vendor -prune -o -name '*.php' | parallel -j 8 php_lint_file {}
 
           if [ "$?" -ne 0 ]
           then
@@ -182,6 +182,8 @@ jobs:
           FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
       - name: Calculate variables
         run: |
+          ls
+          pwd
           # set some variables
           releaseName=$version
           originalName=$version
@@ -245,9 +247,7 @@ jobs:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
   build:
     needs:
-      - prepare
       - validate
-      - translate
       - generate-js
       - cleanup-meta
     runs-on: ubuntu-latest
