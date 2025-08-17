@@ -70,7 +70,6 @@ jobs:
     steps:
       - name: Run PHP Coding Standards Fixer
         run: |
-          sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
       - name: Code cleanup
         id: code-cleanup
