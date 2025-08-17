@@ -148,12 +148,9 @@ jobs:
           npm run prod  --workspace=v1
           npm run build --workspace=v2
           npm update
-  build:
+  cleanup-meta:
     needs:
       - prepare
-      - validate
-      - translate
-      - generate-js
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup changelog
@@ -247,6 +244,15 @@ jobs:
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+  build:
+    needs:
+      - prepare
+      - validate
+      - translate
+      - generate-js
+      - cleanup-meta
+    runs-on: ubuntu-latest
+    steps:
       - name: Commit all changes
         run: |
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
