@@ -142,6 +142,7 @@ class ConfigurationController extends Controller
                 'value'    => $dynamic[$shortKey],
                 'editable' => true,
             ];
+
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
         if (str_starts_with($configKey, 'webhook.')) {
@@ -150,6 +151,7 @@ class ConfigurationController extends Controller
                 'value'    => $this->getWebhookConfiguration($configKey),
                 'editable' => false,
             ];
+
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
 
@@ -176,7 +178,7 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
-        $rules = ['value' => 'required'];
+        $rules     = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
             Validator::make([], $rules, $messages)->validate();
@@ -206,21 +208,27 @@ class ConfigurationController extends Controller
                 foreach ($cases as $c) {
                     $data[$c->name] = $c->value;
                 }
+
                 return $data;
+
             case 'webhook.responses':
                 $cases = WebhookResponse::cases();
                 $data  = [];
                 foreach ($cases as $c) {
                     $data[$c->name] = $c->value;
                 }
+
                 return $data;
+
             case 'webhook.deliveries':
                 $cases = WebhookDelivery::cases();
                 $data  = [];
                 foreach ($cases as $c) {
                     $data[$c->name] = $c->value;
                 }
+
                 return $data;
+
             default:
                 throw new FireflyException(sprintf('Unknown webhook configuration key "%s".', $configKey));
         }

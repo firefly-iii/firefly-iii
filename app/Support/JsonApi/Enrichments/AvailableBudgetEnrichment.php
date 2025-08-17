@@ -57,8 +57,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
 
 
-    private ?Carbon $start = null;
-    private ?Carbon $end   = null;
+    private ?Carbon $start                                                = null;
+    private ?Carbon $end                                                  = null;
 
     public function __construct()
     {
