@@ -64,6 +64,8 @@ jobs:
           rm -rf vendor composer.lock
           composer update --no-dev --no-scripts --no-plugins -q
   validate:
+    needs:
+      - prepare
     runs-on: ubuntu-latest
     steps:
       - name: Run PHP Coding Standards Fixer
@@ -101,6 +103,8 @@ jobs:
               exit 1
           fi
   translate:
+    needs:
+      - prepare
     runs-on: ubuntu-latest
     steps:
       - name: Download translations
@@ -133,6 +137,9 @@ jobs:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ''
   generate-js:
+    needs:
+      - prepare
+      - translate
     runs-on: ubuntu-latest
     steps:
       - name: Build JS
@@ -142,6 +149,11 @@ jobs:
           npm run build --workspace=v2
           npm update
   build:
+    needs:
+      - prepare
+      - validate
+      - translate
+      - generate-js
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup changelog
