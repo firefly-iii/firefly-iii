@@ -98,21 +98,23 @@ class UpdateRequest extends FormRequest
             'url'      => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
+
     public function withValidator(Validator $validator): void
     {
         $validator->after(
             function (Validator $validator): void {
                 Log::debug('Validating webhook');
-                $data     = $validator->getData();
-                $trigger  = $data['trigger'] ?? null;
-                $response = $data['response'] ?? null;
+                $data      = $validator->getData();
+                $trigger   = $data['trigger'] ?? null;
+                $response  = $data['response'] ?? null;
                 if (null === $trigger || null === $response) {
                     Log::debug('No trigger or response, return.');
+
                     return;
                 }
                 $triggers  = array_keys(Webhook::getTriggersForValidation());
                 $responses = array_keys(Webhook::getResponsesForValidation());
-                if (!in_array($trigger, $triggers) || !in_array($response, $responses)) {
+                if (!in_array($trigger, $triggers, true) || !in_array($response, $responses, true)) {
                     return;
                 }
                 // cannot deliver budget info.

@@ -109,20 +109,20 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class = $model::class;
+        $class        = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
 
         $uuid         = Uuid::uuid4();
         $basicMessage = [
-            'uuid'     => $uuid->toString(),
-            'user_id'  => 0,
+            'uuid'          => $uuid->toString(),
+            'user_id'       => 0,
             'user_group_id' => 0,
-            'trigger'  => $webhook->trigger->name,
-            'response' => WebhookResponse::from($webhook->response)->name,
-            'url'      => $webhook->url,
-            'version'  => sprintf('v%d', $this->getVersion()),
-            'content'  => [],
+            'trigger'       => $webhook->trigger->name,
+            'response'      => WebhookResponse::from($webhook->response)->name,
+            'url'           => $webhook->url,
+            'version'       => sprintf('v%d', $this->getVersion()),
+            'content'       => [],
         ];
 
         // depends on the model how user_id is set:
@@ -135,7 +135,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case TransactionGroup::class:
                 /** @var TransactionGroup $model */
-                $basicMessage['user_id'] = $model->user_id;
+                $basicMessage['user_id']       = $model->user_id;
                 $basicMessage['user_group_id'] = $model->user_group_id;
 
                 break;
@@ -155,7 +155,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::TRANSACTIONS->value:
                 /** @var TransactionGroup $model */
-                $transformer = new TransactionGroupTransformer();
+                $transformer             = new TransactionGroupTransformer();
 
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
@@ -172,13 +172,13 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::ACCOUNTS->value:
                 /** @var TransactionGroup $model */
-                $accounts   = $this->collectAccounts($model);
-                $enrichment = new AccountEnrichment();
+                $accounts                = $this->collectAccounts($model);
+                $enrichment              = new AccountEnrichment();
                 $enrichment->setDate(null);
                 $enrichment->setUser($model->user);
-                $accounts = $enrichment->enrich($accounts);
+                $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer();
+                    $transformer               = new AccountTransformer();
                     $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
@@ -208,7 +208,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function storeMessage(Webhook $webhook, array $message): void
     {
-        $webhookMessage = new WebhookMessage();
+        $webhookMessage          = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
         $webhookMessage->errored = false;
