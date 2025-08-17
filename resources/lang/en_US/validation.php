@@ -24,6 +24,9 @@
 declare(strict_types=1);
 
 return [
+    'webhook_budget_info'            => 'Cannot deliver budget information for transaction related webhooks.',
+    'webhook_account_info'           => 'Cannot deliver account information for budget related webhooks.',
+    'webhook_transaction_info'       => 'Cannot deliver transaction information for budget related webhooks.',
     'invalid_account_type'           => 'A piggy bank can only be linked to asset accounts and liabilities',
     'invalid_account_currency'       => 'This account does not use the currency you have selected',
     'current_amount_too_much'        => 'The combined amount in "current_amount" cannot exceed the "target_amount".',

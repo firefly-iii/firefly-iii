@@ -31,5 +31,6 @@ enum WebhookResponse: int
 {
     case TRANSACTIONS = 200;
     case ACCOUNTS     = 210;
+    case BUDGET       = 230;
     case NONE         = 220;
 }

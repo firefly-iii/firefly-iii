@@ -19,73 +19,89 @@
   -->
 
 <template>
-  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-    <label class="col-sm-4 control-label">
-      {{ $t('form.webhook_response') }}
-    </label>
-    <div class="col-sm-8">
-      <select
-          ref="bill"
-          v-model="response"
-          :title="$t('form.webhook_response')"
-          class="form-control"
-          name="webhook_response"
-      >
-        <option v-for="response in this.responses"
-                :label="response.name"
-                :value="response.id">{{ response.name }}
-        </option>
-      </select>
-      <p class="help-block" v-text="$t('firefly.webhook_response_form_help')"></p>
-      <ul v-for="error in this.error" class="list-unstyled">
-        <li class="text-danger">{{ error }}</li>
-      </ul>
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <label class="col-sm-4 control-label">
+            {{ $t('form.webhook_response') }}
+        </label>
+        <div class="col-sm-8">
+            <div v-if="loading" class="form-control-static">
+                <em class="fa fa-spinner fa-spin"></em> {{ $t('firefly.loading') }}
+            </div>
+            <select v-if="!loading"
+                    ref="response"
+                    v-model="response"
+                    :title="$t('form.webhook_response')"
+                    class="form-control"
+                    name="webhook_response"
+            >
+                <option v-for="response in this.responses"
+                        :label="response.name"
+                        :value="response.id">{{ response.name }}
+                </option>
+            </select>
+            <p class="help-block" v-text="$t('firefly.webhook_response_form_help')"></p>
+            <ul v-for="error in this.error" class="list-unstyled">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "WebhookResponse",
-  data() {
-    return {
-      response: 0,
-      responses: [],
-    };
-  },
-  props: {
-    error: {
-      type: Array,
-      required: true,
-      default() {
-        return []
-      }
+    name: "WebhookResponse",
+    data() {
+        return {
+            loading: true,
+            response: 0,
+            responses: [],
+        };
     },
-    value: {
-      type: Number,
-      required: true,
-    }
-  },
-  watch: {
-    value() {
-      this.response = this.value;
+    props: {
+        error: {
+            type: Array,
+            required: true,
+            default() {
+                return []
+            }
+        },
+        value: {
+            type: Number,
+            required: true,
+        }
     },
-  response(newValue) {
-    this.$emit('input', newValue);
-  }
-  },
-  mounted() {
-    this.response = this.value;
-    this.responses = [
-      {id: 200, name: this.$t('firefly.webhook_response_TRANSACTIONS')},
-      {id: 210, name: this.$t('firefly.webhook_response_ACCOUNTS')},
-      {id: 220, name: this.$t('firefly.webhook_response_none_NONE')},
-    ];
-  },
-  methods: {
-    hasError() {
-      return this.error?.length > 0;
-    }
-  },
+    watch: {
+        value() {
+            this.response = this.value;
+        },
+        response(newValue) {
+            this.$emit('input', newValue);
+        }
+    },
+    mounted() {
+        this.response  = this.value;
+        this.responses = [];
+        axios.get('./api/v1/configuration/webhook.responses').then((response) => {
+            for (let key in response.data.data.value) {
+                if (!response.data.data.value.hasOwnProperty(key)) {
+                    continue;
+                }
+                this.responses.push(
+                    {
+                        id: response.data.data.value[key],
+                        name: this.$t('firefly.webhook_response_' + key),
+                    }
+                );
+            }
+            this.loading = false;
+        }).catch((error) => {
+            this.loading = false;
+        });
+    },
+    methods: {
+        hasError() {
+            return this.error?.length > 0;
+        }
+    },
 }
 </script>

@@ -24,11 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
+use FireflyIII\Enums\WebhookResponse;
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateRequest
@@ -40,11 +44,11 @@ class CreateRequest extends FormRequest
 
     public function getData(): array
     {
-        $triggers           = Webhook::getTriggersForValidation();
-        $responses          = Webhook::getResponsesForValidation();
-        $deliveries         = Webhook::getDeliveriesForValidation();
+        $triggers   = Webhook::getTriggersForValidation();
+        $responses  = Webhook::getResponsesForValidation();
+        $deliveries = Webhook::getDeliveriesForValidation();
 
-        $fields             = [
+        $fields = [
             'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
             'trigger'  => ['trigger', 'convertString'],
@@ -55,9 +59,9 @@ class CreateRequest extends FormRequest
 
         // this is the way.
         $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? (int) $return['trigger'];
-        $return['response'] = $responses[$return['response']] ?? (int) $return['response'];
-        $return['delivery'] = $deliveries[$return['delivery']] ?? (int) $return['delivery'];
+        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
+        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
+        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
 
         return $return;
     }
@@ -80,5 +84,45 @@ class CreateRequest extends FormRequest
             'delivery' => sprintf('required|in:%s', $deliveries),
             'url'      => ['required', sprintf('url:%s', $validProtocols), 'uniqueWebhook'],
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator): void {
+                Log::debug('Validating webhook');
+                $data     = $validator->getData();
+                $trigger  = $data['trigger'] ?? null;
+                $response = $data['response'] ?? null;
+                if (null === $trigger || null === $response) {
+                    Log::debug('No trigger or response, return.');
+                    return;
+                }
+                $triggers  = array_keys(Webhook::getTriggersForValidation());
+                $responses = array_keys(Webhook::getResponsesForValidation());
+                if (!in_array($trigger, $triggers) || !in_array($response, $responses)) {
+                    return;
+                }
+                // cannot deliver budget info.
+                if (is_int($trigger)) {
+                    Log::debug(sprintf('Trigger was integer (%d).', $trigger));
+                    $trigger = WebhookTrigger::from($trigger)->name;
+                }
+                if (is_int($response)) {
+                    Log::debug(sprintf('Response was integer (%d).', $response));
+                    $response = WebhookResponse::from($response)->name;
+                }
+                Log::debug(sprintf('Trigger is %s, response is %s', $trigger, $response));
+                if (str_contains($trigger, 'TRANSACTION') && str_contains($response, 'BUDGET')) {
+                    $validator->errors()->add('response', trans('validation.webhook_budget_info'));
+                }
+                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'ACCOUNT')) {
+                    $validator->errors()->add('response', trans('validation.webhook_account_info'));
+                }
+                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'TRANSACTION')) {
+                    $validator->errors()->add('response', trans('validation.webhook_transaction_info'));
+                }
+            }
+        );
     }
 }

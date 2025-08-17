@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Webhook;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
@@ -146,7 +147,7 @@ class ShowController extends Controller
         $engine->setUser(auth()->user());
 
         // tell the generator which trigger it should look for
-        $engine->setTrigger($webhook->trigger);
+        $engine->setTrigger(WebhookTrigger::tryFrom($webhook->trigger));
         // tell the generator which objects to process
         $engine->setObjects(new Collection([$group]));
         // set the webhook to trigger
