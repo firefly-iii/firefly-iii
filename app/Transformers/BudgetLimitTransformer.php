@@ -28,6 +28,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use League\Fractal\Resource\Item;
 
 /**
@@ -55,7 +56,14 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function includeBudget(BudgetLimit $limit)
     {
-        return $this->item($limit->budget, new BudgetTransformer(), 'budgets');
+        // enrich budget
+        $budget = $limit->budget;
+        $enrichment   = new BudgetEnrichment();
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
+        $enrichment->setUser($budget->user);
+        $budget = $enrichment->enrichSingle($budget);
+        return $this->item($budget, new BudgetTransformer(), 'budgets');
     }
 
     /**
