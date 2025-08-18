@@ -112,14 +112,15 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $class        = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
-
+        Log::debug($webhook->response);
+        Log::debug(WebhookResponse::from($webhook->response)->name);
         $uuid         = Uuid::uuid4();
         $basicMessage = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
             'user_group_id' => 0,
             'trigger'       => $webhook->trigger->name,
-            'response'      => WebhookResponse::from($webhook->response)->name,
+            'response'      => WebhookResponse::from((int) $webhook->response)->name,
             'url'           => $webhook->url,
             'version'       => sprintf('v%d', $this->getVersion()),
             'content'       => [],
