@@ -47,10 +47,10 @@ class BudgetLimitHandler
     public function created(Created $event): void
     {
         Log::debug(sprintf('BudgetLimitHandler::created(#%s)', $event->budgetLimit->id));
-        $this->updateAvailableBudget($event->budgetLimit);
+        self::updateAvailableBudget($event->budgetLimit);
     }
 
-    private function updateAvailableBudget(BudgetLimit $budgetLimit): void
+    public static function updateAvailableBudget(BudgetLimit $budgetLimit): void
     {
         Log::debug(sprintf('Now in updateAvailableBudget(limit #%d)', $budgetLimit->id));
 
@@ -115,13 +115,13 @@ class BudgetLimitHandler
 
             if (null !== $availableBudget) {
                 Log::debug('Found 1 AB, will update.');
-                $this->calculateAmount($availableBudget);
+                self::calculateAmount($availableBudget);
             }
             if (null === $availableBudget) {
                 Log::debug('No AB found, will create.');
                 // if not exists:
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-                $daily         = $this->getDailyAmount($budgetLimit);
+                $daily         = self::getDailyAmount($budgetLimit);
                 $amount        = bcmul($daily, (string) $currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
@@ -147,7 +147,7 @@ class BudgetLimitHandler
                     );
                     $availableBudget->save();
                     Log::debug(sprintf('ID of new AB is #%d', $availableBudget->id));
-                    $this->calculateAmount($availableBudget);
+                    self::calculateAmount($availableBudget);
                 }
             }
 
@@ -156,7 +156,7 @@ class BudgetLimitHandler
         }
     }
 
-    private function calculateAmount(AvailableBudget $availableBudget): void
+    private static function calculateAmount(AvailableBudget $availableBudget): void
     {
         $repository              = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($availableBudget->user);
@@ -206,7 +206,7 @@ class BudgetLimitHandler
                 $overlap = $abPeriod->overlap($limitPeriod);
                 if ($overlap instanceof Period) {
                     $length    = $overlap->length();
-                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string) $length);
+                    $daily     = bcmul(self::getDailyAmount($budgetLimit), (string) $length);
                     $newAmount = bcadd($newAmount, $daily);
                 }
             }
@@ -222,7 +222,7 @@ class BudgetLimitHandler
         $availableBudget->save();
     }
 
-    private function getDailyAmount(BudgetLimit $budgetLimit): string
+    private static function getDailyAmount(BudgetLimit $budgetLimit): string
     {
         if (0 === $budgetLimit->id) {
             return '0';
@@ -244,15 +244,12 @@ class BudgetLimitHandler
 
     public function deleted(Deleted $event): void
     {
-        Log::debug(sprintf('BudgetLimitHandler::deleted(#%s)', $event->budgetLimit->id));
-        $budgetLimit     = $event->budgetLimit;
-        $budgetLimit->id = 0;
-        $this->updateAvailableBudget($event->budgetLimit);
+
     }
 
     public function updated(Updated $event): void
     {
         Log::debug(sprintf('BudgetLimitHandler::updated(#%s)', $event->budgetLimit->id));
-        $this->updateAvailableBudget($event->budgetLimit);
+        self::updateAvailableBudget($event->budgetLimit);
     }
 }
