@@ -47,6 +47,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $this->collectCurrencies();
         $this->collectNotes();
         $this->collectBudgets();
+        $this->stringifyIds();
         $this->appendCollectedData();
 
         return $this->collection;
@@ -154,5 +155,24 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         foreach ($currencies as $currency) {
             $this->currencies[(int)$currency->id] = $currency;
         }
+    }
+
+    private function stringifyIds(): void
+    {
+        $this->expenses   = array_map(function ($first) {
+            return array_map(function ($second) {
+                $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+
+                return $second;
+            }, $first);
+        }, $this->expenses);
+
+        $this->pcExpenses = array_map(function ($first) {
+            return array_map(function ($second) {
+                $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+
+                return $second;
+            }, $first);
+        }, $this->expenses);
     }
 }

@@ -53,7 +53,7 @@ class DestroyedGroupEventHandler
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
         $engine->setObjects(new Collection([$group]));
-        $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION->value);
+        $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION);
         $engine->generateMessages();
 
         event(new RequestedSendWebhookMessages());

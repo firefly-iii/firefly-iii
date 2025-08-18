@@ -19,73 +19,91 @@
   -->
 
 <template>
-  <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
-    <label class="col-sm-4 control-label">
-      {{ $t('form.webhook_trigger') }}
-    </label>
-    <div class="col-sm-8">
-      <select
-          ref="bill"
-          v-model="trigger"
-          :title="$t('form.webhook_trigger')"
-          class="form-control"
-          name="webhook_trigger"
-      >
-        <option v-for="trigger in this.triggers"
-                :label="trigger.name"
-                :value="trigger.id">{{ trigger.name }}
-        </option>
-      </select>
-      <p class="help-block" v-text="$t('firefly.webhook_trigger_form_help')"></p>
-      <ul v-for="error in this.error" class="list-unstyled">
-        <li class="text-danger">{{ error }}</li>
-      </ul>
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
+        <label class="col-sm-4 control-label">
+            {{ $t('form.webhook_trigger') }}
+        </label>
+        <div class="col-sm-8">
+            <div v-if="loading" class="form-control-static">
+                <em class="fa fa-spinner fa-spin"></em> {{ $t('firefly.loading') }}
+            </div>
+            <select v-if="!loading"
+                    ref="trigger"
+                    v-model="trigger"
+                    :title="$t('form.webhook_trigger')"
+                    class="form-control"
+                    name="webhook_trigger"
+            >
+                <option v-for="trigger in this.triggers"
+                        :label="trigger.name"
+                        :value="trigger.id">{{ trigger.name }}
+                </option>
+            </select>
+            <p class="help-block" v-text="$t('firefly.webhook_trigger_form_help')"></p>
+            <ul v-for="error in this.error" class="list-unstyled">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
+        </div>
     </div>
-  </div>
 </template>
 
 <script>
 export default {
-  name: "WebhookTrigger",
-  data() {
-    return {
-      trigger: 0,
-      triggers: [],
-    };
-  },
-  props: {
-    error: {
-      type: Array,
-      required: true,
-      default() {
-        return []
-      }
+    name: "WebhookTrigger",
+    data() {
+        return {
+            trigger: 0,
+            loading: true,
+            triggers: [],
+        };
     },
-    value: {
-      type: Number,
-      required: true,
-    }
-  },
-  mounted() {
-    this.trigger = this.value;
-    this.triggers = [
-      {id: 100, name: this.$t('firefly.webhook_trigger_STORE_TRANSACTION')},
-      {id: 110, name: this.$t('firefly.webhook_trigger_UPDATE_TRANSACTION')},
-      {id: 120, name: this.$t('firefly.webhook_trigger_DESTROY_TRANSACTION')},
-    ];
-  },
-  watch: {
-    value() {
-      this.trigger = this.value;
+    props: {
+        error: {
+            type: Array,
+            required: true,
+            default() {
+                return []
+            }
+        },
+        value: {
+            type: Number,
+            required: true,
+        }
     },
-    trigger(newValue) {
-      this.$emit('input', newValue);
-    }
-  },
-  methods: {
-    hasError() {
-      return this.error?.length > 0;
-    }
-  },
+    mounted() {
+        this.trigger  = this.value;
+        this.triggers = [];
+        axios.get('./api/v1/configuration/webhook.triggers').then((response) => {
+            for (let key in response.data.data.value) {
+                if (!response.data.data.value.hasOwnProperty(key)) {
+                    continue;
+                }
+                this.triggers.push(
+                    {
+                        id: response.data.data.value[key],
+                        name: this.$t('firefly.webhook_trigger_' + key),
+                    }
+                );
+                console.log('webhook trigger: id=' + response.data.data.value[key] + ', name=' + key);
+            }
+            this.loading = false;
+        }).catch((error) => {
+            this.loading = false;
+        });
+    },
+    watch: {
+        value() {
+            console.log('Value changed to ' + this.value);
+            this.trigger = this.value;
+        },
+        trigger(newValue) {
+            this.$emit('input', newValue);
+        }
+    },
+    methods: {
+        hasError() {
+            return this.error?.length > 0;
+        }
+    },
 }
 </script>

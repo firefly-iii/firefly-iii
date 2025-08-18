@@ -32,6 +32,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class StoredGroupEventHandler
@@ -51,11 +52,11 @@ class StoredGroupEventHandler
     private function processRules(StoredTransactionGroup $storedGroupEvent): void
     {
         if (false === $storedGroupEvent->applyRules) {
-            app('log')->info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
+            Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
 
             return;
         }
-        app('log')->debug('Now in StoredGroupEventHandler::processRules()');
+        Log::debug('Now in StoredGroupEventHandler::processRules()');
 
         $journals            = $storedGroupEvent->transactionGroup->transactionJournals;
         $array               = [];
@@ -65,7 +66,7 @@ class StoredGroupEventHandler
             $array[] = $journal->id;
         }
         $journalIds          = implode(',', $array);
-        app('log')->debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
@@ -98,10 +99,10 @@ class StoredGroupEventHandler
      */
     private function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
-        app('log')->debug(__METHOD__);
+        Log::debug(__METHOD__);
         $group  = $storedGroupEvent->transactionGroup;
         if (false === $storedGroupEvent->fireWebhooks) {
-            app('log')->info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
+            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }
@@ -113,7 +114,7 @@ class StoredGroupEventHandler
         $engine->setUser($user);
 
         // tell the generator which trigger it should look for
-        $engine->setTrigger(WebhookTrigger::STORE_TRANSACTION->value);
+        $engine->setTrigger(WebhookTrigger::STORE_TRANSACTION);
         // tell the generator which objects to process
         $engine->setObjects(new Collection([$group]));
         // tell the generator to generate the messages

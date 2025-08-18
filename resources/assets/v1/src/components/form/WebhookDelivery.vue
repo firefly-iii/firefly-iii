@@ -24,7 +24,10 @@
       {{ $t('form.webhook_delivery') }}
     </label>
     <div class="col-sm-8">
-      <select
+        <div v-if="loading" class="form-control-static">
+            <em class="fa fa-spinner fa-spin"></em> {{ $t('firefly.loading') }}
+        </div>
+        <select v-if="!loading"
           ref="bill"
           v-model="delivery"
           :title="$t('form.webhook_delivery')"
@@ -49,6 +52,7 @@ export default {
   name: "WebhookDelivery",
   data() {
     return {
+    loading: true,
       delivery : 0,
       deliveries: [
 
@@ -71,8 +75,24 @@ export default {
   mounted() {
     this.delivery = this.value;
     this.deliveries = [
-      {id: 300, name: this.$t('firefly.webhook_delivery_JSON')},
+      //{id: 300, name: this.$t('firefly.webhook_delivery_JSON')},
     ];
+      axios.get('./api/v1/configuration/webhook.deliveries').then((response) => {
+          for (let key in response.data.data.value) {
+              if (!response.data.data.value.hasOwnProperty(key)) {
+                  continue;
+              }
+              this.deliveries.push(
+                  {
+                      id: response.data.data.value[key],
+                      name: this.$t('firefly.webhook_delivery_' + key),
+                  }
+              );
+          }
+          this.loading = false;
+      }).catch((error) => {
+          this.loading = false;
+      });
   },
   watch: {
     value() {

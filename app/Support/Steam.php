@@ -356,8 +356,10 @@ class Steam
                 continue;
             }
             $accountSum           = array_values($accountSum)[0];
+            $sumOfAmount          = (string)$accountSum['sum_of_amount'];
+            $sumOfAmount          = $this->floatalize('' === $sumOfAmount ? '0' : $sumOfAmount);
             $sumsByCode           = [
-                $accountSum['code'] => $accountSum['sum_of_amount'],
+                $accountSum['code'] => $sumOfAmount,
             ];
 
             // Log::debug('All balances are (joined)', $others);

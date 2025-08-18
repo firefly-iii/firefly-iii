@@ -129,6 +129,8 @@ export default {
         this.id = parseInt(response.data.data.id);
 
         // trigger value on content
+        console.log('Trigger is ' + response.data.data.attributes.trigger);
+        // TODO does not need to be hard coded.
         if ('STORE_TRANSACTION' === response.data.data.attributes.trigger) {
           this.trigger = 100;
         }
@@ -138,6 +140,18 @@ export default {
         if ('DESTROY_TRANSACTION' === response.data.data.attributes.trigger) {
           this.trigger = 120;
         }
+          if ('STORE_BUDGET' === response.data.data.attributes.trigger) {
+              this.trigger = 200;
+          }
+          if ('UPDATE_BUDGET' === response.data.data.attributes.trigger) {
+              this.trigger = 210;
+          }
+          if ('DESTROY_BUDGET' === response.data.data.attributes.trigger) {
+              this.trigger = 220;
+          }
+          if ('STORE_UPDATE_BUDGET_LIMIT' === response.data.data.attributes.trigger) {
+              this.trigger = 230;
+          }
 
         // response value
         if ('TRANSACTIONS' === response.data.data.attributes.response) {
@@ -146,6 +160,9 @@ export default {
         if ('ACCOUNTS' === response.data.data.attributes.response) {
           this.response = 210;
         }
+          if ('BUDGET' === response.data.data.attributes.response) {
+              this.response = 230;
+          }
         if ('NONE' === response.data.data.attributes.response) {
           this.response = 220;
         }

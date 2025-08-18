@@ -57,6 +57,11 @@ class EitherConfigKey
             'firefly.rule-actions',
             'firefly.context-rule-actions',
             'search.operators',
+
+            // webhooks
+            'webhook.triggers',
+            'webhook.responses',
+            'webhook.deliveries',
         ];
 
     /**

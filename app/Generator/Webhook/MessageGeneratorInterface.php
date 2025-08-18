@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Webhook;
 
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -38,7 +39,7 @@ interface MessageGeneratorInterface
 
     public function setObjects(Collection $objects): void;
 
-    public function setTrigger(int $trigger): void;
+    public function setTrigger(WebhookTrigger $trigger): void;
 
     public function setUser(User $user): void;
 

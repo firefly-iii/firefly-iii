@@ -27,13 +27,19 @@ namespace FireflyIII\Generator\Webhook;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
+use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\Transformers\BudgetTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -47,11 +53,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class StandardMessageGenerator implements MessageGeneratorInterface
 {
-    private Collection $objects;
-    private int        $trigger;
-    private User       $user;
-    private int        $version = 0;
-    private Collection $webhooks;
+    private Collection     $objects;
+    private WebhookTrigger $trigger;
+    private User           $user;
+    private int            $version = 0;
+    private Collection     $webhooks;
 
     public function __construct()
     {
@@ -68,9 +74,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         // do some debugging
-        Log::debug(
-            sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count())
-        );
+        Log::debug(sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count()));
         $this->run();
     }
 
@@ -79,6 +83,9 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
     }
 
+    /**
+     * @throws FireflyException
+     */
     private function run(): void
     {
         Log::debug('Now in StandardMessageGenerator::run');
@@ -111,31 +118,43 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $class        = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
-
         $uuid         = Uuid::uuid4();
         $basicMessage = [
-            'uuid'     => $uuid->toString(),
-            'user_id'  => 0,
-            'trigger'  => WebhookTrigger::from($webhook->trigger)->name,
-            'response' => WebhookResponse::from($webhook->response)->name,
-            'url'      => $webhook->url,
-            'version'  => sprintf('v%d', $this->getVersion()),
-            'content'  => [],
+            'uuid'          => $uuid->toString(),
+            'user_id'       => 0,
+            'user_group_id' => 0,
+            'trigger'       => WebhookTrigger::from((int)$webhook->trigger)->name,
+            'response'      => WebhookResponse::from((int)$webhook->response)->name,
+            'url'           => $webhook->url,
+            'version'       => sprintf('v%d', $this->getVersion()),
+            'content'       => [],
         ];
 
         // depends on the model how user_id is set:
         switch ($class) {
             default:
                 // Line is ignored because all of Firefly III's Models have an id property.
-                Log::error(
-                    sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id)
-                );
+                Log::error(sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id));
 
                 return;
 
+            case Budget::class:
+                /** @var Budget $model */
+                $basicMessage['user_id']       = $model->user_id;
+                $basicMessage['user_group_id'] = $model->user_group_id;
+
+                break;
+
+            case BudgetLimit::class:
+                $basicMessage['user_id']       = $model->budget->user_id;
+                $basicMessage['user_group_id'] = $model->budget->user_group_id;
+
+                break;
+
             case TransactionGroup::class:
                 /** @var TransactionGroup $model */
-                $basicMessage['user_id'] = $model->user->id;
+                $basicMessage['user_id']       = $model->user_id;
+                $basicMessage['user_group_id'] = $model->user_group_id;
 
                 break;
         }
@@ -143,11 +162,41 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         // then depends on the response what to put in the message:
         switch ($webhook->response) {
             default:
-                Log::error(
-                    sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response)
-                );
+                Log::error(sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
 
                 return;
+
+            case WebhookResponse::BUDGET->value:
+                $basicMessage['content'] = [];
+                if ($model instanceof Budget) {
+                    $enrichment              = new BudgetEnrichment();
+                    $enrichment->setUser($model->user);
+                    $model                   = $enrichment->enrichSingle($model);
+                    $transformer             = new BudgetTransformer();
+                    $basicMessage['content'] = $transformer->transform($model);
+                }
+                if ($model instanceof BudgetLimit) {
+                    $user                    = $model->budget->user;
+                    $enrichment              = new BudgetEnrichment();
+                    $enrichment->setUser($user);
+                    $enrichment->setStart($model->start_date);
+                    $enrichment->setEnd($model->end_date);
+                    $budget                  = $enrichment->enrichSingle($model->budget);
+
+                    $enrichment              = new BudgetLimitEnrichment();
+                    $enrichment->setUser($user);
+
+                    $parameters              = new ParameterBag();
+                    $parameters->set('start', $model->start_date);
+                    $parameters->set('end', $model->end_date);
+
+                    $model                   = $enrichment->enrichSingle($model);
+                    $transformer             = new BudgetLimitTransformer();
+                    $transformer->setParameters($parameters);
+                    $basicMessage['content'] = $transformer->transform($model);
+                }
+
+                break;
 
             case WebhookResponse::NONE->value:
                 $basicMessage['content'] = [];
@@ -224,7 +273,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->objects = $objects;
     }
 
-    public function setTrigger(int $trigger): void
+    public function setTrigger(WebhookTrigger $trigger): void
     {
         $this->trigger = $trigger;
     }

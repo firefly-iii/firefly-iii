@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionJournalObserver
@@ -34,7 +35,7 @@ class TransactionJournalObserver
 {
     public function deleting(TransactionJournal $transactionJournal): void
     {
-        app('log')->debug('Observe "deleting" of a transaction journal.');
+        Log::debug('Observe "deleting" of a transaction journal.');
 
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($transactionJournal->user);
