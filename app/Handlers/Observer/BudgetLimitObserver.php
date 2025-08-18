@@ -24,17 +24,35 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
+use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class BudgetLimitObserver
 {
+    use RecalculatesAvailableBudgetsTrait;
     public function created(BudgetLimit $budgetLimit): void
     {
         Log::debug('Observe "created" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
+        $this->updateAvailableBudget($budgetLimit);
+
+        $user   = $budgetLimit->budget->user;
+
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser($user);
+        $engine->setObjects(new Collection()->push($budgetLimit));
+        $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
+        $engine->generateMessages();
+
+        event(new RequestedSendWebhookMessages());
     }
 
     private function updatePrimaryCurrencyAmount(BudgetLimit $budgetLimit): void
@@ -60,5 +78,17 @@ class BudgetLimitObserver
     {
         Log::debug('Observe "updated" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
+        $this->updateAvailableBudget($budgetLimit);
+
+        $user   = $budgetLimit->budget->user;
+
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser($user);
+        $engine->setObjects(new Collection()->push($budgetLimit));
+        $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
+        $engine->generateMessages();
+
+        event(new RequestedSendWebhookMessages());
     }
 }

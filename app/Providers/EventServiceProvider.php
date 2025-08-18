@@ -29,9 +29,6 @@ use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
-use FireflyIII\Events\Model\BudgetLimit\Created;
-use FireflyIII\Events\Model\BudgetLimit\Deleted;
-use FireflyIII\Events\Model\BudgetLimit\Updated;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
@@ -217,17 +214,6 @@ class EventServiceProvider extends ServiceProvider
             ],
             ChangedName::class                       => [
                 'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
-            ],
-
-            // budget related events: CRUD budget limit
-            Created::class                           => [
-                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@created',
-            ],
-            Updated::class                           => [
-                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@updated',
-            ],
-            Deleted::class                           => [
-                'FireflyIII\Handlers\Events\Model\BudgetLimitHandler@deleted',
             ],
 
             // rule actions

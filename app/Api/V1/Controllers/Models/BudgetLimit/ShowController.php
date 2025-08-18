@@ -96,7 +96,6 @@ class ShowController extends Controller
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]).$this->buildParams());
 
-
         // enrich
         $enrichment   = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
