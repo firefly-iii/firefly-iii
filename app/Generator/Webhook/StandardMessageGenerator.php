@@ -115,7 +115,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class = $model::class;
+        $class        = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
         $uuid         = Uuid::uuid4();
@@ -137,15 +137,20 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 Log::error(sprintf('Webhook #%d was given %s#%d to deal with but can\'t extract user ID from it.', $webhook->id, $class, $model->id));
 
                 return;
+
             case Budget::class:
                 /** @var Budget $model */
                 $basicMessage['user_id']       = $model->user_id;
                 $basicMessage['user_group_id'] = $model->user_group_id;
+
                 break;
+
             case BudgetLimit::class:
                 $basicMessage['user_id']       = $model->budget->user_id;
                 $basicMessage['user_group_id'] = $model->budget->user_group_id;
+
                 break;
+
             case TransactionGroup::class:
                 /** @var TransactionGroup $model */
                 $basicMessage['user_id']       = $model->user_id;
@@ -160,27 +165,28 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 Log::error(sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
 
                 return;
-            case WebhookResponse::BUDGET->value;
+
+            case WebhookResponse::BUDGET->value:
                 $basicMessage['content'] = [];
-            if($model instanceof Budget) {
-                $enrichment = new BudgetEnrichment();
-                $enrichment->setUser($model->user);
-                $model                   = $enrichment->enrichSingle($model);
-                $transformer             = new BudgetTransformer();
-                $basicMessage['content'] = $transformer->transform($model);
-            }
-                if($model instanceof BudgetLimit) {
-                    $user = $model->budget->user;
-                    $enrichment   = new BudgetEnrichment();
+                if ($model instanceof Budget) {
+                    $enrichment              = new BudgetEnrichment();
+                    $enrichment->setUser($model->user);
+                    $model                   = $enrichment->enrichSingle($model);
+                    $transformer             = new BudgetTransformer();
+                    $basicMessage['content'] = $transformer->transform($model);
+                }
+                if ($model instanceof BudgetLimit) {
+                    $user                    = $model->budget->user;
+                    $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($user);
                     $enrichment->setStart($model->start_date);
                     $enrichment->setEnd($model->end_date);
-                    $budget       = $enrichment->enrichSingle($model->budget);
+                    $budget                  = $enrichment->enrichSingle($model->budget);
 
-                    $enrichment = new BudgetLimitEnrichment();
+                    $enrichment              = new BudgetLimitEnrichment();
                     $enrichment->setUser($user);
 
-                    $parameters = new ParameterBag();
+                    $parameters              = new ParameterBag();
                     $parameters->set('start', $model->start_date);
                     $parameters->set('end', $model->end_date);
 
@@ -189,6 +195,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $transformer->setParameters($parameters);
                     $basicMessage['content'] = $transformer->transform($model);
                 }
+
                 break;
 
             case WebhookResponse::NONE->value:
@@ -198,7 +205,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::TRANSACTIONS->value:
                 /** @var TransactionGroup $model */
-                $transformer = new TransactionGroupTransformer();
+                $transformer             = new TransactionGroupTransformer();
 
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
@@ -215,13 +222,13 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::ACCOUNTS->value:
                 /** @var TransactionGroup $model */
-                $accounts   = $this->collectAccounts($model);
-                $enrichment = new AccountEnrichment();
+                $accounts                = $this->collectAccounts($model);
+                $enrichment              = new AccountEnrichment();
                 $enrichment->setDate(null);
                 $enrichment->setUser($model->user);
-                $accounts = $enrichment->enrich($accounts);
+                $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer();
+                    $transformer               = new AccountTransformer();
                     $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
@@ -251,7 +258,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function storeMessage(Webhook $webhook, array $message): void
     {
-        $webhookMessage = new WebhookMessage();
+        $webhookMessage          = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
         $webhookMessage->errored = false;

@@ -27,37 +27,19 @@ namespace FireflyIII\Handlers\Events\Model;
 use FireflyIII\Events\Model\BudgetLimit\Created;
 use FireflyIII\Events\Model\BudgetLimit\Deleted;
 use FireflyIII\Events\Model\BudgetLimit\Updated;
-use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
-use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
-use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Spatie\Period\Boundaries;
-use Spatie\Period\Period;
-use Spatie\Period\Precision;
 
 /**
  * Class BudgetLimitHandler
  */
 class BudgetLimitHandler
 {
-
     public function created(Created $event): void
     {
         Log::debug(sprintf('BudgetLimitHandler::created(#%s)', $event->budgetLimit->id));
     }
 
-    public function deleted(Deleted $event): void
-    {
+    public function deleted(Deleted $event): void {}
 
-    }
-
-    public function updated(Updated $event): void
-    {
-
-    }
+    public function updated(Updated $event): void {}
 }

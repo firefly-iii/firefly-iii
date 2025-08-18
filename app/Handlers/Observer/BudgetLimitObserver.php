@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitObserver
 {
     use RecalculatesAvailableBudgetsTrait;
+
     public function created(BudgetLimit $budgetLimit): void
     {
         Log::debug('Observe "created" of a budget limit.');
