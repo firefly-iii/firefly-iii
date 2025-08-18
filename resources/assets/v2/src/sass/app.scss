@@ -18,6 +18,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 $color-mode-type: media-query;
 $link-decoration: none !default;
 $font-family-sans-serif: "Roboto", sans-serif;

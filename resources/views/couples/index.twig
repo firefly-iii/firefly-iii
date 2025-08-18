@@ -1,0 +1,1007 @@
+{% extends "./layout/default" %}
+
+{% block content %}
+    <!-- Navigation Tabs -->
+    <nav class="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto">
+                <button class="tab-btn tab-active px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="budget">💰 Budget</button>
+                <button class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="insights">📊 Insights</button>
+                <button class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="goals">🎯 Goals</button>
+                <button class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="tips">💡 Tips</button>
+                <button class="tab-btn px-4 py-3 text-sm font-medium whitespace-nowrap" data-tab="settings">⚙️ Settings</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto p-4 max-w-screen-2xl">
+        
+        <!-- Header -->
+        <header class="mb-6 text-center">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">💕 Couples Budget Planner</h1>
+            <p class="text-gray-600 mt-2 text-sm sm:text-base">Build your financial future together</p>
+        </header>
+
+        <!-- Notifications -->
+        <div id="notifications" class="fixed top-16 right-4 z-50 space-y-2"></div>
+
+        <!-- Budget Tab -->
+        <div id="budget-tab" class="tab-content">
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                    <div class="text-2xl font-bold text-green-600" id="total-income">$0</div>
+                    <div class="text-sm text-gray-500">Total Income</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                    <div class="text-2xl font-bold text-red-600" id="total-expenses">$0</div>
+                    <div class="text-sm text-gray-500">Total Expenses</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="savings-rate">0%</div>
+                    <div class="text-sm text-gray-500">Savings Rate</div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md text-center">
+                    <div class="text-2xl font-bold text-purple-600" id="leftover">$0</div>
+                    <div class="text-sm text-gray-500">Leftover</div>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <section id="summary-section" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Person 1 Summary -->
+                <div class="summary-card bg-white p-4 sm:p-6 rounded-xl shadow-md border border-gray-200 space-y-4">
+                    <h2 id="p1-summary-title" class="text-lg sm:text-xl font-bold text-gray-800">Person 1 Summary</h2>
+                    <div class="grid grid-cols-2 gap-2 sm:gap-4 text-sm sm:text-base">
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Income</p>
+                            <p id="p1-summary-income" class="text-lg sm:text-2xl font-bold text-green-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Total Expenses</p>
+                            <p id="p1-summary-total-expenses" class="text-lg sm:text-2xl font-bold text-red-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Shared Contribution</p>
+                            <p id="p1-summary-shared-contribution" class="text-sm sm:text-lg font-semibold text-yellow-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Remaining</p>
+                            <p id="p1-summary-remaining" class="text-lg sm:text-2xl font-bold text-blue-600">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="p1-progress" class="progress-bar bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+                <!-- Person 2 Summary -->
+                <div class="summary-card bg-white p-4 sm:p-6 rounded-xl shadow-md border border-gray-200 space-y-4">
+                    <h2 id="p2-summary-title" class="text-lg sm:text-xl font-bold text-gray-800">Person 2 Summary</h2>
+                    <div class="grid grid-cols-2 gap-2 sm:gap-4 text-sm sm:text-base">
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Income</p>
+                            <p id="p2-summary-income" class="text-lg sm:text-2xl font-bold text-green-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Total Expenses</p>
+                            <p id="p2-summary-total-expenses" class="text-lg sm:text-2xl font-bold text-red-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Shared Contribution</p>
+                            <p id="p2-summary-shared-contribution" class="text-sm sm:text-lg font-semibold text-yellow-600">$0.00</p>
+                        </div>
+                        <div>
+                            <p class="text-xs sm:text-sm font-medium text-gray-500">Remaining</p>
+                            <p id="p2-summary-remaining" class="text-lg sm:text-2xl font-bold text-blue-600">$0.00</p>
+                        </div>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div id="p2-progress" class="progress-bar bg-blue-600 h-2 rounded-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Main Budget Columns -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div id="unassigned-column" class="bg-white p-4 rounded-xl shadow-md border border-gray-200 space-y-4"></div>
+                <div id="person1-column" class="bg-white p-4 rounded-xl shadow-md border border-gray-200 space-y-4"></div>
+                <div id="person2-column" class="bg-white p-4 rounded-xl shadow-md border border-gray-200 space-y-4"></div>
+                <div id="shared-column" class="bg-white p-4 rounded-xl shadow-md border border-gray-200 space-y-4"></div>
+            </div>
+        </div>
+
+        <!-- Insights Tab -->
+        <div id="insights-tab" class="tab-content hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4">📊 Expense Breakdown</h3>
+                    <canvas id="expenseChart" width="400" height="200"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4">💰 Income vs Expenses</h3>
+                    <canvas id="incomeChart" width="400" height="200"></canvas>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md lg:col-span-2">
+                    <h3 class="text-xl font-bold mb-4">🎯 Financial Health Score</h3>
+                    <div id="health-score" class="space-y-4"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Goals Tab -->
+        <div id="goals-tab" class="tab-content hidden">
+            <div class="space-y-6">
+                <div class="bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-xl font-bold mb-4">🎯 Financial Goals</h3>
+                    <div id="goals-list" class="space-y-4"></div>
+                    <form id="add-goal-form" class="mt-4 p-4 border-t">
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <input type="text" name="goalName" placeholder="Goal name" class="p-2 border rounded" required>
+                            <input type="number" name="goalAmount" placeholder="Target amount" class="p-2 border rounded" required>
+                            <input type="date" name="goalDate" class="p-2 border rounded" required>
+                        </div>
+                        <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Goal</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Tab -->
+        <div id="tips-tab" class="tab-content hidden">
+            <div class="space-y-6" id="tips-container">
+                <!-- Tips will be dynamically loaded -->
+            </div>
+        </div>
+
+        <!-- Settings Tab -->
+        <div id="settings-tab" class="tab-content hidden">
+            <div class="bg-white p-6 rounded-xl shadow-md space-y-6">
+                <h3 class="text-xl font-bold">⚙️ Settings</h3>
+                
+                <div>
+                    <label class="block text-sm font-medium mb-2">Currency</label>
+                    <select id="currency-select" class="p-2 border rounded w-full">
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="GBP">GBP (£)</option>
+                        <option value="CAD">CAD ($)</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium mb-2">Budget Period</label>
+                    <select id="period-select" class="p-2 border rounded w-full">
+                        <option value="monthly">Monthly</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="biweekly">Bi-weekly</option>
+                    </select>
+                </div>
+
+                <div class="space-y-4">
+                    <button id="export-btn" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 w-full">📤 Export Data</button>
+                    <button id="import-btn" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 w-full">📥 Import Data</button>
+                    <input type="file" id="import-file" accept=".json" class="hidden">
+                    <button id="clear-btn" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 w-full">🗑️ Clear All Data</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // --- STATE MANAGEMENT ---
+        let state = {};
+
+        function loadState() {
+            // TODO: Fetch state from Firefly III API
+        }
+
+        // --- UTILITY & CALCULATION FUNCTIONS ---
+        function saveState() {
+            // TODO: This will be removed as state is saved via API calls
+        }
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification bg-${type === 'success' ? 'green' : 'red'}-500 text-white px-4 py-2 rounded shadow-lg`;
+            notification.textContent = message;
+            document.getElementById('notifications').appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function calculateBudget() {
+            const p1Income = state.person1.income;
+            const p2Income = state.person2.income;
+            const totalIncome = p1Income + p2Income;
+
+            const p1PersonalExpenses = state.person1.transactions.reduce((sum, tx) => sum + tx.amount, 0);
+            const p2PersonalExpenses = state.person2.transactions.reduce((sum, tx) => sum + tx.amount, 0);
+            const totalSharedExpenses = state.shared.transactions.reduce((sum, tx) => sum + tx.amount, 0);
+
+            let p1SharedContribution = 0, p2SharedContribution = 0;
+            let p1ContributionPercent = 0, p2ContributionPercent = 0;
+
+            switch (state.shared.contributionType) {
+                case 'equal':
+                    p1SharedContribution = totalSharedExpenses / 2;
+                    p2SharedContribution = totalSharedExpenses / 2;
+                    p1ContributionPercent = 50; p2ContributionPercent = 50;
+                    break;
+                case 'custom':
+                    p1ContributionPercent = state.shared.person1CustomPercent;
+                    p2ContributionPercent = 100 - p1ContributionPercent;
+                    p1SharedContribution = totalSharedExpenses * (p1ContributionPercent / 100);
+                    p2SharedContribution = totalSharedExpenses * (p2ContributionPercent / 100);
+                    break;
+                case 'incomeProportion':
+                default:
+                    if (totalIncome > 0) {
+                        p1ContributionPercent = (p1Income / totalIncome) * 100;
+                        p2ContributionPercent = (p2Income / totalIncome) * 100;
+                        p1SharedContribution = totalSharedExpenses * (p1Income / totalIncome);
+                        p2SharedContribution = totalSharedExpenses * (p2Income / totalIncome);
+                    }
+                    break;
+            }
+
+            const p1TotalExpenses = p1PersonalExpenses + p1SharedContribution;
+            const p2TotalExpenses = p2PersonalExpenses + p2SharedContribution;
+            const p1Remaining = p1Income - p1TotalExpenses;
+            const p2Remaining = p2Income - p2TotalExpenses;
+            const totalExpenses = p1TotalExpenses + p2TotalExpenses;
+            const totalLeftover = p1Remaining + p2Remaining;
+            const savingsRate = totalIncome > 0 ? (totalLeftover / totalIncome) * 100 : 0;
+            
+            return { 
+                p1Income, p2Income, totalIncome,
+                p1PersonalExpenses, p2PersonalExpenses, totalSharedExpenses, totalExpenses,
+                p1SharedContribution, p2SharedContribution, 
+                p1ContributionPercent, p2ContributionPercent, 
+                p1TotalExpenses, p2TotalExpenses, 
+                p1Remaining, p2Remaining, totalLeftover, savingsRate
+            };
+        }
+
+        // --- RENDER FUNCTIONS ---
+        function renderQuickStats() {
+            const calcs = calculateBudget();
+            document.getElementById('total-income').textContent = `$${calcs.totalIncome.toFixed(0)}`;
+            document.getElementById('total-expenses').textContent = `$${calcs.totalExpenses.toFixed(0)}`;
+            document.getElementById('savings-rate').textContent = `${calcs.savingsRate.toFixed(1)}%`;
+            document.getElementById('leftover').textContent = `$${calcs.totalLeftover.toFixed(0)}`;
+        }
+
+        function renderSummary() {
+            const calcs = calculateBudget();
+            
+            // Person 1
+            document.getElementById('p1-summary-title').textContent = `${state.person1.name} Summary`;
+            document.getElementById('p1-summary-income').textContent = `$${calcs.p1Income.toFixed(2)}`;
+            document.getElementById('p1-summary-total-expenses').textContent = `$${calcs.p1TotalExpenses.toFixed(2)}`;
+            document.getElementById('p1-summary-shared-contribution').textContent = `$${calcs.p1SharedContribution.toFixed(2)} (${calcs.p1ContributionPercent.toFixed(1)}%)`;
+            document.getElementById('p1-summary-remaining').textContent = `$${calcs.p1Remaining.toFixed(2)}`;
+            document.getElementById('p1-summary-remaining').className = `text-lg sm:text-2xl font-bold ${calcs.p1Remaining < 0 ? 'text-red-600' : 'text-blue-600'}`;
+            
+            // Person 2
+            document.getElementById('p2-summary-title').textContent = `${state.person2.name} Summary`;
+            document.getElementById('p2-summary-income').textContent = `$${calcs.p2Income.toFixed(2)}`;
+            document.getElementById('p2-summary-total-expenses').textContent = `$${calcs.p2TotalExpenses.toFixed(2)}`;
+            document.getElementById('p2-summary-shared-contribution').textContent = `$${calcs.p2SharedContribution.toFixed(2)} (${calcs.p2ContributionPercent.toFixed(1)}%)`;
+            document.getElementById('p2-summary-remaining').textContent = `$${calcs.p2Remaining.toFixed(2)}`;
+            document.getElementById('p2-summary-remaining').className = `text-lg sm:text-2xl font-bold ${calcs.p2Remaining < 0 ? 'text-red-600' : 'text-blue-600'}`;
+
+            // Progress bars
+            const p1Progress = calcs.p1Income > 0 ? Math.min(100, (calcs.p1TotalExpenses / calcs.p1Income) * 100) : 0;
+            const p2Progress = calcs.p2Income > 0 ? Math.min(100, (calcs.p2TotalExpenses / calcs.p2Income) * 100) : 0;
+            document.getElementById('p1-progress').style.width = `${p1Progress}%`;
+            document.getElementById('p2-progress').style.width = `${p2Progress}%`;
+        }
+
+        function renderColumn(columnKey, container) {
+            const columnData = state[columnKey];
+            let headerHTML = `<h2 class="text-lg sm:text-xl font-bold text-center">${columnData.name}</h2>`;
+            let incomeHTML = '';
+            let sharedControlsHTML = '';
+
+            if (columnKey === 'person1' || columnKey === 'person2') {
+                headerHTML = `<input type="text" value="${columnData.name}" data-person="${columnKey}" class="name-input text-lg sm:text-xl font-bold text-center w-full bg-transparent p-2 rounded hover:bg-gray-100 focus:bg-white focus:ring-2 focus:ring-blue-300">`;
+                incomeHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Monthly Income</label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-xl font-semibold text-gray-600">$</span>
+                            <input type="number" data-person="${columnKey}" class="income-input flex-grow p-4 border-2 rounded-lg text-center text-xl font-bold bg-gray-50 focus:bg-white focus:border-blue-500" value="${columnData.income}" step="50" min="0">
+                        </div>
+                    </div>`;
+            }
+
+            if (columnKey === 'shared') {
+                const calcs = calculateBudget();
+                sharedControlsHTML = `
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Contribution Split</label>
+                        <div class="space-y-2" id="contribution-type">
+                            <label class="flex items-center space-x-2 text-sm"><input type="radio" name="split" value="incomeProportion" ${state.shared.contributionType === 'incomeProportion' ? 'checked' : ''}><span>By Income</span></label>
+                            <label class="flex items-center space-x-2 text-sm"><input type="radio" name="split" value="equal" ${state.shared.contributionType === 'equal' ? 'checked' : ''}><span>50/50</span></label>
+                            <label class="flex items-center space-x-2 text-sm"><input type="radio" name="split" value="custom" ${state.shared.contributionType === 'custom' ? 'checked' : ''}><span>Custom</span></label>
+                        </div>
+                        <div id="custom-split-inputs" class="${state.shared.contributionType === 'custom' ? 'flex' : 'hidden'} mt-2 gap-2 items-center">
+                            <input type="number" id="p1-custom-percent" class="w-full p-3 border-2 rounded-lg text-center text-lg font-bold bg-gray-50" value="${state.shared.person1CustomPercent}" min="0" max="100">%
+                            <input type="number" id="p2-custom-percent" class="w-full p-3 border-2 rounded-lg text-center text-lg font-bold bg-gray-50" value="${100 - state.shared.person1CustomPercent}" min="0" max="100">%
+                        </div>
+                    </div>
+                    <div class="text-center text-xs text-gray-600 space-y-1">
+                        <p>Total: <span class="font-bold">$${calcs.totalSharedExpenses.toFixed(2)}</span></p>
+                        <p class="text-xs">${state.person1.name}: $${calcs.p1SharedContribution.toFixed(2)} (${calcs.p1ContributionPercent.toFixed(1)}%)</p>
+                        <p class="text-xs">${state.person2.name}: $${calcs.p2SharedContribution.toFixed(2)} (${calcs.p2ContributionPercent.toFixed(1)}%)</p>
+                    </div>`;
+            }
+            
+            container.innerHTML = `
+                ${headerHTML}
+                ${incomeHTML}
+                ${sharedControlsHTML}
+                <div class="transaction-list min-h-[100px] space-y-2 p-2 border-t border-b" data-list-key="${columnKey}"></div>
+                <div class="form-container" data-list-key="${columnKey}"></div>
+            `;
+            renderTransactionList(columnData.transactions, container.querySelector('.transaction-list'));
+            renderAddForm(container.querySelector('.form-container'));
+        }
+
+        function renderTransactionList(transactions, container) {
+            if (transactions.length === 0) {
+                container.innerHTML = `<p class="text-center text-sm text-gray-500 py-4">Drag expenses here or add new ones below</p>`;
+                return;
+            }
+
+            container.innerHTML = transactions.map(tx => `
+                <div class="transaction-item p-3 rounded-lg border bg-white shadow-sm" data-id="${tx.id}">
+                    <div class="flex items-center gap-2 mb-2">
+                        <div class="drag-handle cursor-grab active:cursor-grabbing p-1 text-gray-400 hover:text-gray-600" draggable="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                                <circle cx="9" cy="12" r="1"/>
+                                <circle cx="9" cy="5" r="1"/>
+                                <circle cx="9" cy="19" r="1"/>
+                                <circle cx="15" cy="12" r="1"/>
+                                <circle cx="15" cy="5" r="1"/>
+                                <circle cx="15" cy="19" r="1"/>
+                            </svg>
+                        </div>
+                        <input type="text" value="${tx.description}" data-field="description" class="flex-grow bg-gray-50 p-3 rounded-lg border text-sm font-medium" placeholder="What's this expense for?">
+                        <button class="delete-btn text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-100 flex-shrink-0">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="pointer-events-none"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-lg font-semibold text-gray-600">$</span>
+                        <button class="amount-btn bg-red-100 hover:bg-red-200 text-red-700 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg" data-action="decrease" data-id="${tx.id}">−</button>
+                        <input type="number" value="${tx.amount.toFixed(2)}" data-field="amount" class="flex-grow bg-gray-50 p-3 rounded-lg border text-center text-lg font-bold" placeholder="0.00" step="0.01" min="0">
+                        <button class="amount-btn bg-green-100 hover:bg-green-200 text-green-700 w-10 h-10 rounded-full flex items-center justify-center font-bold text-lg" data-action="increase" data-id="${tx.id}">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAddForm(container) {
+            container.innerHTML = `
+                <form class="add-transaction-form mt-4 pt-4 border-t space-y-3">
+                    <input type="text" name="description" placeholder="What's this expense for?" class="w-full p-4 border-2 rounded-lg text-lg bg-gray-50 focus:bg-white focus:border-blue-500" required>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl font-semibold text-gray-600">$</span>
+                        <input type="number" name="amount" placeholder="0.00" min="0.01" step="0.01" class="flex-grow p-4 border-2 rounded-lg text-center text-xl font-bold bg-gray-50 focus:bg-white focus:border-blue-500" required>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 mb-3">
+                        <button type="button" class="preset-btn bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm font-medium" data-amount="25">$25</button>
+                        <button type="button" class="preset-btn bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm font-medium" data-amount="50">$50</button>
+                        <button type="button" class="preset-btn bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm font-medium" data-amount="100">$100</button>
+                        <button type="button" class="preset-btn bg-gray-100 hover:bg-gray-200 p-2 rounded-lg text-sm font-medium" data-amount="250">$250</button>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white p-4 rounded-lg font-bold text-lg hover:bg-blue-700 transition-colors">➕ Add Expense</button>
+                </form>
+            `;
+        }
+
+        function renderInsights() {
+            const calcs = calculateBudget();
+            
+            // Expense Chart
+            const expenseCtx = document.getElementById('expenseChart').getContext('2d');
+            if (window.expenseChart) window.expenseChart.destroy();
+            window.expenseChart = new Chart(expenseCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [state.person1.name, state.person2.name, 'Shared'],
+                    datasets: [{
+                        data: [calcs.p1PersonalExpenses, calcs.p2PersonalExpenses, calcs.totalSharedExpenses],
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Income Chart
+            const incomeCtx = document.getElementById('incomeChart').getContext('2d');
+            if (window.incomeChart) window.incomeChart.destroy();
+            window.incomeChart = new Chart(incomeCtx, {
+                type: 'bar',
+                data: {
+                    labels: [state.person1.name, state.person2.name],
+                    datasets: [
+                        {
+                            label: 'Income',
+                            data: [calcs.p1Income, calcs.p2Income],
+                            backgroundColor: '#10b981'
+                        },
+                        {
+                            label: 'Expenses',
+                            data: [calcs.p1TotalExpenses, calcs.p2TotalExpenses],
+                            backgroundColor: '#ef4444'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Health Score
+            const healthScore = Math.max(0, Math.min(100, calcs.savingsRate * 2));
+            const healthColor = healthScore >= 60 ? 'green' : healthScore >= 30 ? 'yellow' : 'red';
+            document.getElementById('health-score').innerHTML = `
+                <div class="text-center">
+                    <div class="text-4xl font-bold text-${healthColor}-600">${healthScore.toFixed(0)}/100</div>
+                    <div class="text-gray-600">Financial Health Score</div>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mt-4">
+                        <div class="bg-${healthColor}-600 h-4 rounded-full transition-all duration-500" style="width: ${healthScore}%"></div>
+                    </div>
+                    <div class="mt-4 text-sm text-gray-600">
+                        ${healthScore >= 60 ? '🎉 Excellent! You\'re on track for financial success.' : 
+                          healthScore >= 30 ? '⚠️ Good, but consider reducing expenses or increasing income.' : 
+                          '🚨 Review your budget - expenses are too high compared to income.'}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderGoals() {
+            const goalsContainer = document.getElementById('goals-list');
+            if (state.goals.length === 0) {
+                goalsContainer.innerHTML = '<p class="text-gray-500 text-center">No goals set yet. Add one below!</p>';
+                return;
+            }
+
+            goalsContainer.innerHTML = state.goals.map((goal, index) => {
+                const daysLeft = Math.ceil((new Date(goal.date) - new Date()) / (1000 * 60 * 60 * 24));
+                const progress = Math.min(100, (goal.saved / goal.amount) * 100);
+                
+                return `
+                    <div class="goal-item bg-gray-50 p-4 rounded-lg">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="font-semibold">${goal.name}</h4>
+                            <button class="text-red-500 hover:text-red-700" onclick="removeGoal(${goal.id})">×</button>
+                        </div>
+                        <div class="text-sm text-gray-600 mb-2">
+                            Target: $${goal.amount} | Due: ${new Date(goal.date).toLocaleDateString()} (${daysLeft} days)
+                        </div>
+                        <div class="w-full bg-gray-200 rounded-full h-2 mb-2">
+                            <div class="bg-blue-600 h-2 rounded-full" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span>$${goal.saved || 0} saved</span>
+                            <span>${progress.toFixed(1)}%</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderTips() {
+            const tips = [
+                {
+                    title: "💡 The 50/30/20 Rule",
+                    content: "Allocate 50% of income to needs, 30% to wants, and 20% to savings and debt repayment. Adjust these percentages based on your specific situation.",
+                    category: "budgeting"
+                },
+                {
+                    title: "🏠 Housing Costs",
+                    content: "Keep housing costs (rent/mortgage, utilities, insurance) under 30% of your combined income to maintain financial flexibility.",
+                    category: "expenses"
+                },
+                {
+                    title: "💰 Emergency Fund",
+                    content: "Build an emergency fund covering 3-6 months of expenses before focusing on other financial goals. Start small if needed.",
+                    category: "savings"
+                },
+                {
+                    title: "🎯 SMART Goals",
+                    content: "Make financial goals Specific, Measurable, Achievable, Relevant, and Time-bound. Example: 'Save $5,000 for vacation by December 2024'",
+                    category: "goals"
+                },
+                {
+                    title: "📊 Track Everything",
+                    content: "Monitor spending for at least one month to understand your patterns. Small expenses add up quickly!",
+                    category: "tracking"
+                },
+                {
+                    title: "💳 Debt Strategy",
+                    content: "Pay minimums on all debts, then focus extra payments on either highest interest (avalanche) or smallest balance (snowball) method.",
+                    category: "debt"
+                },
+                {
+                    title: "🤝 Communication is Key",
+                    content: "Schedule regular money talks with your partner. Discuss goals, concerns, and celebrate wins together.",
+                    category: "relationships"
+                },
+                {
+                    title: "🔄 Review Regularly",
+                    content: "Review and adjust your budget monthly. Life changes, and your budget should adapt too.",
+                    category: "budgeting"
+                }
+            ];
+
+            document.getElementById('tips-container').innerHTML = tips.map(tip => `
+                <div class="tip-card bg-white p-6 rounded-xl shadow-md">
+                    <h3 class="text-lg font-bold mb-3">${tip.title}</h3>
+                    <p class="text-gray-700">${tip.content}</p>
+                    <span class="inline-block mt-3 px-3 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">${tip.category}</span>
+                </div>
+            `).join('');
+        }
+
+        // --- EVENT HANDLERS ---
+        function handleFormSubmit(e) {
+            if (!e.target.classList.contains('add-transaction-form')) return;
+            e.preventDefault();
+            const form = e.target;
+            const listKey = form.parentElement.dataset.listKey;
+            const description = form.elements.description.value.trim();
+            const amount = parseFloat(form.elements.amount.value);
+            if (!description || isNaN(amount) || amount <= 0) return;
+
+            fetch('{{ route('api.v1.couples.transactions.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                },
+                body: JSON.stringify({
+                    description: description,
+                    amount: amount,
+                    column: listKey
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showNotification(data.message);
+                    form.reset();
+                    loadState(); // Reload state after successful creation
+                } else {
+                    showNotification('Error adding expense.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while adding expense.', 'error');
+            });
+        }
+
+        function handleListInteraction(e) {
+            const target = e.target;
+            const transactionEl = target.closest('.transaction-item');
+            
+            // Handle preset amount buttons
+            if (target.classList.contains('preset-btn')) {
+                const amount = parseFloat(target.dataset.amount);
+                const amountInput = target.closest('form').querySelector('input[name="amount"]');
+                amountInput.value = amount;
+                return;
+            }
+            
+            if (!transactionEl) return;
+            const id = parseInt(transactionEl.dataset.id);
+            const listKey = transactionEl.parentElement.dataset.listKey;
+            const list = state[listKey].transactions;
+            const txIndex = list.findIndex(tx => tx.id === id);
+
+            // Handle +/- amount buttons
+            if (target.classList.contains('amount-btn')) {
+                const action = target.dataset.action;
+                const amountInput = transactionEl.querySelector('input[data-field="amount"]');
+                let currentAmount = parseFloat(amountInput.value) || 0;
+                
+                if (action === 'increase') {
+                    currentAmount += currentAmount < 10 ? 1 : (currentAmount < 100 ? 5 : 10);
+                } else if (action === 'decrease') {
+                    currentAmount = Math.max(0, currentAmount - (currentAmount <= 10 ? 1 : (currentAmount <= 100 ? 5 : 10)));
+                }
+                
+                if (txIndex > -1) {
+                    list[txIndex].amount = currentAmount;
+                    renderAll();
+                    // saveState();
+                }
+                return;
+            }
+            
+            if (target.closest('.delete-btn')) {
+                if (txIndex > -1) {
+                    fetch(`{{ route('api.v1.couples.transactions.delete', {transaction: 'TRANSACTION_ID'}) }}`.replace('TRANSACTION_ID', id), {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            showNotification(data.message);
+                            loadState(); // Reload state after successful deletion
+                        } else {
+                            showNotification('Error deleting expense.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('An error occurred while deleting expense.', 'error');
+                    });
+                }
+            } else if (target.matches('input[data-field]')) {
+                const field = target.dataset.field;
+                const value = field === 'amount' ? parseFloat(target.value) || 0 : target.value;
+                
+                if (txIndex > -1) {
+                    // Update the local state immediately for responsiveness
+                    list[txIndex][field] = value;
+                    renderAll(); // Re-render to reflect local state change
+
+                    // Send update to API
+                    fetch(`{{ route('api.v1.couples.transactions.update', {transaction: 'TRANSACTION_ID'}) }}`.replace('TRANSACTION_ID', id), {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                        },
+                        body: JSON.stringify({
+                            description: list[txIndex].description,
+                            amount: list[txIndex].amount
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            showNotification(data.message);
+                            // No need to loadState() here as renderAll() already updated the view
+                        } else {
+                            showNotification('Error updating expense.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('An error occurred while updating expense.', 'error');
+                    });
+                }
+            }
+        }
+
+        function handleGlobalInput(e) {
+            const target = e.target;
+            if (target.classList.contains('income-input')) {
+                const personKey = target.dataset.person;
+                state[personKey].income = parseFloat(target.value) || 0;
+            } else if (target.classList.contains('name-input')) {
+                const personKey = target.dataset.person;
+                state[personKey].name = target.value;
+            } else if (target.id === 'p1-custom-percent') {
+                state.shared.person1CustomPercent = Math.max(0, Math.min(100, parseFloat(target.value) || 0));
+                document.getElementById('p2-custom-percent').value = 100 - state.shared.person1CustomPercent;
+            } else if (target.id === 'p2-custom-percent') {
+                const p2Percent = Math.max(0, Math.min(100, parseFloat(target.value) || 0));
+                state.shared.person1CustomPercent = 100 - p2Percent;
+                document.getElementById('p1-custom-percent').value = state.shared.person1CustomPercent;
+            }
+            
+            // This is a special case for transaction inputs to re-render the summary in real time
+            if(target.matches('input[data-field]')) {
+                handleListInteraction(e);
+            }
+
+            renderAll();
+            // saveState();
+        }
+
+        function handleContributionChange(e) {
+            if (e.target.name === 'split') {
+                state.shared.contributionType = e.target.value;
+                renderAll();
+                // saveState();
+            }
+        }
+
+        // --- DRAG & DROP HANDLERS ---
+        let draggedItemId = null;
+        let sourceListKey = null;
+
+        function handleDragStart(e) {
+            if (!e.target.closest('.drag-handle')) {
+                e.preventDefault();
+                return;
+            }
+            
+            const transactionItem = e.target.closest('.transaction-item');
+            if (transactionItem) {
+                draggedItemId = parseInt(transactionItem.dataset.id);
+                sourceListKey = transactionItem.closest('.transaction-list').dataset.listKey;
+                e.dataTransfer.effectAllowed = 'move';
+                transactionItem.classList.add('dragging');
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            const dropZone = e.target.closest('.transaction-list');
+            if (dropZone) {
+                dropZone.classList.add('drag-over');
+                e.dataTransfer.dropEffect = 'move';
+            }
+        }
+        
+        function handleDragLeave(e) {
+            const dropZone = e.target.closest('.transaction-list');
+            if (dropZone) {
+                dropZone.classList.remove('drag-over');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const dropZone = e.target.closest('.transaction-list');
+            if (dropZone && draggedItemId && sourceListKey) {
+                dropZone.classList.remove('drag-over');
+                const targetListKey = dropZone.dataset.listKey;
+
+                if (sourceListKey !== targetListKey) {
+                    fetch(`{{ route('api.v1.couples.transactions.update-tag', {transaction: 'TRANSACTION_ID'}) }}`.replace('TRANSACTION_ID', draggedItemId), {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                        },
+                        body: JSON.stringify({
+                            column: targetListKey
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message) {
+                            showNotification(data.message);
+                            loadState(); // Reload state after successful tag update
+                        } else {
+                            showNotification('Error moving expense.', 'error');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('An error occurred while moving expense.', 'error');
+                    });
+                }
+            }
+            draggedItemId = null;
+            sourceListKey = null;
+        }
+
+        function handleDragEnd(e) {
+            document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+        }
+
+        // --- TABNAVIGATION ---
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+            
+            document.getElementById(`${tabName}-tab`).classList.remove('hidden');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('tab-active');
+
+            if (tabName === 'insights') {
+                setTimeout(renderInsights, 100);
+            } else if (tabName === 'goals') {
+                renderGoals();
+            } else if (tabName === 'tips') {
+                renderTips();
+            }
+        }
+
+        // --- GOALS FUNCTIONS ---
+        function addGoal(name, amount, date) {
+            fetch('{{ route('api.v1.couples.goals.store') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                },
+                body: JSON.stringify({
+                    name: name,
+                    amount: amount,
+                    date: date
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showNotification(data.message);
+                    loadState(); // Reload state after successful creation
+                } else {
+                    showNotification('Error adding goal.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while adding goal.', 'error');
+            });
+        }
+
+        function removeGoal(id) {
+            fetch(`{{ route('api.v1.couples.goals.delete', {goal: 'GOAL_ID'}) }}`.replace('GOAL_ID', id), {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}' // Laravel CSRF token
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    showNotification(data.message);
+                    loadState(); // Reload state after successful deletion
+                } else {
+                    showNotification('Error deleting goal.', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showNotification('An error occurred while deleting goal.', 'error');
+            });
+        }
+
+        // --- EXPORT/IMPORT ---
+        function exportData() {
+            const dataStr = JSON.stringify(state, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'couples-budget.json';
+            link.click();
+            URL.revokeObjectURL(url);
+            showNotification('Data exported successfully!');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedState = JSON.parse(e.target.result);
+                    state = { ...state, ...importedState };
+                    // saveState();
+                    renderAll();
+                    showNotification('Data imported successfully!');
+                } catch (error) {
+                    showNotification('Invalid file format', 'error');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        function clearData() {
+            if (confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+                localStorage.removeItem('couplesBudget');
+                location.reload();
+            }
+        }
+
+        // --- INITIALIZATION ---
+        function renderAll() {
+            renderColumn('unassigned', document.getElementById('unassigned-column'));
+            renderColumn('person1', document.getElementById('person1-column'));
+            renderColumn('person2', document.getElementById('person2-column'));
+            renderColumn('shared', document.getElementById('shared-column'));
+            renderSummary();
+            renderQuickStats();
+        }
+
+        // Attach global event listeners
+        document.body.addEventListener('submit', handleFormSubmit);
+        
+        // DEBUGGED: Use 'input' for real-time updates on all relevant fields.
+        document.body.addEventListener('input', e => {
+            handleGlobalInput(e);
+        });
+        
+        // 'change' is for radio buttons
+        document.body.addEventListener('change', e => {
+            handleContributionChange(e);
+        });
+        
+        // 'click' is for buttons (+/-, delete, presets)
+        document.body.addEventListener('click', handleListInteraction);
+        
+        // Tab navigation
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+        });
+
+        // Goals form
+        document.getElementById('add-goal-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const form = e.target;
+            addGoal(
+                form.elements.goalName.value,
+                parseFloat(form.elements.goalAmount.value),
+                form.elements.goalDate.value
+            );
+            form.reset();
+        });
+
+        // Settings
+        document.getElementById('export-btn').addEventListener('click', exportData);
+        document.getElementById('import-btn').addEventListener('click', () => {
+            document.getElementById('import-file').click();
+        });
+        document.getElementById('import-file').addEventListener('change', importData);
+        document.getElementById('clear-btn').addEventListener('click', clearData);
+
+        // Drag & Drop Listeners
+        document.addEventListener('dragstart', handleDragStart);
+        document.addEventListener('dragover', handleDragOver);
+        document.addEventListener('dragleave', handleDragLeave);
+        document.addEventListener('drop', handleDrop);
+        document.addEventListener('dragend', handleDragEnd);
+
+        // Make global for goal removal
+        window.removeGoal = removeGoal;
+
+        function loadState() {
+            fetch('{{ route('api.v1.couples.state') }}')
+                .then(response => response.json())
+                .then(data => {
+                    state = data;
+                    renderAll();
+                });
+        }
+
+        // Initial render on page load
+        loadState();
+    </script>
+{% endblock %}
+
+{% block styles %}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .summary-card { transition: all 0.3s ease-in-out; }
+        .transaction-item:hover { background-color: #f9fafb; }
+        .transaction-item { cursor: default; }
+        .transaction-item input { touch-action: manipulation; }
+        .amount-btn { touch-action: manipulation; user-select: none; }
+        .preset-btn { touch-action: manipulation; user-select: none; }
+        .drag-handle { touch-action: none; }
+        .dragging { opacity: 0.5; background: #e0e7ff; }
+        .drag-over { border: 2px dashed #3b82f6; background-color: #eff6ff; }
+        input:focus, select:focus { outline: 2px solid transparent; outline-offset: 2px; --tw-ring-color: #3b82f6; box-shadow: 0 0 0 2px var(--tw-ring-color); }
+        .tip-card { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .progress-bar { transition: width 0.3s ease-in-out; }
+        .tab-active { background: #3b82f6; color: white; }
+        .notification { animation: slideIn 0.3s ease-out; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+    </style>
+{% endblock %}

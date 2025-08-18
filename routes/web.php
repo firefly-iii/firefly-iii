@@ -146,6 +146,14 @@ Route::group(
     }
 );
 
+// Couples Budget Planner Controller.
+Route::group(
+    ['middleware' => ['user-full-auth'], 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'couples', 'as' => 'couples.'],
+    static function (): void {
+        Route::get('/', ['uses' => 'CouplesController@index', 'as' => 'index']);
+    }
+);
+
 // show inactive
 
 /*

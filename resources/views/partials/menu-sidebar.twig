@@ -36,6 +36,13 @@
         </a>
     </li>
 
+    <li class="{{ activeRoutePartial('couples') }}">
+        <a href="{{ route('couples.index') }}">
+            <em class="fa fa-users fa-fw"></em>
+            <span>Couples</span>
+        </a>
+    </li>
+
     <li class="header text-uppercase">{{ 'accounting'|_ }}</li>
 
     <li class="{{ activeRoutePartial('transactions') }} treeview" id="transaction-menu">

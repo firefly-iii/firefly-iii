@@ -727,6 +727,24 @@ Route::group(
     }
 );
 
+// Couples Budget Planner API routes:
+Route::group(
+    [
+        'namespace' => 'FireflyIII\\Api\\V1\\Controllers\\Couples',
+        'prefix'    => 'v1/couples',
+        'as'        => 'api.v1.couples.',
+    ],
+    static function (): void {
+        Route::get('state', ['uses' => 'CouplesController@state', 'as' => 'state']);
+        Route::post('transactions', ['uses' => 'CouplesController@storeTransaction', 'as' => 'transactions.store']);
+        Route::put('transactions/{transaction}', ['uses' => 'CouplesController@updateTransaction', 'as' => 'transactions.update']);
+        Route::delete('transactions/{transaction}', ['uses' => 'CouplesController@deleteTransaction', 'as' => 'transactions.delete']);
+        Route::put('transactions/{transaction}/tag', ['uses' => 'CouplesController@updateTransactionTag', 'as' => 'transactions.update-tag']);
+        Route::post('goals', ['uses' => 'CouplesController@storeGoal', 'as' => 'goals.store']);
+        Route::delete('goals/{goal}', ['uses' => 'CouplesController@deleteGoal', 'as' => 'goals.delete']);
+    }
+);
+
 // USER
 
 // Preference API routes:
