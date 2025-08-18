@@ -3,7 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.3.0 - 2025-08-xx
+## 6.3.1 - 2025-08-19
+
+### Fixed 
+
+- #10768
+- #10771
+- #10773
+- #10775
+- #10782
+
+## 6.3.0 - 2025-08-17
 
 > [!WARNING]
 > Firefly III v6.3.0 introduces a lot of API changes that deal with multi-currency support. Make sure your beloved apps are updated to support this.
