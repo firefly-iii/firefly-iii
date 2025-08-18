@@ -119,7 +119,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
             'user_group_id' => 0,
-            'trigger'       => $webhook->trigger->name,
+            'trigger'       => WebhookTrigger::from((int) $webhook->trigger)->name,
             'response'      => WebhookResponse::from((int) $webhook->response)->name,
             'url'           => $webhook->url,
             'version'       => sprintf('v%d', $this->getVersion()),
