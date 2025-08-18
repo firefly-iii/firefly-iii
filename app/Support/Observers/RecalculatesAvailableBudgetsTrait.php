@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\Observers;
 
 use FireflyIII\Models\AvailableBudget;
@@ -152,8 +154,8 @@ trait RecalculatesAvailableBudgetsTrait
             );
             // overlap in days:
             $limitPeriod = Period::make(
-                            $budgetLimit->start_date,
-                            $budgetLimit->end_date,
+                $budgetLimit->start_date,
+                $budgetLimit->end_date,
                 precision : Precision::DAY(),
                 boundaries: Boundaries::EXCLUDE_NONE()
             );
@@ -194,8 +196,8 @@ trait RecalculatesAvailableBudgetsTrait
             return '0';
         }
         $limitPeriod = Period::make(
-                        $budgetLimit->start_date,
-                        $budgetLimit->end_date,
+            $budgetLimit->start_date,
+            $budgetLimit->end_date,
             precision : Precision::DAY(),
             boundaries: Boundaries::EXCLUDE_NONE()
         );

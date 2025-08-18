@@ -46,7 +46,8 @@ class BudgetObserver
         Log::debug(sprintf('Observe "created" of budget #%d ("%s").', $budget->id, $budget->name));
 
         // fire event.
-        $user = $budget->user;
+        $user   = $budget->user;
+
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
@@ -60,7 +61,7 @@ class BudgetObserver
     public function updated(Budget $budget): void
     {
         Log::debug(sprintf('Observe "updated" of budget #%d ("%s").', $budget->id, $budget->name));
-        $user = $budget->user;
+        $user   = $budget->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -76,10 +77,10 @@ class BudgetObserver
     {
         Log::debug('Observe "deleting" of a budget.');
 
-        $user = $budget->user;
+        $user         = $budget->user;
 
         /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
+        $engine       = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
         $engine->setObjects(new Collection()->push($budget));
         $engine->setTrigger(WebhookTrigger::DESTROY_BUDGET);
@@ -87,7 +88,7 @@ class BudgetObserver
 
         event(new RequestedSendWebhookMessages());
 
-        $repository = app(AttachmentRepositoryInterface::class);
+        $repository   = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);
 
         /** @var Attachment $attachment */
