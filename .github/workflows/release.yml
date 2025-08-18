@@ -237,7 +237,7 @@ jobs:
         id: release-description
         uses: JC5/firefly-iii-dev@main
         with:
-          action: "ff3:generate-release-notes firefly-iii ${{ github.event.inputs.version }}"
+          action: "ff3:generate-release-notes firefly-iii ${{ inputs.version || 'develop' }}"
           output: 'output'
         env:
           FIREFLY_III_ROOT: /github/workspace
