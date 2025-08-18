@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroup
@@ -32,7 +33,7 @@ class TransactionGroupObserver
 {
     public function deleting(TransactionGroup $transactionGroup): void
     {
-        app('log')->debug('Observe "deleting" of a transaction group.');
+        Log::debug('Observe "deleting" of a transaction group.');
         foreach ($transactionGroup->transactionJournals()->get() as $journal) {
             $journal->delete();
         }
