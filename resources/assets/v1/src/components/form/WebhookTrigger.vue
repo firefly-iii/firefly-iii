@@ -93,6 +93,7 @@ export default {
     },
     watch: {
         value() {
+            console.log('Value changed to ' + this.value);
             this.trigger = this.value;
         },
         trigger(newValue) {
