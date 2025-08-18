@@ -7,11 +7,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed 
 
-- #10768
-- #10771
-- #10773
-- #10775
-- #10782
+- [Discussion 10768](https://github.com/orgs/firefly-iii/discussions/10768) (Argument #1 ($start) must be of type Carbon\Carbon, null given) started by @tangodance
+- [Issue 10771](https://github.com/firefly-iii/firefly-iii/issues/10771) (/v1/budgets/{id}/limits seems broken) reported by @Sceptorrh
+- [Issue 10773](https://github.com/firefly-iii/firefly-iii/issues/10773) (API: Wrong Return types) reported by @dreautall
+- [Issue 10775](https://github.com/firefly-iii/firefly-iii/issues/10775) (API: /v1/chart/account/overview broken) reported by @dreautall
+- [Issue 10782](https://github.com/firefly-iii/firefly-iii/issues/10782) ([error'] /accounts/[asset,expense,revenue]) reported by @vkanev
 
 ## 6.3.0 - 2025-08-17
 
