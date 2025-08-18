@@ -50,7 +50,7 @@ jobs:
           git pull
           echo "Current branch is $(git branch --show-current)"
         env:
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Configure Git
         run: |
           # do some configuration
@@ -118,7 +118,7 @@ jobs:
         env:
           FIREFLY_III_ROOT: /github/workspace
           GH_TOKEN: ""
-          FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          FF_III_VERSION: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Generate JSON v1
         id: json-v1
         uses: JC5/firefly-iii-dev@main
@@ -221,7 +221,7 @@ jobs:
           echo "tarName=$tarName" >> "$GITHUB_ENV"
           echo "BRANCH_NAME=$BRANCH_NAME" >> "$GITHUB_ENV"
         env:
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Commit all changes
         run: |
           # add all content, except output.txt (this contains the changelog and/or the download instructions)
@@ -232,12 +232,12 @@ jobs:
           git commit -m "🤖 Auto commit for release '$version' on $(date +'%Y-%m-%d')" || true
           git push
         env:
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Generate release description
         id: release-description
         uses: JC5/firefly-iii-dev@main
         with:
-          action: "ff3:generate-release-notes firefly-iii ${{ github.event.inputs.version }}"
+          action: "ff3:generate-release-notes firefly-iii ${{ inputs.version || 'develop' }}"
           output: 'output'
         env:
           FIREFLY_III_ROOT: /github/workspace
@@ -291,7 +291,7 @@ jobs:
           echo "DONE!"
         env:
           GH_TOKEN: ${{ github.token }}
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Create archives
         run: |
           echo "Create zip file $zipName"
@@ -375,7 +375,7 @@ jobs:
           fi
         env:
           GH_TOKEN: ${{ github.token }}
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Upload artifacts
         run: |
           # add zip file to release.
@@ -411,4 +411,4 @@ jobs:
           rm -f $tarName.sha256
         env:
           GH_TOKEN: ${{ github.token }}
-          version: ${{ github.event_name == 'schedule' && 'develop' || github.event.inputs.version }}
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
