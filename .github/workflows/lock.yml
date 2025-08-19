@@ -21,7 +21,7 @@ jobs:
       discussions: write
     runs-on: ubuntu-latest
     steps:
-      - uses: JC5/lock-threads@v6.0.4
+      - uses: JC5/lock-threads@v6.0.5
         with:
           issue-inactive-days: 21
           pr-inactive-days: 21
