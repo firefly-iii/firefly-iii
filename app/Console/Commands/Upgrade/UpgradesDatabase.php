@@ -75,6 +75,7 @@ class UpgradesDatabase extends Command
             'upgrade:610-currency-preferences',
             'upgrade:620-piggy-banks',
             'upgrade:620-pc-amounts',
+            'upgrade:640-upgrade-webhooks',
             'firefly-iii:correct-database',
         ];
         $args     = [];

@@ -24,14 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Enums\WebhookDelivery;
-use FireflyIII\Enums\WebhookResponse;
-use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
+use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
+use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -56,7 +57,7 @@ class Webhook extends Model
     public static function getDeliveries(): array
     {
         $array = [];
-        $set   = WebhookDelivery::cases();
+        $set   = WebhookDeliveryEnum::cases();
         foreach ($set as $item) {
             $array[$item->value] = $item->name;
         }
@@ -67,7 +68,7 @@ class Webhook extends Model
     public static function getDeliveriesForValidation(): array
     {
         $array = [];
-        $set   = WebhookDelivery::cases();
+        $set   = WebhookDeliveryEnum::cases();
         foreach ($set as $item) {
             $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
@@ -79,7 +80,7 @@ class Webhook extends Model
     public static function getResponses(): array
     {
         $array = [];
-        $set   = WebhookResponse::cases();
+        $set   = WebhookResponseEnum::cases();
         foreach ($set as $item) {
             $array[$item->value] = $item->name;
         }
@@ -90,7 +91,7 @@ class Webhook extends Model
     public static function getResponsesForValidation(): array
     {
         $array = [];
-        $set   = WebhookResponse::cases();
+        $set   = WebhookResponseEnum::cases();
         foreach ($set as $item) {
             $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
@@ -102,7 +103,7 @@ class Webhook extends Model
     public static function getTriggers(): array
     {
         $array = [];
-        $set   = WebhookTrigger::cases();
+        $set   = WebhookTriggerEnum::cases();
         foreach ($set as $item) {
             $array[$item->value] = $item->name;
         }
@@ -113,7 +114,7 @@ class Webhook extends Model
     public static function getTriggersForValidation(): array
     {
         $array = [];
-        $set   = WebhookTrigger::cases();
+        $set   = WebhookTriggerEnum::cases();
         foreach ($set as $item) {
             $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
@@ -130,13 +131,13 @@ class Webhook extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $webhookId = (int) $value;
+            $webhookId = (int)$value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook   = $user->webhooks()->find($webhookId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }
@@ -153,6 +154,21 @@ class Webhook extends Model
     public function webhookMessages(): HasMany
     {
         return $this->hasMany(WebhookMessage::class);
+    }
+
+    public function webhookDeliveries(): BelongsToMany
+    {
+        return $this->belongsToMany(WebhookDelivery::class);
+    }
+
+    public function webhookResponses(): BelongsToMany
+    {
+        return $this->belongsToMany(WebhookResponse::class);
+    }
+
+    public function webhookTriggers(): BelongsToMany
+    {
+        return $this->belongsToMany(WebhookTrigger::class);
     }
 
     protected function casts(): array

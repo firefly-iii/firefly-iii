@@ -1,0 +1,26 @@
+<?php
+
+namespace FireflyIII\Models;
+
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+
+class WebhookTrigger extends Model
+{
+    use ReturnsIntegerIdTrait;
+
+
+
+    /**
+     * Get the ID
+     *
+     * @SuppressWarnings("PHPMD.ShortMethodName")
+     */
+    protected function key(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int) $value,
+        );
+    }
+}

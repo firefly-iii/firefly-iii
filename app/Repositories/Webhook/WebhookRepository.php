@@ -41,7 +41,12 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function all(): Collection
     {
-        return $this->user->webhooks()->get();
+        return $this->user->webhooks()
+            // only get upgraded webhooks
+                          ->where('delivery', 1)
+                          ->where('response', 1)
+                          ->where('trigger', 1)
+                          ->get();
     }
 
     public function destroy(Webhook $webhook): void
@@ -67,22 +72,20 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
     public function getMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-            ->orderBy('created_at', 'DESC')
-            ->get(['webhook_messages.*'])
-        ;
+                       ->orderBy('created_at', 'DESC')
+                       ->get(['webhook_messages.*']);
     }
 
     public function getReadyMessages(Webhook $webhook): Collection
     {
         return $webhook->webhookMessages()
-            ->where('webhook_messages.sent', 0)
-            ->where('webhook_messages.errored', 0)
-            ->get(['webhook_messages.*'])
-            ->filter(
-                static fn (WebhookMessage $message) // @phpstan-ignore-line
-                => $message->webhookAttempts()->count() <= 2
-            )->splice(0, 3)
-        ;
+                       ->where('webhook_messages.sent', 0)
+                       ->where('webhook_messages.errored', 0)
+                       ->get(['webhook_messages.*'])
+                       ->filter(
+                           static fn(WebhookMessage $message) // @phpstan-ignore-line
+                           => $message->webhookAttempts()->count() <= 2
+                       )->splice(0, 3);
     }
 
     public function store(array $data): Webhook
@@ -93,9 +96,12 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
             'user_group_id' => $this->user->user_group_id,
             'active'        => $data['active'] ?? false,
             'title'         => $data['title'] ?? null,
-            'trigger'       => $data['trigger'],
-            'response'      => $data['response'],
-            'delivery'      => $data['delivery'],
+            //            'trigger'       => $data['trigger'],
+            //            'response'      => $data['response'],
+            //            'delivery'      => $data['delivery'],
+            'trigger'       => 1,
+            'response'      => 1,
+            'delivery'      => 1,
             'secret'        => $secret,
             'url'           => $data['url'],
         ];
@@ -105,12 +111,12 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function update(Webhook $webhook, array $data): Webhook
     {
-        $webhook->active   = $data['active'] ?? $webhook->active;
-        $webhook->trigger  = $data['trigger'] ?? $webhook->trigger;
-        $webhook->response = $data['response'] ?? $webhook->response;
-        $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
-        $webhook->title    = $data['title'] ?? $webhook->title;
-        $webhook->url      = $data['url'] ?? $webhook->url;
+        $webhook->active = $data['active'] ?? $webhook->active;
+//        $webhook->trigger  = $data['trigger'] ?? $webhook->trigger;
+//        $webhook->response = $data['response'] ?? $webhook->response;
+//        $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
+        $webhook->title = $data['title'] ?? $webhook->title;
+        $webhook->url   = $data['url'] ?? $webhook->url;
 
         if (true === $data['secret']) {
             $secret          = Str::random(24);

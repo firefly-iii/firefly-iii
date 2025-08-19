@@ -32,7 +32,9 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -89,6 +91,13 @@ class ShowController extends Controller
         // make paginator:
         $paginator   = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhooks     = $enrichment->enrich($webhooks);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);

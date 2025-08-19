@@ -43,5 +43,6 @@ class DatabaseSeeder extends Seeder
         $this->call(ConfigSeeder::class);
         $this->call(UserRoleSeeder::class);
         $this->call(ExchangeRateSeeder::class);
+        $this->call(WebhookDataSeeder::class);
     }
 }

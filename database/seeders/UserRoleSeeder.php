@@ -39,16 +39,11 @@ class UserRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [];
+        /** @var UserRoleEnum $role */
         foreach (UserRoleEnum::cases() as $role) {
-            $roles[] = $role->value;
-        }
-
-        /** @var string $role */
-        foreach ($roles as $role) {
-            if (null === UserRole::where('title', $role)->first()) {
+            if (null === UserRole::where('title', $role->value)->first()) {
                 try {
-                    UserRole::create(['title' => $role]);
+                    UserRole::create(['title' => $role->value]);
                 } catch (PDOException $e) {
                     // @ignoreException
                 }
