@@ -24,15 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Webhook;
 
-use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Models\Webhook\UpdateRequest;
-use FireflyIII\Models\Webhook;
-use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
-use FireflyIII\Transformers\WebhookTransformer;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
-use League\Fractal\Resource\Item;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+    use FireflyIII\Api\V1\Controllers\Controller;
+    use FireflyIII\Api\V1\Requests\Models\Webhook\UpdateRequest;
+    use FireflyIII\Models\Webhook;
+    use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+    use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
+    use FireflyIII\Transformers\WebhookTransformer;
+    use FireflyIII\User;
+    use Illuminate\Http\JsonResponse;
+    use Illuminate\Support\Facades\Log;
+    use League\Fractal\Resource\Item;
+    use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class UpdateController
@@ -69,6 +71,13 @@ class UpdateController extends Controller
 
         $webhook     = $this->repository->update($webhook, $data);
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhook     = $enrichment->enrichSingle($webhook);
 
         Log::channel('audit')->info(sprintf('User updates webhook #%d', $webhook->id), $data);
 

@@ -126,6 +126,13 @@ class ShowController extends Controller
         Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
         $manager     = $this->getManager();
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhook     = $enrichment->enrichSingle($webhook);
+
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);

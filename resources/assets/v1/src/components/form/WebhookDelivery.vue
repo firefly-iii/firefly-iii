@@ -68,7 +68,7 @@ export default {
       }
     },
     value: {
-      type: Number,
+      type: String,
       required: true,
     }
   },
@@ -84,7 +84,7 @@ export default {
               }
               this.deliveries.push(
                   {
-                      id: response.data.data.value[key],
+                      id: key,
                       name: this.$t('firefly.webhook_delivery_' + key),
                   }
               );

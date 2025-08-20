@@ -40,27 +40,39 @@
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
-                <th scope="row" style="width:40%;">Title</th>
+                <td style="width:40%;"><strong>{{ $t('list.title') }}</strong></td>
                 <td>{{ title }}</td>
               </tr>
               <tr>
-                <th scope="row">{{ $t('list.active') }}</th>
+                  <td style="width:40%;"><strong>{{ $t('list.active') }}</strong></td>
                 <td>
                   <em class="fa fa-check text-success" v-if="active"></em>
                   <em class="fa fa-times text-danger" v-if="!active"></em>
                 </td>
               </tr>
               <tr>
-                <th scope="row">{{ $t('list.trigger') }}</th>
-                <td> {{ trigger }}</td>
+                  <td style="width:40%;"><strong>{{ $t('list.trigger') }}</strong></td>
+                <td>
+                    <span v-for="trigger in triggers" :key="trigger">
+                        {{ $t('firefly.webhook_trigger_' + trigger) }}<br>
+                    </span>
+                </td>
               </tr>
               <tr>
-                <th scope="row">{{ $t('list.response') }}</th>
-                <td> {{ response }}</td>
+                  <td style="width:40%;"><strong>{{ $t('list.response') }}</strong></td>
+                <td>
+                        <span v-for="response in responses" :key="response">
+                            {{ $t('firefly.webhook_response_' + response) }}
+                        </span>
+                </td>
               </tr>
               <tr>
-                <th scope="row">{{ $t('list.delivery') }}</th>
-                <td> {{ delivery }}</td>
+                  <td style="width:40%;"><strong>{{ $t('list.delivery') }}</strong></td>
+                <td>
+                        <span v-for="delivery in deliveries" :key="delivery">
+                            {{ $t('firefly.webhook_delivery_' + delivery) }}
+                        </span>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -86,12 +98,13 @@
             <table class="table table-hover" aria-label="A table">
               <tbody>
               <tr>
-                <th scope="row" style="width:40%;">{{ $t('list.url') }}</th>
+                  <td style="width:40%;"><strong>{{ $t('list.url') }}</strong></td>
                 <td><input type="text" readonly class="form-control" :value=url></td>
               </tr>
               <tr>
-                <td>
+                  <td style="width:40%;"><strong>
                   {{ $t('list.secret') }}
+                  </strong>
                 </td>
                 <td>
                   <em style="cursor:pointer"
@@ -260,11 +273,14 @@ export default {
       secret: '',
       show_secret: false,
       trigger: '',
+    triggers: [],
       loading: true,
       response: '',
+    responses: [],
       message_content: '',
       message_attempts: [],
       delivery: '',
+    deliveries: [],
       messages: [],
       active: false,
       edit_url: '#',
@@ -369,9 +385,9 @@ export default {
         this.title = response.data.data.attributes.title;
         this.url = response.data.data.attributes.url;
         this.secret = response.data.data.attributes.secret;
-        this.trigger = this.$t('firefly.webhook_trigger_' + response.data.data.attributes.trigger);
-        this.response = this.$t('firefly.webhook_response_' + response.data.data.attributes.response);
-        this.delivery = this.$t('firefly.webhook_delivery_' + response.data.data.attributes.delivery);
+        this.triggers = response.data.data.attributes.triggers;
+        this.responses = response.data.data.attributes.responses;
+        this.deliveries = response.data.data.attributes.deliveries;
 
         this.active = response.data.data.attributes.active;
         this.url = response.data.data.attributes.url;

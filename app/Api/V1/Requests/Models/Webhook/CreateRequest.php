@@ -24,8 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
-use FireflyIII\Enums\WebhookResponse;
-use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -44,24 +43,24 @@ class CreateRequest extends FormRequest
 
     public function getData(): array
     {
-        $triggers           = Webhook::getTriggersForValidation();
-        $responses          = Webhook::getResponsesForValidation();
-        $deliveries         = Webhook::getDeliveriesForValidation();
-
-        $fields             = [
-            'title'    => ['title', 'convertString'],
-            'active'   => ['active', 'boolean'],
-            'trigger'  => ['trigger', 'convertString'],
-            'response' => ['response', 'convertString'],
-            'delivery' => ['delivery', 'convertString'],
-            'url'      => ['url', 'convertString'],
+        $fields     = [
+            'title'  => ['title', 'convertString'],
+            'active' => ['active', 'boolean'],
+            'url'    => ['url', 'convertString'],
         ];
+        $triggers   = $this->get('triggers', []);
+        $responses  = $this->get('responses', []);
+        $deliveries = $this->get('deliveries', []);
 
-        // this is the way.
-        $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
-        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
-        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
+        if (0 === count($triggers) || 0 === count($responses) || 0 === count($deliveries)) {
+            throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
+        }
+
+
+        $return               = $this->getAllData($fields);
+        $return['triggers']   = $triggers;
+        $return['responses']  = $responses;
+        $return['deliveries'] = $deliveries;
 
         return $return;
     }
@@ -71,18 +70,24 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers       = implode(',', array_keys(Webhook::getTriggersForValidation()));
-        $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
-        $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $triggers       = implode(',', array_values(Webhook::getTriggers()));
+        $responses      = implode(',', array_values(Webhook::getResponses()));
+        $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
         $validProtocols = config('firefly.valid_url_protocols');
 
         return [
-            'title'    => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
-            'active'   => [new IsBoolean()],
-            'trigger'  => sprintf('required|in:%s', $triggers),
-            'response' => sprintf('required|in:%s', $responses),
-            'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', sprintf('url:%s', $validProtocols), 'uniqueWebhook'],
+            'title'        => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
+            'active'       => [new IsBoolean()],
+            'trigger'      => 'prohibited',
+            'triggers'     => 'required|array|min:1|max:10',
+            'triggers.*'   => sprintf('required|in:%s', $triggers),
+            'response'     => 'prohibited',
+            'responses'    => 'required|array|min:1|max:1',
+            'responses.*'  => sprintf('required|in:%s', $responses),
+            'delivery'     => 'prohibited',
+            'deliveries'   => 'required|array|min:1|max:1',
+            'deliveries.*' => sprintf('required|in:%s', $deliveries),
+            'url'          => ['required', sprintf('url:%s', $validProtocols)],
         ];
     }
 
@@ -91,37 +96,44 @@ class CreateRequest extends FormRequest
         $validator->after(
             function (Validator $validator): void {
                 Log::debug('Validating webhook');
+                if ($validator->failed()) {
+                    return;
+                }
                 $data      = $validator->getData();
-                $trigger   = $data['trigger'] ?? null;
-                $response  = $data['response'] ?? null;
-                if (null === $trigger || null === $response) {
+                $triggers  = $data['triggers'] ?? [];
+                $responses = $data['responses'] ?? [];
+
+                if (0 === count($triggers) || 0 === count($responses)) {
                     Log::debug('No trigger or response, return.');
 
                     return;
                 }
-                $triggers  = array_keys(Webhook::getTriggersForValidation());
-                $responses = array_keys(Webhook::getResponsesForValidation());
-                if (!in_array($trigger, $triggers, true) || !in_array($response, $responses, true)) {
-                    return;
+                $validTriggers  = array_values(Webhook::getTriggers());
+                $validResponses = array_values(Webhook::getResponses());
+                foreach ($triggers as $trigger) {
+                    if (!in_array($trigger, $validTriggers, true)) {
+                        return;
+                    }
                 }
-                // cannot deliver budget info.
-                if (is_int($trigger)) {
-                    Log::debug(sprintf('Trigger was integer (%d).', $trigger));
-                    $trigger = WebhookTrigger::from($trigger)->name;
+                foreach ($responses as $response) {
+                    if (!in_array($response, $validResponses, true)) {
+                        return;
+                    }
                 }
-                if (is_int($response)) {
-                    Log::debug(sprintf('Response was integer (%d).', $response));
-                    $response = WebhookResponse::from($response)->name;
-                }
-                Log::debug(sprintf('Trigger is %s, response is %s', $trigger, $response));
-                if (str_contains($trigger, 'TRANSACTION') && str_contains($response, 'BUDGET')) {
-                    $validator->errors()->add('response', trans('validation.webhook_budget_info'));
-                }
-                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'ACCOUNT')) {
-                    $validator->errors()->add('response', trans('validation.webhook_account_info'));
-                }
-                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'TRANSACTION')) {
-                    $validator->errors()->add('response', trans('validation.webhook_transaction_info'));
+                // some combinations are illegal.
+                foreach ($triggers as $i => $trigger) {
+                    $forbidden = config(sprintf('webhooks.forbidden_responses.%s', $trigger));
+                    if (null === $forbidden) {
+                        $validator->errors()->add(sprintf('triggers.%d', $i), trans('validation.unknown_webhook_trigger', ['trigger' => $trigger,]));
+                        continue;
+                    }
+                    foreach ($responses as $ii => $response) {
+                        if (in_array($response, $forbidden, true)) {
+                            Log::debug(sprintf('Trigger %s and response %s are forbidden.', $trigger, $response));
+                            $validator->errors()->add(sprintf('responses.%d', $ii), trans('validation.bad_webhook_combination', ['trigger' => $trigger, 'response' => $response,]));
+                            return;
+                        }
+                    }
                 }
             }
         );
