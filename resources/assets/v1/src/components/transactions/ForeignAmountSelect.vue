@@ -83,15 +83,15 @@ export default {
     },
     watch: {
         source: function () {
-            // console.log('ForeignAmountSelect watch source');
+            console.log('ForeignAmountSelect watch source');
             this.changeData();
         },
         destination: function () {
-            // console.log('ForeignAmountSelect watch destination');
+            console.log('ForeignAmountSelect watch destination');
             this.changeData();
         },
         transactionType: function () {
-            // console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
+            console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
             this.changeData();
         }
     },
@@ -112,12 +112,10 @@ export default {
                 amount: this.$refs.amount.value,
                 currency_id: this.$refs.currency_select.value,
             };
-            // console.log(obj);
-            this.$emit('input', obj
-            );
+            this.$emit('input', obj);
         },
         changeData: function () {
-            // console.log('ForeignAmountSelect changeData');
+            console.log('ForeignAmountSelect changeData');
             this.enabledCurrencies = [];
             let destType = this.destination.type ? this.destination.type.toLowerCase() : 'invalid';
             let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
@@ -160,6 +158,7 @@ export default {
                         }
                     }
                 }
+                this.checkSelection();
                 return;
             }
 
@@ -172,12 +171,30 @@ export default {
                         }
                     }
                 }
+                this.checkSelection();
                 return;
             }
             for (const key in this.currencies) {
                 if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                     this.enabledCurrencies.push(this.currencies[key]);
                 }
+            }
+        },
+        checkSelection: function () {
+            let selectedCurrency = this.$refs.currency_select.value;
+            let hasSelected = false;
+            for(const key in this.enabledCurrencies) {
+                if(parseInt(this.enabledCurrencies[key].id) === parseInt(selectedCurrency)) {
+                    hasSelected = true;
+                }
+            }
+            if(false === hasSelected) {
+                let obj = {
+                    amount: '',
+                    currency_id: null,
+                };
+                this.$emit('input', obj);
+                console.warn('Reset foreign amount.');
             }
         },
         loadCurrencies: function () {
