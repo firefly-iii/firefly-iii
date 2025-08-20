@@ -137,7 +137,7 @@ class RecurringEnrichment implements EnrichmentInterface
             // get the (future) occurrences for this specific type of repetition:
             $amount                         = 'daily' === $repetition->repetition_type ? 9 : 5;
             $set                            = $repository->getXOccurrencesSince($repetition, $fromDate, now(config('app.timezone')), $amount);
-
+            $occurrences = [];
             /** @var Carbon $carbon */
             foreach ($set as $carbon) {
                 $occurrences[] = $carbon->toAtomString();
