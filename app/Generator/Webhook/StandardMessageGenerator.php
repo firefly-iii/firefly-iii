@@ -81,7 +81,12 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function getWebhooks(): Collection
     {
-        return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
+        return $this->user->webhooks()
+            ->leftJoin('webhook_webhook_trigger','webhook_webhook_trigger.webhook_id','webhooks.id')
+            ->leftJoin('webhook_triggers','webhook_webhook_trigger.webhook_trigger_id','webhook_triggers.id')
+            ->where('active', true)
+            ->where('webhook_triggers.title', $this->trigger->name)
+            ->get(['webhooks.*']);
     }
 
     /**
@@ -164,23 +169,25 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         // then depends on the response what to put in the message:
-        /** @var WebhookResponseModel $response */
-        $model = $webhook->webhookResponses()->first();
-        $response = $model->title;
+        /** @var WebhookResponseModel $webhookResponse */
+        $webhookResponse = $webhook->webhookResponses()->first();
+        $response = $webhookResponse->title;
+        Log::debug(sprintf('Expected response for this webhook is "%s".', $response));
         // if it's relevant, just switch to another.
         if(WebhookResponse::RELEVANT->name === $response) {
             // switch to whatever is actually relevant.
             $response = $relevantResponse;
+            Log::debug(sprintf('Expected response for this webhook is now "%s".', $response));
         }
 
 
         switch ($response) {
             default:
-                Log::error(sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
+                Log::error(sprintf('The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
 
                 return;
 
-            case WebhookResponse::BUDGET->value:
+            case WebhookResponse::BUDGET->name:
                 $basicMessage['content'] = [];
                 if ($model instanceof Budget) {
                     $enrichment              = new BudgetEnrichment();
@@ -206,12 +213,12 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
 
-            case WebhookResponse::NONE->value:
+            case WebhookResponse::NONE->name:
                 $basicMessage['content'] = [];
 
                 break;
 
-            case WebhookResponse::TRANSACTIONS->value:
+            case WebhookResponse::TRANSACTIONS->name:
                 /** @var TransactionGroup $model */
                 $transformer             = new TransactionGroupTransformer();
 
@@ -228,7 +235,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
 
-            case WebhookResponse::ACCOUNTS->value:
+            case WebhookResponse::ACCOUNTS->name:
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
