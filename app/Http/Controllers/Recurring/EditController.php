@@ -105,7 +105,6 @@ class EditController extends Controller
         /** @var RecurrenceTransformer $transformer */
         $transformer                      = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
-
         $array                            = $transformer->transform($recurrence);
         $budgets                          = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills                            = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());

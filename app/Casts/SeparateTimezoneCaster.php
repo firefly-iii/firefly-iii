@@ -28,6 +28,7 @@ namespace FireflyIII\Casts;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SeparateTimezoneCaster
@@ -50,7 +51,9 @@ class SeparateTimezoneCaster implements CastsAttributes
         }
         $timeZone = $attributes[sprintf('%s_tz', $key)] ?? config('app.timezone');
 
-        return Carbon::parse($value, $timeZone)->setTimezone(config('app.timezone'));
+        $result = Carbon::parse($value, $timeZone)->setTimezone(config('app.timezone'));
+        Log::debug(sprintf('SeparateTimezoneCaster: %s.%s = %s', str_replace('FireflyIII\\Models\\','',get_class($model)), $key, $result->toAtomString()));
+        return $result;
     }
 
     /**

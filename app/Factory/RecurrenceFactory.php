@@ -30,6 +30,7 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 
 /**
@@ -62,8 +63,8 @@ class RecurrenceFactory
             $type = $this->findTransactionType(ucfirst((string) $data['recurrence']['type']));
         } catch (FireflyException $e) {
             $message = sprintf('Cannot make a recurring transaction of type "%s"', $data['recurrence']['type']);
-            app('log')->error($message);
-            app('log')->error($e->getTraceAsString());
+            Log::error($message);
+            Log::error($e->getTraceAsString());
 
             throw new FireflyException($message, 0, $e);
         }
@@ -107,6 +108,7 @@ class RecurrenceFactory
                 'title'               => $title,
                 'description'         => $description,
                 'first_date'          => $firstDate?->format('Y-m-d'),
+                'first_date_tz'          => $firstDate?->format('e'),
                 'repeat_until'        => $repetitions > 0 ? null : $repeatUntilString,
                 'latest_date'         => null,
                 'repetitions'         => $repetitions,
@@ -125,8 +127,8 @@ class RecurrenceFactory
         try {
             $this->createTransactions($recurrence, $data['transactions'] ?? []);
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
             $recurrence->forceDelete();
             $message = sprintf('Could not create recurring transaction: %s', $e->getMessage());
             $this->errors->add('store', $message);

@@ -83,15 +83,15 @@ export default {
     },
     watch: {
         source: function () {
-            console.log('ForeignAmountSelect watch source');
+            // console.log('ForeignAmountSelect watch source');
             this.changeData();
         },
         destination: function () {
-            console.log('ForeignAmountSelect watch destination');
+            // console.log('ForeignAmountSelect watch destination');
             this.changeData();
         },
         transactionType: function () {
-            console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
+            // console.log('ForeignAmountSelect watch transaction type (is now ' + this.transactionType + ')');
             this.changeData();
         }
     },

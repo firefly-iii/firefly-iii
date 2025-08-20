@@ -129,7 +129,7 @@ class RecurringEnrichment implements EnrichmentInterface
             $recurrence                     = $this->collection->filter(function (Recurrence $item) use ($repetition) {
                 return (int)$item->id === (int)$repetition->recurrence_id;
             })->first();
-            $fromDate                       = $recurrence->latest_date ?? $recurrence->first_date;
+            $fromDate                       = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $id                             = (int)$repetition->recurrence_id;
             $repId                          = (int)$repetition->id;
             $this->repetitions[$id] ??= [];
