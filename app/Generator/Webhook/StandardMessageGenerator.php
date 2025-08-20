@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
@@ -123,14 +124,15 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
             'user_group_id' => 0,
-            'trigger'       => WebhookTrigger::from((int)$webhook->trigger)->name,
-            'response'      => WebhookResponse::from((int)$webhook->response)->name,
+            'trigger'       => $this->trigger->name,
+            'response'      => $webhook->webhookResponses()->first()->title, // guess that the database is correct.
             'url'           => $webhook->url,
             'version'       => sprintf('v%d', $this->getVersion()),
             'content'       => [],
         ];
 
         // depends on the model how user_id is set:
+        $relevantResponse = WebhookResponse::TRANSACTIONS->name;
         switch ($class) {
             default:
                 // Line is ignored because all of Firefly III's Models have an id property.
@@ -142,12 +144,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 /** @var Budget $model */
                 $basicMessage['user_id']       = $model->user_id;
                 $basicMessage['user_group_id'] = $model->user_group_id;
+                $relevantResponse = WebhookResponse::BUDGET->name;
 
                 break;
 
             case BudgetLimit::class:
                 $basicMessage['user_id']       = $model->budget->user_id;
                 $basicMessage['user_group_id'] = $model->budget->user_group_id;
+                $relevantResponse = WebhookResponse::BUDGET->name;
 
                 break;
 
@@ -160,7 +164,17 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         // then depends on the response what to put in the message:
-        switch ($webhook->response) {
+        /** @var WebhookResponseModel $response */
+        $model = $webhook->webhookResponses()->first();
+        $response = $model->title;
+        // if it's relevant, just switch to another.
+        if(WebhookResponse::RELEVANT->name === $response) {
+            // switch to whatever is actually relevant.
+            $response = $relevantResponse;
+        }
+
+
+        switch ($response) {
             default:
                 Log::error(sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
 
@@ -177,12 +191,6 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 }
                 if ($model instanceof BudgetLimit) {
                     $user                    = $model->budget->user;
-                    $enrichment              = new BudgetEnrichment();
-                    $enrichment->setUser($user);
-                    $enrichment->setStart($model->start_date);
-                    $enrichment->setEnd($model->end_date);
-                    $budget                  = $enrichment->enrichSingle($model->budget);
-
                     $enrichment              = new BudgetLimitEnrichment();
                     $enrichment->setUser($user);
 
