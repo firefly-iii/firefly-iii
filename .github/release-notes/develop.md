@@ -16,6 +16,10 @@ The changelog for this release may not be up-to-date, so it is not included. How
 
 The releases are signed, and you can verify them using the [Firefly III releases PGP key](https://docs.firefly-iii.org/explanation/more-information/signatures/).
 
+## Develop with Firefly III
+
+Are you interested in (future) API changes to Firefly III, or other interesting dev-related updates? Sign up to the [Firefly III developer newsletter](https://firefly-iii.kit.com/dev) to receive low-frequency updates about the development of Firefly III.
+
 ## Support Firefly III
 
 Did you know you can support the development of Firefly III? You can donate in many ways, like GitHub Sponsors or Patreon. Please [follow this link](https://bit.ly/donate-to-Firefly-III) for more information. Thank you for your consideration.
