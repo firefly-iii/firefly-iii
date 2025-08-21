@@ -53,6 +53,7 @@ class BudgetLimitObserver
         $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
         $engine->generateMessages();
 
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 
@@ -90,6 +91,7 @@ class BudgetLimitObserver
         $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
         $engine->generateMessages();
 
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 }

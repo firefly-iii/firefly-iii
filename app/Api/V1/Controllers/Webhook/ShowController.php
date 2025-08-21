@@ -172,7 +172,7 @@ class ShowController extends Controller
         $engine->generateMessages();
 
         // trigger event to send them:
-        Log::debug('send event RequestedSendWebhookMessages');
+        Log::debug('send event RequestedSendWebhookMessages from ShowController::triggerTransaction()');
         event(new RequestedSendWebhookMessages());
 
         return response()->json([], 204);

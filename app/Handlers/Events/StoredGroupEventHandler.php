@@ -121,6 +121,7 @@ class StoredGroupEventHandler
         $engine->generateMessages();
 
         // trigger event to send them:
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 }

@@ -167,6 +167,7 @@ class UpdatedGroupEventHandler
         $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION);
         $engine->generateMessages();
 
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 

@@ -268,7 +268,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
          */
         foreach ($budgets as $index => $budget) {
             $budget->order = $index + 1;
-            $budget->save();
+            $budget->saveQuietly();
         }
         // other budgets, set to 0.
         $this->user->budgets()->where('active', 0)->update(['order' => 0]);
