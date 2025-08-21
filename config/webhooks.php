@@ -10,7 +10,7 @@ return [
         WebhookTrigger::STORE_TRANSACTION->name         => [
             WebhookTrigger::STORE_BUDGET->name,
             WebhookTrigger::UPDATE_BUDGET->name,
-                WebhookTrigger::DESTROY_BUDGET->name,
+            WebhookTrigger::DESTROY_BUDGET->name,
             WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT->name,
 
         ],
@@ -49,6 +49,11 @@ return [
         ],
     ],
     'forbidden_responses' => [
+        WebhookTrigger::ANY->name => [
+            WebhookResponse::BUDGET->name,
+            WebhookResponse::TRANSACTIONS->name,
+            WebhookResponse::ACCOUNTS->name,
+        ],
         WebhookTrigger::STORE_TRANSACTION->name         => [
             WebhookResponse::BUDGET->name,
         ],

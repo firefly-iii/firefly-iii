@@ -37,6 +37,7 @@ return [
     'prohibited'                     => 'You must not submit anything in field.',
     'bad_webhook_combination'        => 'Webhook trigger ":trigger" cannot be combined with webhook response ":response".',
     'unknown_webhook_trigger' => 'Unknown webhook trigger ":trigger".',
+    'only_any_trigger' => 'If you select the "Any event"-trigger, you may not select any other triggers.',
     'bad_type_source'                => 'Firefly III can\'t determine the transaction type based on this source account.',
     'bad_type_destination'           => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                  => 'Array is missing "where"-clause',

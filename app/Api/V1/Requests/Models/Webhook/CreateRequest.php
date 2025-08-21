@@ -29,6 +29,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
@@ -40,6 +41,7 @@ class CreateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    use ValidatesWebhooks;
 
     public function getData(): array
     {
@@ -89,53 +91,5 @@ class CreateRequest extends FormRequest
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
             'url'          => ['required', sprintf('url:%s', $validProtocols)],
         ];
-    }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator): void {
-                Log::debug('Validating webhook');
-                if ($validator->failed()) {
-                    return;
-                }
-                $data      = $validator->getData();
-                $triggers  = $data['triggers'] ?? [];
-                $responses = $data['responses'] ?? [];
-
-                if (0 === count($triggers) || 0 === count($responses)) {
-                    Log::debug('No trigger or response, return.');
-
-                    return;
-                }
-                $validTriggers  = array_values(Webhook::getTriggers());
-                $validResponses = array_values(Webhook::getResponses());
-                foreach ($triggers as $trigger) {
-                    if (!in_array($trigger, $validTriggers, true)) {
-                        return;
-                    }
-                }
-                foreach ($responses as $response) {
-                    if (!in_array($response, $validResponses, true)) {
-                        return;
-                    }
-                }
-                // some combinations are illegal.
-                foreach ($triggers as $i => $trigger) {
-                    $forbidden = config(sprintf('webhooks.forbidden_responses.%s', $trigger));
-                    if (null === $forbidden) {
-                        $validator->errors()->add(sprintf('triggers.%d', $i), trans('validation.unknown_webhook_trigger', ['trigger' => $trigger,]));
-                        continue;
-                    }
-                    foreach ($responses as $ii => $response) {
-                        if (in_array($response, $forbidden, true)) {
-                            Log::debug(sprintf('Trigger %s and response %s are forbidden.', $trigger, $response));
-                            $validator->errors()->add(sprintf('responses.%d', $ii), trans('validation.bad_webhook_combination', ['trigger' => $trigger, 'response' => $response,]));
-                            return;
-                        }
-                    }
-                }
-            }
-        );
     }
 }
