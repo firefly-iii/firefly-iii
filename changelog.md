@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #10799
 - #10802
 - #10803
+- #10804
 
 ### API
 
