@@ -356,16 +356,17 @@
                                                     </span>
                                                     <br/>
                                                 {% endif %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id and not budgetLimit.in_range %}
+                                        <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                              data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                            {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                        </span>
+                                                    <span class="text-muted">({{ 'unknown'|_ }})</span>
+                                                {% endif %}
                                             {% endfor %}
 
                                             {% if countLimit == 0 %}
-
-                                                {# this code is used for budget limits OUTSIDE the current view range. #}
-                                                <span class="left_span" data-id="{{ budget.id }}" data-currency="{{ spentInfo.currency_id }}" data-limit="0"
-                                                      class="amount_left" data-value="{{ spentInfo.spent }}">
-                                                    {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
-                                                </span>
-                                                <br/>
+                                                {#  display nothing #}
                                             {% endif %}
                                         {% endfor %}
                                         {% for budgetLimit in budget.budgeted %}

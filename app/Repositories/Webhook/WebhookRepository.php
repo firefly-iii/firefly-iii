@@ -55,6 +55,9 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function destroy(Webhook $webhook): void
     {
+        // force delete all messages and attempts:
+        $webhook->webhookMessages()->delete();
+
         $webhook->delete();
     }
 
