@@ -135,6 +135,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
             $id                  = (int)$budgetLimit->id;
+            $filteredExpenses = $this->filterToBudget($expenses, $budgetLimit->budget_id);
             $filteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
             $this->expenses[$id] = array_values($filteredExpenses);
 
@@ -174,5 +175,12 @@ class BudgetLimitEnrichment implements EnrichmentInterface
                 return $second;
             }, $first);
         }, $this->expenses);
+    }
+
+    private function filterToBudget(array $expenses, int $budget): array
+    {
+        return array_filter($expenses, function (array $item) use ($budget) {
+            return (int)$item['budget_id'] === $budget;
+        });
     }
 }
