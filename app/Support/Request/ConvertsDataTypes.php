@@ -255,7 +255,7 @@ trait ConvertsDataTypes
         if (10 === strlen((string) $value)) {
             // probably a date format.
             try {
-                $carbon = Carbon::createFromFormat('Y-m-d', $value,config('app.timezone'));
+                $carbon = Carbon::createFromFormat('Y-m-d', $value, config('app.timezone'));
             } catch (InvalidDateException $e) { // @phpstan-ignore-line
                 Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
 
@@ -276,7 +276,7 @@ trait ConvertsDataTypes
 
         // is an atom string, I hope?
         try {
-            $carbon = Carbon::parse($value, $value,config('app.timezone'));
+            $carbon = Carbon::parse($value, $value, config('app.timezone'));
         } catch (InvalidDateException $e) { // @phpstan-ignore-line
             Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
 

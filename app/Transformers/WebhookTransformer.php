@@ -51,12 +51,12 @@ class WebhookTransformer extends AbstractTransformer
             'active'     => $webhook->active,
             'title'      => $webhook->title,
             'secret'     => $webhook->secret,
-            'triggers' => $webhook->meta['triggers'],
+            'triggers'   => $webhook->meta['triggers'],
             'deliveries' => $webhook->meta['deliveries'],
-            'responses' => $webhook->meta['responses'],
-//            'trigger'    => $this->getEnum('trigger', $webhook->trigger),
-//            'response'   => $this->getEnum('response', $webhook->response),
-//            'delivery'   => $this->getEnum('delivery', $webhook->delivery),
+            'responses'  => $webhook->meta['responses'],
+            //            'trigger'    => $this->getEnum('trigger', $webhook->trigger),
+            //            'response'   => $this->getEnum('response', $webhook->response),
+            //            'delivery'   => $this->getEnum('delivery', $webhook->delivery),
             'url'        => $webhook->url,
             'links'      => [
                 [

@@ -102,18 +102,18 @@ class RecurrenceFactory
 
         $recurrence        = new Recurrence(
             [
-                'user_id'             => $this->user->id,
-                'user_group_id'       => $this->user->user_group_id,
-                'transaction_type_id' => $type->id,
-                'title'               => $title,
-                'description'         => $description,
-                'first_date'          => $firstDate?->format('Y-m-d'),
+                'user_id'                => $this->user->id,
+                'user_group_id'          => $this->user->user_group_id,
+                'transaction_type_id'    => $type->id,
+                'title'                  => $title,
+                'description'            => $description,
+                'first_date'             => $firstDate?->format('Y-m-d'),
                 'first_date_tz'          => $firstDate?->format('e'),
-                'repeat_until'        => $repetitions > 0 ? null : $repeatUntilString,
-                'latest_date'         => null,
-                'repetitions'         => $repetitions,
-                'apply_rules'         => $applyRules,
-                'active'              => $active,
+                'repeat_until'           => $repetitions > 0 ? null : $repeatUntilString,
+                'latest_date'            => null,
+                'repetitions'            => $repetitions,
+                'apply_rules'            => $applyRules,
+                'active'                 => $active,
             ]
         );
         $recurrence->save();

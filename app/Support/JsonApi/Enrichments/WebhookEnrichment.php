@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
@@ -15,21 +17,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use stdClass;
 
 class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private User       $user;
     private UserGroup  $userGroup;
-    private array      $ids        = [];
-    private array      $deliveries = [];
-    private array      $responses  = [];
-    private array      $triggers   = [];
+    private array      $ids          = [];
+    private array      $deliveries   = [];
+    private array      $responses    = [];
+    private array      $triggers     = [];
 
     private array $webhookDeliveries = [];
     private array $webhookResponses  = [];
     private array $webhookTriggers   = [];
-
 
     public function enrich(Collection $collection): Collection
     {
@@ -40,10 +42,11 @@ class WebhookEnrichment implements EnrichmentInterface
             $this->collectWebhookInfo();
             $this->appendCollectedInfo();
         }
+
         return $this->collection;
     }
 
-    public function enrichSingle(Model|array $model): array|Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection([$model]);
@@ -74,16 +77,19 @@ class WebhookEnrichment implements EnrichmentInterface
     private function collectInfo(): void
     {
         $all = WebhookDelivery::get();
+
         /** @var WebhookDelivery $item */
         foreach ($all as $item) {
             $this->deliveries[$item->id] = $item->key;
         }
         $all = WebhookResponse::get();
+
         /** @var WebhookResponse $item */
         foreach ($all as $item) {
             $this->responses[$item->id] = $item->key;
         }
         $all = WebhookTrigger::get();
+
         /** @var WebhookTrigger $item */
         foreach ($all as $item) {
             $this->triggers[$item->id] = $item->key;
@@ -94,7 +100,8 @@ class WebhookEnrichment implements EnrichmentInterface
     private function collectWebhookInfo(): void
     {
         $set = DB::table('webhook_webhook_delivery')->whereIn('webhook_id', $this->ids)->get(['webhook_id', 'webhook_delivery_id']);
-        /** @var \stdClass $item */
+
+        /** @var stdClass $item */
         foreach ($set as $item) {
             $id                             = $item->webhook_id;
             $deliveryId                     = $item->webhook_delivery_id;
@@ -102,7 +109,8 @@ class WebhookEnrichment implements EnrichmentInterface
         }
 
         $set = DB::table('webhook_webhook_response')->whereIn('webhook_id', $this->ids)->get(['webhook_id', 'webhook_response_id']);
-        /** @var \stdClass $item */
+
+        /** @var stdClass $item */
         foreach ($set as $item) {
             $id                            = $item->webhook_id;
             $responseId                    = $item->webhook_response_id;
@@ -110,7 +118,8 @@ class WebhookEnrichment implements EnrichmentInterface
         }
 
         $set = DB::table('webhook_webhook_trigger')->whereIn('webhook_id', $this->ids)->get(['webhook_id', 'webhook_trigger_id']);
-        /** @var \stdClass $item */
+
+        /** @var stdClass $item */
         foreach ($set as $item) {
             $id                           = $item->webhook_id;
             $triggerId                    = $item->webhook_trigger_id;
@@ -127,8 +136,8 @@ class WebhookEnrichment implements EnrichmentInterface
                 'triggers'   => $this->webhookTriggers[$item->id] ?? [],
             ];
             $item->meta = $meta;
+
             return $item;
         });
     }
-
 }

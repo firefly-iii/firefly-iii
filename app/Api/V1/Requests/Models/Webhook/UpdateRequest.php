@@ -24,17 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
-use FireflyIII\Enums\WebhookResponse;
-use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class UpdateRequest
@@ -47,15 +43,15 @@ class UpdateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields           = [
+        $fields               = [
             'title'    => ['title', 'convertString'],
             'active'   => ['active', 'boolean'],
             'url'      => ['url', 'convertString'],
         ];
 
-        $triggers   = $this->get('triggers', []);
-        $responses  = $this->get('responses', []);
-        $deliveries = $this->get('deliveries', []);
+        $triggers             = $this->get('triggers', []);
+        $responses            = $this->get('responses', []);
+        $deliveries           = $this->get('deliveries', []);
 
         if (0 === count($triggers) || 0 === count($responses) || 0 === count($deliveries)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
@@ -83,8 +79,8 @@ class UpdateRequest extends FormRequest
         $webhook        = $this->route()->parameter('webhook');
 
         return [
-            'title'    => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
-            'active'   => [new IsBoolean()],
+            'title'        => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
+            'active'       => [new IsBoolean()],
 
             'trigger'      => 'prohibited',
             'triggers'     => 'required|array|min:1|max:10',
@@ -96,7 +92,7 @@ class UpdateRequest extends FormRequest
             'deliveries'   => 'required|array|min:1|max:1',
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
 
-            'url'      => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }
 }
