@@ -249,7 +249,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'opening_balance_date'   => null,
                 'opening_balance_amount' => null,
                 'account_number'         => null,
-                'notes'                  => $notes[$id] ?? null,
+                'notes'                  => $this->notes[$id] ?? null,
                 'last_activity'          => $this->lastActivities[$id] ?? null,
             ];
 
