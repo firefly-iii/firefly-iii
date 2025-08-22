@@ -125,27 +125,6 @@ class HomeController extends Controller
      */
     public function index(AccountRepositoryInterface $repository): mixed
     {
-        $trigger = WebhookTrigger::first();
-        $delivery = WebhookDelivery::first();
-        $response = WebhookResponse::first();
-
-        $webhook = new Webhook();
-        $webhook->user_id = auth()->id();
-        $webhook->user_group_id = auth()->user()->user_group_id;
-        $webhook->title = 'Test Webhook';
-        $webhook->url = 'https://example.com/webhook';
-        $webhook->active = true;
-        $webhook->secret = 'abc';
-        $webhook->trigger = 1;
-        $webhook->response = 1;
-        $webhook->delivery = 1;
-        $webhook->save();
-        $webhook->webhookDeliveries()->saveMany(new Collection()->push($delivery));
-        $webhook->webhookResponses()->saveMany(new Collection()->push($response));
-        $webhook->webhookTriggers()->saveMany(new Collection()->push($trigger));
-
-
-
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
         Log::channel('audit')->info('User visits homepage.');
