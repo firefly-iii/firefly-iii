@@ -158,18 +158,8 @@ class ShowController extends Controller
 
         Log::debug('End collect transactions');
         $timer->stop('collection');
-
-        // enrich data in arrays.
-
-        // enrich
-        //        $enrichment   = new TransactionGroupEnrichment();
-        //        $enrichment->setUser(auth()->user());
-        //        $groups->setCollection($enrichment->enrich($groups->getCollection()));
-
-
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        // correct
         $now              = today()->endOfDay();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;

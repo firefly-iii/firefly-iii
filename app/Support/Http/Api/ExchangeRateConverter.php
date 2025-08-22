@@ -103,7 +103,7 @@ class ExchangeRateConverter
 
         // find in cache
         if (null !== $res) {
-            Log::debug(sprintf('ExchangeRateConverter: Return cached rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
+            Log::debug(sprintf('ExchangeRateConverter: Return cached rate (%s) from %s to %s on %s.', $res, $from->code, $to->code, $date->format('Y-m-d')));
 
             return $res;
         }

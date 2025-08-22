@@ -147,7 +147,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}
                         {% if balances.balance %}
-                        ({{ formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true)|raw }})
+                            ({{ formatAmountBySymbol(balances.balance, currency.symbol, currency.decimal_places, true)|raw }})
                         {% elseif balances.pc_balance %}
                             ({{ formatAmountBySymbol(balances.pc_balance, primaryCurrency.symbol, primaryCurrency.decimal_places, true)|raw }})
                         {% endif %}

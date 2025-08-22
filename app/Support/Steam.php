@@ -224,6 +224,7 @@ class Steam
          */
         $request              = clone $start;
         $request->subDay()->endOfDay();
+        Log::debug('Get first balance to start.');
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
         $primaryCurrency      = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
@@ -315,7 +316,7 @@ class Steam
             Log::debug(sprintf('Updated entry [%s]', $carbonKey), $currentBalance);
         }
         $cache->store($balances);
-        Log::debug('End of method');
+        Log::debug('End of method finalAccountBalanceInRange');
 
         return $balances;
     }

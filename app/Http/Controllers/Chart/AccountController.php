@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -504,6 +505,7 @@ class AccountController extends Controller
         Log::debug(sprintf('Step is %s', $step));
         $locale          = Steam::getLocale();
         $return          = [];
+        $converter = new ExchangeRateConverter();
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
@@ -512,10 +514,10 @@ class AccountController extends Controller
         $current         = app('navigation')->endOfX($current, $step, null);
         $format          = (string)trans('config.month_and_day_js', [], $locale);
         $accountCurrency = $this->accountRepository->getAccountCurrency($account);
-
+        Log::debug('Get and filter balance for entire range start');
         $range           = Steam::finalAccountBalanceInRange($account, $start, $end, $this->convertToPrimary);
         $range           = Steam::filterAccountBalances($range, $account, $this->convertToPrimary, $accountCurrency);
-
+        Log::debug('Get and filter balance for entire range end');
         // temp, get end balance.
         Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
         Steam::finalAccountBalance($account, $end);
@@ -552,7 +554,15 @@ class AccountController extends Controller
                     $carbon = Carbon::createFromFormat('Y-m-d', $newRange[$expectedIndex]['date'])->endOfDay();
                 }
             }
-            Log::debug(sprintf('momentBalance is now %s', json_encode($momentBalance)));
+            Log::debug(sprintf('momentBalance[%s] is now %s', $current->format('Y-m-d H:i:s'), json_encode($momentBalance)));
+
+            // check, perhaps recalculate the amount in currency X if the
+            if($accountCurrency->id !== $this->primaryCurrency->id && $this->convertToPrimary && array_key_exists($accountCurrency->code, $momentBalance)){
+                $converted  = $converter->convert($accountCurrency, $this->primaryCurrency, $current, $momentBalance[$accountCurrency->code]);
+                $momentBalance['pc_balance'] = $converted;
+            }
+
+
             $return        = $this->updateChartKeys($return, $momentBalance);
             $previous      = $momentBalance;
 
