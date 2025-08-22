@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.0 - 2025-09-01
+
+## Added
+
+- #10725
+
+New webhook triggers
+
+
 ## 6.3.2 - 2025-08-20
 
 ### Fixed

@@ -75,7 +75,7 @@
                                     <ul class="list-unstyled list-no-margin">
                                     <template x-for="transaction in group.transactions">
                                         <li>
-                                            @include('partials.elements.amount', ['convertToPrimary' => true,'type' => 'transaction.type','amount' => 'transaction.amount','primary' => 'transaction.amount'])
+                                            @include('partials.elements.amount', ['convertToPrimary' => $convertToPrimary,'type' => 'transaction.type','amount' => 'transaction.amount', 'primary' => 'transaction.pc_amount'])
                                         </li>
                                     </template>
                                     </ul>
