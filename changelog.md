@@ -5,11 +5,40 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.4.0 - 2025-09-01
 
-## Added
+### Added
 
-- [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos
+- #5532
+- [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos. See the [documentation](https://docs.firefly-iii.org/how-to/firefly-iii/features/webhooks/).
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- #10790
+- #10791
+- #10794
+- #10799
+- #10802
+- #10803
+
+### Security
+
+- Initial release.
+
+### API
+
 - #8345
-- New webhook triggers
+
 
 
 
