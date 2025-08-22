@@ -25,7 +25,6 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Budget;

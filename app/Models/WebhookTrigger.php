@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Models;
 
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -9,8 +11,6 @@ use Illuminate\Database\Eloquent\Model;
 class WebhookTrigger extends Model
 {
     use ReturnsIntegerIdTrait;
-
-
 
     /**
      * Get the ID

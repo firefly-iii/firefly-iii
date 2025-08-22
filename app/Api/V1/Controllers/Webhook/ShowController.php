@@ -97,7 +97,7 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new WebhookEnrichment();
         $enrichment->setUser($admin);
-        $webhooks     = $enrichment->enrich($webhooks);
+        $webhooks    = $enrichment->enrich($webhooks);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);

@@ -30,9 +30,7 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateRequest
@@ -45,14 +43,14 @@ class CreateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields     = [
+        $fields               = [
             'title'  => ['title', 'convertString'],
             'active' => ['active', 'boolean'],
             'url'    => ['url', 'convertString'],
         ];
-        $triggers   = $this->get('triggers', []);
-        $responses  = $this->get('responses', []);
-        $deliveries = $this->get('deliveries', []);
+        $triggers             = $this->get('triggers', []);
+        $responses            = $this->get('responses', []);
+        $deliveries           = $this->get('deliveries', []);
 
         if (0 === count($triggers) || 0 === count($responses) || 0 === count($deliveries)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');

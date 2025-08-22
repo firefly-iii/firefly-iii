@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
@@ -17,8 +19,8 @@ class UpgradesWebhooks extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '640_upgrade_webhooks';
-    protected $description = 'Upgrade webhooks so they can handle multiple triggers.';
-    protected $signature   = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade webhooks so they can handle multiple triggers.';
+    protected $signature            = 'upgrade:640-upgrade-webhooks {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -32,7 +34,7 @@ class UpgradesWebhooks extends Command
         }
 
         $this->upgradeWebhooks();
-         $this->markAsExecuted();
+        $this->markAsExecuted();
         $this->friendlyPositive('Upgraded webhooks.');
 
         return 0;
@@ -48,10 +50,10 @@ class UpgradesWebhooks extends Command
         return false;
     }
 
-
     private function upgradeWebhooks(): void
     {
         $set = Webhook::where('delivery', '>', 1)->orWhere('trigger', '>', 1)->orWhere('response', '>', 1)->get();
+
         /** @var Webhook $webhook */
         foreach ($set as $webhook) {
             $this->upgradeWebhook($webhook);
@@ -60,18 +62,20 @@ class UpgradesWebhooks extends Command
 
     private function upgradeWebhook(Webhook $webhook): void
     {
-        $delivery = WebhookDelivery::tryFrom((int)$webhook->delivery);
-        $response = WebhookResponse::tryFrom((int)$webhook->response);
-        $trigger  = WebhookTrigger::tryFrom((int)$webhook->trigger);
+        $delivery          = WebhookDelivery::tryFrom((int)$webhook->delivery);
+        $response          = WebhookResponse::tryFrom((int)$webhook->response);
+        $trigger           = WebhookTrigger::tryFrom((int)$webhook->trigger);
         if (null === $delivery || null === $response || null === $trigger) {
             $this->friendlyError(sprintf('[a] Webhook #%d has an invalid delivery, response or trigger value. Will not upgrade.', $webhook->id));
+
             return;
         }
-        $deliveryModel = WebhookDeliveryModel::where('key', $delivery->value)->first();
-        $responseModel = WebhookResponseModel::where('key', $response->value)->first();
-        $triggerModel  = WebhookTriggerModel::where('key', $trigger->value)->first();
+        $deliveryModel     = WebhookDeliveryModel::where('key', $delivery->value)->first();
+        $responseModel     = WebhookResponseModel::where('key', $response->value)->first();
+        $triggerModel      = WebhookTriggerModel::where('key', $trigger->value)->first();
         if (null === $deliveryModel || null === $responseModel || null === $triggerModel) {
             $this->friendlyError(sprintf('[b] Webhook #%d has an invalid delivery, response or trigger model. Will not upgrade.', $webhook->id));
+
             return;
         }
         $webhook->webhookDeliveries()->attach([$deliveryModel->id]);
@@ -83,6 +87,7 @@ class UpgradesWebhooks extends Command
         $webhook->save();
         $this->friendlyPositive(sprintf('Webhook #%d upgraded.', $webhook->id));
     }
+
     private function markAsExecuted(): void
     {
         app('fireflyconfig')->set(self::CONFIG_NAME, true);

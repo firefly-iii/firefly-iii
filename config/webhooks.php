@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 // this is hard coded, which is unfortunate.
 
 use FireflyIII\Enums\WebhookResponse;
@@ -48,8 +50,8 @@ return [
             WebhookTrigger::DESTROY_TRANSACTION->name,
         ],
     ],
-    'forbidden_responses' => [
-        WebhookTrigger::ANY->name => [
+    'forbidden_responses'     => [
+        WebhookTrigger::ANY->name                       => [
             WebhookResponse::BUDGET->name,
             WebhookResponse::TRANSACTIONS->name,
             WebhookResponse::ACCOUNTS->name,
@@ -80,5 +82,5 @@ return [
             WebhookResponse::TRANSACTIONS->name,
             WebhookResponse::ACCOUNTS->name,
         ],
-    ]
+    ],
 ];
