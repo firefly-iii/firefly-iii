@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Added
 
-- #10725
+- [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos
 
 New webhook triggers
 
