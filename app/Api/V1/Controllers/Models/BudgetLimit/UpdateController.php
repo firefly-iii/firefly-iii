@@ -86,7 +86,7 @@ class UpdateController extends Controller
         $admin             = auth()->user();
         $enrichment        = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
-        $budgetLimit       = $enrichment->enrich($budgetLimit);
+        $budgetLimit       = $enrichment->enrichSingle($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer       = app(BudgetLimitTransformer::class);
