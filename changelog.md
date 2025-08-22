@@ -14,14 +14,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Initial release.
 
-### Deprecated
-
-- Initial release.
-
-### Removed
-
-- Initial release.
-
 ### Fixed
 
 - #10790
@@ -30,10 +22,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #10799
 - #10802
 - #10803
-
-### Security
-
-- Initial release.
 
 ### API
 
