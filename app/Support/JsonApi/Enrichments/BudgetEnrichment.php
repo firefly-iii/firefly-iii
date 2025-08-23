@@ -117,7 +117,7 @@ class BudgetEnrichment implements EnrichmentInterface
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = $this->objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
