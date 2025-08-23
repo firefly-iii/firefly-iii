@@ -505,7 +505,7 @@ class AccountController extends Controller
         Log::debug(sprintf('Step is %s', $step));
         $locale          = Steam::getLocale();
         $return          = [];
-        $converter = new ExchangeRateConverter();
+        $converter       = new ExchangeRateConverter();
 
         // fix for issue https://github.com/firefly-iii/firefly-iii/issues/8041
         // have to make sure this chart is always based on the balance at the END of the period.
@@ -557,8 +557,8 @@ class AccountController extends Controller
             Log::debug(sprintf('momentBalance[%s] is now %s', $current->format('Y-m-d H:i:s'), json_encode($momentBalance)));
 
             // check, perhaps recalculate the amount in currency X if the
-            if($accountCurrency->id !== $this->primaryCurrency->id && $this->convertToPrimary && array_key_exists($accountCurrency->code, $momentBalance)){
-                $converted  = $converter->convert($accountCurrency, $this->primaryCurrency, $current, $momentBalance[$accountCurrency->code]);
+            if ($accountCurrency->id !== $this->primaryCurrency->id && $this->convertToPrimary && array_key_exists($accountCurrency->code, $momentBalance)) {
+                $converted                   = $converter->convert($accountCurrency, $this->primaryCurrency, $current, $momentBalance[$accountCurrency->code]);
                 $momentBalance['pc_balance'] = $converted;
             }
 

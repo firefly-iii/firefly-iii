@@ -64,7 +64,7 @@ class ChartRequest extends FormRequest
             'end'         => 'required|date|after:1970-01-02|before:2038-01-17|after_or_equal:start',
             'preselected' => sprintf('nullable|in:%s', implode(',', config('firefly.preselected_accounts'))),
             'period'      => sprintf('nullable|in:%s', implode(',', config('firefly.valid_view_ranges'))),
-            'accounts' => 'nullable|array',
+            'accounts'    => 'nullable|array',
             'accounts.*'  => 'exists:accounts,id',
         ];
 
