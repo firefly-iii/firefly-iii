@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- #5532
+- [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
 - [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos. See the [documentation](https://docs.firefly-iii.org/how-to/firefly-iii/features/webhooks/).
 
 ### Changed
@@ -16,17 +16,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #10790
-- #10791
-- #10794
-- #10799
-- #10802
-- #10803
-- #10804
+- [Issue 10790](https://github.com/firefly-iii/firefly-iii/issues/10790) (Undefined variable $occurrences) reported by @senna1992
+- [Issue 10791](https://github.com/firefly-iii/firefly-iii/issues/10791) (Clone and edit a transaction with a different currency doesn't clear the foreign transaction amount) reported by @jxtxzzw
+- [Issue 10794](https://github.com/firefly-iii/firefly-iii/issues/10794) (Error with recurring transaction) reported by @MaximSN
+- [Issue 10799](https://github.com/firefly-iii/firefly-iii/issues/10799) (Budget - "Left (per day)" not showing the correct value) reported by @GensHaze
+- [Issue 10802](https://github.com/firefly-iii/firefly-iii/issues/10802) (Crash when trying to update a budget limit) reported by @Billos
+- [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
+- [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
 
 ### API
 
-- #8345
+- [Issue 8345](https://github.com/firefly-iii/firefly-iii/issues/8345) (API: Distinguish spent & earned at `/v2/chart/category/dashboard` (or future `v2/categories`)) reported by @dreautall
 
 
 
