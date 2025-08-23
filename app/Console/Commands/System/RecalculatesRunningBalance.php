@@ -1,9 +1,9 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * RecalculatesRunningBalance.php
- * Copyright (c) 2025 james@firefly-iii.org.
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,15 +18,16 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
-
 class RecalculatesRunningBalance extends Command
 {
     use ShowsFriendlyMessages;
