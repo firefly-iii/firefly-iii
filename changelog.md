@@ -23,15 +23,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10802](https://github.com/firefly-iii/firefly-iii/issues/10802) (Crash when trying to update a budget limit) reported by @Billos
 - [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
 - [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
-- #10808
-- #10813
+- [Issue 10808](https://github.com/firefly-iii/firefly-iii/issues/10808) (cron job Error: Undefined variable $preference) reported by @MexerSam
+- [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
 
 ### API
 
 - [Issue 8345](https://github.com/firefly-iii/firefly-iii/issues/8345) (API: Distinguish spent & earned at `/v2/chart/category/dashboard` (or future `v2/categories`)) reported by @dreautall
-- #10804
-- #10806
-- #10807
+- [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
+- [Issue 10806](https://github.com/firefly-iii/firefly-iii/issues/10806) (API: `/v1/chart/balance/balance` has undocumented `period` parameter) reported by @dreautall
+- [Issue 10807](https://github.com/firefly-iii/firefly-iii/issues/10807) (API: `/v1/bills` field `object_group_id` returns int, should be string) reported by @dreautall
 
 
 
