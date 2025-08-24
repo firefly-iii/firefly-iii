@@ -165,6 +165,7 @@
                                         {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     {% elseif first.transaction_type_type == 'Transfer' %}
                                         <span class="text-info money-transfer">
+                                            
                                         {{ formatAmountBySymbol(amount.amount*-1, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
                                     {% elseif first.transaction_type_type == 'Opening balance' %}
