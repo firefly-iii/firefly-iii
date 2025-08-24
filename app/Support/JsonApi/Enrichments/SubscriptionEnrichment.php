@@ -383,7 +383,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 Log::debug(sprintf('[b] Last paid date is: %s', $return->format('Y-m-d')));
             }
         }
-        Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
+        // Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
 
         return $return;
     }
