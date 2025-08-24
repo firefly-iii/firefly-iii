@@ -234,9 +234,9 @@ class AccountEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Account $item) {
-            $id                      = (int)$item->id;
-            $item->full_account_type = $this->accountTypes[(int)$item->account_type_id] ?? null;
-            $meta                    = [
+            $id                           = (int)$item->id;
+            $item->full_account_type      = $this->accountTypes[(int)$item->account_type_id] ?? null;
+            $meta                         = [
                 'currency'               => null,
                 'location'               => [
                     'latitude'   => null,
@@ -283,28 +283,28 @@ class AccountEnrichment implements EnrichmentInterface
 
             // add balances
             // get currencies:
-            $currency                = $this->primaryCurrency; // assume primary currency
+            $currency                     = $this->primaryCurrency; // assume primary currency
             if (null !== $meta['currency']) {
                 $currency = $meta['currency'];
             }
 
             // get the current balance:
-            $date                    = $this->getDate();
+            $date                         = $this->getDate();
             // $finalBalance            = Steam::finalAccountBalance($item, $date, $this->primaryCurrency, $this->convertToPrimary);
-            $finalBalance            = $this->balances[$id];
+            $finalBalance                 = $this->balances[$id];
             Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
 
             // collect current balances:
-            $currentBalance          = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
-            $openingBalance          = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
-            $virtualBalance          = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
-            $debtAmount              = $meta['current_debt'] ?? null;
+            $currentBalance               = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
+            $openingBalance               = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
+            $virtualBalance               = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
+            $debtAmount                   = $meta['current_debt'] ?? null;
 
             // set some pc_ default values to NULL:
-            $pcCurrentBalance        = null;
-            $pcOpeningBalance        = null;
-            $pcVirtualBalance        = null;
-            $pcDebtAmount            = null;
+            $pcCurrentBalance             = null;
+            $pcOpeningBalance             = null;
+            $pcVirtualBalance             = null;
+            $pcDebtAmount                 = null;
 
             // convert to primary currency if needed:
             if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
@@ -327,8 +327,8 @@ class AccountEnrichment implements EnrichmentInterface
                 $openingBalance   = null;
                 $pcOpeningBalance = null;
             }
-            $meta['current_balance_date']  =$this->getDate();
-            $meta['balances']        = [
+            $meta['current_balance_date'] = $this->getDate();
+            $meta['balances']             = [
                 'current_balance'    => $currentBalance,
                 'pc_current_balance' => $pcCurrentBalance,
                 'opening_balance'    => $openingBalance,
@@ -339,7 +339,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'pc_debt_amount'     => $pcDebtAmount,
             ];
             // end add balances
-            $item->meta              = $meta;
+            $item->meta                   = $meta;
 
             return $item;
         });
@@ -379,7 +379,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function setDate(?Carbon $date): void
     {
-        if(null !== $date) {
+        if (null !== $date) {
             $date->endOfDay();
             Log::debug(sprintf('Date is now %s', $date->toW3cString()));
         }
