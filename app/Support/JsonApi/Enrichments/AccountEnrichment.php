@@ -327,6 +327,7 @@ class AccountEnrichment implements EnrichmentInterface
                 $openingBalance   = null;
                 $pcOpeningBalance = null;
             }
+            $meta['current_balance_date']  =$this->getDate();
             $meta['balances']        = [
                 'current_balance'    => $currentBalance,
                 'pc_current_balance' => $pcCurrentBalance,
@@ -378,13 +379,17 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function setDate(?Carbon $date): void
     {
+        if(null !== $date) {
+            $date->endOfDay();
+            Log::debug(sprintf('Date is now %s', $date->toW3cString()));
+        }
         $this->date = $date;
     }
 
     public function getDate(): Carbon
     {
         if (null === $this->date) {
-            return today();
+            return now();
         }
 
         return $this->date;

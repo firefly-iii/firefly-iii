@@ -78,10 +78,6 @@ class AccountTransformer extends AbstractTransformer
         $zoomLevel                             = $account->meta['location']['zoom_level'] ?? null;
         $order                                 = $account->order;
 
-        // date (for balance etc.)
-        $date                                  = $this->getDate();
-        $date->endOfDay();
-
         // get primary currency as fallback:
         $currency                              = $this->primary; // assume primary currency
         if ($hasCurrencySettings) {
@@ -141,7 +137,7 @@ class AccountTransformer extends AbstractTransformer
             'debt_amount'                     => $account->meta['balances']['debt_amount'],
             'pc_debt_amount'                  => $account->meta['balances']['pc_debt_amount'],
 
-            'current_balance_date'            => $date->toAtomString(),
+            'current_balance_date'            => $account->meta['current_balance_date']->toAtomString(),
             'notes'                           => $account->meta['notes'] ?? null,
             'monthly_payment_date'            => $monthlyPaymentDate,
             'credit_card_type'                => $creditCardType,
