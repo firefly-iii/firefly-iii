@@ -28,6 +28,7 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+
 class RecalculatesRunningBalance extends Command
 {
     use ShowsFriendlyMessages;
