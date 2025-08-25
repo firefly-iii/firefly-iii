@@ -69,6 +69,7 @@ class RecurrenceController extends Controller
                 'id'          => (string) $recurrence->id,
                 'name'        => $recurrence->title,
                 'description' => $recurrence->description,
+                'active' => $recurrence->active
             ];
         }
 

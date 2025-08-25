@@ -22,7 +22,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\integration\Api\About;
+namespace Tests\integration\Api\System;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
