@@ -42,8 +42,6 @@ use Illuminate\View\View;
  */
 class ExecutionController extends Controller
 {
-    private RuleGroupRepositoryInterface $ruleGroupRepository;
-
     /**
      * ExecutionController constructor.
      */
@@ -56,7 +54,6 @@ class ExecutionController extends Controller
                 app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -74,15 +71,11 @@ class ExecutionController extends Controller
         /** @var User $user */
         $user          = auth()->user();
         $accounts      = implode(',', $request->get('accounts'));
-        $startDate     = new Carbon($request->get('start'));
-        $endDate       = new Carbon($request->get('end'));
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
-        $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
         // set rules:
@@ -104,10 +97,8 @@ class ExecutionController extends Controller
      */
     public function selectTransactions(RuleGroup $ruleGroup)
     {
-        $first    = session('first')->format('Y-m-d');
-        $today    = today(config('app.timezone'))->format('Y-m-d');
         $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', compact( 'ruleGroup', 'subTitle'));
     }
 }

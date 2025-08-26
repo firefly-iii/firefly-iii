@@ -41,8 +41,6 @@ class SelectTransactionsRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'      => 'required|date|after:1970-01-02|before:2038-01-17|before:end|required_with:end',
-            'end'        => 'required|date|after:1970-01-02|before:2038-01-17|after:start|required_with:start',
             'accounts'   => 'required',
             'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
