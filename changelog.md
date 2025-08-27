@@ -27,6 +27,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
 - #10819
 - #10820
+- #10824
 
 ### API
 

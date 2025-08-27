@@ -48,6 +48,7 @@ Route::group(
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
+        Route::get('subscriptions', ['uses' => 'BillController@bills', 'as' => 'subscriptions']);
         Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);

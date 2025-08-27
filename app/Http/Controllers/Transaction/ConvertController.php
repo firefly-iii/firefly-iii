@@ -337,6 +337,9 @@ class ConvertController extends Controller
             'type'             => $transactionType->type,
         ];
 
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        $amount = $sourceTransaction?->amount ?? '0';
+
         // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
         if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {
             $source         = $this->accountRepository->find((int) $sourceId);
@@ -346,7 +349,20 @@ class ConvertController extends Controller
             if ($sourceCurrency instanceof TransactionCurrency && $destCurrency instanceof TransactionCurrency && $sourceCurrency->code !== $destCurrency->code) {
                 $update['currency_id']         = $sourceCurrency->id;
                 $update['foreign_currency_id'] = $destCurrency->id;
-                $update['foreign_amount']      = '1'; // not the best solution but at this point the amount is hard to get.
+                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
+            }
+        }
+
+        // same thing for converting a withdrawal into a transfer, but with the currency of the destination account.
+        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::WITHDRAWAL->value === $journal->transactionType->type) {
+            $source         = $this->accountRepository->find((int) $sourceId);
+            $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
+            $dest           = $this->accountRepository->find((int) $destinationId);
+            $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
+            if ($sourceCurrency instanceof TransactionCurrency && $destCurrency instanceof TransactionCurrency && $sourceCurrency->code !== $destCurrency->code) {
+                $update['currency_id']         = $sourceCurrency->id;
+                $update['foreign_currency_id'] = $destCurrency->id;
+                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
             }
         }
 

@@ -69,6 +69,7 @@ class BudgetController extends Controller
             static fn (Budget $item) => [
                 'id'   => (string) $item->id,
                 'name' => $item->name,
+                'active' => $item->active,
             ]
         );
 

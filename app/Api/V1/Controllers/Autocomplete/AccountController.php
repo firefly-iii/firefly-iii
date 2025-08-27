@@ -114,6 +114,7 @@ class AccountController extends Controller
                 'id'                              => (string) $account->id,
                 'name'                            => $account->name,
                 'name_with_balance'               => $nameWithBalance,
+                'active' => $account->active,
                 'type'                            => $account->accountType->type,
                 'currency_id'                     => (string) $useCurrency->id,
                 'currency_name'                   => $useCurrency->name,
