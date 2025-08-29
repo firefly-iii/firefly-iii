@@ -160,7 +160,7 @@
         "url": "URL",
         "active": "Actief",
         "interest_date": "Rentedatum",
-        "administration_currency": "Primary currency",
+        "administration_currency": "Standaardvaluta",
         "title": "Titel",
         "date": "Datum",
         "book_date": "Boekdatum",
@@ -180,7 +180,7 @@
     "list": {
         "title": "Titel",
         "active": "Actief?",
-        "primary_currency": "Primary currency",
+        "primary_currency": "Standaardvaluta",
         "trigger": "Trigger",
         "response": "Reactie",
         "delivery": "Bericht",

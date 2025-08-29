@@ -303,22 +303,22 @@ class ConvertController extends Controller
     private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
     {
         /** @var AccountValidator $validator */
-        $validator        = app(AccountValidator::class);
+        $validator         = app(AccountValidator::class);
         $validator->setUser(auth()->user());
         $validator->setTransactionType($transactionType->type);
 
-        $sourceId         = $data['source_id'][$journal->id] ?? null;
-        $sourceName       = $data['source_name'][$journal->id] ?? null;
-        $destinationId    = $data['destination_id'][$journal->id] ?? null;
-        $destinationName  = $data['destination_name'][$journal->id] ?? null;
+        $sourceId          = $data['source_id'][$journal->id] ?? null;
+        $sourceName        = $data['source_name'][$journal->id] ?? null;
+        $destinationId     = $data['destination_id'][$journal->id] ?? null;
+        $destinationName   = $data['destination_name'][$journal->id] ?? null;
 
         // double check it's not an empty string.
-        $sourceId         = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
-        $sourceName       = '' === $sourceName ? null : (string) $sourceName;
-        $destinationId    = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
-        $destinationName  = '' === $destinationName ? null : (string) $destinationName;
-        $validSource      = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
-        $validDestination = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
+        $sourceId          = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
+        $sourceName        = '' === $sourceName ? null : (string) $sourceName;
+        $destinationId     = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
+        $destinationName   = '' === $destinationName ? null : (string) $destinationName;
+        $validSource       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+        $validDestination  = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
 
         if (false === $validSource) {
             throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
@@ -329,7 +329,7 @@ class ConvertController extends Controller
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
-        $update           = [
+        $update            = [
             'source_id'        => $sourceId,
             'source_name'      => $sourceName,
             'destination_id'   => $destinationId,
@@ -338,7 +338,7 @@ class ConvertController extends Controller
         ];
 
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        $amount = $sourceTransaction?->amount ?? '0';
+        $amount            = $sourceTransaction?->amount ?? '0';
 
         // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
         if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {
@@ -367,7 +367,7 @@ class ConvertController extends Controller
         }
 
         /** @var JournalUpdateService $service */
-        $service          = app(JournalUpdateService::class);
+        $service           = app(JournalUpdateService::class);
         $service->setTransactionJournal($journal);
         $service->setData($update);
         $service->update();

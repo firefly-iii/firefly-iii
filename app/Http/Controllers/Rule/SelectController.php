@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Rule;
 
 use Throwable;
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -105,7 +104,7 @@ class SelectController extends Controller
         // does the user have shared accounts?
         $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact( 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact('rule', 'subTitle'));
     }
 
     /**

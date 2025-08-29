@@ -25,9 +25,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
 - [Issue 10808](https://github.com/firefly-iii/firefly-iii/issues/10808) (cron job Error: Undefined variable $preference) reported by @MexerSam
 - [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
-- #10819
-- #10820
-- #10824
+- [Issue 10819](https://github.com/firefly-iii/firefly-iii/issues/10819) (Internal Server Error when trying to open piggy banks) reported by @noantiq
+- [Issue 10820](https://github.com/firefly-iii/firefly-iii/issues/10820) (Unable to search date 1970-01-01 to apply rule.) reported by @Kage1
+- [Issue 10824](https://github.com/firefly-iii/firefly-iii/issues/10824) (Converting withdrawal to transfer to account in different currency doesn't allow setting correct currencies) reported by @avee87
 
 ### API
 
