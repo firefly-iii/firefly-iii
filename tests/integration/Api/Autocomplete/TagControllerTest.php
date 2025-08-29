@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Autocomplete;
 
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,8 +49,8 @@ final class TagControllerTest extends TestCase
                 [
                     'user_id'             => $user->id,
                     'user_group_id'       => $user->user_group_id,
-                    'tag'               => 'Tag ' . $i,
-                    'tag_mode' => 'nothing',
+                    'tag'                 => 'Tag '.$i,
+                    'tag_mode'            => 'nothing',
                 ]
             );
         }
@@ -69,7 +68,7 @@ final class TagControllerTest extends TestCase
     public function testAuthenticatedCall(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
@@ -79,7 +78,7 @@ final class TagControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItems(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(5, $user);
@@ -89,50 +88,50 @@ final class TagControllerTest extends TestCase
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Tag 1']);
         $response->assertJsonStructure([
-                                           '*' => [
-                                               'id',
-                                               'name',
-                                               'tag',
-                                           ],
-                                       ]);
+            '*' => [
+                'id',
+                'name',
+                'tag',
+            ],
+        ]);
 
     }
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(5, $user);
         $response = $this->get(route('api.v1.autocomplete.tags', [
             'query' => 'Tag',
             'limit' => 3,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Tag 1']);
         $response->assertJsonStructure([
-                                           '*' => [
-                                               'id',
-                                               'name',
-                                               'tag',
-                                           ],
-                                       ]);
+            '*' => [
+                'id',
+                'name',
+                'tag',
+            ],
+        ]);
 
     }
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(20, $user);
         $response = $this->get(route('api.v1.autocomplete.tags', [
             'query' => 'Tag 1',
             'limit' => 20,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

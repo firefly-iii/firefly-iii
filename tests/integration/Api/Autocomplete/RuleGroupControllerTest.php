@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Autocomplete;
 
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -50,8 +49,8 @@ final class RuleGroupControllerTest extends TestCase
                 [
                     'user_id'             => $user->id,
                     'user_group_id'       => $user->user_group_id,
-                    'title'               => 'RuleGroup ' . $i,
-                    'description'         => 'RuleGroup '.  $i,
+                    'title'               => 'RuleGroup '.$i,
+                    'description'         => 'RuleGroup '.$i,
                     'order'               => 1,
                     'active'              => 1,
                     'stop_processing'     => 0,
@@ -72,7 +71,7 @@ final class RuleGroupControllerTest extends TestCase
     public function testAuthenticatedCall(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.rule-groups'), ['Accept' => 'application/json']);
@@ -82,7 +81,7 @@ final class RuleGroupControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItems(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRuleGroups(5, $user);
@@ -92,50 +91,50 @@ final class RuleGroupControllerTest extends TestCase
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'RuleGroup 1']);
         $response->assertJsonStructure([
-                                           '*' => [
-                                               'id',
-                                               'name',
-                                               'active',
-                                           ],
-                                       ]);
+            '*' => [
+                'id',
+                'name',
+                'active',
+            ],
+        ]);
 
     }
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRuleGroups(5, $user);
         $response = $this->get(route('api.v1.autocomplete.rule-groups', [
             'query' => 'RuleGroup',
             'limit' => 3,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'RuleGroup 1']);
         $response->assertJsonStructure([
-                                           '*' => [
-                                               'id',
-                                               'name',
-                                               'active',
-                                           ],
-                                       ]);
+            '*' => [
+                'id',
+                'name',
+                'active',
+            ],
+        ]);
 
     }
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRuleGroups(20, $user);
         $response = $this->get(route('api.v1.autocomplete.rule-groups', [
             'query' => 'RuleGroup 1',
             'limit' => 20,
-        ]),                    ['Accept' => 'application/json']);
+        ]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

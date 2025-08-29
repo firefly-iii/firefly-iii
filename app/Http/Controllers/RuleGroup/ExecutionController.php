@@ -25,11 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
 use Exception;
-use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -99,6 +97,6 @@ class ExecutionController extends Controller
     {
         $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact( 'ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', compact('ruleGroup', 'subTitle'));
     }
 }
