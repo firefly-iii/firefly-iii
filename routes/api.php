@@ -504,7 +504,8 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
-        Route::get('{recurrence}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::get( '{recurrence}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::post('{recurrence}/trigger', ['uses' => 'TriggerController@trigger', 'as' => 'trigger']);
         Route::put('{recurrence}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 

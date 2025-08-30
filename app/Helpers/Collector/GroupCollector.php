@@ -861,8 +861,8 @@ class GroupCollector implements GroupCollectorInterface
 
             return new LengthAwarePaginator($set, $this->total, $total, 1);
         }
-
-        return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
+        $limit= $this->limit ?? 1;
+        return new LengthAwarePaginator($set, $this->total, $limit, $this->page);
     }
 
     /**

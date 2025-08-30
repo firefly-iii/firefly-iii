@@ -35,6 +35,7 @@ use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
@@ -581,5 +582,18 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $service = app(RecurrenceUpdateService::class);
 
         return $service->update($recurrence, $data);
+    }
+
+    public function markGroupsAsNow(Collection $groups): void
+    {
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            /** @var TransactionJournal $journal */
+            foreach ($group->transactionJournals as $journal) {
+                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
+                $journal->date = now(config('app.timezone'));
+                $journal->save();
+            }
+        }
     }
 }

@@ -28,8 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TriggerRecurrenceRequest;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 
@@ -58,20 +57,11 @@ class TriggerController extends Controller
         app('log')->debug('Done with recurrence.');
 
         $groups                     = $job->getGroups();
-
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            /** @var TransactionJournal $journal */
-            foreach ($group->transactionJournals as $journal) {
-                app('log')->debug(sprintf('Set date of journal #%d to today!', $journal->id));
-                $journal->date = today(config('app.timezone'));
-                $journal->save();
-            }
-        }
+        $this->repository->markGroupsAsNow($groups);
         $recurrence->latest_date    = $backupDate;
         $recurrence->latest_date_tz = $backupDate?->format('e');
         $recurrence->save();
-        app('preferences')->mark();
+        Preferences::mark();
 
         if (0 === $groups->count()) {
             $request->session()->flash('info', (string) trans('firefly.no_new_transaction_in_recurrence'));
