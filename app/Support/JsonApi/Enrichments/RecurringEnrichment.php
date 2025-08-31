@@ -59,7 +59,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private Collection          $collection;
     private array               $ids                   = [];
     private array               $transactionTypeIds    = [];
-    private array               $transactionTypes      = [];
+    //private array               $transactionTypes      = [];
     private array               $notes                 = [];
     private array               $repetitions           = [];
     private array               $transactions          = [];
@@ -131,11 +131,11 @@ class RecurringEnrichment implements EnrichmentInterface
         $this->ids        = array_unique($this->ids);
 
         // collect transaction types.
-        $transactionTypes = TransactionType::whereIn('id', array_unique($this->transactionTypeIds))->get();
-        foreach ($transactionTypes as $transactionType) {
-            $id                          = (int)$transactionType->id;
-            $this->transactionTypes[$id] = TransactionTypeEnum::from($transactionType->type);
-        }
+//        $transactionTypes = TransactionType::whereIn('id', array_unique($this->transactionTypeIds))->get();
+//        foreach ($transactionTypes as $transactionType) {
+//            $id                          = (int)$transactionType->id;
+//            $this->transactionTypes[$id] = TransactionTypeEnum::from($transactionType->type);
+//        }
     }
 
     private function collectRepetitions(): void
@@ -400,7 +400,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private function collectTransactionMetaData(): void
     {
         $ids           = array_keys($this->transactions);
-        $meta          = RecurrenceTransactionMeta::whereIn('rt_id', $ids)->get();
+        $meta          = RecurrenceTransactionMeta::whereNull('deleted_at')->whereIn('rt_id', $ids)->get();
         // other meta-data to be collected:
         $billIds       = [];
         $piggyBankIds  = [];
@@ -410,8 +410,14 @@ class RecurringEnrichment implements EnrichmentInterface
         foreach ($meta as $entry) {
             $id            = (int)$entry->id;
             $transactionId = (int)$entry->rt_id;
-            $recurrenceId  = $this->recurrenceIds[$transactionId];
-            $name          = (string)$entry->name;
+
+            // this should refer to another array, were rtIds can be used to find the recurrence.
+            $recurrenceId  = $this->recurrenceIds[$transactionId] ?? 0;
+            $name          = (string)$entry->name ?? '';
+            if(0 === $recurrenceId) {
+                Log::error(sprintf('Could not find recurrence ID for recurrence transaction ID %d', $transactionId));
+                continue;
+            }
 
             switch ($name) {
                 default:
