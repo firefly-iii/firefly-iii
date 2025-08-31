@@ -119,6 +119,7 @@ return [
     'between.file'               => 'The :attribute must be between :min and :max kilobytes.',
     'between.string'             => 'The :attribute must be between :min and :max characters.',
     'between.array'              => 'The :attribute must have between :min and :max items.',
+    'between_date'              => 'The date must be between the given start and end date.',
     'boolean'                    => 'The :attribute field must be true or false.',
     'confirmed'                  => 'The :attribute confirmation does not match.',
     'date'                       => 'The :attribute is not a valid date.',

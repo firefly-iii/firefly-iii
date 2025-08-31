@@ -441,7 +441,7 @@
                                     <td>
                                         {% for tag in journal.tags %}
                                             <h4 style="display: inline;"><a class="label label-success"
-                                                                            href="{{ route('tags.show', tag.id) }}">
+                                                                            href="{{ route('tags.show', [tag.id]) }}">
                                                     <span class="fa fa-fw fa-tag"></span>{{ tag.tag }}</a>
                                             </h4>
                                         {% endfor %}

@@ -108,12 +108,7 @@ abstract class Controller extends BaseController
     {
         $bag      = new ParameterBag();
         $page     = (int)request()->get('page');
-        if ($page < 1) {
-            $page = 1;
-        }
-        if ($page > 2 ** 16) {
-            $page = 2 ** 16;
-        }
+        $page = min(max(1, $page), 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
@@ -131,19 +126,15 @@ abstract class Controller extends BaseController
             $obj  = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string)$date);
+                    $obj = Carbon::parse((string)$date, config('app.timezone'));
                 } catch (InvalidFormatException $e) {
                     // don't care
-                    Log::warning(
-                        sprintf(
-                            'Ignored invalid date "%s" in API controller parameter check: %s',
-                            substr((string)$date, 0, 20),
-                            $e->getMessage()
-                        )
-                    );
+                    Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
             }
-            $bag->set($field, $obj);
+            if($obj instanceof Carbon){
+                $bag->set($field, $obj);
+            }
         }
 
         // integer fields:

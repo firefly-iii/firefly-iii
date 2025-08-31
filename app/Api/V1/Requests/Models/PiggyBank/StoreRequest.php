@@ -78,7 +78,7 @@ class StoreRequest extends FormRequest
             'object_group_id'           => 'numeric|belongsToUser:object_groups,id',
             'object_group_title'        => ['min:1', 'max:255'],
             'target_amount'             => ['required', new IsValidZeroOrMoreAmount()],
-            'start_date'                => 'date|nullable',
+            'start_date'                => 'required|date|after:1970-01-01|before:2038-01-17',
             'transaction_currency_id'   => 'exists:transaction_currencies,id|required_without:transaction_currency_code',
             'transaction_currency_code' => 'exists:transaction_currencies,code|required_without:transaction_currency_id',
             'target_date'               => 'date|nullable|after:start_date',
