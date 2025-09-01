@@ -108,7 +108,7 @@ abstract class Controller extends BaseController
     {
         $bag      = new ParameterBag();
         $page     = (int)request()->get('page');
-        $page = min(max(1, $page), 2 ** 16);
+        $page     = min(max(1, $page), 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
@@ -132,7 +132,7 @@ abstract class Controller extends BaseController
                     Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
                 }
             }
-            if($obj instanceof Carbon){
+            if ($obj instanceof Carbon) {
                 $bag->set($field, $obj);
             }
         }

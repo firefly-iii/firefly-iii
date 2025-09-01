@@ -36,7 +36,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10806](https://github.com/firefly-iii/firefly-iii/issues/10806) (API: `/v1/chart/balance/balance` has undocumented `period` parameter) reported by @dreautall
 - [Issue 10807](https://github.com/firefly-iii/firefly-iii/issues/10807) (API: `/v1/bills` field `object_group_id` returns int, should be string) reported by @dreautall
 - [Issue 10815](https://github.com/firefly-iii/firefly-iii/issues/10815) (API: `/v1/accounts` balance is off by a day) reported by @dreautall
-- #10827
+- [Issue 10827](https://github.com/firefly-iii/firefly-iii/issues/10827) (Trigger Recurrence by API) reported by @MexerSam
 
 ## 6.3.2 - 2025-08-20
 

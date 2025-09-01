@@ -70,10 +70,10 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
         $collection  = $this->repository->get();
@@ -82,20 +82,20 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new RecurringEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
         $enrichment->setUser($admin);
         $recurrences = $enrichment->enrich($recurrences);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.recurrences.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($recurrences, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.recurrences.index').$this->buildParams());
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($recurrences, $transformer, 'recurrences');
+        $resource    = new FractalCollection($recurrences, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -109,23 +109,21 @@ class ShowController extends Controller
      */
     public function show(Recurrence $recurrence): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new RecurringEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrence = $enrichment->enrichSingle($recurrence);
+        $recurrence  = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($recurrence, $transformer, 'recurrences');
+        $resource    = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
-
 }
