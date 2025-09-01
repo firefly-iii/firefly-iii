@@ -83,7 +83,7 @@ class ShowController extends Controller
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
         // TODO fix sort.
-        $collection  = $this->repository->getAccountsByType($types, null);
+        $collection  = $this->repository->getAccountsByType($types);
         $count       = $collection->count();
 
         // continue sort:
