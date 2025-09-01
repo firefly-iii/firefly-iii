@@ -378,8 +378,8 @@ let index = function () {
                 date: format(today,'yyyy-MM-dd'),
                 type: type,
                 page: this.page,
-                // startPeriod: start,
-                // endPeriod: end
+                start: start,
+                end: end
             };
 
             if (!this.tableColumns.balance_difference.enabled) {
@@ -403,17 +403,26 @@ let index = function () {
                             role: current.attributes.account_role,
                             iban: null === current.attributes.iban ? '' : current.attributes.iban.match(/.{1,4}/g).join(' '),
                             account_number: null === current.attributes.account_number ? '' : current.attributes.account_number,
-                            current_balance: current.attributes.current_balance,
-                            currency_code: current.attributes.currency_code,
                             last_activity: null === current.attributes.last_activity ? '' : format(new Date(current.attributes.last_activity), i18next.t('config.month_and_day_fns')),
                             liability_type: current.attributes.liability_type,
                             liability_direction: current.attributes.liability_direction,
                             interest: current.attributes.interest,
                             interest_period: current.attributes.interest_period,
-                            // balance: current.attributes.balance,
-                            // pc_balance: current.attributes.pc_balance,
-                            // balances: current.attributes.balances,
+
+                            // currency info
+                            currency_code: current.attributes.currency_code,
+                            primary_currency_code: current.attributes.primary_currency_code,
+
+
+                            // balances.
+                            current_balance: current.attributes.current_balance,
+                            pc_current_balance: current.attributes.pc_current_balance,
+                            balance_difference: current.attributes.balance_difference,
+                            pc_balance_difference: current.attributes.pc_balance_difference,
+                            debt_amount: current.attributes.debt_amount,
+                            pc_debt_amount: current.attributes.debt_amount,
                         };
+                        console.log(account);
                         // get group info:
                         let groupId = current.attributes.object_group_id;
                         if(!this.pageOptions.groupedAccounts) {

@@ -43,14 +43,14 @@ class ShowRequest extends FormRequest
         if (0 === $limit) {
             // get default for user:
             /** @var User $user */
-            $user  = auth()->user();
+            $user = auth()->user();
 
             /** @var Preference $pageSize */
             $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
         }
 
-        $page  = $this->convertInteger('page');
-        $page  = min(max(1, $page), 2 ** 16);
+        $page = $this->convertInteger('page');
+        $page = min(max(1, $page), 2 ** 16);
 
         return [
             'type'  => $this->convertString('type', 'all'),
@@ -63,12 +63,11 @@ class ShowRequest extends FormRequest
     public function rules(): array
     {
         $keys = implode(',', array_keys($this->types));
-
         return [
             'date'  => 'date',
             'start' => 'date|present_with:end|before_or_equal:end|before:2038-01-17|after:1970-01-02',
             'end'   => 'date|present_with:start|after_or_equal:start|before:2038-01-17|after:1970-01-02',
-            'sort'  => 'in:active,iban,name,order,-active,-iban,-name,-order', // TODO improve me.
+            'sort'  => 'nullable|in:active,iban,name,order,-active,-iban,-name,-order', // TODO improve me.
             'type'  => sprintf('in:%s', $keys),
             'limit' => 'numeric|min:1|max:131337',
             'page'  => 'numeric|min:1|max:131337',
@@ -83,6 +82,8 @@ class ShowRequest extends FormRequest
                     return;
                 }
                 $data = $validator->getData();
+
+
                 if (array_key_exists('date', $data) && array_key_exists('start', $data) && array_key_exists('end', $data)) {
                     // assume valid dates, before we got here.
                     $start = Carbon::parse($data['start'], config('app.timezone'))->startOfDay();

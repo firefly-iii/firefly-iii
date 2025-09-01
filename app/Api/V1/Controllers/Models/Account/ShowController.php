@@ -94,6 +94,8 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setDate($this->parameters->get('date'));
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($admin);
         $accounts    = $enrichment->enrich($accounts);
 
@@ -117,7 +119,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      */
-    public function show(Account $account): JsonResponse
+    public function show(ShowRequest $request, Account $account): JsonResponse
     {
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
@@ -129,6 +131,8 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setDate($this->parameters->get('date'));
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($admin);
         $account     = $enrichment->enrichSingle($account);
 
