@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * ShowRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -21,7 +23,6 @@
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
-
 use Carbon\Carbon;
 use FireflyIII\Models\Preference;
 use FireflyIII\Support\Facades\Preferences;
@@ -33,8 +34,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ShowRequest extends FormRequest
 {
-    use ConvertsDataTypes;
     use AccountFilter;
+    use ConvertsDataTypes;
 
     public function getParameters(): array
     {
@@ -42,14 +43,14 @@ class ShowRequest extends FormRequest
         if (0 === $limit) {
             // get default for user:
             /** @var User $user */
-            $user = auth()->user();
+            $user  = auth()->user();
 
             /** @var Preference $pageSize */
             $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
         }
 
-        $page = $this->convertInteger('page');
-        $page = min(max(1, $page), 2 ** 16);
+        $page  = $this->convertInteger('page');
+        $page  = min(max(1, $page), 2 ** 16);
 
         return [
             'type'  => $this->convertString('type', 'all'),
@@ -61,7 +62,8 @@ class ShowRequest extends FormRequest
 
     public function rules(): array
     {
-        $keys = join(',', array_keys($this->types));
+        $keys = implode(',', array_keys($this->types));
+
         return [
             'date'  => 'date',
             'start' => 'date|present_with:end|before_or_equal:end|before:2038-01-17|after:1970-01-02',
@@ -90,7 +92,7 @@ class ShowRequest extends FormRequest
                         $validator->errors()->add('date', (string)trans('validation.between_date'));
                     }
                 }
-            });
+            }
+        );
     }
-
 }

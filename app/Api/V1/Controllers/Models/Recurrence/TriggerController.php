@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * TriggerController.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -58,27 +60,25 @@ class TriggerController extends Controller
         );
     }
 
-    /**
-     */
     public function trigger(SingleDateRequest $request, Recurrence $recurrence): JsonResponse
     {
         // find recurrence occurrence for this date and trigger it.
         // grab the date from the last time the recurrence fired:
-        $backupDate = $recurrence->latest_date;
-        $date       = $request->getDate();
+        $backupDate                 = $recurrence->latest_date;
+        $date                       = $request->getDate();
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
         Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
 
         /** @var CreateRecurringTransactions $job */
-        $job = app(CreateRecurringTransactions::class);
+        $job                        = app(CreateRecurringTransactions::class);
         $job->setRecurrences(new Collection()->push($recurrence));
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
         Log::debug('Done with recurrence.');
 
-        $groups = $job->getGroups();
+        $groups                     = $job->getGroups();
         $this->repository->markGroupsAsNow($groups);
         $recurrence->latest_date    = $backupDate;
         $recurrence->latest_date_tz = $backupDate?->format('e');
@@ -88,38 +88,39 @@ class TriggerController extends Controller
         // enrich groups and return them:
 
         if (0 === $groups->count()) {
-            $paginator = new LengthAwarePaginator(new Collection(), 0, 1,);
+            $paginator = new LengthAwarePaginator(new Collection(), 0, 1);
         }
         if ($groups->count() > 0) {
             /** @var User $admin */
-            $admin = auth()->user();
+            $admin     = auth()->user();
+
             // use new group collector:
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector
                 ->setUser($admin)
                 ->setIds($groups->pluck('id')->toArray())
-                ->withAPIInformation();
+                ->withAPIInformation()
+            ;
             $paginator = $collector->getPaginatedGroups();
         }
 
-        $manager = $this->getManager();
-        $paginator->setPath(route('api.v1.recurrences.trigger', [$recurrence->id]) . $this->buildParams());
+        $manager                    = $this->getManager();
+        $paginator->setPath(route('api.v1.recurrences.trigger', [$recurrence->id]).$this->buildParams());
 
         // enrich
-        $admin = auth()->user();
-        $enrichment = new TransactionGroupEnrichment();
+        $admin                      = auth()->user();
+        $enrichment                 = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $transactions = $enrichment->enrich($paginator->getCollection());
+        $transactions               = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer                = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource                   = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
-
 }
