@@ -70,8 +70,8 @@ class ShowRequest extends FormRequest
             'end'   => 'date|present_with:start|after_or_equal:start|before:2038-01-17|after:1970-01-02',
             'sort'  => 'in:active,iban,name,order,-active,-iban,-name,-order', // TODO improve me.
             'type'  => sprintf('in:%s', $keys),
-            'limit' => 'number|min:1|max:131337',
-            'page'  => 'number|min:1|max:131337',
+            'limit' => 'numeric|min:1|max:131337',
+            'page'  => 'numeric|min:1|max:131337',
         ];
     }
 
