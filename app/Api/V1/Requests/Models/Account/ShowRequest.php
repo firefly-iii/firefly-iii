@@ -43,14 +43,14 @@ class ShowRequest extends FormRequest
         if (0 === $limit) {
             // get default for user:
             /** @var User $user */
-            $user = auth()->user();
+            $user  = auth()->user();
 
             /** @var Preference $pageSize */
             $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
         }
 
-        $page = $this->convertInteger('page');
-        $page = min(max(1, $page), 2 ** 16);
+        $page  = $this->convertInteger('page');
+        $page  = min(max(1, $page), 2 ** 16);
 
         return [
             'type'  => $this->convertString('type', 'all'),
@@ -63,6 +63,7 @@ class ShowRequest extends FormRequest
     public function rules(): array
     {
         $keys = implode(',', array_keys($this->types));
+
         return [
             'date'  => 'date',
             'start' => 'date|present_with:end|before_or_equal:end|before:2038-01-17|after:1970-01-02',
