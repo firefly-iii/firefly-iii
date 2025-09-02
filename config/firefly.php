@@ -232,6 +232,13 @@ return [
         'image/png',
         'image/heic',
         'image/heic-sequence',
+        'image/webp',
+        'image/gif',
+        'image/tiff',
+        'image/bmp',
+        'image/x-icon',
+        'image/vnd.microsoft.icon',
+
 
         // PDF
         'application/pdf',
