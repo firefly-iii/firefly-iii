@@ -377,7 +377,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
 
-        return $journal->tags()->get();
+        return $journal->tags()->whereNull('deleted_at')->get();
     }
 
     /**

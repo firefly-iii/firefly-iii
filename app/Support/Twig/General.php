@@ -32,13 +32,12 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Facades\Log;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Illuminate\Support\Facades\Route;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Override;
-
 use function Safe\parse_url;
 
 /**
@@ -71,14 +70,14 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date             = session('end', today(config('app.timezone'))->endOfMonth());
+                $date = session('end', today(config('app.timezone'))->endOfMonth());
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $info             = Steam::finalAccountBalance($account, $date);
                 $currency         = Steam::getAccountCurrency($account);
                 $primary          = Amount::getPrimaryCurrency();
                 $convertToPrimary = Amount::convertToPrimary();
                 $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-                $currency ??= $primary;
+                $currency         ??= $primary;
                 $strings          = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
@@ -119,15 +118,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2).' MB';
+                    return round($size / (1024 * 1024), 2) . ' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2).' KB';
+                    return round($size / 1024, 2) . ' KB';
                 }
 
-                return $size.' bytes';
+                return $size . ' bytes';
             }
         );
     }
@@ -141,9 +140,9 @@ class General extends AbstractExtension
     {
         return new TwigFilter(
             'mimeIcon',
-            static fn (string $string): string => match ($string) {
+            static fn(string $string): string => match ($string) {
                 'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'fa-file-pdf-o',
-                'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 => 'fa-file-image-o',
+                'image/webp', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'fa-file-image-o',
                 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
                 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.sun.xml.calc', 'application/vnd.sun.xml.calc.template', 'application/vnd.stardivision.calc', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                          => 'fa-file-excel-o',
                 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.template', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'application/vnd.sun.xml.impress', 'application/vnd.sun.xml.impress.template', 'application/vnd.stardivision.impress', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.presentation-template'                                                                                                                       => 'fa-file-powerpoint-o',
@@ -168,7 +167,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string) $converter->convert($text);
+                return (string)$converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -182,8 +181,8 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string) parse_url($string, PHP_URL_SCHEME);
-                $host  = (string) parse_url($string, PHP_URL_HOST);
+                $proto = (string)parse_url($string, PHP_URL_SCHEME);
+                $host  = (string)parse_url($string, PHP_URL_HOST);
 
                 return e(sprintf('%s://%s', $proto, $host));
             }
@@ -214,7 +213,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'phpdate',
-            static fn (string $str): string => date($str)
+            static fn(string $str): string => date($str)
         );
     }
 
@@ -270,12 +269,12 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType       = $context['objectType'] ?? false;
+                $activeObjectType = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        (string) Route::getCurrentRoute()->getName(),
-                        (string) $route
+                        (string)Route::getCurrentRoute()->getName(),
+                        (string)$route
                     )) {
                     return 'active';
                 }
@@ -376,7 +375,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'carbonize',
-            static fn (string $date): Carbon => new Carbon($date, config('app.timezone'))
+            static fn(string $date): Carbon => new Carbon($date, config('app.timezone'))
         );
     }
 }
