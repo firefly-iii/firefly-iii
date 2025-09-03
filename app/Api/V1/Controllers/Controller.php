@@ -67,7 +67,6 @@ abstract class Controller extends BaseController
     protected array $accepts                        = ['application/json', 'application/vnd.api+json'];
 
     /** @var array<int, string> */
-    protected array               $allowedSort;
     protected bool                $convertToPrimary = false;
     protected TransactionCurrency $primaryCurrency;
     protected ParameterBag        $parameters;
@@ -78,7 +77,6 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // get global parameters
-        $this->allowedSort = config('firefly.allowed_sort_parameters');
         $this->middleware(
             function ($request, $next) {
                 $this->parameters = $this->getParameters();
@@ -150,13 +148,7 @@ abstract class Controller extends BaseController
             }
             if (null !== $value) {
                 $value = (int)$value;
-                if ($value < 1) {
-                    $value = 1;
-                }
-                if ($value > 2 ** 16) {
-                    $value = 2 ** 16;
-                }
-
+                $value     = min(max(1, $value), 2 ** 16);
                 $bag->set($integer, $value);
             }
             if (null === $value
@@ -173,39 +165,8 @@ abstract class Controller extends BaseController
         }
 
         // sort fields:
-        return $this->getSortParameters($bag);
-    }
-
-    private function getSortParameters(ParameterBag $bag): ParameterBag
-    {
-        $sortParameters = [];
-
-        try {
-            $param = (string)request()->query->get('sort');
-        } catch (BadRequestException $e) {
-            Log::error('Request field "sort" contains a non-scalar value. Value set to NULL.');
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            $param = '';
-        }
-        if ('' === $param) {
-            return $bag;
-        }
-        $parts          = explode(',', $param);
-        foreach ($parts as $part) {
-            $part      = trim($part);
-            $direction = 'asc';
-            if ('-' === $part[0]) {
-                $part      = substr($part, 1);
-                $direction = 'desc';
-            }
-            if (in_array($part, $this->allowedSort, true)) {
-                $sortParameters[] = [$part, $direction];
-            }
-        }
-        $bag->set('sort', $sortParameters);
-
         return $bag;
+        //return $this->getSortParameters($bag);
     }
 
     /**

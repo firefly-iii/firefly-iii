@@ -24,7 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Preference;
+use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -55,7 +57,7 @@ class ShowRequest extends FormRequest
         return [
             'type'  => $this->convertString('type', 'all'),
             'limit' => $limit,
-            'sort'  => $this->convertString('sort', 'order'),
+            'sort' => $this->convertSortParameters('sort',Account::class),
             'page'  => $page,
         ];
     }
@@ -68,7 +70,7 @@ class ShowRequest extends FormRequest
             'date'  => 'date',
             'start' => 'date|present_with:end|before_or_equal:end|before:2038-01-17|after:1970-01-02',
             'end'   => 'date|present_with:start|after_or_equal:start|before:2038-01-17|after:1970-01-02',
-            'sort'  => 'nullable|in:active,iban,name,order,-active,-iban,-name,-order', // TODO improve me.
+            'sort'  => ['nullable', new IsValidSortInstruction(Account::class)],
             'type'  => sprintf('in:%s', $keys),
             'limit' => 'numeric|min:1|max:131337',
             'page'  => 'numeric|min:1|max:131337',

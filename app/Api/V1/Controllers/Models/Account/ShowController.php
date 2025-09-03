@@ -82,17 +82,19 @@ class ShowController extends Controller
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        // TODO fix sort.
-        $collection  = $this->repository->getAccountsByType($types);
+        $collection  = $this->repository->getAccountsByType($types, $params['sort']);
         $count       = $collection->count();
 
         // continue sort:
+        // TODO if the user sorts on DB dependent field there must be no slice before enrichment, only after.
+        // TODO still need to figure out how to do this easily.
         $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $params['limit'], $params['limit']);
 
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setSort($params['sort']);
         $enrichment->setDate($this->parameters->get('date'));
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));

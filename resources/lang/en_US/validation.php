@@ -24,6 +24,9 @@
 declare(strict_types=1);
 
 return [
+    'invalid_sort_instruction'       => 'The sort instruction is invalid for an object of type ":object".',
+    'invalid_sort_instruction_index'       => 'The sort instruction at index #:index is invalid for an object of type ":object".',
+    'no_sort_instructions' => 'There are no sort instructions defined for an object of type ":object".',
     'webhook_budget_info'            => 'Cannot deliver budget information for transaction related webhooks.',
     'webhook_account_info'           => 'Cannot deliver account information for budget related webhooks.',
     'webhook_transaction_info'       => 'Cannot deliver transaction information for budget related webhooks.',

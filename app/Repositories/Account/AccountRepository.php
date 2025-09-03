@@ -484,14 +484,19 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             $query->accountTypeIn($types);
         }
 
-        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        // add sort parameters
+        $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
+        $sorted = 0;
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
-                $query->orderBy($param[0], $param[1]);
+                if(in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
             }
         }
 
-        if (0 === count($sort)) {
+        if (0 === $sorted) {
             if (0 !== count($res)) {
                 $query->orderBy('accounts.order', 'ASC');
             }
