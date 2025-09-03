@@ -135,7 +135,6 @@ class IndexController extends Controller
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
-        $primaryCurrency  = $this->primaryCurrency;
 
         return view(
             'budgets.index',
@@ -148,7 +147,6 @@ class IndexController extends Controller
                 'budgets',
                 'currencies',
                 'periodTitle',
-                'primaryCurrency',
                 'activeDaysPassed',
                 'activeDaysLeft',
                 'inactive',

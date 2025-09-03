@@ -140,6 +140,7 @@ abstract class Controller extends BaseController
                     View::share('language', $language);
                     View::share('locale', $locale);
                     View::share('convertToPrimary', $this->convertToPrimary);
+                    View::share('primaryCurrency', $this->primaryCurrency);
                     View::share('shownDemo', $shownDemo);
                     View::share('current_route_name', $page);
                     View::share('original_route_name', Route::currentRouteName());
