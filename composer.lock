@@ -1878,20 +1878,20 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.26.4",
+            "version": "v12.28.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09"
+                "reference": "868c1f2d3dba4df6d21e3a8d818479f094cfd942"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/085a367a32ba86fcfa647bfc796098ae6f795b09",
-                "reference": "085a367a32ba86fcfa647bfc796098ae6f795b09",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/868c1f2d3dba4df6d21e3a8d818479f094cfd942",
+                "reference": "868c1f2d3dba4df6d21e3a8d818479f094cfd942",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "^0.11|^0.12|^0.13",
+                "brick/math": "^0.11|^0.12|^0.13|^0.14",
                 "composer-runtime-api": "^2.2",
                 "doctrine/inflector": "^2.0.5",
                 "dragonmantank/cron-expression": "^3.4",
@@ -1965,6 +1965,7 @@
                 "illuminate/filesystem": "self.version",
                 "illuminate/hashing": "self.version",
                 "illuminate/http": "self.version",
+                "illuminate/json-schema": "self.version",
                 "illuminate/log": "self.version",
                 "illuminate/macroable": "self.version",
                 "illuminate/mail": "self.version",
@@ -1997,7 +1998,8 @@
                 "league/flysystem-read-only": "^3.25.1",
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
-                "orchestra/testbench-core": "^10.6.3",
+                "opis/json-schema": "^2.4.1",
+                "orchestra/testbench-core": "^10.6.5",
                 "pda/pheanstalk": "^5.0.6|^7.0.0",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
@@ -2091,7 +2093,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2025-08-29T14:15:53+00:00"
+            "time": "2025-09-04T14:58:12+00:00"
         },
         {
             "name": "laravel/passport",
@@ -11483,16 +11485,16 @@
         },
         {
             "name": "phpunit/php-code-coverage",
-            "version": "12.3.5",
+            "version": "12.3.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-                "reference": "96dc0466673e215bf5536301039017f03cd45c6b"
+                "reference": "da2cdaff87220fa641e7652364281b736e4347e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/96dc0466673e215bf5536301039017f03cd45c6b",
-                "reference": "96dc0466673e215bf5536301039017f03cd45c6b",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/da2cdaff87220fa641e7652364281b736e4347e0",
+                "reference": "da2cdaff87220fa641e7652364281b736e4347e0",
                 "shasum": ""
             },
             "require": {
@@ -11548,7 +11550,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
                 "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.3.5"
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/12.3.6"
             },
             "funding": [
                 {
@@ -11568,7 +11570,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-09-01T08:07:42+00:00"
+            "time": "2025-09-02T05:23:14+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -11817,16 +11819,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.3.7",
+            "version": "12.3.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "b8fa997c49682979ad6bfaa0d7fb25f54954965e"
+                "reference": "9d68c1b41fc21aac106c71cde4669fe7b99fca10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/b8fa997c49682979ad6bfaa0d7fb25f54954965e",
-                "reference": "b8fa997c49682979ad6bfaa0d7fb25f54954965e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/9d68c1b41fc21aac106c71cde4669fe7b99fca10",
+                "reference": "9d68c1b41fc21aac106c71cde4669fe7b99fca10",
                 "shasum": ""
             },
             "require": {
@@ -11840,7 +11842,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.3.3",
+                "phpunit/php-code-coverage": "^12.3.6",
                 "phpunit/php-file-iterator": "^6.0.0",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -11850,7 +11852,7 @@
                 "sebastian/diff": "^7.0.0",
                 "sebastian/environment": "^8.0.3",
                 "sebastian/exporter": "^7.0.0",
-                "sebastian/global-state": "^8.0.0",
+                "sebastian/global-state": "^8.0.2",
                 "sebastian/object-enumerator": "^7.0.0",
                 "sebastian/type": "^6.0.3",
                 "sebastian/version": "^6.0.0",
@@ -11894,7 +11896,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.3.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.3.8"
             },
             "funding": [
                 {
@@ -11918,20 +11920,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-08-28T05:15:46+00:00"
+            "time": "2025-09-03T06:25:17+00:00"
         },
         {
             "name": "rector/rector",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3"
+                "reference": "1cd6abfb5976fd4ed728d5b73ebd67c7c810cd88"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/fe613c528819222f8686a9a037a315ef9d4915b3",
-                "reference": "fe613c528819222f8686a9a037a315ef9d4915b3",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/1cd6abfb5976fd4ed728d5b73ebd67c7c810cd88",
+                "reference": "1cd6abfb5976fd4ed728d5b73ebd67c7c810cd88",
                 "shasum": ""
             },
             "require": {
@@ -11970,7 +11972,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.1.4"
+                "source": "https://github.com/rectorphp/rector/tree/2.1.5"
             },
             "funding": [
                 {
@@ -11978,7 +11980,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-08-15T14:41:36+00:00"
+            "time": "2025-09-04T14:19:07+00:00"
         },
         {
             "name": "sebastian/cli-parser",

@@ -42,7 +42,7 @@
             </div>
         </div>
     @endif
-    
+
     @if($debug)
         <div class="row">
             <div class="col">
