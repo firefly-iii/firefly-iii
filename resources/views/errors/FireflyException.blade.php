@@ -50,6 +50,19 @@
                     {!! trans('errors.error_location', ['file' => $exception->getFile(), 'line' =>  $exception->getLine(), 'code' => $exception->getCode() ]) !!}
                 </p>
                 <h4>
+                    {{ trans('errors.github_help') }}
+                </h4>
+                <p>
+                    {!! trans('errors.github_instructions') !!}
+                </p>
+                <ol>
+                    <li>{{ trans('errors.use_search') }}</li>
+                    <li>{!!  trans('errors.include_info', ['link' => route('debug') ]) !!}</li>
+                    <li>{{ trans('errors.tell_more') }}</li>
+                    <li>{{ trans('errors.include_logs') }}</li>
+                    <li>{{ trans('errors.what_did_you_do') }}</li>
+                </ol>
+                <h4>
                     {{ trans('errors.stacktrace') }}
                 </h4>
                 <div style="font-family: monospace;font-size:11px;">
