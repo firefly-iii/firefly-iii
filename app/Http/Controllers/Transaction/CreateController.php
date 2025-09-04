@@ -117,7 +117,6 @@ class CreateController extends Controller
         $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
         $accountToTypes             = config('firefly.account_to_transaction');
-        $primaryCurrency            = $this->primaryCurrency;
         $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
         $parts                      = parse_url((string) $previousUrl);
         $search                     = sprintf('?%s', $parts['query'] ?? '');
@@ -145,26 +144,6 @@ class CreateController extends Controller
 
         session()->put('preFilled', $preFilled);
 
-        return view(
-            'transactions.create',
-            compact(
-                'subTitleIcon',
-                'cash',
-                'longitude',
-                'latitude',
-                'zoomLevel',
-                'objectType',
-                'optionalDateFields',
-                'subTitle',
-                'primaryCurrency',
-                'previousUrl',
-                'optionalFields',
-                'preFilled',
-                'allowedOpposingTypes',
-                'accountToTypes',
-                'sourceId',
-                'destinationId'
-            )
-        );
+        return view('transactions.create', compact('subTitleIcon', 'cash', 'longitude', 'latitude', 'zoomLevel', 'objectType', 'optionalDateFields', 'subTitle', 'previousUrl', 'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes', 'sourceId', 'destinationId'));
     }
 }

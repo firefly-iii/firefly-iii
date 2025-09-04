@@ -176,7 +176,7 @@ class Amount
 
     public function getSystemCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', 'EUR')->first();
+        return TransactionCurrency::whereNull('deleted_at')->where('code', 'EUR')->first();
     }
 
     /**

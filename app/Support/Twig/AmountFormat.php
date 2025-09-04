@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -52,9 +53,9 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmount',
             static function (string $string): string {
-                $currency = app('amount')->getPrimaryCurrency();
+                $currency = Amount::getPrimaryCurrency();
 
-                return app('amount')->formatAnything($currency, $string, true);
+                return Amount::formatAnything($currency, $string, true);
             },
             ['is_safe' => ['html']]
         );
@@ -65,9 +66,9 @@ class AmountFormat extends AbstractExtension
         return new TwigFilter(
             'formatAmountPlain',
             static function (string $string): string {
-                $currency = app('amount')->getPrimaryCurrency();
+                $currency = Amount::getPrimaryCurrency();
 
-                return app('amount')->formatAnything($currency, $string, false);
+                return Amount::formatAnything($currency, $string, false);
             },
             ['is_safe' => ['html']]
         );
@@ -98,9 +99,9 @@ class AmountFormat extends AbstractExtension
 
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
-                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrency();
+                $currency     = $accountRepos->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
 
-                return app('amount')->formatAnything($currency, $amount, $coloured);
+                return Amount::formatAnything($currency, $amount, $coloured);
             },
             ['is_safe' => ['html']]
         );
@@ -113,14 +114,21 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountBySymbol',
-            static function (string $amount, string $symbol, ?int $decimalPlaces = null, ?bool $coloured = null): string {
+            static function (string $amount, ?string $symbol, ?int $decimalPlaces = null, ?bool $coloured = null): string {
+
+                if(null === $symbol) {
+                    $message = sprintf('formatAmountBySymbol("%s", "%s", %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount,$symbol, $decimalPlaces, var_export($coloured, true));
+                    Log::error($message);
+                    throw new FireflyException($message);
+                }
+
                 $decimalPlaces ??= 2;
                 $coloured      ??= true;
                 $currency                 = new TransactionCurrency();
                 $currency->symbol         = $symbol;
                 $currency->decimal_places = $decimalPlaces;
 
-                return app('amount')->formatAnything($currency, $amount, $coloured);
+                return Amount::formatAnything($currency, $amount, $coloured);
             },
             ['is_safe' => ['html']]
         );
@@ -136,7 +144,7 @@ class AmountFormat extends AbstractExtension
             static function (TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
                 $coloured ??= true;
 
-                return app('amount')->formatAnything($currency, $amount, $coloured);
+                return Amount::formatAnything($currency, $amount, $coloured);
             },
             ['is_safe' => ['html']]
         );
@@ -161,7 +169,7 @@ class AmountFormat extends AbstractExtension
                     Log::error(sprintf('Fallback currency is "%s".', $currency->code));
                 }
 
-                return app('amount')->formatAnything($currency, $amount, $coloured);
+                return Amount::formatAnything($currency, $amount, $coloured);
             },
             ['is_safe' => ['html']]
         );
