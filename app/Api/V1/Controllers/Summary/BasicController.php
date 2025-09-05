@@ -481,7 +481,7 @@ class BasicController extends Controller
         $currencies = [];
 
         // first, create an entry for each entry in the "available" array.
-        /** @var array $availableBudget */
+        /** @var string $availableBudget */
         foreach ($available as $currencyId => $availableBudget) {
             $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
             $return[$currencyId] = [

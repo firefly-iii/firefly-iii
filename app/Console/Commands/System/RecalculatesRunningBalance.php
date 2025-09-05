@@ -50,7 +50,7 @@ class RecalculatesRunningBalance extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): int
     {
         if (true === config('firefly.feature_flags.running_balance_column')) {
             $this->friendlyInfo('Will recalculate account balances. This may take a LONG time. Please be patient.');
@@ -60,6 +60,7 @@ class RecalculatesRunningBalance extends Command
             return 0;
         }
         $this->friendlyWarning('This command has been disabled.');
+        return 0;
     }
 
     private function correctBalanceAmounts(bool $forced): void

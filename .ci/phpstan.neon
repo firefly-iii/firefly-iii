@@ -1,6 +1,4 @@
 parameters:
-  scanFiles:
-    - ../_ide_helper.php
   paths:
     - ../app
     - ../database

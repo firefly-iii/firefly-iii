@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\Insight\GenericRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -71,7 +72,7 @@ class PeriodController extends Controller
                 'currency_id'      => (string) $currencyId,
                 'currency_code'    => $currencyCode,
             ];
-            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], (string) app('steam')->positive($journal[$field]));
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // float but on purpose.
         }
 

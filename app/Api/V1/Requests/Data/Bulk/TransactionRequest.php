@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use JsonException;
 use FireflyIII\Enums\ClauseType;
 use FireflyIII\Rules\IsValidBulkClause;

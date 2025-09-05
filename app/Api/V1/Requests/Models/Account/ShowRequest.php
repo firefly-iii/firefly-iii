@@ -31,7 +31,7 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ShowRequest extends FormRequest
@@ -46,8 +46,6 @@ class ShowRequest extends FormRequest
             // get default for user:
             /** @var User $user */
             $user  = auth()->user();
-
-            /** @var Preference $pageSize */
             $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
         }
 
@@ -81,7 +79,7 @@ class ShowRequest extends FormRequest
     {
         $validator->after(
             function (Validator $validator): void {
-                if ($validator->failed()) {
+                if (count($validator->failed()) > 0) {
                     return;
                 }
                 $data = $validator->getData();

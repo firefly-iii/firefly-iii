@@ -30,6 +30,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -95,7 +96,7 @@ class TagController extends Controller
                 'currency_id'      => (string) $currencyId,
                 'currency_code'    => $currencyCode,
             ];
-            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], (string) app('steam')->positive($journal[$field]));
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
 
         }
@@ -146,7 +147,7 @@ class TagController extends Controller
                         'currency_id'      => (string) $currencyId,
                         'currency_code'    => $journal['currency_code'],
                     ];
-                    $response[$key]['difference']       = bcadd((string) $response[$key]['difference'], (string) app('steam')->positive($journal['amount']));
+                    $response[$key]['difference']       = bcadd((string) $response[$key]['difference'], Steam::positive($journal['amount']));
                     $response[$key]['difference_float'] = (float) $response[$key]['difference'];
                 }
 
@@ -160,7 +161,7 @@ class TagController extends Controller
                     ];
                     $response[$foreignKey]['difference']       = bcadd(
                         (string) $response[$foreignKey]['difference'],
-                        (string) app('steam')->positive($journal['foreign_amount'])
+                        Steam::positive($journal['foreign_amount'])
                     );
                     $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // intentional float
                 }

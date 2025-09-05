@@ -66,7 +66,6 @@ abstract class Controller extends BaseController
     protected const string JSON_CONTENT_TYPE        = 'application/json';
     protected array $accepts                        = ['application/json', 'application/vnd.api+json'];
 
-    /** @var array<int, string> */
     protected bool                $convertToPrimary = false;
     protected TransactionCurrency $primaryCurrency;
     protected ParameterBag        $parameters;

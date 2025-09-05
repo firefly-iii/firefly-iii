@@ -32,18 +32,7 @@ class ValidatesEnvironmentVariables extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var null|string
-     */
     protected $description = 'Makes sure you use the correct variables.';
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature   = 'integrity:validates-environment-variables';
 
     /**

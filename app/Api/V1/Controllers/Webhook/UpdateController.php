@@ -77,6 +77,7 @@ class UpdateController extends Controller
         $admin       = auth()->user();
         $enrichment  = new WebhookEnrichment();
         $enrichment->setUser($admin);
+        /** @var Webhook $webhook */
         $webhook     = $enrichment->enrichSingle($webhook);
 
         Log::channel('audit')->info(sprintf('User updates webhook #%d', $webhook->id), $data);

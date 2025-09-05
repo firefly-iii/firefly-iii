@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -361,7 +362,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ];
 
         // source account? money goes out!
-        $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+        $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], Steam::negative($amount));
         $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
         // destination  account? money comes in:
@@ -404,7 +405,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_code'    => $journal['foreign_currency_code'],
             ];
             // source account? money goes out! (same as above)
-            $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+            $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], Steam::negative($amount));
             $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
             // destination  account? money comes in:

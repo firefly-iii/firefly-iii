@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 
@@ -92,9 +93,9 @@ class BoxController extends Controller
             $currencyId           = $this->convertToPrimary && $this->primaryCurrency->id !== (int) $journal['currency_id'] ? $this->primaryCurrency->id : (int) $journal['currency_id'];
             $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], (string) app('steam')->positive($amount));
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], Steam::positive($amount));
             $sums[$currencyId]    ??= '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], (string) app('steam')->positive($amount));
+            $sums[$currencyId]    = bcadd($sums[$currencyId], Steam::positive($amount));
         }
 
         // collect expenses

@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
