@@ -287,10 +287,8 @@ trait ModifiesPiggyBanks
             $piggyBank->name = $data['name'];
         }
         if (array_key_exists('transaction_currency_id', $data) && is_int($data['transaction_currency_id'])) {
-            $currency = Amount::getTransactionCurrencyById($data['transaction_currency_id']);
-            if (null !== $currency) {
-                $piggyBank->transaction_currency_id = $currency->id;
-            }
+            $currency                           = Amount::getTransactionCurrencyById($data['transaction_currency_id']);
+            $piggyBank->transaction_currency_id = $currency->id;
         }
 
         if (array_key_exists('target_amount', $data) && '' !== $data['target_amount']) {

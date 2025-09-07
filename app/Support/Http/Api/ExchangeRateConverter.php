@@ -267,9 +267,6 @@ class ExchangeRateConverter
         }
         $euro  = Amount::getTransactionCurrencyByCode('EUR');
         ++$this->queryCount;
-        if (null === $euro) {
-            throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');
-        }
         $cache->store($euro->id);
 
         return $euro->id;

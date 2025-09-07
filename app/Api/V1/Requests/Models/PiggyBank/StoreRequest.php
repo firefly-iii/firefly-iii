@@ -136,16 +136,10 @@ class StoreRequest extends FormRequest
     private function getCurrencyFromData(Validator $validator, array $data): ?TransactionCurrency
     {
         if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
-            $currency = Amount::getTransactionCurrencyByCode((string) $data['transaction_currency_code']);
-            if (null !== $currency) {
-                return $currency;
-            }
+            return Amount::getTransactionCurrencyByCode((string) $data['transaction_currency_code']);
         }
         if (array_key_exists('transaction_currency_id', $data) && '' !== (string) $data['transaction_currency_id']) {
-            $currency = Amount::getTransactionCurrencyById((int) $data['transaction_currency_id']);
-            if (null !== $currency) {
-                return $currency;
-            }
+            return Amount::getTransactionCurrencyById((int) $data['transaction_currency_id']);
         }
         $validator->errors()->add('transaction_currency_id', trans('validation.require_currency_id_code'));
 

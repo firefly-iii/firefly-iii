@@ -33,6 +33,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use NumberFormatter;
 
 /**
@@ -126,7 +127,9 @@ class Amount
         }
         $currency = TransactionCurrency::find($currencyId);
         if (null === $currency) {
-            throw new FireflyException(sprintf('Could not find a transaction currency with ID #%d', $currencyId));
+            $message = sprintf('Could not find a transaction currency with ID #%d', $currencyId);
+            Log::error($message);
+            throw new FireflyException($message);
         }
         $instance->setPreference($key, $currency);
         return $currency;
@@ -143,7 +146,9 @@ class Amount
         }
         $currency = TransactionCurrency::whereCode($code)->first();
         if (null === $currency) {
-            throw new FireflyException(sprintf('Could not find a transaction currency with code "%s"', $code));
+            $message = sprintf('Could not find a transaction currency with code "%s"', $code);
+            Log::error($message);
+            throw new FireflyException($message);
         }
         $instance->setPreference($key, $currency);
         return $currency;

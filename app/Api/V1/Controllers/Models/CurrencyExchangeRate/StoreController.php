@@ -100,9 +100,6 @@ class StoreController extends Controller
         $collection  = new Collection();
         foreach ($data['rates'] as $key => $rate) {
             $to       = Amount::getTransactionCurrencyByCode($key);
-            if (null === $to) {
-                continue; // should not happen.
-            }
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
             if (null !== $existing) {
                 // update existing rate.
