@@ -86,6 +86,7 @@ class ShowController extends Controller
         $admin                  = auth()->user();
         $enrichment             = new RecurringEnrichment();
         $enrichment->setUser($admin);
+
         /** @var Recurrence $recurrence */
         $recurrence             = $enrichment->enrichSingle($recurrence);
 

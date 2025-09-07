@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
-use Carbon\Carbon;
 use Illuminate\Support\Facades\Facade;
 
 class Navigation extends Facade

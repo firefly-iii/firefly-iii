@@ -35,7 +35,7 @@ class MFAUsedBackupCode extends Event
 
     public User $user;
 
-    public function __construct(null|Authenticatable|User $user)
+    public function __construct(Authenticatable|User|null $user)
     {
         if ($user instanceof User) {
             $this->user = $user;

@@ -241,7 +241,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if the amount is positive, make sure it fits in piggy bank:
-        if (1 === bccomp($amount, '0') && -1 === bccomp( $room, $amount)) {
+        if (1 === bccomp($amount, '0') && -1 === bccomp($room, $amount)) {
             // amount is positive and $room is smaller than $amount
             Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
             Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
@@ -259,7 +259,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             return $compare;
         }
 
-        return  $amount;
+        return $amount;
     }
 
     /**

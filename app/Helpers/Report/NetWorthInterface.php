@@ -46,7 +46,7 @@ interface NetWorthInterface
      */
     public function byAccounts(Collection $accounts, Carbon $date): array;
 
-    public function setUser(null|Authenticatable|User $user): void;
+    public function setUser(Authenticatable|User|null $user): void;
 
     public function setUserGroup(UserGroup $userGroup): void;
 

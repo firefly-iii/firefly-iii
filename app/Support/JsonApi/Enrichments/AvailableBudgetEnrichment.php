@@ -55,10 +55,9 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly OperationsRepositoryInterface $opsRepository;
     private readonly BudgetRepositoryInterface     $repository;
 
-
     public function __construct()
     {
-        //$this->primaryCurrency    = Amount::getPrimaryCurrency();
+        // $this->primaryCurrency    = Amount::getPrimaryCurrency();
         $this->convertToPrimary   = Amount::convertToPrimary();
         $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
         $this->opsRepository      = app(OperationsRepositoryInterface::class);

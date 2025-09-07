@@ -60,6 +60,7 @@ class RecalculatesRunningBalance extends Command
             return 0;
         }
         $this->friendlyWarning('This command has been disabled.');
+
         return 0;
     }
 

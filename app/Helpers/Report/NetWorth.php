@@ -116,7 +116,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(Authenticatable|User|null $user): void
     {
         if (!$user instanceof User) {
             return;

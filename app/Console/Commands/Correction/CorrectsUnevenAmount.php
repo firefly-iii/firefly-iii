@@ -302,10 +302,10 @@ class CorrectsUnevenAmount extends Command
 
     private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
     {
-        /** @var Transaction|null $sourceTransaction */
+        /** @var null|Transaction $sourceTransaction */
         $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
 
-        /** @var Transaction|null $destinationTransaction */
+        /** @var null|Transaction $destinationTransaction */
         $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destinationTransaction) {
             Log::warning('Either transaction is false, stop.');

@@ -49,20 +49,20 @@ class OwnerTestNotificationNtfy extends Notification
         ];
     }
 
-//    public function toNtfy(OwnerNotifiable $notifiable): Message
-//    {
-//        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.admin_test_subject'));
-//        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
-//        $message->tags(['white_check_mark']);
-//
-//        return $message;
-//    }
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.admin_test_subject'));
+    //        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
+    //        $message->tags(['white_check_mark']);
+    //
+    //        return $message;
+    //    }
 
-//    public function via(OwnerNotifiable $notifiable): array
-//    {
-//        return [NtfyChannel::class];
-//    }
+    //    public function via(OwnerNotifiable $notifiable): array
+    //    {
+    //        return [NtfyChannel::class];
+    //    }
 }

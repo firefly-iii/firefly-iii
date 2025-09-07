@@ -69,14 +69,14 @@ class CreateController extends Controller
      */
     public function create(Request $request)
     {
-        $periods         = [];
+        $periods     = [];
 
         /** @var array $billPeriods */
-        $billPeriods     = config('firefly.bill_periods');
+        $billPeriods = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
             $periods[$current] = (string) trans('firefly.repeat_freq_'.$current);
         }
-        $subTitle        = (string) trans('firefly.create_new_bill');
+        $subTitle    = (string) trans('firefly.create_new_bill');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {

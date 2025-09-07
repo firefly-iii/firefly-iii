@@ -117,7 +117,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = Steam::positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -147,7 +147,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = Steam::positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -235,7 +235,7 @@ class BudgetReportController extends Controller
                     ];
 
                     $amount                   = Steam::positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }

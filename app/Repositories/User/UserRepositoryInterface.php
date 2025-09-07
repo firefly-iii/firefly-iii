@@ -105,9 +105,9 @@ interface UserRepositoryInterface
 
     public function getUserGroups(User $user): Collection;
 
-    public function hasRole(null|Authenticatable|User $user, string $role): bool;
+    public function hasRole(Authenticatable|User|null $user, string $role): bool;
 
-    public function inviteUser(null|Authenticatable|User $user, string $email): InvitedUser;
+    public function inviteUser(Authenticatable|User|null $user, string $email): InvitedUser;
 
     public function redeemCode(string $code): void;
 

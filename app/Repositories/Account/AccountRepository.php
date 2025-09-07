@@ -478,18 +478,18 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
-        $res   = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
-        $query = $this->user->accounts();
+        $res     = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
+        $query   = $this->user->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
 
         // add sort parameters
         $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
-        $sorted = 0;
+        $sorted  = 0;
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
-                if(in_array($param[0], $allowed, true)) {
+                if (in_array($param[0], $allowed, true)) {
                     $query->orderBy($param[0], $param[1]);
                     ++$sorted;
                 }

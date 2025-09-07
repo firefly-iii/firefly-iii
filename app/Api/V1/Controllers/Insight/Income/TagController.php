@@ -36,7 +36,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class TagController
  */
-class   TagController extends Controller
+class TagController extends Controller
 {
     private TagRepositoryInterface $repository;
 

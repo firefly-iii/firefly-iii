@@ -147,7 +147,7 @@ abstract class Controller extends BaseController
             }
             if (null !== $value) {
                 $value = (int)$value;
-                $value     = min(max(1, $value), 2 ** 16);
+                $value = min(max(1, $value), 2 ** 16);
                 $bag->set($integer, $value);
             }
             if (null === $value
@@ -165,7 +165,7 @@ abstract class Controller extends BaseController
 
         // sort fields:
         return $bag;
-        //return $this->getSortParameters($bag);
+        // return $this->getSortParameters($bag);
     }
 
     /**

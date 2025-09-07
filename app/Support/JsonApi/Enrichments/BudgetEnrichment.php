@@ -30,10 +30,8 @@ use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -56,9 +54,7 @@ class BudgetEnrichment implements EnrichmentInterface
     private array               $objectGroups  = [];
     private array               $mappedObjects = [];
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     public function enrich(Collection $collection): Collection
     {

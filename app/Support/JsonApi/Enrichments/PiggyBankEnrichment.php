@@ -55,8 +55,8 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private array               $mappedObjects = [];
     private TransactionCurrency $primaryCurrency;
     private array               $amounts       = [];
-    private array $accounts=  [];
-    private array $objectGroups=  [];
+    private array $accounts                    = [];
+    private array $objectGroups                = [];
 
     public function __construct()
     {
