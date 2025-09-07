@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
-use function Safe\json_decode;
 use Carbon\Carbon;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Exceptions\FireflyException;
@@ -53,11 +52,13 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+use function Safe\json_decode;
+
 class RecurringEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
     private array               $ids                   = [];
-//    private array               $transactionTypeIds    = [];
+    //    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
     private array               $notes                 = [];
     private array               $repetitions           = [];
@@ -122,10 +123,10 @@ class RecurringEnrichment implements EnrichmentInterface
     {
         /** @var Recurrence $recurrence */
         foreach ($this->collection as $recurrence) {
-            $id                            = (int)$recurrence->id;
-//            $typeId                        = (int)$recurrence->transaction_type_id;
-            $this->ids[]                   = $id;
-            //$this->transactionTypeIds[$id] = $typeId;
+            $id          = (int)$recurrence->id;
+            //            $typeId                        = (int)$recurrence->transaction_type_id;
+            $this->ids[] = $id;
+            // $this->transactionTypeIds[$id] = $typeId;
         }
         $this->ids = array_unique($this->ids);
 
@@ -146,7 +147,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                     = $this->collection->filter(fn(Recurrence $item) => (int)$item->id === (int)$repetition->recurrence_id)->first();
+            $recurrence                     = $this->collection->filter(fn (Recurrence $item) => (int)$item->id === (int)$repetition->recurrence_id)->first();
             $fromDate                       = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $id                             = (int)$repetition->recurrence_id;
             $repId                          = (int)$repetition->id;

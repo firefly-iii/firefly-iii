@@ -77,6 +77,7 @@ class UpdateController extends Controller
         $admin       = auth()->user();
         $enrichment  = new WebhookEnrichment();
         $enrichment->setUser($admin);
+
         /** @var Webhook $webhook */
         $webhook     = $enrichment->enrichSingle($webhook);
 

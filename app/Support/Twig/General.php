@@ -38,6 +38,7 @@ use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
+
 use function Safe\parse_url;
 
 /**
@@ -70,14 +71,14 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date = session('end', today(config('app.timezone'))->endOfMonth());
+                $date             = session('end', today(config('app.timezone'))->endOfMonth());
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
                 $info             = Steam::finalAccountBalance($account, $date);
                 $currency         = Steam::getAccountCurrency($account);
                 $primary          = Amount::getPrimaryCurrency();
                 $convertToPrimary = Amount::convertToPrimary();
                 $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-                $currency         ??= $primary;
+                $currency ??= $primary;
                 $strings          = [];
                 foreach ($info as $key => $balance) {
                     if ('balance' === $key) {
@@ -118,15 +119,15 @@ class General extends AbstractExtension
             static function (int $size): string {
                 // less than one GB, more than one MB
                 if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2) . ' MB';
+                    return round($size / (1024 * 1024), 2).' MB';
                 }
 
                 // less than one MB
                 if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2) . ' KB';
+                    return round($size / 1024, 2).' KB';
                 }
 
-                return $size . ' bytes';
+                return $size.' bytes';
             }
         );
     }
@@ -140,7 +141,7 @@ class General extends AbstractExtension
     {
         return new TwigFilter(
             'mimeIcon',
-            static fn(string $string): string => match ($string) {
+            static fn (string $string): string => match ($string) {
                 'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'fa-file-pdf-o',
                 'image/webp', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'fa-file-image-o',
                 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
@@ -219,7 +220,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'phpdate',
-            static fn(string $str): string => date($str)
+            static fn (string $str): string => date($str)
         );
     }
 
@@ -275,7 +276,7 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function ($context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType = $context['objectType'] ?? false;
+                $activeObjectType       = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
@@ -381,7 +382,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'carbonize',
-            static fn(string $date): Carbon => new Carbon($date, config('app.timezone'))
+            static fn (string $date): Carbon => new Carbon($date, config('app.timezone'))
         );
     }
 }

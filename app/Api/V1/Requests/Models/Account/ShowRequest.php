@@ -25,7 +25,6 @@ namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Preference;
 use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -55,7 +54,7 @@ class ShowRequest extends FormRequest
         return [
             'type'  => $this->convertString('type', 'all'),
             'limit' => $limit,
-            'sort' => $this->convertSortParameters('sort',Account::class),
+            'sort'  => $this->convertSortParameters('sort', Account::class),
             'page'  => $page,
         ];
     }

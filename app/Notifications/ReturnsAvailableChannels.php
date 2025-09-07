@@ -28,7 +28,8 @@ use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverChannel;
-//use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
+
+// use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 class ReturnsAvailableChannels
 {
@@ -58,16 +59,16 @@ class ReturnsAvailableChannels
             }
         }
 
-//        if (true === config('notifications.channels.ntfy.enabled', false)) {
-//            // validate presence of of Ntfy settings.
-//            if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
-//                Log::debug('Enabled ntfy.');
-//                $channels[] = NtfyChannel::class;
-//            }
-//            if ('' === (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
-//                Log::warning('No topic name for Ntfy, channel is disabled.');
-//            }
-//        }
+        //        if (true === config('notifications.channels.ntfy.enabled', false)) {
+        //            // validate presence of of Ntfy settings.
+        //            if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+        //                Log::debug('Enabled ntfy.');
+        //                $channels[] = NtfyChannel::class;
+        //            }
+        //            if ('' === (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+        //                Log::warning('No topic name for Ntfy, channel is disabled.');
+        //            }
+        //        }
 
         // pushover
         if (true === config('notifications.channels.pushover.enabled', false)) {
@@ -99,17 +100,17 @@ class ReturnsAvailableChannels
             }
         }
 
-//        // validate presence of of Ntfy settings.
-//        if (true === config('notifications.channels.nfy.enabled', false)) {
-//            $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
-//            if ('' !== $ntfyTopic) {
-//                Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
-//                $channels[] = NtfyChannel::class;
-//            }
-//            if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
-//                Log::warning('No topic name for Ntfy, channel is disabled.');
-//            }
-//        }
+        //        // validate presence of of Ntfy settings.
+        //        if (true === config('notifications.channels.nfy.enabled', false)) {
+        //            $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
+        //            if ('' !== $ntfyTopic) {
+        //                Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
+        //                $channels[] = NtfyChannel::class;
+        //            }
+        //            if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
+        //                Log::warning('No topic name for Ntfy, channel is disabled.');
+        //            }
+        //        }
 
         // pushover
         if (true === config('notifications.channels.slack.enabled', false)) {

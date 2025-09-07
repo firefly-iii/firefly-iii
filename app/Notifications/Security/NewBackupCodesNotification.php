@@ -65,16 +65,16 @@ class NewBackupCodesNotification extends Notification
         return new MailMessage()->markdown('emails.security.new-backup-codes', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
-//    public function toNtfy(User $notifiable): Message
-//    {
-//        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.new_backup_codes_subject'));
-//        $message->body((string) trans('email.new_backup_codes_slack', ['email' => $this->user->email]));
-//
-//        return $message;
-//    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.new_backup_codes_subject'));
+    //        $message->body((string) trans('email.new_backup_codes_slack', ['email' => $this->user->email]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

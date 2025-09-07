@@ -49,20 +49,20 @@ class UserTestNotificationNtfy extends Notification
         ];
     }
 
-//    public function toNtfy(User $user): Message
-//    {
-//        $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.admin_test_subject'));
-//        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
-//        $message->tags(['white_check_mark']);
-//
-//        return $message;
-//    }
+    //    public function toNtfy(User $user): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $user);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.admin_test_subject'));
+    //        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
+    //        $message->tags(['white_check_mark']);
+    //
+    //        return $message;
+    //    }
 
-//    public function via(User $user): array
-//    {
-//        return [NtfyChannel::class];
-//    }
+    //    public function via(User $user): array
+    //    {
+    //        return [NtfyChannel::class];
+    //    }
 }

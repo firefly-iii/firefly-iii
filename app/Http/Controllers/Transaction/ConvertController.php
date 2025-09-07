@@ -338,7 +338,7 @@ class ConvertController extends Controller
             'type'             => $transactionType->type,
         ];
 
-        /** @var Transaction|null $sourceTransaction */
+        /** @var null|Transaction $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
         $amount            = $sourceTransaction->amount ?? '0';
 

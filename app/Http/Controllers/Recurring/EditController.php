@@ -70,8 +70,8 @@ class EditController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
-                $this->repository  = app(RecurringRepositoryInterface::class);
-                $this->budgetRepos = app(BudgetRepositoryInterface::class);
+                $this->repository     = app(RecurringRepositoryInterface::class);
+                $this->budgetRepos    = app(BudgetRepositoryInterface::class);
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
 
@@ -100,6 +100,7 @@ class EditController extends Controller
         $admin                            = auth()->user();
         $enrichment                       = new RecurringEnrichment();
         $enrichment->setUser($admin);
+
         /** @var Recurrence $recurrence */
         $recurrence                       = $enrichment->enrichSingle($recurrence);
 

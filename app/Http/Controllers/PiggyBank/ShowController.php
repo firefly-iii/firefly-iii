@@ -82,6 +82,7 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
+
         /** @var PiggyBank $piggyBank */
         $piggyBank   = $enrichment->enrichSingle($piggyBank);
 

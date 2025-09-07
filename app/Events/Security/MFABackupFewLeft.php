@@ -35,7 +35,7 @@ class MFABackupFewLeft extends Event
 
     public User $user;
 
-    public function __construct(null|Authenticatable|User $user, public int $count)
+    public function __construct(Authenticatable|User|null $user, public int $count)
     {
         if ($user instanceof User) {
             $this->user = $user;

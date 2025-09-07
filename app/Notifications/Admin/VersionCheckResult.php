@@ -64,20 +64,20 @@ class VersionCheckResult extends Notification
         ;
     }
 
-//    /**
-//     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-//     */
-//    public function toNtfy(OwnerNotifiable $notifiable): Message
-//    {
-//        Log::debug('Now in toNtfy() for VersionCheckResult');
-//        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.new_version_email_subject'));
-//        $message->body($this->message);
-//
-//        return $message;
-//    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        Log::debug('Now in toNtfy() for VersionCheckResult');
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.new_version_email_subject'));
+    //        $message->body($this->message);
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
