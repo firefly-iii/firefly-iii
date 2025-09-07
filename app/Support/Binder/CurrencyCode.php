@@ -42,9 +42,10 @@ class CurrencyCode implements BinderInterface
         if (auth()->check()) {
             try {
                 $currency = Amount::getTransactionCurrencyByCode(trim($value));
-            } catch(FireflyException) {
+            } catch (FireflyException) {
                 throw new NotFoundHttpException();
             }
+
             return $currency;
         }
 

@@ -104,20 +104,20 @@ class InterestingMessage
 
         // send message about newly created transaction group.
         /** @var null|TransactionGroup $group */
-        $group = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
+        $group              = auth()->user()->transactionGroups()->with(['transactionJournals', 'transactionJournals.transactionType'])->find((int)$transactionGroupId);
 
         if (null === $group) {
             return;
         }
 
-        $count = $group->transactionJournals->count();
+        $count              = $group->transactionJournals->count();
 
         /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals->first();
+        $journal            = $group->transactionJournals->first();
         if (null === $journal) {
             return;
         }
-        $title = $count > 1 ? $group->title : $journal->description;
+        $title              = $count > 1 ? $group->title : $journal->description;
         if ('created' === $message) {
             session()->flash('success_url', route('transactions.show', [$transactionGroupId]));
             session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $title]));
@@ -150,7 +150,7 @@ class InterestingMessage
         $message     = $request->get('message');
 
         /** @var User $user */
-        $user = auth()->user();
+        $user        = auth()->user();
 
         /** @var null|UserGroup $userGroup */
         $userGroup   = UserGroup::find($userGroupId);
@@ -197,10 +197,10 @@ class InterestingMessage
         $message   = $request->get('message');
 
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
 
         /** @var null|Account $account */
-        $account = $user->accounts()->withTrashed()->find($accountId);
+        $account   = $user->accounts()->withTrashed()->find($accountId);
 
         if (null === $account) {
             return;
@@ -232,7 +232,7 @@ class InterestingMessage
         $message = $request->get('message');
 
         /** @var null|Bill $bill */
-        $bill = auth()->user()->bills()->withTrashed()->find($billId);
+        $bill    = auth()->user()->bills()->withTrashed()->find($billId);
 
         if (null === $bill) {
             return;
@@ -261,7 +261,7 @@ class InterestingMessage
         $message   = $request->get('message');
 
         /** @var null|Webhook $webhook */
-        $webhook = auth()->user()->webhooks()->withTrashed()->find($webhookId);
+        $webhook   = auth()->user()->webhooks()->withTrashed()->find($webhookId);
 
         if (null === $webhook) {
             return;
@@ -290,8 +290,9 @@ class InterestingMessage
     {
         // params:
         // get parameters from request.
-        $code     = (string) $request->get('code');
-        $message  = (string) $request->get('message');
+        $code    = (string) $request->get('code');
+        $message = (string) $request->get('message');
+
         try {
             $currency = Amount::getTransactionCurrencyByCode($code);
         } catch (FireflyException) {

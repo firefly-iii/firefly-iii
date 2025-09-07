@@ -31,7 +31,6 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
@@ -252,7 +251,7 @@ class BudgetController extends Controller
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
                 /** @var numeric-string $amount */
-                $amount= (string)$journal['amount'];
+                $amount                       = (string)$journal['amount'];
                 $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $amount);
             }
         }

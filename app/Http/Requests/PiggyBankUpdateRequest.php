@@ -130,6 +130,7 @@ class PiggyBankUpdateRequest extends FormRequest
     private function getCurrencyFromData(array $data): TransactionCurrency
     {
         $currencyId = (int) ($data['transaction_currency_id'] ?? 0);
+
         try {
             $currency = Amount::getTransactionCurrencyById($currencyId);
         } catch (FireflyException) {

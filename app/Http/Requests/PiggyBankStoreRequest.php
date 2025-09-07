@@ -107,7 +107,7 @@ class PiggyBankStoreRequest extends FormRequest
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                             }
-                            $type = $account->accountType->type;
+                            $type            = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                             }
@@ -125,6 +125,7 @@ class PiggyBankStoreRequest extends FormRequest
     private function getCurrencyFromData(array $data): TransactionCurrency
     {
         $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+
         try {
             $currency = Amount::getTransactionCurrencyById($currencyId);
         } catch (FireflyException) {
