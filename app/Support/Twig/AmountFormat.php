@@ -162,9 +162,9 @@ class AmountFormat extends AbstractExtension
             static function (string $amount, string $code, ?bool $coloured = null): string {
                 $coloured ??= true;
 
-                /** @var null|TransactionCurrency $currency */
-                $currency = TransactionCurrency::whereCode($code)->first();
-                if (null === $currency) {
+                try {
+                    $currency = Amount::getTransactionCurrencyByCode($code);
+                } catch(FireflyException) {
                     Log::error(sprintf('Could not find currency with code "%s". Fallback to primary currency.', $code));
                     $currency = Amount::getPrimaryCurrency();
                     Log::error(sprintf('Fallback currency is "%s".', $currency->code));

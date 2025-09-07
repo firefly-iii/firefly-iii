@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Http\Api;
 
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
@@ -110,7 +111,7 @@ class SummaryBalanceGrouped
             // transaction info:
             $currencyId                            = (int) $journal['currency_id'];
             $amount                                = bcmul((string) $journal['amount'], $multiplier);
-            $currency                              = $this->currencies[$currencyId] ?? TransactionCurrency::find($currencyId);
+            $currency                              = $this->currencies[$currencyId] ?? Amount::getTransactionCurrencyById($currencyId);
             $this->currencies[$currencyId]         = $currency;
             $pcAmount                              = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int) $journal['foreign_currency_id'] === $this->default->id) {

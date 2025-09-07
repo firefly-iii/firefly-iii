@@ -354,7 +354,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 ->first()
             ;
             if (null !== $currencyPreference) {
-                $currency = TransactionCurrency::where('id', $currencyPreference->data)->first();
+                $currency = Amount::getTransactionCurrencyById((int) $currencyPreference->data);
             }
             $journalId            = $row->transaction_journal_id;
             $return[$journalId] ??= [];

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Validation\Validator;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
@@ -129,8 +130,9 @@ class PiggyBankUpdateRequest extends FormRequest
     private function getCurrencyFromData(array $data): TransactionCurrency
     {
         $currencyId = (int) ($data['transaction_currency_id'] ?? 0);
-        $currency   = TransactionCurrency::find($currencyId);
-        if (null === $currency) {
+        try {
+            $currency = Amount::getTransactionCurrencyById($currencyId);
+        } catch (FireflyException) {
             return Amount::getPrimaryCurrency();
         }
 

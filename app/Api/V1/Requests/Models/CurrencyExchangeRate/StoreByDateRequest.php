@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Validation\Validator;
@@ -48,7 +49,7 @@ class StoreByDateRequest extends FormRequest
 
     public function getFromCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', $this->get('from'))->first();
+        return Amount::getTransactionCurrencyByCode((string) $this->get('from'));
     }
 
     /**
@@ -83,7 +84,7 @@ class StoreByDateRequest extends FormRequest
 
                         continue;
                     }
-                    $to = TransactionCurrency::where('code', $key)->first();
+                    $to = Amount::getTransactionCurrencyByCode((string) $key);
                     if (null === $to) {
                         $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                     }

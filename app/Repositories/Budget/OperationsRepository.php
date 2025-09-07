@@ -166,7 +166,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 $currencyDecimalPlaces = $journal['currency_decimal_places'];
             }
             if (true === $convertToPrimary && $journalCurrencyId !== $currencyId) {
-                $currencies[$journalCurrencyId] ??= TransactionCurrency::find($journalCurrencyId);
+                $currencies[$journalCurrencyId] ??= Amount::getTransactionCurrencyById($journalCurrencyId);
                 $amount = $converter->convert($currencies[$journalCurrencyId], $primaryCurrency, $journal['date'], $amount);
             }
 

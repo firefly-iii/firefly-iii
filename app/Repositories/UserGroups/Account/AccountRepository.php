@@ -32,6 +32,7 @@ use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -141,7 +142,7 @@ class AccountRepository implements AccountRepositoryInterface
         }
         $currencyId = (int) $this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
-            return TransactionCurrency::find($currencyId);
+            return Amount::getTransactionCurrencyById($currencyId);
         }
 
         return null;

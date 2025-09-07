@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsValidPositiveAmount;
@@ -60,7 +61,7 @@ class PiggyBankStoreRequest extends FormRequest
             $accounts = [];
         }
         foreach ($accounts as $item) {
-            $data['accounts'][] = ['account_id' => (int) $item];
+            $data['accounts'][] = ['account_id' => (int)$item];
         }
 
         return $data;
@@ -97,7 +98,7 @@ class PiggyBankStoreRequest extends FormRequest
                     $repository = app(AccountRepositoryInterface::class);
                     $types      = config('firefly.piggy_bank_account_types');
                     foreach ($data['accounts'] as $value) {
-                        $accountId = (int) $value;
+                        $accountId = (int)$value;
                         $account   = $repository->find($accountId);
                         if (null !== $account) {
                             // check currency here.
@@ -106,7 +107,7 @@ class PiggyBankStoreRequest extends FormRequest
                             if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                             }
-                            $type            = $account->accountType->type;
+                            $type = $account->accountType->type;
                             if (!in_array($type, $types, true)) {
                                 $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                             }
@@ -123,9 +124,10 @@ class PiggyBankStoreRequest extends FormRequest
 
     private function getCurrencyFromData(array $data): TransactionCurrency
     {
-        $currencyId = (int) ($data['transaction_currency_id'] ?? 0);
-        $currency   = TransactionCurrency::find($currencyId);
-        if (null === $currency) {
+        $currencyId = (int)($data['transaction_currency_id'] ?? 0);
+        try {
+            $currency = Amount::getTransactionCurrencyById($currencyId);
+        } catch (FireflyException) {
             return Amount::getPrimaryCurrency();
         }
 

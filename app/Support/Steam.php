@@ -285,7 +285,7 @@ class Steam
             $sumOfDay                             = $this->floatalize($sumOfDay);
 
             // find currency of this entry, does not have to exist.
-            $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
+            $currencies[$entry->transaction_currency_id] ??= Amount::getTransactionCurrencyById($entry->transaction_currency_id);
 
             // make sure this $entry has its own $entryCurrency
             /** @var TransactionCurrency $entryCurrency */
@@ -502,7 +502,7 @@ class Steam
             return null;
         }
 
-        return TransactionCurrency::find((int)$result->data);
+        return Amount::getTransactionCurrencyById((int)$result->data);
     }
 
     private function groupAndSumTransactions(array $array, string $group, string $field): array
@@ -524,7 +524,7 @@ class Steam
         $singleton = PreferencesSingleton::getInstance();
         foreach ($others as $key => $amount) {
             $preference = $singleton->getPreference($key);
-            $currency   = $preference ?? TransactionCurrency::where('code', $key)->first();
+            $currency   = $preference ?? Amount::getTransactionCurrencyByCode($key);
             if (null === $currency) {
                 continue;
             }

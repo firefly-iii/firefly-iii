@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
@@ -184,7 +185,7 @@ class AccountBalanceGrouped
         if (array_key_exists($currencyId, $this->currencies)) {
             return $this->currencies[$currencyId];
         }
-        $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
+        $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
 
         return $this->currencies[$currencyId];
     }

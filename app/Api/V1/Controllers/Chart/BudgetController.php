@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -143,7 +144,7 @@ class BudgetController extends Controller
 
             // convert data if necessary.
             if (true === $this->convertToPrimary && $currencyId !== $this->primaryCurrency->id) {
-                $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+                $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
                 $row['pc_budgeted']  = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['budgeted']);
                 $row['pc_spent']     = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['spent']);
                 $row['pc_left']      = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['left']);
@@ -231,7 +232,7 @@ class BudgetController extends Controller
          * @var array $block
          */
         foreach ($spent as $currencyId => $block) {
-            $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
             $return[$currencyId]           ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],

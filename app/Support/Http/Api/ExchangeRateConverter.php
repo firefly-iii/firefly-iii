@@ -30,6 +30,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
@@ -264,7 +265,7 @@ class ExchangeRateConverter
         if ($cache->has()) {
             return (int) $cache->get();
         }
-        $euro  = TransactionCurrency::whereCode('EUR')->first();
+        $euro  = Amount::getTransactionCurrencyByCode('EUR');
         ++$this->queryCount;
         if (null === $euro) {
             throw new FireflyException('Cannot find EUR in system, cannot do currency conversion.');

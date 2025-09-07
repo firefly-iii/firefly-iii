@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Validation\Validator;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -135,13 +136,13 @@ class StoreRequest extends FormRequest
     private function getCurrencyFromData(Validator $validator, array $data): ?TransactionCurrency
     {
         if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
-            $currency = TransactionCurrency::whereCode($data['transaction_currency_code'])->first();
+            $currency = Amount::getTransactionCurrencyByCode((string) $data['transaction_currency_code']);
             if (null !== $currency) {
                 return $currency;
             }
         }
         if (array_key_exists('transaction_currency_id', $data) && '' !== (string) $data['transaction_currency_id']) {
-            $currency = TransactionCurrency::find((int) $data['transaction_currency_id']);
+            $currency = Amount::getTransactionCurrencyById((int) $data['transaction_currency_id']);
             if (null !== $currency) {
                 return $currency;
             }

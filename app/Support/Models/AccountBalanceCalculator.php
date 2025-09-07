@@ -30,6 +30,7 @@ use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -171,7 +172,7 @@ class AccountBalanceCalculator
              */
             foreach ($currencies as $currencyId => $balance) {
                 /** @var null|TransactionCurrency $currency */
-                $currency        = TransactionCurrency::find($currencyId);
+                $currency        = Amount::getTransactionCurrencyById($currencyId);
                 if (null === $currency) {
                     Log::error(sprintf('Could not find currency #%d, will not save account balance.', $currencyId));
 

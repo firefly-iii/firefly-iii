@@ -321,7 +321,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 if ($this->convertToPrimary && null !== $entry->foreign_currency_id && (int)$entry->foreign_currency_id !== $this->primaryCurrency->id) {
                     // TODO this is very database intensive.
                     /** @var TransactionCurrency $foreignCurrency */
-                    $foreignCurrency            = TransactionCurrency::find($entry->foreign_currency_id);
+                    $foreignCurrency            = Amount::getTransactionCurrencyById($entry->foreign_currency_id);
                     $array['pc_foreign_amount'] = $converter->convert($foreignCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
                 }
                 $result[] = $array;

@@ -38,8 +38,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait ValidatesUserGroupTrait
 {
-    protected ?UserGroup $userGroup = null;
-    protected ?User $user           = null;
+    protected UserGroup $userGroup;
+    protected User $user;
 
     /**
      * An "undocumented" filter
