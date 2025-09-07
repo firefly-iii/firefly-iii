@@ -30,6 +30,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -81,8 +82,8 @@ class DoubleReportController extends Controller
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
                 ];
-                $amount                   = app('steam')->positive($journal['amount']);
-                $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                $amount                   = Steam::positive($journal['amount']);
+                $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
@@ -108,8 +109,8 @@ class DoubleReportController extends Controller
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
                 ];
-                $amount                   = app('steam')->positive($journal['amount']);
-                $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                $amount                   = Steam::positive($journal['amount']);
+                $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
@@ -135,8 +136,8 @@ class DoubleReportController extends Controller
                     'currency_symbol' => $currency['currency_symbol'],
                     'currency_code'   => $currency['currency_code'],
                 ];
-                $amount                   = app('steam')->positive($journal['amount']);
-                $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                $amount                   = Steam::positive($journal['amount']);
+                $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
@@ -176,9 +177,9 @@ class DoubleReportController extends Controller
 
             foreach ($currency['transaction_journals'] as $journal) {
                 $key                                   = $journal['date']->isoFormat($format);
-                $amount                                = app('steam')->positive($journal['amount']);
+                $amount                                = Steam::positive($journal['amount']);
                 $chartData[$spentKey]['entries'][$key] ??= '0';
-                $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
+                $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
             }
         }
         // loop income.
@@ -202,9 +203,9 @@ class DoubleReportController extends Controller
 
             foreach ($currency['transaction_journals'] as $journal) {
                 $key                                    = $journal['date']->isoFormat($format);
-                $amount                                 = app('steam')->positive($journal['amount']);
+                $amount                                 = Steam::positive($journal['amount']);
                 $chartData[$earnedKey]['entries'][$key] ??= '0';
-                $chartData[$earnedKey]['entries'][$key] = bcadd($chartData[$earnedKey]['entries'][$key], (string) $amount);
+                $chartData[$earnedKey]['entries'][$key] = bcadd($chartData[$earnedKey]['entries'][$key], $amount);
             }
         }
 
@@ -274,8 +275,8 @@ class DoubleReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
 
                 // loop each tag:
@@ -293,8 +294,8 @@ class DoubleReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -327,8 +328,8 @@ class DoubleReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
 
                 // loop each tag:
@@ -346,8 +347,8 @@ class DoubleReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }

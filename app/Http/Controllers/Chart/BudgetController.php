@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Chart\Budget\FrontpageChartGenerator;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
@@ -102,14 +103,14 @@ class BudgetController extends Controller
         $collection     = new Collection([$budget]);
         $chartData      = [];
         $loopStart      = clone $start;
-        $loopStart      = app('navigation')->startOfPeriod($loopStart, $step);
+        $loopStart      = Navigation::startOfPeriod($loopStart, $step);
         $currencies     = [];
         $defaultEntries = [];
         while ($end >= $loopStart) {
             /** @var Carbon $loopEnd */
-            $loopEnd                = app('navigation')->endOfPeriod($loopStart, $step);
+            $loopEnd                = Navigation::endOfPeriod($loopStart, $step);
             $spent                  = $this->opsRepository->sumExpenses($loopStart, $loopEnd, null, $collection); // this method already converts to primary currency.
-            $label                  = trim((string) app('navigation')->periodShow($loopStart, $step));
+            $label                  = trim(Navigation::periodShow($loopStart, $step));
 
             foreach ($spent as $row) {
                 $currencyId                               = $row['currency_id'];
@@ -496,8 +497,8 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $titleFormat    = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $chartData      = [
             [
                 'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
@@ -517,9 +518,9 @@ class BudgetController extends Controller
 
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
-            $currentStart                    = app('navigation')->startOfPeriod($currentStart, $preferredRange);
+            $currentStart                    = Navigation::startOfPeriod($currentStart, $preferredRange);
             $title                           = $currentStart->isoFormat($titleFormat);
-            $currentEnd                      = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $currentEnd                      = Navigation::endOfPeriod($currentStart, $preferredRange);
 
             // default limit is no limit:
             $chartData[0]['entries'][$title] = 0;
@@ -565,17 +566,17 @@ class BudgetController extends Controller
         }
 
         // the expenses:
-        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $titleFormat    = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $chartData      = [];
         $currentStart   = clone $start;
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
         while ($currentStart <= $end) {
-            $currentEnd        = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $currentEnd        = Navigation::endOfPeriod($currentStart, $preferredRange);
             $title             = $currentStart->isoFormat($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
             $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[$title] = app('steam')->bcround($amount, $currency->decimal_places);
-            $currentStart      = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+            $currentStart      = Navigation::addPeriod($currentStart, $preferredRange, 0);
         }
 
         $data           = $this->generator->singleSet((string) trans('firefly.spent'), $chartData);

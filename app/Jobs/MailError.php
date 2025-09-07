@@ -129,7 +129,7 @@ class MailError extends Job implements ShouldQueue
         }
         if (file_exists($file)) {
             Log::debug(sprintf('Read file in "%s"', $file));
-            $limits = json_decode((string) file_get_contents($file), true);
+            $limits = json_decode( file_get_contents($file), true);
         }
         // limit reached?
         foreach ($types as $type => $info) {

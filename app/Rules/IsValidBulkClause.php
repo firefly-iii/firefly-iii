@@ -96,7 +96,7 @@ class IsValidBulkClause implements ValidationRule
                     'value' => $this->rules[$clause][$arrayKey],
                 ]);
                 if ($validator->fails()) {
-                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value')));
+                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value'))); // @phpstan-ignore-line
 
                     return false;
                 }

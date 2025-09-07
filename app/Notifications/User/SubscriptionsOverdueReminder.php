@@ -87,16 +87,16 @@ class SubscriptionsOverdueReminder extends Notification
         return (string)trans('email.subscriptions_overdue_subject_single');
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title($this->getSubject());
-        $message->body((string)trans('email.bill_warning_please_action'));
-
-        return $message;
-    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title($this->getSubject());
+    //        $message->body((string)trans('email.bill_warning_please_action'));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

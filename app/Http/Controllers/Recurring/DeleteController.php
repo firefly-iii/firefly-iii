@@ -38,8 +38,7 @@ use Illuminate\View\View;
  */
 class DeleteController extends Controller
 {
-    /** @var RecurringRepositoryInterface Recurring repository */
-    private $recurring;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * DeleteController constructor.
@@ -54,7 +53,7 @@ class DeleteController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
                 app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->recurring = app(RecurringRepositoryInterface::class);
+                $this->repository = app(RecurringRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -72,7 +71,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('recurrences.delete.url');
 
-        $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
+        $journalsCreated = $this->repository->getTransactions($recurrence)->count();
 
         return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }

@@ -300,7 +300,7 @@ class AccountEnrichment implements EnrichmentInterface
             // collect current balances:
             $currentBalance = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
             $openingBalance = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
-            $virtualBalance = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
+            $virtualBalance = Steam::bcround($item->virtual_balance ?? '0', $currency->decimal_places);
             $debtAmount     = $meta['current_debt'] ?? null;
 
             // set some pc_ default values to NULL:
@@ -440,7 +440,7 @@ class AccountEnrichment implements EnrichmentInterface
     private function sortData(): void
     {
         $dbParams = config('firefly.allowed_db_sort_parameters.Account', []);
-        /** @var array<string,string> $parameter */
+        /** @var array<int,<string,string> $parameter */
         foreach ($this->sort as $parameter) {
             if (in_array($parameter[0], $dbParams, true)) {
                 continue;

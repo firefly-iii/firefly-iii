@@ -411,10 +411,10 @@ class UserEventHandler
 
                 break;
 
-            case 'ntfy':
-                $class = UserTestNotificationNtfy::class;
-
-                break;
+//            case 'ntfy':
+//                $class = UserTestNotificationNtfy::class;
+//
+//                break;
 
             case 'pushover':
                 $class = UserTestNotificationPushover::class;

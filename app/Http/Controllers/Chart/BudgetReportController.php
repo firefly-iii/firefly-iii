@@ -29,6 +29,8 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
@@ -84,8 +86,8 @@ class BudgetReportController extends Controller
                     'currency_code'   => $currency['currency_code'],
                 ];
                 foreach ($budget['transaction_journals'] as $journal) {
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -114,8 +116,8 @@ class BudgetReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
 
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
                 }
             }
         }
@@ -144,8 +146,8 @@ class BudgetReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
 
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
                 }
             }
         }
@@ -162,7 +164,7 @@ class BudgetReportController extends Controller
     {
         $chartData = [];
         $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$budget]));
-        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
         foreach ($spent as $currency) {
@@ -184,9 +186,9 @@ class BudgetReportController extends Controller
             foreach ($currency['budgets'] as $currentBudget) {
                 foreach ($currentBudget['transaction_journals'] as $journal) {
                     $key                                   = $journal['date']->isoFormat($format);
-                    $amount                                = app('steam')->positive($journal['amount']);
+                    $amount                                = Steam::positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
         }
@@ -199,11 +201,11 @@ class BudgetReportController extends Controller
     private function makeEntries(Carbon $start, Carbon $end): array
     {
         $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
             $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;
@@ -232,8 +234,8 @@ class BudgetReportController extends Controller
                         'currency_code'   => $currency['currency_code'],
                     ];
 
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'],  $amount);
                 }
             }
         }

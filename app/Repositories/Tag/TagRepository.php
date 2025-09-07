@@ -31,6 +31,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Tag;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
@@ -268,12 +269,12 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             ];
 
             // add amount to correct type:
-            $amount                   = app('steam')->positive((string) $journal['amount']);
+            $amount                   = Steam::positive((string) $journal['amount']);
             $type                     = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-                $amount = bcmul((string) $amount, '-1');
+                $amount = bcmul( $amount, '-1');
             }
-            $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type], (string) $amount);
+            $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type],  $amount);
 
             $foreignCurrencyId        = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
@@ -289,11 +290,11 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                     TransactionTypeEnum::OPENING_BALANCE->value => '0',
                 ];
                 // add foreign amount to correct type:
-                $amount                          = app('steam')->positive((string) $journal['foreign_amount']);
+                $amount                          = Steam::positive((string) $journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-                    $amount = bcmul((string) $amount, '-1');
+                    $amount = bcmul( $amount, '-1');
                 }
-                $sums[$foreignCurrencyId][$type] = bcadd((string) $sums[$foreignCurrencyId][$type], (string) $amount);
+                $sums[$foreignCurrencyId][$type] = bcadd((string) $sums[$foreignCurrencyId][$type], $amount);
             }
         }
 

@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TriggerRecurrenceRequest;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
@@ -37,6 +38,28 @@ use Illuminate\Support\Collection;
  */
 class TriggerController extends Controller
 {
+    private RecurringRepositoryInterface $repository;
+
+    /**
+     * IndexController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        app('view')->share('showCategory', true);
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-paint-brush');
+                app('view')->share('title', (string) trans('firefly.recurrences'));
+
+                $this->repository = app(RecurringRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse
     {
         $all                        = $request->getAll();

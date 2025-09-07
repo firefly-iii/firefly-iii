@@ -65,15 +65,15 @@ class RuleActionFailed extends Notification
         ];
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->body($this->message);
-
-        return $message;
-    }
+//    public function toNtfy(User $notifiable): Message
+//    {
+//        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+//        $message  = new Message();
+//        $message->topic($settings['ntfy_topic']);
+//        $message->body($this->message);
+//
+//        return $message;
+//    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

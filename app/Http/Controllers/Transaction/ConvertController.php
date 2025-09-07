@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -337,8 +338,9 @@ class ConvertController extends Controller
             'type'             => $transactionType->type,
         ];
 
+        /** @var Transaction|null $sourceTransaction */
         $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        $amount            = $sourceTransaction?->amount ?? '0';
+        $amount            = $sourceTransaction->amount ?? '0';
 
         // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
         if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {

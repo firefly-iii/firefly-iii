@@ -310,10 +310,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
             return $budget;
         }
-        if (0 === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
+        if (0 === $autoBudgetType) {
             return $budget;
         }
-        if (null === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
+        if (null === $autoBudgetType) {
             return $budget;
         }
         $this->updateAutoBudget($budget, $data);

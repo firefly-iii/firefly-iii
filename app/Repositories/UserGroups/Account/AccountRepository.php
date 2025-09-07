@@ -169,6 +169,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $account = $this->user->accounts()->find($accountId);
         if (null === $account) {
+            /** @var null|Account */
             return $this->userGroup->accounts()->find($accountId);
         }
 
@@ -242,11 +243,7 @@ class AccountRepository implements AccountRepositoryInterface
     #[Override]
     public function getLastActivity(Collection $accounts): array
     {
-        return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->groupBy('transactions.account_id')
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray() // @phpstan-ignore-line
-        ;
+        return Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')->groupBy('transactions.account_id')->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) as date_max')])->toArray();
     }
 
     #[Override]

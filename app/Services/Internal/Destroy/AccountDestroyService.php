@@ -108,10 +108,7 @@ class AccountDestroyService
         app('log')->debug(sprintf('Move from account #%d to #%d', $account->id, $moveTo->id));
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
 
-        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')
-            ->where('account_id', $moveTo->id)
-            ->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]) // @phpstan-ignore-line
-        ;
+        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]);
         if (0 === $collection->count()) {
             return;
         }

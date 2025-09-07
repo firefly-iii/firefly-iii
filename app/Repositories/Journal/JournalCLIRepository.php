@@ -182,7 +182,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->groupBy('transaction_journals.id')
         ;
-        $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]); // @phpstan-ignore-line
+        $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
         $journalIds = [];
 
         /** @var stdClass $row */

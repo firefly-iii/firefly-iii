@@ -73,16 +73,16 @@ class BillReminder extends Notification
         return (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title($this->getSubject());
-        $message->body((string) trans('email.bill_warning_please_action'));
-
-        return $message;
-    }
+//    public function toNtfy(User $notifiable): Message
+//    {
+//        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+//        $message  = new Message();
+//        $message->topic($settings['ntfy_topic']);
+//        $message->title($this->getSubject());
+//        $message->body((string) trans('email.bill_warning_please_action'));
+//
+//        return $message;
+//    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

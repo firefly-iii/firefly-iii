@@ -65,18 +65,18 @@ class UserLogin extends Notification
         ;
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $ip       = Request::ip();
-        $host     = Steam::getHostName($ip);
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.login_from_new_ip'));
-        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
-
-        return $message;
-    }
+//    public function toNtfy(User $notifiable): Message
+//    {
+//        $ip       = Request::ip();
+//        $host     = Steam::getHostName($ip);
+//        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+//        $message  = new Message();
+//        $message->topic($settings['ntfy_topic']);
+//        $message->title((string) trans('email.login_from_new_ip'));
+//        $message->body((string) trans('email.slack_login_from_new_ip', ['ip' => $ip, 'host' => $host]));
+//
+//        return $message;
+//    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

@@ -68,20 +68,21 @@ class UnknownUserLoginAttempt extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function toNtfy(OwnerNotifiable $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-        $message  = new Message();
-        $ip       = Request::ip();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.unknown_user_subject'));
-        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]));
-
-        return $message;
-    }
+//    /**
+//     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+//     */
+//
+//    public function toNtfy(OwnerNotifiable $notifiable): Message
+//    {
+//        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+//        $message  = new Message();
+//        $ip       = Request::ip();
+//        $message->topic($settings['ntfy_topic']);
+//        $message->title((string) trans('email.unknown_user_subject'));
+//        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]));
+//
+//        return $message;
+//    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

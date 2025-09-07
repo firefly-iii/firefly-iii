@@ -207,7 +207,7 @@ class ProfileController extends Controller
         $existing = $repository->findByEmail($newEmail);
         if ($existing instanceof User) {
             // force user logout.
-            Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
+            Auth::guard()->logout();
             $request->session()->invalidate();
 
             session()->flash('success', (string) trans('firefly.email_changed'));
@@ -221,7 +221,7 @@ class ProfileController extends Controller
         event(new UserChangedEmail($user, $newEmail, $oldEmail));
 
         // force user logout.
-        Auth::guard()->logout(); // @phpstan-ignore-line (does not recognize function)
+        Auth::guard()->logout();
         $request->session()->invalidate();
         session()->flash('success', (string) trans('firefly.email_changed'));
 

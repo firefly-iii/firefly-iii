@@ -40,8 +40,6 @@ class Configuration extends Model
 
     /**
      * TODO can be replaced with native laravel code.
-     *
-     * @return mixed
      */
     protected function data(): Attribute
     {

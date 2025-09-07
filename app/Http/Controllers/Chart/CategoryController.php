@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Chart\Category\FrontpageChartGenerator;
 use FireflyIII\Support\Chart\Category\WholePeriodChartGenerator;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -211,19 +212,19 @@ class CategoryController extends Controller
             // loop income and expenses for this category.:
             $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
-                $amount                               = app('steam')->positive($journal['amount']);
+                $amount                               = Steam::positive($journal['amount']);
                 $date                                 = $journal['date']->isoFormat($format);
                 $chartData[$outKey]['entries'][$date] ??= '0';
 
-                $chartData[$outKey]['entries'][$date] = bcadd((string) $amount, $chartData[$outKey]['entries'][$date]);
+                $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
             $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
-                $amount                              = app('steam')->positive($journal['amount']);
+                $amount                              = Steam::positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);
                 $chartData[$inKey]['entries'][$date] ??= '0';
-                $chartData[$inKey]['entries'][$date] = bcadd((string) $amount, $chartData[$inKey]['entries'][$date]);
+                $chartData[$inKey]['entries'][$date] = bcadd($amount, $chartData[$inKey]['entries'][$date]);
             }
         }
 

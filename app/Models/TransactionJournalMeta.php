@@ -41,15 +41,12 @@ class TransactionJournalMeta extends Model
 
     protected $table    = 'journal_meta';
 
-    /**
-     * @return mixed
-     */
     protected function data(): Attribute
     {
         return Attribute::make(get: fn ($value) => json_decode((string) $value, false), set: function ($value) {
             $data = json_encode($value);
 
-            return ['data' => $data, 'hash' => hash('sha256', (string) $data)];
+            return ['data' => $data, 'hash' => hash('sha256', $data)];
         });
     }
 

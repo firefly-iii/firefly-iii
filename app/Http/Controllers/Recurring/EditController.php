@@ -54,7 +54,7 @@ class EditController extends Controller
     private AttachmentHelperInterface    $attachments;
     private BillRepositoryInterface      $billRepository;
     private BudgetRepositoryInterface    $budgetRepos;
-    private RecurringRepositoryInterface $recurring;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * EditController constructor.
@@ -70,8 +70,8 @@ class EditController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
-                $this->recurring      = app(RecurringRepositoryInterface::class);
-                $this->budgetRepos    = app(BudgetRepositoryInterface::class);
+                $this->repository  = app(RecurringRepositoryInterface::class);
+                $this->budgetRepos = app(BudgetRepositoryInterface::class);
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
 
@@ -100,6 +100,7 @@ class EditController extends Controller
         $admin                            = auth()->user();
         $enrichment                       = new RecurringEnrichment();
         $enrichment->setUser($admin);
+        /** @var Recurrence $recurrence */
         $recurrence                       = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
@@ -180,7 +181,7 @@ class EditController extends Controller
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
         $data     = $request->getAll();
-        $this->recurring->update($recurrence, $data);
+        $this->repository->update($recurrence, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);

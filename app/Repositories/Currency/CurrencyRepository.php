@@ -267,10 +267,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
             return $result;
         }
-        if (null === $result) {
-            Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
-            $result = $this->findByCode((string) $currencyCode);
-        }
+        Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
+        $result = $this->findByCode((string) $currencyCode);
+
         if ($result instanceof TransactionCurrency && false === $result->enabled) {
             Log::debug(sprintf('Also enabled currency %s', $result->code));
             $this->enable($result);

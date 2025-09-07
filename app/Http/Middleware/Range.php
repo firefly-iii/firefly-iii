@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Middleware;
 
 use Closure;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\App;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -101,12 +102,12 @@ class Range
     private function configureView(): void
     {
         // get locale preference:
-        $language          = app('steam')->getLanguage();
-        $locale            = app('steam')->getLocale();
+        $language          = Steam::getLanguage();
+        $locale            = Steam::getLocale();
         App::setLocale($language);
-        Carbon::setLocale(substr((string) $locale, 0, 2));
+        Carbon::setLocale(substr($locale, 0, 2));
 
-        $localeArray       = app('steam')->getLocaleArray($locale);
+        $localeArray       = Steam::getLocaleArray($locale);
 
         setlocale(LC_TIME, $localeArray);
         $moneyResult       = setlocale(LC_MONETARY, $localeArray);

@@ -780,10 +780,10 @@ class JournalUpdateService
 
     private function isBetweenAssetAndLiability(): bool
     {
-        /** @var Transaction $sourceTransaction */
+        /** @var Transaction|null $sourceTransaction */
         $sourceTransaction      = $this->transactionJournal->transactions()->where('amount', '<', 0)->first();
 
-        /** @var Transaction $destinationTransaction */
+        /** @var Transaction|null $destinationTransaction */
         $destinationTransaction = $this->transactionJournal->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destinationTransaction) {
             Log::warning('Either transaction is false, stop.');
