@@ -35,6 +35,9 @@ class StoreByDateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAll(): array
     {
         return [
@@ -50,6 +53,7 @@ class StoreByDateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
+     * @return array<string, string>
      */
     public function rules(): array
     {

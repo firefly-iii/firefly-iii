@@ -250,7 +250,9 @@ class BudgetController extends Controller
             // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
-                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], (string)$journal['amount']);
+                /** @var numeric-string $amount */
+                $amount= (string)$journal['amount'];
+                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $amount);
             }
         }
 
