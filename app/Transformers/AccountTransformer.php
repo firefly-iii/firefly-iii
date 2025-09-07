@@ -176,18 +176,6 @@ class AccountTransformer extends AbstractTransformer
         return $accountRole;
     }
 
-    /**
-     * TODO duplicated in the V2 transformer.
-     */
-    private function getDate(): Carbon
-    {
-        if (null !== $this->parameters->get('date')) {
-            return $this->parameters->get('date');
-        }
-
-        return today(config('app.timezone'));
-    }
-
     private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
     {
         $monthlyPaymentDate = null;

@@ -27,8 +27,8 @@ namespace FireflyIII\Support\Request;
 
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Models\Webhook;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 trait ValidatesWebhooks
 {
@@ -37,7 +37,7 @@ trait ValidatesWebhooks
         $validator->after(
             function (Validator $validator): void {
                 Log::debug('Validating webhook');
-                if ($validator->failed()) {
+                if (count($validator->failed()) > 0) {
                     return;
                 }
                 $data           = $validator->getData();

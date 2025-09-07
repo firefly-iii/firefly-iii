@@ -108,19 +108,5 @@ class PiggyBankTransformer extends AbstractTransformer
         ];
     }
 
-    private function renderAccounts(PiggyBank $piggyBank): array
-    {
-        $return = [];
-        foreach ($piggyBank->accounts()->get() as $account) {
-            $return[] = [
-                'id'                => (string)$account->id,
-                'name'              => $account->name,
-                'current_amount'    => (string)$account->pivot->current_amount,
-                'pc_current_amount' => (string)$account->pivot->native_current_amount,
-                // TODO add balance, add left to save.
-            ];
-        }
 
-        return $return;
-    }
 }

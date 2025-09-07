@@ -21,7 +21,7 @@
  */
 
 declare(strict_types=1);
-
+use function Safe\define;
 use Illuminate\Support\Facades\Route;
 
 /*

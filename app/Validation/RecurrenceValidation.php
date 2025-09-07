@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use Carbon\Carbon;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;

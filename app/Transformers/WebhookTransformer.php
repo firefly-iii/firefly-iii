@@ -54,9 +54,6 @@ class WebhookTransformer extends AbstractTransformer
             'triggers'   => $webhook->meta['triggers'],
             'deliveries' => $webhook->meta['deliveries'],
             'responses'  => $webhook->meta['responses'],
-            //            'trigger'    => $this->getEnum('trigger', $webhook->trigger),
-            //            'response'   => $this->getEnum('response', $webhook->response),
-            //            'delivery'   => $this->getEnum('delivery', $webhook->delivery),
             'url'        => $webhook->url,
             'links'      => [
                 [
@@ -65,17 +62,5 @@ class WebhookTransformer extends AbstractTransformer
                 ],
             ],
         ];
-    }
-
-    private function getEnum(string $type, int $value): string
-    {
-        if ('trigger' === $type) {
-            return WebhookTrigger::from($value)->name;
-        }
-        if ('response' === $type) {
-            return WebhookResponse::from($value)->name;
-        }
-
-        return WebhookDelivery::from($value)->name;
     }
 }

@@ -25,6 +25,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use FireflyIII\Exceptions\Handler;
+use function Safe\realpath;
 
 /*
 |--------------------------------------------------------------------------
