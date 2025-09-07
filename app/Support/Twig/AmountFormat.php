@@ -164,7 +164,7 @@ class AmountFormat extends AbstractExtension
 
                 try {
                     $currency = Amount::getTransactionCurrencyByCode($code);
-                } catch(FireflyException) {
+                } catch (FireflyException) {
                     Log::error(sprintf('Could not find currency with code "%s". Fallback to primary currency.', $code));
                     $currency = Amount::getPrimaryCurrency();
                     Log::error(sprintf('Fallback currency is "%s".', $currency->code));

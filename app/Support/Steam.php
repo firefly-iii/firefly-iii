@@ -524,6 +524,7 @@ class Steam
         $singleton = PreferencesSingleton::getInstance();
         foreach ($others as $key => $amount) {
             $preference = $singleton->getPreference($key);
+
             try {
                 $currency = $preference ?? Amount::getTransactionCurrencyByCode($key);
             } catch (FireflyException) {
