@@ -22,6 +22,7 @@
 
 declare(strict_types=1);
 use function Safe\parse_url;
+
 return [
     /*
     |--------------------------------------------------------------------------

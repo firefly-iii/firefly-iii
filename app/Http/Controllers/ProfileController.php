@@ -412,7 +412,7 @@ class ProfileController extends Controller
         // found user.which email address to return to?
         $set   = app('preferences')->beginsWith($user, 'previous_email_');
 
-        /** @var string|null $match */
+        /** @var null|string $match */
         $match = null;
         foreach ($set as $entry) {
             $hashed = hash('sha256', sprintf('%s%s', (string) config('app.key'), $entry->data));

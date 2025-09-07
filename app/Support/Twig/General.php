@@ -184,11 +184,11 @@ class General extends AbstractExtension
             static function (string $string): string {
                 $proto = parse_url($string, PHP_URL_SCHEME);
                 $host  = parse_url($string, PHP_URL_HOST);
-                if(is_array($host)) {
-                    $host = join(' ', $host);
+                if (is_array($host)) {
+                    $host = implode(' ', $host);
                 }
-                if(is_array($proto)) {
-                    $proto = join(' ', $proto);
+                if (is_array($proto)) {
+                    $proto = implode(' ', $proto);
                 }
 
                 return e(sprintf('%s://%s', $proto, $host));

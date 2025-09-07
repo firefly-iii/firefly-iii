@@ -22,6 +22,7 @@
 
 declare(strict_types=1);
 use function Safe\realpath;
+
 $paths = [realpath(base_path('resources/views'))];
 if ('v2' === env('FIREFLY_III_LAYOUT')) {
     $paths = [
