@@ -72,7 +72,7 @@ if (!function_exists('stringIsEqual')) {
 }
 
 $app = new Application(
-    (string)realpath(__DIR__ . '/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*
