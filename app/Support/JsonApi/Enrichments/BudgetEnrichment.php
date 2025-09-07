@@ -43,8 +43,6 @@ use Illuminate\Support\Facades\Log;
 class BudgetEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
-    private bool                $convertToPrimary;
-    private TransactionCurrency $primaryCurrency;
     private User                $user;
     private UserGroup           $userGroup;
     private array               $ids           = [];
@@ -60,8 +58,6 @@ class BudgetEnrichment implements EnrichmentInterface
 
     public function __construct()
     {
-        $this->convertToPrimary = Amount::convertToPrimary();
-        $this->primaryCurrency  = Amount::getPrimaryCurrency();
     }
 
     public function enrich(Collection $collection): Collection

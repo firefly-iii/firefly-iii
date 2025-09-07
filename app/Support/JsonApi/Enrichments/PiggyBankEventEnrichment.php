@@ -39,8 +39,8 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventEnrichment implements EnrichmentInterface
 {
-    private User       $user;
-    private UserGroup  $userGroup;
+    private User       $user; // @phpstan-ignore-line
+    private UserGroup  $userGroup; // @phpstan-ignore-line
     private Collection $collection;
     private array      $ids               = [];
     private array      $journalIds        = [];

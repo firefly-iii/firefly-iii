@@ -146,7 +146,7 @@ trait ConvertsDataTypes
         // clear zalgo text (TODO also in API v2)
         $string = preg_replace('/(\pM{2})\pM+/u', '\1', $string);
 
-        return trim((string)$string);
+        return trim($string);
     }
 
     public function convertIban(string $field): string

@@ -57,7 +57,7 @@ class RecurringEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
     private array               $ids                   = [];
-    private array               $transactionTypeIds    = [];
+//    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
     private array               $notes                 = [];
     private array               $repetitions           = [];
@@ -123,9 +123,9 @@ class RecurringEnrichment implements EnrichmentInterface
         /** @var Recurrence $recurrence */
         foreach ($this->collection as $recurrence) {
             $id                            = (int)$recurrence->id;
-            $typeId                        = (int)$recurrence->transaction_type_id;
+//            $typeId                        = (int)$recurrence->transaction_type_id;
             $this->ids[]                   = $id;
-            $this->transactionTypeIds[$id] = $typeId;
+            //$this->transactionTypeIds[$id] = $typeId;
         }
         $this->ids = array_unique($this->ids);
 
@@ -410,7 +410,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
             // this should refer to another array, were rtIds can be used to find the recurrence.
             $recurrenceId  = $this->recurrenceIds[$transactionId] ?? 0;
-            $name          = (string)$entry->name ?? '';
+            $name          = (string)($entry->name ?? '');
             if (0 === $recurrenceId) {
                 Log::error(sprintf('Could not find recurrence ID for recurrence transaction ID %d', $transactionId));
 

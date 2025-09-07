@@ -440,7 +440,7 @@ class AccountEnrichment implements EnrichmentInterface
     private function sortData(): void
     {
         $dbParams = config('firefly.allowed_db_sort_parameters.Account', []);
-        /** @var array<int,<string,string> $parameter */
+        /** @var array $parameter */
         foreach ($this->sort as $parameter) {
             if (in_array($parameter[0], $dbParams, true)) {
                 continue;

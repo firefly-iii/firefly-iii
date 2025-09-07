@@ -43,8 +43,8 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup;
+    private User                $user; // @phpstan-ignore-line
+    private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
     private array               $ids           = [];
     private array               $currencyIds   = [];
@@ -55,6 +55,8 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private array               $mappedObjects = [];
     private TransactionCurrency $primaryCurrency;
     private array               $amounts       = [];
+    private array $accounts=  [];
+    private array $objectGroups=  [];
 
     public function __construct()
     {

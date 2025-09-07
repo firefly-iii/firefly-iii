@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private User                $user;
-    private UserGroup           $userGroup;
+    private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
     private array               $ids              = [];
     private array               $notes            = [];

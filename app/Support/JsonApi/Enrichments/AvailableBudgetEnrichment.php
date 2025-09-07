@@ -40,9 +40,8 @@ use Override;
 
 class AvailableBudgetEnrichment implements EnrichmentInterface
 {
-    private User                                   $user;
-    private UserGroup                              $userGroup;
-    private TransactionCurrency                    $primaryCurrency;
+    private User                                   $user; // @phpstan-ignore-line
+    private UserGroup                              $userGroup;  // @phpstan-ignore-line
     private bool                                   $convertToPrimary;
     private array                                  $ids                   = [];
     private array                                  $currencyIds           = [];
@@ -57,12 +56,9 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
 
 
-    private ?Carbon $start                                                = null;
-    private ?Carbon $end                                                  = null;
-
     public function __construct()
     {
-        $this->primaryCurrency    = Amount::getPrimaryCurrency();
+        //$this->primaryCurrency    = Amount::getPrimaryCurrency();
         $this->convertToPrimary   = Amount::convertToPrimary();
         $this->noBudgetRepository = app(NoBudgetRepositoryInterface::class);
         $this->opsRepository      = app(OperationsRepositoryInterface::class);
@@ -124,8 +120,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $start               = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
         $end                 = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
         $allActive           = $this->repository->getActiveBudgets();
-        $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive, null);
-        $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end, null, null, null);
+        $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive);
+        $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end);
         foreach ($this->collection as $availableBudget) {
             $id                             = (int)$availableBudget->id;
             $currencyId                     = $this->currencyIds[$id];

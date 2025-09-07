@@ -53,9 +53,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array          $metaData        = [];
     private array          $notes           = [];
     private array          $tags            = [];
-    private User           $user;
+    private User           $user; // @phpstan-ignore-line
     private readonly TransactionCurrency $primaryCurrency;
-    private UserGroup      $userGroup;
+    private UserGroup      $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -177,7 +177,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
             ->whereIn('attachable_id', $this->journalIds)
             ->where('attachable_type', TransactionJournal::class)
             ->groupBy('attachable_id')
-            ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')]) // @phpstan-ignore-line
+            ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')])
             ->toArray()
         ;
         foreach ($attachments as $row) {

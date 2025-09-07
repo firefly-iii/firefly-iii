@@ -43,8 +43,8 @@ use stdClass;
 class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private User       $user;
-    private UserGroup  $userGroup;
+    private User       $user; // @phpstan-ignore-line
+    private UserGroup  $userGroup; // @phpstan-ignore-line
     private array      $ids          = [];
     private array      $deliveries   = [];
     private array      $responses    = [];
