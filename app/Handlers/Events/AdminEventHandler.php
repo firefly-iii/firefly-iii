@@ -140,10 +140,10 @@ class AdminEventHandler
 
                 break;
 
-//            case 'ntfy':
-//                $class = OwnerTestNotificationNtfy::class;
-//
-//                break;
+                //            case 'ntfy':
+                //                $class = OwnerTestNotificationNtfy::class;
+                //
+                //                break;
 
             case 'pushover':
                 $class = OwnerTestNotificationPushover::class;

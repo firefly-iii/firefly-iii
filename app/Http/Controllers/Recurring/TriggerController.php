@@ -60,6 +60,7 @@ class TriggerController extends Controller
             }
         );
     }
+
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse
     {
         $all                        = $request->getAll();

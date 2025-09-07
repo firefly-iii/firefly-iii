@@ -65,8 +65,8 @@ class CreateController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.create_new_recurrence'));
 
-                $this->repository  = app(RecurringRepositoryInterface::class);
-                $this->budgetRepos = app(BudgetRepositoryInterface::class);
+                $this->repository     = app(RecurringRepositoryInterface::class);
+                $this->budgetRepos    = app(BudgetRepositoryInterface::class);
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
 
@@ -115,7 +115,7 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds',  'budgets')
+            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'budgets')
         );
     }
 

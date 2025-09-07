@@ -72,20 +72,20 @@ class UserRegistration extends Notification
         ;
     }
 
-//    /**
-//     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-//     */
-//    public function toNtfy(OwnerNotifiable $notifiable): Message
-//    {
-//        Log::debug('Now in toNtfy() for (Admin) UserRegistration');
-//        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.registered_subject_admin'));
-//        $message->body((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]));
-//
-//        return $message;
-//    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        Log::debug('Now in toNtfy() for (Admin) UserRegistration');
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.registered_subject_admin'));
+    //        $message->body((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

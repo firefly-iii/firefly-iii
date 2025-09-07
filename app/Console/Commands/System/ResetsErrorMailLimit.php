@@ -25,11 +25,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\System;
 
-use function Safe\file_put_contents;
-use function Safe\json_encode;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Command\Command as CommandAlias;
+
+use function Safe\file_put_contents;
+use function Safe\json_encode;
 
 class ResetsErrorMailLimit extends Command
 {

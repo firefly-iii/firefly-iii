@@ -184,6 +184,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 if ($model instanceof Budget) {
                     $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($model->user);
+
                     /** @var Budget $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetTransformer();
@@ -197,6 +198,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $parameters              = new ParameterBag();
                     $parameters->set('start', $model->start_date);
                     $parameters->set('end', $model->end_date);
+
                     /** @var BudgetLimit $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetLimitTransformer();

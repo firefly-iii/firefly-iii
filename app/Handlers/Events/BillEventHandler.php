@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use function Safe\json_encode;
 use Exception;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
@@ -34,6 +33,8 @@ use FireflyIII\Notifications\User\SubscriptionsOverdueReminder;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+
+use function Safe\json_encode;
 
 /**
  * Class BillEventHandler

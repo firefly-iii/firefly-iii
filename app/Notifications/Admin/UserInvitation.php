@@ -73,20 +73,20 @@ class UserInvitation extends Notification
         ;
     }
 
-//    /**
-//     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-//     */
-//    public function toNtfy(OwnerNotifiable $notifiable): Message
-//    {
-//        Log::debug('Now in toNtfy() for UserInvitation');
-//        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-//        $message  = new Message();
-//        $message->topic($settings['ntfy_topic']);
-//        $message->title((string) trans('email.invitation_created_subject'));
-//        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
-//
-//        return $message;
-//    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        Log::debug('Now in toNtfy() for UserInvitation');
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.invitation_created_subject'));
+    //        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

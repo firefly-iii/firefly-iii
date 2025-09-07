@@ -144,9 +144,10 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectMetaData(): void
     {
-        $set = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'BIC', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
-                          ->whereIn('account_id', $this->ids)
-                          ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray();
+        $set                 = AccountMeta::whereIn('name', ['is_multi_currency', 'include_net_worth', 'currency_id', 'account_role', 'account_number', 'BIC', 'liability_direction', 'interest', 'interest_period', 'current_debt'])
+            ->whereIn('account_id', $this->ids)
+            ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data'])->toArray()
+        ;
 
         /** @var array $entry */
         foreach ($set as $entry) {
@@ -172,9 +173,10 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', Account::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Account::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -184,14 +186,15 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectLocations(): void
     {
         $locations = Location::query()->whereIn('locatable_id', $this->ids)
-                             ->where('locatable_type', Account::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray();
+            ->where('locatable_type', Account::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray()
+        ;
         foreach ($locations as $location) {
             $this->locations[(int)$location['locatable_id']]
                 = [
-                'latitude'   => (float)$location['latitude'],
-                'longitude'  => (float)$location['longitude'],
-                'zoom_level' => (int)$location['zoom_level'],
-            ];
+                    'latitude'   => (float)$location['latitude'],
+                    'longitude'  => (float)$location['longitude'],
+                    'zoom_level' => (int)$location['zoom_level'],
+                ];
         }
         Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
@@ -206,19 +209,20 @@ class AccountEnrichment implements EnrichmentInterface
             ->setUserGroup($this->userGroup)
             ->setAccounts($this->collection)
             ->withAccountInformation()
-            ->setTypes([TransactionTypeEnum::OPENING_BALANCE->value]);
-        $journals = $collector->getExtractedJournals();
+            ->setTypes([TransactionTypeEnum::OPENING_BALANCE->value])
+        ;
+        $journals  = $collector->getExtractedJournals();
         foreach ($journals as $journal) {
             $this->openingBalances[(int)$journal['source_account_id']]
                 = [
-                'amount' => Steam::negative($journal['amount']),
-                'date'   => $journal['date'],
-            ];
+                    'amount' => Steam::negative($journal['amount']),
+                    'date'   => $journal['date'],
+                ];
             $this->openingBalances[(int)$journal['destination_account_id']]
                 = [
-                'amount' => Steam::positive($journal['amount']),
-                'date'   => $journal['date'],
-            ];
+                    'amount' => Steam::positive($journal['amount']),
+                    'date'   => $journal['date'],
+                ];
         }
     }
 
@@ -236,9 +240,9 @@ class AccountEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Account $item) {
-            $id                      = (int)$item->id;
-            $item->full_account_type = $this->accountTypes[(int)$item->account_type_id] ?? null;
-            $meta                    = [
+            $id                           = (int)$item->id;
+            $item->full_account_type      = $this->accountTypes[(int)$item->account_type_id] ?? null;
+            $meta                         = [
                 'currency'               => null,
                 'location'               => [
                     'latitude'   => null,
@@ -285,30 +289,30 @@ class AccountEnrichment implements EnrichmentInterface
 
             // add balances
             // get currencies:
-            $currency = $this->primaryCurrency; // assume primary currency
+            $currency                     = $this->primaryCurrency; // assume primary currency
             if (null !== $meta['currency']) {
                 $currency = $meta['currency'];
             }
 
             // get the current balance:
-            $date = $this->getDate();
+            $date                         = $this->getDate();
             // $finalBalance            = Steam::finalAccountBalance($item, $date, $this->primaryCurrency, $this->convertToPrimary);
-            $finalBalance      = $this->balances[$id];
-            $balanceDifference = $this->getBalanceDifference($id, $currency);
+            $finalBalance                 = $this->balances[$id];
+            $balanceDifference            = $this->getBalanceDifference($id, $currency);
             Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
 
             // collect current balances:
-            $currentBalance = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
-            $openingBalance = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
-            $virtualBalance = Steam::bcround($item->virtual_balance ?? '0', $currency->decimal_places);
-            $debtAmount     = $meta['current_debt'] ?? null;
+            $currentBalance               = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
+            $openingBalance               = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
+            $virtualBalance               = Steam::bcround($item->virtual_balance ?? '0', $currency->decimal_places);
+            $debtAmount                   = $meta['current_debt'] ?? null;
 
             // set some pc_ default values to NULL:
-            $pcCurrentBalance    = null;
-            $pcOpeningBalance    = null;
-            $pcVirtualBalance    = null;
-            $pcDebtAmount        = null;
-            $pcBalanceDifference = null;
+            $pcCurrentBalance             = null;
+            $pcOpeningBalance             = null;
+            $pcVirtualBalance             = null;
+            $pcDebtAmount                 = null;
+            $pcBalanceDifference          = null;
 
             // convert to primary currency if needed:
             if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
@@ -347,7 +351,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'pc_balance_difference' => $pcBalanceDifference,
             ];
             // end add balances
-            $item->meta = $meta;
+            $item->meta                   = $meta;
 
             return $item;
         });
@@ -369,12 +373,13 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function collectObjectGroups(): void
     {
-        $set = DB::table('object_groupables')
-                 ->whereIn('object_groupable_id', $this->ids)
-                 ->where('object_groupable_type', Account::class)
-                 ->get(['object_groupable_id', 'object_group_id']);
+        $set    = DB::table('object_groupables')
+            ->whereIn('object_groupable_id', $this->ids)
+            ->where('object_groupable_type', Account::class)
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
@@ -426,8 +431,8 @@ class AccountEnrichment implements EnrichmentInterface
         if (0 === count($startBalance) || 0 === count($endBalance)) {
             return null;
         }
-        $start = $startBalance[$currency->code] ?? '0';
-        $end   = $endBalance[$currency->code] ?? '0';
+        $start        = $startBalance[$currency->code] ?? '0';
+        $end          = $endBalance[$currency->code] ?? '0';
 
         return bcsub($end, $start);
     }
@@ -440,22 +445,25 @@ class AccountEnrichment implements EnrichmentInterface
     private function sortData(): void
     {
         $dbParams = config('firefly.allowed_db_sort_parameters.Account', []);
+
         /** @var array $parameter */
         foreach ($this->sort as $parameter) {
             if (in_array($parameter[0], $dbParams, true)) {
                 continue;
             }
+
             switch ($parameter[0]) {
                 default:
                     throw new FireflyException(sprintf('Account enrichment cannot sort on field "%s"', $parameter[0]));
+
                 case 'current_balance':
                 case 'pc_current_balance':
                     $this->collection = $this->collection->sortBy(static function (Account $account) use ($parameter) {
                         return $account->meta['balances'][$parameter[0]] ?? '0';
                     }, SORT_NUMERIC, 'desc' === $parameter[1]);
+
                     break;
             }
         }
     }
-
 }
