@@ -40,9 +40,9 @@ class UpgradesCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
-    protected $description = 'Upgrade user currency preferences';
+    protected $description          = 'Upgrade user currency preferences';
 
-    protected $signature = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -82,7 +82,7 @@ class UpgradesCurrencyPreferences extends Command
             $this->upgradeGroupPreferences($group);
         }
 
-        $users = User::get();
+        $users  = User::get();
 
         /** @var User $user */
         foreach ($users as $user) {
@@ -119,6 +119,7 @@ class UpgradesCurrencyPreferences extends Command
 
         // set the default currency for the user and for the group:
         $preference = $this->getPreference($user);
+
         try {
             $primaryCurrency = Amount::getTransactionCurrencyByCode($preference);
         } catch (FireflyException) {

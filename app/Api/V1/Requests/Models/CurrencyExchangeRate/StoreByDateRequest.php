@@ -55,6 +55,7 @@ class StoreByDateRequest extends FormRequest
 
     /**
      * The rules that the incoming request must be matched against.
+     *
      * @return array<string, string>
      */
     public function rules(): array
@@ -85,6 +86,7 @@ class StoreByDateRequest extends FormRequest
 
                         continue;
                     }
+
                     try {
                         $to = Amount::getTransactionCurrencyByCode((string)$key);
                     } catch (FireflyException) {
