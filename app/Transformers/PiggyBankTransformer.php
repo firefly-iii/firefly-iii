@@ -107,6 +107,4 @@ class PiggyBankTransformer extends AbstractTransformer
             ],
         ];
     }
-
-
 }

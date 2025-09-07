@@ -21,8 +21,9 @@
  */
 
 declare(strict_types=1);
-use function Safe\define;
 use Illuminate\Support\Facades\Route;
+
+use function Safe\define;
 
 /*
  * ____    ____  __     .______        ______    __    __  .___________. _______     _______.

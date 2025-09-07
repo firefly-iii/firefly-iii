@@ -103,7 +103,7 @@ trait ConvertsDataTypes
     {
         // assume this all works, because the validator would have caught any errors.
         $parameter      = (string)request()->query->get($field);
-        if('' === $parameter) {
+        if ('' === $parameter) {
             return [];
         }
         $parts          = explode(',', $parameter);

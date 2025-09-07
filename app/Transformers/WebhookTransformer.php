@@ -24,9 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use FireflyIII\Enums\WebhookDelivery;
-use FireflyIII\Enums\WebhookResponse;
-use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Models\Webhook;
 
 /**

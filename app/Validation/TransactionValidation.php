@@ -296,7 +296,7 @@ trait TransactionValidation
             return true;
         }
 
-        return  $this->isAsset($account);
+        return $this->isAsset($account);
     }
 
     private function isLiability(Account $account): bool
