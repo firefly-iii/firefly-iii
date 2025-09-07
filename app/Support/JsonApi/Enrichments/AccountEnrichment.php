@@ -60,7 +60,7 @@ class AccountEnrichment implements EnrichmentInterface
     private array               $currencies      = [];
     private array               $locations       = [];
     private array               $meta            = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private array               $notes           = [];
     private array               $openingBalances = [];
     private User                $user;
@@ -69,7 +69,7 @@ class AccountEnrichment implements EnrichmentInterface
     private ?Carbon             $date            = null;
     private ?Carbon             $start           = null;
     private ?Carbon             $end             = null;
-    private bool                $convertToPrimary;
+    private readonly bool                $convertToPrimary;
     private array               $balances        = [];
     private array               $startBalances   = [];
     private array               $endBalances     = [];
@@ -365,7 +365,7 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectBalances(): void
     {
         $this->balances = Steam::accountsBalancesOptimized($this->collection, $this->getDate(), $this->primaryCurrency, $this->convertToPrimary);
-        if (null !== $this->start && null !== $this->end) {
+        if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
             $this->startBalances = Steam::accountsBalancesOptimized($this->collection, $this->start, $this->primaryCurrency, $this->convertToPrimary);
             $this->endBalances   = Steam::accountsBalancesOptimized($this->collection, $this->end, $this->primaryCurrency, $this->convertToPrimary);
         }
@@ -395,7 +395,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function setDate(?Carbon $date): void
     {
-        if (null !== $date) {
+        if ($date instanceof Carbon) {
             $date->endOfDay();
             Log::debug(sprintf('Date is now %s', $date->toW3cString()));
         }
@@ -404,7 +404,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function getDate(): Carbon
     {
-        if (null === $this->date) {
+        if (!$this->date instanceof Carbon) {
             return now();
         }
 
@@ -423,7 +423,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function getBalanceDifference(int $id, TransactionCurrency $currency): ?string
     {
-        if (null === $this->start || null === $this->end) {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
             return null;
         }
         $startBalance = $this->startBalances[$id] ?? [];
@@ -458,9 +458,7 @@ class AccountEnrichment implements EnrichmentInterface
 
                 case 'current_balance':
                 case 'pc_current_balance':
-                    $this->collection = $this->collection->sortBy(static function (Account $account) use ($parameter) {
-                        return $account->meta['balances'][$parameter[0]] ?? '0';
-                    }, SORT_NUMERIC, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(static fn(Account $account) => $account->meta['balances'][$parameter[0]] ?? '0', SORT_NUMERIC, 'desc' === $parameter[1]);
 
                     break;
             }

@@ -42,7 +42,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 {
     private User                                   $user; // @phpstan-ignore-line
     private UserGroup                              $userGroup;  // @phpstan-ignore-line
-    private bool                                   $convertToPrimary;
+    private readonly bool                                   $convertToPrimary;
     private array                                  $ids                   = [];
     private array                                  $currencyIds           = [];
     private array                                  $currencies            = [];

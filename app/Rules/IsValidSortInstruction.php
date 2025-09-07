@@ -28,11 +28,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsValidSortInstruction implements ValidationRule
 {
-    private string $class;
-
-    public function __construct(string $class)
+    public function __construct(private readonly string $class)
     {
-        $this->class = $class;
     }
 
     public function validate(string $attribute, mixed $value, Closure $fail): void

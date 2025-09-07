@@ -72,7 +72,7 @@ trait UserGroupTrait
 
             return;
         }
-        $class = null === $user ? 'NULL' : $user::class;
+        $class = $user instanceof Authenticatable ? $user::class : 'NULL';
 
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }

@@ -133,9 +133,9 @@ class BudgetController extends Controller
             $row['pc_left']      = '0';
             $row['pc_overspent'] = '0';
 
-            if (null !== $limit) {
+            if ($limit instanceof BudgetLimit) {
                 $row['budgeted']  = $limit->amount;
-                $row['left']      = bcsub($row['budgeted'], bcmul($row['spent'], '-1'));
+                $row['left']      = bcsub((string) $row['budgeted'], bcmul((string) $row['spent'], '-1'));
                 $row['overspent'] = bcmul($row['left'], '-1');
                 $row['left']      = 1 === bccomp($row['left'], '0') ? $row['left'] : '0';
                 $row['overspent'] = 1 === bccomp($row['overspent'], '0') ? $row['overspent'] : '0';

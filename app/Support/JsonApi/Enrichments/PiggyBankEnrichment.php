@@ -53,7 +53,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
     // private array               $accountCurrencies = [];
     private array               $notes         = [];
     private array               $mappedObjects = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private array               $amounts       = [];
     private array $accounts                    = [];
     private array $objectGroups                = [];
@@ -271,7 +271,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
      */
     private function getSuggestedMonthlyAmount(?Carbon $startDate, ?Carbon $targetDate, ?string $targetAmount, string $currentAmount): string
     {
-        if (null === $targetAmount || null === $targetDate || null === $startDate) {
+        if (null === $targetAmount || !$targetDate instanceof Carbon || !$startDate instanceof Carbon) {
             return '0';
         }
         $savePerMonth = '0';

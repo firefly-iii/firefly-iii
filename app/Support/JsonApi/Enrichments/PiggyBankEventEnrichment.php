@@ -27,7 +27,6 @@ namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Amount;

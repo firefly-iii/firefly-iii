@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Chart;
 
+use Override;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 
@@ -39,7 +40,7 @@ final class BalanceControllerTest extends TestCase
     private $user;
 
     #[Override]
-    #[\Override]
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

@@ -161,7 +161,7 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function collectExpenses(): void
     {
-        if (null !== $this->start && null !== $this->end) {
+        if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);

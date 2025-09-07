@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
-use FireflyIII\Support\Facades\Amount;
 use Illuminate\Validation\Validator;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
@@ -97,7 +97,7 @@ class StoreRequest extends FormRequest
                 // validate start before end only if both are there.
                 $data          = $validator->getData();
                 $currency      = $this->getCurrencyFromData($validator, $data);
-                if (null === $currency) {
+                if (!$currency instanceof TransactionCurrency) {
                     return;
                 }
                 $targetAmount  = (string) ($data['target_amount'] ?? '0');

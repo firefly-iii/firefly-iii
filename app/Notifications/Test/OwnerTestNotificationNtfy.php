@@ -25,11 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Ntfy\Message;
-use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 // use Illuminate\Notifications\Slack\SlackMessage;
 

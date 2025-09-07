@@ -34,7 +34,7 @@ use FireflyIII\Support\Facades\Amount;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-    private TransactionCurrency                   $primaryCurrency;
+    private readonly TransactionCurrency                   $primaryCurrency;
 
     /**
      * PiggyBankTransformer constructor.
@@ -53,8 +53,8 @@ class PiggyBankTransformer extends AbstractTransformer
     {
         // Amounts, depending on 0.0 state of target amount
         $percentage = null;
-        if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp($piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
-            $percentage = (int)bcmul(bcdiv($piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
+        if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp((string) $piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
+            $percentage = (int)bcmul(bcdiv((string) $piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
         }
         $startDate  = $piggyBank->start_date?->toAtomString();
         $targetDate = $piggyBank->target_date?->toAtomString();

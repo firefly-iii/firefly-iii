@@ -49,7 +49,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private User                $user;
     private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
-    private bool                $convertToPrimary;
+    private readonly bool                $convertToPrimary;
     private ?Carbon             $start           = null;
     private ?Carbon             $end             = null;
     private array               $subscriptionIds = [];
@@ -58,7 +58,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private array               $paidDates       = [];
     private array               $notes           = [];
     private array               $payDates        = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private BillDateCalculator  $calculator;
 
     public function __construct()
@@ -210,7 +210,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     {
         $this->paidDates = [];
         Log::debug('Now in collectPaidDates for bills');
-        if (null === $this->start || null === $this->end) {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
             Log::debug('Parameters are NULL, set empty array');
 
             return;
@@ -274,9 +274,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // At this point the "next match" is exactly after the last time the bill was paid.
             $result                                  = [];
-            $filtered                                = $set->filter(function (TransactionJournal $journal) use ($subscription) {
-                return (int)$journal->bill_id === (int)$subscription->id;
-            });
+            $filtered                                = $set->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
             foreach ($filtered as $entry) {
                 $array    = [
                     'transaction_group_id'            => (string)$entry->transaction_group_id,
@@ -346,9 +344,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
      */
     protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
-        $filtered = $dates->filter(function (TransactionJournal $journal) use ($subscription) {
-            return (int)$journal->bill_id === (int)$subscription->id;
-        });
+        $filtered = $dates->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
         Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
         if (0 === $filtered->count()) {
             return $default;
@@ -392,7 +388,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function collectPayDates(): void
     {
-        if (null === $this->start || null === $this->end) {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
             Log::debug('Parameters are NULL, set empty array');
 
             return;
@@ -440,8 +436,8 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // nullify again when it's outside the current view range.
             if (
-                (null !== $this->start && $nemDate->lt($this->start))
-                || (null !== $this->end && $nemDate->gt($this->end))
+                ($this->start instanceof Carbon && $nemDate->lt($this->start))
+                || ($this->end instanceof Carbon && $nemDate->gt($this->end))
             ) {
                 $nem          = null;
                 $nemDate      = null;
@@ -454,7 +450,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function getNextExpectedMatchDiff(?Carbon $nem, array $payDates): string
     {
-        if (null === $nem) {
+        if (!$nem instanceof Carbon) {
             return trans('firefly.not_expected_period');
         }
         $nemDiff = trans('firefly.not_expected_period');

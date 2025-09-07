@@ -70,7 +70,7 @@ class StoreController extends Controller
         foreach ($data as $date => $rate) {
             $date     = Carbon::createFromFormat('Y-m-d', $date);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
-            if (null !== $existing) {
+            if ($existing instanceof CurrencyExchangeRate) {
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
@@ -101,7 +101,7 @@ class StoreController extends Controller
         foreach ($data['rates'] as $key => $rate) {
             $to       = Amount::getTransactionCurrencyByCode($key);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
-            if (null !== $existing) {
+            if ($existing instanceof CurrencyExchangeRate) {
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);

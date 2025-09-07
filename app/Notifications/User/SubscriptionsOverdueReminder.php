@@ -27,7 +27,6 @@ namespace FireflyIII\Notifications\User;
 
 use Carbon\Carbon;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -63,9 +62,7 @@ class SubscriptionsOverdueReminder extends Notification
                 'bill' => $item['bill'],
             ];
             $current['pay_dates'] = array_map(
-                static function (string $date): string {
-                    return new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js'));
-                },
+                static fn(string $date): string => new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js')),
                 $item['dates']['pay_dates']
             );
             $info[]               = $current;
