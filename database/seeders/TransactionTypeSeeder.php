@@ -36,7 +36,7 @@ class TransactionTypeSeeder extends Seeder
     public function run(): void
     {
         /** @var TransactionTypeEnum $type */
-        foreach (TransactionTypeEnum::cases() as $type) {
+        foreach (TransactionTypeEnum::cases() as $type) { // @phpstan-ignore-line
             if (null === TransactionType::where('type', $type->value)->first()) {
                 try {
                     TransactionType::create(['type' => $type->value]);

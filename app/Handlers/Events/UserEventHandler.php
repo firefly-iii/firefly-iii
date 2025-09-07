@@ -129,7 +129,7 @@ class UserEventHandler
         $groupTitle          = $user->email;
         $index               = 1;
 
-        /** @var UserGroup $group */
+        /** @var UserGroup|null $group */
         $group               = null;
 
         // create a new group.

@@ -157,7 +157,6 @@ abstract class Controller extends BaseController
                 /** @var User $user */
                 $user     = auth()->user();
 
-                /** @var Preference $pageSize */
                 $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }

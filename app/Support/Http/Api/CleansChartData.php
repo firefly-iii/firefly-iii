@@ -43,7 +43,7 @@ trait CleansChartData
         $return = [];
 
         /**
-         * @var mixed $index
+         * @var int $index
          * @var array $array
          */
         foreach ($data as $index => $array) {

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Form;
 
 use Carbon\Carbon;
-use Carbon\Exceptions\InvalidDateException;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Throwable;
@@ -37,7 +36,7 @@ trait FormSupport
 {
     public function multiSelect(string $name, ?array $list = null, mixed $selected = null, ?array $options = null): string
     {
-        $list ??= [];
+        $list     ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -63,7 +62,7 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string) trans('form.'.$name);
+        return (string)trans('form.' . $name);
     }
 
     /**
@@ -71,12 +70,12 @@ trait FormSupport
      */
     protected function expandOptionArray(string $name, $label, ?array $options = null): array
     {
-        $options ??= [];
+        $options                 ??= [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_'.$name;
+        $options['id']           = 'ffInput_' . $name;
         $options['autocomplete'] = 'off';
-        $options['placeholder']  = ucfirst((string) $label);
+        $options['placeholder']  = ucfirst((string)$label);
 
         return $options;
     }
@@ -122,7 +121,7 @@ trait FormSupport
      */
     public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
     {
-        $list ??= [];
+        $list     ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -146,15 +145,6 @@ trait FormSupport
 
     protected function getDate(): Carbon
     {
-        /** @var Carbon $date */
-        $date = null;
-
-        try {
-            $date = today(config('app.timezone'));
-        } catch (InvalidDateException $e) {  // @phpstan-ignore-line
-            app('log')->error($e->getMessage());
-        }
-
-        return $date;
+        return today(config('app.timezone'));
     }
 }

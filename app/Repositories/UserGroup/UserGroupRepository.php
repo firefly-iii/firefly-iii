@@ -53,7 +53,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
             /** @var null|User $user */
-            $user  = $membership->user()->first();
+            $user = $membership->user()->first();
             if (null === $user) {
                 continue;
             }
@@ -82,8 +82,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         // all users are now moved away from user group.
         // time to DESTROY all objects.
         // we have to do this one by one to trigger the necessary observers :(
-        $objects     = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
-            'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
+        $objects = ['availableBudgets', 'bills', 'budgets', 'categories', 'currencyExchangeRates', 'objectGroups',
+                    'recurrences', 'rules', 'ruleGroups', 'tags', 'transactionGroups', 'transactionJournals', 'piggyBanks', 'accounts', 'webhooks',
         ];
         foreach ($objects as $object) {
             foreach ($userGroup->{$object}()->get() as $item) { // @phpstan-ignore-line
@@ -110,7 +110,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId       = $group->id;
+                $groupId = $group->id;
                 if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
@@ -135,15 +135,12 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (!$existingGroup instanceof UserGroup) {
-                $exists        = false;
+                $exists = false;
 
-                /** @var null|UserGroup $existingGroup */
+                /** @var UserGroup $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
-            if (null !== $existingGroup) {
-                // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
-            }
+            $groupName = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999) . microtime()), 0, 4));
             ++$loop;
         }
 
@@ -163,7 +160,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         $data['user'] = $this->user;
 
         /** @var UserGroupFactory $factory */
-        $factory      = app(UserGroupFactory::class);
+        $factory = app(UserGroupFactory::class);
 
         return $factory->create($data);
     }
@@ -194,10 +191,10 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     {
         $userGroup->title = $data['title'];
         $userGroup->save();
-        $currency         = null;
+        $currency = null;
 
         /** @var CurrencyRepositoryInterface $repository */
-        $repository       = app(CurrencyRepositoryInterface::class);
+        $repository = app(CurrencyRepositoryInterface::class);
 
         if (array_key_exists('primary_currency_code', $data)) {
             $repository->setUser($this->user);
@@ -206,7 +203,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
         if (array_key_exists('primary_currency_id', $data) && null === $currency) {
             $repository->setUser($this->user);
-            $currency = $repository->find((int) $data['primary_currency_id']);
+            $currency = $repository->find((int)$data['primary_currency_id']);
         }
         if (null !== $currency) {
             $repository->makePrimary($currency);
@@ -223,17 +220,17 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
      */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
-        $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
+        $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         app('log')->debug('in update membership');
 
         /** @var null|User $user */
-        $user            = null;
+        $user = null;
         if (array_key_exists('id', $data)) {
             /** @var null|User $user */
             $user = User::find($data['id']);
             app('log')->debug('Found user by ID');
         }
-        if (array_key_exists('email', $data) && '' !== (string) $data['email']) {
+        if (array_key_exists('email', $data) && '' !== (string)$data['email']) {
             /** @var null|User $user */
             $user = User::whereEmail($data['email'])->first();
             app('log')->debug('Found user by email');
@@ -251,13 +248,13 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         if (1 === $membershipCount) {
             $lastUserId = $userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
             // if this is also the user we're editing right now, and we remove all of their roles:
-            if ($lastUserId === (int) $user->id && 0 === count($data['roles'])) {
+            if ($lastUserId === (int)$user->id && 0 === count($data['roles'])) {
                 app('log')->debug('User is last in this group, refuse to act');
 
                 throw new FireflyException('You cannot remove the last member from this user group. Delete the user group instead.');
             }
             // if this is also the user we're editing right now, and do not grant them the owner role:
-            if ($lastUserId === (int) $user->id && count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)) {
+            if ($lastUserId === (int)$user->id && count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)) {
                 app('log')->debug('User needs to have owner role in this group, refuse to act');
 
                 throw new FireflyException('The last member in this user group must get or keep the "owner" role.');
@@ -266,9 +263,8 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         if ($membershipCount > 1) {
             // group has multiple members. How many are owner, except the user we're editing now?
             $ownerCount = $userGroup->groupMemberships()
-                ->where('user_role_id', $owner->id)
-                ->where('user_id', '!=', $user->id)->count()
-            ;
+                                    ->where('user_role_id', $owner->id)
+                                    ->where('user_id', '!=', $user->id)->count();
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
             if (
                 0 === $ownerCount

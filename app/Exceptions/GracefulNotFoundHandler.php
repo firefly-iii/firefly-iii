@@ -170,7 +170,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
 
         /** @var null|Account $account */
-        $account   = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
+        $account   = $user->accounts()->withTrashed()->with(['accountType'])->find($accountId);
         if (null === $account) {
             app('log')->error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 
