@@ -330,6 +330,7 @@ class AccountController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key                   = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $field                 = 'amount';
             if (!array_key_exists($key, $result)) {
 
                 // currency info:
@@ -338,7 +339,6 @@ class AccountController extends Controller
                 $currencySymbol        = $journal['currency_symbol'];
                 $currencyCode          = $journal['currency_code'];
                 $currencyDecimalPlaces = $journal['currency_decimal_places'];
-                $field                 = 'amount';
                 if ($this->convertToPrimary && $this->primaryCurrency->id !== $currencyId) {
                     $field                 = 'pc_amount';
                     $currencyName          = $this->primaryCurrency->name;
@@ -437,6 +437,7 @@ class AccountController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             $key                   = sprintf('%d-%d', $journal['category_id'], $journal['currency_id']);
+            $field                 = 'amount';
             if (!array_key_exists($key, $result)) {
 
                 // currency info:
@@ -445,7 +446,6 @@ class AccountController extends Controller
                 $currencySymbol        = $journal['currency_symbol'];
                 $currencyCode          = $journal['currency_code'];
                 $currencyDecimalPlaces = $journal['currency_decimal_places'];
-                $field                 = 'amount';
                 if ($this->convertToPrimary && $this->primaryCurrency->id !== $currencyId) {
                     $field                 = 'pc_amount';
                     $currencyName          = $this->primaryCurrency->name;

@@ -51,7 +51,7 @@ class NetWorth implements NetWorthInterface
     private AccountRepositoryInterface  $accountRepository;
     private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;             // @phpstan-ignore-line
-    private ?UserGroup                  $userGroup = null; // @phpstan-ignore-line
+    private ?UserGroup                  $userGroup = null;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies

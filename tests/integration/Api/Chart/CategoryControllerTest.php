@@ -39,6 +39,7 @@ final class CategoryControllerTest extends TestCase
     private $user;
 
     #[Override]
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

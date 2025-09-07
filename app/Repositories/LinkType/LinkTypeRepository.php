@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
 
-use FireflyIII\Events\DestroyedTransactionLink;
+use Exception;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
-use Exception;
 
 /**
  * Class LinkTypeRepository.
@@ -57,13 +56,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
 
     public function update(LinkType $linkType, array $data): LinkType
     {
-        if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
             $linkType->name = $data['name'];
         }
-        if (array_key_exists('inward', $data) && '' !== (string) $data['inward']) {
+        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
             $linkType->inward = $data['inward'];
         }
-        if (array_key_exists('outward', $data) && '' !== (string) $data['outward']) {
+        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
             $linkType->outward = $data['outward'];
         }
         $linkType->save();
@@ -76,7 +75,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
-        event(new DestroyedTransactionLink($link));
         $link->delete();
 
         return true;
@@ -117,13 +115,12 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     public function getJournalLinks(?LinkType $linkType = null): Collection
     {
         $query = TransactionJournalLink::with(['source', 'destination'])
-            ->leftJoin('transaction_journals as source_journals', 'journal_links.source_id', '=', 'source_journals.id')
-            ->leftJoin('transaction_journals as dest_journals', 'journal_links.destination_id', '=', 'dest_journals.id')
-            ->where('source_journals.user_id', $this->user->id)
-            ->where('dest_journals.user_id', $this->user->id)
-            ->whereNull('source_journals.deleted_at')
-            ->whereNull('dest_journals.deleted_at')
-        ;
+                                       ->leftJoin('transaction_journals as source_journals', 'journal_links.source_id', '=', 'source_journals.id')
+                                       ->leftJoin('transaction_journals as dest_journals', 'journal_links.destination_id', '=', 'dest_journals.id')
+                                       ->where('source_journals.user_id', $this->user->id)
+                                       ->where('dest_journals.user_id', $this->user->id)
+                                       ->whereNull('source_journals.deleted_at')
+                                       ->whereNull('dest_journals.deleted_at');
 
         if ($linkType instanceof LinkType) {
             $query->where('journal_links.link_type_id', $linkType->id);
@@ -152,7 +149,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $merged  = $outward->merge($inward);
 
         return $merged->filter(
-            static fn (TransactionJournalLink $link) => null !== $link->source && null !== $link->destination
+            static fn(TransactionJournalLink $link) => null !== $link->source && null !== $link->destination
         );
     }
 
@@ -175,7 +172,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
-        $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
+        $linkType = $this->find((int)($information['link_type_id'] ?? 0));
 
         if (!$linkType instanceof LinkType) {
             $linkType = $this->findByName($information['link_type_name']);
@@ -191,7 +188,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
             return $existing;
         }
 
-        $link     = new TransactionJournalLink();
+        $link = new TransactionJournalLink();
         $link->linkType()->associate($linkType);
         if ('inward' === $information['direction']) {
             app('log')->debug(sprintf('Link type is inwards ("%s"), so %d is source and %d is destination.', $linkType->inward, $inward->id, $outward->id));
@@ -207,7 +204,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $link->save();
 
         // make note in noteable:
-        $this->setNoteText($link, (string) $information['notes']);
+        $this->setNoteText($link, (string)$information['notes']);
 
         return $link;
     }
@@ -232,9 +229,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
     public function findSpecificLink(LinkType $linkType, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         return TransactionJournalLink::where('link_type_id', $linkType->id)
-            ->where('source_id', $inward->id)
-            ->where('destination_id', $outward->id)->first()
-        ;
+                                     ->where('source_id', $inward->id)
+                                     ->where('destination_id', $outward->id)->first();
     }
 
     /**
@@ -296,7 +292,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
             $journalLink->refresh();
         }
 
-        $journalLink->link_type_id   = $data['link_type_id'] ?? $journalLink->link_type_id;
+        $journalLink->link_type_id = $data['link_type_id'] ?? $journalLink->link_type_id;
         $journalLink->save();
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
             $this->setNoteText($journalLink, $data['notes']);

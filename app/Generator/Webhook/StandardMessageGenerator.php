@@ -184,6 +184,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 if ($model instanceof Budget) {
                     $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($model->user);
+                    /** @var Budget $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetTransformer();
                     $basicMessage['content'] = $transformer->transform($model);
@@ -196,7 +197,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $parameters              = new ParameterBag();
                     $parameters->set('start', $model->start_date);
                     $parameters->set('end', $model->end_date);
-
+                    /** @var BudgetLimit $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetLimitTransformer();
                     $transformer->setParameters($parameters);
@@ -295,7 +296,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->webhooks = $webhooks;
     }
 
-    private function getRelevantResponse(array $triggers, WebhookResponseModel $response, $class): string
+    private function getRelevantResponse(array $triggers, WebhookResponseModel $response, string $class): string
     {
         // return none if none.
         if (WebhookResponse::NONE->name === $response->title) {

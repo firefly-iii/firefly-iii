@@ -34,6 +34,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
+use Safe\Exceptions\UrlException;
 use function Safe\parse_url;
 
 /**
@@ -103,8 +104,12 @@ class ForgotPasswordController extends Controller
      */
     private function validateHost(): void
     {
-        $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
-        if (false === $configuredHost || null === $configuredHost) {
+        try {
+            $configuredHost = parse_url((string)config('app.url'), PHP_URL_HOST);
+        } catch (UrlException $e) {
+            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.',0, $e);
+        }
+        if (!is_string( $configuredHost)) {
             throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
         }
         $host           = request()->host();

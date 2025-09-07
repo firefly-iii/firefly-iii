@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use function Safe\json_encode;
 use Exception;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;

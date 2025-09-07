@@ -39,6 +39,7 @@ final class AccountControllerTest extends TestCase
     private $user;
 
     #[Override]
+    #[\Override]
     protected function setUp(): void
     {
         parent::setUp();

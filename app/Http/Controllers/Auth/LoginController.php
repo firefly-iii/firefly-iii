@@ -249,8 +249,8 @@ class LoginController extends Controller
             $allowReset        = false;
         }
 
-        $email             = $request?->old('email');
-        $remember          = $request?->old('remember');
+        $email             = $request->old('email');
+        $remember          = $request->old('remember');
 
         $storeInCookie     = config('google2fa.store_in_cookie', false);
         if (false !== $storeInCookie) {

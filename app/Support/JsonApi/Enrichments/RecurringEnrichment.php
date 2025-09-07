@@ -25,9 +25,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
+use function Safe\json_decode;
 use Carbon\Carbon;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Account;
@@ -42,7 +42,6 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -73,7 +72,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private array               $accounts              = [];
     private array               $currencies            = [];
     private array               $recurrenceIds         = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private bool                $convertToPrimary      = false;
 
     public function __construct()
@@ -147,9 +146,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                     = $this->collection->filter(function (Recurrence $item) use ($repetition) {
-                return (int)$item->id === (int)$repetition->recurrence_id;
-            })->first();
+            $recurrence                     = $this->collection->filter(fn(Recurrence $item) => (int)$item->id === (int)$repetition->recurrence_id)->first();
             $fromDate                       = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $id                             = (int)$repetition->recurrence_id;
             $repId                          = (int)$repetition->id;

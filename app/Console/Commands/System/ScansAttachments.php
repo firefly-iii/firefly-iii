@@ -78,8 +78,8 @@ class ScansAttachments extends Command
             }
             $tempFileName     = tempnam(sys_get_temp_dir(), 'FireflyIII');
             file_put_contents($tempFileName, $decryptedContent);
-            $attachment->md5  = (string)md5_file($tempFileName);
-            $attachment->mime = (string)mime_content_type($tempFileName);
+            $attachment->md5  = md5_file($tempFileName);
+            $attachment->mime = mime_content_type($tempFileName);
             $attachment->save();
             $this->friendlyInfo(sprintf('Fixed attachment #%d', $attachment->id));
         }
