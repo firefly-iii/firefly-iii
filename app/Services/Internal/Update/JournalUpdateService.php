@@ -221,7 +221,7 @@ class JournalUpdateService
 
     private function hasFields(array $fields): bool
     {
-        return array_any($fields, fn($field) => array_key_exists($field, $this->data));
+        return array_any($fields, fn ($field) => array_key_exists($field, $this->data));
     }
 
     private function getOriginalSourceAccount(): Account
