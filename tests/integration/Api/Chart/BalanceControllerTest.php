@@ -40,7 +40,6 @@ final class BalanceControllerTest extends TestCase
     private $user;
 
     #[Override]
-    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

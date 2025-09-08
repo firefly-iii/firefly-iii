@@ -40,7 +40,6 @@ final class BudgetControllerTest extends TestCase
     private $user;
 
     #[Override]
-    #[Override]
     protected function setUp(): void
     {
         parent::setUp();
