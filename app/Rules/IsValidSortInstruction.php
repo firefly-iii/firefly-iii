@@ -28,9 +28,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsValidSortInstruction implements ValidationRule
 {
-    public function __construct(private readonly string $class)
-    {
-    }
+    public function __construct(private readonly string $class) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {

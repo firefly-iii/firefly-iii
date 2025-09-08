@@ -274,7 +274,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // At this point the "next match" is exactly after the last time the bill was paid.
             $result                                  = [];
-            $filtered                                = $set->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
+            $filtered                                = $set->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
             foreach ($filtered as $entry) {
                 $array    = [
                     'transaction_group_id'            => (string)$entry->transaction_group_id,
@@ -344,7 +344,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
      */
     protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
-        $filtered = $dates->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
+        $filtered = $dates->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
         Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
         if (0 === $filtered->count()) {
             return $default;

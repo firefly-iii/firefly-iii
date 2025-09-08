@@ -181,13 +181,13 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses   = array_map(fn($first) => array_map(function ($second) {
+        $this->expenses   = array_map(fn ($first) => array_map(function ($second) {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);
 
-        $this->pcExpenses = array_map(fn($first) => array_map(function ($second) {
+        $this->pcExpenses = array_map(fn ($first) => array_map(function ($second) {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;
@@ -196,6 +196,6 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        return array_filter($expenses, fn(array $item) => (int)$item['budget_id'] === $budget);
+        return array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
     }
 }

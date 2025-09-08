@@ -62,7 +62,7 @@ class SubscriptionsOverdueReminder extends Notification
                 'bill' => $item['bill'],
             ];
             $current['pay_dates'] = array_map(
-                static fn(string $date): string => new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js')),
+                static fn (string $date): string => new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js')),
                 $item['dates']['pay_dates']
             );
             $info[]               = $current;

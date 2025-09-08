@@ -458,7 +458,7 @@ class AccountEnrichment implements EnrichmentInterface
 
                 case 'current_balance':
                 case 'pc_current_balance':
-                    $this->collection = $this->collection->sortBy(static fn(Account $account) => $account->meta['balances'][$parameter[0]] ?? '0', SORT_NUMERIC, 'desc' === $parameter[1]);
+                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta['balances'][$parameter[0]] ?? '0', SORT_NUMERIC, 'desc' === $parameter[1]);
 
                     break;
             }

@@ -348,7 +348,7 @@ class Steam
             $currency             = $currencies[$account->id];
 
             // second array
-            $accountSum           = array_filter($arrayOfSums, fn($entry) => $entry['account_id'] === $account->id);
+            $accountSum           = array_filter($arrayOfSums, fn ($entry) => $entry['account_id'] === $account->id);
             if (0 === count($accountSum)) {
                 $result[$account->id] = $return;
 

@@ -1177,7 +1177,8 @@ class GroupCollector implements GroupCollectorInterface
             // include budget ID + name (if any)
             ->withBudgetInformation()
             // include bill ID + name (if any)
-            ->withBillInformation();
+            ->withBillInformation()
+        ;
 
         return $this;
     }
