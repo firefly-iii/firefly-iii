@@ -17,23 +17,23 @@
                                 <tbody>
                                 <tr>
                                     <th style="width:10%;">
-                                        <template x-if="'Withdrawal' === groupProperties.transactionType">
+                                        <template x-if="'withdrawal' === groupProperties.transactionType">
                                             <em class="fa fa-solid fa-arrow-left"
                                                 :title="groupProperties.transactionTypeTranslated"></em>
                                         </template>
 
-                                        <template x-if="'Deposit' === groupProperties.transactionType">
+                                        <template x-if="'deposit' === groupProperties.transactionType">
                                             <em class="fa-solid fa-arrow-right"
                                                 :title="groupProperties.transactionTypeTranslated"></em>
                                         </template>
 
-                                        <template x-if="'Transfer' === groupProperties.transactionType">
+                                        <template x-if="'transfer' === groupProperties.transactionType">
                                             <em class="fa-solid fa-rotate"
                                                 :title="groupProperties.transactionTypeTranslated"></em>
                                         </template>
                                         <template
-                                            x-if="'Transfer' !== groupProperties.transactionType && 'Deposit' !== groupProperties.transactionType && 'Withdrawal' !== groupProperties.transactionType">
-                                            <span>TODO missing ICON</span>
+                                            x-if="'transfer' !== groupProperties.transactionType && 'deposit' !== groupProperties.transactionType && 'withdrawal' !== groupProperties.transactionType">
+                                            <span x-text="groupProperties.transactionType"></span>
                                         </template>
                                     </th>
                                     <td><span class="group_title" :data-group="groupProperties.id" x-text="groupProperties.title"></span></td>
@@ -53,6 +53,18 @@
                                 <a class="btn btn-danger" :href="'./transactions/delete/' + groupProperties.id">
                                     <em class="fa-solid fa-trash"></em> {{ __('firefly.delete') }}
                                 </a>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {{ __('firefly.actions') }}
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li x-show="'withdrawal' !== groupProperties.transactionType"><a class="dropdown-item" href="{{ route('transactions.convert.index', ['withdrawal', $transactionGroup['id']]) }}">{{ __('firefly.convert_to_withdrawal') }}</a></li>
+                                        <li x-show="'deposit' !== groupProperties.transactionType"><a class="dropdown-item" href="{{ route('transactions.convert.index', ['deposit', $transactionGroup['id']]) }}">{{ __('firefly.convert_to_deposit') }}</a></li>
+                                        <li x-show="'transfer' !== groupProperties.transactionType"><a class="dropdown-item" href="{{ route('transactions.convert.index', ['transfer', $transactionGroup['id']]) }}">{{ __('firefly.convert_to_transfer') }}</a></li>
+                                        <li><a class="dropdown-item" href="#">{{ __('firefly.clone') }}</a></li>
+                                        <li><a class="dropdown-item" href="#">{{ __('firefly.clone_and_edit') }}</a></li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -70,25 +82,25 @@
                                         <em class="fa-solid fa-money-bill-wave" title="{{ __('firefly.amount') }}"></em>
                                     </th>
                                     <td>
-                                        <template x-if="'Withdrawal' === groupProperties.transactionType">
+                                        <template x-if="'withdrawal' === groupProperties.transactionType">
                                             <template x-for="(amount, code) in amounts">
                                                 <span class="text-danger" x-text="formatMoney(amount*-1, code)"></span>
                                             </template>
                                         </template>
 
-                                        <template x-if="'Deposit' === groupProperties.transactionType">
+                                        <template x-if="'deposit' === groupProperties.transactionType">
                                             <template x-for="(amount, code) in amounts">
                                                 <span class="text-success" x-text="formatMoney(amount, code)"></span>
                                             </template>
                                         </template>
 
-                                        <template x-if="'Transfer' === groupProperties.transactionType">
+                                        <template x-if="'transfer' === groupProperties.transactionType">
                                             <template x-for="(amount, code) in amounts">
                                                 <span class="text-info" x-text="formatMoney(amount, code)"></span>
                                             </template>
                                         </template>
                                         <template
-                                            x-if="'Transfer' !== groupProperties.transactionType && 'Deposit' !== groupProperties.transactionType && 'Withdrawal' !== groupProperties.transactionType">
+                                            x-if="'transfer' !== groupProperties.transactionType && 'deposit' !== groupProperties.transactionType && 'withdrawal' !== groupProperties.transactionType">
                                             <span>TODO PARSE MISSING AMOUNT</span>
                                         </template>
                                     </td>
@@ -164,33 +176,33 @@
                                                :title="entry.source_account.name"
                                                x-text="entry.source_account.name"></a>
                                             &rarr;
-                                            <template x-if="'Withdrawal' === groupProperties.transactionType">
+                                            <template x-if="'withdrawal' === groupProperties.transactionType">
                                                 <span class="text-danger"
                                                       x-text="formatMoney(entry.amount*-1, entry.currency_code)"></span>
                                             </template>
 
-                                            <template x-if="'Deposit' === groupProperties.transactionType">
+                                            <template x-if="'deposit' === groupProperties.transactionType">
                                                 <span class="text-success"
                                                       x-text="formatMoney(entry.amount, entry.currency_code)"></span>
                                             </template>
 
-                                            <template x-if="'Transfer' === groupProperties.transactionType">
+                                            <template x-if="'transfer' === groupProperties.transactionType">
                                                 <span class="text-info"
                                                       x-text="formatMoney(entry.amount, entry.currency_code)"></span>
                                             </template>
                                             <template
-                                                x-if="null !== entry.foreign_currency_code && 'Withdrawal' === groupProperties.transactionType">
+                                                x-if="null !== entry.foreign_currency_code && '' !== entry.foreign_currency_code && 'withdrawal' === groupProperties.transactionType">
                                                 <span class="text-muted"
-                                                      x-text="formatMoney(entry.foreign_amount*-1, entry.foreign_currency_code)"></span>
+                                                      x-text="formatMoney(entry.foreign_amount*-1, entry.foreign_currency_code) + 'y'"></span>
                                             </template>
                                             <template
-                                                x-if="null !== entry.foreign_currency_code && 'Withdrawal' !== groupProperties.transactionType">
+                                                x-if="null !== entry.foreign_currency_code && '' !== entry.foreign_currency_code && 'withdrawal' !== groupProperties.transactionType">
                                                 <span class="text-muted"
-                                                      x-text="formatMoney(entry.foreign_amount, entry.foreign_currency_code)"></span>
+                                                      x-text="formatMoney(entry.foreign_amount, entry.foreign_currency_code) + 'x'"></span>
                                             </template>
 
                                             <template
-                                                x-if="'Transfer' !== groupProperties.transactionType && 'Deposit' !== groupProperties.transactionType && 'Withdrawal' !== groupProperties.transactionType">
+                                                x-if="'transfer' !== groupProperties.transactionType && 'deposit' !== groupProperties.transactionType && 'withdrawal' !== groupProperties.transactionType">
                                                 <span>TODO PARSE MISSING AMOUNT</span>
                                             </template>
                                             &rarr;
