@@ -1811,16 +1811,16 @@
         },
         {
             "name": "laravel-notification-channels/pushover",
-            "version": "4.1.1",
+            "version": "4.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel-notification-channels/pushover.git",
-                "reference": "68697f85a01c5f10168ad0ab05b14ef3e244cec4"
+                "reference": "53be939273e79e832a417d5863c1d443f0b3c665"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel-notification-channels/pushover/zipball/68697f85a01c5f10168ad0ab05b14ef3e244cec4",
-                "reference": "68697f85a01c5f10168ad0ab05b14ef3e244cec4",
+                "url": "https://api.github.com/repos/laravel-notification-channels/pushover/zipball/53be939273e79e832a417d5863c1d443f0b3c665",
+                "reference": "53be939273e79e832a417d5863c1d443f0b3c665",
                 "shasum": ""
             },
             "require": {
@@ -1872,9 +1872,9 @@
             "homepage": "https://github.com/laravel-notification-channels/pushover",
             "support": {
                 "issues": "https://github.com/laravel-notification-channels/pushover/issues",
-                "source": "https://github.com/laravel-notification-channels/pushover/tree/4.1.1"
+                "source": "https://github.com/laravel-notification-channels/pushover/tree/4.1.2"
             },
-            "time": "2025-03-01T09:05:11+00:00"
+            "time": "2025-09-09T09:14:17+00:00"
         },
         {
             "name": "laravel/framework",

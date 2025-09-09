@@ -20,15 +20,15 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
 - [Issue 10808](https://github.com/firefly-iii/firefly-iii/issues/10808) (cron job Error: Undefined variable $preference) reported by @MexerSam
 - [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
-- #10814
+- [Issue 10814](https://github.com/firefly-iii/firefly-iii/issues/10814) (Deposit show negative amounts & red numbers in detail view) reported by @dreautall
 - [Issue 10819](https://github.com/firefly-iii/firefly-iii/issues/10819) (Internal Server Error when trying to open piggy banks) reported by @noantiq
 - [Issue 10820](https://github.com/firefly-iii/firefly-iii/issues/10820) (Unable to search date 1970-01-01 to apply rule.) reported by @Kage1
 - [Issue 10824](https://github.com/firefly-iii/firefly-iii/issues/10824) (Converting withdrawal to transfer to account in different currency doesn't allow setting correct currencies) reported by @avee87
-- #10833
-- #10837
-- #10846
-- #10853
-- #10854
+- [Issue 10833](https://github.com/firefly-iii/firefly-iii/issues/10833) (Can't open transaction after assigning a tag to it) reported by @zynexiz
+- [Issue 10837](https://github.com/firefly-iii/firefly-iii/issues/10837) (Internal Server Erorr when viewing or editing Recurring transaction) reported by @Tommy78649
+- [Discussion 10846](https://github.com/orgs/firefly-iii/discussions/10846) (Add support for WebP format in attachments) started by @Idestius
+- [Issue 10853](https://github.com/firefly-iii/firefly-iii/issues/10853) (Failed to Send Discord Notification) reported by @pimonteiro
+- [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
 
 ### API
 
