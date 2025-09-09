@@ -3,16 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.0 - 2025-09-01
+## 6.4.0 - 2025-09-19
 
 ### Added
 
 - [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
 - [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos. See the [documentation](https://docs.firefly-iii.org/how-to/firefly-iii/features/webhooks/).
-
-### Changed
-
-- Initial release.
 
 ### Fixed
 
@@ -22,12 +18,17 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10799](https://github.com/firefly-iii/firefly-iii/issues/10799) (Budget - "Left (per day)" not showing the correct value) reported by @GensHaze
 - [Issue 10802](https://github.com/firefly-iii/firefly-iii/issues/10802) (Crash when trying to update a budget limit) reported by @Billos
 - [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
-- [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
 - [Issue 10808](https://github.com/firefly-iii/firefly-iii/issues/10808) (cron job Error: Undefined variable $preference) reported by @MexerSam
 - [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
+- #10814
 - [Issue 10819](https://github.com/firefly-iii/firefly-iii/issues/10819) (Internal Server Error when trying to open piggy banks) reported by @noantiq
 - [Issue 10820](https://github.com/firefly-iii/firefly-iii/issues/10820) (Unable to search date 1970-01-01 to apply rule.) reported by @Kage1
 - [Issue 10824](https://github.com/firefly-iii/firefly-iii/issues/10824) (Converting withdrawal to transfer to account in different currency doesn't allow setting correct currencies) reported by @avee87
+- #10833
+- #10837
+- #10846
+- #10853
+- #10854
 
 ### API
 
