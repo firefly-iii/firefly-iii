@@ -269,7 +269,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // if has one, calculate expenses and use that as a base.
         $repository    = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
-        $spent         = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
+        $spent         = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection()->push($autoBudget->budget), $autoBudget->transactionCurrency);
         $currencyId    = $autoBudget->transaction_currency_id;
         $spentAmount   = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));
@@ -329,7 +329,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
         // if has one, calculate expenses and use that as a base.
         $repository      = app(OperationsRepositoryInterface::class);
         $repository->setUser($autoBudget->budget->user);
-        $spent           = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection([$autoBudget->budget]), $autoBudget->transactionCurrency);
+        $spent           = $repository->sumExpenses($previousStart, $previousEnd, null, new Collection()->push($autoBudget->budget), $autoBudget->transactionCurrency);
         $currencyId      = $autoBudget->transaction_currency_id;
         $spentAmount     = $spent[$currencyId]['sum'] ?? '0';
         Log::debug(sprintf('Spent in previous budget period (%s-%s) is %s', $previousStart->format('Y-m-d'), $previousEnd->format('Y-m-d'), $spentAmount));

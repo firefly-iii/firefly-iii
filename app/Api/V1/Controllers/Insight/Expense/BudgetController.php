@@ -76,7 +76,7 @@ class BudgetController extends Controller
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $expenses = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, new Collection([$budget]));
+            $expenses = $this->opsRepository->sumExpenses($start, $end, $assetAccounts, new Collection()->push($budget));
 
             /** @var array $expense */
             foreach ($expenses as $expense) {

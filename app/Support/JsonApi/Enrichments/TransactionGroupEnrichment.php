@@ -68,7 +68,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     {
         Log::debug(__METHOD__);
         if (is_array($model)) {
-            $collection = new Collection([$model]);
+            $collection = new Collection()->push($model);
             $collection = $this->enrich($collection);
 
             return $collection->first();

@@ -152,7 +152,7 @@ class SelectController extends Controller
         $newRuleEngine      = app(RuleEngineInterface::class);
 
         // set rules:
-        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRules(new Collection()->push($rule));
         $newRuleEngine->setRefreshTriggers(false);
         $collection         = $newRuleEngine->find();
         $collection         = $collection->slice(0, 20);
@@ -196,7 +196,7 @@ class SelectController extends Controller
         $newRuleEngine = app(RuleEngineInterface::class);
 
         // set rules:
-        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRules(new Collection()->push($rule));
         $collection    = $newRuleEngine->find();
         $collection    = $collection->slice(0, 20);
 

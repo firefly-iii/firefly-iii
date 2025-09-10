@@ -163,7 +163,7 @@ class BudgetReportController extends Controller
     public function mainChart(Collection $accounts, Budget $budget, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
-        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$budget]));
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection()->push($budget));
         $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.

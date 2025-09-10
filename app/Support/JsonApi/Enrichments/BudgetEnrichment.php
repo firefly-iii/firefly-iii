@@ -73,7 +73,7 @@ class BudgetEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -167,7 +167,7 @@ class BudgetEnrichment implements EnrichmentInterface
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
-            // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget]))
+            // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget))
             $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
             foreach ($this->collection as $item) {
                 $id                 = (int)$item->id;

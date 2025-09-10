@@ -208,8 +208,8 @@ class CategoryReportController extends Controller
     public function mainChart(Collection $accounts, Category $category, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
-        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$category]));
-        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$category]));
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection()->push($category));
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection()->push($category));
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
         // loop expenses.
         foreach ($spent as $currency) {

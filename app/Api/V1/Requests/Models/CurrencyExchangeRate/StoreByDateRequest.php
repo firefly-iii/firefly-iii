@@ -88,7 +88,7 @@ class StoreByDateRequest extends FormRequest
                     }
 
                     try {
-                        $to = Amount::getTransactionCurrencyByCode((string)$key);
+                        Amount::getTransactionCurrencyByCode((string)$key);
                     } catch (FireflyException) {
                         $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                     }

@@ -217,7 +217,7 @@ class ReconcileController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector      = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts(new Collection([$account]))
+        $collector->setAccounts(new Collection()->push($account))
             ->setRange($selectionStart, $selectionEnd)
             ->withBudgetInformation()->withCategoryInformation()->withAccountInformation()
         ;

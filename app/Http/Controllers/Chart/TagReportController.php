@@ -212,8 +212,8 @@ class TagReportController extends Controller
     public function mainChart(Collection $accounts, Tag $tag, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
-        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$tag]));
-        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$tag]));
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection()->push($tag));
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection()->push($tag));
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.

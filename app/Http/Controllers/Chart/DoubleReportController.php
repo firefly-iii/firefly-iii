@@ -150,7 +150,7 @@ class DoubleReportController extends Controller
     {
         $chartData = [];
 
-        $opposing  = $this->repository->expandWithDoubles(new Collection([$account]));
+        $opposing  = $this->repository->expandWithDoubles(new Collection()->push($account));
         $accounts  = $accounts->merge($opposing);
         $spent     = $this->opsRepository->listExpenses($start, $end, $accounts);
         $earned    = $this->opsRepository->listIncome($start, $end, $accounts);

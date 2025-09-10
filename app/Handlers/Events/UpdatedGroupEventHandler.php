@@ -163,7 +163,7 @@ class UpdatedGroupEventHandler
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
-        $engine->setObjects(new Collection([$group]));
+        $engine->setObjects(new Collection()->push($group));
         $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION);
         $engine->generateMessages();
 

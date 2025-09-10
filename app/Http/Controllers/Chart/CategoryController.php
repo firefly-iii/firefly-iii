@@ -174,7 +174,7 @@ class CategoryController extends Controller
             $opsRepository = app(OperationsRepositoryInterface::class);
             $categoryId    = $category->id;
             // this gives us all currencies
-            $collection    = new Collection([$category]);
+            $collection    = new Collection()->push($category);
             $expenses      = $opsRepository->listExpenses($start, $end, $accounts, $collection);
             $income        = $opsRepository->listIncome($start, $end, $accounts, $collection);
         }

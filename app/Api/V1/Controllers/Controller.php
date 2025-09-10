@@ -232,8 +232,6 @@ abstract class Controller extends BaseController
         $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // $transformer->collectMetaData(new Collection([$object]));
-
         $resource = new Item($object, $transformer, $key);
 
         return $manager->createData($resource)->toArray();

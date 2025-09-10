@@ -76,7 +76,7 @@ class CategoryController extends Controller
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $expenses = $this->opsRepository->sumIncome($start, $end, $assetAccounts, new Collection([$category]));
+            $expenses = $this->opsRepository->sumIncome($start, $end, $assetAccounts, new Collection()->push($category));
 
             /** @var array $expense */
             foreach ($expenses as $expense) {

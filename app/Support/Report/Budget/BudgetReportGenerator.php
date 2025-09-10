@@ -188,7 +188,7 @@ class BudgetReportGenerator
         $limitId                                        = $limit->id;
         $limitCurrency                                  = $limit->transactionCurrency ?? $this->currency;
         $currencyId                                     = $limitCurrency->id;
-        $expenses                                       = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection([$budget]));
+        $expenses                                       = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, $this->accounts, new Collection()->push($budget));
         $spent                                          = $expenses[$currencyId]['sum'] ?? '0';
         $left                                           = -1 === bccomp(bcadd($limit->amount, $spent), '0') ? '0' : bcadd($limit->amount, $spent);
         $overspent                                      = 1 === bccomp(bcmul($spent, '-1'), $limit->amount) ? bcadd($spent, $limit->amount) : '0';

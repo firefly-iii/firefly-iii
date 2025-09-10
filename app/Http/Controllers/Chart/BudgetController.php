@@ -100,7 +100,7 @@ class BudgetController extends Controller
             return response()->json($cache->get());
         }
         $step           = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
-        $collection     = new Collection([$budget]);
+        $collection     = new Collection()->push($budget);
         $chartData      = [];
         $loopStart      = clone $start;
         $loopStart      = Navigation::startOfPeriod($loopStart, $step);
@@ -169,7 +169,7 @@ class BudgetController extends Controller
         $locale                                 = app('steam')->getLocale();
         $entries                                = [];
         $amount                                 = $budgetLimit->amount ?? '0';
-        $budgetCollection                       = new Collection([$budget]);
+        $budgetCollection                       = new Collection()->push($budget);
         $currency                               = $budgetLimit->transactionCurrency;
         if ($this->convertToPrimary) {
             $amount   = $budgetLimit->native_amount ?? $amount;
@@ -535,7 +535,7 @@ class BudgetController extends Controller
             }
 
             // get spent amount in this period for this currency.
-            $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection([$budget]), $currency);
+            $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection()->push($budget), $currency);
             $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[0]['entries'][$title] = app('steam')->bcround($amount, $currency->decimal_places);
 

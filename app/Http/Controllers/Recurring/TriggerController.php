@@ -74,7 +74,7 @@ class TriggerController extends Controller
 
         /** @var CreateRecurringTransactions $job */
         $job                        = app(CreateRecurringTransactions::class);
-        $job->setRecurrences(new Collection([$recurrence]));
+        $job->setRecurrences(new Collection()->push($recurrence));
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();

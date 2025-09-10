@@ -762,7 +762,7 @@ trait MetaCollection
     public function setTag(Tag $tag): GroupCollectorInterface
     {
         $this->withTagInformation();
-        $this->setTags(new Collection([$tag]));
+        $this->setTags(new Collection()->push($tag));
 
         return $this;
     }

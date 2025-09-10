@@ -58,8 +58,8 @@ class StoreByCurrenciesRequest extends FormRequest
                 $data = $validator->getData();
                 foreach ($data as $date => $rate) {
                     try {
-                        $date = Carbon::createFromFormat('Y-m-d', $date);
-                    } catch (InvalidFormatException $e) {
+                        Carbon::createFromFormat('Y-m-d', $date);
+                    } catch (InvalidFormatException) {
                         $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
 
                         return;

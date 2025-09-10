@@ -133,7 +133,6 @@ class ConfigurationController extends Controller
      */
     public function show(string $configKey): JsonResponse
     {
-        $data     = [];
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
         if (str_starts_with($configKey, 'configuration.')) {

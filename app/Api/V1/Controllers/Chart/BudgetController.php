@@ -114,7 +114,7 @@ class BudgetController extends Controller
         // get all limits:
         $limits     = $this->blRepository->getBudgetLimits($budget, $start, $end);
         $rows       = [];
-        $spent      = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+        $spent      = $this->opsRepository->listExpenses($start, $end, null, new Collection()->push($budget));
         $expenses   = $this->processExpenses($budget->id, $spent, $start, $end);
         $converter  = new ExchangeRateConverter();
         $currencies = [$this->primaryCurrency->id => $this->primaryCurrency];
@@ -208,7 +208,7 @@ class BudgetController extends Controller
     //     */
     //    private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
     //    {
-    //        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+    //        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection()->push($budget));
     //
     //        return $this->processExpenses($budget->id, $spent, $start, $end);
     //    }
@@ -290,7 +290,7 @@ class BudgetController extends Controller
     //        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
     //        $end             = clone $limit->end_date;
     //        $end->endOfDay();
-    //        $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
+    //        $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection()->push($budget));
     //        $limitCurrencyId = $limit->transaction_currency_id;
     //
     //        /** @var array $entry */

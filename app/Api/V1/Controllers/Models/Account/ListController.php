@@ -152,7 +152,7 @@ class ListController extends Controller
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
-        $collector->setUser($admin)->setAccounts(new Collection([$account]))
+        $collector->setUser($admin)->setAccounts(new Collection()->push($account))
             ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types)
         ;
 

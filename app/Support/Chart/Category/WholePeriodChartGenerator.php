@@ -40,7 +40,7 @@ class WholePeriodChartGenerator
 
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
-        $collection        = new Collection([$category]);
+        $collection        = new Collection()->push($category);
 
         /** @var OperationsRepositoryInterface $opsRepository */
         $opsRepository     = app(OperationsRepositoryInterface::class);
