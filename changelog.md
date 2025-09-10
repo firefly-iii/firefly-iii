@@ -30,6 +30,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10853](https://github.com/firefly-iii/firefly-iii/issues/10853) (Failed to Send Discord Notification) reported by @pimonteiro
 - [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
 - [Discussion 10883](https://github.com/orgs/firefly-iii/discussions/10883) (Initial balance for account is missing from exported CSV) started by @ajaskiewiczpl
+- #10888
 
 ### API
 

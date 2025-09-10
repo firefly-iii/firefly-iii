@@ -162,15 +162,14 @@ class RecurringEnrichment implements EnrichmentInterface
             foreach ($set as $carbon) {
                 $occurrences[] = $carbon->toAtomString();
             }
-
             $this->repetitions[$id][$repId] = [
                 'id'          => (string)$repId,
                 'created_at'  => $repetition->created_at->toAtomString(),
                 'updated_at'  => $repetition->updated_at->toAtomString(),
                 'type'        => $repetition->repetition_type,
-                'moment'      => (string)$repetition->moment,
-                'skip'        => (int)$repetition->skip,
-                'weekend'     => RecurrenceRepetitionWeekend::from((int)$repetition->weekend),
+                'moment'      => (string)$repetition->repetition_moment,
+                'skip'        => (int)$repetition->repetition_skip,
+                'weekend'     => RecurrenceRepetitionWeekend::from((int)$repetition->weekend)->value,
                 'description' => $this->getRepetitionDescription($repetition),
                 'occurrences' => $occurrences,
             ];
