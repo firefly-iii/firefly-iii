@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\System;
 use Carbon\Carbon;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
+use Random\RandomException;
 
 class OutputsInstructions extends Command
 {
@@ -266,7 +267,11 @@ class OutputsInstructions extends Command
             ];
         }
 
-        $random    = random_int(0, count($lines) - 1);
+        try {
+            $random = random_int(0, count($lines) - 1);
+        } catch (RandomException $e) {
+            $random = 0;
+        }
         if ($addQuotes) {
             $this->line(sprintf('       "%s"', $lines[$random]));
 
