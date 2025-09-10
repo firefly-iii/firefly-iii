@@ -29,6 +29,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 10846](https://github.com/orgs/firefly-iii/discussions/10846) (Add support for WebP format in attachments) started by @Idestius
 - [Issue 10853](https://github.com/firefly-iii/firefly-iii/issues/10853) (Failed to Send Discord Notification) reported by @pimonteiro
 - [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
+- #10883
 
 ### API
 

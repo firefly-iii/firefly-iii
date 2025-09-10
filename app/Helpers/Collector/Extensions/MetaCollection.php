@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Collector\Extensions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -919,6 +920,8 @@ trait MetaCollection
     {
         $this->withCategoryInformation();
         $this->query->whereNull('category_transaction_journal.category_id');
+        // better fix for #10507
+        $this->query->whereNotIn('transaction_types.type', [ TransactionTypeEnum::OPENING_BALANCE->value]);
 
         return $this;
     }
