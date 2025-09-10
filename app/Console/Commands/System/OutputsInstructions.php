@@ -269,7 +269,7 @@ class OutputsInstructions extends Command
 
         try {
             $random = random_int(0, count($lines) - 1);
-        } catch (RandomException $e) {
+        } catch (RandomException) {
             $random = 0;
         }
         if ($addQuotes) {
