@@ -921,7 +921,7 @@ trait MetaCollection
         $this->withCategoryInformation();
         $this->query->whereNull('category_transaction_journal.category_id');
         // better fix for #10507
-        $this->query->whereNotIn('transaction_types.type', [ TransactionTypeEnum::OPENING_BALANCE->value]);
+        $this->query->whereNotIn('transaction_types.type', [TransactionTypeEnum::OPENING_BALANCE->value]);
 
         return $this;
     }
