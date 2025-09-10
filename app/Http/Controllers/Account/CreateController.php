@@ -86,7 +86,7 @@ class CreateController extends Controller
                 'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
                 'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
                 'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
-                'has_location' => $hasOldInput ? 'true' === old('location_has_location') : false,
+                'has_location' => $hasOldInput && 'true' === old('location_has_location'),
             ],
         ];
         $liabilityDirections = [
@@ -106,7 +106,7 @@ class CreateController extends Controller
             'preFilled',
             [
                 'currency_id'       => $this->primaryCurrency->id,
-                'include_net_worth' => $hasOldInput ? (bool) $request->old('include_net_worth') : true,
+                'include_net_worth' => !$hasOldInput || (bool)$request->old('include_net_worth'),
             ]
         );
         // issue #8321

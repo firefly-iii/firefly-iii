@@ -560,7 +560,7 @@ class GroupCollector implements GroupCollectorInterface
         }
         $groups = $this->parseSums($groups);
 
-        return new Collection($groups);
+        return new Collection()->push(...$groups);
     }
 
     /**

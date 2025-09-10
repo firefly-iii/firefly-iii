@@ -79,14 +79,13 @@ trait FiltersWeekends
                 );
                 $return[] = $clone;
 
-                continue;
             }
             // Log::debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
         }
 
         // filter unique dates
         Log::debug(sprintf('Count before filtering: %d', count($dates)));
-        $collection = new Collection($return);
+        $collection = new Collection()->push(...$return);
         $filtered   = $collection->unique();
         $return     = $filtered->toArray();
 

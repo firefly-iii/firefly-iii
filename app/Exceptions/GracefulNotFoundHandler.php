@@ -128,10 +128,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return redirect(route('categories.index'));
 
             case 'rules.edit':
-                $request->session()->reflash();
-
-                return redirect(route('rules.index'));
-
             case 'rule-groups.edit':
                 $request->session()->reflash();
 

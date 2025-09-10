@@ -227,7 +227,6 @@ class CreditRecalculateService
             $source->save();
             $dest->save();
 
-            return;
         }
         // Log::debug('Opening balance is valid');
     }

@@ -206,7 +206,7 @@ class AccountBalanceCalculator
         foreach ($transactionJournal->transactions as $transaction) {
             $set[$transaction->account_id] = $transaction->account;
         }
-        $accounts = new Collection($set);
+        $accounts = new Collection()->push(...$set);
         $object->optimizedCalculation($accounts, $transactionJournal->date);
     }
 }

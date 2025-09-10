@@ -71,7 +71,6 @@ class RestoresOAuthKeys extends Command
             $this->storeKeysInDB();
             $this->friendlyInfo('Stored OAuth keys in database.');
 
-            return;
         }
     }
 

@@ -291,7 +291,7 @@ class BudgetController extends Controller
         $cache->addProperty('budget-period-report');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            // return $cache->get();
+             return $cache->get();
         }
 
         $periods   = Navigation::listOfPeriods($start, $end);

@@ -49,7 +49,6 @@ use Illuminate\Support\Facades\Log;
 class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface  $accountRepository;
-    private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;             // @phpstan-ignore-line
     private ?UserGroup                  $userGroup = null;
 
@@ -131,8 +130,6 @@ class NetWorth implements NetWorthInterface
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
 
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->currencyRepos->setUserGroup($this->userGroup);
     }
 
     #[Deprecated]

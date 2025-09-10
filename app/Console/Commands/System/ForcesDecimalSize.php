@@ -515,7 +515,7 @@ class ForcesDecimalSize extends Command
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow         = (float) 10 ** $currency->decimal_places;
+            $pow         = 10.0 ** $currency->decimal_places;
             $correct     = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
 
@@ -546,7 +546,7 @@ class ForcesDecimalSize extends Command
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow         = (float) 10 ** $currency->decimal_places;
+            $pow         = 10.0 ** $currency->decimal_places;
             $correct     = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(
                 sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct)

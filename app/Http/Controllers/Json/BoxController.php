@@ -171,7 +171,7 @@ class BoxController extends Controller
         $filtered          = $allAccounts->filter(
             static function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
-                $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+                $result          = null === $includeNetWorth || '1' === $includeNetWorth;
                 if (false === $result) {
                     app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }

@@ -47,7 +47,6 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private array               $notes            = [];
     private Carbon              $start;
     private Carbon              $end;
-    private Collection          $budgets;
     private array               $expenses         = [];
     private array               $pcExpenses       = [];
     private array               $currencyIds      = [];
@@ -147,11 +146,11 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectBudgets(): void
     {
         $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
-        $this->budgets = Budget::whereIn('id', $budgetIds)->get();
+        $budgets = Budget::whereIn('id', $budgetIds)->get();
 
         $repository    = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
+        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
