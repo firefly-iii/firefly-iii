@@ -373,7 +373,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         return CurrencyExchangeRate::create(
             [
                 'user_id'          => $this->user->id,
-                'user_group_id'    => $this->user->user_group_id,
+                'user_group_id'    => $this->userGroup->id,
                 'from_currency_id' => $fromCurrency->id,
                 'to_currency_id'   => $toCurrency->id,
                 'date'             => $date,
