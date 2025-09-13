@@ -243,7 +243,7 @@ class TagController extends Controller
 
         $startPeriod  = $this->repository->firstUseDate($tag);
         $startPeriod ??= today(config('app.timezone'));
-        $endPeriod        = clone $end;
+        $endPeriod    = clone $end;
         $periods      = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
         $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
