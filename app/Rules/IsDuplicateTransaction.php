@@ -34,7 +34,6 @@ use Closure;
  */
 class IsDuplicateTransaction implements ValidationRule
 {
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */

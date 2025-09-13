@@ -145,12 +145,12 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectBudgets(): void
     {
-        $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
-        $budgets = Budget::whereIn('id', $budgetIds)->get();
+        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
+        $budgets    = Budget::whereIn('id', $budgetIds)->get();
 
-        $repository    = app(OperationsRepository::class);
+        $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
+        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {

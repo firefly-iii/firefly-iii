@@ -30,9 +30,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10853](https://github.com/firefly-iii/firefly-iii/issues/10853) (Failed to Send Discord Notification) reported by @pimonteiro
 - [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
 - [Discussion 10883](https://github.com/orgs/firefly-iii/discussions/10883) (Initial balance for account is missing from exported CSV) started by @ajaskiewiczpl
-- #10888
-- #10891
-- #10898
+- [Issue 10888](https://github.com/firefly-iii/firefly-iii/issues/10888) (Recurring transation forgets repetition type, skip and weekend action) reported by @mansellrace
+- [Discussion 10891](https://github.com/orgs/firefly-iii/discussions/10891) (User group id is null when downloading new exchange rates) started by @dakennguyen
+- [Issue 10898](https://github.com/firefly-iii/firefly-iii/issues/10898) (Paperclip icon appears for transactions without attachments in Tag view) reported by @empeig
 
 ### API
 
