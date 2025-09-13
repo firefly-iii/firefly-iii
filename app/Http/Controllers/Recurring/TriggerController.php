@@ -28,8 +28,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TriggerRecurrenceRequest;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 
@@ -38,6 +38,29 @@ use Illuminate\Support\Collection;
  */
 class TriggerController extends Controller
 {
+    private RecurringRepositoryInterface $repository;
+
+    /**
+     * IndexController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        app('view')->share('showCategory', true);
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-paint-brush');
+                app('view')->share('title', (string) trans('firefly.recurrences'));
+
+                $this->repository = app(RecurringRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
+
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse
     {
         $all                        = $request->getAll();
@@ -51,27 +74,18 @@ class TriggerController extends Controller
 
         /** @var CreateRecurringTransactions $job */
         $job                        = app(CreateRecurringTransactions::class);
-        $job->setRecurrences(new Collection([$recurrence]));
+        $job->setRecurrences(new Collection()->push($recurrence));
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
         app('log')->debug('Done with recurrence.');
 
         $groups                     = $job->getGroups();
-
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            /** @var TransactionJournal $journal */
-            foreach ($group->transactionJournals as $journal) {
-                app('log')->debug(sprintf('Set date of journal #%d to today!', $journal->id));
-                $journal->date = today(config('app.timezone'));
-                $journal->save();
-            }
-        }
+        $this->repository->markGroupsAsNow($groups);
         $recurrence->latest_date    = $backupDate;
         $recurrence->latest_date_tz = $backupDate?->format('e');
         $recurrence->save();
-        app('preferences')->mark();
+        Preferences::mark();
 
         if (0 === $groups->count()) {
             $request->session()->flash('info', (string) trans('firefly.no_new_transaction_in_recurrence'));

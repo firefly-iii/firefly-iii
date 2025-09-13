@@ -10,7 +10,7 @@
                             <h3 class="card-title">{{ __('firefly.net_worth') }}</h3>
                         </div>
                         <div class="card-body">
-                            TODO
+                            Not yet implemented.
                         </div>
                     </div>
                 </div>
@@ -20,17 +20,17 @@
                             <h3 class="card-title">{{ __('firefly.in_out_period') }}</h3>
                         </div>
                         <div class="card-body">
-                            TODO
+                            Not yet implemented.
                         </div>
                     </div>
                 </div>
                 <div class="col-xl-4 col-lg-6 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">TODO</h3>
+                            <h3 class="card-title">Not yet implemented.</h3>
                         </div>
                         <div class="card-body">
-                            TODO
+                            Not yet implemented.
                         </div>
                     </div>
                 </div>
@@ -262,43 +262,75 @@
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.current_balance.visible && tableColumns.current_balance.enabled">
-                                            <template x-if="null !== account.balance">
-                                            <template x-for="balance in account.balance">
-                                                <span>
-                                                <span x-show="parseFloat(balance.balance) < 0.0" class="text-danger"
-                                                      x-text="formatMoney(balance.balance, balance.currency_code)"></span>
-                                                <span x-show="parseFloat(balance.balance) === 0.0" class="text-muted"
-                                                      x-text="formatMoney(balance.balance, balance.currency_code)"></span>
-                                                <span x-show="parseFloat(balance.balance) > 0.0" class="text-success"
-                                                      x-text="formatMoney(balance.balance, balance.currency_code)"></span>
-                                                    </span>
-                                            </template>
+                                                <span x-show="parseFloat(account.current_balance) < 0.0" class="text-danger"
+                                                      x-text="formatMoney(account.current_balance, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.current_balance) === 0.0" class="text-muted"
+                                                      x-text="formatMoney(account.current_balance, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.current_balance) > 0.0" class="text-success"
+                                                      x-text="formatMoney(account.current_balance, account.primary_currency_code)"></span>
+                                            <template x-if="null !== account.pc_current_balance">
+                                                <span>(
+                                                <span x-show="parseFloat(account.pc_current_balance) < 0.0" class="text-danger"
+                                                      x-text="formatMoney(account.pc_current_balance, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_current_balance) === 0.0" class="text-muted"
+                                                      x-text="formatMoney(account.pc_current_balance, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_current_balance) > 0.0" class="text-success"
+                                                      x-text="formatMoney(account.pc_current_balance, account.primary_currency_code)"></span>
+                                                )
+                                                </span>
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.amount_due.visible && tableColumns.amount_due.enabled">
-                                            <!--
-                                            <template x-if="null !== account.current_debt">
-                                                <span class="text-info"
-                                                    x-text="formatMoney(account.current_debt, account.currency_code)"></span>
+                                            <template x-if="null !== account.debt_amount">
+                                                <span>
+                                                <span x-show="null != account.debt_amount && account.debt_amount < 0" class="text-danger"
+                                                      x-text="formatMoney(account.debt_amount, account.currency_code)"></span>
+                                                <span x-show="null != account.debt_amount && account.debt_amount == 0" class="text-muted"
+                                                      x-text="formatMoney(account.debt_amount, account.currency_code)"></span>
+                                                <span x-show="null != account.debt_amount && account.debt_amount > 0" class="text-success"
+                                                      x-text="formatMoney(account.debt_amount, account.currency_code)"></span>
+                                                </span>
+
+                                                <template x-if="null !== account.pc_debt_amount">
+                                                <span>(
+                                                <span x-show="parseFloat(account.pc_debt_amount) < 0.0" class="text-danger"
+                                                      x-text="formatMoney(account.pc_debt_amount, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_debt_amount) === 0.0" class="text-muted"
+                                                      x-text="formatMoney(account.pc_debt_amount, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_debt_amount) > 0.0" class="text-success"
+                                                      x-text="formatMoney(account.pc_debt_amount, account.primary_currency_code)"></span>
+                                                )
+                                                </span>
+                                                </template>
                                             </template>
-                                            -->
-                                            FIXME
+
                                         </td>
                                         <td x-show="tableColumns.last_activity.visible && tableColumns.last_activity.enabled">
                                             <span x-text="account.last_activity"></span>
                                         </td>
                                         <td x-show="tableColumns.balance_difference.visible && tableColumns.balance_difference.enabled">
-                                            <template x-if="null !== account.balance">
-                                            <template x-for="balance in account.balance">
+                                            <template x-if="null !== account.balance_difference">
                                                 <span>
-                                                <span x-show="null != balance.balance_difference && balance.balance_difference < 0" class="text-danger"
-                                                      x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
-                                                <span x-show="null != balance.balance_difference && balance.balance_difference == 0" class="text-muted"
-                                                      x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
-                                                <span x-show="null != balance.balance_difference && balance.balance_difference > 0" class="text-success"
-                                                      x-text="formatMoney(balance.balance_difference, balance.currency_code)"></span>
+                                                <span x-show="null != account.balance_difference && account.balance_difference < 0" class="text-danger"
+                                                      x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                                <span x-show="null != account.balance_difference && account.balance_difference == 0" class="text-muted"
+                                                      x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
+                                                <span x-show="null != account.balance_difference && account.balance_difference > 0" class="text-success"
+                                                      x-text="formatMoney(account.balance_difference, account.currency_code)"></span>
                                                 </span>
-                                            </template>
+
+                                                <template x-if="null !== account.pc_balance_difference">
+                                                <span>(
+                                                <span x-show="parseFloat(account.pc_balance_difference) < 0.0" class="text-danger"
+                                                      x-text="formatMoney(account.pc_balance_difference, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_balance_difference) === 0.0" class="text-muted"
+                                                      x-text="formatMoney(account.pc_balance_difference, account.primary_currency_code)"></span>
+                                                <span x-show="parseFloat(account.pc_balance_difference) > 0.0" class="text-success"
+                                                      x-text="formatMoney(account.pc_balance_difference, account.primary_currency_code)"></span>
+                                                )
+                                                </span>
+                                                </template>
+
                                             </template>
                                         </td>
                                         <td x-show="tableColumns.menu.visible && tableColumns.menu.enabled">

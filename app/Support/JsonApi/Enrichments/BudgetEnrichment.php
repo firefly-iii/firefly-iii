@@ -1,5 +1,26 @@
 <?php
 
+
+/*
+ * BudgetEnrichment.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
@@ -9,10 +30,8 @@ use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -22,8 +41,6 @@ use Illuminate\Support\Facades\Log;
 class BudgetEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
-    private bool                $convertToPrimary;
-    private TransactionCurrency $primaryCurrency;
     private User                $user;
     private UserGroup           $userGroup;
     private array               $ids           = [];
@@ -37,11 +54,7 @@ class BudgetEnrichment implements EnrichmentInterface
     private array               $objectGroups  = [];
     private array               $mappedObjects = [];
 
-    public function __construct()
-    {
-        $this->convertToPrimary = Amount::convertToPrimary();
-        $this->primaryCurrency  = Amount::getPrimaryCurrency();
-    }
+    public function __construct() {}
 
     public function enrich(Collection $collection): Collection
     {
@@ -60,7 +73,7 @@ class BudgetEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -117,7 +130,7 @@ class BudgetEnrichment implements EnrichmentInterface
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = $this->objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
@@ -148,13 +161,13 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function collectExpenses(): void
     {
-        if (null !== $this->start && null !== $this->end) {
+        if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
-            // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$budget]))
+            // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget))
             $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
             foreach ($this->collection as $item) {
                 $id                 = (int)$item->id;

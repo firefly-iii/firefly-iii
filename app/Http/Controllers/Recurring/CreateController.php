@@ -49,7 +49,7 @@ class CreateController extends Controller
     private AttachmentHelperInterface    $attachments;
     private BillRepositoryInterface      $billRepository;
     private BudgetRepositoryInterface    $budgetRepos;
-    private RecurringRepositoryInterface $recurring;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * CreateController constructor.
@@ -65,7 +65,7 @@ class CreateController extends Controller
                 app('view')->share('title', (string) trans('firefly.recurrences'));
                 app('view')->share('subTitle', (string) trans('firefly.create_new_recurrence'));
 
-                $this->recurring      = app(RecurringRepositoryInterface::class);
+                $this->repository     = app(RecurringRepositoryInterface::class);
                 $this->budgetRepos    = app(BudgetRepositoryInterface::class);
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
@@ -84,7 +84,6 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $primaryCurrency   = $this->primaryCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
@@ -116,7 +115,7 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'primaryCurrency', 'budgets')
+            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'budgets')
         );
     }
 
@@ -129,7 +128,6 @@ class CreateController extends Controller
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
-        $primaryCurrency   = $this->primaryCurrency;
         $tomorrow          = today(config('app.timezone'));
         $oldRepetitionType = $request->old('repetition_type');
         $tomorrow->addDay();
@@ -208,10 +206,7 @@ class CreateController extends Controller
         }
         $request->session()->flash('preFilled', $preFilled);
 
-        return view(
-            'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'primaryCurrency', 'budgets')
-        );
+        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'budgets'));
     }
 
     /**
@@ -226,7 +221,7 @@ class CreateController extends Controller
         $data     = $request->getAll();
 
         try {
-            $recurrence = $this->recurring->store($data);
+            $recurrence = $this->repository->store($data);
         } catch (FireflyException $e) {
             session()->flash('error', $e->getMessage());
 

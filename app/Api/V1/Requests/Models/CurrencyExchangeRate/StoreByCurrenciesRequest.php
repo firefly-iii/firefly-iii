@@ -28,7 +28,7 @@ use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreByCurrenciesRequest extends FormRequest
@@ -55,11 +55,11 @@ class StoreByCurrenciesRequest extends FormRequest
     {
         $validator->after(
             static function (Validator $validator): void {
-                $data = $validator->getData() ?? [];
+                $data = $validator->getData();
                 foreach ($data as $date => $rate) {
                     try {
-                        $date = Carbon::createFromFormat('Y-m-d', $date);
-                    } catch (InvalidFormatException $e) {
+                        Carbon::createFromFormat('Y-m-d', $date);
+                    } catch (InvalidFormatException) {
                         $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
 
                         return;

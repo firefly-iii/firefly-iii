@@ -137,13 +137,10 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             if (!$existingGroup instanceof UserGroup) {
                 $exists        = false;
 
-                /** @var null|UserGroup $existingGroup */
+                /** @var UserGroup $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
-            if (null !== $existingGroup) {
-                // group already exists
-                $groupName = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
-            }
+            $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
             ++$loop;
         }
 
@@ -206,7 +203,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
         if (array_key_exists('primary_currency_id', $data) && null === $currency) {
             $repository->setUser($this->user);
-            $currency = $repository->find((int) $data['primary_currency_id']);
+            $currency = $repository->find((int)$data['primary_currency_id']);
         }
         if (null !== $currency) {
             $repository->makePrimary($currency);
@@ -233,7 +230,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             $user = User::find($data['id']);
             app('log')->debug('Found user by ID');
         }
-        if (array_key_exists('email', $data) && '' !== (string) $data['email']) {
+        if (array_key_exists('email', $data) && '' !== (string)$data['email']) {
             /** @var null|User $user */
             $user = User::whereEmail($data['email'])->first();
             app('log')->debug('Found user by email');
@@ -251,13 +248,13 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         if (1 === $membershipCount) {
             $lastUserId = $userGroup->groupMemberships()->distinct()->first(['group_memberships.user_id'])->user_id;
             // if this is also the user we're editing right now, and we remove all of their roles:
-            if ($lastUserId === (int) $user->id && 0 === count($data['roles'])) {
+            if ($lastUserId === (int)$user->id && 0 === count($data['roles'])) {
                 app('log')->debug('User is last in this group, refuse to act');
 
                 throw new FireflyException('You cannot remove the last member from this user group. Delete the user group instead.');
             }
             // if this is also the user we're editing right now, and do not grant them the owner role:
-            if ($lastUserId === (int) $user->id && count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)) {
+            if ($lastUserId === (int)$user->id && count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)) {
                 app('log')->debug('User needs to have owner role in this group, refuse to act');
 
                 throw new FireflyException('The last member in this user group must get or keep the "owner" role.');

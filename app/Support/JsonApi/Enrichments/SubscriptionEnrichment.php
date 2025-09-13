@@ -1,11 +1,33 @@
 <?php
 
+
+/*
+ * SubscriptionEnrichment.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
 use Carbon\CarbonInterface;
+use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\ObjectGroup;
@@ -25,9 +47,9 @@ use Illuminate\Support\Facades\Log;
 class SubscriptionEnrichment implements EnrichmentInterface
 {
     private User                $user;
-    private UserGroup           $userGroup;
+    private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
-    private bool                $convertToPrimary;
+    private readonly bool                $convertToPrimary;
     private ?Carbon             $start           = null;
     private ?Carbon             $end             = null;
     private array               $subscriptionIds = [];
@@ -36,7 +58,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private array               $paidDates       = [];
     private array               $notes           = [];
     private array               $payDates        = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private BillDateCalculator  $calculator;
 
     public function __construct()
@@ -64,7 +86,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $paidDates        = $this->paidDates;
         $payDates         = $this->payDates;
         $this->collection = $this->collection->map(function (Bill $item) use ($notes, $objectGroups, $paidDates, $payDates) {
-            $id            = (int) $item->id;
+            $id            = (int)$item->id;
             $currency      = $item->transactionCurrency;
             $nem           = $this->getNextExpectedMatch($payDates[$id] ?? []);
 
@@ -101,7 +123,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = $objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string)$objectGroups[$key]['id'];
                 $meta['object_group_title'] = $objectGroups[$key]['title'];
                 $meta['object_group_order'] = $objectGroups[$key]['order'];
             }
@@ -123,7 +145,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -137,7 +159,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
             ->where('noteable_type', Bill::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
         ;
         foreach ($notes as $note) {
-            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
+            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
         Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
@@ -157,7 +179,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     {
         /** @var Bill $bill */
         foreach ($this->collection as $bill) {
-            $this->subscriptionIds[] = (int) $bill->id;
+            $this->subscriptionIds[] = (int)$bill->id;
         }
         $this->subscriptionIds = array_unique($this->subscriptionIds);
     }
@@ -173,14 +195,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
-            $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
+            $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
         }
 
         $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
-            $group['id']                            = (int) $group['id'];
-            $group['order']                         = (int) $group['order'];
-            $this->objectGroups[(int) $group['id']] = $group;
+            $group['id']                           = (int)$group['id'];
+            $group['order']                        = (int)$group['order'];
+            $this->objectGroups[(int)$group['id']] = $group;
         }
     }
 
@@ -188,7 +210,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     {
         $this->paidDates = [];
         Log::debug('Now in collectPaidDates for bills');
-        if (null === $this->start || null === $this->end) {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
             Log::debug('Parameters are NULL, set empty array');
 
             return;
@@ -247,63 +269,62 @@ class SubscriptionEnrichment implements EnrichmentInterface
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
             Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-            $lastPaidDate                             = $this->lastPaidDate($subscription, $set, $start);
+            $lastPaidDate                            = $this->lastPaidDate($subscription, $set, $start);
             Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
             // At this point the "next match" is exactly after the last time the bill was paid.
-            $result                                   = [];
-            $filtered                                 = $set->filter(function (TransactionJournal $journal) use ($subscription) {
-                return (int) $journal->bill_id === (int) $subscription->id;
-            });
+            $result                                  = [];
+            $filtered                                = $set->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
             foreach ($filtered as $entry) {
                 $array    = [
-                    'transaction_group_id'                    => (string) $entry->transaction_group_id,
-                    'transaction_journal_id'                  => (string) $entry->id,
-                    'date'                                    => $entry->date->toAtomString(),
-                    'date_object'                             => $entry->date,
-                    'subscription_id'                         => (string) $entry->bill_id,
-                    'currency_id'                             => (string) $entry->transaction_currency_id,
-                    'currency_code'                           => $entry->transaction_currency_code,
-                    'currency_symbol'                         => $entry->transaction_currency_symbol,
-                    'currency_decimal_places'                 => $entry->transaction_currency_decimal_places,
-                    'primary_currency_id'                     => (string) $this->primaryCurrency->id,
-                    'primary_currency_code'                   => $this->primaryCurrency->code,
-                    'primary_currency_symbol'                 => $this->primaryCurrency->symbol,
-                    'primary_currency_decimal_places'         => $this->primaryCurrency->decimal_places,
-                    'amount'                                  => Steam::bcround($entry->amount, $entry->transaction_currency_decimal_places),
-                    'pc_amount'                               => null,
-                    'foreign_amount'                          => null,
-                    'pc_foreign_amount'                       => null,
+                    'transaction_group_id'            => (string)$entry->transaction_group_id,
+                    'transaction_journal_id'          => (string)$entry->id,
+                    'date'                            => $entry->date->toAtomString(),
+                    'date_object'                     => $entry->date,
+                    'subscription_id'                 => (string)$entry->bill_id,
+                    'currency_id'                     => (string)$entry->transaction_currency_id,
+                    'currency_code'                   => $entry->transaction_currency_code,
+                    'currency_symbol'                 => $entry->transaction_currency_symbol,
+                    'currency_decimal_places'         => $entry->transaction_currency_decimal_places,
+                    'primary_currency_id'             => (string)$this->primaryCurrency->id,
+                    'primary_currency_code'           => $this->primaryCurrency->code,
+                    'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+                    'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
+                    'amount'                          => Steam::bcround($entry->amount, $entry->transaction_currency_decimal_places),
+                    'pc_amount'                       => null,
+                    'foreign_amount'                  => null,
+                    'pc_foreign_amount'               => null,
 
                 ];
                 if (null !== $entry->foreign_amount && null !== $entry->foreign_currency_code) {
-                    $array['foreign_currency_id']             = (string) $entry->foreign_currency_id;
+                    $array['foreign_currency_id']             = (string)$entry->foreign_currency_id;
                     $array['foreign_currency_code']           = $entry->foreign_currency_code;
                     $array['foreign_currency_symbol']         = $entry->foreign_currency_symbol;
                     $array['foreign_currency_decimal_places'] = $entry->foreign_currency_decimal_places;
                     $array['foreign_amount']                  = Steam::bcround($entry->foreign_amount, $entry->foreign_currency_decimal_places);
                 }
                 // convert to primary, but is already primary.
-                if ($this->convertToPrimary && (int) $entry->transaction_currency_id === $this->primaryCurrency->id) {
+                if ($this->convertToPrimary && (int)$entry->transaction_currency_id === $this->primaryCurrency->id) {
                     $array['pc_amount'] = $array['amount'];
                 }
                 // convert to primary, but is NOT already primary.
-                if ($this->convertToPrimary && (int) $entry->transaction_currency_id !== $this->primaryCurrency->id) {
+                if ($this->convertToPrimary && (int)$entry->transaction_currency_id !== $this->primaryCurrency->id) {
                     $array['pc_amount'] = $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
                 }
                 // convert to primary, but foreign is already primary.
-                if ($this->convertToPrimary && (int) $entry->foreign_currency_id === $this->primaryCurrency->id) {
+                if ($this->convertToPrimary && (int)$entry->foreign_currency_id === $this->primaryCurrency->id) {
                     $array['pc_foreign_amount'] = $array['foreign_amount'];
                 }
                 // convert to primary, but foreign is NOT already primary.
-                if ($this->convertToPrimary && null !== $entry->foreign_currency_id && (int) $entry->foreign_currency_id !== $this->primaryCurrency->id) {
+                if ($this->convertToPrimary && null !== $entry->foreign_currency_id && (int)$entry->foreign_currency_id !== $this->primaryCurrency->id) {
                     // TODO this is very database intensive.
-                    $foreignCurrency            = TransactionCurrency::find($entry->foreign_currency_id);
+                    /** @var TransactionCurrency $foreignCurrency */
+                    $foreignCurrency            = Amount::getTransactionCurrencyById($entry->foreign_currency_id);
                     $array['pc_foreign_amount'] = $converter->convert($foreignCurrency, $this->primaryCurrency, $entry->date, $entry->amount);
                 }
                 $result[] = $array;
             }
-            $this->paidDates[(int) $subscription->id] = $result;
+            $this->paidDates[(int)$subscription->id] = $result;
         }
 
     }
@@ -323,9 +344,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
      */
     protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
-        $filtered = $dates->filter(function (TransactionJournal $journal) use ($subscription) {
-            return (int) $journal->bill_id === (int) $subscription->id;
-        });
+        $filtered = $dates->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
         Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
         if (0 === $filtered->count()) {
             return $default;
@@ -362,14 +381,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 Log::debug(sprintf('[b] Last paid date is: %s', $return->format('Y-m-d')));
             }
         }
-        Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
+        // Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
 
         return $return;
     }
 
     private function collectPayDates(): void
     {
-        if (null === $this->start || null === $this->end) {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
             Log::debug('Parameters are NULL, set empty array');
 
             return;
@@ -377,8 +396,8 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
-            $id                  = (int) $subscription->id;
-            $lastPaidDate        = $this->getLastPaidDate($paidDates[$id] ?? []);
+            $id                  = (int)$subscription->id;
+            $lastPaidDate        = $this->getLastPaidDate($this->paidDates[$id] ?? []);
             $payDates            = $this->calculator->getPayDates($this->start, $this->end, $subscription->date, $subscription->repeat_freq, $subscription->skip, $lastPaidDate);
             $payDatesFormatted   = [];
             foreach ($payDates as $string) {
@@ -408,16 +427,17 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $firstPayDate = $payDates[0] ?? null;
 
         if (null !== $firstPayDate) {
-            $nemDate = Carbon::parse($firstPayDate, config('app.timezone'));
-            if (!$nemDate instanceof Carbon) {
+            try {
+                $nemDate = Carbon::parse($firstPayDate, config('app.timezone'));
+            } catch (InvalidFormatException) {
                 $nemDate = today(config('app.timezone'));
             }
-            $nem     = $nemDate;
+            $nem = $nemDate;
 
             // nullify again when it's outside the current view range.
             if (
-                (null !== $this->start && $nemDate->lt($this->start))
-                || (null !== $this->end && $nemDate->gt($this->end))
+                ($this->start instanceof Carbon && $nemDate->lt($this->start))
+                || ($this->end instanceof Carbon && $nemDate->gt($this->end))
             ) {
                 $nem          = null;
                 $nemDate      = null;
@@ -430,7 +450,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     private function getNextExpectedMatchDiff(?Carbon $nem, array $payDates): string
     {
-        if (null === $nem) {
+        if (!$nem instanceof Carbon) {
             return trans('firefly.not_expected_period');
         }
         $nemDiff = trans('firefly.not_expected_period');
@@ -441,8 +461,9 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
         $current = $payDates[0] ?? null;
         if (null !== $current && !$nem->isToday()) {
-            $temp2   = Carbon::parse($current, config('app.timezone'));
-            if (!$temp2 instanceof Carbon) {
+            try {
+                $temp2 = Carbon::parse($current, config('app.timezone'));
+            } catch (InvalidFormatException) {
                 $temp2 = today(config('app.timezone'));
             }
             $nemDiff = trans('firefly.bill_expected_date', ['date' => $temp2->diffForHumans(today(config('app.timezone')), CarbonInterface::DIFF_RELATIVE_TO_NOW)]);

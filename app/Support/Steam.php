@@ -224,6 +224,7 @@ class Steam
          */
         $request              = clone $start;
         $request->subDay()->endOfDay();
+        Log::debug('Get first balance to start.');
         Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
         $startBalance         = $this->finalAccountBalance($account, $request);
         $primaryCurrency      = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
@@ -284,7 +285,7 @@ class Steam
             $sumOfDay                             = $this->floatalize($sumOfDay);
 
             // find currency of this entry, does not have to exist.
-            $currencies[$entry->transaction_currency_id] ??= TransactionCurrency::find($entry->transaction_currency_id);
+            $currencies[$entry->transaction_currency_id] ??= Amount::getTransactionCurrencyById($entry->transaction_currency_id);
 
             // make sure this $entry has its own $entryCurrency
             /** @var TransactionCurrency $entryCurrency */
@@ -315,7 +316,7 @@ class Steam
             Log::debug(sprintf('Updated entry [%s]', $carbonKey), $currentBalance);
         }
         $cache->store($balances);
-        Log::debug('End of method');
+        Log::debug('End of method finalAccountBalanceInRange');
 
         return $balances;
     }
@@ -347,9 +348,7 @@ class Steam
             $currency             = $currencies[$account->id];
 
             // second array
-            $accountSum           = array_filter($arrayOfSums, function ($entry) use ($account) {
-                return $entry['account_id'] === $account->id;
-            });
+            $accountSum           = array_filter($arrayOfSums, fn ($entry) => $entry['account_id'] === $account->id);
             if (0 === count($accountSum)) {
                 $result[$account->id] = $return;
 
@@ -501,7 +500,7 @@ class Steam
             return null;
         }
 
-        return TransactionCurrency::find((int)$result->data);
+        return Amount::getTransactionCurrencyById((int)$result->data);
     }
 
     private function groupAndSumTransactions(array $array, string $group, string $field): array
@@ -523,8 +522,10 @@ class Steam
         $singleton = PreferencesSingleton::getInstance();
         foreach ($others as $key => $amount) {
             $preference = $singleton->getPreference($key);
-            $currency   = $preference ?? TransactionCurrency::where('code', $key)->first();
-            if (null === $currency) {
+
+            try {
+                $currency = $preference ?? Amount::getTransactionCurrencyByCode($key);
+            } catch (FireflyException) {
                 continue;
             }
             if (null === $preference) {

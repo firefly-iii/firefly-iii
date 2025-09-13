@@ -67,12 +67,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
-        app('log')->debug('Searching for piggy information.');
+        Log::debug('Searching for piggy information.');
 
         if (null !== $piggyBankId) {
             $searchResult = $this->find($piggyBankId);
             if ($searchResult instanceof PiggyBank) {
-                app('log')->debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
+                Log::debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
 
                 return $searchResult;
             }
@@ -80,12 +80,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         if (null !== $piggyBankName) {
             $searchResult = $this->findByName($piggyBankName);
             if ($searchResult instanceof PiggyBank) {
-                app('log')->debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
+                Log::debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
 
                 return $searchResult;
             }
         }
-        app('log')->debug('Found no piggy bank.');
+        Log::debug('Found no piggy bank.');
 
         return null;
     }
@@ -158,7 +158,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
      */
     public function getExactAmount(PiggyBank $piggyBank, TransactionJournal $journal): string
     {
-        app('log')->debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
+        Log::debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
 
         $operator        = null;
         $currency        = null;
@@ -173,7 +173,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
         $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
-        app('log')->debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
+        Log::debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
         /** @var Transaction $source */
         $source          = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
@@ -187,26 +187,26 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             if ($account->id === $source->account_id) {
                 $operator = 'negative';
                 $currency = $accountRepos->getAccountCurrency($source->account) ?? $primaryCurrency;
-                app('log')->debug(sprintf('Currency will draw money out of piggy bank. Source currency is %s', $currency->code));
+                Log::debug(sprintf('Currency will draw money out of piggy bank. Source currency is %s', $currency->code));
                 ++$hits;
             }
             // matches destination, which means amount will be added to piggy.
             if ($account->id === $destination->account_id) {
                 $operator = 'positive';
                 $currency = $accountRepos->getAccountCurrency($destination->account) ?? $primaryCurrency;
-                app('log')->debug(sprintf('Currency will add money to piggy bank. Destination currency is %s', $currency->code));
+                Log::debug(sprintf('Currency will add money to piggy bank. Destination currency is %s', $currency->code));
                 ++$hits;
             }
         }
         if ($hits > 1) {
-            app('log')->debug(sprintf('Transaction journal is related to %d of the accounts, cannot determine what to do. Return "0".', $hits));
+            Log::debug(sprintf('Transaction journal is related to %d of the accounts, cannot determine what to do. Return "0".', $hits));
 
             return '0';
         }
 
 
         if (null === $operator || null === $currency) {
-            app('log')->debug('Currency is NULL and operator is NULL, return "0".');
+            Log::debug('Currency is NULL and operator is NULL, return "0".');
 
             return '0';
         }
@@ -214,52 +214,52 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         // which amount from the transaction matches?
         $amount          = null;
         if ((int) $source->transaction_currency_id === $currency->id) {
-            app('log')->debug('Use normal amount');
-            $amount = app('steam')->{$operator}($source->amount); // @phpstan-ignore-line
+            Log::debug('Use normal amount');
+            $amount = Steam::{$operator}($source->amount); // @phpstan-ignore-line
         }
         if ((int) $source->foreign_currency_id === $currency->id) {
-            app('log')->debug('Use foreign amount');
-            $amount = app('steam')->{$operator}($source->foreign_amount); // @phpstan-ignore-line
+            Log::debug('Use foreign amount');
+            $amount = Steam::{$operator}($source->foreign_amount); // @phpstan-ignore-line
         }
         if (null === $amount) {
-            app('log')->debug('No match on currency, so amount remains null, return "0".');
+            Log::debug('No match on currency, so amount remains null, return "0".');
 
             return '0';
         }
 
-        app('log')->debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
+        Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
         $currentAmount   = $this->getCurrentAmount($piggyBank);
         $room            = bcsub($piggyBank->target_amount, $currentAmount);
         $compare         = bcmul($currentAmount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
-            $room = app('steam')->positive($amount);
-            app('log')->debug(sprintf('Room is now %s', $room));
+            $room = Steam::positive($amount);
+            Log::debug(sprintf('Room is now %s', $room));
         }
 
-        app('log')->debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
+        Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if the amount is positive, make sure it fits in piggy bank:
-        if (1 === bccomp($amount, '0') && -1 === bccomp((string) $room, $amount)) {
+        if (1 === bccomp($amount, '0') && -1 === bccomp($room, $amount)) {
             // amount is positive and $room is smaller than $amount
-            app('log')->debug(sprintf('Room in piggy bank for extra money is %f', $room));
-            app('log')->debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-            app('log')->debug(sprintf('New amount is %f', $room));
+            Log::debug(sprintf('Room in piggy bank for extra money is %f', $room));
+            Log::debug(sprintf('There is NO room to add %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
+            Log::debug(sprintf('New amount is %f', $room));
 
             return $room;
         }
 
         // amount is negative and $currentAmount is smaller than $amount
         if (-1 === bccomp($amount, '0') && 1 === bccomp($compare, $amount)) {
-            app('log')->debug(sprintf('Max amount to remove is %f', $currentAmount));
-            app('log')->debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
-            app('log')->debug(sprintf('New amount is %f', $compare));
+            Log::debug(sprintf('Max amount to remove is %f', $currentAmount));
+            Log::debug(sprintf('Cannot remove %f from piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
+            Log::debug(sprintf('New amount is %f', $compare));
 
             return $compare;
         }
 
-        return (string) $amount;
+        return $amount;
     }
 
     /**

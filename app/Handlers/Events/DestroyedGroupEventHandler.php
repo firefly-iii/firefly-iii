@@ -52,10 +52,10 @@ class DestroyedGroupEventHandler
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
-        $engine->setObjects(new Collection([$group]));
+        $engine->setObjects(new Collection()->push($group));
         $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION);
         $engine->generateMessages();
-
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 

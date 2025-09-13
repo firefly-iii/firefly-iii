@@ -57,8 +57,6 @@ class CorrectsPiggyBanks extends Command
                 $event->transaction_journal_id = null;
                 $event->save();
                 ++$count;
-
-                continue;
             }
         }
         if (0 !== $count) {

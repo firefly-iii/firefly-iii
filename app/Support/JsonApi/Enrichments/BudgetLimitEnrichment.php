@@ -1,5 +1,26 @@
 <?php
 
+
+/*
+ * BudgetLimitEnrichment.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
@@ -20,19 +41,18 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private User                $user;
-    private UserGroup           $userGroup;
+    private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
     private array               $ids              = [];
     private array               $notes            = [];
     private Carbon              $start;
     private Carbon              $end;
-    private Collection          $budgets;
     private array               $expenses         = [];
     private array               $pcExpenses       = [];
     private array               $currencyIds      = [];
     private array               $currencies       = [];
     private bool                $convertToPrimary = true;
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
 
     public function __construct()
     {
@@ -125,16 +145,17 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectBudgets(): void
     {
-        $budgetIds     = $this->collection->pluck('budget_id')->unique()->toArray();
-        $this->budgets = Budget::whereIn('id', $budgetIds)->get();
+        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
+        $budgets    = Budget::whereIn('id', $budgetIds)->get();
 
-        $repository    = app(OperationsRepository::class);
+        $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses      = $repository->collectExpenses($this->start, $this->end, null, $this->budgets, null);
+        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
             $id                  = (int)$budgetLimit->id;
+            $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
             $filteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
             $this->expenses[$id] = array_values($filteredExpenses);
 
@@ -159,20 +180,21 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses   = array_map(function ($first) {
-            return array_map(function ($second) {
-                $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+        $this->expenses   = array_map(fn ($first) => array_map(function ($second) {
+            $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
-                return $second;
-            }, $first);
-        }, $this->expenses);
+            return $second;
+        }, $first), $this->expenses);
 
-        $this->pcExpenses = array_map(function ($first) {
-            return array_map(function ($second) {
-                $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+        $this->pcExpenses = array_map(fn ($first) => array_map(function ($second) {
+            $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
-                return $second;
-            }, $first);
-        }, $this->expenses);
+            return $second;
+        }, $first), $this->expenses);
+    }
+
+    private function filterToBudget(array $expenses, int $budget): array
+    {
+        return array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
     }
 }

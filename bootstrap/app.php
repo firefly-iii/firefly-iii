@@ -25,6 +25,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use FireflyIII\Exceptions\Handler;
+use function Safe\realpath;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,7 +72,7 @@ if (!function_exists('stringIsEqual')) {
 }
 
 $app = new Application(
-    (string)realpath(__DIR__ . '/../')
+    realpath(__DIR__ . '/../')
 );
 
 /*

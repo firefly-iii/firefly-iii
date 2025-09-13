@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;

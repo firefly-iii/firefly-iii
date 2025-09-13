@@ -3,6 +3,47 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.0 - 2025-09-19
+
+### Added
+
+- [Issue 5532](https://github.com/firefly-iii/firefly-iii/issues/5532) (Asset prices and exchange rates) reported by @svozniuk
+- [Discussion 10725](https://github.com/orgs/firefly-iii/discussions/10725) (New webhook triggers) started by @Billos. See the [documentation](https://docs.firefly-iii.org/how-to/firefly-iii/features/webhooks/).
+
+### Fixed
+
+- [Issue 10790](https://github.com/firefly-iii/firefly-iii/issues/10790) (Undefined variable $occurrences) reported by @senna1992
+- [Issue 10791](https://github.com/firefly-iii/firefly-iii/issues/10791) (Clone and edit a transaction with a different currency doesn't clear the foreign transaction amount) reported by @jxtxzzw
+- [Issue 10794](https://github.com/firefly-iii/firefly-iii/issues/10794) (Error with recurring transaction) reported by @MaximSN
+- [Issue 10799](https://github.com/firefly-iii/firefly-iii/issues/10799) (Budget - "Left (per day)" not showing the correct value) reported by @GensHaze
+- [Issue 10802](https://github.com/firefly-iii/firefly-iii/issues/10802) (Crash when trying to update a budget limit) reported by @Billos
+- [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
+- [Issue 10808](https://github.com/firefly-iii/firefly-iii/issues/10808) (cron job Error: Undefined variable $preference) reported by @MexerSam
+- [Issue 10813](https://github.com/firefly-iii/firefly-iii/issues/10813) (Error "Argument #2 ($symbol) must be of type string" while try open subscriptions section) reported by @mrResident
+- [Issue 10814](https://github.com/firefly-iii/firefly-iii/issues/10814) (Deposit show negative amounts & red numbers in detail view) reported by @dreautall
+- [Issue 10819](https://github.com/firefly-iii/firefly-iii/issues/10819) (Internal Server Error when trying to open piggy banks) reported by @noantiq
+- [Issue 10820](https://github.com/firefly-iii/firefly-iii/issues/10820) (Unable to search date 1970-01-01 to apply rule.) reported by @Kage1
+- [Issue 10824](https://github.com/firefly-iii/firefly-iii/issues/10824) (Converting withdrawal to transfer to account in different currency doesn't allow setting correct currencies) reported by @avee87
+- [Issue 10833](https://github.com/firefly-iii/firefly-iii/issues/10833) (Can't open transaction after assigning a tag to it) reported by @zynexiz
+- [Issue 10837](https://github.com/firefly-iii/firefly-iii/issues/10837) (Internal Server Erorr when viewing or editing Recurring transaction) reported by @Tommy78649
+- [Discussion 10846](https://github.com/orgs/firefly-iii/discussions/10846) (Add support for WebP format in attachments) started by @Idestius
+- [Issue 10853](https://github.com/firefly-iii/firefly-iii/issues/10853) (Failed to Send Discord Notification) reported by @pimonteiro
+- [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
+- [Issue 10871](https://github.com/firefly-iii/firefly-iii/issues/10871) (Transactions disappear after deleting attachment) reported by @dvmfa90
+- [Discussion 10883](https://github.com/orgs/firefly-iii/discussions/10883) (Initial balance for account is missing from exported CSV) started by @ajaskiewiczpl
+- [Issue 10888](https://github.com/firefly-iii/firefly-iii/issues/10888) (Recurring transation forgets repetition type, skip and weekend action) reported by @mansellrace
+- [Discussion 10891](https://github.com/orgs/firefly-iii/discussions/10891) (User group id is null when downloading new exchange rates) started by @dakennguyen
+- [Issue 10898](https://github.com/firefly-iii/firefly-iii/issues/10898) (Paperclip icon appears for transactions without attachments in Tag view) reported by @empeig
+
+### API
+
+- [Issue 8345](https://github.com/firefly-iii/firefly-iii/issues/8345) (API: Distinguish spent & earned at `/v2/chart/category/dashboard` (or future `v2/categories`)) reported by @dreautall
+- [Issue 10804](https://github.com/firefly-iii/firefly-iii/issues/10804) (No notes information included in the "List all accounts" API call) reported by @gpampuro
+- [Issue 10806](https://github.com/firefly-iii/firefly-iii/issues/10806) (API: `/v1/chart/balance/balance` has undocumented `period` parameter) reported by @dreautall
+- [Issue 10807](https://github.com/firefly-iii/firefly-iii/issues/10807) (API: `/v1/bills` field `object_group_id` returns int, should be string) reported by @dreautall
+- [Issue 10815](https://github.com/firefly-iii/firefly-iii/issues/10815) (API: `/v1/accounts` balance is off by a day) reported by @dreautall
+- [Issue 10827](https://github.com/firefly-iii/firefly-iii/issues/10827) (Trigger Recurrence by API) reported by @MexerSam
+
 ## 6.3.2 - 2025-08-20
 
 ### Fixed

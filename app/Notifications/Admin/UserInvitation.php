@@ -27,7 +27,6 @@ namespace FireflyIII\Notifications\Admin;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -36,7 +35,6 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 /**
  * Class UserInvitation
@@ -73,20 +71,20 @@ class UserInvitation extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function toNtfy(OwnerNotifiable $notifiable): Message
-    {
-        Log::debug('Now in toNtfy() for UserInvitation');
-        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.invitation_created_subject'));
-        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
-
-        return $message;
-    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        Log::debug('Now in toNtfy() for UserInvitation');
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.invitation_created_subject'));
+    //        $message->body((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

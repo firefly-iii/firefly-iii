@@ -84,6 +84,8 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
+
+        /** @var Budget $budget */
         $budget       = $enrichment->enrichSingle($budget);
 
 

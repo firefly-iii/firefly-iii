@@ -270,7 +270,7 @@ class TransactionJournalFactory
             $negative = $transactionFactory->createNegative((string) $row['amount'], (string) $row['foreign_amount']);
         } catch (FireflyException $e) {
             Log::error(sprintf('Exception creating negative transaction: %s', $e->getMessage()));
-            $this->forceDeleteOnError(new Collection([$journal]));
+            $this->forceDeleteOnError(new Collection()->push($journal));
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }
@@ -305,7 +305,7 @@ class TransactionJournalFactory
         } catch (FireflyException $e) {
             Log::error(sprintf('Exception creating positive transaction: %s', $e->getMessage()));
             $this->forceTrDelete($negative);
-            $this->forceDeleteOnError(new Collection([$journal]));
+            $this->forceDeleteOnError(new Collection()->push($journal));
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }

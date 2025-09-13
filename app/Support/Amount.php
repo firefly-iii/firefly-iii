@@ -29,9 +29,11 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use NumberFormatter;
 
 /**
@@ -58,8 +60,8 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
-        $locale  = app('steam')->getLocale();
-        $rounded = app('steam')->bcround($amount, $decimalPlaces);
+        $locale  = Steam::getLocale();
+        $rounded = Steam::bcround($amount, $decimalPlaces);
         $coloured ??= true;
 
         $fmt     = new NumberFormatter($locale, NumberFormatter::CURRENCY);
@@ -69,10 +71,10 @@ class Amount
         $result  = (string)$fmt->format((float)$rounded); // intentional float
 
         if (true === $coloured) {
-            if (1 === bccomp((string)$rounded, '0')) {
+            if (1 === bccomp($rounded, '0')) {
                 return sprintf('<span class="text-success money-positive">%s</span>', $result);
             }
-            if (-1 === bccomp((string)$rounded, '0')) {
+            if (-1 === bccomp($rounded, '0')) {
                 return sprintf('<span class="text-danger money-negative">%s</span>', $result);
             }
 
@@ -84,7 +86,7 @@ class Amount
 
     public function formatByCurrencyId(int $currencyId, string $amount, ?bool $coloured = null): string
     {
-        $format = TransactionCurrency::find($currencyId);
+        $format = $this->getTransactionCurrencyById($currencyId);
 
         return $this->formatFlat($format->symbol, $format->decimal_places, $amount, $coloured);
     }
@@ -112,6 +114,50 @@ class Amount
         }
 
         return (string)$amount;
+    }
+
+    public function getTransactionCurrencyById(int $currencyId): TransactionCurrency
+    {
+        $instance = PreferencesSingleton::getInstance();
+        $key      = sprintf('transaction_currency_%d', $currencyId);
+
+        /** @var null|TransactionCurrency $pref */
+        $pref     = $instance->getPreference($key);
+        if (null !== $pref) {
+            return $pref;
+        }
+        $currency = TransactionCurrency::find($currencyId);
+        if (null === $currency) {
+            $message = sprintf('Could not find a transaction currency with ID #%d', $currencyId);
+            Log::error($message);
+
+            throw new FireflyException($message);
+        }
+        $instance->setPreference($key, $currency);
+
+        return $currency;
+    }
+
+    public function getTransactionCurrencyByCode(string $code): TransactionCurrency
+    {
+        $instance = PreferencesSingleton::getInstance();
+        $key      = sprintf('transaction_currency_%s', $code);
+
+        /** @var null|TransactionCurrency $pref */
+        $pref     = $instance->getPreference($key);
+        if (null !== $pref) {
+            return $pref;
+        }
+        $currency = TransactionCurrency::whereCode($code)->first();
+        if (null === $currency) {
+            $message = sprintf('Could not find a transaction currency with code "%s"', $code);
+            Log::error($message);
+
+            throw new FireflyException($message);
+        }
+        $instance->setPreference($key, $currency);
+
+        return $currency;
     }
 
     public function convertToPrimary(?User $user = null): bool
@@ -176,7 +222,7 @@ class Amount
 
     public function getSystemCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', 'EUR')->first();
+        return TransactionCurrency::whereNull('deleted_at')->where('code', 'EUR')->first();
     }
 
     /**
@@ -242,8 +288,8 @@ class Amount
     private function getLocaleInfo(): array
     {
         // get config from preference, not from translation:
-        $locale                    = app('steam')->getLocale();
-        $array                     = app('steam')->getLocaleArray($locale);
+        $locale                    = Steam::getLocale();
+        $array                     = Steam::getLocaleArray($locale);
 
         setlocale(LC_MONETARY, $array);
         $info                      = localeconv();

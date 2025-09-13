@@ -32,7 +32,6 @@ use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
-use FireflyIII\Notifications\Test\OwnerTestNotificationNtfy;
 use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
 use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
@@ -140,10 +139,10 @@ class AdminEventHandler
 
                 break;
 
-            case 'ntfy':
-                $class = OwnerTestNotificationNtfy::class;
-
-                break;
+                //            case 'ntfy':
+                //                $class = OwnerTestNotificationNtfy::class;
+                //
+                //                break;
 
             case 'pushover':
                 $class = OwnerTestNotificationPushover::class;

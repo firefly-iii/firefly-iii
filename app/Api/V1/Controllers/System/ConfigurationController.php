@@ -133,7 +133,6 @@ class ConfigurationController extends Controller
      */
     public function show(string $configKey): JsonResponse
     {
-        $data     = [];
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
         if (str_starts_with($configKey, 'configuration.')) {
@@ -156,13 +155,11 @@ class ConfigurationController extends Controller
         }
 
         // fallback
-        if (!str_starts_with($configKey, 'configuration.')) {
-            $data = [
-                'title'    => $configKey,
-                'value'    => config($configKey),
-                'editable' => false,
-            ];
-        }
+        $data     = [
+            'title'    => $configKey,
+            'value'    => config($shortKey),
+            'editable' => false,
+        ];
 
         return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }

@@ -45,7 +45,7 @@ class IndexController extends Controller
 {
     use GetConfigurationData;
 
-    private RecurringRepositoryInterface $recurringRepos;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -60,7 +60,7 @@ class IndexController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
                 app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->recurringRepos = app(RecurringRepositoryInterface::class);
+                $this->repository = app(RecurringRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -79,7 +79,7 @@ class IndexController extends Controller
     {
         $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
-        $collection  = $this->recurringRepos->get();
+        $collection  = $this->repository->get();
         $today       = today(config('app.timezone'));
         $year        = today(config('app.timezone'));
 

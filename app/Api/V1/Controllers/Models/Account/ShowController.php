@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Models\Account\ShowRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -33,7 +34,6 @@ use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -71,34 +71,38 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function index(Request $request): JsonResponse
+    public function index(ShowRequest $request): JsonResponse
     {
         $manager     = $this->getManager();
-        $type        = $request->get('type') ?? 'all';
-        $this->parameters->set('type', $type);
+        $params      = $request->getParameters();
+        $this->parameters->set('type', $params['type']);
 
         // types to get, page size:
-        $types       = $this->mapAccountTypes($this->parameters->get('type'));
-        $pageSize    = $this->parameters->get('limit');
+        $types       = $this->mapAccountTypes($params['type']);
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection  = $this->repository->getAccountsByType($types, $this->parameters->get('sort') ?? []);
+        $collection  = $this->repository->getAccountsByType($types, $params['sort']);
         $count       = $collection->count();
 
         // continue sort:
-        $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        // TODO if the user sorts on DB dependent field there must be no slice before enrichment, only after.
+        // TODO still need to figure out how to do this easily.
+        $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $params['limit'], $params['limit']);
 
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
+        $enrichment->setSort($params['sort']);
         $enrichment->setDate($this->parameters->get('date'));
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($admin);
         $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($accounts, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($accounts, $count, $params['limit'], $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.accounts.index').$this->buildParams());
 
         /** @var AccountTransformer $transformer */
@@ -117,7 +121,7 @@ class ShowController extends Controller
      *
      * Show single instance.
      */
-    public function show(Account $account): JsonResponse
+    public function show(ShowRequest $request, Account $account): JsonResponse
     {
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
@@ -129,6 +133,8 @@ class ShowController extends Controller
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
         $enrichment->setDate($this->parameters->get('date'));
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($admin);
         $account     = $enrichment->enrichSingle($account);
 

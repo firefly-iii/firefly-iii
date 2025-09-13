@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
+use function Safe\define;
+
 if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
 }

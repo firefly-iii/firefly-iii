@@ -26,14 +26,12 @@ namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 /**
  * Class BillReminder
@@ -73,16 +71,16 @@ class BillReminder extends Notification
         return (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title($this->getSubject());
-        $message->body((string) trans('email.bill_warning_please_action'));
-
-        return $message;
-    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title($this->getSubject());
+    //        $message->body((string) trans('email.bill_warning_please_action'));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

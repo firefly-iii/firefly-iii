@@ -35,6 +35,8 @@ use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
+use Safe\Exceptions\FileinfoException;
+use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use function Safe\tmpfile;
@@ -126,9 +128,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentFromApi(Attachment $attachment, string $content): bool
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $resource             = tmpfile();
-        if (false === $resource) {
-            Log::error('Cannot create temp-file for file upload.');
+
+        try {
+            $resource = tmpfile();
+        } catch (FilesystemException $e) {
+            Log::error(sprintf('Cannot create temp-file for file upload: %s', $e->getMessage()));
 
             return false;
         }
@@ -141,17 +145,20 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         $path                 = stream_get_meta_data($resource)['uri'];
         Log::debug(sprintf('Path is %s', $path));
-        $result               = fwrite($resource, $content);
-        if (false === $result) {
-            Log::error('Could not write temp file.');
+
+        try {
+            $result = fwrite($resource, $content);
+        } catch (FilesystemException $e) {
+            Log::error(sprintf('Could not write to temp file: %s', $e->getMessage()));
 
             return false;
         }
         Log::debug(sprintf('Wrote %d bytes to temp file.', $result));
-        $finfo                = finfo_open(FILEINFO_MIME_TYPE);
-        if (false === $finfo) {
-            Log::error('Could not open finfo.');
-            fclose($resource);
+
+        try {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        } catch (FileinfoException $e) {
+            Log::error(sprintf('Could not open finfo handler: %s', $e->getMessage()));
 
             return false;
         }
@@ -171,7 +178,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = (string) md5_file($path);
+        $attachment->md5      = md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = strlen($content);
         $attachment->uploaded = true;
@@ -233,7 +240,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment           = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = (string) md5_file($file->getRealPath());
+            $attachment->md5      = md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();

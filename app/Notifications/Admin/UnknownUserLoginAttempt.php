@@ -26,7 +26,6 @@ namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
@@ -35,7 +34,6 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 class UnknownUserLoginAttempt extends Notification
 {
@@ -68,20 +66,21 @@ class UnknownUserLoginAttempt extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function toNtfy(OwnerNotifiable $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-        $message  = new Message();
-        $ip       = Request::ip();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.unknown_user_subject'));
-        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]));
-
-        return $message;
-    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $ip       = Request::ip();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.unknown_user_subject'));
+    //        $message->body((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

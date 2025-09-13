@@ -116,11 +116,12 @@ class StoredGroupEventHandler
         // tell the generator which trigger it should look for
         $engine->setTrigger(WebhookTrigger::STORE_TRANSACTION);
         // tell the generator which objects to process
-        $engine->setObjects(new Collection([$group]));
+        $engine->setObjects(new Collection()->push($group));
         // tell the generator to generate the messages
         $engine->generateMessages();
 
         // trigger event to send them:
+        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
     }
 }

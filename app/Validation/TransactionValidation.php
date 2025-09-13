@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -296,7 +296,7 @@ trait TransactionValidation
             return true;
         }
 
-        return (bool) $this->isAsset($account);
+        return $this->isAsset($account);
     }
 
     private function isLiability(Account $account): bool

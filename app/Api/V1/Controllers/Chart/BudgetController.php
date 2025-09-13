@@ -31,10 +31,10 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
@@ -55,7 +55,6 @@ class BudgetController extends Controller
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface  $blRepository;
     private array                           $currencies = [];
-    private TransactionCurrency             $currency;
     private BudgetRepositoryInterface       $repository;
 
     public function __construct()
@@ -115,7 +114,7 @@ class BudgetController extends Controller
         // get all limits:
         $limits     = $this->blRepository->getBudgetLimits($budget, $start, $end);
         $rows       = [];
-        $spent      = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
+        $spent      = $this->opsRepository->listExpenses($start, $end, null, new Collection()->push($budget));
         $expenses   = $this->processExpenses($budget->id, $spent, $start, $end);
         $converter  = new ExchangeRateConverter();
         $currencies = [$this->primaryCurrency->id => $this->primaryCurrency];
@@ -134,9 +133,9 @@ class BudgetController extends Controller
             $row['pc_left']      = '0';
             $row['pc_overspent'] = '0';
 
-            if (null !== $limit) {
+            if ($limit instanceof BudgetLimit) {
                 $row['budgeted']  = $limit->amount;
-                $row['left']      = bcsub($row['budgeted'], bcmul($row['spent'], '-1'));
+                $row['left']      = bcsub((string) $row['budgeted'], bcmul((string) $row['spent'], '-1'));
                 $row['overspent'] = bcmul($row['left'], '-1');
                 $row['left']      = 1 === bccomp($row['left'], '0') ? $row['left'] : '0';
                 $row['overspent'] = 1 === bccomp($row['overspent'], '0') ? $row['overspent'] : '0';
@@ -144,7 +143,7 @@ class BudgetController extends Controller
 
             // convert data if necessary.
             if (true === $this->convertToPrimary && $currencyId !== $this->primaryCurrency->id) {
-                $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+                $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
                 $row['pc_budgeted']  = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['budgeted']);
                 $row['pc_spent']     = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['spent']);
                 $row['pc_left']      = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['left']);
@@ -201,18 +200,18 @@ class BudgetController extends Controller
         return $return;
     }
 
-    /**
-     * When no budget limits are present, the expenses of the whole period are collected and grouped.
-     * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
-     *
-     * @throws FireflyException
-     */
-    private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
-    {
-        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection([$budget]));
-
-        return $this->processExpenses($budget->id, $spent, $start, $end);
-    }
+    //    /**
+    //     * When no budget limits are present, the expenses of the whole period are collected and grouped.
+    //     * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
+    //     *
+    //     * @throws FireflyException
+    //     */
+    //    private function noBudgetLimits(Budget $budget, Carbon $start, Carbon $end): array
+    //    {
+    //        $spent = $this->opsRepository->listExpenses($start, $end, null, new Collection()->push($budget));
+    //
+    //        return $this->processExpenses($budget->id, $spent, $start, $end);
+    //    }
 
     /**
      * Shared between the "noBudgetLimits" function and "processLimit". Will take a single set of expenses and return
@@ -232,7 +231,7 @@ class BudgetController extends Controller
          * @var array $block
          */
         foreach ($spent as $currencyId => $block) {
-            $this->currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+            $this->currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
             $return[$currencyId]           ??= [
                 'currency_id'             => (string)$currencyId,
                 'currency_code'           => $block['currency_code'],
@@ -251,66 +250,68 @@ class BudgetController extends Controller
             // var_dump($return);
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
-                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], (string)$journal['amount']);
+                /** @var numeric-string $amount */
+                $amount                       = (string)$journal['amount'];
+                $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $amount);
             }
         }
 
         return $return;
     }
 
-    /**
-     * Function that processes each budget limit (per budget).
-     *
-     * If you have a budget limit in EUR, only transactions in EUR will be considered.
-     * If you have a budget limit in GBP, only transactions in GBP will be considered.
-     *
-     * If you have a budget limit in EUR, and a transaction in GBP, it will not be considered for the EUR budget limit.
-     *
-     * @throws FireflyException
-     */
-    private function budgetLimits(Budget $budget, Collection $limits): array
-    {
-        Log::debug(sprintf('Now in budgetLimits(#%d)', $budget->id));
-        $data = [];
+    //    /**
+    //     * Function that processes each budget limit (per budget).
+    //     *
+    //     * If you have a budget limit in EUR, only transactions in EUR will be considered.
+    //     * If you have a budget limit in GBP, only transactions in GBP will be considered.
+    //     *
+    //     * If you have a budget limit in EUR, and a transaction in GBP, it will not be considered for the EUR budget limit.
+    //     *
+    //     * @throws FireflyException
+    //     */
+    //    private function budgetLimits(Budget $budget, Collection $limits): array
+    //    {
+    //        Log::debug(sprintf('Now in budgetLimits(#%d)', $budget->id));
+    //        $data = [];
+    //
+    //        /** @var BudgetLimit $limit */
+    //        foreach ($limits as $limit) {
+    //            $data = array_merge($data, $this->processLimit($budget, $limit));
+    //        }
+    //
+    //        return $data;
+    //    }
 
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $data = array_merge($data, $this->processLimit($budget, $limit));
-        }
-
-        return $data;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function processLimit(Budget $budget, BudgetLimit $limit): array
-    {
-        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
-        $end             = clone $limit->end_date;
-        $end->endOfDay();
-        $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection([$budget]));
-        $limitCurrencyId = $limit->transaction_currency_id;
-
-        /** @var array $entry */
-        // only spent the entry where the entry's currency matches the budget limit's currency
-        // so $filtered will only have 1 or 0 entries
-        $filtered        = array_filter($spent, fn ($entry) => $entry['currency_id'] === $limitCurrencyId);
-        $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
-        if (1 === count($result)) {
-            $compare                              = bccomp($limit->amount, (string)app('steam')->positive($result[$limitCurrencyId]['spent']));
-            $result[$limitCurrencyId]['budgeted'] = $limit->amount;
-            if (1 === $compare) {
-                // convert this amount into the primary currency:
-                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']);
-            }
-            if ($compare <= 0) {
-                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']));
-            }
-        }
-
-        return $result;
-    }
+    //    /**
+    //     * @throws FireflyException
+    //     */
+    //    private function processLimit(Budget $budget, BudgetLimit $limit): array
+    //    {
+    //        Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
+    //        $end             = clone $limit->end_date;
+    //        $end->endOfDay();
+    //        $spent           = $this->opsRepository->listExpenses($limit->start_date, $end, null, new Collection()->push($budget));
+    //        $limitCurrencyId = $limit->transaction_currency_id;
+    //
+    //        /** @var array $entry */
+    //        // only spent the entry where the entry's currency matches the budget limit's currency
+    //        // so $filtered will only have 1 or 0 entries
+    //        $filtered        = array_filter($spent, fn ($entry) => $entry['currency_id'] === $limitCurrencyId);
+    //        $result          = $this->processExpenses($budget->id, $filtered, $limit->start_date, $end);
+    //        if (1 === count($result)) {
+    //            $compare                              = bccomp($limit->amount, (string)app('steam')->positive($result[$limitCurrencyId]['spent']));
+    //            $result[$limitCurrencyId]['budgeted'] = $limit->amount;
+    //            if (1 === $compare) {
+    //                // convert this amount into the primary currency:
+    //                $result[$limitCurrencyId]['left'] = bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']);
+    //            }
+    //            if ($compare <= 0) {
+    //                $result[$limitCurrencyId]['overspent'] = app('steam')->positive(bcadd($limit->amount, (string)$result[$limitCurrencyId]['spent']));
+    //            }
+    //        }
+    //
+    //        return $result;
+    //    }
 
     private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
     {

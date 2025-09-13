@@ -25,11 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
-use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Ntfy\Message;
-use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
 // use Illuminate\Notifications\Slack\SlackMessage;
 
@@ -49,26 +46,20 @@ class OwnerTestNotificationNtfy extends Notification
         ];
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function toNtfy(OwnerNotifiable $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.admin_test_subject'));
-        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
-        $message->tags(['white_check_mark']);
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.admin_test_subject'));
+    //        $message->body((string) trans('email.admin_test_message', ['channel' => 'ntfy']));
+    //        $message->tags(['white_check_mark']);
+    //
+    //        return $message;
+    //    }
 
-        return $message;
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function via(OwnerNotifiable $notifiable): array
-    {
-        return [NtfyChannel::class];
-    }
+    //    public function via(OwnerNotifiable $notifiable): array
+    //    {
+    //        return [NtfyChannel::class];
+    //    }
 }

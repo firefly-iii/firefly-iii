@@ -54,12 +54,12 @@
             <div class="row">
               <div class="col-lg-12">
                 <Title :value=this.title :error="errors.title" v-on:input="title = $event"></Title>
-                <WebhookTrigger :value=this.trigger :error="errors.trigger"
-                                v-on:input="trigger = $event"></WebhookTrigger>
-                <WebhookResponse :value=this.response :error="errors.response"
-                                 v-on:input="response = $event"></WebhookResponse>
-                <WebhookDelivery :value=this.delivery :error="errors.delivery"
-                                 v-on:input="delivery = $event"></WebhookDelivery>
+                <WebhookTrigger :value=this.triggers :error="errors.triggers"
+                                v-on:input="triggers = $event"></WebhookTrigger>
+                <WebhookResponse :value=this.responses :error="errors.responses"
+                                 v-on:input="responses = $event"></WebhookResponse>
+                <WebhookDelivery :value=this.deliveries :error="errors.deliveries"
+                                 v-on:input="deliveries = $event"></WebhookDelivery>
                 <URL :value=this.url :error="errors.url" v-on:input="url = $event"></URL>
                 <Checkbox :value=this.active :error="errors.active" help="ACTIVE HELP TODO" :title="$t('form.active')"
                           v-on:input="active = $event"></Checkbox>
@@ -97,17 +97,17 @@ export default {
       error_message: '',
       success_message: '',
       title: '',
-      trigger: 100,
-      response: 200,
-      delivery: 300,
+      triggers: ["STORE_TRANSACTION"],
+      responses: "RELEVANT",
+      deliveries: "JSON",
       id: 0,
       active: false,
       url: '',
       errors: {
         title: [],
-        trigger: [],
-        response: [],
-        delivery: [],
+        triggers: [],
+        responses: [],
+        deliveries: [],
         url: [],
         active: []
       }
@@ -127,49 +127,9 @@ export default {
         // console.log(response.data.data.attributes);
         this.title = response.data.data.attributes.title;
         this.id = parseInt(response.data.data.id);
-
-        // trigger value on content
-        console.log('Trigger is ' + response.data.data.attributes.trigger);
-        // TODO does not need to be hard coded.
-        if ('STORE_TRANSACTION' === response.data.data.attributes.trigger) {
-          this.trigger = 100;
-        }
-        if ('UPDATE_TRANSACTION' === response.data.data.attributes.trigger) {
-          this.trigger = 110;
-        }
-        if ('DESTROY_TRANSACTION' === response.data.data.attributes.trigger) {
-          this.trigger = 120;
-        }
-          if ('STORE_BUDGET' === response.data.data.attributes.trigger) {
-              this.trigger = 200;
-          }
-          if ('UPDATE_BUDGET' === response.data.data.attributes.trigger) {
-              this.trigger = 210;
-          }
-          if ('DESTROY_BUDGET' === response.data.data.attributes.trigger) {
-              this.trigger = 220;
-          }
-          if ('STORE_UPDATE_BUDGET_LIMIT' === response.data.data.attributes.trigger) {
-              this.trigger = 230;
-          }
-
-        // response value
-        if ('TRANSACTIONS' === response.data.data.attributes.response) {
-          this.response = 200;
-        }
-        if ('ACCOUNTS' === response.data.data.attributes.response) {
-          this.response = 210;
-        }
-          if ('BUDGET' === response.data.data.attributes.response) {
-              this.response = 230;
-          }
-        if ('NONE' === response.data.data.attributes.response) {
-          this.response = 220;
-        }
-        if ('JSON' === response.data.data.attributes.delivery) {
-          this.delivery = 300;
-        }
-
+        this.triggers = response.data.data.attributes.triggers;
+        this.responses = response.data.data.attributes.responses[0];
+        this.deliveries = response.data.data.attributes.deliveries[0];
         this.active = response.data.data.attributes.active;
         this.url = response.data.data.attributes.url;
       }).catch(error => {
@@ -182,9 +142,9 @@ export default {
       this.success_message = '';
       this.errors = {
         title: [],
-        trigger: [],
-        response: [],
-        delivery: [],
+        triggers: [],
+        responses: [],
+        deliveries: [],
         url: [],
         active: [],
       };
@@ -195,9 +155,9 @@ export default {
       // collect data
       let data = {
         title: this.title,
-        trigger: this.trigger,
-        response: this.response,
-        delivery: this.delivery,
+        triggers: this.triggers,
+        responses: [this.responses],
+        deliveries: [this.deliveries],
         url: this.url,
         active: this.active,
       };
@@ -210,9 +170,9 @@ export default {
 
         this.error_message = error.response.data.message;
         this.errors.title = error.response.data.errors.title;
-        this.errors.trigger = error.response.data.errors.trigger;
-        this.errors.response = error.response.data.errors.response;
-        this.errors.delivery = error.response.data.errors.delivery;
+        this.errors.triggers = error.response.data.errors.trigger;
+        this.errors.responses = error.response.data.errors.response;
+        this.errors.deliveries = error.response.data.errors.deliveries;
         this.errors.url = error.response.data.errors.url;
 
         // enable button again

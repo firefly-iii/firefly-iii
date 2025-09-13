@@ -54,12 +54,12 @@
             <div class="row">
               <div class="col-lg-12">
                 <Title :value=this.title :error="errors.title" v-on:input="title = $event"></Title>
-                <WebhookTrigger :value=this.trigger :error="errors.trigger"
-                                v-on:input="trigger = $event"></WebhookTrigger>
-                <WebhookResponse :value=this.response :error="errors.response"
-                                 v-on:input="response = $event"></WebhookResponse>
-                <WebhookDelivery :value=this.delivery :error="errors.delivery"
-                                 v-on:input="delivery = $event"></WebhookDelivery>
+                <WebhookTrigger :value=this.triggers :error="errors.trigger"
+                                v-on:input="triggers = $event"></WebhookTrigger>
+                <WebhookResponse :value=this.responses :error="errors.response"
+                                 v-on:input="responses = $event"></WebhookResponse>
+                <WebhookDelivery :value=this.deliveries :error="errors.delivery"
+                                 v-on:input="deliveries = $event"></WebhookDelivery>
                 <URL :value=this.url :error="errors.url" v-on:input="url = $event"></URL>
                 <Checkbox :value=this.active :error="errors.active" help="ACTIVE HELP TODO" :title="$t('form.active')" v-on:input="active = $event"></Checkbox>
               </div>
@@ -96,16 +96,16 @@ export default {
       error_message: '',
       success_message: '',
       title: '',
-      trigger: 100,
-      response: 200,
-      delivery: 300,
+      triggers: ["STORE_TRANSACTION"],
+      responses: "RELEVANT",
+      deliveries: "JSON",
       active: true,
       url: '',
       errors: {
         title: [],
-        trigger: [],
-        response: [],
-        delivery: [],
+        triggers: [],
+        responses: [],
+        deliveries: [],
         url: [],
         active: []
       }
@@ -118,9 +118,9 @@ export default {
       this.success_message = '';
       this.errors = {
         title: [],
-        trigger: [],
-        response: [],
-        delivery: [],
+        triggers: [],
+        responses: [],
+        deliveries: [],
         url: [],
         active: [],
       };
@@ -131,9 +131,9 @@ export default {
       // collect data
       let data = {
         title: this.title,
-        trigger: this.trigger,
-        response: this.response,
-        delivery: this.delivery,
+        triggers: this.triggers,
+        responses: [this.responses],
+        deliveries: [this.deliveries],
         url: this.url,
         active: this.active,
       };
@@ -148,9 +148,9 @@ export default {
         //console.log(error.response.data);
         this.error_message = error.response.data.message;
         this.errors.title = error.response.data.errors.title;
-        this.errors.trigger = error.response.data.errors.trigger;
-        this.errors.response = error.response.data.errors.response;
-        this.errors.delivery = error.response.data.errors.delivery;
+        this.errors.triggers = error.response.data.errors.triggers;
+        this.errors.responses = error.response.data.errors.responses;
+        this.errors.deliveries = error.response.data.errors.deliveries;
         this.errors.url = error.response.data.errors.url;
 
         // enable button again

@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -82,7 +83,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->{$direction}((string) $journal['amount']), // @phpstan-ignore-line
+                'amount'                   => Steam::{$direction}((string) $journal['amount']), // @phpstan-ignore-line
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],
@@ -330,7 +331,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $currencyId                       = $journal['currency_id'];
         $sourceKey                        = sprintf('%d-%d', $currencyId, $sourceId);
         $destKey                          = sprintf('%d-%d', $currencyId, $destinationId);
-        $amount                           = app('steam')->positive($journal['amount']);
+        $amount                           = Steam::positive($journal['amount']);
 
         // source first
         $return[$sourceKey] ??= [
@@ -361,11 +362,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ];
 
         // source account? money goes out!
-        $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+        $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], Steam::negative($amount));
         $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
         // destination  account? money comes in:
-        $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], (string) $amount);
+        $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], $amount);
         $return[$destKey]['difference']   = bcadd((string) $return[$destKey]['out'], $return[$destKey]['in']);
 
         // foreign currency
@@ -373,7 +374,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $currencyId                       = $journal['foreign_currency_id'];
             $sourceKey                        = sprintf('%d-%d', $currencyId, $sourceId);
             $destKey                          = sprintf('%d-%d', $currencyId, $destinationId);
-            $amount                           = app('steam')->positive($journal['foreign_amount']);
+            $amount                           = Steam::positive($journal['foreign_amount']);
 
             // same as above:
             // source first
@@ -404,11 +405,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_code'    => $journal['foreign_currency_code'],
             ];
             // source account? money goes out! (same as above)
-            $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], (string) app('steam')->negative($amount));
+            $return[$sourceKey]['out']        = bcadd((string) $return[$sourceKey]['out'], Steam::negative($amount));
             $return[$sourceKey]['difference'] = bcadd($return[$sourceKey]['out'], (string) $return[$sourceKey]['in']);
 
             // destination  account? money comes in:
-            $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], (string) $amount);
+            $return[$destKey]['in']           = bcadd((string) $return[$destKey]['in'], $amount);
             $return[$destKey]['difference']   = bcadd((string) $return[$destKey]['out'], $return[$destKey]['in']);
         }
 

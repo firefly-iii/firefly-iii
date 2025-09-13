@@ -32,7 +32,9 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -90,6 +92,13 @@ class ShowController extends Controller
         $paginator   = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
 
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhooks    = $enrichment->enrich($webhooks);
+
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
@@ -116,6 +125,13 @@ class ShowController extends Controller
 
         Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
         $manager     = $this->getManager();
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhook     = $enrichment->enrichSingle($webhook);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
@@ -149,14 +165,14 @@ class ShowController extends Controller
         // tell the generator which trigger it should look for
         $engine->setTrigger(WebhookTrigger::tryFrom($webhook->trigger));
         // tell the generator which objects to process
-        $engine->setObjects(new Collection([$group]));
+        $engine->setObjects(new Collection()->push($group));
         // set the webhook to trigger
-        $engine->setWebhooks(new Collection([$webhook]));
+        $engine->setWebhooks(new Collection()->push($webhook));
         // tell the generator to generate the messages
         $engine->generateMessages();
 
         // trigger event to send them:
-        Log::debug('send event RequestedSendWebhookMessages');
+        Log::debug('send event RequestedSendWebhookMessages from ShowController::triggerTransaction()');
         event(new RequestedSendWebhookMessages());
 
         return response()->json([], 204);

@@ -61,7 +61,7 @@ trait UserGroupTrait
     /**
      * @throws FireflyException
      */
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(Authenticatable|User|null $user): void
     {
         if ($user instanceof User) {
             $this->user      = $user;
@@ -72,7 +72,7 @@ trait UserGroupTrait
 
             return;
         }
-        $class = null === $user ? 'NULL' : $user::class;
+        $class = $user instanceof Authenticatable ? $user::class : 'NULL';
 
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }

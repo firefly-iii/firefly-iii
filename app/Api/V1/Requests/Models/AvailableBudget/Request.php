@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\AvailableBudget;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use Carbon\Carbon;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;

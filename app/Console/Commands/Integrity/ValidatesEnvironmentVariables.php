@@ -1,9 +1,9 @@
 <?php
 
-declare(strict_types=1);
+
 /*
  * ValidatesEnvironmentVariables.php
- * Copyright (c) 2025 james@firefly-iii.org.
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -18,8 +18,10 @@ declare(strict_types=1);
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Integrity;
 
@@ -30,18 +32,7 @@ class ValidatesEnvironmentVariables extends Command
 {
     use ShowsFriendlyMessages;
 
-    /**
-     * The console command description.
-     *
-     * @var null|string
-     */
     protected $description = 'Makes sure you use the correct variables.';
-
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature   = 'integrity:validates-environment-variables';
 
     /**

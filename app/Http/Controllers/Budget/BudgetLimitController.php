@@ -203,7 +203,7 @@ class BudgetLimitController extends Controller
         if ($request->expectsJson()) {
             $array                           = $limit->toArray();
             // add some extra metadata:
-            $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection([$budget]), $currency);
+            $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
             $array['spent']                  = $spentArr[$currency->id]['sum'] ?? '0';
             $array['left_formatted']         = app('amount')->formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
             $array['amount_formatted']       = app('amount')->formatAnything($limit->transactionCurrency, $limit['amount']);
@@ -264,7 +264,7 @@ class BudgetLimitController extends Controller
             $limit->start_date,
             $limit->end_date,
             null,
-            new Collection([$budgetLimit->budget]),
+            new Collection()->push($budgetLimit->budget),
             $budgetLimit->transactionCurrency
         );
         $daysLeft                        = $this->activeDaysLeft($limit->start_date, $limit->end_date);

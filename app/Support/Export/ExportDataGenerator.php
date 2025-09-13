@@ -85,7 +85,7 @@ class ExportDataGenerator
     private bool       $exportTransactions;
     private Carbon     $start;
     private User       $user;
-    private UserGroup $userGroup;
+    private UserGroup $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {

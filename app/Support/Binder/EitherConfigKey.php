@@ -52,6 +52,7 @@ class EitherConfigKey
             'firefly.languages',
             'app.timezone',
             'firefly.valid_view_ranges',
+            'firefly.preselected_accounts',
 
             // triggers and actions:
             'firefly.rule-actions',

@@ -25,19 +25,18 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Facades\Log;
-use League\CommonMark\GithubFlavoredMarkdownConverter;
 use Illuminate\Support\Facades\Route;
+use League\CommonMark\GithubFlavoredMarkdownConverter;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Override;
 
 use function Safe\parse_url;
 
@@ -99,7 +98,7 @@ class General extends AbstractExtension
                     }
                     // for multi currency accounts.
                     if ($usePrimary && $key !== $primary->code) {
-                        $strings[] = app('amount')->formatAnything(TransactionCurrency::where('code', $key)->first(), $balance, false);
+                        $strings[] = app('amount')->formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
                     }
                 }
 
@@ -143,7 +142,7 @@ class General extends AbstractExtension
             'mimeIcon',
             static fn (string $string): string => match ($string) {
                 'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'fa-file-pdf-o',
-                'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 => 'fa-file-image-o',
+                'image/webp', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'fa-file-image-o',
                 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
                 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.sun.xml.calc', 'application/vnd.sun.xml.calc.template', 'application/vnd.stardivision.calc', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                          => 'fa-file-excel-o',
                 'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.template', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'application/vnd.sun.xml.impress', 'application/vnd.sun.xml.impress.template', 'application/vnd.stardivision.impress', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.presentation-template'                                                                                                                       => 'fa-file-powerpoint-o',
@@ -168,7 +167,7 @@ class General extends AbstractExtension
                     ]
                 );
 
-                return (string) $converter->convert($text);
+                return (string)$converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -182,8 +181,14 @@ class General extends AbstractExtension
         return new TwigFilter(
             'phphost',
             static function (string $string): string {
-                $proto = (string) parse_url($string, PHP_URL_SCHEME);
-                $host  = (string) parse_url($string, PHP_URL_HOST);
+                $proto = parse_url($string, PHP_URL_SCHEME);
+                $host  = parse_url($string, PHP_URL_HOST);
+                if (is_array($host)) {
+                    $host = implode(' ', $host);
+                }
+                if (is_array($proto)) {
+                    $proto = implode(' ', $proto);
+                }
 
                 return e(sprintf('%s://%s', $proto, $host));
             }
@@ -274,8 +279,8 @@ class General extends AbstractExtension
 
                 if ($objectType === $activeObjectType
                     && false !== stripos(
-                        (string) Route::getCurrentRoute()->getName(),
-                        (string) $route
+                        (string)Route::getCurrentRoute()->getName(),
+                        (string)$route
                     )) {
                     return 'active';
                 }

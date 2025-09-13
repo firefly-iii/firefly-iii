@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Rule;
 
 use Throwable;
-use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -74,20 +73,16 @@ class SelectController extends Controller
         /** @var User $user */
         $user          = auth()->user();
         $accounts      = implode(',', $request->get('accounts'));
-        $startDate     = new Carbon($request->get('start'));
-        $endDate       = new Carbon($request->get('end'));
 
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
-        $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
         // set rules:
-        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRules(new Collection()->push($rule));
         $newRuleEngine->fire();
         $resultCount   = $newRuleEngine->getResults();
 
@@ -107,11 +102,9 @@ class SelectController extends Controller
             return redirect(route('rules.index'));
         }
         // does the user have shared accounts?
-        $first    = session('first', today(config('app.timezone'))->subYear())->format('Y-m-d');
-        $today    = today(config('app.timezone'))->format('Y-m-d');
         $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
+        return view('rules.rule.select-transactions', compact('rule', 'subTitle'));
     }
 
     /**
@@ -159,7 +152,7 @@ class SelectController extends Controller
         $newRuleEngine      = app(RuleEngineInterface::class);
 
         // set rules:
-        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRules(new Collection()->push($rule));
         $newRuleEngine->setRefreshTriggers(false);
         $collection         = $newRuleEngine->find();
         $collection         = $collection->slice(0, 20);
@@ -203,7 +196,7 @@ class SelectController extends Controller
         $newRuleEngine = app(RuleEngineInterface::class);
 
         // set rules:
-        $newRuleEngine->setRules(new Collection([$rule]));
+        $newRuleEngine->setRules(new Collection()->push($rule));
         $collection    = $newRuleEngine->find();
         $collection    = $collection->slice(0, 20);
 

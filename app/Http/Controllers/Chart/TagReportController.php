@@ -28,6 +28,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
@@ -82,8 +83,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -110,8 +111,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -138,8 +139,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -166,8 +167,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -194,8 +195,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -211,8 +212,8 @@ class TagReportController extends Controller
     public function mainChart(Collection $accounts, Tag $tag, Carbon $start, Carbon $end): JsonResponse
     {
         $chartData = [];
-        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection([$tag]));
-        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection([$tag]));
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts, new Collection()->push($tag));
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts, new Collection()->push($tag));
         $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
@@ -235,9 +236,9 @@ class TagReportController extends Controller
             foreach ($currency['tags'] as $currentTag) {
                 foreach ($currentTag['transaction_journals'] as $journal) {
                     $key                                   = $journal['date']->isoFormat($format);
-                    $amount                                = app('steam')->positive($journal['amount']);
+                    $amount                                = Steam::positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
         }
@@ -262,9 +263,9 @@ class TagReportController extends Controller
             foreach ($currency['tags'] as $currentTag) {
                 foreach ($currentTag['transaction_journals'] as $journal) {
                     $key                                   = $journal['date']->isoFormat($format);
-                    $amount                                = app('steam')->positive($journal['amount']);
+                    $amount                                = Steam::positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
-                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], (string) $amount);
+                    $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
         }
@@ -311,8 +312,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -339,8 +340,8 @@ class TagReportController extends Controller
                         'currency_symbol' => $currency['currency_symbol'],
                         'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -366,8 +367,8 @@ class TagReportController extends Controller
                     'currency_code'   => $currency['currency_code'],
                 ];
                 foreach ($tag['transaction_journals'] as $journal) {
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
@@ -392,8 +393,8 @@ class TagReportController extends Controller
                     'currency_code'   => $currency['currency_code'],
                 ];
                 foreach ($tag['transaction_journals'] as $journal) {
-                    $amount                   = app('steam')->positive($journal['amount']);
-                    $result[$title]['amount'] = bcadd($result[$title]['amount'], (string) $amount);
+                    $amount                   = Steam::positive($journal['amount']);
+                    $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }

@@ -1,12 +1,32 @@
 <?php
 
+
+/*
+ * RecurringEnrichment.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
 
 use Carbon\Carbon;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
-use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Account;
@@ -21,7 +41,6 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -33,12 +52,14 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+use function Safe\json_decode;
+
 class RecurringEnrichment implements EnrichmentInterface
 {
     private Collection          $collection;
     private array               $ids                   = [];
-    private array               $transactionTypeIds    = [];
-    private array               $transactionTypes      = [];
+    //    private array               $transactionTypeIds    = [];
+    // private array               $transactionTypes      = [];
     private array               $notes                 = [];
     private array               $repetitions           = [];
     private array               $transactions          = [];
@@ -52,7 +73,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private array               $accounts              = [];
     private array               $currencies            = [];
     private array               $recurrenceIds         = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private bool                $convertToPrimary      = false;
 
     public function __construct()
@@ -80,7 +101,7 @@ class RecurringEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -102,19 +123,19 @@ class RecurringEnrichment implements EnrichmentInterface
     {
         /** @var Recurrence $recurrence */
         foreach ($this->collection as $recurrence) {
-            $id                            = (int)$recurrence->id;
-            $typeId                        = (int)$recurrence->transaction_type_id;
-            $this->ids[]                   = $id;
-            $this->transactionTypeIds[$id] = $typeId;
+            $id          = (int)$recurrence->id;
+            //            $typeId                        = (int)$recurrence->transaction_type_id;
+            $this->ids[] = $id;
+            // $this->transactionTypeIds[$id] = $typeId;
         }
-        $this->ids        = array_unique($this->ids);
+        $this->ids = array_unique($this->ids);
 
         // collect transaction types.
-        $transactionTypes = TransactionType::whereIn('id', array_unique($this->transactionTypeIds))->get();
-        foreach ($transactionTypes as $transactionType) {
-            $id                          = (int)$transactionType->id;
-            $this->transactionTypes[$id] = TransactionTypeEnum::from($transactionType->type);
-        }
+        //        $transactionTypes = TransactionType::whereIn('id', array_unique($this->transactionTypeIds))->get();
+        //        foreach ($transactionTypes as $transactionType) {
+        //            $id                          = (int)$transactionType->id;
+        //            $this->transactionTypes[$id] = TransactionTypeEnum::from($transactionType->type);
+        //        }
     }
 
     private function collectRepetitions(): void
@@ -126,10 +147,8 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                     = $this->collection->filter(function (Recurrence $item) use ($repetition) {
-                return (int)$item->id === (int)$repetition->recurrence_id;
-            })->first();
-            $fromDate                       = $recurrence->latest_date ?? $recurrence->first_date;
+            $recurrence                     = $this->collection->filter(fn (Recurrence $item) => (int)$item->id === (int)$repetition->recurrence_id)->first();
+            $fromDate                       = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $id                             = (int)$repetition->recurrence_id;
             $repId                          = (int)$repetition->id;
             $this->repetitions[$id] ??= [];
@@ -137,20 +156,20 @@ class RecurringEnrichment implements EnrichmentInterface
             // get the (future) occurrences for this specific type of repetition:
             $amount                         = 'daily' === $repetition->repetition_type ? 9 : 5;
             $set                            = $repository->getXOccurrencesSince($repetition, $fromDate, now(config('app.timezone')), $amount);
+            $occurrences                    = [];
 
             /** @var Carbon $carbon */
             foreach ($set as $carbon) {
                 $occurrences[] = $carbon->toAtomString();
             }
-
             $this->repetitions[$id][$repId] = [
                 'id'          => (string)$repId,
                 'created_at'  => $repetition->created_at->toAtomString(),
                 'updated_at'  => $repetition->updated_at->toAtomString(),
                 'type'        => $repetition->repetition_type,
-                'moment'      => (string)$repetition->moment,
-                'skip'        => (int)$repetition->skip,
-                'weekend'     => RecurrenceRepetitionWeekend::from((int)$repetition->weekend),
+                'moment'      => (string)$repetition->repetition_moment,
+                'skip'        => (int)$repetition->repetition_skip,
+                'weekend'     => RecurrenceRepetitionWeekend::from((int)$repetition->weekend)->value,
                 'description' => $this->getRepetitionDescription($repetition),
                 'occurrences' => $occurrences,
             ];
@@ -378,7 +397,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private function collectTransactionMetaData(): void
     {
         $ids           = array_keys($this->transactions);
-        $meta          = RecurrenceTransactionMeta::whereIn('rt_id', $ids)->get();
+        $meta          = RecurrenceTransactionMeta::whereNull('deleted_at')->whereIn('rt_id', $ids)->get();
         // other meta-data to be collected:
         $billIds       = [];
         $piggyBankIds  = [];
@@ -388,8 +407,15 @@ class RecurringEnrichment implements EnrichmentInterface
         foreach ($meta as $entry) {
             $id            = (int)$entry->id;
             $transactionId = (int)$entry->rt_id;
-            $recurrenceId  = $this->recurrenceIds[$transactionId];
-            $name          = (string)$entry->name;
+
+            // this should refer to another array, were rtIds can be used to find the recurrence.
+            $recurrenceId  = $this->recurrenceIds[$transactionId] ?? 0;
+            $name          = (string)($entry->name ?? '');
+            if (0 === $recurrenceId) {
+                Log::error(sprintf('Could not find recurrence ID for recurrence transaction ID %d', $transactionId));
+
+                continue;
+            }
 
             switch ($name) {
                 default:

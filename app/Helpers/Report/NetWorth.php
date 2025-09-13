@@ -31,7 +31,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -49,9 +48,8 @@ use Illuminate\Support\Facades\Log;
 class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface  $accountRepository;
-    private CurrencyRepositoryInterface $currencyRepos;
     private User                        $user;             // @phpstan-ignore-line
-    private ?UserGroup                  $userGroup = null; // @phpstan-ignore-line
+    private ?UserGroup                  $userGroup = null;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -116,7 +114,7 @@ class NetWorth implements NetWorthInterface
         return $netWorth;
     }
 
-    public function setUser(null|Authenticatable|User $user): void
+    public function setUser(Authenticatable|User|null $user): void
     {
         if (!$user instanceof User) {
             return;
@@ -131,8 +129,6 @@ class NetWorth implements NetWorthInterface
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
 
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->currencyRepos->setUserGroup($this->userGroup);
     }
 
     #[Deprecated]

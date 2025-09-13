@@ -87,10 +87,15 @@ let show = function () {
                     if (this.entries.hasOwnProperty(i)) {
                         const currencyCode = this.entries[i].currency_code;
                         const foreignCurrencyCode = this.entries[i].foreign_currency_code;
+                        const primaryCurrencyCode = this.entries[i].primary_currency_code;
 
                         if (undefined === this.amounts[currencyCode]) {
                             this.amounts[currencyCode] = 0;
                             this.amounts[currencyCode] += parseFloat(this.entries[i].amount);
+                        }
+                        if (undefined === this.amounts[primaryCurrencyCode]) {
+                            this.amounts[primaryCurrencyCode] = 0;
+                            this.amounts[primaryCurrencyCode] += parseFloat(this.entries[i].pc_amount);
                         }
                         if (null !== foreignCurrencyCode && '' !== foreignCurrencyCode && undefined === this.amounts[foreignCurrencyCode]) {
                             this.amounts[foreignCurrencyCode] = 0;

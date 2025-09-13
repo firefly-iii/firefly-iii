@@ -35,24 +35,17 @@ class TransactionTypeSeeder extends Seeder
 {
     public function run(): void
     {
-        $types = [
-            TransactionTypeEnum::WITHDRAWAL->value,
-            TransactionTypeEnum::DEPOSIT->value,
-            TransactionTypeEnum::TRANSFER->value,
-            TransactionTypeEnum::OPENING_BALANCE->value,
-            TransactionTypeEnum::RECONCILIATION->value,
-            TransactionTypeEnum::INVALID->value,
-            TransactionTypeEnum::LIABILITY_CREDIT->value,
-        ];
-
-        foreach ($types as $type) {
-            if (null === TransactionType::where('type', $type)->first()) {
+        /** @var TransactionTypeEnum $type */
+        foreach (TransactionTypeEnum::cases() as $type) { // @phpstan-ignore-line
+            if (null === TransactionType::where('type', $type->value)->first()) {
                 try {
-                    TransactionType::create(['type' => $type]);
+                    TransactionType::create(['type' => $type->value]);
                 } catch (PDOException $e) {
                     // @ignoreException
                 }
             }
         }
+
+
     }
 }

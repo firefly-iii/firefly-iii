@@ -129,14 +129,12 @@ class IndexController extends Controller
             $spent    = $spentArr[$this->primaryCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
-
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
         $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
-        $primaryCurrency  = $this->primaryCurrency;
 
         return view(
             'budgets.index',
@@ -149,7 +147,6 @@ class IndexController extends Controller
                 'budgets',
                 'currencies',
                 'periodTitle',
-                'primaryCurrency',
                 'activeDaysPassed',
                 'activeDaysLeft',
                 'inactive',
@@ -238,7 +235,7 @@ class IndexController extends Controller
 
             /** @var TransactionCurrency $currency */
             foreach ($currencies as $currency) {
-                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection([$current]), $currency, false);
+                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($current), $currency, false);
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;

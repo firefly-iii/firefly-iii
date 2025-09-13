@@ -24,15 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 
-use FireflyIII\Enums\WebhookResponse;
-use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Contracts\Validation\Validator;
+use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreateRequest
@@ -41,27 +39,28 @@ class CreateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    use ValidatesWebhooks;
 
     public function getData(): array
     {
-        $triggers           = Webhook::getTriggersForValidation();
-        $responses          = Webhook::getResponsesForValidation();
-        $deliveries         = Webhook::getDeliveriesForValidation();
-
-        $fields             = [
-            'title'    => ['title', 'convertString'],
-            'active'   => ['active', 'boolean'],
-            'trigger'  => ['trigger', 'convertString'],
-            'response' => ['response', 'convertString'],
-            'delivery' => ['delivery', 'convertString'],
-            'url'      => ['url', 'convertString'],
+        $fields               = [
+            'title'  => ['title', 'convertString'],
+            'active' => ['active', 'boolean'],
+            'url'    => ['url', 'convertString'],
         ];
+        $triggers             = $this->get('triggers', []);
+        $responses            = $this->get('responses', []);
+        $deliveries           = $this->get('deliveries', []);
 
-        // this is the way.
-        $return             = $this->getAllData($fields);
-        $return['trigger']  = $triggers[$return['trigger']] ?? (int)$return['trigger'];
-        $return['response'] = $responses[$return['response']] ?? (int)$return['response'];
-        $return['delivery'] = $deliveries[$return['delivery']] ?? (int)$return['delivery'];
+        if (0 === count($triggers) || 0 === count($responses) || 0 === count($deliveries)) {
+            throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
+        }
+
+
+        $return               = $this->getAllData($fields);
+        $return['triggers']   = $triggers;
+        $return['responses']  = $responses;
+        $return['deliveries'] = $deliveries;
 
         return $return;
     }
@@ -71,59 +70,24 @@ class CreateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $triggers       = implode(',', array_keys(Webhook::getTriggersForValidation()));
-        $responses      = implode(',', array_keys(Webhook::getResponsesForValidation()));
-        $deliveries     = implode(',', array_keys(Webhook::getDeliveriesForValidation()));
+        $triggers       = implode(',', array_values(Webhook::getTriggers()));
+        $responses      = implode(',', array_values(Webhook::getResponses()));
+        $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
         $validProtocols = config('firefly.valid_url_protocols');
 
         return [
-            'title'    => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
-            'active'   => [new IsBoolean()],
-            'trigger'  => sprintf('required|in:%s', $triggers),
-            'response' => sprintf('required|in:%s', $responses),
-            'delivery' => sprintf('required|in:%s', $deliveries),
-            'url'      => ['required', sprintf('url:%s', $validProtocols), 'uniqueWebhook'],
+            'title'        => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',
+            'active'       => [new IsBoolean()],
+            'trigger'      => 'prohibited',
+            'triggers'     => 'required|array|min:1|max:10',
+            'triggers.*'   => sprintf('required|in:%s', $triggers),
+            'response'     => 'prohibited',
+            'responses'    => 'required|array|min:1|max:1',
+            'responses.*'  => sprintf('required|in:%s', $responses),
+            'delivery'     => 'prohibited',
+            'deliveries'   => 'required|array|min:1|max:1',
+            'deliveries.*' => sprintf('required|in:%s', $deliveries),
+            'url'          => ['required', sprintf('url:%s', $validProtocols)],
         ];
-    }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator): void {
-                Log::debug('Validating webhook');
-                $data      = $validator->getData();
-                $trigger   = $data['trigger'] ?? null;
-                $response  = $data['response'] ?? null;
-                if (null === $trigger || null === $response) {
-                    Log::debug('No trigger or response, return.');
-
-                    return;
-                }
-                $triggers  = array_keys(Webhook::getTriggersForValidation());
-                $responses = array_keys(Webhook::getResponsesForValidation());
-                if (!in_array($trigger, $triggers, true) || !in_array($response, $responses, true)) {
-                    return;
-                }
-                // cannot deliver budget info.
-                if (is_int($trigger)) {
-                    Log::debug(sprintf('Trigger was integer (%d).', $trigger));
-                    $trigger = WebhookTrigger::from($trigger)->name;
-                }
-                if (is_int($response)) {
-                    Log::debug(sprintf('Response was integer (%d).', $response));
-                    $response = WebhookResponse::from($response)->name;
-                }
-                Log::debug(sprintf('Trigger is %s, response is %s', $trigger, $response));
-                if (str_contains($trigger, 'TRANSACTION') && str_contains($response, 'BUDGET')) {
-                    $validator->errors()->add('response', trans('validation.webhook_budget_info'));
-                }
-                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'ACCOUNT')) {
-                    $validator->errors()->add('response', trans('validation.webhook_account_info'));
-                }
-                if (str_contains($trigger, 'BUDGET') && str_contains($response, 'TRANSACTION')) {
-                    $validator->errors()->add('response', trans('validation.webhook_transaction_info'));
-                }
-            }
-        );
     }
 }

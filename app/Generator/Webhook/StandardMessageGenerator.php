@@ -34,6 +34,8 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookMessage;
+use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
+use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetEnrichment;
 use FireflyIII\Support\JsonApi\Enrichments\BudgetLimitEnrichment;
@@ -80,7 +82,13 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
     private function getWebhooks(): Collection
     {
-        return $this->user->webhooks()->where('active', true)->where('trigger', $this->trigger)->get(['webhooks.*']);
+        return $this->user->webhooks()
+            ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
+            ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
+            ->where('active', true)
+            ->whereIn('webhook_triggers.title', [$this->trigger->name, WebhookTrigger::ANY->name])
+            ->get(['webhooks.*'])
+        ;
     }
 
     /**
@@ -115,22 +123,25 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class        = $model::class;
+        $class         = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
-        $uuid         = Uuid::uuid4();
-        $basicMessage = [
+        $uuid          = Uuid::uuid4();
+
+        /** @var WebhookResponseModel $response */
+        $response      = $webhook->webhookResponses()->first();
+        $triggers      = $this->getTriggerTitles($webhook->webhookTriggers()->get());
+        $basicMessage  = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
             'user_group_id' => 0,
-            'trigger'       => WebhookTrigger::from((int)$webhook->trigger)->name,
-            'response'      => WebhookResponse::from((int)$webhook->response)->name,
+            'trigger'       => $this->trigger->name,
+            'response'      => $response->title, // guess that the database is correct.
             'url'           => $webhook->url,
             'version'       => sprintf('v%d', $this->getVersion()),
             'content'       => [],
         ];
 
-        // depends on the model how user_id is set:
         switch ($class) {
             default:
                 // Line is ignored because all of Firefly III's Models have an id property.
@@ -142,12 +153,14 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 /** @var Budget $model */
                 $basicMessage['user_id']       = $model->user_id;
                 $basicMessage['user_group_id'] = $model->user_group_id;
+                $relevantResponse              = WebhookResponse::BUDGET->name;
 
                 break;
 
             case BudgetLimit::class:
                 $basicMessage['user_id']       = $model->budget->user_id;
                 $basicMessage['user_group_id'] = $model->budget->user_group_id;
+                $relevantResponse              = WebhookResponse::BUDGET->name;
 
                 break;
 
@@ -158,31 +171,27 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
         }
+        $responseTitle = $this->getRelevantResponse($triggers, $response, $class);
 
-        // then depends on the response what to put in the message:
-        switch ($webhook->response) {
+        switch ($responseTitle) {
             default:
-                Log::error(sprintf('The response code for webhook #%d is "%d" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
+                Log::error(sprintf('The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
 
                 return;
 
-            case WebhookResponse::BUDGET->value:
+            case WebhookResponse::BUDGET->name:
                 $basicMessage['content'] = [];
                 if ($model instanceof Budget) {
                     $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($model->user);
+
+                    /** @var Budget $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetTransformer();
                     $basicMessage['content'] = $transformer->transform($model);
                 }
                 if ($model instanceof BudgetLimit) {
                     $user                    = $model->budget->user;
-                    $enrichment              = new BudgetEnrichment();
-                    $enrichment->setUser($user);
-                    $enrichment->setStart($model->start_date);
-                    $enrichment->setEnd($model->end_date);
-                    $budget                  = $enrichment->enrichSingle($model->budget);
-
                     $enrichment              = new BudgetLimitEnrichment();
                     $enrichment->setUser($user);
 
@@ -190,6 +199,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $parameters->set('start', $model->start_date);
                     $parameters->set('end', $model->end_date);
 
+                    /** @var BudgetLimit $model */
                     $model                   = $enrichment->enrichSingle($model);
                     $transformer             = new BudgetLimitTransformer();
                     $transformer->setParameters($parameters);
@@ -198,12 +208,12 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
 
-            case WebhookResponse::NONE->value:
+            case WebhookResponse::NONE->name:
                 $basicMessage['content'] = [];
 
                 break;
 
-            case WebhookResponse::TRANSACTIONS->value:
+            case WebhookResponse::TRANSACTIONS->name:
                 /** @var TransactionGroup $model */
                 $transformer             = new TransactionGroupTransformer();
 
@@ -220,7 +230,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
 
-            case WebhookResponse::ACCOUNTS->value:
+            case WebhookResponse::ACCOUNTS->name:
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
@@ -286,5 +296,51 @@ class StandardMessageGenerator implements MessageGeneratorInterface
     public function setWebhooks(Collection $webhooks): void
     {
         $this->webhooks = $webhooks;
+    }
+
+    private function getRelevantResponse(array $triggers, WebhookResponseModel $response, string $class): string
+    {
+        // return none if none.
+        if (WebhookResponse::NONE->name === $response->title) {
+            Log::debug(sprintf('Return "%s" because requested nothing.', WebhookResponse::NONE->name));
+
+            return WebhookResponse::NONE->name;
+        }
+
+        if (WebhookResponse::RELEVANT->name === $response->title) {
+            Log::debug('Expected response is any relevant data.');
+
+            // depends on the $class
+            switch ($class) {
+                case TransactionGroup::class:
+                    Log::debug(sprintf('Return "%s" because class is %s', WebhookResponse::TRANSACTIONS->name, $class));
+
+                    return WebhookResponse::TRANSACTIONS->name;
+
+                case Budget::class:
+                case BudgetLimit::class:
+                    Log::debug(sprintf('Return "%s" because class is %s', WebhookResponse::BUDGET->name, $class));
+
+                    return WebhookResponse::BUDGET->name;
+
+                default:
+                    throw new FireflyException(sprintf('Cannot deal with "relevant" if the given object is a "%s"', $class));
+            }
+        }
+        Log::debug(sprintf('Return response again: %s', $response->title));
+
+        return $response->title;
+    }
+
+    private function getTriggerTitles(Collection $collection): array
+    {
+        $return = [];
+
+        /** @var WebhookTriggerModel $item */
+        foreach ($collection as $item) {
+            $return[] = $item->title;
+        }
+
+        return array_unique($return);
     }
 }

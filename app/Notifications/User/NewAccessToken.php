@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\User;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
@@ -35,7 +34,6 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 /**
  * Class NewAccessToken
@@ -68,16 +66,16 @@ class NewAccessToken extends Notification
         ;
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.access_token_created_subject'));
-        $message->body((string) trans('email.access_token_created_body'));
-
-        return $message;
-    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.access_token_created_subject'));
+    //        $message->body((string) trans('email.access_token_created_body'));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

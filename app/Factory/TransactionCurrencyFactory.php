@@ -26,7 +26,9 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionCurrencyFactory
@@ -41,14 +43,14 @@ class TransactionCurrencyFactory
         $data['code']           = e($data['code']);
         $data['symbol']         = e($data['symbol']);
         $data['name']           = e($data['name']);
-        $data['decimal_places'] = (int) $data['decimal_places'];
+        $data['decimal_places'] = (int)$data['decimal_places'];
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
         $count                  = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
         if (1 === $count) {
             $old = TransactionCurrency::withTrashed()->whereCode($data['code'])->first();
             $old->forceDelete();
-            app('log')->warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
+            Log::warning(sprintf('Force deleted old currency with ID #%d and code "%s".', $old->id, $data['code']));
         }
 
         try {
@@ -64,8 +66,8 @@ class TransactionCurrencyFactory
             );
         } catch (QueryException $e) {
             $result = null;
-            app('log')->error(sprintf('Could not create new currency: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Could not create new currency: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
 
             throw new FireflyException('400004: Could not store new currency.', 0, $e);
         }
@@ -76,32 +78,33 @@ class TransactionCurrencyFactory
     public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         $currencyCode = e($currencyCode);
-        $currencyId   = (int) $currencyId;
+        $currencyId   = (int)$currencyId;
+        $currency     = null;
 
         if ('' === $currencyCode && 0 === $currencyId) {
-            app('log')->debug('Cannot find anything on empty currency code and empty currency ID!');
+            Log::debug('Cannot find anything on empty currency code and empty currency ID!');
 
             return null;
         }
 
         // first by ID:
         if ($currencyId > 0) {
-            $currency = TransactionCurrency::find($currencyId);
-            if (null !== $currency) {
-                return $currency;
+            try {
+                $currency = Amount::getTransactionCurrencyById($currencyId);
+            } catch (FireflyException) {
+                Log::warning(sprintf('Currency ID is #%d but found nothing!', $currencyId));
             }
-            app('log')->warning(sprintf('Currency ID is %d but found nothing!', $currencyId));
         }
         // then by code:
-        if ('' !== $currencyCode) {
-            $currency = TransactionCurrency::whereCode($currencyCode)->first();
-            if (null !== $currency) {
-                return $currency;
+        if ('' !== $currencyCode && null === $currency) {
+            try {
+                $currency = Amount::getTransactionCurrencyByCode($currencyCode);
+            } catch (FireflyException) {
+                Log::warning(sprintf('Currency code is "%s" but found nothing!', $currencyCode));
             }
-            app('log')->warning(sprintf('Currency code is %d but found nothing!', $currencyCode));
         }
-        app('log')->warning('Found nothing for currency.');
+        Log::info(sprintf('Found currency #%d based on ID %d and code "%s".', $currency->id, $currencyId, $currencyCode));
 
-        return null;
+        return $currency;
     }
 }

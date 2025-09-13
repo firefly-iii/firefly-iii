@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Chart;
 
-use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Validation\Validator;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -64,6 +64,7 @@ class ChartRequest extends FormRequest
             'end'         => 'required|date|after:1970-01-02|before:2038-01-17|after_or_equal:start',
             'preselected' => sprintf('nullable|in:%s', implode(',', config('firefly.preselected_accounts'))),
             'period'      => sprintf('nullable|in:%s', implode(',', config('firefly.valid_view_ranges'))),
+            'accounts'    => 'nullable|array',
             'accounts.*'  => 'exists:accounts,id',
         ];
 

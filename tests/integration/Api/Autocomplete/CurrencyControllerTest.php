@@ -27,7 +27,6 @@ namespace Tests\integration\Api\Autocomplete;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class CurrencyControllerTest

@@ -60,17 +60,22 @@ class AccountEnrichment implements EnrichmentInterface
     private array               $currencies      = [];
     private array               $locations       = [];
     private array               $meta            = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private array               $notes           = [];
     private array               $openingBalances = [];
     private User                $user;
     private UserGroup           $userGroup;
     private array               $lastActivities  = [];
     private ?Carbon             $date            = null;
-    private bool                $convertToPrimary;
+    private ?Carbon             $start           = null;
+    private ?Carbon             $end             = null;
+    private readonly bool                $convertToPrimary;
     private array               $balances        = [];
+    private array               $startBalances   = [];
+    private array               $endBalances     = [];
     private array               $objectGroups    = [];
     private array               $mappedObjects   = [];
+    private array               $sort            = [];
 
     /**
      * TODO The account enricher must do conversion from and to the primary currency.
@@ -85,7 +90,7 @@ class AccountEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): Account|array
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -111,6 +116,7 @@ class AccountEnrichment implements EnrichmentInterface
         $this->collectObjectGroups();
         $this->collectBalances();
         $this->appendCollectedData();
+        $this->sortData();
 
         return $this->collection;
     }
@@ -234,9 +240,9 @@ class AccountEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Account $item) {
-            $id                      = (int)$item->id;
-            $item->full_account_type = $this->accountTypes[(int)$item->account_type_id] ?? null;
-            $meta                    = [
+            $id                           = (int)$item->id;
+            $item->full_account_type      = $this->accountTypes[(int)$item->account_type_id] ?? null;
+            $meta                         = [
                 'currency'               => null,
                 'location'               => [
                     'latitude'   => null,
@@ -249,14 +255,14 @@ class AccountEnrichment implements EnrichmentInterface
                 'opening_balance_date'   => null,
                 'opening_balance_amount' => null,
                 'account_number'         => null,
-                'notes'                  => $notes[$id] ?? null,
+                'notes'                  => $this->notes[$id] ?? null,
                 'last_activity'          => $this->lastActivities[$id] ?? null,
             ];
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = $this->objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string)$this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
@@ -283,43 +289,47 @@ class AccountEnrichment implements EnrichmentInterface
 
             // add balances
             // get currencies:
-            $currency                = $this->primaryCurrency; // assume primary currency
+            $currency                     = $this->primaryCurrency; // assume primary currency
             if (null !== $meta['currency']) {
                 $currency = $meta['currency'];
             }
 
             // get the current balance:
-            $date                    = $this->getDate();
+            $date                         = $this->getDate();
             // $finalBalance            = Steam::finalAccountBalance($item, $date, $this->primaryCurrency, $this->convertToPrimary);
-            $finalBalance            = $this->balances[$id];
+            $finalBalance                 = $this->balances[$id];
+            $balanceDifference            = $this->getBalanceDifference($id, $currency);
             Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
 
             // collect current balances:
-            $currentBalance          = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
-            $openingBalance          = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
-            $virtualBalance          = Steam::bcround($account->virtual_balance ?? '0', $currency->decimal_places);
-            $debtAmount              = $meta['current_debt'] ?? null;
+            $currentBalance               = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
+            $openingBalance               = Steam::bcround($meta['opening_balance_amount'] ?? '0', $currency->decimal_places);
+            $virtualBalance               = Steam::bcround($item->virtual_balance ?? '0', $currency->decimal_places);
+            $debtAmount                   = $meta['current_debt'] ?? null;
 
             // set some pc_ default values to NULL:
-            $pcCurrentBalance        = null;
-            $pcOpeningBalance        = null;
-            $pcVirtualBalance        = null;
-            $pcDebtAmount            = null;
+            $pcCurrentBalance             = null;
+            $pcOpeningBalance             = null;
+            $pcVirtualBalance             = null;
+            $pcDebtAmount                 = null;
+            $pcBalanceDifference          = null;
 
             // convert to primary currency if needed:
             if ($this->convertToPrimary && $currency->id !== $this->primaryCurrency->id) {
                 Log::debug(sprintf('Convert to primary, from %s to %s', $currency->code, $this->primaryCurrency->code));
-                $converter        = new ExchangeRateConverter();
-                $pcCurrentBalance = $converter->convert($currency, $this->primaryCurrency, $date, $currentBalance);
-                $pcOpeningBalance = $converter->convert($currency, $this->primaryCurrency, $date, $openingBalance);
-                $pcVirtualBalance = $converter->convert($currency, $this->primaryCurrency, $date, $virtualBalance);
-                $pcDebtAmount     = null === $debtAmount ? null : $converter->convert($currency, $this->primaryCurrency, $date, $debtAmount);
+                $converter           = new ExchangeRateConverter();
+                $pcCurrentBalance    = $converter->convert($currency, $this->primaryCurrency, $date, $currentBalance);
+                $pcOpeningBalance    = $converter->convert($currency, $this->primaryCurrency, $date, $openingBalance);
+                $pcVirtualBalance    = $converter->convert($currency, $this->primaryCurrency, $date, $virtualBalance);
+                $pcBalanceDifference = null === $balanceDifference ? null : $converter->convert($currency, $this->primaryCurrency, $date, $balanceDifference);
+                $pcDebtAmount        = null === $debtAmount ? null : $converter->convert($currency, $this->primaryCurrency, $date, $debtAmount);
             }
             if ($this->convertToPrimary && $currency->id === $this->primaryCurrency->id) {
-                $pcCurrentBalance = $currentBalance;
-                $pcOpeningBalance = $openingBalance;
-                $pcVirtualBalance = $virtualBalance;
-                $pcDebtAmount     = $debtAmount;
+                $pcCurrentBalance    = $currentBalance;
+                $pcOpeningBalance    = $openingBalance;
+                $pcVirtualBalance    = $virtualBalance;
+                $pcBalanceDifference = $balanceDifference;
+                $pcDebtAmount        = $debtAmount;
             }
 
             // set opening balance(s) to NULL if the date is null
@@ -327,18 +337,21 @@ class AccountEnrichment implements EnrichmentInterface
                 $openingBalance   = null;
                 $pcOpeningBalance = null;
             }
-            $meta['balances']        = [
-                'current_balance'    => $currentBalance,
-                'pc_current_balance' => $pcCurrentBalance,
-                'opening_balance'    => $openingBalance,
-                'pc_opening_balance' => $pcOpeningBalance,
-                'virtual_balance'    => $virtualBalance,
-                'pc_virtual_balance' => $pcVirtualBalance,
-                'debt_amount'        => $debtAmount,
-                'pc_debt_amount'     => $pcDebtAmount,
+            $meta['current_balance_date'] = $this->getDate();
+            $meta['balances']             = [
+                'current_balance'       => $currentBalance,
+                'pc_current_balance'    => $pcCurrentBalance,
+                'opening_balance'       => $openingBalance,
+                'pc_opening_balance'    => $pcOpeningBalance,
+                'virtual_balance'       => $virtualBalance,
+                'pc_virtual_balance'    => $pcVirtualBalance,
+                'debt_amount'           => $debtAmount,
+                'pc_debt_amount'        => $pcDebtAmount,
+                'balance_difference'    => $balanceDifference,
+                'pc_balance_difference' => $pcBalanceDifference,
             ];
             // end add balances
-            $item->meta              = $meta;
+            $item->meta                   = $meta;
 
             return $item;
         });
@@ -352,6 +365,10 @@ class AccountEnrichment implements EnrichmentInterface
     private function collectBalances(): void
     {
         $this->balances = Steam::accountsBalancesOptimized($this->collection, $this->getDate(), $this->primaryCurrency, $this->convertToPrimary);
+        if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
+            $this->startBalances = Steam::accountsBalancesOptimized($this->collection, $this->start, $this->primaryCurrency, $this->convertToPrimary);
+            $this->endBalances   = Steam::accountsBalancesOptimized($this->collection, $this->end, $this->primaryCurrency, $this->convertToPrimary);
+        }
     }
 
     private function collectObjectGroups(): void
@@ -378,15 +395,73 @@ class AccountEnrichment implements EnrichmentInterface
 
     public function setDate(?Carbon $date): void
     {
+        if ($date instanceof Carbon) {
+            $date->endOfDay();
+            Log::debug(sprintf('Date is now %s', $date->toW3cString()));
+        }
         $this->date = $date;
     }
 
     public function getDate(): Carbon
     {
-        if (null === $this->date) {
-            return today();
+        if (!$this->date instanceof Carbon) {
+            return now();
         }
 
         return $this->date;
+    }
+
+    public function setStart(?Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    public function setEnd(?Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    private function getBalanceDifference(int $id, TransactionCurrency $currency): ?string
+    {
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
+            return null;
+        }
+        $startBalance = $this->startBalances[$id] ?? [];
+        $endBalance   = $this->endBalances[$id] ?? [];
+        if (0 === count($startBalance) || 0 === count($endBalance)) {
+            return null;
+        }
+        $start        = $startBalance[$currency->code] ?? '0';
+        $end          = $endBalance[$currency->code] ?? '0';
+
+        return bcsub($end, $start);
+    }
+
+    public function setSort(array $sort): void
+    {
+        $this->sort = $sort;
+    }
+
+    private function sortData(): void
+    {
+        $dbParams = config('firefly.allowed_db_sort_parameters.Account', []);
+
+        /** @var array $parameter */
+        foreach ($this->sort as $parameter) {
+            if (in_array($parameter[0], $dbParams, true)) {
+                continue;
+            }
+
+            switch ($parameter[0]) {
+                default:
+                    throw new FireflyException(sprintf('Account enrichment cannot sort on field "%s"', $parameter[0]));
+
+                case 'current_balance':
+                case 'pc_current_balance':
+                    $this->collection = $this->collection->sortBy(static fn (Account $account) => $account->meta['balances'][$parameter[0]] ?? '0', SORT_NUMERIC, 'desc' === $parameter[1]);
+
+                    break;
+            }
+        }
     }
 }

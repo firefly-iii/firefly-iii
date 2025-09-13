@@ -70,6 +70,7 @@ class NotificationController extends Controller
         }
         $forcedAvailability['ntfy']     = '' !== $ntfyTopic;
         $forcedAvailability['pushover'] = '' !== $pushoverAppToken && '' !== $pushoverUserToken;
+        $forcedAvailability['slack']    = '' !== $slackUrl;
 
         return view(
             'settings.notifications.index',

@@ -191,7 +191,7 @@ trait AugumentData
 
         $set              = $blRepository->getBudgetLimits($budget, $start, $end);
 
-        $budgetCollection = new Collection([$budget]);
+        $budgetCollection = new Collection()->push($budget);
 
         // merge sets based on a key, in case of convert to primary currency
         $limits           = new Collection();

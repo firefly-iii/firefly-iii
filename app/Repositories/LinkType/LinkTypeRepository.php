@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
 
-use FireflyIII\Events\DestroyedTransactionLink;
+use Exception;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -31,7 +31,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
-use Exception;
 
 /**
  * Class LinkTypeRepository.
@@ -57,13 +56,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
 
     public function update(LinkType $linkType, array $data): LinkType
     {
-        if (array_key_exists('name', $data) && '' !== (string) $data['name']) {
+        if (array_key_exists('name', $data) && '' !== (string)$data['name']) {
             $linkType->name = $data['name'];
         }
-        if (array_key_exists('inward', $data) && '' !== (string) $data['inward']) {
+        if (array_key_exists('inward', $data) && '' !== (string)$data['inward']) {
             $linkType->inward = $data['inward'];
         }
-        if (array_key_exists('outward', $data) && '' !== (string) $data['outward']) {
+        if (array_key_exists('outward', $data) && '' !== (string)$data['outward']) {
             $linkType->outward = $data['outward'];
         }
         $linkType->save();
@@ -76,7 +75,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function destroyLink(TransactionJournalLink $link): bool
     {
-        event(new DestroyedTransactionLink($link));
         $link->delete();
 
         return true;
@@ -175,7 +173,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
-        $linkType = $this->find((int) ($information['link_type_id'] ?? 0));
+        $linkType = $this->find((int)($information['link_type_id'] ?? 0));
 
         if (!$linkType instanceof LinkType) {
             $linkType = $this->findByName($information['link_type_name']);
@@ -207,7 +205,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface, UserGroupInterf
         $link->save();
 
         // make note in noteable:
-        $this->setNoteText($link, (string) $information['notes']);
+        $this->setNoteText($link, (string)$information['notes']);
 
         return $link;
     }

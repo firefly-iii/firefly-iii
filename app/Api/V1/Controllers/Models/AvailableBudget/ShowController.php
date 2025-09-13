@@ -114,8 +114,8 @@ class ShowController extends Controller
     public function show(AvailableBudget $availableBudget): JsonResponse
     {
         $manager         = $this->getManager();
-        $start           = $this->parameters->get('start');
-        $end             = $this->parameters->get('end');
+        //        $start           = $this->parameters->get('start');
+        //        $end             = $this->parameters->get('end');
 
         /** @var AvailableBudgetTransformer $transformer */
         $transformer     = app(AvailableBudgetTransformer::class);
@@ -126,8 +126,8 @@ class ShowController extends Controller
         $admin           = auth()->user();
         $enrichment      = new AvailableBudgetEnrichment();
         $enrichment->setUser($admin);
-        $enrichment->setStart($start);
-        $enrichment->setEnd($end);
+        //        $enrichment->setStart($start);
+        //        $enrichment->setEnd($end);
         $availableBudget = $enrichment->enrichSingle($availableBudget);
 
 

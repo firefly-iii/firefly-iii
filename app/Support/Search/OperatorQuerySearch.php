@@ -450,7 +450,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'source_account_id':
                 $account                 = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
-                    $this->collector->setSourceAccounts(new Collection([$account]));
+                    $this->collector->setSourceAccounts(new Collection()->push($account));
                 }
                 if (null === $account) {
                     // since the source does not exist, cannot return results:
@@ -463,7 +463,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-source_account_id':
                 $account                 = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
-                    $this->collector->excludeSourceAccounts(new Collection([$account]));
+                    $this->collector->excludeSourceAccounts(new Collection()->push($account));
                 }
                 if (null === $account) {
                     // since the source does not exist, cannot return results:
@@ -580,7 +580,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'destination_account_id':
                 $account                 = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
-                    $this->collector->setDestinationAccounts(new Collection([$account]));
+                    $this->collector->setDestinationAccounts(new Collection()->push($account));
                 }
                 if (null === $account) {
                     Log::warning('Call to findNothing() because dest account does not exist (destination_account_id).');
@@ -592,7 +592,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-destination_account_id':
                 $account                 = $this->accountRepository->find((int) $value);
                 if (null !== $account) {
-                    $this->collector->excludeDestinationAccounts(new Collection([$account]));
+                    $this->collector->excludeDestinationAccounts(new Collection()->push($account));
                 }
                 if (null === $account) {
                     Log::warning('Call to findNothing() because dest account does not exist (-destination_account_id).');
@@ -652,37 +652,37 @@ class OperatorQuerySearch implements SearchInterface
                 //
             case 'source_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->setSourceAccounts(new Collection([$account]));
+                $this->collector->setSourceAccounts(new Collection()->push($account));
 
                 break;
 
             case '-source_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->excludeSourceAccounts(new Collection([$account]));
+                $this->collector->excludeSourceAccounts(new Collection()->push($account));
 
                 break;
 
             case 'destination_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->setDestinationAccounts(new Collection([$account]));
+                $this->collector->setDestinationAccounts(new Collection()->push($account));
 
                 break;
 
             case '-destination_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->excludeDestinationAccounts(new Collection([$account]));
+                $this->collector->excludeDestinationAccounts(new Collection()->push($account));
 
                 break;
 
             case 'account_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->setAccounts(new Collection([$account]));
+                $this->collector->setAccounts(new Collection()->push($account));
 
                 break;
 
             case '-account_is_cash':
                 $account                 = $this->getCashAccount();
-                $this->collector->excludeAccounts(new Collection([$account]));
+                $this->collector->excludeAccounts(new Collection()->push($account));
 
                 break;
 
@@ -1070,7 +1070,7 @@ class OperatorQuerySearch implements SearchInterface
             case '-bill_is':
                 $bill                    = $this->billRepository->findByName($value);
                 if (null !== $bill) {
-                    $this->collector->excludeBills(new Collection([$bill]));
+                    $this->collector->excludeBills(new Collection()->push($bill));
 
                     break;
                 }

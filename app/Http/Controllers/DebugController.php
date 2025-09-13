@@ -151,13 +151,13 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr((string) $logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
         }
 
         return view('debug', compact('table', 'now', 'logContent'));
     }
 
-    public function apiTest()
+    public function apiTest(): View
     {
         return view('test.api-test');
     }
@@ -175,8 +175,8 @@ class DebugController extends Controller
 
     private function getSystemInformation(): array
     {
-        $maxFileSize   = Steam::phpBytes((string) ini_get('upload_max_filesize'));
-        $maxPostSize   = Steam::phpBytes((string) ini_get('post_max_size'));
+        $maxFileSize   = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize   = Steam::phpBytes(ini_get('post_max_size'));
         $drivers       = DB::availableDrivers();
         $currentDriver = DB::getDriverName();
 
@@ -208,7 +208,7 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim((string) file_get_contents('/var/www/counter-main.txt'));
+                $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
                 app('log')->debug(sprintf('build is now "%s"', $return['build']));
             }
         } catch (Exception $e) {
@@ -218,7 +218,7 @@ class DebugController extends Controller
 
         try {
             if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim((string) file_get_contents('/var/www/build-date-main.txt'));
+                $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
             }
         } catch (Exception $e) {
             app('log')->debug('Could not check build date, but thats ok.');

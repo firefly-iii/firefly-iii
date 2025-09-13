@@ -72,7 +72,7 @@ class TransactionObserver
         }
 
         $transaction->saveQuietly();
-        Log::debug('Transaction primary currency amounts are updated.');
+        Log::debug(sprintf('Transaction #%d primary currency amounts are updated.', $transaction->id));
     }
 
     public function deleting(?Transaction $transaction): void

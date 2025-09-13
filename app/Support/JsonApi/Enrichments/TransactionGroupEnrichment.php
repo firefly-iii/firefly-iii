@@ -53,9 +53,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array          $metaData        = [];
     private array          $notes           = [];
     private array          $tags            = [];
-    private User           $user;
+    private User           $user; // @phpstan-ignore-line
     private readonly TransactionCurrency $primaryCurrency;
-    private UserGroup      $userGroup;
+    private UserGroup      $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -68,7 +68,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     {
         Log::debug(__METHOD__);
         if (is_array($model)) {
-            $collection = new Collection([$model]);
+            $collection = new Collection()->push($model);
             $collection = $this->enrich($collection);
 
             return $collection->first();
@@ -143,9 +143,9 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                 continue;
             }
             if (in_array($name, $this->dateFields, true)) {
-                Log::debug(sprintf('Meta data for "%s" is a date  : "%s"', $name, $data));
+                // Log::debug(sprintf('Meta data for "%s" is a date  : "%s"', $name, $data));
                 $this->metaData[$entry['transaction_journal_id']][$name] = Carbon::parse($data, config('app.timezone'));
-                Log::debug(sprintf('Meta data for "%s" converts to: "%s"', $name, $this->metaData[$entry['transaction_journal_id']][$name]->toW3CString()));
+                // Log::debug(sprintf('Meta data for "%s" converts to: "%s"', $name, $this->metaData[$entry['transaction_journal_id']][$name]->toW3CString()));
 
                 continue;
             }
@@ -177,7 +177,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
             ->whereIn('attachable_id', $this->journalIds)
             ->where('attachable_type', TransactionJournal::class)
             ->groupBy('attachable_id')
-            ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')]) // @phpstan-ignore-line
+            ->get(['attachable_id', DB::raw('COUNT(id) as nr_of_attachments')])
             ->toArray()
         ;
         foreach ($attachments as $row) {

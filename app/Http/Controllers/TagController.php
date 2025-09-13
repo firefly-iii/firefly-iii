@@ -250,10 +250,7 @@ class TagController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
 
-        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
-            ->setTag($tag)->withBudgetInformation()->withCategoryInformation()
-            ->withAttachmentInformation()
-        ;
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()->setTag($tag)->withBudgetInformation()->withCategoryInformation()->withAttachmentInformation();
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
         $sums         = $this->repository->sumsOfTag($tag, $start, $end);

@@ -38,6 +38,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -400,7 +401,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         }
         $currencyId = (int) $this->getMetaValue($account, 'currency_id');
         if ($currencyId > 0) {
-            return TransactionCurrency::find($currencyId);
+            return Amount::getTransactionCurrencyById($currencyId);
         }
 
         return null;
@@ -478,20 +479,25 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 
     public function getAccountsByType(array $types, ?array $sort = []): Collection
     {
-        $res   = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
-        $query = $this->user->accounts();
+        $res     = array_intersect([AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], $types);
+        $query   = $this->user->accounts();
         if (0 !== count($types)) {
             $query->accountTypeIn($types);
         }
 
-        // add sort parameters. At this point they're filtered to allowed fields to sort by:
+        // add sort parameters
+        $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
+        $sorted  = 0;
         if (0 !== count($sort)) {
             foreach ($sort as $param) {
-                $query->orderBy($param[0], $param[1]);
+                if (in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
             }
         }
 
-        if (0 === count($sort)) {
+        if (0 === $sorted) {
             if (0 !== count($res)) {
                 $query->orderBy('accounts.order', 'ASC');
             }

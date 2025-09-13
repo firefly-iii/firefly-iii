@@ -1,8 +1,9 @@
 <?php
 
+
 /*
- * AvailableBudgetRepositoryInterface.php
- * Copyright (c) 2023 james@firefly-iii.org
+ * WebhookResponse.php
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,16 +23,25 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\UserGroups\Budget;
+namespace FireflyIII\Models;
 
-use Carbon\Carbon;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Interface AvailableBudgetRepositoryInterface
- *
- * @deprecated
- */
-interface AvailableBudgetRepositoryInterface
+class WebhookResponse extends Model
 {
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+    use ReturnsIntegerIdTrait;
+
+    /**
+     * Get the ID
+     *
+     * @SuppressWarnings("PHPMD.ShortMethodName")
+     */
+    protected function key(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int) $value,
+        );
+    }
 }

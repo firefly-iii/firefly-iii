@@ -128,10 +128,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return redirect(route('categories.index'));
 
             case 'rules.edit':
-                $request->session()->reflash();
-
-                return redirect(route('rules.index'));
-
             case 'rule-groups.edit':
                 $request->session()->reflash();
 
@@ -170,7 +166,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
 
         /** @var null|Account $account */
-        $account   = $user->accounts()->with(['accountType'])->withTrashed()->find($accountId);
+        $account   = $user->accounts()->withTrashed()->with(['accountType'])->find($accountId);
         if (null === $account) {
             app('log')->error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 

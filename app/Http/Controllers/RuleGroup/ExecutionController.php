@@ -25,11 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
 use Exception;
-use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
@@ -42,8 +40,6 @@ use Illuminate\View\View;
  */
 class ExecutionController extends Controller
 {
-    private RuleGroupRepositoryInterface $ruleGroupRepository;
-
     /**
      * ExecutionController constructor.
      */
@@ -56,7 +52,6 @@ class ExecutionController extends Controller
                 app('view')->share('title', (string) trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -74,20 +69,16 @@ class ExecutionController extends Controller
         /** @var User $user */
         $user          = auth()->user();
         $accounts      = implode(',', $request->get('accounts'));
-        $startDate     = new Carbon($request->get('start'));
-        $endDate       = new Carbon($request->get('end'));
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
-        $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
         // set rules:
         // #10427, file rule group and not the set of rules.
-        $collection    = new Collection([$ruleGroup]);
+        $collection    = new Collection()->push($ruleGroup);
         $newRuleEngine->setRuleGroups($collection);
         $newRuleEngine->fire();
 
@@ -104,10 +95,8 @@ class ExecutionController extends Controller
      */
     public function selectTransactions(RuleGroup $ruleGroup)
     {
-        $first    = session('first')->format('Y-m-d');
-        $today    = today(config('app.timezone'))->format('Y-m-d');
         $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', compact('ruleGroup', 'subTitle'));
     }
 }

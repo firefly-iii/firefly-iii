@@ -1,5 +1,26 @@
 <?php
 
+
+/*
+ * PiggyBankEnrichment.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Support\JsonApi\Enrichments;
@@ -22,8 +43,8 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup;
+    private User                $user; // @phpstan-ignore-line
+    private UserGroup           $userGroup; // @phpstan-ignore-line
     private Collection          $collection;
     private array               $ids           = [];
     private array               $currencyIds   = [];
@@ -32,8 +53,10 @@ class PiggyBankEnrichment implements EnrichmentInterface
     // private array               $accountCurrencies = [];
     private array               $notes         = [];
     private array               $mappedObjects = [];
-    private TransactionCurrency $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
     private array               $amounts       = [];
+    private array $accounts                    = [];
+    private array $objectGroups                = [];
 
     public function __construct()
     {
@@ -57,7 +80,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
     public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
-        $collection = new Collection([$model]);
+        $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
@@ -105,7 +128,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
                     'pc_current_amount' => '0',
                 ];
             }
-            $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], $item->current_amount);
+            $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], (string) $item->current_amount);
             if (null !== $this->amounts[$id][$accountId]['pc_current_amount'] && null !== $item->native_current_amount) {
                 $this->amounts[$id][$accountId]['pc_current_amount'] = bcadd($this->amounts[$id][$accountId]['pc_current_amount'], $item->native_current_amount);
             }
@@ -119,7 +142,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $accountId  = (int)$item->account_id;
             $currencyId = (int)$item->data;
             if (!array_key_exists($currencyId, $this->currencies)) {
-                $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
+                $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
             }
             // $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
@@ -248,7 +271,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
      */
     private function getSuggestedMonthlyAmount(?Carbon $startDate, ?Carbon $targetDate, ?string $targetAmount, string $currentAmount): string
     {
-        if (null === $targetAmount || null === $targetDate || null === $startDate) {
+        if (null === $targetAmount || !$targetDate instanceof Carbon || !$startDate instanceof Carbon) {
             return '0';
         }
         $savePerMonth = '0';

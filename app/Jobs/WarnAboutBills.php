@@ -171,6 +171,8 @@ class WarnAboutBills implements ShouldQueue
         $enrichment->setUser($bill->user);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
+
+        /** @var Bill $single */
         $single     = $enrichment->enrichSingle($bill);
 
         return [

@@ -22,6 +22,8 @@
 
 declare(strict_types=1);
 
+use function Safe\parse_url;
+
 $databaseUrl       = getenv('DATABASE_URL');
 $host              = '';
 $username          = '';

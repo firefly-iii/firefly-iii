@@ -1,12 +1,32 @@
 <?php
 
+
+/*
+ * SubscriptionsOverdueReminder.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Notifications\User;
 
 use Carbon\Carbon;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -42,9 +62,7 @@ class SubscriptionsOverdueReminder extends Notification
                 'bill' => $item['bill'],
             ];
             $current['pay_dates'] = array_map(
-                static function (string $date): string {
-                    return new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js'));
-                },
+                static fn (string $date): string => new Carbon($date)->isoFormat((string)trans('config.month_and_day_moment_js')),
                 $item['dates']['pay_dates']
             );
             $info[]               = $current;
@@ -66,16 +84,16 @@ class SubscriptionsOverdueReminder extends Notification
         return (string)trans('email.subscriptions_overdue_subject_single');
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title($this->getSubject());
-        $message->body((string)trans('email.bill_warning_please_action'));
-
-        return $message;
-    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title($this->getSubject());
+    //        $message->body((string)trans('email.bill_warning_please_action'));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

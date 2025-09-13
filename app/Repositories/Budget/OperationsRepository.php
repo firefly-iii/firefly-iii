@@ -166,7 +166,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 $currencyDecimalPlaces = $journal['currency_decimal_places'];
             }
             if (true === $convertToPrimary && $journalCurrencyId !== $currencyId) {
-                $currencies[$journalCurrencyId] ??= TransactionCurrency::find($journalCurrencyId);
+                $currencies[$journalCurrencyId] ??= Amount::getTransactionCurrencyById($journalCurrencyId);
                 $amount = $converter->convert($currencies[$journalCurrencyId], $primaryCurrency, $journal['date'], $amount);
             }
 
@@ -294,9 +294,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static function (array $expense) use ($start, $end, $transactionCurrency): bool {
-            return $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id;
-        });
+        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id);
 
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
@@ -308,9 +306,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static function (array $expense) use ($budget): bool {
-            return $expense['budget_id'] === $budget->id;
-        });
+        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['budget_id'] === $budget->id);
 
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }

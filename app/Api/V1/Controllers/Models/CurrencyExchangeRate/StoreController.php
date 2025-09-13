@@ -33,6 +33,7 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
@@ -69,7 +70,7 @@ class StoreController extends Controller
         foreach ($data as $date => $rate) {
             $date     = Carbon::createFromFormat('Y-m-d', $date);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
-            if (null !== $existing) {
+            if ($existing instanceof CurrencyExchangeRate) {
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);
@@ -98,12 +99,9 @@ class StoreController extends Controller
         $from        = $request->getFromCurrency();
         $collection  = new Collection();
         foreach ($data['rates'] as $key => $rate) {
-            $to       = TransactionCurrency::where('code', $key)->first();
-            if (null === $to) {
-                continue; // should not happen.
-            }
+            $to       = Amount::getTransactionCurrencyByCode($key);
             $existing = $this->repository->getSpecificRateOnDate($from, $to, $date);
-            if (null !== $existing) {
+            if ($existing instanceof CurrencyExchangeRate) {
                 // update existing rate.
                 $existing = $this->repository->updateExchangeRate($existing, $rate);
                 $collection->push($existing);

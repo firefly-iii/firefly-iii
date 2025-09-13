@@ -248,6 +248,7 @@ return [
                 'multi_account_warning_deposit',
                 'multi_account_warning_transfer',
 
+                'webhook_trigger_ANY',
                 'webhook_trigger_STORE_TRANSACTION',
                 'webhook_trigger_UPDATE_TRANSACTION',
                 'webhook_trigger_DESTROY_TRANSACTION',
@@ -258,6 +259,7 @@ return [
                 'webhook_trigger_STORE_UPDATE_BUDGET_LIMIT',
 
                 'webhook_response_TRANSACTIONS',
+                'webhook_response_RELEVANT',
                 'webhook_response_ACCOUNTS',
                 'webhook_response_NONE',
                 'webhook_delivery_JSON',

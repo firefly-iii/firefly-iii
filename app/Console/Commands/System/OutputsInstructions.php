@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\System;
 use Carbon\Carbon;
 use FireflyIII\Support\System\GeneratesInstallationId;
 use Illuminate\Console\Command;
+use Random\RandomException;
 
 class OutputsInstructions extends Command
 {
@@ -133,6 +134,9 @@ class OutputsInstructions extends Command
         if ('03-31' === $today) {
             $colors = ['bright-blue', 'bright-red', 'white', 'white', 'bright-red', 'bright-blue', 'default', 'default'];
         }
+        if ('ru_RU' === config('firefly.default_language')) {
+            $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
+        }
 
         $this->line(sprintf('<fg=%s>              ______ _           __ _            _____ _____ _____  </>', $colors[0]));
         $this->line(sprintf('<fg=%s>             |  ____(_)         / _| |          |_   _|_   _|_   _| </>', $colors[1]));
@@ -238,14 +242,42 @@ class OutputsInstructions extends Command
 
     private function someQuote(): void
     {
-        $lines  = [
+        $lines     = [
             'Forgive yourself for not being at peace.',
             'Doesn\'t look like anything to me.',
             'Be proud of what you make.',
             'Be there or forever wonder.',
             'A year from now you will wish you had started today.',
         ];
-        $random = random_int(0, count($lines) - 1);
-        $this->line(sprintf('       "%s"', $lines[$random]));
+        $addQuotes = true;
+
+        // fuck the Russian aggression in Ukraine.
+
+        // There is no point even trying to be neutral, because you can’t. When I say you can’t be neutral on
+        // a moving train, it means the world is already moving in certain directions. Children are going
+        // hungry, wars are taking place. In a situation like that, to be neutral or to try to be neutral,
+        // to stand aside, not to take a stand, not to participate, is to collaborate with whatever is
+        // going on, to allow that to happen.
+
+        if ('ru_RU' === config('firefly.default_language')) {
+            $addQuotes = false;
+            $lines     = [
+                '🇺🇦 Слава Україні!',
+                '🇺🇦 Slava Ukraini!',
+            ];
+        }
+
+        try {
+            $random = random_int(0, count($lines) - 1);
+        } catch (RandomException) {
+            $random = 0;
+        }
+        if ($addQuotes) {
+            $this->line(sprintf('       "%s"', $lines[$random]));
+
+            return;
+        }
+        $this->line(sprintf('       %s', $lines[$random]));
+
     }
 }

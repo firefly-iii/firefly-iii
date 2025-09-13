@@ -24,9 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Webhook;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
+use FireflyIII\Models\WebhookDelivery;
 use FireflyIII\Models\WebhookMessage;
+use FireflyIII\Models\WebhookResponse;
+use FireflyIII\Models\WebhookTrigger;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
@@ -41,11 +45,20 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function all(): Collection
     {
-        return $this->user->webhooks()->get();
+        return $this->user->webhooks()
+            // only get upgraded webhooks
+            ->where('delivery', 1)
+            ->where('response', 1)
+            ->where('trigger', 1)
+            ->get()
+        ;
     }
 
     public function destroy(Webhook $webhook): void
     {
+        // force delete all messages and attempts:
+        $webhook->webhookMessages()->delete();
+
         $webhook->delete();
     }
 
@@ -87,37 +100,107 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function store(array $data): Webhook
     {
-        $secret   = Str::random(24);
-        $fullData = [
+        $secret     = Str::random(24);
+        $fullData   = [
             'user_id'       => $this->user->id,
             'user_group_id' => $this->user->user_group_id,
             'active'        => $data['active'] ?? false,
             'title'         => $data['title'] ?? null,
-            'trigger'       => $data['trigger'],
-            'response'      => $data['response'],
-            'delivery'      => $data['delivery'],
+            //            'trigger'       => $data['trigger'],
+            //            'response'      => $data['response'],
+            //            'delivery'      => $data['delivery'],
+            'trigger'       => 1,
+            'response'      => 1,
+            'delivery'      => 1,
             'secret'        => $secret,
             'url'           => $data['url'],
         ];
 
-        return Webhook::create($fullData);
+        /** @var Webhook $webhook */
+        $webhook    = Webhook::create($fullData);
+        $triggers   = new Collection();
+        $responses  = new Collection();
+        $deliveries = new Collection();
+
+        foreach ($data['triggers'] as $trigger) {
+            // get the relevant ID:
+            $object = WebhookTrigger::where('title', $trigger)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook trigger with title "%s".', $trigger));
+            }
+            $triggers->push($object);
+        }
+        $webhook->webhookTriggers()->saveMany($triggers);
+
+        foreach ($data['responses'] as $response) {
+            // get the relevant ID:
+            $object = WebhookResponse::where('title', $response)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook response with title "%s".', $response));
+            }
+            $responses->push($object);
+        }
+        $webhook->webhookResponses()->saveMany($responses);
+
+        foreach ($data['deliveries'] as $delivery) {
+            // get the relevant ID:
+            $object = WebhookDelivery::where('title', $delivery)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook delivery with title "%s".', $delivery));
+            }
+            $deliveries->push($object);
+        }
+        $webhook->webhookDeliveries()->saveMany($deliveries);
+
+        return $webhook;
     }
 
     public function update(Webhook $webhook, array $data): Webhook
     {
-        $webhook->active   = $data['active'] ?? $webhook->active;
-        $webhook->trigger  = $data['trigger'] ?? $webhook->trigger;
-        $webhook->response = $data['response'] ?? $webhook->response;
-        $webhook->delivery = $data['delivery'] ?? $webhook->delivery;
-        $webhook->title    = $data['title'] ?? $webhook->title;
-        $webhook->url      = $data['url'] ?? $webhook->url;
+        $webhook->active = $data['active'] ?? $webhook->active;
+        $webhook->title  = $data['title'] ?? $webhook->title;
+        $webhook->url    = $data['url'] ?? $webhook->url;
 
-        if (true === $data['secret']) {
+        if (array_key_exists('secret', $data) && true === $data['secret']) {
             $secret          = Str::random(24);
             $webhook->secret = $secret;
         }
 
         $webhook->save();
+
+        $triggers        = new Collection();
+        $responses       = new Collection();
+        $deliveries      = new Collection();
+
+        foreach ($data['triggers'] as $trigger) {
+            // get the relevant ID:
+            $object = WebhookTrigger::where('title', $trigger)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook trigger with title "%s".', $trigger));
+            }
+            $triggers->push($object);
+        }
+        $webhook->webhookTriggers()->sync($triggers);
+
+        foreach ($data['responses'] as $response) {
+            // get the relevant ID:
+            $object = WebhookResponse::where('title', $response)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook response with title "%s".', $response));
+            }
+            $responses->push($object);
+        }
+        $webhook->webhookResponses()->sync($responses);
+
+        foreach ($data['deliveries'] as $delivery) {
+            // get the relevant ID:
+            $object = WebhookDelivery::where('title', $delivery)->first();
+            if (null === $object) {
+                throw new FireflyException(sprintf('Could not find webhook delivery with title "%s".', $delivery));
+            }
+            $deliveries->push($object);
+        }
+        $webhook->webhookDeliveries()->sync($deliveries);
 
         return $webhook;
     }

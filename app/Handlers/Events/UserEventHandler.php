@@ -44,7 +44,6 @@ use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
 use FireflyIII\Notifications\Security\UserFailedLoginAttempt;
 use FireflyIII\Notifications\Test\UserTestNotificationEmail;
-use FireflyIII\Notifications\Test\UserTestNotificationNtfy;
 use FireflyIII\Notifications\Test\UserTestNotificationPushover;
 use FireflyIII\Notifications\Test\UserTestNotificationSlack;
 use FireflyIII\Notifications\User\UserLogin;
@@ -129,7 +128,7 @@ class UserEventHandler
         $groupTitle          = $user->email;
         $index               = 1;
 
-        /** @var UserGroup $group */
+        /** @var null|UserGroup $group */
         $group               = null;
 
         // create a new group.
@@ -411,10 +410,10 @@ class UserEventHandler
 
                 break;
 
-            case 'ntfy':
-                $class = UserTestNotificationNtfy::class;
-
-                break;
+                //            case 'ntfy':
+                //                $class = UserTestNotificationNtfy::class;
+                //
+                //                break;
 
             case 'pushover':
                 $class = UserTestNotificationPushover::class;

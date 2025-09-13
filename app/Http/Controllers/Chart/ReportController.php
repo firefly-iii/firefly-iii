@@ -32,6 +32,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +74,7 @@ class ReportController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale            = app('steam')->getLocale();
+        $locale            = Steam::getLocale();
         $current           = clone $start;
         $chartData         = [];
 
@@ -193,7 +194,7 @@ class ReportController extends Controller
             ];
             // in our outgoing?
             $key                              = 'spent';
-            $amount                           = app('steam')->positive($journal['amount']);
+            $amount                           = Steam::positive($journal['amount']);
 
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.
@@ -207,7 +208,7 @@ class ReportController extends Controller
                     && in_array($journal['destination_account_id'], $ids, true))) {
                 $key = 'earned';
             }
-            $data[$currencyId][$period][$key] = bcadd((string) $data[$currencyId][$period][$key], (string) $amount);
+            $data[$currencyId][$period][$key] = bcadd((string) $data[$currencyId][$period][$key], $amount);
         }
 
         // loop this data, make chart bars for each currency:
@@ -250,8 +251,8 @@ class ReportController extends Controller
                 $title        = $currentStart->isoFormat($titleFormat);
                 // #8663 make sure the period exists in the data previously collected.
                 if (array_key_exists($key, $currency)) {
-                    $income['entries'][$title]  = app('steam')->bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
-                    $expense['entries'][$title] = app('steam')->bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
+                    $income['entries'][$title]  = Steam::bcround($currency[$key]['earned'] ?? '0', $currency['currency_decimal_places']);
+                    $expense['entries'][$title] = Steam::bcround($currency[$key]['spent'] ?? '0', $currency['currency_decimal_places']);
                 }
                 // #9477 if the period is not in the data, add it with zero values.
                 if (!array_key_exists($key, $currency)) {

@@ -263,9 +263,9 @@ class CorrectsUnevenAmount extends Command
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
 
-        if (0 === bccomp((string) app('steam')->positive($source->amount), (string) app('steam')->positive($destination->foreign_amount))
+        if (0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
             && $source->transaction_currency_id === $destination->foreign_currency_id
-            && 0 === bccomp((string) app('steam')->positive($destination->amount), (string) app('steam')->positive($source->foreign_amount))
+            && 0 === bccomp(Steam::positive($destination->amount), Steam::positive($source->foreign_amount))
             && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id
         ) {
             return true;
@@ -302,10 +302,10 @@ class CorrectsUnevenAmount extends Command
 
     private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
     {
-        /** @var Transaction $sourceTransaction */
+        /** @var null|Transaction $sourceTransaction */
         $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
 
-        /** @var Transaction $destinationTransaction */
+        /** @var null|Transaction $destinationTransaction */
         $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destinationTransaction) {
             Log::warning('Either transaction is false, stop.');

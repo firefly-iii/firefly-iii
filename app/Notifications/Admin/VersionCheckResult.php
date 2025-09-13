@@ -26,14 +26,12 @@ namespace FireflyIII\Notifications\Admin;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 /**
  * Class VersionCheckResult
@@ -64,20 +62,20 @@ class VersionCheckResult extends Notification
         ;
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function toNtfy(OwnerNotifiable $notifiable): Message
-    {
-        Log::debug('Now in toNtfy() for VersionCheckResult');
-        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
-        $message  = new Message();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.new_version_email_subject'));
-        $message->body($this->message);
-
-        return $message;
-    }
+    //    /**
+    //     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+    //     */
+    //    public function toNtfy(OwnerNotifiable $notifiable): Message
+    //    {
+    //        Log::debug('Now in toNtfy() for VersionCheckResult');
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'owner', null);
+    //        $message  = new Message();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.new_version_email_subject'));
+    //        $message->body($this->message);
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

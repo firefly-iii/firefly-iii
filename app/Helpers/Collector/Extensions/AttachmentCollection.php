@@ -94,7 +94,7 @@ trait AttachmentCollection
                     static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
                         $q1->where('attachments.attachable_type', TransactionJournal::class);
                         // $q1->where('attachments.uploaded', true);
-                        $q1->whereNull('attachments.deleted_at');
+                        // $q1->whereNull('attachments.deleted_at');
                         $q1->orWhereNull('attachments.attachable_type');
                     }
                 )
@@ -107,6 +107,7 @@ trait AttachmentCollection
         $this->fields[] = 'attachments.id as attachment_id';
         $this->fields[] = 'attachments.filename as attachment_filename';
         $this->fields[] = 'attachments.title as attachment_title';
+        $this->fields[] = 'attachments.deleted_at as attachment_deleted_at';
         $this->fields[] = 'attachments.uploaded as attachment_uploaded';
         $this->joinAttachmentTables();
 

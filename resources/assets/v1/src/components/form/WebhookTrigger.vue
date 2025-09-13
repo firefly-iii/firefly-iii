@@ -29,6 +29,7 @@
             </div>
             <select v-if="!loading"
                     ref="trigger"
+                    multiple
                     v-model="trigger"
                     :title="$t('form.webhook_trigger')"
                     class="form-control"
@@ -52,7 +53,7 @@ export default {
     name: "WebhookTrigger",
     data() {
         return {
-            trigger: 0,
+            trigger: [],
             loading: true,
             triggers: [],
         };
@@ -66,7 +67,7 @@ export default {
             }
         },
         value: {
-            type: Number,
+            type: Array,
             required: true,
         }
     },
@@ -80,11 +81,11 @@ export default {
                 }
                 this.triggers.push(
                     {
-                        id: response.data.data.value[key],
+                        id: key,
                         name: this.$t('firefly.webhook_trigger_' + key),
                     }
                 );
-                console.log('webhook trigger: id=' + response.data.data.value[key] + ', name=' + key);
+                // console.log('webhook trigger: id=' + response.data.data.value[key] + ', name=' + key);
             }
             this.loading = false;
         }).catch((error) => {

@@ -139,6 +139,8 @@ interface RecurringRepositoryInterface
      */
     public function getXOccurrencesSince(RecurrenceRepetition $repetition, Carbon $date, Carbon $afterDate, int $count): array;
 
+    public function markGroupsAsNow(Collection $groups): void;
+
     /**
      * Parse the repetition in a string that is user readable.
      */

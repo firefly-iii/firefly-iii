@@ -75,7 +75,7 @@ class TriggerController extends Controller
 
         /** @var RuleEngineInterface $ruleEngine */
         $ruleEngine   = app(RuleEngineInterface::class);
-        $ruleEngine->setRules(new Collection([$rule]));
+        $ruleEngine->setRules(new Collection()->push($rule));
 
         // overrule the rule(s) if necessary.
         if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
@@ -129,7 +129,7 @@ class TriggerController extends Controller
 
         /** @var RuleEngineInterface $ruleEngine */
         $ruleEngine = app(RuleEngineInterface::class);
-        $ruleEngine->setRules(new Collection([$rule]));
+        $ruleEngine->setRules(new Collection()->push($rule));
 
         // overrule the rule(s) if necessary.
         if (array_key_exists('start', $parameters) && null !== $parameters['start']) {

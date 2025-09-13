@@ -25,11 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -102,7 +103,7 @@ class AccountBalanceCalculator
 
             // before and after are easy:
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after                                                         = bcadd($before, (string) $entry->amount);
+            $after                                                         = bcadd($before, (string)$entry->amount);
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;
@@ -144,7 +145,7 @@ class AccountBalanceCalculator
         $query->where('transaction_journals.date', '<', $notBefore);
 
         $first   = $query->first(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount', 'transactions.balance_after']);
-        $balance = (string) ($first->balance_after ?? '0');
+        $balance = (string)($first->balance_after ?? '0');
         Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d', $balance, $first->id ?? 0));
 
         return $balance;
@@ -170,9 +171,9 @@ class AccountBalanceCalculator
              * @var array $balance
              */
             foreach ($currencies as $currencyId => $balance) {
-                /** @var null|TransactionCurrency $currency */
-                $currency        = TransactionCurrency::find($currencyId);
-                if (null === $currency) {
+                try {
+                    $currency = Amount::getTransactionCurrencyById($currencyId);
+                } catch (FireflyException) {
                     Log::error(sprintf('Could not find currency #%d, will not save account balance.', $currencyId));
 
                     continue;
@@ -205,7 +206,7 @@ class AccountBalanceCalculator
         foreach ($transactionJournal->transactions as $transaction) {
             $set[$transaction->account_id] = $transaction->account;
         }
-        $accounts = new Collection($set);
+        $accounts = new Collection()->push(...$set);
         $object->optimizedCalculation($accounts, $transactionJournal->date);
     }
 }

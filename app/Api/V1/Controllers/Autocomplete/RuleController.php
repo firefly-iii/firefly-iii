@@ -37,7 +37,7 @@ use Illuminate\Http\JsonResponse;
 class RuleController extends Controller
 {
     private RuleRepositoryInterface $repository;
-    protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
+    protected array                 $acceptedRoles = [UserRoleEnum::READ_RULES];
 
     /**
      * RuleController constructor.
@@ -66,9 +66,10 @@ class RuleController extends Controller
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $response[] = [
-                'id'          => (string) $rule->id,
+                'id'          => (string)$rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
+                'active'      => $rule->active,
             ];
         }
 

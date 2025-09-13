@@ -34,15 +34,11 @@ use Closure;
  */
 class IsDuplicateTransaction implements ValidationRule
 {
-    private string $value;
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $this->value = $value;
-
-        $fail($this->value);
+        $fail($value);
     }
 }

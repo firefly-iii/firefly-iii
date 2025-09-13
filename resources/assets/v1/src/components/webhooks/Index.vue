@@ -50,12 +50,24 @@
                                 <a :href="'webhooks/show/' + webhook.id">{{ webhook.title }}</a>
                             </td>
                             <td>
-                                <span v-if="webhook.active">{{ triggers[webhook.trigger] }}</span>
-                                <span v-if="!webhook.active" class="text-muted"><s>{{ triggers[webhook.trigger] }}</s> ({{
-                                        $t('firefly.inactive')
-                                    }})</span>
+                                <span v-if="webhook.active">
+                                    <ul class="list-unstyled">
+                                        <li v-for="trigger in webhook.triggers" :key="trigger">
+                                            {{ triggers[trigger] }}
+                                        </li>
+                                    </ul>
+                                </span>
+                                <span v-if="!webhook.active" class="text-muted">
+                                    <ul class="list-unstyled">
+                                        <li v-for="trigger in webhook.triggers" :key="trigger">
+                                            <s>{{ triggers[trigger] }}</s> ({{$t('firefly.inactive') }})
+                                        </li>
+                                    </ul>
+                                    </span>
                             </td>
-                            <td>{{ responses[webhook.response] }} ({{ deliveries[webhook.delivery] }})</td>
+                            <td>
+                              {{ responses[webhook.responses[0]] }} ({{ deliveries[webhook.deliveries[0]] }})
+                            </td>
                             <td>
                                 <em style="cursor:pointer"
                                     v-if="webhook.show_secret" class="fa fa-eye" @click="toggleSecret(webhook)"></em>
@@ -167,9 +179,9 @@ export default {
                             active: current.attributes.active,
                             full_url: current.attributes.url,
                             secret: current.attributes.secret,
-                            trigger: current.attributes.trigger,
-                            response: current.attributes.response,
-                            delivery: current.attributes.delivery,
+                            triggers: current.attributes.triggers,
+                            responses: current.attributes.responses,
+                            deliveries: current.attributes.deliveries,
                             show_secret: false,
                         };
                         if (current.attributes.url.length > 20) {

@@ -40,6 +40,7 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -268,7 +269,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
          */
         foreach ($budgets as $index => $budget) {
             $budget->order = $index + 1;
-            $budget->save();
+            $budget->saveQuietly();
         }
         // other budgets, set to 0.
         $this->user->budgets()->where('active', 0)->update(['order' => 0]);
@@ -309,10 +310,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
             return $budget;
         }
-        if (0 === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
+        if (0 === $autoBudgetType) {
             return $budget;
         }
-        if (null === $autoBudgetType && !$autoBudget instanceof AutoBudget) {
+        if (null === $autoBudgetType) {
             return $budget;
         }
         $this->updateAutoBudget($budget, $data);
@@ -632,7 +633,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 'decimal_places' => $journal['currency_decimal_places'],
                 'sum'            => '0',
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::negative($journal['amount']));
 
             // also do foreign amount:
             $foreignId                 = (int) $journal['foreign_currency_id'];
@@ -645,7 +646,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                     'decimal_places' => $journal['foreign_currency_decimal_places'],
                     'sum'            => '0',
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], (string) app('steam')->negative($journal['foreign_amount']));
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], Steam::negative($journal['foreign_amount']));
             }
         }
 
@@ -694,7 +695,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 'decimal_places' => $journal['currency_decimal_places'],
                 'sum'            => '0',
             ];
-            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], (string) app('steam')->negative($journal['amount']));
+            $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::negative($journal['amount']));
 
             // also do foreign amount:
             $foreignId                 = (int) $journal['foreign_currency_id'];
@@ -707,7 +708,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                     'decimal_places' => $journal['foreign_currency_decimal_places'],
                     'sum'            => '0',
                 ];
-                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], (string) app('steam')->negative($journal['foreign_amount']));
+                $array[$foreignId]['sum'] = bcadd($array[$foreignId]['sum'], Steam::negative($journal['foreign_amount']));
             }
         }
 

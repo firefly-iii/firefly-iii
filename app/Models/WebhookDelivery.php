@@ -1,8 +1,9 @@
 <?php
 
+
 /*
- * CategoryRepositoryInterface.php
- * Copyright (c) 2024 james@firefly-iii.org
+ * WebhookDelivery.php
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -22,19 +23,25 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Repositories\UserGroups\Category;
+namespace FireflyIII\Models;
 
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * Interface CategoryRepositoryInterface
- *
- * @deprecated
- */
-interface CategoryRepositoryInterface
+class WebhookDelivery extends Model
 {
+    use ReturnsIntegerIdTrait;
+
     /**
-     * Search for a category using wild cards. Uses the database, so case sensitive.
+     * Get the ID
+     *
+     * @SuppressWarnings("PHPMD.ShortMethodName")
      */
-    public function searchCategory(array $query, int $limit): Collection;
+    protected function key(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int) $value,
+        );
+    }
 }

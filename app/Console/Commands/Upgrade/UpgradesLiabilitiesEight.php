@@ -157,7 +157,6 @@ class UpgradesLiabilitiesEight extends Command
             $service = new TransactionGroupDestroyService();
             $service->destroy($group);
 
-            return;
         }
     }
 

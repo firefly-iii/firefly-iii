@@ -70,7 +70,7 @@ class Calculator
         }
         self::$intervalMap = new SplObjectStorage();
         foreach (Periodicity::cases() as $interval) {
-            $periodicityClass  = __NAMESPACE__."\\Periodicity\\{$interval->name}";
+            $periodicityClass  = sprintf('%s\Periodicity\%s', __NAMESPACE__, $interval->name);
             self::$intervals[] = $interval->name;
             self::$intervalMap->attach($interval, new $periodicityClass());
         }

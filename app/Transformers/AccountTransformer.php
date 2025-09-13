@@ -66,21 +66,17 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // get account type:
-        $accountType                           = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType                         = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $accountType                           = (string)config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType                         = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
         $liabilityType                         = '' === $liabilityType ? null : strtolower($liabilityType);
         $liabilityDirection                    = $account->meta['liability_direction'] ?? null;
         $accountRole                           = $this->getAccountRole($account, $accountType);
         $hasCurrencySettings                   = null !== $account->meta['currency'];
-        $includeNetWorth                       = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
+        $includeNetWorth                       = 1 === (int)($account->meta['include_net_worth'] ?? 0);
         $longitude                             = $account->meta['location']['longitude'] ?? null;
         $latitude                              = $account->meta['location']['latitude'] ?? null;
         $zoomLevel                             = $account->meta['location']['zoom_level'] ?? null;
         $order                                 = $account->order;
-
-        // date (for balance etc.)
-        $date                                  = $this->getDate();
-        $date->endOfDay();
 
         // get primary currency as fallback:
         $currency                              = $this->primary; // assume primary currency
@@ -99,7 +95,7 @@ class AccountTransformer extends AbstractTransformer
         [$interest, $interestPeriod]           = $this->getInterest($account, $accountType);
 
         return [
-            'id'                              => (string) $account->id,
+            'id'                              => (string)$account->id,
             'created_at'                      => $account->created_at->toAtomString(),
             'updated_at'                      => $account->updated_at->toAtomString(),
             'active'                          => $account->active,
@@ -116,13 +112,13 @@ class AccountTransformer extends AbstractTransformer
             'object_has_currency_setting'     => $hasCurrencySettings,
 
             // currency is object specific or primary, already determined above.
-            'currency_id'                     => (string) $currency['id'],
+            'currency_id'                     => (string)$currency['id'],
             'currency_name'                   => $currency['name'],
             'currency_code'                   => $currency['code'],
             'currency_symbol'                 => $currency['symbol'],
             'currency_decimal_places'         => $currency['decimal_places'],
 
-            'primary_currency_id'             => (string) $this->primary->id,
+            'primary_currency_id'             => (string)$this->primary->id,
             'primary_currency_name'           => $this->primary->name,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
@@ -141,7 +137,10 @@ class AccountTransformer extends AbstractTransformer
             'debt_amount'                     => $account->meta['balances']['debt_amount'],
             'pc_debt_amount'                  => $account->meta['balances']['pc_debt_amount'],
 
-            'current_balance_date'            => $date->toAtomString(),
+            'balance_difference'              => $account->meta['balances']['balance_difference'],
+            'pc_balance_difference'           => $account->meta['balances']['pc_balance_difference'],
+
+            'current_balance_date'            => $account->meta['current_balance_date']->toAtomString(),
             'notes'                           => $account->meta['notes'] ?? null,
             'monthly_payment_date'            => $monthlyPaymentDate,
             'credit_card_type'                => $creditCardType,
@@ -170,23 +169,11 @@ class AccountTransformer extends AbstractTransformer
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $account->meta['account_role'] ?? null;
-        if ('asset' !== $accountType || '' === (string) $accountRole) {
+        if ('asset' !== $accountType || '' === (string)$accountRole) {
             return null;
         }
 
         return $accountRole;
-    }
-
-    /**
-     * TODO duplicated in the V2 transformer.
-     */
-    private function getDate(): Carbon
-    {
-        if (null !== $this->parameters->get('date')) {
-            return $this->parameters->get('date');
-        }
-
-        return today(config('app.timezone'));
     }
 
     private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
@@ -206,7 +193,7 @@ class AccountTransformer extends AbstractTransformer
                 }
                 $monthlyPaymentDate = $object->toAtomString();
             }
-            if (10 !== strlen((string) $monthlyPaymentDate)) {
+            if (10 !== strlen((string)$monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
             }
         }

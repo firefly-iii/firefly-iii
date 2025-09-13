@@ -30,9 +30,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -192,7 +190,7 @@ class ListController extends Controller
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $bills       = $enrichment->enrichSingle($bills);
+        $bills       = $enrichment->enrich($bills);
 
         // make paginator:
         $paginator   = new LengthAwarePaginator($bills, $count, $pageSize, $this->parameters->get('page'));
@@ -268,7 +266,6 @@ class ListController extends Controller
         // filter selection
         $collection     = $unfiltered->filter(
             static function (Recurrence $recurrence) use ($currency) {  // @phpstan-ignore-line
-                /** @var RecurrenceTransaction $transaction */
                 if (array_any($recurrence->recurrenceTransactions, fn ($transaction) => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id)) {
                     return $recurrence;
                 }
@@ -320,7 +317,6 @@ class ListController extends Controller
 
         $collection  = $unfiltered->filter(
             static function (Rule $rule) use ($currency) { // @phpstan-ignore-line
-                /** @var RuleTrigger $trigger */
                 if (array_any($rule->ruleTriggers, fn ($trigger) => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value)) {
                     return $rule;
                 }

@@ -66,7 +66,7 @@ class RemovesDatabaseDecryption extends Command
          * @var string $table
          * @var array  $fields
          */
-        foreach ($tables as $table => $fields) {
+        foreach ($tables as $table => $fields) { // @phpstan-ignore-line
             $this->decryptTable($table, $fields);
         }
 

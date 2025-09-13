@@ -78,8 +78,8 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.3.2',
-    'build_time'                   => 1755576388,
+    'version'                      => '6.4.0',
+    'build_time'                   => 1757781366,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 26,
 
@@ -182,12 +182,12 @@ return [
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
-        'frontpageAccounts'   => [],
-        'listPageSize'        => 50,
-        'currencyPreference'  => 'EUR',
-        'language'            => 'en_US',
-        'locale'              => 'equal',
-        'convertToPrimary'    => false,
+        'frontpageAccounts'  => [],
+        'listPageSize'       => 50,
+        'currencyPreference' => 'EUR',
+        'language'           => 'en_US',
+        'locale'             => 'equal',
+        'convertToPrimary'   => false,
     ],
     'default_currency'             => 'EUR',
     'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
@@ -232,6 +232,13 @@ return [
         'image/png',
         'image/heic',
         'image/heic-sequence',
+        'image/webp',
+        'image/gif',
+        'image/tiff',
+        'image/bmp',
+        'image/x-icon',
+        'image/vnd.microsoft.icon',
+
 
         // PDF
         'application/pdf',
@@ -820,8 +827,24 @@ return [
     // dynamic date ranges are as follows:
     'dynamic_date_ranges'          => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
 
-    // only used in v1
-    'allowed_sort_parameters'      => ['order', 'name', 'iban'],
+    'allowed_sort_parameters'      => [
+        'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id',
+            'current_balance',
+            'pc_current_balance',
+            'opening_balance',
+            'pc_opening_balance',
+            'virtual_balance',
+            'pc_virtual_balance',
+            'debt_amount',
+            'pc_debt_amount',
+            'balance_difference',
+            'pc_balance_difference',
+        ],
+    ],
+    'allowed_db_sort_parameters'   => [
+        'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id'],
+    ],
+
 
     // preselected account lists possibilities:
     'preselected_accounts'         => ['all', 'assets', 'liabilities'],

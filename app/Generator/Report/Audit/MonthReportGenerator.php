@@ -132,7 +132,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         /** @var GroupCollectorInterface $collector */
         $collector         = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)->withAccountInformation()
+        $collector->setAccounts(new Collection()->push($account))->setRange($this->start, $this->end)->withAccountInformation()
             ->withBudgetInformation()->withCategoryInformation()->withBillInformation()->withNotes()
         ;
         $journals          = $collector->getExtractedJournals();

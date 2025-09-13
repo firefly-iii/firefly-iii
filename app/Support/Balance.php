@@ -26,7 +26,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -61,7 +61,7 @@ class Balance
         foreach ($result as $entry) {
             $accountId                       = (int) $entry->account_id;
             $currencyId                      = (int) $entry->transaction_currency_id;
-            $currencies[$currencyId] ??= TransactionCurrency::find($currencyId);
+            $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
             $return[$accountId]      ??= [];
             if (array_key_exists($currencyId, $return[$accountId])) {
                 continue;

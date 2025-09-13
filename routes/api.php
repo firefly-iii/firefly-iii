@@ -21,8 +21,9 @@
  */
 
 declare(strict_types=1);
-
 use Illuminate\Support\Facades\Route;
+
+use function Safe\define;
 
 /*
  * ____    ____  __     .______        ______    __    __  .___________. _______     _______.
@@ -48,6 +49,7 @@ Route::group(
         // Auto complete routes
         Route::get('accounts', ['uses' => 'AccountController@accounts', 'as' => 'accounts']);
         Route::get('bills', ['uses' => 'BillController@bills', 'as' => 'bills']);
+        Route::get('subscriptions', ['uses' => 'BillController@bills', 'as' => 'subscriptions']);
         Route::get('budgets', ['uses' => 'BudgetController@budgets', 'as' => 'budgets']);
         Route::get('categories', ['uses' => 'CategoryController@categories', 'as' => 'categories']);
         Route::get('currencies', ['uses' => 'CurrencyController@currencies', 'as' => 'currencies']);
@@ -504,6 +506,7 @@ Route::group(
         Route::get('', ['uses' => 'ShowController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'StoreController@store', 'as' => 'store']);
         Route::get('{recurrence}', ['uses' => 'ShowController@show', 'as' => 'show']);
+        Route::post('{recurrence}/trigger', ['uses' => 'TriggerController@trigger', 'as' => 'trigger']);
         Route::put('{recurrence}', ['uses' => 'UpdateController@update', 'as' => 'update']);
         Route::delete('{recurrence}', ['uses' => 'DestroyController@destroy', 'as' => 'delete']);
 

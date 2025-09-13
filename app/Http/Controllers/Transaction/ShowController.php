@@ -92,6 +92,7 @@ class ShowController extends Controller
         $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setTransactionGroup($transactionGroup)->withAPIInformation();
 
+        /** @var null|TransactionGroup $selectedGroup */
         $selectedGroup   = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
@@ -103,9 +104,6 @@ class ShowController extends Controller
         $selectedGroup   = $enrichment->enrichSingle($selectedGroup);
 
 
-        /** @var null|TransactionJournal $first */
-        $first           = $transactionGroup->transactionJournals()->first(['transaction_journals.*']);
-        $splits          = $transactionGroup->transactionJournals()->count();
         $splits          = count($selectedGroup['transactions']);
         $keys            = array_keys($selectedGroup['transactions']);
         $first           = $selectedGroup['transactions'][array_shift($keys)];
@@ -121,6 +119,8 @@ class ShowController extends Controller
         // enrich
         $enrichment      = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
+
+        /** @var array $selectedGroup */
         $selectedGroup   = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */

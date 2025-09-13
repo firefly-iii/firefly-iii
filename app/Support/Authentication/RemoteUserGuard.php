@@ -139,14 +139,14 @@ class RemoteUserGuard implements Guard
     /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
-    public function id(): null|int|string
+    public function id(): int|string|null
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 
         return $this->user?->id;
     }
 
-    public function setUser(null|Authenticatable|User $user): void // @phpstan-ignore-line
+    public function setUser(Authenticatable|User|null $user): void // @phpstan-ignore-line
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {

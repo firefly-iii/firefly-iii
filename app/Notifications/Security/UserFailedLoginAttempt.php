@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Notifications\Security;
 
 use FireflyIII\Notifications\ReturnsAvailableChannels;
-use FireflyIII\Notifications\ReturnsSettings;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
@@ -35,7 +34,6 @@ use Illuminate\Notifications\Messages\SlackMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Support\Facades\Request;
 use NotificationChannels\Pushover\PushoverMessage;
-use Ntfy\Message;
 
 class UserFailedLoginAttempt extends Notification
 {
@@ -63,17 +61,17 @@ class UserFailedLoginAttempt extends Notification
         return new MailMessage()->markdown('emails.security.failed-login', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
     }
 
-    public function toNtfy(User $notifiable): Message
-    {
-        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-        $message  = new Message();
-        $ip       = Request::ip();
-        $message->topic($settings['ntfy_topic']);
-        $message->title((string) trans('email.failed_login_subject'));
-        $message->body((string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]));
-
-        return $message;
-    }
+    //    public function toNtfy(User $notifiable): Message
+    //    {
+    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
+    //        $message  = new Message();
+    //        $ip       = Request::ip();
+    //        $message->topic($settings['ntfy_topic']);
+    //        $message->title((string) trans('email.failed_login_subject'));
+    //        $message->body((string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]));
+    //
+    //        return $message;
+    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

@@ -317,7 +317,7 @@ class SearchRuleEngine implements RuleEngineInterface
             Log::debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
 
             /** @var Rule $rule */
-            foreach ($this->rules as $rule) {
+            foreach ($this->rules as $rule) { // @phpstan-ignore-line
                 $result = $this->fireRule($rule);
                 if (true === $result && true === $rule->stop_processing) {
                     Log::debug(sprintf('Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.', $rule->id));
@@ -335,7 +335,7 @@ class SearchRuleEngine implements RuleEngineInterface
 
             // fire each group:
             /** @var RuleGroup $group */
-            foreach ($this->groups as $group) {
+            foreach ($this->groups as $group) { // @phpstan-ignore-line
                 $this->fireGroup($group);
             }
         }

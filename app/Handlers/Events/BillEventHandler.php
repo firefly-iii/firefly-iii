@@ -34,6 +34,8 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
+use function Safe\json_encode;
+
 /**
  * Class BillEventHandler
  */
@@ -108,10 +110,10 @@ class BillEventHandler
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        $bill = $event->bill;
+        $bill       = $event->bill;
 
         /** @var bool $preference */
-        Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
+        $preference = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
             Log::debug('Bill reminder is true!');

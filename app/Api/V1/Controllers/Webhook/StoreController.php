@@ -27,7 +27,9 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
+use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
@@ -68,6 +70,15 @@ class StoreController extends Controller
         }
 
         $webhook     = $this->repository->store($data);
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
+        $enrichment->setUser($admin);
+        $webhook     = $enrichment->enrichSingle($webhook);
+
+
         $manager     = $this->getManager();
 
         Log::channel('audit')->info('User stores new webhook', $data);

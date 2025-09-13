@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
@@ -42,7 +43,7 @@ class StoreRequest extends FormRequest
 
     public function getFromCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', $this->get('from'))->first();
+        return Amount::getTransactionCurrencyByCode((string) $this->get('from'));
     }
 
     public function getRate(): string
@@ -52,7 +53,7 @@ class StoreRequest extends FormRequest
 
     public function getToCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', $this->get('to'))->first();
+        return Amount::getTransactionCurrencyByCode((string) $this->get('to'));
     }
 
     /**

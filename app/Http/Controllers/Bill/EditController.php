@@ -88,7 +88,6 @@ class EditController extends Controller
         $bill->amount_min = app('steam')->bcround($bill->amount_min, $bill->transactionCurrency->decimal_places);
         $bill->amount_max = app('steam')->bcround($bill->amount_max, $bill->transactionCurrency->decimal_places);
         $rules            = $this->repository->getRulesForBill($bill);
-        $primaryCurrency  = $this->primaryCurrency;
 
         // code to handle active-checkboxes
         $hasOldInput      = null !== $request->old('_token');
@@ -105,7 +104,7 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'primaryCurrency', 'preFilled'));
+        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'preFilled'));
     }
 
     /**

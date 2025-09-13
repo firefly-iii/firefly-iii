@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
+use Illuminate\Validation\Validator;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreByDateRequest extends FormRequest
@@ -35,6 +37,9 @@ class StoreByDateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
+    /**
+     * @return array<string, mixed>
+     */
     public function getAll(): array
     {
         return [
@@ -45,11 +50,13 @@ class StoreByDateRequest extends FormRequest
 
     public function getFromCurrency(): TransactionCurrency
     {
-        return TransactionCurrency::where('code', $this->get('from'))->first();
+        return Amount::getTransactionCurrencyByCode((string)$this->get('from'));
     }
 
     /**
      * The rules that the incoming request must be matched against.
+     *
+     * @return array<string, string>
      */
     public function rules(): array
     {
@@ -79,8 +86,10 @@ class StoreByDateRequest extends FormRequest
 
                         continue;
                     }
-                    $to = TransactionCurrency::where('code', $key)->first();
-                    if (null === $to) {
+
+                    try {
+                        Amount::getTransactionCurrencyByCode((string)$key);
+                    } catch (FireflyException) {
                         $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                     }
                 }

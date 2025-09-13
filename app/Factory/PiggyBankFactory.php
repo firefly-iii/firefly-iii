@@ -282,7 +282,7 @@ class PiggyBankFactory
 
                 // create event:
                 Log::debug('linkToAccountIds: Trigger change for positive amount [b].');
-                event(new ChangedAmount($piggyBank, $toBeLinked[$account->id]['current_amount'], null, null));
+                event(new ChangedAmount($piggyBank, $toBeLinked[$account->id]['current_amount'] ?? '0', null, null));
             }
             if (!array_key_exists('current_amount', $info)) {
                 $toBeLinked[$account->id] ??= [];

@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
@@ -163,7 +164,7 @@ class AccountBalanceGrouped
 
         // get conversion rate
         $rate                                            = $this->getRate($currency, $journal['date']);
-        $amountConverted                                 = bcmul((string)$amount, $rate);
+        $amountConverted                                 = bcmul($amount, $rate);
 
         // perhaps transaction already has the foreign amount in the primary currency.
         if ((int)$journal['foreign_currency_id'] === $this->primary->id) {
@@ -172,11 +173,11 @@ class AccountBalanceGrouped
         }
 
         // add normal entry
-        $this->data[$currencyId][$period][$key]          = bcadd((string)$this->data[$currencyId][$period][$key], (string)$amount);
+        $this->data[$currencyId][$period][$key]          = bcadd((string)$this->data[$currencyId][$period][$key], $amount);
 
         // add converted entry
         $convertedKey                                    = sprintf('pc_%s', $key);
-        $this->data[$currencyId][$period][$convertedKey] = bcadd((string)$this->data[$currencyId][$period][$convertedKey], (string)$amountConverted);
+        $this->data[$currencyId][$period][$convertedKey] = bcadd((string)$this->data[$currencyId][$period][$convertedKey], $amountConverted);
     }
 
     private function findCurrency(int $currencyId): TransactionCurrency
@@ -184,7 +185,7 @@ class AccountBalanceGrouped
         if (array_key_exists($currencyId, $this->currencies)) {
             return $this->currencies[$currencyId];
         }
-        $this->currencies[$currencyId] = TransactionCurrency::find($currencyId);
+        $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
 
         return $this->currencies[$currencyId];
     }
