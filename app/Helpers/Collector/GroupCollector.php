@@ -634,7 +634,8 @@ class GroupCollector implements GroupCollectorInterface
         if (array_key_exists('attachment_id', $result) && null !== $result['attachment_id']) {
             $uploaded     = 1 === (int)$result['attachment_uploaded'];
             $attachmentId = (int)$augumentedJournal['attachment_id'];
-            if (0 !== $attachmentId && $uploaded) {
+            $deleted = null !== $result['attachment_deleted_at'];
+            if (0 !== $attachmentId && $uploaded && !$deleted) {
                 $result['attachments'][$attachmentId] = [
                     'id'       => $attachmentId,
                     'filename' => $augumentedJournal['attachment_filename'],
