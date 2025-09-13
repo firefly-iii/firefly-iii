@@ -631,7 +631,7 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         // also merge attachments:
-        if (array_key_exists('attachment_id', $result)) {
+        if (array_key_exists('attachment_id', $result) && null !== $result['attachment_id']) {
             $uploaded     = 1 === (int)$result['attachment_uploaded'];
             $attachmentId = (int)$augumentedJournal['attachment_id'];
             if (0 !== $attachmentId && $uploaded) {
@@ -659,7 +659,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToInteger(array $array): array
     {
         foreach ($this->integerFields as $field) {
-            $array[$field] = array_key_exists($field, $array) ? (int)$array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (int)$array[$field] : null;
         }
 
         return $array;

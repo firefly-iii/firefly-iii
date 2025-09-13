@@ -598,16 +598,16 @@ trait MetaCollection
             $foundTagCount          = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
-                app('log')->debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
+                Log::debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
                 if ($transactionTagCount < $expectedTagCount) {
-                    app('log')->debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
+                    Log::debug(sprintf('Transaction has %d tag(s), we expect %d tag(s), return false.', $transactionTagCount, $expectedTagCount));
 
                     return false;
                 }
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
-                        app('log')->debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
+                        Log::debug(sprintf('Transaction has tag "%s" so count++.', $tag['name']));
                         ++$foundTagCount;
                         $journalId = $transaction['transaction_journal_id'];
                         // #8377 prevent adding a transaction twice when multiple tag searches find this transaction
@@ -776,6 +776,9 @@ trait MetaCollection
         $this->withTagInformation();
         $this->query->whereNotNull('tag_transaction_journal.tag_id');
 
+        // Added this while fixing #10898, not sure why a post filter was ever necessary.
+        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
+
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map('strtolower', $list);
@@ -785,13 +788,13 @@ trait MetaCollection
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
-                        app('log')->debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
+                        Log::debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
 
                         return true;
                     }
                 }
             }
-            app('log')->debug('Transaction has no tags from the list, so return false.');
+            Log::debug('Transaction has no tags from the list, so return false.');
 
             return false;
         };
@@ -813,11 +816,11 @@ trait MetaCollection
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
-                app('log')->debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
+                Log::debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
-                        app('log')->debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
+                        Log::debug(sprintf('Transaction has tag "%s", but should not have it, return false.', $tag['name']));
 
                         return false;
                     }

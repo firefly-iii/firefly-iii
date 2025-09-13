@@ -32,6 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 10883](https://github.com/orgs/firefly-iii/discussions/10883) (Initial balance for account is missing from exported CSV) started by @ajaskiewiczpl
 - #10888
 - #10891
+- #10898
 
 ### API
 
