@@ -272,7 +272,7 @@ jobs:
 
             echo "Also merge everything into main since this is a release."
             echo 'create PR'
-            PR_URL=$(gh pr create -B main -H develop --title "🤖 Automatic PR to merge all changes into the main branch." --body "🤖 This PR was created automatically by a GitHub action to merge the changed files into this branch. It will be merged automatically. `Share and enjoy`")
+            PR_URL=$(gh pr create -B main -H develop --title "🤖 Automatic PR to merge all changes into the main branch." --body '🤖 This PR was created automatically by a GitHub action to merge the changed files into this branch. It will be merged automatically. `Share and enjoy`')
             echo "PR URL is '$PR_URL'"
 
             IFS='/' read -ra parts <<< "$PR_URL"
