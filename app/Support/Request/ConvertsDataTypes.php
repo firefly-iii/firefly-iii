@@ -258,6 +258,12 @@ trait ConvertsDataTypes
         if ('yes' === $value) {
             return true;
         }
+        if ('on' === $value) {
+            return true;
+        }
+        if ('y' === $value) {
+            return true;
+        }
         if ('1' === $value) {
             return true;
         }

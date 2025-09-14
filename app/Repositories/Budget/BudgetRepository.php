@@ -44,6 +44,7 @@ use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -723,6 +724,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function store(array $data): Budget
     {
         $order                               = $this->getMaxOrder();
+
+        // this is a lame trick to communicate with the observer.
+        $singleton = PreferencesSingleton::getInstance();
+        $singleton->setPreference('fire_webhooks_budget_create', $data['fire_webhooks'] ?? true);
 
         try {
             $newBudget = Budget::create(
