@@ -46,16 +46,16 @@ class Preference extends Model
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user        = auth()->user();
+            $user = auth()->user();
 
             // some preferences do not have an administration ID.
             // some need it, to make sure the correct one is selected.
-            $userGroupId = (int) $user->user_group_id;
+            $userGroupId = (int)$user->user_group_id;
             $userGroupId = 0 === $userGroupId ? null : $userGroupId;
 
             /** @var null|Preference $preference */
-            $preference  = null;
-            $items       = config('firefly.admin_specific_prefs');
+            $preference = null;
+            $items      = config('firefly.admin_specific_prefs');
             if (null !== $userGroupId && in_array($value, $items, true)) {
                 // find a preference with a specific user_group_id
                 $preference = $user->preferences()->where('user_group_id', $userGroupId)->where('name', $value)->first();
@@ -67,18 +67,18 @@ class Preference extends Model
 
             // try again with ID, but this time don't care about the preferred user_group_id
             if (null === $preference) {
-                $preference = $user->preferences()->where('id', (int) $value)->first();
+                $preference = $user->preferences()->where('id', (int)$value)->first();
             }
             if (null !== $preference) {
                 /** @var Preference $preference */
                 return $preference;
             }
-            $default     = config('firefly.default_preferences');
+            $default = config('firefly.default_preferences');
             if (array_key_exists($value, $default)) {
                 $preference                = new self();
                 $preference->name          = $value;
                 $preference->data          = $default[$value];
-                $preference->user_id       = (int) $user->id;
+                $preference->user_id       = (int)$user->id;
                 $preference->user_group_id = in_array($value, $items, true) ? $userGroupId : null;
                 $preference->save();
 

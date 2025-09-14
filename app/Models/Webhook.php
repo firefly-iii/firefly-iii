@@ -27,7 +27,6 @@ namespace FireflyIII\Models;
 use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
 use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
 use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
-use FireflyIII\Handlers\Observer\AccountObserver;
 use FireflyIII\Handlers\Observer\WebhookObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -138,10 +137,10 @@ class Webhook extends Model
             $webhookId = (int)$value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook   = $user->webhooks()->find($webhookId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }
@@ -155,14 +154,14 @@ class Webhook extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function webhookMessages(): HasMany
-    {
-        return $this->hasMany(WebhookMessage::class);
-    }
-
     public function webhookDeliveries(): BelongsToMany
     {
         return $this->belongsToMany(WebhookDelivery::class);
+    }
+
+    public function webhookMessages(): HasMany
+    {
+        return $this->hasMany(WebhookMessage::class);
     }
 
     public function webhookResponses(): BelongsToMany

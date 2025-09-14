@@ -40,7 +40,7 @@ class TransactionCurrency extends Model
     public ?bool $userGroupEnabled = null;
     public ?bool $userGroupNative  = null;
 
-    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -50,7 +50,7 @@ class TransactionCurrency extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $currencyId = (int) $value;
+            $currencyId = (int)$value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
@@ -101,13 +101,6 @@ class TransactionCurrency extends Model
         return $this->belongsToMany(User::class)->withTimestamps()->withPivot('user_default');
     }
 
-    protected function decimalPlaces(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -117,5 +110,12 @@ class TransactionCurrency extends Model
             'decimal_places' => 'int',
             'enabled'        => 'bool',
         ];
+    }
+
+    protected function decimalPlaces(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

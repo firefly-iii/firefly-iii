@@ -37,18 +37,11 @@ class RecurrenceMeta extends Model
 
     protected $fillable = ['recurrence_id', 'name', 'value'];
 
-    protected $table    = 'recurrences_meta';
+    protected $table = 'recurrences_meta';
 
     public function recurrence(): BelongsTo
     {
         return $this->belongsTo(Recurrence::class);
-    }
-
-    protected function recurrenceId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
     }
 
     protected function casts(): array
@@ -60,5 +53,12 @@ class RecurrenceMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
+    }
+
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

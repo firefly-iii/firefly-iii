@@ -95,6 +95,18 @@ class RecurrenceTransaction extends Model
         );
     }
 
+    protected function casts(): array
+    {
+        return [
+            'created_at'     => 'datetime',
+            'updated_at'     => 'datetime',
+            'deleted_at'     => 'datetime',
+            'amount'         => 'string',
+            'foreign_amount' => 'string',
+            'description'    => 'string',
+        ];
+    }
+
     protected function destinationId(): Attribute
     {
         return Attribute::make(
@@ -135,17 +147,5 @@ class RecurrenceTransaction extends Model
         return Attribute::make(
             get: static fn($value) => (int)$value,
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'created_at'     => 'datetime',
-            'updated_at'     => 'datetime',
-            'deleted_at'     => 'datetime',
-            'amount'         => 'string',
-            'foreign_amount' => 'string',
-            'description'    => 'string',
-        ];
     }
 }

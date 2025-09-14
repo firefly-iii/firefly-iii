@@ -28,7 +28,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
 use function Safe\json_decode;
 use function Safe\json_encode;
 
@@ -39,27 +38,11 @@ class TransactionJournalMeta extends Model
 
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
-    protected $table    = 'journal_meta';
-
-    protected function data(): Attribute
-    {
-        return Attribute::make(get: fn ($value) => json_decode((string) $value, false), set: function ($value) {
-            $data = json_encode($value);
-
-            return ['data' => $data, 'hash' => hash('sha256', $data)];
-        });
-    }
+    protected $table = 'journal_meta';
 
     public function transactionJournal(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
-    }
-
-    protected function transactionJournalId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
     }
 
     protected function casts(): array
@@ -69,5 +52,21 @@ class TransactionJournalMeta extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    protected function data(): Attribute
+    {
+        return Attribute::make(get: fn($value) => json_decode((string)$value, false), set: function ($value) {
+            $data = json_encode($value);
+
+            return ['data' => $data, 'hash' => hash('sha256', $data)];
+        });
+    }
+
+    protected function transactionJournalId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

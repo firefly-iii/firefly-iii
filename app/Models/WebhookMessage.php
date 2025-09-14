@@ -72,6 +72,17 @@ class WebhookMessage extends Model
         return $this->hasMany(WebhookAttempt::class);
     }
 
+    protected function casts(): array
+    {
+        return [
+            'sent'    => 'boolean',
+            'errored' => 'boolean',
+            'uuid'    => 'string',
+            'message' => 'json',
+            'logs'    => 'json',
+        ];
+    }
+
     /**
      * Get the amount
      */
@@ -87,16 +98,5 @@ class WebhookMessage extends Model
         return Attribute::make(
             get: static fn($value) => (int)$value,
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'sent'    => 'boolean',
-            'errored' => 'boolean',
-            'uuid'    => 'string',
-            'message' => 'json',
-            'logs'    => 'json',
-        ];
     }
 }

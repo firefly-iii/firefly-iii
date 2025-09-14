@@ -66,13 +66,6 @@ class Location extends Model
         return $this->morphMany(TransactionJournal::class, 'locatable');
     }
 
-    protected function locatableId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -83,5 +76,12 @@ class Location extends Model
             'latitude'   => 'float',
             'longitude'  => 'float',
         ];
+    }
+
+    protected function locatableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

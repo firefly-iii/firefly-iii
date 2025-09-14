@@ -84,6 +84,22 @@ class AvailableBudget extends Model
         );
     }
 
+    protected function casts(): array
+    {
+        return [
+            'created_at'              => 'datetime',
+            'updated_at'              => 'datetime',
+            'deleted_at'              => 'datetime',
+            'start_date'              => 'date',
+            'end_date'                => 'date',
+            'transaction_currency_id' => 'int',
+            'amount'                  => 'string',
+            'native_amount'           => 'string',
+            'user_id'                 => 'integer',
+            'user_group_id'           => 'integer',
+        ];
+    }
+
     protected function endDate(): Attribute
     {
         return Attribute::make(
@@ -105,21 +121,5 @@ class AvailableBudget extends Model
         return Attribute::make(
             get: static fn($value) => (int)$value,
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-            'amount'                  => 'string',
-            'native_amount'           => 'string',
-            'user_id'                 => 'integer',
-            'user_group_id'           => 'integer',
-        ];
     }
 }

@@ -23,16 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AccountObserver;
-use FireflyIII\Handlers\Observer\TransactionJournalObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Handlers\Observer\TransactionJournalObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,7 +48,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method        EloquentBuilder|static after()
  * @method static EloquentBuilder|static query()
  */
-
 #[ObservedBy([TransactionJournalObserver::class])]
 class TransactionJournal extends Model
 {
@@ -59,7 +57,7 @@ class TransactionJournal extends Model
     use SoftDeletes;
 
     protected $fillable
-                      = [
+        = [
             'user_id',
             'user_group_id',
             'transaction_type_id',
@@ -83,13 +81,13 @@ class TransactionJournal extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $journalId = (int) $value;
+            $journalId = (int)$value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|TransactionJournal $journal */
-            $journal   = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
+            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -170,32 +168,6 @@ class TransactionJournal extends Model
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'));
     }
 
-    #[Scope]
-    protected function transactionTypes(EloquentBuilder $query, array $types): void
-    {
-        if (!self::isJoined($query, 'transaction_types')) {
-            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
-        }
-        if (0 !== count($types)) {
-            $query->whereIn('transaction_types.type', $types);
-        }
-    }
-
-    /**
-     * Checks if tables are joined.
-     */
-    public static function isJoined(EloquentBuilder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public function sourceJournalLinks(): HasMany
     {
         return $this->hasMany(TransactionJournalLink::class, 'source_id');
@@ -236,20 +208,6 @@ class TransactionJournal extends Model
         return $this->belongsTo(UserGroup::class);
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function transactionTypeId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -267,5 +225,45 @@ class TransactionJournal extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    #[Scope]
+    protected function transactionTypes(EloquentBuilder $query, array $types): void
+    {
+        if (!self::isJoined($query, 'transaction_types')) {
+            $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
+        }
+        if (0 !== count($types)) {
+            $query->whereIn('transaction_types.type', $types);
+        }
+    }
+
+    /**
+     * Checks if tables are joined.
+     */
+    public static function isJoined(EloquentBuilder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -36,6 +36,7 @@ class InvitedUser extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
+
     protected $fillable = ['user_group_id', 'user_id', 'email', 'invite_code', 'expires', 'expires_tz', 'redeemed'];
 
     /**
@@ -44,10 +45,10 @@ class InvitedUser extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $attemptId = (int) $value;
+            $attemptId = (int)$value;
 
             /** @var null|InvitedUser $attempt */
-            $attempt   = self::find($attemptId);
+            $attempt = self::find($attemptId);
             if (null !== $attempt) {
                 return $attempt;
             }

@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AccountObserver;
-use Illuminate\Database\Eloquent\Attributes\ObservedBy;
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Handlers\Observer\AccountObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -50,9 +50,9 @@ class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
+    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
 
-    protected $hidden                = ['encrypted'];
+    protected    $hidden             = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -63,13 +63,13 @@ class Account extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $accountId = (int) $value;
+            $accountId = (int)$value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Account $account */
-            $account   = $user->accounts()->with(['accountType'])->find($accountId);
+            $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -98,39 +98,6 @@ class Account extends Model
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
-    /**
-     * Get the account number.
-     */
-    protected function accountNumber(): Attribute
-    {
-        return Attribute::make(get: function () {
-            /** @var null|AccountMeta $metaValue */
-            $metaValue = $this->accountMeta()
-                ->where('name', 'account_number')
-                ->first()
-            ;
-
-            return null !== $metaValue ? $metaValue->data : '';
-        });
-    }
-
-    public function accountMeta(): HasMany
-    {
-        return $this->hasMany(AccountMeta::class);
-    }
-
-    protected function editName(): Attribute
-    {
-        return Attribute::make(get: function () {
-            $name = $this->name;
-            if (AccountTypeEnum::CASH->value === $this->accountType->type) {
-                return '';
-            }
-
-            return $name;
-        });
-    }
-
     public function locations(): MorphMany
     {
         return $this->morphMany(Location::class, 'locatable');
@@ -157,19 +124,9 @@ class Account extends Model
         return $this->belongsToMany(PiggyBank::class);
     }
 
-    #[Scope]
-    protected function accountTypeIn(EloquentBuilder $query, array $types): void
-    {
-        if (false === $this->joinedAccountTypes) {
-            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
-            $this->joinedAccountTypes = true;
-        }
-        $query->whereIn('account_types.type', $types);
-    }
-
     public function setVirtualBalanceAttribute(mixed $value): void
     {
-        $value                               = (string) $value;
+        $value = (string)$value;
         if ('' === $value) {
             $value = null;
         }
@@ -189,8 +146,28 @@ class Account extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
+    }
+
+    /**
+     * Get the account number.
+     */
+    protected function accountNumber(): Attribute
+    {
+        return Attribute::make(get: function () {
+            /** @var null|AccountMeta $metaValue */
+            $metaValue = $this->accountMeta()
+                              ->where('name', 'account_number')
+                              ->first();
+
+            return null !== $metaValue ? $metaValue->data : '';
+        });
+    }
+
+    public function accountMeta(): HasMany
+    {
+        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -199,32 +176,18 @@ class Account extends Model
     protected function accountTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 
-    protected function iban(): Attribute
+    #[Scope]
+    protected function accountTypeIn(EloquentBuilder $query, array $types): void
     {
-        return Attribute::make(
-            get: static fn ($value) => null === $value ? null : trim(str_replace(' ', '', (string) $value)),
-        );
-    }
-
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    /**
-     * Get the virtual balance
-     */
-    protected function virtualBalance(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string) $value,
-        );
+        if (false === $this->joinedAccountTypes) {
+            $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
+            $this->joinedAccountTypes = true;
+        }
+        $query->whereIn('account_types.type', $types);
     }
 
     protected function casts(): array
@@ -240,5 +203,41 @@ class Account extends Model
             'virtual_balance'        => 'string',
             'native_virtual_balance' => 'string',
         ];
+    }
+
+    protected function editName(): Attribute
+    {
+        return Attribute::make(get: function () {
+            $name = $this->name;
+            if (AccountTypeEnum::CASH->value === $this->accountType->type) {
+                return '';
+            }
+
+            return $name;
+        });
+    }
+
+    protected function iban(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
+        );
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the virtual balance
+     */
+    protected function virtualBalance(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (string)$value,
+        );
     }
 }

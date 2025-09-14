@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AccountObserver;
 use FireflyIII\Handlers\Observer\TransactionGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -53,17 +52,16 @@ class TransactionGroup extends Model
     {
         app('log')->debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {
-            $groupId = (int) $value;
+            $groupId = (int)$value;
 
             /** @var User $user */
-            $user    = auth()->user();
+            $user = auth()->user();
             app('log')->debug(sprintf('User authenticated as %s', $user->email));
 
             /** @var null|TransactionGroup $group */
-            $group   = $user->transactionGroups()
-                ->with(['transactionJournals', 'transactionJournals.transactions'])
-                ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*'])
-            ;
+            $group = $user->transactionGroups()
+                          ->with(['transactionJournals', 'transactionJournals.transactions'])
+                          ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
                 app('log')->debug(sprintf('Found group #%d.', $group->id));
 

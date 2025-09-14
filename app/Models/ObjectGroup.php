@@ -37,6 +37,7 @@ class ObjectGroup extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
+
     protected $fillable = ['title', 'order', 'user_id', 'user_group_id'];
 
     /**
@@ -47,12 +48,11 @@ class ObjectGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $objectGroupId = (int) $value;
+            $objectGroupId = (int)$value;
 
             /** @var null|ObjectGroup $objectGroup */
-            $objectGroup   = self::where('object_groups.id', $objectGroupId)
-                ->where('object_groups.user_id', auth()->user()->id)->first()
-            ;
+            $objectGroup = self::where('object_groups.id', $objectGroupId)
+                               ->where('object_groups.user_id', auth()->user()->id)->first();
             if (null !== $objectGroup) {
                 return $objectGroup;
             }
@@ -90,13 +90,6 @@ class ObjectGroup extends Model
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -106,5 +99,12 @@ class ObjectGroup extends Model
             'user_group_id' => 'integer',
             'deleted_at'    => 'datetime',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -39,20 +39,6 @@ class RuleTrigger extends Model
         return $this->belongsTo(Rule::class);
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function ruleId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -62,5 +48,19 @@ class RuleTrigger extends Model
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    protected function ruleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

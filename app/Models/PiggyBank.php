@@ -126,6 +126,22 @@ class PiggyBank extends Model
         );
     }
 
+    protected function casts(): array
+    {
+        return [
+            'created_at'           => 'datetime',
+            'updated_at'           => 'datetime',
+            'deleted_at'           => 'datetime',
+            'start_date'           => 'date',
+            'target_date'          => 'date',
+            'order'                => 'int',
+            'active'               => 'boolean',
+            'encrypted'            => 'boolean',
+            'target_amount'        => 'string',
+            'native_target_amount' => 'string',
+        ];
+    }
+
     protected function order(): Attribute
     {
         return Attribute::make(
@@ -141,21 +157,5 @@ class PiggyBank extends Model
         return Attribute::make(
             get: static fn($value) => (string)$value,
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'created_at'           => 'datetime',
-            'updated_at'           => 'datetime',
-            'deleted_at'           => 'datetime',
-            'start_date'           => 'date',
-            'target_date'          => 'date',
-            'order'                => 'int',
-            'active'               => 'boolean',
-            'encrypted'            => 'boolean',
-            'target_amount'        => 'string',
-            'native_target_amount' => 'string',
-        ];
     }
 }

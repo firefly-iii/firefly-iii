@@ -116,13 +116,6 @@ class Recurrence extends Model
         return $this->belongsTo(TransactionType::class);
     }
 
-    protected function transactionTypeId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn($value) => (int)$value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -141,5 +134,12 @@ class Recurrence extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -32,55 +32,69 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[Deprecated] /** @deprecated */
-    public const string ASSET            = 'Asset account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string ASSET = 'Asset account';
 
-    #[Deprecated] /** @deprecated */
-    public const string BENEFICIARY      = 'Beneficiary account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string BENEFICIARY = 'Beneficiary account';
 
-    #[Deprecated] /** @deprecated */
-    public const string CASH             = 'Cash account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string CASH = 'Cash account';
 
-    #[Deprecated] /** @deprecated */
-    public const string CREDITCARD       = 'Credit card';
+    #[Deprecated]
+    /** @deprecated */
+    public const string CREDITCARD = 'Credit card';
 
-    #[Deprecated] /** @deprecated */
-    public const string DEBT             = 'Debt';
+    #[Deprecated]
+    /** @deprecated */
+    public const string DEBT    = 'Debt';
 
-    #[Deprecated] /** @deprecated */
-    public const string DEFAULT          = 'Default account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string DEFAULT = 'Default account';
 
-    #[Deprecated] /** @deprecated */
-    public const string EXPENSE          = 'Expense account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string EXPENSE = 'Expense account';
 
-    #[Deprecated] /** @deprecated */
-    public const string IMPORT           = 'Import account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string IMPORT = 'Import account';
 
-    #[Deprecated] /** @deprecated */
-    public const string INITIAL_BALANCE  = 'Initial balance account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string INITIAL_BALANCE = 'Initial balance account';
 
-    #[Deprecated] /** @deprecated */
+    #[Deprecated]
+    /** @deprecated */
     public const string LIABILITY_CREDIT = 'Liability credit account';
 
-    #[Deprecated] /** @deprecated */
-    public const string LOAN             = 'Loan';
+    #[Deprecated]
+    /** @deprecated */
+    public const string LOAN = 'Loan';
 
-    #[Deprecated] /** @deprecated */
-    public const string MORTGAGE         = 'Mortgage';
+    #[Deprecated]
+    /** @deprecated */
+    public const string MORTGAGE = 'Mortgage';
 
-    #[Deprecated] /** @deprecated */
-    public const string RECONCILIATION   = 'Reconciliation account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string RECONCILIATION = 'Reconciliation account';
 
-    #[Deprecated] /** @deprecated */
-    public const string REVENUE          = 'Revenue account';
+    #[Deprecated]
+    /** @deprecated */
+    public const string REVENUE = 'Revenue account';
 
     protected $casts
-                                         = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
 
-    protected $fillable                  = ['type'];
+    protected $fillable = ['type'];
 
     public function accounts(): HasMany
     {

@@ -46,7 +46,7 @@ class Budget extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'name', 'active', 'order', 'user_group_id'];
 
-    protected $hidden   = ['encrypted'];
+    protected $hidden = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -56,13 +56,13 @@ class Budget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetId = (int) $value;
+            $budgetId = (int)$value;
 
             /** @var User $user */
-            $user     = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Budget $budget */
-            $budget   = $user->budgets()->find($budgetId);
+            $budget = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }
@@ -109,13 +109,6 @@ class Budget extends Model
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -127,5 +120,12 @@ class Budget extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

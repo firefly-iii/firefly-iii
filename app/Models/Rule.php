@@ -87,28 +87,9 @@ class Rule extends Model
         return $this->hasMany(RuleTrigger::class);
     }
 
-    protected function description(): Attribute
-    {
-        return Attribute::make(set: fn($value) => ['description' => e($value)]);
-    }
-
     public function userGroup(): BelongsTo
     {
         return $this->belongsTo(UserGroup::class);
-    }
-
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn($value) => (int)$value,
-        );
-    }
-
-    protected function ruleGroupId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn($value) => (int)$value,
-        );
     }
 
     protected function casts(): array
@@ -125,5 +106,24 @@ class Rule extends Model
             'user_id'         => 'integer',
             'user_group_id'   => 'integer',
         ];
+    }
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(set: fn($value) => ['description' => e($value)]);
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
+    }
+
+    protected function ruleGroupId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

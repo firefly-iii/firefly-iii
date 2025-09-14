@@ -48,14 +48,7 @@ class AuditLogEntry extends Model
     protected function auditableId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function changerId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 
@@ -68,5 +61,12 @@ class AuditLogEntry extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    protected function changerId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

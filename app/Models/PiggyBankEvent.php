@@ -68,13 +68,6 @@ class PiggyBankEvent extends Model
         );
     }
 
-    protected function piggyBankId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn($value) => (int)$value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -84,5 +77,12 @@ class PiggyBankEvent extends Model
             'amount'        => 'string',
             'native_amount' => 'string',
         ];
+    }
+
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AccountObserver;
 use FireflyIII\Handlers\Observer\RuleGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
@@ -53,13 +52,13 @@ class RuleGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $ruleGroupId = (int) $value;
+            $ruleGroupId = (int)$value;
 
             /** @var User $user */
-            $user        = auth()->user();
+            $user = auth()->user();
 
             /** @var null|RuleGroup $ruleGroup */
-            $ruleGroup   = $user->ruleGroups()->find($ruleGroupId);
+            $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
@@ -78,13 +77,6 @@ class RuleGroup extends Model
         return $this->hasMany(Rule::class);
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -97,5 +89,12 @@ class RuleGroup extends Model
             'user_id'         => 'integer',
             'user_group_id'   => 'integer',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn($value) => (int)$value,
+        );
     }
 }
