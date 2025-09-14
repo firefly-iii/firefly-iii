@@ -75,7 +75,7 @@ class BudgetLimitObserver
         $userCurrency               = app('amount')->getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
-            $converter                  = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($budgetLimit->budget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
@@ -90,16 +90,21 @@ class BudgetLimitObserver
         $this->updatePrimaryCurrencyAmount($budgetLimit);
         $this->updateAvailableBudget($budgetLimit);
 
-        $user   = $budgetLimit->budget->user;
+        // this is a lame trick to communicate with the observer.
+        $singleton = PreferencesSingleton::getInstance();
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($budgetLimit));
-        $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
-        $engine->generateMessages();
+        if (true === $singleton->getPreference('fire_webhooks_bl_update')) {
+            $user = $budgetLimit->budget->user;
 
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser($user);
+            $engine->setObjects(new Collection()->push($budgetLimit));
+            $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
+            $engine->generateMessages();
+
+            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
+            event(new RequestedSendWebhookMessages());
+        }
     }
 }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
+use FireflyIII\Rules\IsBoolean;
 use Illuminate\Validation\Validator;
 use Carbon\Carbon;
 use FireflyIII\Rules\IsValidPositiveAmount;
@@ -52,6 +53,9 @@ class UpdateRequest extends FormRequest
             'currency_id'   => ['currency_id', 'convertInteger'],
             'currency_code' => ['currency_code', 'convertString'],
             'notes'         => ['notes', 'stringWithNewlines'],
+
+            // webhooks
+            'fire_webhooks'           => ['fire_webhooks','boolean']
         ];
         if (false === $this->has('notes')) {
             // ignore notes, not submitted.
@@ -73,6 +77,9 @@ class UpdateRequest extends FormRequest
             'currency_id'   => 'numeric|exists:transaction_currencies,id',
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
             'notes'         => 'nullable|min:0|max:32768',
+
+            // webhooks
+            'fire_webhooks'              => [new IsBoolean()],
         ];
     }
 
