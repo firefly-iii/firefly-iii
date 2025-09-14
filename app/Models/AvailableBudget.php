@@ -24,15 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Handlers\Observer\AvailableBudgetObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([AvailableBudgetObserver::class])]
 class AvailableBudget extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -49,13 +52,13 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $availableBudgetId = (int) $value;
+            $availableBudgetId = (int)$value;
 
             /** @var User $user */
-            $user              = auth()->user();
+            $user = auth()->user();
 
             /** @var null|AvailableBudget $availableBudget */
-            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
@@ -77,30 +80,30 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn($value) => (string)$value,
         );
     }
 
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => Carbon::parse($value),
-            set: fn (Carbon $value) => $value->format('Y-m-d'),
+            get: fn(string $value) => Carbon::parse($value),
+            set: fn(Carbon $value) => $value->format('Y-m-d'),
         );
     }
 
     protected function startDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => Carbon::parse($value),
-            set: fn (Carbon $value) => $value->format('Y-m-d'),
+            get: fn(string $value) => Carbon::parse($value),
+            set: fn(Carbon $value) => $value->format('Y-m-d'),
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 

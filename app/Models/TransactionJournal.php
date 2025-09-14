@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\AccountObserver;
+use FireflyIII\Handlers\Observer\TransactionJournalObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
@@ -46,6 +49,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method        EloquentBuilder|static after()
  * @method static EloquentBuilder|static query()
  */
+
+#[ObservedBy([TransactionJournalObserver::class])]
 class TransactionJournal extends Model
 {
     use HasFactory;

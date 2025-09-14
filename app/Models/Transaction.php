@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\AccountObserver;
+use FireflyIII\Handlers\Observer\TransactionObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -34,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([TransactionObserver::class])]
 class Transaction extends Model
 {
     use HasFactory;

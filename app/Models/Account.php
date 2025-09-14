@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\AccountObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -40,6 +42,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([AccountObserver::class])]
 class Account extends Model
 {
     use HasFactory;

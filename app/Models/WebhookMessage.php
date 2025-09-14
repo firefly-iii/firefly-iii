@@ -24,14 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\WebhookMessageObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([WebhookMessageObserver::class])]
 class WebhookMessage extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -44,13 +47,13 @@ class WebhookMessage extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $messageId = (int) $value;
+            $messageId = (int)$value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|WebhookMessage $message */
-            $message   = self::find($messageId);
+            $message = self::find($messageId);
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
             }
@@ -75,14 +78,14 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (bool) $value,
+            get: static fn($value) => (bool)$value,
         );
     }
 
     protected function webhookId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 

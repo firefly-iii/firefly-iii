@@ -24,13 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Handlers\Observer\BudgetLimitObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([BudgetLimitObserver::class])]
 class BudgetLimit extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -45,12 +48,11 @@ class BudgetLimit extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetLimitId = (int) $value;
+            $budgetLimitId = (int)$value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
-                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                ->where('budgets.user_id', auth()->user()->id)
-                ->first(['budget_limits.*'])
-            ;
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                 ->where('budgets.user_id', auth()->user()->id)
+                                 ->first(['budget_limits.*']);
             if (null !== $budgetLimit) {
                 return $budgetLimit;
             }
@@ -83,21 +85,21 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn($value) => (string)$value,
         );
     }
 
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 

@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Handlers\Observer\RecurrenceObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([RecurrenceObserver::class])]
 class Recurrence extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -43,7 +46,7 @@ class Recurrence extends Model
     use SoftDeletes;
 
     protected $fillable
-                     = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
+        = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
 
     protected $table = 'recurrences';
 
@@ -55,13 +58,13 @@ class Recurrence extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $recurrenceId = (int) $value;
+            $recurrenceId = (int)$value;
 
             /** @var User $user */
-            $user         = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence   = $user->recurrences()->find($recurrenceId);
+            $recurrence = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }
@@ -116,7 +119,7 @@ class Recurrence extends Model
     protected function transactionTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 

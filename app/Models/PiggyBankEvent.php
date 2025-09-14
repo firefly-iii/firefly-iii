@@ -24,18 +24,21 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Handlers\Observer\PiggyBankEventObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+#[ObservedBy([PiggyBankEventObserver::class])]
 class PiggyBankEvent extends Model
 {
     use ReturnsIntegerIdTrait;
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
-    protected $hidden   = ['amount_encrypted'];
+    protected $hidden = ['amount_encrypted'];
 
     public function piggyBank(): BelongsTo
     {
@@ -47,7 +50,7 @@ class PiggyBankEvent extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string) $value;
+        $this->attributes['amount'] = (string)$value;
     }
 
     public function transactionJournal(): BelongsTo
@@ -61,14 +64,14 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn($value) => (string)$value,
         );
     }
 
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn($value) => (int)$value,
         );
     }
 
