@@ -31,6 +31,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -44,17 +45,24 @@ class BudgetLimitObserver
         $this->updatePrimaryCurrencyAmount($budgetLimit);
         $this->updateAvailableBudget($budgetLimit);
 
-        $user   = $budgetLimit->budget->user;
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($budgetLimit));
-        $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
-        $engine->generateMessages();
+        // this is a lame trick to communicate with the observer.
+        $singleton = PreferencesSingleton::getInstance();
 
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        if (true === $singleton->getPreference('fire_webhooks_bl_store')) {
+
+            $user = $budgetLimit->budget->user;
+
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser($user);
+            $engine->setObjects(new Collection()->push($budgetLimit));
+            $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
+            $engine->generateMessages();
+
+            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
+            event(new RequestedSendWebhookMessages());
+        }
     }
 
     private function updatePrimaryCurrencyAmount(BudgetLimit $budgetLimit): void
