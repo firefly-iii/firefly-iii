@@ -57,30 +57,25 @@ class UpdateController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudget
-     *
-     * Update a budget.
-     */
     public function update(UpdateRequest $request, Budget $budget): JsonResponse
     {
-        $data        = $request->getAll();
-        $budget      = $this->repository->update($budget, $data);
-        $manager     = $this->getManager();
+        $data                  = $request->getAll();
+        $data['fire_webhooks'] = $data['fire_webhooks'] ?? true;
+        $budget                = $this->repository->update($budget, $data);
+        $manager               = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new BudgetEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new BudgetEnrichment();
         $enrichment->setUser($admin);
-        $budget      = $enrichment->enrichSingle($budget);
+        $budget = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

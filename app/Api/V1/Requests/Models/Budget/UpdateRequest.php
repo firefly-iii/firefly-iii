@@ -59,6 +59,9 @@ class UpdateRequest extends FormRequest
             'auto_budget_type'   => ['auto_budget_type', 'convertString'],
             'auto_budget_amount' => ['auto_budget_amount', 'convertString'],
             'auto_budget_period' => ['auto_budget_period', 'convertString'],
+
+            // webhooks
+            'fire_webhooks'           => ['fire_webhooks','boolean']
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {
@@ -91,6 +94,9 @@ class UpdateRequest extends FormRequest
             'auto_budget_currency_code' => 'exists:transaction_currencies,code',
             'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+
+            // webhooks
+            'fire_webhooks'              => [new IsBoolean()],
         ];
     }
 
