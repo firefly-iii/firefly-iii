@@ -38,7 +38,7 @@ class PiggyBankEvent extends Model
 
     protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'date_tz', 'amount', 'native_amount'];
 
-    protected $hidden = ['amount_encrypted'];
+    protected $hidden   = ['amount_encrypted'];
 
     public function piggyBank(): BelongsTo
     {
@@ -64,7 +64,7 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -82,7 +82,7 @@ class PiggyBankEvent extends Model
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

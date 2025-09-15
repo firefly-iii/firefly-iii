@@ -55,10 +55,10 @@ class RuleGroup extends Model
             $ruleGroupId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user        = auth()->user();
 
             /** @var null|RuleGroup $ruleGroup */
-            $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
+            $ruleGroup   = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
@@ -94,7 +94,7 @@ class RuleGroup extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

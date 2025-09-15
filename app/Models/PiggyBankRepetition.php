@@ -68,7 +68,7 @@ class PiggyBankRepetition extends Model
     protected function currentAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -81,7 +81,7 @@ class PiggyBankRepetition extends Model
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -97,11 +97,12 @@ class PiggyBankRepetition extends Model
                 $q->orWhereNull('start_date');
             }
         )
-                     ->where(
-                         static function (EloquentBuilder $q) use ($date): void {
-                             $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
-                             $q->orWhereNull('target_date');
-                         }
-                     );
+            ->where(
+                static function (EloquentBuilder $q) use ($date): void {
+                    $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
+                    $q->orWhereNull('target_date');
+                }
+            )
+        ;
     }
 }

@@ -46,7 +46,7 @@ class Recurrence extends Model
     use SoftDeletes;
 
     protected $fillable
-        = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
+                     = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
 
     protected $table = 'recurrences';
 
@@ -61,10 +61,10 @@ class Recurrence extends Model
             $recurrenceId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence = $user->recurrences()->find($recurrenceId);
+            $recurrence   = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }
@@ -139,7 +139,7 @@ class Recurrence extends Model
     protected function transactionTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

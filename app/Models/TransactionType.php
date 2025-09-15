@@ -38,11 +38,11 @@ class TransactionType extends Model
 
     #[Deprecated]
     /** @deprecated */
-    public const string DEPOSIT = 'Deposit';
+    public const string DEPOSIT          = 'Deposit';
 
     #[Deprecated]
     /** @deprecated */
-    public const string INVALID = 'Invalid';
+    public const string INVALID          = 'Invalid';
 
     #[Deprecated]
     /** @deprecated */
@@ -50,27 +50,27 @@ class TransactionType extends Model
 
     #[Deprecated]
     /** @deprecated */
-    public const string OPENING_BALANCE = 'Opening balance';
+    public const string OPENING_BALANCE  = 'Opening balance';
 
     #[Deprecated]
     /** @deprecated */
-    public const string RECONCILIATION = 'Reconciliation';
+    public const string RECONCILIATION   = 'Reconciliation';
 
     #[Deprecated]
     /** @deprecated */
-    public const string TRANSFER = 'Transfer';
+    public const string TRANSFER         = 'Transfer';
 
     #[Deprecated]
     /** @deprecated */
-    public const string WITHDRAWAL = 'Withdrawal';
+    public const string WITHDRAWAL       = 'Withdrawal';
 
     protected $casts
-                        = [
+                                         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    protected $fillable = ['type'];
+    protected $fillable                  = ['type'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
