@@ -50,10 +50,10 @@ class WebhookMessage extends Model
             $messageId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|WebhookMessage $message */
-            $message = self::find($messageId);
+            $message   = self::find($messageId);
             if (null !== $message && $message->webhook->user_id === $user->id) {
                 return $message;
             }
@@ -89,14 +89,14 @@ class WebhookMessage extends Model
     protected function sent(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (bool)$value,
+            get: static fn ($value) => (bool)$value,
         );
     }
 
     protected function webhookId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

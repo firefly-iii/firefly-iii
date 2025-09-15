@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 use function Safe\json_decode;
 use function Safe\json_encode;
 
@@ -51,6 +52,6 @@ class Configuration extends Model
      */
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn($value) => json_decode((string)$value), set: fn($value) => ['data' => json_encode($value)]);
+        return Attribute::make(get: fn ($value) => json_decode((string)$value), set: fn ($value) => ['data' => json_encode($value)]);
     }
 }

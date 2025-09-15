@@ -51,8 +51,9 @@ class ObjectGroup extends Model
             $objectGroupId = (int)$value;
 
             /** @var null|ObjectGroup $objectGroup */
-            $objectGroup = self::where('object_groups.id', $objectGroupId)
-                               ->where('object_groups.user_id', auth()->user()->id)->first();
+            $objectGroup   = self::where('object_groups.id', $objectGroupId)
+                ->where('object_groups.user_id', auth()->user()->id)->first()
+            ;
             if (null !== $objectGroup) {
                 return $objectGroup;
             }
@@ -104,7 +105,7 @@ class ObjectGroup extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

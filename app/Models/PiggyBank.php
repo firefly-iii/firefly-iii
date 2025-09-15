@@ -54,9 +54,10 @@ class PiggyBank extends Model
         if (auth()->check()) {
             $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                               ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                               ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                               ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -122,7 +123,7 @@ class PiggyBank extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -145,7 +146,7 @@ class PiggyBank extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -155,7 +156,7 @@ class PiggyBank extends Model
     protected function targetAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 }

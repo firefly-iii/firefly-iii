@@ -46,7 +46,7 @@ class Bill extends Model
     use SoftDeletes;
 
     protected $fillable
-        = [
+                      = [
             'name',
             'match',
             'amount_min',
@@ -81,10 +81,10 @@ class Bill extends Model
             $billId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Bill $bill */
-            $bill = $user->bills()->find($billId);
+            $bill   = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
             }
@@ -151,7 +151,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -161,7 +161,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -189,7 +189,7 @@ class Bill extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -199,14 +199,14 @@ class Bill extends Model
     protected function skip(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

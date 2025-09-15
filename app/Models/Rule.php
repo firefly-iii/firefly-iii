@@ -55,10 +55,10 @@ class Rule extends Model
             $ruleId = (int)$value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Rule $rule */
-            $rule = $user->rules()->find($ruleId);
+            $rule   = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }
@@ -110,20 +110,20 @@ class Rule extends Model
 
     protected function description(): Attribute
     {
-        return Attribute::make(set: fn($value) => ['description' => e($value)]);
+        return Attribute::make(set: fn ($value) => ['description' => e($value)]);
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
     protected function ruleGroupId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

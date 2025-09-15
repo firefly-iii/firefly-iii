@@ -40,7 +40,7 @@ class TransactionCurrency extends Model
     public ?bool $userGroupEnabled = null;
     public ?bool $userGroupNative  = null;
 
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -115,7 +115,7 @@ class TransactionCurrency extends Model
     protected function decimalPlaces(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }
