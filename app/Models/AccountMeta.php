@@ -27,6 +27,7 @@ use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 use function Safe\json_decode;
 use function Safe\json_encode;
 
@@ -52,6 +53,6 @@ class AccountMeta extends Model
 
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn(mixed $value) => (string)json_decode((string)$value, true), set: fn(mixed $value) => ['data' => json_encode($value)]);
+        return Attribute::make(get: fn (mixed $value) => (string)json_decode((string)$value, true), set: fn (mixed $value) => ['data' => json_encode($value)]);
     }
 }

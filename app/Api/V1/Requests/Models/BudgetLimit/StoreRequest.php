@@ -25,9 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
-use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Facades\Amount;
@@ -69,12 +67,12 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start'         => 'required|before:end|date',
-            'end'           => 'required|after:start|date',
-            'amount'        => ['required', new IsValidPositiveAmount()],
-            'currency_id'   => 'numeric|exists:transaction_currencies,id',
-            'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
-            'notes'         => 'nullable|min:0|max:32768',
+            'start'                      => 'required|before:end|date',
+            'end'                        => 'required|after:start|date',
+            'amount'                     => ['required', new IsValidPositiveAmount()],
+            'currency_id'                => 'numeric|exists:transaction_currencies,id',
+            'currency_code'              => 'min:3|max:51|exists:transaction_currencies,code',
+            'notes'                      => 'nullable|min:0|max:32768',
 
             // webhooks
             'fire_webhooks'              => [new IsBoolean()],
@@ -86,36 +84,36 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $budget     = $this->route()->parameter('budget');
+        $budget = $this->route()->parameter('budget');
         $validator->after(
             static function (Validator $validator) use ($budget): void {
-                if(0 !== count($validator->failed())) {
+                if (0 !== count($validator->failed())) {
                     return;
                 }
-                $data = $validator->getData();
+                $data              = $validator->getData();
 
                 // if no currency has been provided, use the user's default currency:
                 /** @var TransactionCurrencyFactory $factory */
-                $factory                        = app(TransactionCurrencyFactory::class);
-                $currency                       = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+                $factory           = app(TransactionCurrencyFactory::class);
+                $currency          = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
                 if (null === $currency) {
                     $currency = Amount::getPrimaryCurrency();
                 }
-                $currency->enabled              = true;
+                $currency->enabled = true;
                 $currency->save();
 
                 // validator already concluded start and end are valid dates:
-                $start = Carbon::parse($data['start'], config('app.timezone'));
-                $end   = Carbon::parse($data['end'], config('app.timezone'));
+                $start             = Carbon::parse($data['start'], config('app.timezone'));
+                $end               = Carbon::parse($data['end'], config('app.timezone'));
 
                 // find limit with same date range and currency.
-                $limit                          = $budget->budgetlimits()
-                                                         ->where('budget_limits.start_date', $start->format('Y-m-d'))
-                                                         ->where('budget_limits.end_date', $end->format('Y-m-d'))
-                                                         ->where('budget_limits.transaction_currency_id', $currency->id)
-                                                         ->first(['budget_limits.*'])
+                $limit             = $budget->budgetlimits()
+                    ->where('budget_limits.start_date', $start->format('Y-m-d'))
+                    ->where('budget_limits.end_date', $end->format('Y-m-d'))
+                    ->where('budget_limits.transaction_currency_id', $currency->id)
+                    ->first(['budget_limits.*'])
                 ;
-                if(null !== $limit) {
+                if (null !== $limit) {
                     $validator->errors()->add('start', trans('validation.limit_exists'));
                 }
             }

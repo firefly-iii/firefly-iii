@@ -286,7 +286,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         Log::debug('Now in update()');
 
         // this is a lame trick to communicate with the observer.
-        $singleton = PreferencesSingleton::getInstance();
+        $singleton      = PreferencesSingleton::getInstance();
         $singleton->setPreference('fire_webhooks_budget_update', $data['fire_webhooks'] ?? true);
 
         $oldName        = $budget->name;
@@ -730,7 +730,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $order                               = $this->getMaxOrder();
 
         // this is a lame trick to communicate with the observer.
-        $singleton = PreferencesSingleton::getInstance();
+        $singleton                           = PreferencesSingleton::getInstance();
         $singleton->setPreference('fire_webhooks_budget_create', $data['fire_webhooks'] ?? true);
 
         try {

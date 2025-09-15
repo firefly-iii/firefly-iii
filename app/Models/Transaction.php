@@ -44,7 +44,7 @@ class Transaction extends Model
     use SoftDeletes;
 
     protected $fillable
-        = [
+                      = [
             'account_id',
             'transaction_journal_id',
             'description',
@@ -113,7 +113,7 @@ class Transaction extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -151,14 +151,14 @@ class Transaction extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
     protected function balanceDirty(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => 1 === (int)$value,
+            get: static fn ($value) => 1 === (int)$value,
         );
     }
 
@@ -201,14 +201,14 @@ class Transaction extends Model
     protected function foreignAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (string)$value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
     protected function transactionJournalId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 

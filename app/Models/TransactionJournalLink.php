@@ -46,11 +46,12 @@ class TransactionJournalLink extends Model
         if (auth()->check()) {
             $linkId = (int)$value;
             $link   = self::where('journal_links.id', $linkId)
-                          ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
-                          ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
-                          ->where('t_a.user_id', auth()->user()->id)
-                          ->where('t_b.user_id', auth()->user()->id)
-                          ->first(['journal_links.*']);
+                ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
+                ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
+                ->where('t_a.user_id', auth()->user()->id)
+                ->where('t_b.user_id', auth()->user()->id)
+                ->first(['journal_links.*'])
+            ;
             if (null !== $link) {
                 return $link;
             }
@@ -93,21 +94,21 @@ class TransactionJournalLink extends Model
     protected function destinationId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
     protected function linkTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
     protected function sourceId(): Attribute
     {
         return Attribute::make(
-            get: static fn($value) => (int)$value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }
