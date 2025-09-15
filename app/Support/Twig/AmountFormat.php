@@ -114,20 +114,20 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountBySymbol',
-            static function (string $amount, ?string $symbol, ?int $decimalPlaces = null, ?bool $coloured = null): string {
+            static function (string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string {
 
                 if (null === $symbol) {
                     $message = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
                     Log::error($message);
-
-                    throw new FireflyException($message);
+                    $currency = Amount::getPrimaryCurrency();
                 }
-
-                $decimalPlaces ??= 2;
-                $coloured      ??= true;
-                $currency                 = new TransactionCurrency();
-                $currency->symbol         = $symbol;
-                $currency->decimal_places = $decimalPlaces;
+                if (null !== $symbol) {
+                    $decimalPlaces            ??= 2;
+                    $coloured                 ??= true;
+                    $currency                 = new TransactionCurrency();
+                    $currency->symbol         = $symbol;
+                    $currency->decimal_places = $decimalPlaces;
+                }
 
                 return Amount::formatAnything($currency, $amount, $coloured);
             },
