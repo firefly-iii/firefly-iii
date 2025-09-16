@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * RemovesLinksToDeletedObjects.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -38,7 +40,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:remove-links-to-deleted-objects';
+    protected $signature   = 'correction:remove-links-to-deleted-objects';
 
     /**
      * The console command description.
@@ -50,7 +52,7 @@ class RemovesLinksToDeletedObjects extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $deletedTags       = Tag::withTrashed()->whereNotNull('deleted_at')->get('tags.id')->pluck('id')->toArray();
         $deletedJournals   = TransactionJournal::withTrashed()->whereNotNull('deleted_at')->get('transaction_journals.id')->pluck('id')->toArray();

@@ -160,7 +160,7 @@
         "url": "URL",
         "active": "Attivo",
         "interest_date": "Data di valuta",
-        "administration_currency": "Primary currency",
+        "administration_currency": "Valuta primaria",
         "title": "Titolo",
         "date": "Data",
         "book_date": "Data contabile",
@@ -180,7 +180,7 @@
     "list": {
         "title": "Titolo",
         "active": "\u00c8 attivo?",
-        "primary_currency": "Primary currency",
+        "primary_currency": "Valuta primaria",
         "trigger": "Trigger",
         "response": "Risposta",
         "delivery": "Consegna",
