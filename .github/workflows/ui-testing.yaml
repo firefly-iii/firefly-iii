@@ -126,7 +126,8 @@ jobs:
           keep_reports: 0
 
       - name: Upload updated Allure history
-        uses: actions/upload-artifact@v4
+        run: mkdir -p allure-results/history
+      - uses: actions/upload-artifact@v4
         with:
           name: allure-history-ui
           path: allure-results/history
