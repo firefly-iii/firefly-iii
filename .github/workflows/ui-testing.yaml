@@ -109,4 +109,35 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           pattern: allure-results-ui-*
-          path: allure-results-downl
+          path: allure-results-downloaded
+          merge-multiple: false
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p allure-results
+          for dir in allure-results-downloaded/*/; do
+            cp -r "$dir"* allure-results/ 2>/dev/null || true
+          done
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          allure_report: allure-report-ui
+          gh_pages: gh-pages
+          keep_reports: 2
+
+      - name: Upload updated Allure history
+        run: mkdir -p allure-results/history
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-history-ui
+          path: allure-results/history
+          retention-days: 30
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+          publish_dir: allure-report-ui
+          destination_dir: ui
