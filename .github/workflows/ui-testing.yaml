@@ -1,5 +1,5 @@
 # .github/workflows/ui-testing.yaml
-name: Selenium UI Tests 
+name: Selenium UI Tests
 
 on:
   pull_request:
@@ -30,33 +30,111 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1  # Fetch only the latest commit to speed up the checkout process
-        repository: hamad-fyad/firefly
-        token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          repository: hamad-fyad/firefly
+          token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
       
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
         
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirments.txt
-        
-    - name: Install Chrome and ChromeDriver
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-chrome-stable
-        
-    - name: Run Selenium tests
-      env:
-        HEADLESS: "true"
-        FIREFLY_URL: http://52.212.42.101:8080
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt   # ✅ fixed typo
+      
+      # --- Browser setup ---
+      - name: Install Chrome and ChromeDriver
+        if: ${{ github.event.inputs.browser == 'chrome' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo apt install -y ./google-chrome-stable_current_amd64.deb
+          CHROME_VERSION=$(google-chrome --version | cut -d " " -f3 | cut -d "." -f1)
+          wget -q https://chromedriver.storage.googleapis.com/${CHROME_VERSION}.0.0/chromedriver_linux64.zip
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
 
-      run: |
-        pytest tests-UI/ -v
-    
+      - name: Install Firefox and GeckoDriver
+        if: ${{ github.event.inputs.browser == 'firefox' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y firefox wget tar
+          GECKO_DRIVER_VERSION=$(curl -s https://api.github.com/repos/mozilla/geckodriver/releases/latest | grep "tag_name" | cut -d '"' -f4)
+          wget -q https://github.com/mozilla/geckodriver/releases/download/$GECKO_DRIVER_VERSION/geckodriver-$GECKO_DRIVER_VERSION-linux64.tar.gz
+          tar -xzf geckodriver-*.tar.gz
+          sudo mv geckodriver /usr/local/bin/
+      
+      # --- Run Selenium tests ---
+      - name: Run Selenium tests
+        env:
+          HEADLESS: "true"
+          FIREFLY_URL: http://52.212.42.101:8080
+          BROWSER: ${{ github.event.inputs.browser }}
+          TEST_ENV: ${{ github.event.inputs.environment }}
+        run: |
+          pytest tests-UI/ -v --tb=short --alluredir=allure-results
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-ui-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 30
+
+  allure-report:
+    runs-on: ubuntu-latest
+    needs: selenium-tests
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          path: allure-results-downloaded
+          merge-multiple: false
+
+      - name: Merge all results
+        run: |
+          mkdir -p allure-results
+          for dir in allure-results-downloaded/*/; do
+            cp -r "$dir"* allure-results/ 2>/dev/null || true
+          done
+
+      - name: Download previous Allure history
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history
+          path: allure-history
+        continue-on-error: true
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          gh_pages: gh-pages
+          keep_reports: 1 
+
+      - name: Upload updated Allure history
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-history
+          path: allure-history
+          retention-days: 30
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+          publish_dir: allure-history

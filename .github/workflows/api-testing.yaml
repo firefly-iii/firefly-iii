@@ -1,4 +1,6 @@
 # .github/workflows/ui-testing.yaml
+
+# need to work on this the tests are in firefly repo but the workflow is in this repo add the new features here as well 
 name: API Tests
 
 on:
@@ -55,6 +57,63 @@ jobs:
          API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
          STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
       run: |
-        pytest tests/ -v --disable-warnings --tb=short
-        pytest tests/ -v --disable-warnings --tb=short --junitxml=api_test_results.xml
+        pytest tests/ -v --tb=short --alluredir=allure-results
 
+    - name: Upload Allure results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: allure-results-${{ github.run_id }}
+        path: allure-results/
+        retention-days: 30
+
+  allure-report:
+    runs-on: ubuntu-latest
+    needs: api-tests
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download all Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-*
+          path: allure-results-downloaded
+          merge-multiple: false
+
+      - name: Merge all results
+        run: |
+          mkdir -p allure-results
+          for dir in allure-results-downloaded/*/; do
+            cp -r "$dir"* allure-results/ 2>/dev/null || true
+          done
+
+      - name: Download previous Allure history
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history
+          path: allure-history
+        continue-on-error: true
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          gh_pages: gh-pages
+          keep_reports: 1 
+
+      - name: Upload updated allure history
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-history
+          path: allure-history
+          retention-days: 30
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+          publish_dir: allure-history
