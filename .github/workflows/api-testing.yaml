@@ -1,6 +1,3 @@
-# .github/workflows/ui-testing.yaml
-
-# need to work on this the tests are in firefly repo but the workflow is in this repo add the new features here as well 
 name: API Tests
 
 on:
@@ -18,54 +15,44 @@ on:
           - development
           - staging
           - production
-      browser:
-        description: 'Browser to run tests on'
-        required: true
-        default: 'chrome'
-        type: choice
-        options:
-          - chrome
-          - firefox
-          
+
 jobs:
   api-tests:
     runs-on: ubuntu-latest
     
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1  # Fetch only the latest commit to speed up the checkout process
-        repository: hamad-fyad/firefly
-        token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          repository: hamad-fyad/firefly
+          token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
       
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
         
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirments.txt
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
         
-    
-    - name: Run API tests
-      env:
-           
-         FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
-         API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
-         STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
-      run: |
-        pytest tests/ -v --tb=short --alluredir=allure-results
+      - name: Run API tests
+        env:
+          FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
+          API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
+          STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
+        run: |
+          pytest tests/ -v --tb=short --alluredir=allure-results
 
-    - name: Upload Allure results
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: allure-results-${{ github.run_id }}
-        path: allure-results/
-        retention-days: 30
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-api-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 30
 
   allure-report:
     runs-on: ubuntu-latest
@@ -79,7 +66,7 @@ jobs:
       - name: Download all Allure results
         uses: actions/download-artifact@v4
         with:
-          pattern: allure-results-*
+          pattern: allure-results-api-*
           path: allure-results-downloaded
           merge-multiple: false
 
@@ -93,27 +80,27 @@ jobs:
       - name: Download previous Allure history
         uses: actions/download-artifact@v4
         with:
-          name: allure-history
-          path: allure-history
+          name: allure-history-api
+          path: allure-results/history
         continue-on-error: true
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: allure-results
-          allure_report: allure-report
+          allure_report: allure-report-api
           gh_pages: gh-pages
-          keep_reports: 1 
+          keep_reports: 0
 
-      - name: Upload updated allure history
+      - name: Upload updated Allure history
         uses: actions/upload-artifact@v4
         with:
-          name: allure-history
-          path: allure-history
+          name: allure-history-api
+          path: allure-results/history
           retention-days: 30
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
-          publish_dir: allure-history
+          publish_dir: allure-report-api

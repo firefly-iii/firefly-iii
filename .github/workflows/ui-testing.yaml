@@ -1,4 +1,3 @@
-# .github/workflows/ui-testing.yaml
 name: Selenium UI Tests
 
 on:
@@ -45,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt   # ✅ fixed typo
+          pip install -r requirements.txt
       
       # --- Browser setup ---
       - name: Install Chrome and ChromeDriver
@@ -100,7 +99,7 @@ jobs:
       - name: Download all Allure results
         uses: actions/download-artifact@v4
         with:
-          pattern: allure-results-*
+          pattern: allure-results-ui-*
           path: allure-results-downloaded
           merge-multiple: false
 
@@ -114,27 +113,27 @@ jobs:
       - name: Download previous Allure history
         uses: actions/download-artifact@v4
         with:
-          name: allure-history
-          path: allure-history
+          name: allure-history-ui
+          path: allure-results/history
         continue-on-error: true
 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: allure-results
-          allure_report: allure-report
+          allure_report: allure-report-ui
           gh_pages: gh-pages
-          keep_reports: 1 
+          keep_reports: 0
 
       - name: Upload updated Allure history
         uses: actions/upload-artifact@v4
         with:
-          name: allure-history
-          path: allure-history
+          name: allure-history-ui
+          path: allure-results/history
           retention-days: 30
 
       - name: Deploy Allure report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
-          publish_dir: allure-history
+          publish_dir: allure-report-ui
