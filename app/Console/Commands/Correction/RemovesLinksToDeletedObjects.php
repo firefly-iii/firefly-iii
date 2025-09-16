@@ -24,6 +24,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
@@ -51,47 +52,65 @@ class RemovesLinksToDeletedObjects extends Command
      */
     public function handle()
     {
-        // accounts
-        // remove soft-deleted accounts from account_balances
-        // remove soft-deleted accounts from account_meta
-        // remove soft-deleted accounts from account_piggy_bank
-        // remove soft-deleted accounts from attachments.
+        $deletedTags       = Tag::withTrashed()->whereNotNull('deleted_at')->get('tags.id')->pluck('id')->toArray();
+        $deletedJournals   = TransactionJournal::withTrashed()->whereNotNull('deleted_at')->get('transaction_journals.id')->pluck('id')->toArray();
+        $deletedBudgets    = Budget::withTrashed()->whereNotNull('deleted_at')->get('budgets.id')->pluck('id')->toArray();
+        $deletedCategories = Category::withTrashed()->whereNotNull('deleted_at')->get('categories.id')->pluck('id')->toArray();
 
-        // journals
-        // remove soft-deleted journals from attachments
-        // audit_log_entries
-        $deleted = TransactionJournal::withTrashed()->whereNotNull('deleted_at')->get('transaction_journals.id')->pluck('id')->toArray();
-        $count   = DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $deleted)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between tags and transactions.', $count));
+        if (count($deletedTags) > 0) {
+            $this->cleanupTags($deletedTags);
         }
-        unset($deleted);
-        // budgets
-        // from auto_budgets
-        // from budget_limits
-        $deleted = Budget::withTrashed()->whereNotNull('deleted_at')->get('budgets.id')->pluck('id')->toArray();
-        $count   = DB::table('budget_transaction')->whereIn('budget_id', $deleted)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+        if (count($deletedJournals) > 0) {
+            $this->cleanupJournals($deletedJournals);
         }
-        $count = DB::table('budget_transaction_journal')->whereIn('budget_id', $deleted)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+        if (count($deletedBudgets) > 0) {
+            $this->cleanupBudgets($deletedBudgets);
         }
-        unset($deleted);
-        // -> category_transaction
-        // -> category_transaction_journal
-        $deleted = Category::withTrashed()->whereNotNull('deleted_at')->get('categories.id')->pluck('id')->toArray();
-        $count   = DB::table('category_transaction')->whereIn('category_id', $deleted)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between categories and transactions.', $count));
-        }
-        $count = DB::table('category_transaction_journal')->whereIn('category_id', $deleted)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories budgets and transactions.', $count));
+        if (count($deletedCategories) > 0) {
+            $this->cleanupCategories($deletedCategories);
         }
         $this->friendlyNeutral('Validated links to deleted objects.');
 
 
+    }
+
+    private function cleanupTags(array $tags): void
+    {
+        $count = DB::table('tag_transaction_journal')->whereIn('tag_id', $tags)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories transactions and tags.', $count));
+        }
+    }
+
+    private function cleanupJournals(array $journals): void
+    {
+        $count = DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between tags and transactions.', $count));
+        }
+        $count = DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+        }
+        $count = DB::table('category_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories and transactions.', $count));
+        }
+    }
+
+    private function cleanupBudgets(array $budgets): void
+    {
+        $count = DB::table('budget_transaction_journal')->whereIn('budget_id', $budgets)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+        }
+    }
+
+    private function cleanupCategories(array $categories): void
+    {
+        $count = DB::table('category_transaction_journal')->whereIn('category_id', $categories)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories categories and transactions.', $count));
+        }
     }
 }
