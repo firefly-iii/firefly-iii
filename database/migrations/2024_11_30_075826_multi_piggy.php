@@ -140,7 +140,7 @@ return new class () extends Migration {
             $table->dropColumn('transaction_currency_id');
 
             // 2. make column non-nullable.
-            $table->unsignedInteger('account_id')->change();
+            $table->unsignedInteger('account_id')->nullable()->change();
 
             // 5. add new index
             $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
