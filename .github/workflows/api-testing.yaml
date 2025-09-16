@@ -19,7 +19,7 @@ on:
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,17 +27,17 @@ jobs:
           fetch-depth: 1
           repository: hamad-fyad/firefly
           token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
-      
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
-        
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-        
+
       - name: Run API tests
         env:
           FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
@@ -45,6 +45,9 @@ jobs:
           STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
         run: |
           pytest tests/ -v --tb=short --alluredir=allure-results
+
+      - name: Ensure Allure history folder exists
+        run: mkdir -p allure-results/history
 
       - name: Upload Allure results
         uses: actions/upload-artifact@v4
@@ -63,20 +66,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Download all Allure results
-        uses: actions/download-artifact@v4
-        with:
-          pattern: allure-results-api-*
-          path: allure-results-downloaded
-          merge-multiple: false
-
-      - name: Merge all results
-        run: |
-          mkdir -p allure-results
-          for dir in allure-results-downloaded/*/; do
-            cp -r "$dir"* allure-results/ 2>/dev/null || true
-          done
-
       - name: Download previous Allure history
         uses: actions/download-artifact@v4
         with:
@@ -84,13 +73,27 @@ jobs:
           path: allure-results/history
         continue-on-error: true
 
+      - name: Download all new Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-api-*
+          path: allure-results-downloaded
+          merge-multiple: false
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p allure-results
+          for dir in allure-results-downloaded/*/; do
+            cp -r "$dir"* allure-results/ 2>/dev/null || true
+          done
+
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: allure-results
           allure_report: allure-report-api
           gh_pages: gh-pages
-          keep_reports: 0
+          keep_reports: 2
 
       - name: Upload updated Allure history
         run: mkdir -p allure-results/history
