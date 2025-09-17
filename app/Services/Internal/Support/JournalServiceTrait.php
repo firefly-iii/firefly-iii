@@ -54,7 +54,7 @@ trait JournalServiceTrait
     /**
      * @throws FireflyException
      */
-    protected function getAccount(string $transactionType, string $direction, array $data): ?Account
+    protected function getAccount(string $transactionType, string $direction, array $data, ?Account $opposite = null): ?Account
     {
         // some debug logging:
         Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
@@ -69,12 +69,12 @@ trait JournalServiceTrait
         $message       = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
-        $result        = $this->findAccountById($data, $expectedTypes[$transactionType]);
-        $result        = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType]);
+        $result        = $this->findAccountById($data, $expectedTypes[$transactionType], $opposite);
+        $result        = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType], $opposite);
         $ibanResult    = $result;
-        $result        = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType]);
+        $result        = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType], $opposite);
         $numberResult  = $result;
-        $result        = $this->findAccountByName($result, $data, $expectedTypes[$transactionType]);
+        $result        = $this->findAccountByName($result, $data, $expectedTypes[$transactionType], $opposite);
         $nameResult    = $result;
 
         // if $result (find by name) is NULL, but IBAN is set, any result of the search by NAME can't overrule
@@ -82,7 +82,7 @@ trait JournalServiceTrait
         if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string) $data['iban'] && '' !== (string) $nameResult->iban) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
-            $result       = $this->findAccountByName(null, $data, $expectedTypes[$transactionType]);
+            $result       = $this->findAccountByName(null, $data, $expectedTypes[$transactionType], $opposite);
         }
 
         // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case
@@ -115,15 +115,18 @@ trait JournalServiceTrait
         return $result;
     }
 
-    private function findAccountById(array $data, array $types): ?Account
+    private function findAccountById(array $data, array $types, ?Account $opposite = null): ?Account
     {
         // first attempt, find by ID.
         if (null !== $data['id']) {
             $search = $this->accountRepository->find((int) $data['id']);
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
-                Log::debug(
-                    sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type)
-                );
+                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type));
+
+                if($opposite?->id === $search->id) {
+                    Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $search->id, $opposite->id));
+                    return null;
+                }
 
                 return $search;
             }
@@ -140,7 +143,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function findAccountByIban(?Account $account, array $data, array $types): ?Account
+    private function findAccountByIban(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -153,21 +156,26 @@ trait JournalServiceTrait
             return null;
         }
         // find by preferred type.
-        $source = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
+        $result = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
         // or any expected type.
-        $source ??= $this->accountRepository->findByIbanNull($data['iban'], $types);
+        $result ??= $this->accountRepository->findByIbanNull($data['iban'], $types);
 
-        if (null !== $source) {
-            Log::debug(sprintf('Found "account_iban" object: #%d, %s', $source->id, $source->name));
+        if (null !== $result) {
+            Log::debug(sprintf('Found "account_iban" object: #%d, %s', $result->id, $result->name));
 
-            return $source;
+            if($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+                return null;
+            }
+
+            return $result;
         }
         Log::debug(sprintf('Found no account with IBAN "%s" of expected types', $data['iban']), $types);
 
         return null;
     }
 
-    private function findAccountByNumber(?Account $account, array $data, array $types): ?Account
+    private function findAccountByNumber(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -180,15 +188,20 @@ trait JournalServiceTrait
             return null;
         }
         // find by preferred type.
-        $source = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
+        $result = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
 
         // or any expected type.
-        $source ??= $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
+        $result ??= $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
 
-        if (null !== $source) {
-            Log::debug(sprintf('Found account: #%d, %s', $source->id, $source->name));
+        if (null !== $result) {
+            Log::debug(sprintf('Found account: #%d, %s', $result->id, $result->name));
 
-            return $source;
+            if($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+                return null;
+            }
+
+            return $result;
         }
 
         Log::debug(sprintf('Found no account with account number "%s" of expected types', $data['number']), $types);
@@ -196,7 +209,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function findAccountByName(?Account $account, array $data, array $types): ?Account
+    private function findAccountByName(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -210,15 +223,20 @@ trait JournalServiceTrait
         }
 
         // find by preferred type.
-        $source = $this->accountRepository->findByName($data['name'], [$types[0]]);
+        $result = $this->accountRepository->findByName($data['name'], [$types[0]]);
 
         // or any expected type.
-        $source ??= $this->accountRepository->findByName($data['name'], $types);
+        $result ??= $this->accountRepository->findByName($data['name'], $types);
 
-        if (null !== $source) {
-            Log::debug(sprintf('Found "account_name" object: #%d, %s', $source->id, $source->name));
+        if (null !== $result) {
+            Log::debug(sprintf('Found "account_name" object: #%d, %s', $result->id, $result->name));
 
-            return $source;
+            if($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+                return null;
+            }
+
+            return $result;
         }
         Log::debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
 

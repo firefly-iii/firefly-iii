@@ -36,6 +36,7 @@ use FireflyIII\Validation\Account\OBValidation;
 use FireflyIII\Validation\Account\ReconciliationValidation;
 use FireflyIII\Validation\Account\TransferValidation;
 use FireflyIII\Validation\Account\WithdrawalValidation;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountValidator
@@ -80,10 +81,10 @@ class AccountValidator
     public function setSource(?Account $account): void
     {
         if (!$account instanceof Account) {
-            app('log')->debug('AccountValidator source is set to NULL');
+            Log::debug('AccountValidator source is set to NULL');
         }
         if ($account instanceof Account) {
-            app('log')->debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
+            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
         }
         $this->source = $account;
     }
@@ -91,17 +92,17 @@ class AccountValidator
     public function setDestination(?Account $account): void
     {
         if (!$account instanceof Account) {
-            app('log')->debug('AccountValidator destination is set to NULL');
+            Log::debug('AccountValidator destination is set to NULL');
         }
         if ($account instanceof Account) {
-            app('log')->debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
+            Log::debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
         }
         $this->destination = $account;
     }
 
     public function setTransactionType(string $transactionType): void
     {
-        app('log')->debug(sprintf('Transaction type for validator is now "%s".', ucfirst($transactionType)));
+        Log::debug(sprintf('Transaction type for validator is now "%s".', ucfirst($transactionType)));
         $this->transactionType = ucfirst($transactionType);
     }
 
@@ -117,9 +118,9 @@ class AccountValidator
 
     public function validateDestination(array $array): bool
     {
-        app('log')->debug('Now in AccountValidator::validateDestination()', $array);
+        Log::debug('Now in AccountValidator::validateDestination()', $array);
         if (!$this->source instanceof Account) {
-            app('log')->error('Source is NULL, always FALSE.');
+            Log::error('Source is NULL, always FALSE.');
             $this->destError = 'No source account validation has taken place yet. Please do this first or overrule the object.';
 
             return false;
@@ -128,7 +129,7 @@ class AccountValidator
         switch ($this->transactionType) {
             default:
                 $this->destError = sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType);
-                app('log')->error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
+                Log::error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
 
                 $result          = false;
 
@@ -170,11 +171,11 @@ class AccountValidator
 
     public function validateSource(array $array): bool
     {
-        app('log')->debug('Now in AccountValidator::validateSource()', $array);
+        Log::debug('Now in AccountValidator::validateSource()', $array);
 
         switch ($this->transactionType) {
             default:
-                app('log')->error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will do a generic check.', $this->transactionType));
+                Log::error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will do a generic check.', $this->transactionType));
                 $result = $this->validateGenericSource($array);
 
                 break;
@@ -205,7 +206,7 @@ class AccountValidator
                 break;
 
             case TransactionTypeEnum::RECONCILIATION->value:
-                app('log')->debug('Calling validateReconciliationSource');
+                Log::debug('Calling validateReconciliationSource');
                 $result = $this->validateReconciliationSource($array);
 
                 break;
@@ -216,17 +217,17 @@ class AccountValidator
 
     protected function canCreateTypes(array $accountTypes): bool
     {
-        app('log')->debug('Can we create any of these types?', $accountTypes);
+        Log::debug('Can we create any of these types?', $accountTypes);
 
         /** @var string $accountType */
         foreach ($accountTypes as $accountType) {
             if ($this->canCreateType($accountType)) {
-                app('log')->debug(sprintf('YES, we can create a %s', $accountType));
+                Log::debug(sprintf('YES, we can create a %s', $accountType));
 
                 return true;
             }
         }
-        app('log')->debug('NO, we cant create any of those.');
+        Log::debug('NO, we cant create any of those.');
 
         return false;
     }
@@ -250,8 +251,8 @@ class AccountValidator
      */
     protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
-        app('log')->debug('Now in findExistingAccount', [$validTypes, $data]);
-        app('log')->debug('The search will be reversed!');
+        Log::debug('Now in findExistingAccount', [$validTypes, $data]);
+        Log::debug('The search will be reversed!');
         $accountId     = array_key_exists('id', $data) ? $data['id'] : null;
         $accountIban   = array_key_exists('iban', $data) ? $data['iban'] : null;
         $accountNumber = array_key_exists('number', $data) ? $data['number'] : null;
@@ -264,7 +265,7 @@ class AccountValidator
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if (($first instanceof Account) && $check) {
-                app('log')->debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+                Log::debug(sprintf('ID: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
             }
@@ -277,7 +278,7 @@ class AccountValidator
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if (($first instanceof Account) && $check) {
-                app('log')->debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+                Log::debug(sprintf('Iban: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
             }
@@ -290,7 +291,7 @@ class AccountValidator
             $check       = in_array($accountType, $validTypes, true);
             $check       = $inverse ? !$check : $check; // reverse the validation check if necessary.
             if (($first instanceof Account) && $check) {
-                app('log')->debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+                Log::debug(sprintf('Number: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
             }
@@ -300,12 +301,12 @@ class AccountValidator
         if ('' !== (string) $accountName) {
             $first = $this->accountRepository->findByName($accountName, $validTypes);
             if ($first instanceof Account) {
-                app('log')->debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
+                Log::debug(sprintf('Name: Found %s account #%d ("%s", IBAN "%s")', $first->accountType->type, $first->id, $first->name, $first->iban ?? 'no iban'));
 
                 return $first;
             }
         }
-        app('log')->debug('Found nothing in findExistingAccount()');
+        Log::debug('Found nothing in findExistingAccount()');
 
         return null;
     }

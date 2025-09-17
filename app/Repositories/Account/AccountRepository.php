@@ -45,6 +45,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Override;
 
@@ -150,18 +151,18 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
-        app('log')->debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
+        Log::debug(sprintf('Searching for account named "%s" (of user #%d) of the following type(s)', $name, $this->user->id), ['types' => $types]);
 
         $query->where('accounts.name', $name);
 
         /** @var null|Account $account */
         $account = $query->first(['accounts.*']);
         if (null === $account) {
-            app('log')->debug(sprintf('There is no account with name "%s" of types', $name), $types);
+            Log::debug(sprintf('There is no account with name "%s" of types', $name), $types);
 
             return null;
         }
-        app('log')->debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
+        Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
         return $account;
     }
@@ -465,14 +466,14 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         ];
         if (array_key_exists(ucfirst($type), $sets)) {
             $order = (int) $this->getAccountsByType($sets[ucfirst($type)])->max('order');
-            app('log')->debug(sprintf('Return max order of "%s" set: %d', $type, $order));
+            Log::debug(sprintf('Return max order of "%s" set: %d', $type, $order));
 
             return $order;
         }
         $specials = [AccountTypeEnum::CASH->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::RECONCILIATION->value];
 
         $order    = (int) $this->getAccountsByType($specials)->max('order');
-        app('log')->debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
+        Log::debug(sprintf('Return max order of "%s" set (specials!): %d', $type, $order));
 
         return $order;
     }
@@ -599,7 +600,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
                     continue;
                 }
                 if ($index !== (int) $account->order) {
-                    app('log')->debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
+                    Log::debug(sprintf('Account #%d ("%s"): order should %d be but is %d.', $account->id, $account->name, $index, $account->order));
                     $account->order = $index;
                     $account->save();
                 }
