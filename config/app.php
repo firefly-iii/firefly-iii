@@ -140,6 +140,9 @@ return [
         TagServiceProvider::class,
         AdminServiceProvider::class,
         RecurringServiceProvider::class,
+        
+        // Safe transaction handling provider
+        FireflyIII\Providers\SafeTransactionServiceProvider::class,
     ],
     'aliases'         => [
         'Auth'          => Auth::class,
