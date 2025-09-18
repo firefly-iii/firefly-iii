@@ -23,6 +23,15 @@ on:
         options:
           - chrome
           - firefox
+env:
+  url: http://52.212.42.101:8080
+  firefly_version: fireflyiii/core:version-6.3.2
+  firefly_db: mariaDB:noble
+  firefly_importer: fireflyiii/importer:version-1.7.10
+  
+
+
+
 
 jobs:
   selenium-tests:
@@ -141,3 +150,5 @@ jobs:
           github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
           publish_dir: allure-report-ui
           destination_dir: ui
+
+#UI report: https://hamad-fyad.github.io/firefly-iii/ui/

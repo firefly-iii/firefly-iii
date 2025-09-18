@@ -1,0 +1,19 @@
+https://chatgpt.com/c/68c9abb4-84ec-8329-b305-4a027d64ff3d
+change the code of the firefly iii repo to use the AI and show the results of ai categories in the UI as well
+
+build the image as from scratch as it says in link above add to docker compose file as well
+
+make the AI code in the other repo firefly build it and put it in the docker image as well
+
+integrate the AI code into the firefly iii repo as well 
+
+check the test(php) in this repo to see if it works make another ci flow for it as well 
+
+add more tests in the other repo ui test and api and show what was the purpose of the tests and they work as well 
+
+
+make docker compose file with the new build of the firefly iii repo and the new build of the AI repo as well
+
+if there is time make a full ci/cd flow for and also make everything from scratch using terraform and github actions or anisble as well
+
+

@@ -15,7 +15,12 @@ on:
           - development
           - staging
           - production
-
+env:
+  url: http://52.212.42.101:8080
+  firefly_version: fireflyiii/core:version-6.3.2
+  firefly_db: mariaDB:noble
+  firefly_importer: fireflyiii/importer:version-1.7.10
+  
 jobs:
   api-tests:
     runs-on: ubuntu-latest
@@ -109,3 +114,4 @@ jobs:
           github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
           publish_dir: allure-report-api
           destination_dir: api
+#API report: https://hamad-fyad.github.io/firefly-iii/api/
