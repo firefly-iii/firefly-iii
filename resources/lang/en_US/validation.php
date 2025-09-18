@@ -24,9 +24,10 @@
 declare(strict_types=1);
 
 return [
+    'limit_exists'                   => 'There is already a budget limit (amount) for this budget and currency in the given period.',
     'invalid_sort_instruction'       => 'The sort instruction is invalid for an object of type ":object".',
-    'invalid_sort_instruction_index'       => 'The sort instruction at index #:index is invalid for an object of type ":object".',
-    'no_sort_instructions' => 'There are no sort instructions defined for an object of type ":object".',
+    'invalid_sort_instruction_index' => 'The sort instruction at index #:index is invalid for an object of type ":object".',
+    'no_sort_instructions'           => 'There are no sort instructions defined for an object of type ":object".',
     'webhook_budget_info'            => 'Cannot deliver budget information for transaction related webhooks.',
     'webhook_account_info'           => 'Cannot deliver account information for budget related webhooks.',
     'webhook_transaction_info'       => 'Cannot deliver transaction information for budget related webhooks.',
@@ -39,8 +40,8 @@ return [
     'nog_logged_in'                  => 'You are not logged in.',
     'prohibited'                     => 'You must not submit anything in field.',
     'bad_webhook_combination'        => 'Webhook trigger ":trigger" cannot be combined with webhook response ":response".',
-    'unknown_webhook_trigger' => 'Unknown webhook trigger ":trigger".',
-    'only_any_trigger' => 'If you select the "Any event"-trigger, you may not select any other triggers.',
+    'unknown_webhook_trigger'        => 'Unknown webhook trigger ":trigger".',
+    'only_any_trigger'               => 'If you select the "Any event"-trigger, you may not select any other triggers.',
     'bad_type_source'                => 'Firefly III can\'t determine the transaction type based on this source account.',
     'bad_type_destination'           => 'Firefly III can\'t determine the transaction type based on this destination account.',
     'missing_where'                  => 'Array is missing "where"-clause',
@@ -122,7 +123,7 @@ return [
     'between.file'               => 'The :attribute must be between :min and :max kilobytes.',
     'between.string'             => 'The :attribute must be between :min and :max characters.',
     'between.array'              => 'The :attribute must have between :min and :max items.',
-    'between_date'              => 'The date must be between the given start and end date.',
+    'between_date'               => 'The date must be between the given start and end date.',
     'boolean'                    => 'The :attribute field must be true or false.',
     'confirmed'                  => 'The :attribute confirmation does not match.',
     'date'                       => 'The :attribute is not a valid date.',

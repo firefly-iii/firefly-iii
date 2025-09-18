@@ -25,24 +25,30 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Deprecated;
+use FireflyIII\Handlers\Observer\AutoBudgetObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy([AutoBudgetObserver::class])]
 class AutoBudget extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[Deprecated] /** @deprecated */
+    #[Deprecated]
+    /** @deprecated */
     public const int AUTO_BUDGET_ADJUSTED = 3;
 
-    #[Deprecated] /** @deprecated */
+    #[Deprecated]
+    /** @deprecated */
     public const int AUTO_BUDGET_RESET    = 1;
 
-    #[Deprecated] /** @deprecated */
+    #[Deprecated]
+    /** @deprecated */
     public const int AUTO_BUDGET_ROLLOVER = 2;
     protected $casts
                                           = [
@@ -64,14 +70,14 @@ class AutoBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -85,7 +91,7 @@ class AutoBudget extends Model
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn ($value) => (int)$value,
         );
     }
 }

@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\AttachmentObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([AttachmentObserver::class])]
 class Attachment extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -50,7 +53,7 @@ class Attachment extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $attachmentId = (int) $value;
+            $attachmentId = (int)$value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -83,7 +86,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string) $this->id);
+        return sprintf('at-%s.data', (string)$this->id);
     }
 
     /**
@@ -97,7 +100,7 @@ class Attachment extends Model
     protected function attachableId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn ($value) => (int)$value,
         );
     }
 

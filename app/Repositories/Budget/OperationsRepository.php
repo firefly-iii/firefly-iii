@@ -314,7 +314,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     #[Override]
     public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array
     {
-        Log::debug(sprintf('Start of %s(date, date, array, array, "%s").', __METHOD__, $currency?->code));
+        Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.

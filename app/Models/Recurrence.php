@@ -25,9 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Handlers\Observer\RecurrenceObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([RecurrenceObserver::class])]
 class Recurrence extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -55,7 +58,7 @@ class Recurrence extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $recurrenceId = (int) $value;
+            $recurrenceId = (int)$value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -113,13 +116,6 @@ class Recurrence extends Model
         return $this->belongsTo(TransactionType::class);
     }
 
-    protected function transactionTypeId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -138,5 +134,12 @@ class Recurrence extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function transactionTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

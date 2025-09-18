@@ -53,13 +53,6 @@ class GroupMembership extends Model
         return $this->belongsTo(UserRole::class);
     }
 
-    protected function userRoleId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -68,5 +61,12 @@ class GroupMembership extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function userRoleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

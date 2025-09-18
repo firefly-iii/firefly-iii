@@ -40,18 +40,18 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup; // @phpstan-ignore-line
-    private Collection          $collection;
-    private array               $ids              = [];
-    private array               $notes            = [];
-    private Carbon              $start;
-    private Carbon              $end;
-    private array               $expenses         = [];
-    private array               $pcExpenses       = [];
-    private array               $currencyIds      = [];
-    private array               $currencies       = [];
-    private bool                $convertToPrimary = true;
+    private User                         $user;
+    private UserGroup                    $userGroup; // @phpstan-ignore-line
+    private Collection                   $collection;
+    private array                        $ids              = [];
+    private array                        $notes            = [];
+    private Carbon                       $start;
+    private Carbon                       $end;
+    private array                        $expenses         = [];
+    private array                        $pcExpenses       = [];
+    private array                        $currencyIds      = [];
+    private array                        $currencies       = [];
+    private bool                         $convertToPrimary = true;
     private readonly TransactionCurrency $primaryCurrency;
 
     public function __construct()
@@ -154,9 +154,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
+            Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
             $id                  = (int)$budgetLimit->id;
             $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
-            $filteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
+            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
             $this->expenses[$id] = array_values($filteredExpenses);
 
             if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
@@ -195,6 +196,9 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        return array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
+        $result = array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
+        Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
+
+        return $result;
     }
 }

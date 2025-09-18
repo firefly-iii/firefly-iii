@@ -42,7 +42,7 @@ class RuleAction extends Model
         if (false === config('firefly.feature_flags.expression_engine')) {
             Log::debug('Expression engine is disabled, returning action value as string.');
 
-            return (string) $this->action_value;
+            return (string)$this->action_value;
         }
         if (true === config('firefly.feature_flags.expression_engine') && str_starts_with($this->action_value, '\=')) {
             // return literal string.
@@ -54,7 +54,7 @@ class RuleAction extends Model
             $result = $expr->evaluate($journal);
         } catch (SyntaxError $e) {
             Log::error(sprintf('Expression engine failed to evaluate expression "%s" with error "%s".', $this->action_value, $e->getMessage()));
-            $result = (string) $this->action_value;
+            $result = (string)$this->action_value;
         }
         Log::debug(sprintf('Expression engine is enabled, result of expression "%s" is "%s".', $this->action_value, $result));
 
@@ -66,20 +66,6 @@ class RuleAction extends Model
         return $this->belongsTo(Rule::class);
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function ruleId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -89,5 +75,19 @@ class RuleAction extends Model
             'order'           => 'int',
             'stop_processing' => 'boolean',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function ruleId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

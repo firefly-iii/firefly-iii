@@ -57,46 +57,6 @@ use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
-use FireflyIII\Handlers\Observer\AccountObserver;
-use FireflyIII\Handlers\Observer\AttachmentObserver;
-use FireflyIII\Handlers\Observer\AutoBudgetObserver;
-use FireflyIII\Handlers\Observer\AvailableBudgetObserver;
-use FireflyIII\Handlers\Observer\BillObserver;
-use FireflyIII\Handlers\Observer\BudgetLimitObserver;
-use FireflyIII\Handlers\Observer\BudgetObserver;
-use FireflyIII\Handlers\Observer\CategoryObserver;
-use FireflyIII\Handlers\Observer\PiggyBankEventObserver;
-use FireflyIII\Handlers\Observer\PiggyBankObserver;
-use FireflyIII\Handlers\Observer\RecurrenceObserver;
-use FireflyIII\Handlers\Observer\RecurrenceTransactionObserver;
-use FireflyIII\Handlers\Observer\RuleGroupObserver;
-use FireflyIII\Handlers\Observer\RuleObserver;
-use FireflyIII\Handlers\Observer\TagObserver;
-use FireflyIII\Handlers\Observer\TransactionGroupObserver;
-use FireflyIII\Handlers\Observer\TransactionJournalObserver;
-use FireflyIII\Handlers\Observer\TransactionObserver;
-use FireflyIII\Handlers\Observer\WebhookMessageObserver;
-use FireflyIII\Handlers\Observer\WebhookObserver;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\AutoBudget;
-use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\Webhook;
-use FireflyIII\Models\WebhookMessage;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
@@ -256,32 +216,5 @@ class EventServiceProvider extends ServiceProvider
      * Register any events for your application.
      */
     #[Override]
-    public function boot(): void
-    {
-        $this->registerObservers();
-    }
-
-    private function registerObservers(): void
-    {
-        Attachment::observe(new AttachmentObserver());
-        Account::observe(new AccountObserver());
-        AutoBudget::observe(new AutoBudgetObserver());
-        AvailableBudget::observe(new AvailableBudgetObserver());
-        Bill::observe(new BillObserver());
-        Budget::observe(new BudgetObserver());
-        BudgetLimit::observe(new BudgetLimitObserver());
-        Category::observe(new CategoryObserver());
-        PiggyBank::observe(new PiggyBankObserver());
-        PiggyBankEvent::observe(new PiggyBankEventObserver());
-        Recurrence::observe(new RecurrenceObserver());
-        RecurrenceTransaction::observe(new RecurrenceTransactionObserver());
-        Rule::observe(new RuleObserver());
-        RuleGroup::observe(new RuleGroupObserver());
-        Tag::observe(new TagObserver());
-        Transaction::observe(new TransactionObserver());
-        TransactionJournal::observe(new TransactionJournalObserver());
-        TransactionGroup::observe(new TransactionGroupObserver());
-        Webhook::observe(new WebhookObserver());
-        WebhookMessage::observe(new WebhookMessageObserver());
-    }
+    public function boot(): void {}
 }

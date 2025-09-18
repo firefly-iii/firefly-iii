@@ -77,6 +77,7 @@ class UpdateController extends Controller
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         $data              = $request->getAll();
+        $data['fire_webhooks'] ??= true;
         $data['budget_id'] = $budget->id;
         $budgetLimit       = $this->blRepository->update($budgetLimit, $data);
         $manager           = $this->getManager();

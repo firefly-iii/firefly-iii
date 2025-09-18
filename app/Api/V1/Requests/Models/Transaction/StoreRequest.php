@@ -183,6 +183,7 @@ class StoreRequest extends FormRequest
             // basic fields for group:
             'group_title'                          => 'min:1|max:1000|nullable',
             'error_if_duplicate_hash'              => [new IsBoolean()],
+            'fire_webhooks'                        => [new IsBoolean()],
             'apply_rules'                          => [new IsBoolean()],
 
             // location rules

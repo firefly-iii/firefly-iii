@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\PiggyBankObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -34,6 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([PiggyBankObserver::class])]
 class PiggyBank extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -49,7 +52,7 @@ class PiggyBank extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $piggyBankId = (int) $value;
+            $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                 ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
@@ -109,7 +112,7 @@ class PiggyBank extends Model
      */
     public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['target_amount'] = (string) $value;
+        $this->attributes['target_amount'] = (string)$value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -120,24 +123,7 @@ class PiggyBank extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    /**
-     * Get the max amount
-     */
-    protected function targetAmount(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn ($value) => (int)$value,
         );
     }
 
@@ -155,5 +141,22 @@ class PiggyBank extends Model
             'target_amount'        => 'string',
             'native_target_amount' => 'string',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the max amount
+     */
+    protected function targetAmount(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (string)$value,
+        );
     }
 }

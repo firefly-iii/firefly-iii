@@ -370,8 +370,11 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
     public function getTagObjects(int $journalId): Collection
     {
-        /** @var TransactionJournal $journal */
+        /** @var null|TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
+        if (null === $journal) {
+            return new Collection();
+        }
 
         return $journal->tags()->whereNull('deleted_at')->get();
     }

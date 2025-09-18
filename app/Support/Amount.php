@@ -128,7 +128,7 @@ class Amount
         }
         $currency = TransactionCurrency::find($currencyId);
         if (null === $currency) {
-            $message = sprintf('Could not find a transaction currency with ID #%d', $currencyId);
+            $message = sprintf('Could not find a transaction currency with ID #%d in %s', $currencyId, __METHOD__);
             Log::error($message);
 
             throw new FireflyException($message);
@@ -150,7 +150,7 @@ class Amount
         }
         $currency = TransactionCurrency::whereCode($code)->first();
         if (null === $currency) {
-            $message = sprintf('Could not find a transaction currency with code "%s"', $code);
+            $message = sprintf('Could not find a transaction currency with code "%s" in %s', $code, __METHOD__);
             Log::error($message);
 
             throw new FireflyException($message);

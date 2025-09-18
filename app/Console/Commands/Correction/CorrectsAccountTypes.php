@@ -29,12 +29,15 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Facades\Log;
 
 class CorrectsAccountTypes extends Command
 {
@@ -45,6 +48,7 @@ class CorrectsAccountTypes extends Command
     private int            $count;
     private array          $expected;
     private AccountFactory $factory;
+    private AccountRepositoryInterface $repository;
 
     /**
      * Execute the console command.
@@ -110,7 +114,7 @@ class CorrectsAccountTypes extends Command
         if ($resultSet->count() > 0) {
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
             foreach ($resultSet as $entry) {
-                app('log')->debug(sprintf('Now fixing journal #%d', $entry->id));
+                Log::debug(sprintf('Now fixing journal #%d', $entry->id));
 
                 /** @var null|TransactionJournal $journal */
                 $journal = TransactionJournal::find($entry->id);
@@ -120,7 +124,7 @@ class CorrectsAccountTypes extends Command
             }
         }
         if (0 !== $this->count) {
-            app('log')->debug(sprintf('%d journals had to be fixed.', $this->count));
+            Log::debug(sprintf('%d journals had to be fixed.', $this->count));
             $this->friendlyInfo(sprintf('Acted on %d transaction(s)', $this->count));
         }
 
@@ -134,10 +138,10 @@ class CorrectsAccountTypes extends Command
 
     private function inspectJournal(TransactionJournal $journal): void
     {
-        app('log')->debug(sprintf('Now inspecting journal #%d', $journal->id));
+        Log::debug(sprintf('Now inspecting journal #%d', $journal->id));
         $transactions      = $journal->transactions()->count();
         if (2 !== $transactions) {
-            app('log')->debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
+            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
             $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
 
             return;
@@ -151,20 +155,20 @@ class CorrectsAccountTypes extends Command
         $destAccountType   = $destAccount->accountType->type;
 
         if (!array_key_exists($type, $this->expected)) {
-            app('log')->info(sprintf('No source/destination info for transaction type %s.', $type));
+            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
             $this->friendlyError(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;
         }
         if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
-            app('log')->debug(sprintf('[a] Going to fix journal #%d', $journal->id));
+            Log::debug(sprintf('[a] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
 
             return;
         }
         $expectedTypes     = $this->expected[$type][$sourceAccountType];
         if (!in_array($destAccountType, $expectedTypes, true)) {
-            app('log')->debug(sprintf('[b] Going to fix journal #%d', $journal->id));
+            Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
         }
     }
@@ -181,13 +185,15 @@ class CorrectsAccountTypes extends Command
 
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
     {
-        app('log')->debug(sprintf('Going to fix journal #%d', $journal->id));
+        Log::debug(sprintf('Going to fix journal #%d', $journal->id));
+        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository->setUser($journal->user);
         ++$this->count;
         // variables:
         $sourceType           = $source->account->accountType->type;
         $destinationType      = $dest->account->accountType->type;
         $combination          = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
-        app('log')->debug(sprintf('Combination is "%s"', $combination));
+        Log::debug(sprintf('Combination is "%s"', $combination));
 
         if ($this->shouldBeTransfer($transactionType, $sourceType, $destinationType)) {
             $this->makeTransfer($journal);
@@ -220,10 +226,10 @@ class CorrectsAccountTypes extends Command
             return;
         }
         if (!$canCreateSource && !$hasValidSource) {
-            app('log')->debug('This transaction type has no source we can create. Just give error.');
+            Log::debug('This transaction type has no source we can create. Just give error.');
             $message = sprintf('The source account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.', $transactionType, $journal->id, $source->account->accountType->type);
             $this->friendlyError($message);
-            app('log')->debug($message);
+            Log::debug($message);
 
             return;
         }
@@ -232,16 +238,24 @@ class CorrectsAccountTypes extends Command
         $validDestinations    = $this->expected[$transactionType][$sourceType] ?? [];
         $canCreateDestination = $this->canCreateDestination($validDestinations);
         $hasValidDestination  = $this->hasValidAccountType($validDestinations, $destinationType);
+        $alternativeDestination = $this->repository->findByName($dest->account->name, $validDestinations);
         if (!$hasValidDestination && $canCreateDestination) {
             $this->giveNewExpense($journal, $dest);
 
             return;
         }
-        if (!$canCreateDestination && !$hasValidDestination) {
-            app('log')->debug('This transaction type has no destination we can create. Just give error.');
+        if (!$canCreateDestination && !$hasValidDestination && null === $alternativeDestination) {
+            Log::debug('This transaction type has no destination we can create. Just give error.');
             $message = sprintf('The destination account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.', $transactionType, $journal->id, $dest->account->accountType->type);
             $this->friendlyError($message);
-            app('log')->debug($message);
+            Log::debug($message);
+        }
+        if (!$canCreateDestination && !$hasValidDestination && null !== $alternativeDestination) {
+            Log::debug('This transaction type has no destination we can create, but found alternative with the same name.');
+            $message = sprintf('The destination account of %s #%d cannot be of type "%s". Firefly III found an alternative account. Please make sure this transaction is correct.', $transactionType, $journal->transaction_group_id, $dest->account->accountType->type);
+            $this->friendlyInfo($message);
+            Log::debug($message);
+             $this->giveNewDestinationAccount($journal, $alternativeDestination);
         }
     }
 
@@ -263,7 +277,7 @@ class CorrectsAccountTypes extends Command
         $journal->save();
         $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
         $this->friendlyInfo($message);
-        app('log')->debug($message);
+        Log::debug($message);
         // check it again:
         $this->inspectJournal($journal);
     }
@@ -281,7 +295,7 @@ class CorrectsAccountTypes extends Command
         $journal->save();
         $message = sprintf('Converted transaction #%d from a transfer to a deposit.', $journal->id);
         $this->friendlyInfo($message);
-        app('log')->debug($message);
+        Log::debug($message);
         // check it again:
         $this->inspectJournal($journal);
     }
@@ -308,7 +322,7 @@ class CorrectsAccountTypes extends Command
             $result->name
         );
         $this->friendlyWarning($message);
-        app('log')->debug($message);
+        Log::debug($message);
         $this->inspectJournal($journal);
     }
 
@@ -335,7 +349,7 @@ class CorrectsAccountTypes extends Command
             $result->name
         );
         $this->friendlyWarning($message);
-        app('log')->debug($message);
+        Log::debug($message);
         $this->inspectJournal($journal);
     }
 
@@ -354,14 +368,14 @@ class CorrectsAccountTypes extends Command
 
     private function giveNewRevenue(TransactionJournal $journal, Transaction $source): void
     {
-        app('log')->debug(sprintf('An account of type "%s" could be a valid source.', AccountTypeEnum::REVENUE->value));
+        Log::debug(sprintf('An account of type "%s" could be a valid source.', AccountTypeEnum::REVENUE->value));
         $this->factory->setUser($journal->user);
         $name      = $source->account->name;
         $newSource = $this->factory->findOrCreate($name, AccountTypeEnum::REVENUE->value);
         $source->account()->associate($newSource);
         $source->save();
         $this->friendlyPositive(sprintf('Firefly III gave transaction #%d a new source %s: #%d ("%s").', $journal->transaction_group_id, AccountTypeEnum::REVENUE->value, $newSource->id, $newSource->name));
-        app('log')->debug(sprintf('Associated account #%d with transaction #%d', $newSource->id, $source->id));
+        Log::debug(sprintf('Associated account #%d with transaction #%d', $newSource->id, $source->id));
         $this->inspectJournal($journal);
     }
 
@@ -372,14 +386,33 @@ class CorrectsAccountTypes extends Command
 
     private function giveNewExpense(TransactionJournal $journal, Transaction $destination): void
     {
-        app('log')->debug(sprintf('An account of type "%s" could be a valid destination.', AccountTypeEnum::EXPENSE->value));
+        Log::debug(sprintf('An account of type "%s" could be a valid destination.', AccountTypeEnum::EXPENSE->value));
         $this->factory->setUser($journal->user);
         $name           = $destination->account->name;
         $newDestination = $this->factory->findOrCreate($name, AccountTypeEnum::EXPENSE->value);
         $destination->account()->associate($newDestination);
         $destination->save();
         $this->friendlyPositive(sprintf('Firefly III gave transaction #%d a new destination %s: #%d ("%s").', $journal->transaction_group_id, AccountTypeEnum::EXPENSE->value, $newDestination->id, $newDestination->name));
-        app('log')->debug(sprintf('Associated account #%d with transaction #%d', $newDestination->id, $destination->id));
+        Log::debug(sprintf('Associated account #%d with transaction #%d', $newDestination->id, $destination->id));
         $this->inspectJournal($journal);
+    }
+
+    private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void
+    {
+        $destTransaction = $this->getDestinationTransaction($journal);
+        $oldDest        = $destTransaction->account;
+        $destTransaction->account_id = $newDestination->id;
+        $destTransaction->save();
+        $message = sprintf(
+            'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+            $journal->id,
+            $oldDest->id,
+            $oldDest->name,
+            $newDestination->id,
+            $newDestination->name
+        );
+        $this->friendlyInfo($message);
+        $journal->refresh();
+        Log::debug($message);
     }
 }

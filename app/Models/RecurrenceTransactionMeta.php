@@ -44,13 +44,6 @@ class RecurrenceTransactionMeta extends Model
         return $this->belongsTo(RecurrenceTransaction::class, 'rt_id');
     }
 
-    protected function rtId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -60,5 +53,12 @@ class RecurrenceTransactionMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
+    }
+
+    protected function rtId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

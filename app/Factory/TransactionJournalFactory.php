@@ -222,7 +222,7 @@ class TransactionJournalFactory
         Log::debug('Source info:', $sourceInfo);
         Log::debug('Destination info:', $destInfo);
         $sourceAccount         = $this->getAccount($type->type, 'source', $sourceInfo);
-        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo);
+        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo, $sourceAccount);
         Log::debug('Done with getAccount(2x)');
 
 

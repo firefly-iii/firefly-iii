@@ -44,7 +44,7 @@ class TransactionJournalLink extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $linkId = (int) $value;
+            $linkId = (int)$value;
             $link   = self::where('journal_links.id', $linkId)
                 ->leftJoin('transaction_journals as t_a', 't_a.id', '=', 'source_id')
                 ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
@@ -83,32 +83,32 @@ class TransactionJournalLink extends Model
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }
 
-    protected function destinationId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function linkTypeId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function sourceId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    protected function destinationId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function linkTypeId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function sourceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }
