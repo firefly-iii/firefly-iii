@@ -1,4 +1,3 @@
-# .github/workflows/ui-testing.yaml
 name: API Tests
 
 on:
@@ -16,45 +15,103 @@ on:
           - development
           - staging
           - production
-      browser:
-        description: 'Browser to run tests on'
-        required: true
-        default: 'chrome'
-        type: choice
-        options:
-          - chrome
-          - firefox
-          
+env:
+  url: http://52.212.42.101:8080
+  firefly_version: fireflyiii/core:version-6.3.2
+  firefly_db: mariaDB:noble
+  firefly_importer: fireflyiii/importer:version-1.7.10
+  
 jobs:
   api-tests:
     runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 1  # Fetch only the latest commit to speed up the checkout process
-        repository: hamad-fyad/firefly
-        token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
-      
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.11'
-        
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirments.txt
-        
-    
-    - name: Run API tests
-      env:
-           
-         FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
-         API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
-         STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
-      run: |
-        pytest tests/ -v --disable-warnings --tb=short
-        pytest tests/ -v --disable-warnings --tb=short --junitxml=api_test_results.xml
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          repository: hamad-fyad/firefly
+          token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run API tests
+        env:
+          FIREFLY_BASE_URL: http://52.212.42.101:8080/api/v1
+          API_TESTING_TOKEN: ${{ secrets.API_TESTING_TOKEN }}
+          STATIC_CRON_TOKEN: ${{ secrets.STATIC_CRON_TOKEN }}
+        run: |
+          pytest tests/ -v --tb=short --alluredir=allure-results
+
+      - name: Ensure Allure history folder exists
+        run: mkdir -p allure-results/history
+
+      - name: Upload Allure results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-results-api-${{ github.run_id }}
+          path: allure-results/
+          retention-days: 30
+
+  allure-report:
+    runs-on: ubuntu-latest
+    needs: api-tests
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download previous Allure history
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-history-api
+          path: allure-results/history
+        continue-on-error: true
+
+      - name: Download all new Allure results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: allure-results-api-*
+          path: allure-results-downloaded
+          merge-multiple: false
+
+      - name: Merge Allure results
+        run: |
+          mkdir -p allure-results
+          for dir in allure-results-downloaded/*/; do
+            cp -r "$dir"* allure-results/ 2>/dev/null || true
+          done
+
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: allure-results
+          allure_report: allure-report-api
+          gh_pages: gh-pages
+          keep_reports: 2
+
+      - name: Upload updated Allure history
+        run: mkdir -p allure-results/history
+      - uses: actions/upload-artifact@v4
+        with:
+          name: allure-history-api
+          path: allure-results/history
+          retention-days: 30
+
+      - name: Deploy Allure report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.UI_TESTING_GITHUB_TOKEN }}
+          publish_dir: allure-report-api
+          destination_dir: api
+#API report: https://hamad-fyad.github.io/firefly-iii/api/
