@@ -1437,3 +1437,15 @@ Route::group(
         //        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
+
+
+use FireflyIII\Http\Controllers\ReceiptInboxController;
+
+Route::group(
+    ['middleware' => 'user-full-auth'],
+    static function (): void {
+        Route::get('receipts/inbox', [ReceiptInboxController::class, 'index'])->name('receipts.inbox');
+        Route::post('receipts/parse', [ReceiptInboxController::class, 'parse'])->name('receipts.parse');
+        Route::post('receipts/post',  [ReceiptInboxController::class, 'post'])->name('receipts.post');
+    }
+);
