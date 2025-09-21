@@ -29,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\NotificationRequest;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -122,6 +123,10 @@ class NotificationController extends Controller
 
     public function testNotification(Request $request): RedirectResponse
     {
+        if (true === auth()->user()->hasRole('demo')) {
+            session()->flash('error', (string) trans('firefly.not_available_demo_user' ));
+            return redirect(route('settings.notification.index'));
+        }
 
         $all     = $request->all();
         $channel = $all['test_submit'] ?? '';
