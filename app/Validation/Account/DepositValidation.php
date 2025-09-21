@@ -133,7 +133,7 @@ trait DepositValidation
                 Log::debug(sprintf('Firefly III does not accept ID #%d as valid account data.', $accountId));
                 // #10921 Set result false
                 $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-                $result = false;
+                $result            = false;
             }
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug('ID result is not null and seems valid, save as source account.');
