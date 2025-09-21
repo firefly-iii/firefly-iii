@@ -123,8 +123,9 @@ trait JournalServiceTrait
             if (null !== $search && in_array($search->accountType->type, $types, true)) {
                 Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type));
 
-                if($opposite?->id === $search->id) {
+                if ($opposite?->id === $search->id) {
                     Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $search->id, $opposite->id));
+
                     return null;
                 }
 
@@ -163,8 +164,9 @@ trait JournalServiceTrait
         if (null !== $result) {
             Log::debug(sprintf('Found "account_iban" object: #%d, %s', $result->id, $result->name));
 
-            if($opposite?->id === $result->id) {
+            if ($opposite?->id === $result->id) {
                 Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
                 return null;
             }
 
@@ -196,8 +198,9 @@ trait JournalServiceTrait
         if (null !== $result) {
             Log::debug(sprintf('Found account: #%d, %s', $result->id, $result->name));
 
-            if($opposite?->id === $result->id) {
+            if ($opposite?->id === $result->id) {
                 Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
                 return null;
             }
 
@@ -231,8 +234,9 @@ trait JournalServiceTrait
         if (null !== $result) {
             Log::debug(sprintf('Found "account_name" object: #%d, %s', $result->id, $result->name));
 
-            if($opposite?->id === $result->id) {
+            if ($opposite?->id === $result->id) {
                 Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
                 return null;
             }
 
