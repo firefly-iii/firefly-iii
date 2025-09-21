@@ -186,13 +186,13 @@ class CorrectsAccountTypes extends Command
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
     {
         Log::debug(sprintf('Going to fix journal #%d', $journal->id));
-        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository       = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
         ++$this->count;
         // variables:
-        $sourceType           = $source->account->accountType->type;
-        $destinationType      = $dest->account->accountType->type;
-        $combination          = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
+        $sourceType             = $source->account->accountType->type;
+        $destinationType        = $dest->account->accountType->type;
+        $combination            = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
         Log::debug(sprintf('Combination is "%s"', $combination));
 
         if ($this->shouldBeTransfer($transactionType, $sourceType, $destinationType)) {
@@ -217,9 +217,9 @@ class CorrectsAccountTypes extends Command
         }
 
         // transaction has no valid source.
-        $validSources         = array_keys($this->expected[$transactionType]);
-        $canCreateSource      = $this->canCreateSource($validSources);
-        $hasValidSource       = $this->hasValidAccountType($validSources, $sourceType);
+        $validSources           = array_keys($this->expected[$transactionType]);
+        $canCreateSource        = $this->canCreateSource($validSources);
+        $hasValidSource         = $this->hasValidAccountType($validSources, $sourceType);
         if (!$hasValidSource && $canCreateSource) {
             $this->giveNewRevenue($journal, $source);
 
@@ -235,9 +235,9 @@ class CorrectsAccountTypes extends Command
         }
 
         /** @var array $validDestinations */
-        $validDestinations    = $this->expected[$transactionType][$sourceType] ?? [];
-        $canCreateDestination = $this->canCreateDestination($validDestinations);
-        $hasValidDestination  = $this->hasValidAccountType($validDestinations, $destinationType);
+        $validDestinations      = $this->expected[$transactionType][$sourceType] ?? [];
+        $canCreateDestination   = $this->canCreateDestination($validDestinations);
+        $hasValidDestination    = $this->hasValidAccountType($validDestinations, $destinationType);
         $alternativeDestination = $this->repository->findByName($dest->account->name, $validDestinations);
         if (!$hasValidDestination && $canCreateDestination) {
             $this->giveNewExpense($journal, $dest);
@@ -255,7 +255,7 @@ class CorrectsAccountTypes extends Command
             $message = sprintf('The destination account of %s #%d cannot be of type "%s". Firefly III found an alternative account. Please make sure this transaction is correct.', $transactionType, $journal->transaction_group_id, $dest->account->accountType->type);
             $this->friendlyInfo($message);
             Log::debug($message);
-             $this->giveNewDestinationAccount($journal, $alternativeDestination);
+            $this->giveNewDestinationAccount($journal, $alternativeDestination);
         }
     }
 
@@ -399,11 +399,11 @@ class CorrectsAccountTypes extends Command
 
     private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void
     {
-        $destTransaction = $this->getDestinationTransaction($journal);
-        $oldDest        = $destTransaction->account;
+        $destTransaction             = $this->getDestinationTransaction($journal);
+        $oldDest                     = $destTransaction->account;
         $destTransaction->account_id = $newDestination->id;
         $destTransaction->save();
-        $message = sprintf(
+        $message                     = sprintf(
             'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldDest->id,
