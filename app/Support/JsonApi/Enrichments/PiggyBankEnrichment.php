@@ -130,7 +130,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             }
             $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], (string) $item->current_amount);
             if (null !== $this->amounts[$id][$accountId]['pc_current_amount'] && null !== $item->native_current_amount) {
-                $this->amounts[$id][$accountId]['pc_current_amount'] = bcadd($this->amounts[$id][$accountId]['pc_current_amount'], $item->native_current_amount);
+                $this->amounts[$id][$accountId]['pc_current_amount'] = bcadd($this->amounts[$id][$accountId]['pc_current_amount'], (string) $item->native_current_amount);
             }
         }
 
