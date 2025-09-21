@@ -509,6 +509,7 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $group->rules->count()));
 
         $rules = $group->rules()->orderBy('order', 'ASC')->get();
+
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             Log::debug(sprintf('Going to fire rule #%d with order #%d from group #%d', $rule->id, $rule->order, $group->id));
