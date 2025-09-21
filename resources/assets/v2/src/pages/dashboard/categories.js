@@ -64,13 +64,17 @@ export default () => ({
                 }
             }
         }
-
         // loop data again to add amounts to each series.
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
                 let yAxis = 'y';
                 let current = data[i];
+
+                // allow switch to primary currency.
                 let code = current.currency_code;
+                if(this.convertToPrimary) {
+                    code = current.primary_currency_code;
+                }
 
                 // loop series, add 0 if not present or add actual amount.
                 for (const ii in series) {
@@ -78,8 +82,11 @@ export default () => ({
                         let amount = 0.0;
                         if (code === ii) {
                             // this series' currency matches this column's currency.
-                            amount = parseFloat(current.amount);
-                            yAxis = 'y' + current.currency_code;
+                            amount = parseFloat(current.entries.spent);
+                            if(this.convertToPrimary) {
+                                amount = parseFloat(current.entries.pc_entries.spent);
+                            }
+                            yAxis = 'y' + code;
                         }
                         if (series[ii].data.hasOwnProperty(current.label)) {
                             // there is a value for this particular currency. The amount from this column will be added.
@@ -103,7 +110,6 @@ export default () => ({
         // loop the series and create ChartJS-compatible data sets.
         let count = 0;
         for (const i in series) {
-            // console.log('series');
             let yAxisID = 'y' + i;
             let dataset = {
                 label: i,
@@ -148,16 +154,15 @@ export default () => ({
         const end = new Date(window.store.get('end'));
         const cacheKey = getCacheKey('ds_ct_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
-        const cacheValid = window.store.get('cacheValid');
+        // const cacheValid = window.store.get('cacheValid');
+        const cacheValid = false;
         let cachedData = window.store.get(cacheKey);
-
         if (cacheValid && typeof cachedData !== 'undefined') {
             chartData = cachedData; // save chart data for later.
             this.drawChart(this.generateOptions(chartData));
             this.loading = false;
             return;
         }
-
         const dashboard = new Dashboard();
         dashboard.dashboard(start, end, null).then((response) => {
             chartData = response.data; // save chart data for later.
@@ -181,7 +186,6 @@ export default () => ({
         this.getFreshData();
     },
     init() {
-        // console.log('categories init');
         Promise.all([getVariable('convert_to_primary', false),]).then((values) => {
             this.convertToPrimary = values[0];
             afterPromises = true;

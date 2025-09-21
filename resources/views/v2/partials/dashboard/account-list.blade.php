@@ -9,16 +9,10 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <a :href="'{{ route('accounts.show', '') }}/' + account.id"
-                           x-text="account.name"></a>
-
+                        <a :href="'{{ route('accounts.show', '') }}/' + account.id" x-text="account.name"></a>
                         <span class="small">
-                            <template x-for="balance in account.balances">
-                                <template x-if="balance.type === 'current'">
-                                    <span class="text-muted">(<span x-text="balance.amount_formatted"></span>)
-                                        </span>
-                                </template>
-                            </template>
+                            <span class="text-muted">(<span x-text="account.current_balance"></span>)</span>
+                            <template x-if="null !== account.pc_current_balance"><span class="text-muted">(<span x-text="account.pc_current_balance"></span>)</span></template>
                         </span>
                     </h3>
                 </div>

@@ -211,14 +211,6 @@ export default () => ({
                     (new Get).show(accountId, new Date(window.store.get('end'))).then((response) => {
                         let parent = response.data.data;
 
-                        // apply function to each element of parent:
-                        // parent.attributes.balances = parent.attributes.balances.map((balance) => {
-                        //     balance.amount_formatted = formatMoney(balance.amount, balance.currency_code);
-                        //     return balance;
-                        // });
-                        // console.log(parent);
-
-
                         // get groups for account:
                         const params = {
                             page: 1,
@@ -261,11 +253,14 @@ export default () => ({
                             accounts.push({
                                 name: parent.attributes.name,
                                 order: parent.attributes.order,
+
+                                current_balance: formatMoney(parent.attributes.current_balance, parent.attributes.currency_code),
+                                pc_current_balance: null === parent.attributes.pc_current_balance ? null : formatMoney(parent.attributes.pc_current_balance, parent.attributes.primary_currency_code),
+
                                 id: parent.id,
-                                balances: parent.attributes.balances,
+                                //balances: parent.attributes.balances,
                                 groups: groups,
                             });
-                            // console.log(parent.attributes);
                             count++;
                             if (count === totalAccounts) {
                                 accounts.sort((a, b) => a.order - b.order); // b - a for reverse sort
