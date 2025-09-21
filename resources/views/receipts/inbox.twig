@@ -1,0 +1,116 @@
+{% extends 'layout/default' %}
+
+{% block breadcrumbs %}
+    <ol class="breadcrumb">
+        <li><a href="{{ route('home') }}"><span class="fa fa-home"></span> {{ trans('firefly.home') }}</a></li>
+        <li class="active">Receipt Inbox</li>
+    </ol>
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+
+        <h1>Receipt Inbox</h1>
+
+        {% if config('receipt.enabled') != true %}
+            <div class="alert alert-warning">Receipt Inbox is disabled.</div>
+        {% endif %}
+
+        {% if success is defined and success %}
+            <div class="alert alert-success">{{ success }}</div>
+        {% endif %}
+
+        {% if error is defined and error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+
+        {# Upload & Parse #}
+        <div class="panel panel-default">
+            <div class="panel-heading">Upload receipt</div>
+            <div class="panel-body">
+                <form action="{{ route('receipts.parse') }}" method="post" enctype="multipart/form-data" class="form-inline">
+                    {{ csrf_field() }}
+                    <div class="form-group">
+                        <label for="file">File:</label>
+                        <input type="file" name="file" id="file" class="form-control" accept="image/*,application/pdf" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Parse</button>
+                </form>
+            </div>
+        </div>
+
+        {# Parsed result #}
+        {% if parsed is defined and parsed %}
+            <div class="panel panel-info">
+                <div class="panel-heading">Parsed result</div>
+                <div class="panel-body">
+                    <dl class="dl-horizontal">
+                        <dt>Receipt ID</dt><dd>{{ parsed.receipt_id|default('—') }}</dd>
+                        <dt>Merchant</dt><dd>{{ parsed.merchant|default('—') }}</dd>
+                        <dt>Total Amount</dt><dd>{{ parsed.total_amount|default('—') }}</dd>
+                        <dt>Currency</dt><dd>{{ parsed.currency|default('—') }}</dd>
+                        <dt>Purchase Date</dt><dd>{{ parsed.purchase_date|default('—') }}</dd>
+                        <dt>VAT Amount</dt><dd>{{ parsed.vat_amount|default('—') }}</dd>
+                        <dt>Confidence</dt><dd>{{ parsed.confidence|default('—') }}</dd>
+                    </dl>
+
+                    <hr>
+
+                    <form action="{{ route('receipts.post') }}" method="post" class="form-horizontal">
+                        {{ csrf_field() }}
+                        {# hidden parsed fields #}
+                        <input type="hidden" name="receipt_id"    value="{{ parsed.receipt_id|default('') }}">
+                        <input type="hidden" name="merchant"      value="{{ parsed.merchant|default('') }}">
+                        <input type="hidden" name="total_amount"  value="{{ parsed.total_amount|default('') }}">
+                        <input type="hidden" name="currency"      value="{{ parsed.currency|default('') }}">
+                        <input type="hidden" name="purchase_date" value="{{ parsed.purchase_date|default('') }}">
+                        <input type="hidden" name="vat_amount"    value="{{ parsed.vat_amount|default('') }}">
+                        <input type="hidden" name="raw_text"      value="{{ parsed.raw_text|default('') }}">
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Asset Account</label>
+                            <div class="col-sm-6">
+                                <select name="asset_account_id" class="form-control" required>
+                                    <option value="">-- choose --</option>
+                                    {% for acc in assetAccounts %}
+                                        <option value="{{ acc.id }}">{{ acc.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p class="help-block">From which asset account to withdraw (e.g., Cash, Checking).</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Expense Account</label>
+                            <div class="col-sm-6">
+                                <select name="expense_account_id" class="form-control" required>
+                                    <option value="">-- choose --</option>
+                                    {% for acc in expenseAccounts %}
+                                        <option value="{{ acc.id }}">{{ acc.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <p class="help-block">To which expense account to assign this receipt (e.g., Restaurants).</p>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-6">
+                                <button type="submit" class="btn btn-success">
+                                    Create Transaction
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr>
+
+                    <p><strong>Raw Text (English)</strong></p>
+                    <pre style="white-space: pre-wrap;">{{ parsed.raw_text|default('') }}</pre>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+{% endblock %}

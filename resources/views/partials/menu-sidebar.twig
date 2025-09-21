@@ -6,6 +6,17 @@
         </a>
     </li>
 
+    {% if config('receipt.enabled') %}
+    <li>
+        <a href="{{ route('receipts.inbox') }}">
+            <i class="fa fa-file-image-o"></i>
+            <span>Receipt Inbox</span>
+        </a>
+    </li>
+    {% endif %}
+
+
+
     <li class="{{ activeRouteStrict('search.index') }} visible-xs hidden-sm hidden-md hidden-lg">
         <a href="{{ route('search.index') }}">
             <em class="fa fa-search fa-fw"></em>
