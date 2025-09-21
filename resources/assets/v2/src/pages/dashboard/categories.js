@@ -54,12 +54,21 @@ export default () => ({
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
                 let code = current.currency_code;
-                if (!series.hasOwnProperty(code)) {
-                    series[code] = {
-                        name: code,
-                        yAxisID: '',
-                        data: {},
-                    };
+
+                // create two series, "spent" and "earned".
+                for(const type of ['spent', 'earned']) {
+                    let typeCode = code + '_' + type;
+                    if (!series.hasOwnProperty(typeCode)) {
+                        series[typeCode] = {
+                            name: typeCode,
+                            code: code,
+                            type: type,
+                            yAxisID: '',
+                            data: {},
+                        };
+                    }
+                }
+                if (!currencies.includes(code)) {
                     currencies.push(code);
                 }
             }
@@ -76,31 +85,38 @@ export default () => ({
                     code = current.primary_currency_code;
                 }
 
-                // loop series, add 0 if not present or add actual amount.
-                for (const ii in series) {
-                    if (series.hasOwnProperty(ii)) {
-                        let amount = 0.0;
-                        if (code === ii) {
-                            // this series' currency matches this column's currency.
-                            amount = parseFloat(current.entries.spent);
-                            if(this.convertToPrimary) {
-                                amount = parseFloat(current.entries.pc_entries.spent);
+                // twice again, for speny AND earned.
+                for(const type of ['spent', 'earned']) {
+                    let typeCode = code + '_' + type;
+                    // loop series, add 0 if not present or add actual amount.
+                    for (const ii in series) {
+                        if (series.hasOwnProperty(typeCode)) {
+                            let amount = 0.0;
+                            if (typeCode === ii) {
+                                // this series' currency matches this column's currency.
+                                amount = parseFloat(current.entries[type]);
+                                if(this.convertToPrimary) {
+                                    amount = parseFloat(current.entries.pc_entries[type]);
+                                }
+                                yAxis = 'y' + typeCode;
                             }
-                            yAxis = 'y' + code;
-                        }
-                        if (series[ii].data.hasOwnProperty(current.label)) {
-                            // there is a value for this particular currency. The amount from this column will be added.
-                            // (even if this column isn't recorded in this currency and a new filler value is written)
-                            // this is so currency conversion works.
-                            series[ii].data[current.label] = series[ii].data[current.label] + amount;
-                        }
+                            if (series[typeCode].data.hasOwnProperty(current.label)) {
+                                // there is a value for this particular currency. The amount from this column will be added.
+                                // (even if this column isn't recorded in this currency and a new filler value is written)
+                                // this is so currency conversion works.
+                                series[typeCode].data[current.label] = series[typeCode].data[current.label] + amount;
+                            }
 
-                        if (!series[ii].data.hasOwnProperty(current.label)) {
-                            // this column's amount is not yet set in this series.
-                            series[ii].data[current.label] = amount;
+                            if (!series[typeCode].data.hasOwnProperty(current.label)) {
+                                // this column's amount is not yet set in this series.
+                                series[typeCode].data[current.label] = amount;
+                            }
                         }
                     }
                 }
+
+
+
                 // add label to x-axis, not unimportant.
                 if (!options.data.labels.includes(current.label)) {
                     options.data.labels.push(current.label);
@@ -111,9 +127,10 @@ export default () => ({
         let count = 0;
         for (const i in series) {
             let yAxisID = 'y' + i;
+            let currencyCode = i.replace('_spent', '').replace('_earned', '');
             let dataset = {
                 label: i,
-                currency_code: i,
+                currency_code: currencyCode,
                 yAxisID: yAxisID,
                 data: [],
                 // backgroundColor: getColors(null, 'background'),
