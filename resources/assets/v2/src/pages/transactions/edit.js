@@ -72,8 +72,6 @@ let transactions = function () {
             resetButton: true,
             rulesButton: true,
             webhooksButton: true,
-
-
         },
 
         // form behaviour during transaction
@@ -85,7 +83,7 @@ let transactions = function () {
 
         // form data (except transactions) is stored in formData
         formData: {
-            defaultCurrency: null,
+            primaryCurrency: null,
             enabledCurrencies: [],
             primaryCurrencies: [],
             foreignCurrencies: [],
@@ -200,8 +198,7 @@ let transactions = function () {
                 // addedSplit, is called from the HTML
                 // for source account
                 const renderAccount = function (item, b, c) {
-                    console.log(item);
-                    return item.title + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.meta.type) + '</small>';
+                    return item.name_with_balance + '<br><small class="text-muted">' + i18next.t('firefly.account_type_' + item.type) + '</small>';
                 };
                 addAutocomplete({
                     selector: 'input.ac-source',
@@ -209,7 +206,7 @@ let transactions = function () {
                     account_types: this.filters.source,
                     onRenderItem: renderAccount,
                     valueField: 'id',
-                    labelField: 'title',
+                    labelField: 'name',
                     onChange: changeSourceAccount,
                     onSelectItem: selectSourceAccount
                 });
@@ -217,7 +214,7 @@ let transactions = function () {
                     selector: 'input.ac-dest',
                     serverUrl: urls.account,
                     valueField: 'id',
-                    labelField: 'title',
+                    labelField: 'name',
                     account_types: this.filters.destination,
                     onRenderItem: renderAccount,
                     onChange: changeDestinationAccount,
@@ -227,7 +224,7 @@ let transactions = function () {
                     selector: 'input.ac-category',
                     serverUrl: urls.category,
                     valueField: 'id',
-                    labelField: 'title',
+                    labelField: 'name',
                     onChange: changeCategory,
                     onSelectItem: changeCategory
                 });
@@ -330,7 +327,7 @@ let transactions = function () {
             // load meta data.
             loadCurrencies().then(data => {
                 this.formStates.loadingCurrencies = false;
-                this.formData.defaultCurrency = data.defaultCurrency;
+                this.formData.primaryCurrency = data.primaryCurrency;
                 this.formData.enabledCurrencies = data.enabledCurrencies;
                 this.formData.primaryCurrencies = data.primaryCurrencies;
                 this.formData.foreignCurrencies = data.foreignCurrencies;

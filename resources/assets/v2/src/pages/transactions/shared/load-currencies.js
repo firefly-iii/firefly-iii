@@ -28,7 +28,7 @@ export function loadCurrencies() {
     let getter = new Get();
     return getter.list(params).then((response) => {
         let returnData = {
-            defaultCurrency: {},
+            primaryCurrency: {},
             primaryCurrencies: [],
             foreignCurrencies: [],
             enabledCurrencies: [],
@@ -46,13 +46,13 @@ export function loadCurrencies() {
                             id: current.id,
                             name: current.attributes.name,
                             code: current.attributes.code,
-                            default: current.attributes.default,
+                            primary: current.attributes.primary,
                             symbol: current.attributes.symbol,
                             decimal_places: current.attributes.decimal_places,
 
                         };
-                    if (obj.default) {
-                        returnData.defaultCurrency = obj;
+                    if (obj.primary) {
+                        returnData.primaryCurrency = obj;
                     }
                     returnData.enabledCurrencies.push(obj);
                     returnData.primaryCurrencies.push(obj);
