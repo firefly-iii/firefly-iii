@@ -138,36 +138,36 @@ final class ReceiptInboxController extends Controller
     /**
      * @return array<int, array{id:string,name:string}>
      */
-    private function fetchAccounts(string $type): array
-    {
+private function fetchAccounts(string $type): array
+{
+    try {
         $apiBase = rtrim((string) Config::get('receipt.firefly_api_base'), '/');
         $token   = (string) Config::get('receipt.firefly_token');
 
-        if ($token === '') {
+        if ($apiBase === '' || $token === '') {
+            Log::warning('ReceiptInbox: missing API base or token');
             return [];
         }
 
         $resp = Http::withToken($token)
             ->acceptJson()
-            ->get($apiBase . '/api/v1/accounts', [
-                'type'  => $type,
-                'limit' => 200,
-            ]);
+            ->get($apiBase.'/api/v1/accounts', ['type' => $type, 'limit' => 200]);
 
         if (!$resp->ok()) {
+            Log::warning('ReceiptInbox: API non-OK', ['status' => $resp->status()]);
             return [];
         }
 
-        $json = $resp->json();
-        $data = $json['data'] ?? [];
-
-        return array_map(static function ($item): array {
-            return [
-                'id'   => (string) ($item['id'] ?? ''),
-                'name' => (string) ($item['attributes']['name'] ?? ''),
-            ];
-        }, $data);
+        $data = $resp->json('data') ?? [];
+        return array_map(static fn($it) => [
+            'id'   => (string)($it['id'] ?? ''),
+            'name' => (string)($it['attributes']['name'] ?? ''),
+        ], $data);
+    } catch (\Throwable $e) {
+        Log::error('ReceiptInbox: fetchAccounts failed', ['e' => $e->getMessage()]);
+        return [];
     }
+}
 
     private function renderWithError(string $msg)
     {

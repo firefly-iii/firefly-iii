@@ -19,9 +19,19 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+
+
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
+
+
+
+
+Route::get('/___ping', static fn () => 'pong');
+
+
+
 
 if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
@@ -1449,3 +1459,42 @@ Route::group(
         Route::post('receipts/post',  [ReceiptInboxController::class, 'post'])->name('receipts.post');
     }
 );
+
+
+Route::middleware(['web','user-full-auth'])->group(function () {
+
+    Route::get('api/v1/autocomplete/accounts', static function () {
+        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@accounts');
+        $js   = trim($resp->getContent());
+        $json = preg_replace('/^\s*(?:var|let|const)?\s*accounts\s*=\s*/', '', $js);
+        $json = rtrim($json, ";\r\n\t ");
+
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'parse_failed',
+                'msg'   => json_last_error_msg(),
+                'peek'  => mb_substr($js, 0, 120),
+            ], 500);
+        }
+        return response()->json($data);
+    })->name('api.autocomplete.accounts');
+
+    Route::get('api/v1/autocomplete/currencies', static function () {
+        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@currencies');
+        $js   = trim($resp->getContent());
+        $json = preg_replace('/^\s*(?:var|let|const)?\s*currencies\s*=\s*/', '', $js);
+        $json = rtrim($json, ";\r\n\t ");
+
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'parse_failed',
+                'msg'   => json_last_error_msg(),
+                'peek'  => mb_substr($js, 0, 120),
+            ], 500);
+        }
+        return response()->json($data);
+    })->name('api.autocomplete.currencies');
+
+});

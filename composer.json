@@ -119,6 +119,7 @@
         "filp/whoops": "2.*",
         "larastan/larastan": "^3",
         "laravel-json-api/testing": "^3.0",
+        "laravel/tinker": "^2.10",
         "mockery/mockery": "1.*",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2",
