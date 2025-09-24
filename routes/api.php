@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
+
 /*
  *
  * ____    ____  ___      .______        ______    __    __  .___________. _______     _______.
@@ -997,3 +998,45 @@ Route::group(
         );
     }
 );
+
+Route::middleware('user-full-auth')->group(function () {
+
+    Route::get('v1/autocomplete/accounts', static function () {
+        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@accounts');
+        $js   = trim($resp->getContent());
+
+        // מסיר var/let/const + השם
+        $json = preg_replace('/^\s*(?:var|let|const)?\s*accounts\s*=\s*/', '', $js);
+        // מסיר ; בסוף ורווחים
+        $json = rtrim($json, ";\r\n\t ");
+
+        // ודא שזה JSON תקין (decode + encode)
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'parse_failed',
+                'msg'   => json_last_error_msg(),
+                'peek'  => mb_substr($js, 0, 80),
+            ], 500);
+        }
+        return response()->json($data);
+    })->name('api.autocomplete.accounts');
+
+    Route::get('v1/autocomplete/currencies', static function () {
+        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@currencies');
+        $js   = trim($resp->getContent());
+        $json = preg_replace('/^\s*(?:var|let|const)?\s*currencies\s*=\s*/', '', $js);
+        $json = rtrim($json, ";\r\n\t ");
+
+        $data = json_decode($json, true);
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            return response()->json([
+                'error' => 'parse_failed',
+                'msg'   => json_last_error_msg(),
+                'peek'  => mb_substr($js, 0, 80),
+            ], 500);
+        }
+        return response()->json($data);
+    })->name('api.autocomplete.currencies');
+
+});

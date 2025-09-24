@@ -1,0 +1,108 @@
+
+
+
+services:
+  app:
+    image: firefly:0.0.5
+    ports:
+      - "8082:8080"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: "http://localhost:8082"
+      APP_KEY: "base64:Oxn3bza9hwTes4by6ySdvRNCKoSWFHS9IN1s8Haaab4="
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_DATABASE: firefly
+      DB_USERNAME: firefly
+      DB_PASSWORD: firefly
+      # Receipt Inbox
+      RECEIPT_INBOX_ENABLED: "true"
+      FIREFLY_API_BASE: "http://127.0.0.1:8080"
+      FIREFLY_PERSONAL_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjc3Yjg2OTg1YzAxZGY2MDNiMDAzZDFhYThhMzg4MmE3MzhhZjEzZGM1MTI4YjUxNjRlNDM3NWQ3ZDk5YzZjODNkOWQ2YzlmNTFkMmY5NmEiLCJpYXQiOjE3NTg1Njc2NjEuMTU1OTAxLCJuYmYiOjE3NTg1Njc2NjEuMTU1OTAyLCJleHAiOjE3OTAxMDM2NjEuMTM1ODU2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.YTs68_YqT23O-Su-Vzz88uEZ2A0Ogo5R3ddC4PRi0DVo1X44um0P7w40hbfOl1flJx_W61agowMA2JTsvtVx1HTnPhE3dg_X3kdW47r0kK3fmbGqles4_wla5xD5xwnJUDSWMEcAVrmkx4tbFJs39snVqCJ8EsVC4yVLVbpanCBk9nuTNvmgHJhPO8ZK_GcqfY-ZYpq2kKU-HIKh3Q7xSR2uZnldr1ihp65Qik-vExGflqVaV3l5vI8Gekc9bsQjApOzeusFYdUtK43XbL_b-JwPqGQSc0EORbC4gohRm3CrsAA-JCzc1dEQ3VJyah70V1P7D7wFzU4QfGynFJ1FGfWWwFKBo-bFNAQBqjlOu8QUR8Ahec2_RxpnNq39lsnazoFKETUT7zQwA7lWgl1px8twFyLCr9ww8SdyEABYiKfQGK-gwsJ5fYf76EIiSrJ8G-26WlwkJ6H42Q1gX7S_cKXTRsjZS0Kytty-tqHpFVFeFpJKP8yn71i2ughlTEWFdqoXSis2MamkEgt7JqHGzfLyZA2I49yG0Qhf0Zz5rWftGUxAZIlKbFMn4UMjpbYqFqPl2X0nxewLxEwwAoJWwhYyj61Bs2Tk2xeh-A3zCpBvdQdCjEkGLfxFPedlY2THMy5VKImZoQqHuZV-kZWoj2OoAkoUTkQKhzi34H278kk"
+      # אם שירות ה-parser רץ על ה-Host (Mac/Windows עם Docker Desktop):
+      # מתוך הקונטיינר צריך לקרוא ל-host.docker.internal במקום localhost
+      RECEIPT_PARSER_URL: "http://host.docker.internal:8000"
+
+    depends_on:
+      - db
+    restart: unless-stopped
+
+    # מאפשר לקונטיינר להגיע ל-host.docker.internal גם בלינוקס חדשים
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  db:
+    image: mariadb:10.11
+    environment:
+      MARIADB_DATABASE: firefly
+      MARIADB_USER: firefly
+      MARIADB_PASSWORD: firefly
+      MARIADB_ROOT_PASSWORD: root
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:
+
+
+
+
+
+
+# services:
+#   app:
+#     image: firefly:0.0.5
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - "8082:8080"
+#     environment:
+#       APP_ENV: local
+#       APP_DEBUG: "true"
+#       APP_URL: "http://localhost:8082"
+#       APP_KEY: "base64:Oxn3bza9hwTes4by6ySdvRNCKoSWFHS9IN1s8Haaab4="
+#       DB_CONNECTION: mysql
+#       DB_HOST: db
+#       DB_PORT: 3306
+#       DB_DATABASE: firefly
+#       DB_USERNAME: firefly
+#       DB_PASSWORD: firefly
+#       # Receipt Inbox
+#       RECEIPT_INBOX_ENABLED: "true"
+#       FIREFLY_API_BASE: "http://127.0.0.1:8080"
+#       FIREFLY_PERSONAL_TOKEN: "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiMjc3Yjg2OTg1YzAxZGY2MDNiMDAzZDFhYThhMzg4MmE3MzhhZjEzZGM1MTI4YjUxNjRlNDM3NWQ3ZDk5YzZjODNkOWQ2YzlmNTFkMmY5NmEiLCJpYXQiOjE3NTg1Njc2NjEuMTU1OTAxLCJuYmYiOjE3NTg1Njc2NjEuMTU1OTAyLCJleHAiOjE3OTAxMDM2NjEuMTM1ODU2LCJzdWIiOiIxIiwic2NvcGVzIjpbXX0.YTs68_YqT23O-Su-Vzz88uEZ2A0Ogo5R3ddC4PRi0DVo1X44um0P7w40hbfOl1flJx_W61agowMA2JTsvtVx1HTnPhE3dg_X3kdW47r0kK3fmbGqles4_wla5xD5xwnJUDSWMEcAVrmkx4tbFJs39snVqCJ8EsVC4yVLVbpanCBk9nuTNvmgHJhPO8ZK_GcqfY-ZYpq2kKU-HIKh3Q7xSR2uZnldr1ihp65Qik-vExGflqVaV3l5vI8Gekc9bsQjApOzeusFYdUtK43XbL_b-JwPqGQSc0EORbC4gohRm3CrsAA-JCzc1dEQ3VJyah70V1P7D7wFzU4QfGynFJ1FGfWWwFKBo-bFNAQBqjlOu8QUR8Ahec2_RxpnNq39lsnazoFKETUT7zQwA7lWgl1px8twFyLCr9ww8SdyEABYiKfQGK-gwsJ5fYf76EIiSrJ8G-26WlwkJ6H42Q1gX7S_cKXTRsjZS0Kytty-tqHpFVFeFpJKP8yn71i2ughlTEWFdqoXSis2MamkEgt7JqHGzfLyZA2I49yG0Qhf0Zz5rWftGUxAZIlKbFMn4UMjpbYqFqPl2X0nxewLxEwwAoJWwhYyj61Bs2Tk2xeh-A3zCpBvdQdCjEkGLfxFPedlY2THMy5VKImZoQqHuZV-kZWoj2OoAkoUTkQKhzi34H278kk"
+#       # אם שירות ה-parser רץ על ה-Host (Mac/Windows עם Docker Desktop):
+#       # מתוך הקונטיינר צריך לקרוא ל-host.docker.internal במקום localhost
+#       RECEIPT_PARSER_URL: "http://host.docker.internal:8000"
+
+#     depends_on:
+#       - db
+#     restart: unless-stopped
+
+#     # מאפשר לקונטיינר להגיע ל-host.docker.internal גם בלינוקס חדשים
+#     extra_hosts:
+#       - "host.docker.internal:host-gateway"
+
+#   db:
+#     image: mariadb:10.11
+#     environment:
+#       MARIADB_DATABASE: firefly
+#       MARIADB_USER: firefly
+#       MARIADB_PASSWORD: firefly
+#       MARIADB_ROOT_PASSWORD: root
+#     volumes:
+#       - db_data:/var/lib/mysql
+#     restart: unless-stopped
+
+# volumes:
+#   db_data:
+
+
+
+
+# docker compose build app --no-cache
+# docker compose up -d --force-recreate

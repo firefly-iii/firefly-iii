@@ -8,5 +8,8 @@
     ],
     "devDependencies": {
         "postcss": "^8.4.47"
+    },
+    "dependencies": {
+        "select2": "^4.0.13"
     }
 }

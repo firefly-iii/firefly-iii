@@ -23,63 +23,51 @@
         {% if title != "Firefly III" %}
             {{ title }} »
         {% endif %}
-
         Firefly III
-
     </title>
-    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    {# CSS things #}
-    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-          nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-          nonce="{{ JS_NONCE }}">
 
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+
+    {# CSS things #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
 
     {# the theme #}
-    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-          nonce="{{ JS_NONCE }}">
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
     {% if 'browser' == darkMode %}
         <script nonce="{{ JS_NONCE }}">
-            // If `prefers-color-scheme` is not supported, fall back to light mode.
-            // In this case, light.css will be downloaded with `highest` priority.
             if (window.matchMedia('(prefers-color-scheme: dark)').media === 'not all') {
                 document.documentElement.style.display = 'none';
                 document.head.insertAdjacentHTML(
                     'beforeend',
-                    '<link rel="stylesheet" href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}" onload="document.documentElement.style.display = \'\'">',
+                    '<link rel="stylesheet" href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}" onload="document.documentElement.style.display = \'\'">'
                 );
             }
         </script>
-        <link href="v1/css/daterangepicker-default.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: dark)">
-        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
+        <link href="v1/css/daterangepicker-default.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: dark)">
+        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
     {% endif %}
     {% if 'dark' == darkMode %}
-        <link href="v1/css/daterangepicker-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
+        <link href="v1/css/daterangepicker-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
     {% endif %}
     {% if 'light' == darkMode %}
-        <link href="v1/css/daterangepicker-light.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
+        <link href="v1/css/daterangepicker-light.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
     {% endif %}
+
     {# Firefly III customisations #}
     <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
 
     {# Extra CSS for the demo: #}
     {% if not shownDemo %}
-        <link href="v1/lib/intro/introjs.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
-              nonce="{{ JS_NONCE }}">
+        <link href="v1/lib/intro/introjs.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
     {% endif %}
 
     {# Any local custom CSS.  #}
     {% block styles %}{% endblock %}
+
     <!--[if lt IE 9]>
     <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
@@ -90,18 +78,15 @@
 
     {# favicons #}
     {% include 'partials.favicons' %}
-
 </head>
+
 <body class="skin-firefly-iii sidebar-mini hold-transition">
 <div class="wrapper" id="app">
 
     <header class="main-header">
-
         {# Logo #}
         <a href="{{ route('index') }}" class="logo">
-            {# mini logo for sidebar mini 50x50 pixels #}
             <span class="logo-mini">FF</span>
-            {# logo for regular state and mobile devices #}
             <span class="logo-lg"><strong>Firefly</strong>III</span>
         </a>
 
@@ -111,43 +96,37 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
                     <li class="hidden-sm hidden-xs">
-                        <a href="#" id="help" data-route="{{ original_route_name }}"
-                           data-extra="{{ objectType|default("") }}">
-                            <span class="fa fa-question-circle" data-route="{{ original_route_name }}"
-                                  data-extra="{{ objectType|default("") }}"></span>
+                        <a href="#" id="help" data-route="{{ original_route_name }}" data-extra="{{ objectType|default('') }}">
+                            <span class="fa fa-question-circle" data-route="{{ original_route_name }}" data-extra="{{ objectType|default('') }}"></span>
                         </a>
                     </li>
-
                     <li>
                         <span style="color:#fff;padding: 15px;display: block;line-height: 20px;">
                             <span id="daterange"></span>
                         </span>
                     </li>
-
                     <li class="dropdown user user-menu">
-                    <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
-                        <span class="hidden-xs">{{ Auth.user.email }}</span>
-                    </span>
+                        <span style="cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;">
+                            <span class="hidden-xs">{{ Auth.user.email }}</span>
+                        </span>
                     </li>
                     <li id="sidebar-toggle">
                         <a href="#" data-toggle="control-sidebar"><span class="fa fa-plus-circle"></span></a>
                     </li>
                 </ul>
             </div>
-
         </nav>
     </header>
+
     <aside class="main-sidebar">
         <section class="sidebar">
             <form action="{{ route('search.index') }}" method="get" class="sidebar-form">
                 <div class="input-group">
-                    <input autocomplete="off" type="text" name="search" class="form-control"
-                           placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
+                    <input autocomplete="off" type="text" name="search" class="form-control" placeholder="{{ 'searchPlaceholder'|_ }}" value="{{ query }}" spellcheck="false"/>
                     <span class="input-group-btn">
-                <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
-              </span>
+                        <button type='submit' name='go' id='search-btn' class="btn btn-flat"><span class="fa fa-search"></span></button>
+                    </span>
                 </div>
             </form>
             {% include('partials.menu-sidebar') %}
@@ -171,15 +150,22 @@
                 </div>
             {% endif %}
 
-            {% include('partials.flashes') %}
+                {# flashes פעם אחת בלבד #}
+                {% include('partials.flashes') %}
 
-            {% block content %}{% endblock %}
+                {# Mount point קבוע ל-Vue (#create_transaction עם קו תחתון) #}
+                <div id="create_transaction"></div>
+
+                {# בלוק התוכן – אחד בלבד #}
+                {% block content %}{% endblock %}
+
+
         </section>
     </div>
+
     <footer class="main-footer">
         <div class="pull-right">
-            <b class="hidden-xs">{{ 'version'|_ }}</b> <a
-                href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
+            <b class="hidden-xs">{{ 'version'|_ }}</b> <a href="{{ route('debug') }}">{{ Config.get('firefly.version') }}</a>
         </div>
         <strong><a href="https://github.com/firefly-iii/firefly-iii">Firefly III</a></strong>
         <small class="text-muted">&copy; James Cole, <a href="https://www.gnu.org/licenses/agpl-3.0.html">AGPL-3.0-or-later</a>.</small>
@@ -188,10 +174,9 @@
     </footer>
 
     {% include('partials.control-bar') %}
+</div>
 
-</div>
-<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
-</div>
+<div class="modal fade" id="defaultModal" tabindex="-1" role="dialog"></div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="helpModal">
     <div class="modal-dialog modal-lg">
@@ -215,18 +200,14 @@
 </div>
 
 {# Java libraries and stuff: #}
-
 {% block definitions %}{% endblock %}
 
 {# Moment JS #}
 <script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-<script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ FF_VERSION }}" type="text/javascript"
-        nonce="{{ JS_NONCE }}"></script>
+<script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# All kinds of variables. #}
-<script
-    src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}"
-    type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# Base script: jquery and bootstrap #}
 <script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
@@ -234,24 +215,29 @@
 {# Vue scripts and components. Only loaded when needed #}
 {% if VUE_SCRIPT_NAME %}
     <script src="v1/js/app_vue.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-    <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ FF_VERSION }}" type="text/javascript"
-            nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+{% endif %}
+
+{# Fallback: אם לא הוגדר VUE_SCRIPT_NAME אבל אנחנו בעמוד יצירת טרנזקציה, טען את הסקריפטים הדרושים #}
+{% if not VUE_SCRIPT_NAME and (current_route_name|slice(0, 22) == 'transactions.create.') %}
+    <script src="v1/js/app_vue.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/create_transaction.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 {% endif %}
 
 {# date range picker, current template, etc. #}
 <script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"
-        nonce="{{ JS_NONCE }}"></script>
+<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 
 {# Firefly III code #}
 <script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
 <script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+
 {% if not shownDemo %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var routeForTour = "{{ current_route_name }}";
-        var routeStepsUrl = "{{ route('json.intro', [current_route_name, objectType|default("")]) }}";
-        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default("")]) }}";
+        var routeStepsUrl = "{{ route('json.intro', [current_route_name, objectType|default('')]) }}";
+        var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default('')]) }}";
     </script>
     <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
@@ -271,16 +257,11 @@
             _paq.push(['setTrackerUrl', u + 'matomo.php']);
             _paq.push(['setSiteId', '{{ config('firefly.tracker_site_id') }}']);
             var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
-            g.type = 'text/javascript';
-            g.async = true;
-            g.defer = true;
-            g.src = u + 'matomo.js';
+            g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'matomo.js';
             s.parentNode.insertBefore(g, s);
         })();
     </script>
-    <noscript><p><img
-                src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1"
-                style="border:0;" alt=""/></p></noscript>
+    <noscript><p><img src="//{{ config('firefly.tracker_url') }}/matomo.php?idsite={{ config('firefly.tracker_site_id') }}&amp;rec=1" style="border:0;" alt=""/></p></noscript>
 {% endif %}
 
 <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
