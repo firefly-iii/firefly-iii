@@ -158,18 +158,23 @@ class ShowController extends Controller
         Log::debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser(auth()->user());
 
-        // tell the generator which trigger it should look for
-        $engine->setTrigger(WebhookTrigger::tryFrom($webhook->trigger));
-        // tell the generator which objects to process
-        $engine->setObjects(new Collection()->push($group));
-        // set the webhook to trigger
-        $engine->setWebhooks(new Collection()->push($webhook));
-        // tell the generator to generate the messages
-        $engine->generateMessages();
+        /** @var \FireflyIII\Models\WebhookTrigger $trigger */
+        foreach($webhook->webhookTriggers as $trigger) {
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser(auth()->user());
+
+            // tell the generator which trigger it should look for
+            $engine->setTrigger(WebhookTrigger::tryFrom((int)$trigger->key));
+            // tell the generator which objects to process
+            $engine->setObjects(new Collection()->push($group));
+            // set the webhook to trigger
+            $engine->setWebhooks(new Collection()->push($webhook));
+            // tell the generator to generate the messages
+            $engine->generateMessages();
+        }
+
 
         // trigger event to send them:
         Log::debug('send event RequestedSendWebhookMessages from ShowController::triggerTransaction()');
