@@ -43,6 +43,8 @@ use FireflyIII\Repositories\AuditLogEntry\ALERepository;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepository;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
@@ -161,6 +163,7 @@ class FireflyServiceProvider extends ServiceProvider
 
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
         $this->app->bind(ALERepositoryInterface::class, ALERepository::class);
+        $this->app->bind(PeriodStatisticRepositoryInterface::class, PeriodStatisticRepository::class);
 
         $this->app->bind(
             static function (Application $app): ObjectGroupRepositoryInterface {

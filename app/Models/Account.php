@@ -241,4 +241,12 @@ class Account extends Model
             get: static fn ($value) => (string)$value,
         );
     }
+
+    public function primaryPeriodStatistics(): MorphMany
+
+    {
+
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+
+    }
 }
