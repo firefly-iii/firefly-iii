@@ -243,7 +243,6 @@ class Account extends Model
     }
 
     public function primaryPeriodStatistics(): MorphMany
-
     {
 
         return $this->morphMany(PeriodStatistic::class, 'primary_statable');

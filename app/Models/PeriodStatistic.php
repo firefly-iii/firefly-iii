@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
@@ -11,8 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PeriodStatistic extends Model
 {
-    use SoftDeletes;
     use ReturnsIntegerUserIdTrait;
+    use SoftDeletes;
 
     protected function casts(): array
     {
@@ -31,7 +33,6 @@ class PeriodStatistic extends Model
         );
     }
 
-
     public function primaryStatable(): MorphTo
     {
 
@@ -45,6 +46,7 @@ class PeriodStatistic extends Model
         return $this->morphTo();
 
     }
+
     public function tertiaryStatable(): MorphTo
     {
 
@@ -52,5 +54,5 @@ class PeriodStatistic extends Model
 
     }
 
-    //
+
 }
