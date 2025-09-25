@@ -1,0 +1,58 @@
+name: UI Tests on Pull Request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Firefly III repository
+        uses: actions/checkout@v4
+
+      - name: Checkout Firefly-UI (tests repo)
+        uses: actions/checkout@v4
+        with:
+          repository: tmeraslan/firefly-UI
+          path: firefly-UI
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Chrome & ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg unzip xvfb
+          
+          # התקנת Google Chrome
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+          # התקנת ChromeDriver תואם לגרסה של הדפדפן
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -q "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          rm chromedriver_linux64.zip
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          cd firefly-UI
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest selenium pillow
+
+      - name: Run UI tests (headless Chrome)
+        run: |
+          cd firefly-UI
+          # נוסיף משתנה סביבה להרצה במצב headless
+          export HEADLESS=true
+          pytest tests --maxfail=1 --disable-warnings -q
