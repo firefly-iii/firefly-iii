@@ -2,18 +2,15 @@ name: UI Tests on Pull Request
 
 on:
   pull_request:
-    branches: [ main ]
-
-permissions:
-  contents: read
+    branches:
+      - main
 
 jobs:
   ui-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
 
     steps:
-      - name: Checkout Firefly III repository (PR code)
+      - name: Checkout Firefly III repository
         uses: actions/checkout@v4
 
       - name: Checkout Firefly-UI (tests repo)
@@ -22,70 +19,42 @@ jobs:
           repository: tmeraslan/firefly-UI
           path: firefly-UI
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Setup Chrome (stable)
-        uses: browser-actions/setup-chrome@v1
-        with:
-          chrome-version: stable
+      - name: Install Chrome & ChromeDriver
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget gnupg unzip xvfb
+          
+          # התקנת Google Chrome
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
+
+          # התקנת ChromeDriver תואם לגרסה של הדפדפן
+          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
+          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
+          wget -q "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
+          unzip chromedriver_linux64.zip
+          sudo mv chromedriver /usr/local/bin/
+          rm chromedriver_linux64.zip
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           cd firefly-UI
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # Selenium Manager (4.13+) ינהל את ה-Driver, pytest-timeout למניעת תקיעות
-          pip install "selenium>=4.13" pillow pytest pytest-timeout
+          pip install pytest selenium pillow
 
-      - name: Show environment
-        run: |
-          echo "FIREFLY_URL=${{ vars.FIREFLY_URL || 'NOT_SET' }}"
-          echo "HEADLESS will be true"
-
-      - name: Wait for Firefly to be ready
+      - name: Run Selenium UI tests
         env:
-          FIREFLY_URL: ${{ vars.FIREFLY_URL }} # או שים כאן ישירות את ה-URL, או ב-Repository Variables
-        run: |
-          if [ -z "${FIREFLY_URL}" ]; then
-            echo "❌ FIREFLY_URL is not set. Set it as a Repository Variable (Settings -> Variables)."
-            exit 1
-          fi
-
-          echo "Waiting for ${FIREFLY_URL} to be ready..."
-          # ננסה גם /login וגם /api/v1/ping כדי לתפוס גם 200/302
-          for i in $(seq 1 40); do
-            if curl -fsSL -o /dev/null "${FIREFLY_URL}/login" || curl -fsSL -o /dev/null "${FIREFLY_URL}/api/v1/ping"; then
-              echo "✅ Firefly is reachable"
-              exit 0
-            fi
-            echo "Attempt $i/40: not ready yet, sleeping 3s..."
-            sleep 3
-          done
-          echo "❌ Firefly did not become ready in time."
-          curl -I "${FIREFLY_URL}/login" || true
-          exit 1
-
-      - name: Run Selenium UI tests (headless)
-        env:
-          CI: "true"
-          HEADLESS: "true"
-          FIREFLY_URL: http://34.244.228.75:8082
-      
-          PYTHONUNBUFFERED: "1"
+          CI: true
+          HEADLESS: true
+          FIREFLY_URL: http://34.244.228.75:8082   # כתובת השרת שלך
         run: |
           cd firefly-UI
-          # --timeout=120: מגביל כל טסט ל-120 שניות כדי שלא ייתקע
-          pytest tests/ -v --disable-warnings --timeout=120
-          
-      - name: Upload test artifacts (optional)
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: ui-test-artifacts
-          path: |
-            firefly-UI/reports/**
-            firefly-UI/screenshots/**
-          if-no-files-found: ignore
+          pytest tests/ -v --disable-warnings
