@@ -74,7 +74,7 @@ jobs:
         env:
           CI: "true"
           HEADLESS: "true"
-          FIREFLY_URL: http://34.244.228.75:8082
+          FIREFLY_URL: http://54.217.40.63:8082
       
           PYTHONUNBUFFERED: "1"
         run: |
