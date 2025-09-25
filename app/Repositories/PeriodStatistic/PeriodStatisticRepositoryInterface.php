@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * PeriodStatisticRepositoryInterface.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -28,11 +30,9 @@ use Illuminate\Support\Collection;
 
 interface PeriodStatisticRepositoryInterface
 {
-
     public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection;
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection;
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
-
 }
