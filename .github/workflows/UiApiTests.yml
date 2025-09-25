@@ -2,15 +2,18 @@ name: UI Tests on Pull Request
 
 on:
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+
+permissions:
+  contents: read
 
 jobs:
   ui-tests:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
 
     steps:
-      - name: Checkout Firefly III repository
+      - name: Checkout Firefly III repository (PR code)
         uses: actions/checkout@v4
 
       - name: Checkout Firefly-UI (tests repo)
@@ -19,42 +22,45 @@ jobs:
           repository: tmeraslan/firefly-UI
           path: firefly-UI
 
-      - name: Set up Python
+      - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
-      - name: Install Chrome & ChromeDriver
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget gnupg unzip xvfb
-          
-          # התקנת Google Chrome
-          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-          echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
-          sudo apt-get update
-          sudo apt-get install -y google-chrome-stable
-
-          # התקנת ChromeDriver תואם לגרסה של הדפדפן
-          CHROME_VERSION=$(google-chrome --version | awk '{print $3}' | cut -d'.' -f1)
-          DRIVER_VERSION=$(wget -qO- "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_VERSION")
-          wget -q "https://chromedriver.storage.googleapis.com/$DRIVER_VERSION/chromedriver_linux64.zip"
-          unzip chromedriver_linux64.zip
-          sudo mv chromedriver /usr/local/bin/
-          rm chromedriver_linux64.zip
+      # מתקינים Chrome יציב בלי apt-key / מראות ידניות
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: stable
 
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
           cd firefly-UI
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          pip install pytest selenium pillow
+          # נבטיח Selenium חדש כדי להשתמש ב-Selenium Manager
+          pip install "selenium>=4.13" pillow pytest
 
-      - name: Run Selenium UI tests
+      - name: Run Selenium UI tests (headless)
         env:
-          CI: true
-          HEADLESS: true
-          FIREFLY_URL: http://108.129.187.158:8080   # כתובת השרת שלך
+          CI: "true"
+          HEADLESS: "true"
+          # כתובת ה-FF שרץ חיצונית. אם תרצה להריץ Docker ב-CI – תגיד ואכין compose.
+          FIREFLY_URL: "http://108.129.187.158:8080"
+          EMAIL: ${{ secrets.FIREFLY_EMAIL }}
+          PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
         run: |
           cd firefly-UI
+          # אם בקוד שלך יש בדיקה ל-HEADLESS, השורה הזו תפעיל מצב ראש-ללא
           pytest tests/ -v --disable-warnings
+
+      # אופציונלי: להעלות artifacts (לוגים/צילומי מסך) במידה והטסטים שומרים לקובץ
+      - name: Upload test artifacts (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-artifacts
+          path: |
+            firefly-UI/reports/**
+            firefly-UI/screenshots/**
+          if-no-files-found: ignore
