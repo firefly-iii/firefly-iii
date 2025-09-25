@@ -73,9 +73,8 @@ jobs:
         env:
           CI: "true"
           HEADLESS: "true"
-          FIREFLY_URL: ${{ vars.FIREFLY_URL }}   # למשל: http://34.244.228.75:8082
-          EMAIL: ${{ secrets.FIREFLY_EMAIL }}
-          PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
+          FIREFLY_URL: http://34.244.228.75:8082
+      
           PYTHONUNBUFFERED: "1"
         run: |
           cd firefly-UI
