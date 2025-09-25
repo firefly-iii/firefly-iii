@@ -50,9 +50,13 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install pytest selenium pillow
 
-      - name: Run UI tests (headless Chrome)
+      - name: Run Selenium UI tests
+        env:
+          CI: true
+          HEADLESS: true
+          FIREFLY_URL: http://108.129.187.158:8080   # כתובת השרת שלך
+          EMAIL: ${{ secrets.FIREFLY_EMAIL }}
+          PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
         run: |
           cd firefly-UI
-          # נוסיף משתנה סביבה להרצה במצב headless
-          export HEADLESS=true
-          pytest tests --maxfail=1 --disable-warnings -q
+          pytest tests/ -v --disable-warnings
