@@ -1,4 +1,3 @@
-
 name: UI Tests on Pull Request
 
 on:
@@ -12,6 +11,14 @@ jobs:
   ui-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
+
+    env:
+      FIREFLY_URL: "http://54.217.40.63:8082"   # ← ה-URL החיצוני שלך
+      EMAIL: ${{ secrets.FIREFLY_EMAIL }}
+      PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
+      HEADLESS: "true"
+      CI: "true"
+      PYTHONUNBUFFERED: "1"
 
     steps:
       - name: Checkout Firefly III repository (PR code)
@@ -28,7 +35,6 @@ jobs:
         with:
           python-version: "3.11"
 
-      # מתקינים Chrome בצורה נקייה (ללא apt-key / ללא chromedriver ידני)
       - name: Setup Chrome (stable)
         uses: browser-actions/setup-chrome@v1
         with:
@@ -39,24 +45,16 @@ jobs:
           python -m pip install --upgrade pip
           cd firefly-UI
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # Selenium Manager זמין מ-4.13+
           pip install "selenium>=4.13" pillow pytest pytest-timeout
 
       - name: Show versions (debug)
         run: |
           google-chrome --version || true
           python -c "import selenium,sys; print('selenium', selenium.__version__); print(sys.version)"
+          echo "FIREFLY_URL=${FIREFLY_URL}"
 
-      # מחכים שהשרת יהיה זמין כדי שהטסטים לא "ייתקעו" בניווט הראשון
       - name: Wait for Firefly to be ready
-        env:
-          # עדיף לשים את ה-URL כ-Repository Variable בשם FIREFLY_URL
-          FIREFLY_URL: ${{ vars.FIREFLY_URL }}
         run: |
-          if [ -z "${FIREFLY_URL}" ]; then
-            echo "❌ FIREFLY_URL is not set. Set it under Settings → Variables (e.g. http://34.244.228.75:8082)"
-            exit 1
-          fi
           echo "Waiting for ${FIREFLY_URL}..."
           for i in $(seq 1 40); do
             if curl -fsSL -o /dev/null "${FIREFLY_URL}/login" || curl -fsSL -o /dev/null "${FIREFLY_URL}/api/v1/ping"; then
@@ -71,15 +69,8 @@ jobs:
           exit 1
 
       - name: Run Selenium UI tests (headless)
-        env:
-          CI: "true"
-          HEADLESS: "true"
-          FIREFLY_URL: http://54.217.40.63:8082
-      
-          PYTHONUNBUFFERED: "1"
         run: |
           cd firefly-UI
-          # timeout לכל טסט כדי שלא ייתקעו לנצח
           pytest tests/ -v --disable-warnings --timeout=120
 
       - name: Upload test artifacts (optional)
@@ -91,4 +82,3 @@ jobs:
             firefly-UI/reports/**
             firefly-UI/screenshots/**
           if-no-files-found: ignore
-
