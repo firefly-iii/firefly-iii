@@ -27,8 +27,7 @@ jobs:
         with:
           python-version: "3.11"
 
-      # מתקינים Chrome יציב בלי apt-key / מראות ידניות
-      - name: Setup Chrome
+      - name: Setup Chrome (stable)
         uses: browser-actions/setup-chrome@v1
         with:
           chrome-version: stable
@@ -38,23 +37,49 @@ jobs:
           python -m pip install --upgrade pip
           cd firefly-UI
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-          # נבטיח Selenium חדש כדי להשתמש ב-Selenium Manager
-          pip install "selenium>=4.13" pillow pytest
+          # Selenium Manager (4.13+) ינהל את ה-Driver, pytest-timeout למניעת תקיעות
+          pip install "selenium>=4.13" pillow pytest pytest-timeout
+
+      - name: Show environment
+        run: |
+          echo "FIREFLY_URL=${{ vars.FIREFLY_URL || 'NOT_SET' }}"
+          echo "HEADLESS will be true"
+
+      - name: Wait for Firefly to be ready
+        env:
+          FIREFLY_URL: ${{ vars.FIREFLY_URL }} # או שים כאן ישירות את ה-URL, או ב-Repository Variables
+        run: |
+          if [ -z "${FIREFLY_URL}" ]; then
+            echo "❌ FIREFLY_URL is not set. Set it as a Repository Variable (Settings -> Variables)."
+            exit 1
+          fi
+
+          echo "Waiting for ${FIREFLY_URL} to be ready..."
+          # ננסה גם /login וגם /api/v1/ping כדי לתפוס גם 200/302
+          for i in $(seq 1 40); do
+            if curl -fsSL -o /dev/null "${FIREFLY_URL}/login" || curl -fsSL -o /dev/null "${FIREFLY_URL}/api/v1/ping"; then
+              echo "✅ Firefly is reachable"
+              exit 0
+            fi
+            echo "Attempt $i/40: not ready yet, sleeping 3s..."
+            sleep 3
+          done
+          echo "❌ Firefly did not become ready in time."
+          curl -I "${FIREFLY_URL}/login" || true
+          exit 1
 
       - name: Run Selenium UI tests (headless)
         env:
           CI: "true"
           HEADLESS: "true"
-          # כתובת ה-FF שרץ חיצונית. אם תרצה להריץ Docker ב-CI – תגיד ואכין compose.
-          FIREFLY_URL: "http://108.129.187.158:8080"
-          EMAIL: ${{ secrets.FIREFLY_EMAIL }}
-          PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
+          FIREFLY_URL: http://34.244.228.75:8082
+      
+          PYTHONUNBUFFERED: "1"
         run: |
           cd firefly-UI
-          # אם בקוד שלך יש בדיקה ל-HEADLESS, השורה הזו תפעיל מצב ראש-ללא
-          pytest tests/ -v --disable-warnings
-
-      # אופציונלי: להעלות artifacts (לוגים/צילומי מסך) במידה והטסטים שומרים לקובץ
+          # --timeout=120: מגביל כל טסט ל-120 שניות כדי שלא ייתקע
+          pytest tests/ -v --disable-warnings --timeout=120
+          
       - name: Upload test artifacts (optional)
         if: always()
         uses: actions/upload-artifact@v4
