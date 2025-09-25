@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * PeriodStatisticRepository.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -28,28 +30,29 @@ use Illuminate\Support\Collection;
 
 class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface
 {
-
     public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection
     {
         return $model->primaryPeriodStatistics()
-                     ->where('start', $start)
-                     ->where('end', $end)
-                     ->whereIn('type', $types)
-                     ->get();
+            ->where('start', $start)
+            ->where('end', $end)
+            ->whereIn('type', $types)
+            ->get()
+        ;
     }
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection
     {
         return $model->primaryPeriodStatistics()
-                     ->where('start', $start)
-                     ->where('end', $end)
-                     ->where('type', $type)
-                     ->get();
+            ->where('start', $start)
+            ->where('end', $end)
+            ->where('type', $type)
+            ->get()
+        ;
     }
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat = new PeriodStatistic;
+        $stat                          = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
         $stat->start                   = $start;
@@ -60,6 +63,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface
         $stat->count                   = $count;
         $stat->type                    = $type;
         $stat->save();
+
         return $stat;
     }
 }

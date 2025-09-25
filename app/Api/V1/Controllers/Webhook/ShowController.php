@@ -160,7 +160,7 @@ class ShowController extends Controller
 
 
         /** @var \FireflyIII\Models\WebhookTrigger $trigger */
-        foreach($webhook->webhookTriggers as $trigger) {
+        foreach ($webhook->webhookTriggers as $trigger) {
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);
             $engine->setUser(auth()->user());
