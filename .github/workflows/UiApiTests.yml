@@ -55,8 +55,6 @@ jobs:
           CI: true
           HEADLESS: true
           FIREFLY_URL: http://108.129.187.158:8080   # כתובת השרת שלך
-          EMAIL: ${{ secrets.FIREFLY_EMAIL }}
-          PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
         run: |
           cd firefly-UI
           pytest tests/ -v --disable-warnings
