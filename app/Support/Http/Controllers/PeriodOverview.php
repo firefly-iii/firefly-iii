@@ -208,12 +208,12 @@ trait PeriodOverview
         foreach ($transactions as $index => $item) {
             $date = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {
-                if ('away' === $direction && -1 === bccomp((string)$item['amount'], '0')) {
+                if ('Transfer' === $item['type'] && 'away' === $direction && -1 === bccomp((string)$item['amount'], '0')) {
                     $result[] = $item;
 
                     continue;
                 }
-                if ('in' === $direction && 1 === bccomp((string)$item['amount'], '0')) {
+                if ('Transfer' === $item['type'] && 'in' === $direction && 1 === bccomp((string)$item['amount'], '0')) {
                     $result[] = $item;
 
                     continue;
