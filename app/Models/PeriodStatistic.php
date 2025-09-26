@@ -9,7 +9,6 @@ use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class PeriodStatistic extends Model
 {
@@ -20,8 +19,8 @@ class PeriodStatistic extends Model
         return [
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
-            'start' => SeparateTimezoneCaster::class,
-            'end'   => SeparateTimezoneCaster::class,
+            'start'         => SeparateTimezoneCaster::class,
+            'end'           => SeparateTimezoneCaster::class,
         ];
     }
 

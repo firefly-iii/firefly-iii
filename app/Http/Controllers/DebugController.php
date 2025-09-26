@@ -109,7 +109,7 @@ class DebugController extends Controller
         Artisan::call('route:clear');
         Artisan::call('view:clear');
 
-        PeriodStatistic::where('id','>',0)->delete();
+        PeriodStatistic::where('id', '>', 0)->delete();
 
         // also do some recalculations.
         Artisan::call('correction:recalculates-liabilities');
