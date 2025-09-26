@@ -550,6 +550,9 @@ trait PeriodOverview
         foreach ($array as $entry) {
             $this->periodStatisticRepo->saveStatistic($account, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
+        if(0 === count($array)) {
+            $this->periodStatisticRepo->saveStatistic($account, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
+        }
     }
 
     /**
