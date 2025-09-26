@@ -36,7 +36,7 @@ trait FormSupport
 {
     public function multiSelect(string $name, ?array $list = null, mixed $selected = null, ?array $options = null): string
     {
-        $list     ??= [];
+        $list ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -59,7 +59,7 @@ trait FormSupport
      */
     public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
     {
-        $list     ??= [];
+        $list ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -81,10 +81,10 @@ trait FormSupport
      */
     protected function expandOptionArray(string $name, $label, ?array $options = null): array
     {
-        $options                 ??= [];
+        $options ??= [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
-        $options['id']           = 'ffInput_' . $name;
+        $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
         $options['placeholder']  = ucfirst((string)$label);
 
@@ -145,6 +145,6 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string)trans('form.' . $name);
+        return (string)trans('form.'.$name);
     }
 }

@@ -29,6 +29,7 @@ use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\preg_match;
 
 /**
@@ -78,15 +79,15 @@ class ParseDateString
     public function parseDate(string $date): Carbon
     {
         Log::debug(sprintf('parseDate("%s")', $date));
-        $date = strtolower($date);
+        $date        = strtolower($date);
         // parse keywords:
         if (in_array($date, $this->keywords, true)) {
             return $this->parseKeyword($date);
         }
 
         // if regex for YYYY-MM-DD:
-        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        $result  = preg_match($pattern, $date);
+        $pattern     = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
+        $result      = preg_match($pattern, $date);
         if (0 !== $result) {
             return $this->parseDefaultDate($date);
         }
@@ -355,11 +356,11 @@ class ParseDateString
 
         foreach ($parts as $part) {
             Log::debug(sprintf('Now parsing part "%s"', $part));
-            $part = trim($part);
+            $part      = trim($part);
 
             // verify if correct
-            $pattern = '/[+-]\d+[wqmdy]/';
-            $result  = preg_match($pattern, $part);
+            $pattern   = '/[+-]\d+[wqmdy]/';
+            $result    = preg_match($pattern, $part);
             if (0 === $result) {
                 Log::error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
 
@@ -373,7 +374,7 @@ class ParseDateString
 
                 continue;
             }
-            $func = $functions[$direction][$period];
+            $func      = $functions[$direction][$period];
             Log::debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
             $today->{$func}($number); // @phpstan-ignore-line
             Log::debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));

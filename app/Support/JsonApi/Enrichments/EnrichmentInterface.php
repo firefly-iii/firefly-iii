@@ -33,7 +33,7 @@ interface EnrichmentInterface
 {
     public function enrich(Collection $collection): Collection;
 
-    public function enrichSingle(array | Model $model): array | Model;
+    public function enrichSingle(array|Model $model): array|Model;
 
     public function setUser(User $user): void;
 

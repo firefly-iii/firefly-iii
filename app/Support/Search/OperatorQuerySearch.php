@@ -117,7 +117,7 @@ class OperatorQuerySearch implements SearchInterface
             $operator = substr($operator, 1);
         }
 
-        $config = config(sprintf('search.operators.%s', $operator));
+        $config   = config(sprintf('search.operators.%s', $operator));
         if (null === $config) {
             throw new FireflyException(sprintf('No configuration for search operator "%s"', $operator));
         }
@@ -186,7 +186,7 @@ class OperatorQuerySearch implements SearchInterface
 
         try {
             $parsedQuery = $parser->parse($query);
-        } catch (LogicException | TypeError $e) {
+        } catch (LogicException|TypeError $e) {
             Log::error($e->getMessage());
             Log::error(sprintf('Could not parse search: "%s".', $query));
 
@@ -278,7 +278,7 @@ class OperatorQuerySearch implements SearchInterface
         $value      = $node->getValue();
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
-        $context = config(sprintf('search.operators.%s.needs_context', $operator));
+        $context    = config(sprintf('search.operators.%s.needs_context', $operator));
 
         // is an operator that needs no context, and value is false, then prohibited = true.
         if ('false' === $value && in_array($operator, $this->validOperators, true) && false === $context && !$prohibited) {
@@ -292,14 +292,14 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // must be valid operator:
-        $inArray = in_array($operator, $this->validOperators, true);
+        $inArray    = in_array($operator, $this->validOperators, true);
         if ($inArray) {
             if ($this->updateCollector($operator, $value, $prohibited)) {
                 $this->operators->push([
-                                           'type'       => self::getRootOperator($operator),
-                                           'value'      => $value,
-                                           'prohibited' => $prohibited,
-                                       ]);
+                    'type'       => self::getRootOperator($operator),
+                    'value'      => $value,
+                    'prohibited' => $prohibited,
+                ]);
                 Log::debug(sprintf('Added operator type "%s"', $operator));
             }
         }
@@ -355,7 +355,7 @@ class OperatorQuerySearch implements SearchInterface
 
     private function handleStringNode(StringNode $node, bool $flipProhibitedFlag): void
     {
-        $string = $node->getValue();
+        $string     = $node->getValue();
 
         $prohibited = $node->isProhibited($flipProhibitedFlag);
 
@@ -477,7 +477,7 @@ class OperatorQuerySearch implements SearchInterface
             }
         }
         // string position (default): starts with:
-        $stringMethod = 'str_starts_with';
+        $stringMethod    = 'str_starts_with';
 
         // string position: ends with:
         if (StringPosition::ENDS === $stringPosition) {
@@ -491,7 +491,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // get accounts:
-        $accounts = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
+        $accounts        = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
         if (0 === $accounts->count() && false === $prohibited) {
             Log::warning('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
@@ -504,8 +504,8 @@ class OperatorQuerySearch implements SearchInterface
             return;
         }
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
-        $filtered = $accounts->filter(
-            static fn(Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
+        $filtered        = $accounts->filter(
+            static fn (Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
         );
 
         if (0 === $filtered->count()) {
@@ -557,7 +557,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // string position (default): starts with:
-        $stringMethod = 'str_starts_with';
+        $stringMethod    = 'str_starts_with';
 
         // string position: ends with:
         if (StringPosition::ENDS === $stringPosition) {
@@ -571,7 +571,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // search for accounts:
-        $accounts = $this->accountRepository->searchAccountNr($value, $searchTypes, 1337);
+        $accounts        = $this->accountRepository->searchAccountNr($value, $searchTypes, 1337);
         if (0 === $accounts->count()) {
             Log::debug('Found zero accounts, search for invalid account.');
             Log::warning('Call to findNothing() from searchAccountNr().');
@@ -582,7 +582,7 @@ class OperatorQuerySearch implements SearchInterface
 
         // if found, do filter
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
-        $filtered = $accounts->filter(
+        $filtered        = $accounts->filter(
             static function (Account $account) use ($value, $stringMethod) {
                 // either IBAN or account number
                 $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower($value));
@@ -1250,15 +1250,15 @@ class OperatorQuerySearch implements SearchInterface
 
                 throw new FireflyException(sprintf('Unsupported search operator: "%s"', $operator));
 
-            // some search operators are ignored, basically:
+                // some search operators are ignored, basically:
             case 'user_action':
                 Log::info(sprintf('Ignore search operator "%s"', $operator));
 
                 return false;
 
-            //
-            // all account related searches:
-            //
+                //
+                // all account related searches:
+                //
             case 'account_is':
                 $this->searchAccount($value, SearchDirection::BOTH, StringPosition::IS);
 
@@ -1420,7 +1420,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'source_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account                 = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setSourceAccounts(new Collection()->push($account));
                 }
@@ -1433,7 +1433,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-source_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account                 = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->excludeSourceAccounts(new Collection()->push($account));
                 }
@@ -1446,25 +1446,25 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'journal_id':
-                $parts = explode(',', $value);
+                $parts                   = explode(',', $value);
                 $this->collector->setJournalIds($parts);
 
                 break;
 
             case '-journal_id':
-                $parts = explode(',', $value);
+                $parts                   = explode(',', $value);
                 $this->collector->excludeJournalIds($parts);
 
                 break;
 
             case 'id':
-                $parts = explode(',', $value);
+                $parts                   = explode(',', $value);
                 $this->collector->setIds($parts);
 
                 break;
 
             case '-id':
-                $parts = explode(',', $value);
+                $parts                   = explode(',', $value);
                 $this->collector->excludeIds($parts);
 
                 break;
@@ -1550,7 +1550,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'destination_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account                 = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->setDestinationAccounts(new Collection()->push($account));
                 }
@@ -1562,7 +1562,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-destination_account_id':
-                $account = $this->accountRepository->find((int)$value);
+                $account                 = $this->accountRepository->find((int)$value);
                 if (null !== $account) {
                     $this->collector->excludeDestinationAccounts(new Collection()->push($account));
                 }
@@ -1575,12 +1575,12 @@ class OperatorQuerySearch implements SearchInterface
 
             case 'account_id':
                 Log::debug(sprintf('Now in "account_id" with value "%s"', $value));
-                $parts      = explode(',', $value);
-                $collection = new Collection();
+                $parts                   = explode(',', $value);
+                $collection              = new Collection();
                 foreach ($parts as $accountId) {
                     $accountId = (int)$accountId;
                     Log::debug(sprintf('Searching for account with ID #%d', $accountId));
-                    $account = $this->accountRepository->find($accountId);
+                    $account   = $this->accountRepository->find($accountId);
                     if (null !== $account) {
                         Log::debug(sprintf('Found account with ID #%d ("%s")', $accountId, $account->name));
                         $collection->push($account);
@@ -1601,8 +1601,8 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-account_id':
-                $parts      = explode(',', $value);
-                $collection = new Collection();
+                $parts                   = explode(',', $value);
+                $collection              = new Collection();
                 foreach ($parts as $accountId) {
                     $account = $this->accountRepository->find((int)$accountId);
                     if (null !== $account) {
@@ -1619,48 +1619,48 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // cash account
-            //
+                //
+                // cash account
+                //
             case 'source_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->setSourceAccounts(new Collection()->push($account));
 
                 break;
 
             case '-source_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->excludeSourceAccounts(new Collection()->push($account));
 
                 break;
 
             case 'destination_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->setDestinationAccounts(new Collection()->push($account));
 
                 break;
 
             case '-destination_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->excludeDestinationAccounts(new Collection()->push($account));
 
                 break;
 
             case 'account_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->setAccounts(new Collection()->push($account));
 
                 break;
 
             case '-account_is_cash':
-                $account = $this->getCashAccount();
+                $account                 = $this->getCashAccount();
                 $this->collector->excludeAccounts(new Collection()->push($account));
 
                 break;
 
-            //
-            // description
-            //
+                //
+                // description
+                //
             case 'description_starts':
                 $this->collector->descriptionStarts([$value]);
 
@@ -1682,7 +1682,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'description_contains':
-                $this->words[] = $value;
+                $this->words[]           = $value;
 
                 return false;
 
@@ -1701,11 +1701,11 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // currency
-            //
+                //
+                // currency
+                //
             case 'currency_is':
-                $currency = $this->findCurrency($value);
+                $currency                = $this->findCurrency($value);
                 if ($currency instanceof TransactionCurrency) {
                     $this->collector->setCurrency($currency);
                 }
@@ -1717,7 +1717,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-currency_is':
-                $currency = $this->findCurrency($value);
+                $currency                = $this->findCurrency($value);
                 if ($currency instanceof TransactionCurrency) {
                     $this->collector->excludeCurrency($currency);
                 }
@@ -1729,7 +1729,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'foreign_currency_is':
-                $currency = $this->findCurrency($value);
+                $currency                = $this->findCurrency($value);
                 if ($currency instanceof TransactionCurrency) {
                     $this->collector->setForeignCurrency($currency);
                 }
@@ -1741,7 +1741,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-foreign_currency_is':
-                $currency = $this->findCurrency($value);
+                $currency                = $this->findCurrency($value);
                 if ($currency instanceof TransactionCurrency) {
                     $this->collector->excludeForeignCurrency($currency);
                 }
@@ -1752,9 +1752,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // attachments
-            //
+                //
+                // attachments
+                //
             case 'has_attachments':
             case '-has_no_attachments':
                 Log::debug('Set collector to filter on attachments.');
@@ -1769,8 +1769,8 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // categories
+                //
+                // categories
             case '-has_any_category':
             case 'has_no_category':
                 $this->collector->withoutCategory();
@@ -1784,7 +1784,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'category_is':
-                $category = $this->categoryRepository->findByName($value);
+                $category                = $this->categoryRepository->findByName($value);
                 if (null !== $category) {
                     $this->collector->setCategory($category);
 
@@ -1796,7 +1796,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-category_is':
-                $category = $this->categoryRepository->findByName($value);
+                $category                = $this->categoryRepository->findByName($value);
                 if (null !== $category) {
                     $this->collector->excludeCategory($category);
 
@@ -1806,7 +1806,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'category_ends':
-                $result = $this->categoryRepository->categoryEndsWith($value, 1337);
+                $result                  = $this->categoryRepository->categoryEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
@@ -1818,7 +1818,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-category_ends':
-                $result = $this->categoryRepository->categoryEndsWith($value, 1337);
+                $result                  = $this->categoryRepository->categoryEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
                 }
@@ -1830,7 +1830,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'category_starts':
-                $result = $this->categoryRepository->categoryStartsWith($value, 1337);
+                $result                  = $this->categoryRepository->categoryStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
@@ -1842,7 +1842,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-category_starts':
-                $result = $this->categoryRepository->categoryStartsWith($value, 1337);
+                $result                  = $this->categoryRepository->categoryStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
                 }
@@ -1854,7 +1854,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'category_contains':
-                $result = $this->categoryRepository->searchCategory($value, 1337);
+                $result                  = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setCategories($result);
                 }
@@ -1866,7 +1866,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-category_contains':
-                $result = $this->categoryRepository->searchCategory($value, 1337);
+                $result                  = $this->categoryRepository->searchCategory($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeCategories($result);
                 }
@@ -1877,9 +1877,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // budgets
-            //
+                //
+                // budgets
+                //
             case '-has_any_budget':
             case 'has_no_budget':
                 $this->collector->withoutBudget();
@@ -1893,7 +1893,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'budget_contains':
-                $result = $this->budgetRepository->searchBudget($value, 1337);
+                $result                  = $this->budgetRepository->searchBudget($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
                 }
@@ -1905,7 +1905,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-budget_contains':
-                $result = $this->budgetRepository->searchBudget($value, 1337);
+                $result                  = $this->budgetRepository->searchBudget($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
                 }
@@ -1917,7 +1917,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'budget_is':
-                $budget = $this->budgetRepository->findByName($value);
+                $budget                  = $this->budgetRepository->findByName($value);
                 if (null !== $budget) {
                     $this->collector->setBudget($budget);
 
@@ -1929,7 +1929,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-budget_is':
-                $budget = $this->budgetRepository->findByName($value);
+                $budget                  = $this->budgetRepository->findByName($value);
                 if (null !== $budget) {
                     $this->collector->excludeBudget($budget);
 
@@ -1941,7 +1941,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'budget_ends':
-                $result = $this->budgetRepository->budgetEndsWith($value, 1337);
+                $result                  = $this->budgetRepository->budgetEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
                 }
@@ -1953,7 +1953,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-budget_ends':
-                $result = $this->budgetRepository->budgetEndsWith($value, 1337);
+                $result                  = $this->budgetRepository->budgetEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
                 }
@@ -1965,7 +1965,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'budget_starts':
-                $result = $this->budgetRepository->budgetStartsWith($value, 1337);
+                $result                  = $this->budgetRepository->budgetStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBudgets($result);
                 }
@@ -1977,7 +1977,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-budget_starts':
-                $result = $this->budgetRepository->budgetStartsWith($value, 1337);
+                $result                  = $this->budgetRepository->budgetStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBudgets($result);
                 }
@@ -1988,9 +1988,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // bill
-            //
+                //
+                // bill
+                //
             case '-has_any_bill':
             case 'has_no_bill':
                 $this->collector->withoutBill();
@@ -2004,7 +2004,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'bill_contains':
-                $result = $this->billRepository->searchBill($value, 1337);
+                $result                  = $this->billRepository->searchBill($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
 
@@ -2016,7 +2016,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-bill_contains':
-                $result = $this->billRepository->searchBill($value, 1337);
+                $result                  = $this->billRepository->searchBill($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
 
@@ -2028,7 +2028,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'bill_is':
-                $bill = $this->billRepository->findByName($value);
+                $bill                    = $this->billRepository->findByName($value);
                 if (null !== $bill) {
                     $this->collector->setBill($bill);
 
@@ -2040,7 +2040,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-bill_is':
-                $bill = $this->billRepository->findByName($value);
+                $bill                    = $this->billRepository->findByName($value);
                 if (null !== $bill) {
                     $this->collector->excludeBills(new Collection()->push($bill));
 
@@ -2052,7 +2052,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'bill_ends':
-                $result = $this->billRepository->billEndsWith($value, 1337);
+                $result                  = $this->billRepository->billEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
@@ -2064,7 +2064,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-bill_ends':
-                $result = $this->billRepository->billEndsWith($value, 1337);
+                $result                  = $this->billRepository->billEndsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
                 }
@@ -2076,7 +2076,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'bill_starts':
-                $result = $this->billRepository->billStartsWith($value, 1337);
+                $result                  = $this->billRepository->billStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->setBills($result);
                 }
@@ -2088,7 +2088,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-bill_starts':
-                $result = $this->billRepository->billStartsWith($value, 1337);
+                $result                  = $this->billRepository->billStartsWith($value, 1337);
                 if ($result->count() > 0) {
                     $this->collector->excludeBills($result);
                 }
@@ -2099,9 +2099,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // tags
-            //
+                //
+                // tags
+                //
             case '-has_any_tag':
             case 'has_no_tag':
                 $this->collector->withoutTags();
@@ -2116,7 +2116,7 @@ class OperatorQuerySearch implements SearchInterface
 
             case '-tag_is_not':
             case 'tag_is':
-                $result = $this->tagRepository->findByTag($value);
+                $result                  = $this->tagRepository->findByTag($value);
                 if (null !== $result) {
                     $this->includeTags[] = $result->id;
                     $this->includeTags   = array_unique($this->includeTags);
@@ -2131,7 +2131,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'tag_contains':
-                $tags = $this->tagRepository->searchTag($value);
+                $tags                    = $this->tagRepository->searchTag($value);
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     Log::warning(sprintf('Call to findNothing() from %s.', $operator));
@@ -2146,7 +2146,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'tag_starts':
-                $tags = $this->tagRepository->tagStartsWith($value);
+                $tags                    = $this->tagRepository->tagStartsWith($value);
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     Log::warning(sprintf('Call to findNothing() from %s.', $operator));
@@ -2161,7 +2161,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-tag_starts':
-                $tags = $this->tagRepository->tagStartsWith($value);
+                $tags                    = $this->tagRepository->tagStartsWith($value);
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     Log::warning(sprintf('Call to findNothing() from %s.', $operator));
@@ -2175,7 +2175,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case 'tag_ends':
-                $tags = $this->tagRepository->tagEndsWith($value);
+                $tags                    = $this->tagRepository->tagEndsWith($value);
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     Log::warning(sprintf('Call to findNothing() from %s.', $operator));
@@ -2189,7 +2189,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-tag_ends':
-                $tags = $this->tagRepository->tagEndsWith($value);
+                $tags                    = $this->tagRepository->tagEndsWith($value);
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
                     Log::warning(sprintf('Call to findNothing() from %s.', $operator));
@@ -2203,7 +2203,7 @@ class OperatorQuerySearch implements SearchInterface
                 break;
 
             case '-tag_contains':
-                $tags = $this->tagRepository->searchTag($value)->keyBy('id');
+                $tags                    = $this->tagRepository->searchTag($value)->keyBy('id');
 
                 if (0 === $tags->count()) {
                     Log::info(sprintf('No valid tags in "%s"-operator, so search will not return ANY results.', $operator));
@@ -2219,7 +2219,7 @@ class OperatorQuerySearch implements SearchInterface
 
             case '-tag_is':
             case 'tag_is_not':
-                $result = $this->tagRepository->findByTag($value);
+                $result                  = $this->tagRepository->findByTag($value);
                 if (null !== $result) {
                     $this->excludeTags[] = $result->id;
                     $this->excludeTags   = array_unique($this->excludeTags);
@@ -2227,9 +2227,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // notes
-            //
+                //
+                // notes
+                //
             case 'notes_contains':
                 $this->collector->notesContain($value);
 
@@ -2292,14 +2292,14 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // amount
-            //
+                //
+                // amount
+                //
             case 'amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', $value);
-                $amount = app('steam')->positive($value);
+                $value                   = str_replace(',', '.', $value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
 
@@ -2308,8 +2308,8 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_is':
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
-                $value  = str_replace(',', '.', $value);
-                $amount = app('steam')->positive($value);
+                $value                   = str_replace(',', '.', $value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIsNot($amount);
 
@@ -2317,9 +2317,9 @@ class OperatorQuerySearch implements SearchInterface
 
             case 'foreign_amount_is':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', $value);
+                $value                   = str_replace(',', '.', $value);
 
-                $amount = app('steam')->positive($value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIs($amount);
 
@@ -2327,9 +2327,9 @@ class OperatorQuerySearch implements SearchInterface
 
             case '-foreign_amount_is':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', $value);
+                $value                   = str_replace(',', '.', $value);
 
-                $amount = app('steam')->positive($value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIsNot($amount);
 
@@ -2338,9 +2338,9 @@ class OperatorQuerySearch implements SearchInterface
             case '-amount_more':
             case 'amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', $value);
+                $value                   = str_replace(',', '.', $value);
 
-                $amount = app('steam')->positive($value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
 
@@ -2349,9 +2349,9 @@ class OperatorQuerySearch implements SearchInterface
             case '-foreign_amount_more':
             case 'foreign_amount_less':
                 // strip comma's, make dots.
-                $value = str_replace(',', '.', $value);
+                $value                   = str_replace(',', '.', $value);
 
-                $amount = app('steam')->positive($value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountLess($amount);
 
@@ -2361,8 +2361,8 @@ class OperatorQuerySearch implements SearchInterface
             case 'amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', $value);
-                $amount = app('steam')->positive($value);
+                $value                   = str_replace(',', '.', $value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
 
@@ -2372,16 +2372,16 @@ class OperatorQuerySearch implements SearchInterface
             case 'foreign_amount_more':
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
-                $value  = str_replace(',', '.', $value);
-                $amount = app('steam')->positive($value);
+                $value                   = str_replace(',', '.', $value);
+                $amount                  = app('steam')->positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
 
                 break;
 
-            //
-            // transaction type
-            //
+                //
+                // transaction type
+                //
             case 'transaction_type':
                 $this->collector->setTypes([ucfirst($value)]);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
@@ -2394,152 +2394,152 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // dates
-            //
+                //
+                // dates
+                //
             case '-date_on':
             case 'date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactDateParams($range, $prohibited);
 
                 return false;
 
             case 'date_before':
             case '-date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setDateBeforeParams($range);
 
                 return false;
 
             case 'date_after':
             case '-date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setDateAfterParams($range);
 
                 return false;
 
             case 'interest_date_on':
             case '-interest_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('interest_date', $range, $prohibited);
 
                 return false;
 
             case 'interest_date_before':
             case '-interest_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('interest_date', $range);
 
                 return false;
 
             case 'interest_date_after':
             case '-interest_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('interest_date', $range);
 
                 return false;
 
             case 'book_date_on':
             case '-book_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('book_date', $range, $prohibited);
 
                 return false;
 
             case 'book_date_before':
             case '-book_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('book_date', $range);
 
                 return false;
 
             case 'book_date_after':
             case '-book_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('book_date', $range);
 
                 return false;
 
             case 'process_date_on':
             case '-process_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('process_date', $range, $prohibited);
 
                 return false;
 
             case 'process_date_before':
             case '-process_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('process_date', $range);
 
                 return false;
 
             case 'process_date_after':
             case '-process_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('process_date', $range);
 
                 return false;
 
             case 'due_date_on':
             case '-due_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('due_date', $range, $prohibited);
 
                 return false;
 
             case 'due_date_before':
             case '-due_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('due_date', $range);
 
                 return false;
 
             case 'due_date_after':
             case '-due_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('due_date', $range);
 
                 return false;
 
             case 'payment_date_on':
             case '-payment_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('payment_date', $range, $prohibited);
 
                 return false;
 
             case 'payment_date_before':
             case '-payment_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('payment_date', $range);
 
                 return false;
 
             case 'payment_date_after':
             case '-payment_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('payment_date', $range);
 
                 return false;
 
             case 'invoice_date_on':
             case '-invoice_date_on':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactMetaDateParams('invoice_date', $range, $prohibited);
 
                 return false;
 
             case 'invoice_date_before':
             case '-invoice_date_after':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateBeforeParams('invoice_date', $range);
 
                 return false;
 
             case 'invoice_date_after':
             case '-invoice_date_before':
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setMetaDateAfterParams('invoice_date', $range);
 
                 return false;
@@ -2547,7 +2547,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'created_at_on':
             case '-created_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('created_at', $range, $prohibited);
 
                 return false;
@@ -2555,7 +2555,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'created_at_before':
             case '-created_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('created_at', $range);
 
                 return false;
@@ -2563,7 +2563,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'created_at_after':
             case '-created_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('created_at', $range);
 
                 return false;
@@ -2571,7 +2571,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'updated_at_on':
             case '-updated_at_on':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setExactObjectDateParams('updated_at', $range, $prohibited);
 
                 return false;
@@ -2579,7 +2579,7 @@ class OperatorQuerySearch implements SearchInterface
             case 'updated_at_before':
             case '-updated_at_after':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setObjectDateBeforeParams('updated_at', $range);
 
                 return false;
@@ -2587,14 +2587,14 @@ class OperatorQuerySearch implements SearchInterface
             case 'updated_at_after':
             case '-updated_at_before':
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $value));
-                $range = $this->parseDateRange($operator, $value);
+                $range                   = $this->parseDateRange($operator, $value);
                 $this->setObjectDateAfterParams('updated_at', $range);
 
                 return false;
 
-            //
-            // external URL
-            //
+                //
+                // external URL
+                //
             case '-any_external_url':
             case 'no_external_url':
                 $this->collector->withoutExternalUrl();
@@ -2659,9 +2659,9 @@ class OperatorQuerySearch implements SearchInterface
 
                 break;
 
-            //
-            // other fields
-            //
+                //
+                // other fields
+                //
             case 'external_id_is':
                 $this->collector->setExternalId($value);
 

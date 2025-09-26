@@ -82,7 +82,7 @@ class BillWarningCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire bill notification job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
         /** @var WarnAboutBills $job */
-        $job = app(WarnAboutBills::class);
+        $job                = app(WarnAboutBills::class);
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();

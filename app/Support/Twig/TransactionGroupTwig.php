@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+
 use function Safe\json_decode;
 
 /**
@@ -82,10 +83,11 @@ class TransactionGroupTwig extends AbstractExtension
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
                 $entry = DB::table('journal_meta')
-                           ->where('name', $metaField)
-                           ->where('transaction_journal_id', $journalId)
-                           ->whereNull('deleted_at')
-                           ->first();
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->first()
+                ;
                 if (null === $entry) {
                     return today(config('app.timezone'));
                 }
@@ -102,10 +104,11 @@ class TransactionGroupTwig extends AbstractExtension
             static function (int $journalId, string $metaField) {
                 /** @var null|TransactionJournalMeta $entry */
                 $entry = DB::table('journal_meta')
-                           ->where('name', $metaField)
-                           ->where('transaction_journal_id', $journalId)
-                           ->whereNull('deleted_at')
-                           ->first();
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->first()
+                ;
                 if (null === $entry) {
                     return '';
                 }
@@ -121,10 +124,11 @@ class TransactionGroupTwig extends AbstractExtension
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
                 $count = DB::table('journal_meta')
-                           ->where('name', $metaField)
-                           ->where('transaction_journal_id', $journalId)
-                           ->whereNull('deleted_at')
-                           ->count();
+                    ->where('name', $metaField)
+                    ->where('transaction_journal_id', $journalId)
+                    ->whereNull('deleted_at')
+                    ->count()
+                ;
 
                 return 1 === $count;
             }
@@ -157,9 +161,9 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalArrayAmount(array $array): string
     {
-        $type    = $array['transaction_type_type'] ?? TransactionTypeEnum::WITHDRAWAL->value;
-        $amount  = $array['foreign_amount'] ?? '0';
-        $colored = true;
+        $type       = $array['transaction_type_type'] ?? TransactionTypeEnum::WITHDRAWAL->value;
+        $amount     = $array['foreign_amount'] ?? '0';
+        $colored    = true;
 
         $sourceType = $array['source_account_type'] ?? 'invalid';
         $amount     = $this->signAmount($amount, $type, $sourceType);
@@ -167,7 +171,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
+        $result     = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -180,7 +184,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function foreignJournalObjectAmount(TransactionJournal $journal): string
     {
-        $type = $journal->transactionType->type;
+        $type       = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -189,12 +193,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account->accountType()->first()->type;
 
-        $amount = $this->signAmount($amount, $type, $sourceType);
+        $amount     = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -225,7 +229,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
+        $result     = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -238,7 +242,7 @@ class TransactionGroupTwig extends AbstractExtension
      */
     private function normalJournalObjectAmount(TransactionJournal $journal): string
     {
-        $type = $journal->transactionType->type;
+        $type       = $journal->transactionType->type;
 
         /** @var Transaction $first */
         $first      = $journal->transactions()->where('amount', '<', 0)->first();
@@ -247,12 +251,12 @@ class TransactionGroupTwig extends AbstractExtension
         $colored    = true;
         $sourceType = $first->account->accountType()->first()->type;
 
-        $amount = $this->signAmount($amount, $type, $sourceType);
+        $amount     = $this->signAmount($amount, $type, $sourceType);
 
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }

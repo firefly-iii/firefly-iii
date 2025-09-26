@@ -79,7 +79,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     }
 
     #[Override]
-    public function enrichSingle(array | Model $model): array | Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);

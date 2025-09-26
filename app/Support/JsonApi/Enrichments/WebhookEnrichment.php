@@ -66,7 +66,7 @@ class WebhookEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(array | Model $model): array | Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);

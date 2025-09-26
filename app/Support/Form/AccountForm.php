@@ -62,9 +62,9 @@ class AccountForm
      */
     public function activeWithdrawalDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
-        $types      = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::EXPENSE->value];
-        $repository = $this->getAccountRepository();
-        $grouped    = $this->getAccountsGrouped($types, $repository);
+        $types                    = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::EXPENSE->value];
+        $repository               = $this->getAccountRepository();
+        $grouped                  = $this->getAccountsGrouped($types, $repository);
 
         $cash                     = $repository->getCashAccount();
         $key                      = (string)trans('firefly.cash_account_type');
@@ -80,15 +80,15 @@ class AccountForm
      */
     public function assetAccountCheckList(string $name, ?array $options = null): string
     {
-        $options  ??= [];
+        $options ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = request()->old($name) ?? [];
 
         // get all asset accounts:
-        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value];
-        $grouped = $this->getAccountsGrouped($types);
+        $types    = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value];
+        $grouped  = $this->getAccountsGrouped($types);
 
         unset($options['class']);
 
@@ -154,7 +154,7 @@ class AccountForm
 
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role = (string)$repository->getMetaValue($account, 'account_role');
+            $role                        = (string)$repository->getMetaValue($account, 'account_role');
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = sprintf('l_%s', $account->accountType->type);
             }

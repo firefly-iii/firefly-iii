@@ -74,8 +74,8 @@ trait RuleManagement
     protected function getPreviousTriggers(Request $request): array
     {
         // TODO duplicated code.
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators       = config('search.operators');
+        $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -129,7 +129,7 @@ trait RuleManagement
         }
         asort($triggers);
 
-        $index = 0;
+        $index           = 0;
         foreach ($submittedOperators as $operator) {
             $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
             $needsContext = (bool)config(sprintf('search.operators.%s.needs_context', $rootOperator));

@@ -75,14 +75,14 @@ trait ModelInformation
     protected function getLiabilityTypes(): array
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository     = app(AccountRepositoryInterface::class);
 
         // types of liability:
         /** @var AccountType $debt */
-        $debt = $repository->getAccountTypeByType(AccountTypeEnum::DEBT->value);
+        $debt           = $repository->getAccountTypeByType(AccountTypeEnum::DEBT->value);
 
         /** @var AccountType $loan */
-        $loan = $repository->getAccountTypeByType(AccountTypeEnum::LOAN->value);
+        $loan           = $repository->getAccountTypeByType(AccountTypeEnum::LOAN->value);
 
         /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountTypeEnum::MORTGAGE->value);
@@ -114,8 +114,8 @@ trait ModelInformation
     protected function getTriggersForBill(Bill $bill): array // get info and argument
     {
         // TODO duplicate code
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators    = config('search.operators');
+        $triggers     = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -165,8 +165,8 @@ trait ModelInformation
     private function getTriggersForJournal(TransactionJournal $journal): array
     {
         // TODO duplicated code.
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators               = config('search.operators');
+        $triggers                = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -174,18 +174,18 @@ trait ModelInformation
         }
         asort($triggers);
 
-        $result          = [];
-        $journalTriggers = [];
-        $values          = [];
-        $index           = 0;
+        $result                  = [];
+        $journalTriggers         = [];
+        $values                  = [];
+        $index                   = 0;
 
         // amount, description, category, budget, tags, source, destination, notes, currency type
         // ,type
         /** @var null|Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source                  = $journal->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination             = $journal->transactions()->where('amount', '>', 0)->first();
         if (null === $destination || null === $source) {
             return $result;
         }
@@ -220,21 +220,21 @@ trait ModelInformation
         ++$index;
 
         // category (if)
-        $category = $journal->categories()->first();
+        $category                = $journal->categories()->first();
         if (null !== $category) {
             $journalTriggers[$index] = 'category_is';
             $values[$index]          = $category->name;
             ++$index;
         }
         // budget (if)
-        $budget = $journal->budgets()->first();
+        $budget                  = $journal->budgets()->first();
         if (null !== $budget) {
             $journalTriggers[$index] = 'budget_is';
             $values[$index]          = $budget->name;
             ++$index;
         }
         // tags (if)
-        $tags = $journal->tags()->get();
+        $tags                    = $journal->tags()->get();
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
@@ -243,7 +243,7 @@ trait ModelInformation
             ++$index;
         }
         // notes (if)
-        $notes = $journal->notes()->first();
+        $notes                   = $journal->notes()->first();
         if (null !== $notes) {
             $journalTriggers[$index] = 'notes_is';
             $values[$index]          = $notes->text;
