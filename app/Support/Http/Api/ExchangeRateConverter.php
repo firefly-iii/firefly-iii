@@ -99,8 +99,8 @@ class ExchangeRateConverter
      */
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
-        $key    = $this->getCacheKey($from, $to, $date);
-        $res    = Cache::get($key, null);
+        $key = $this->getCacheKey($from, $to, $date);
+        $res = Cache::get($key, null);
 
         // find in cache
         if (null !== $res) {
@@ -110,7 +110,7 @@ class ExchangeRateConverter
         }
 
         // find in database
-        $rate   = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($from->id, $to->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             Cache::forever($key, $rate);
             Log::debug(sprintf('ExchangeRateConverter: Return DB rate from %s to %s on %s.', $from->code, $to->code, $date->format('Y-m-d')));
@@ -119,7 +119,7 @@ class ExchangeRateConverter
         }
 
         // find reverse in database
-        $rate   = $this->getFromDB($to->id, $from->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($to->id, $from->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             $rate = bcdiv('1', $rate);
             Cache::forever($key, $rate);
@@ -159,7 +159,7 @@ class ExchangeRateConverter
 
             return '1';
         }
-        $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
+        $key = sprintf('cer-%d-%d-%s', $from, $to, $date);
 
         // perhaps the rate has been cached during this particular run
         $preparedRate = $this->prepared[$date][$from][$to] ?? null;
@@ -169,7 +169,7 @@ class ExchangeRateConverter
             return $preparedRate;
         }
 
-        $cache        = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($key);
         if ($cache->has()) {
             $rate = $cache->get();
@@ -182,15 +182,14 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result       = $this->userGroup->currencyExchangeRates()
-            ->where('from_currency_id', $from)
-            ->where('to_currency_id', $to)
-            ->where('date', '<=', $date)
-            ->orderBy('date', 'DESC')
-            ->first()
-        ;
+        $result = $this->userGroup->currencyExchangeRates()
+                                  ->where('from_currency_id', $from)
+                                  ->where('to_currency_id', $to)
+                                  ->where('date', '<=', $date)
+                                  ->orderBy('date', 'DESC')
+                                  ->first();
         ++$this->queryCount;
-        $rate         = (string) $result?->rate;
+        $rate = (string)$result?->rate;
 
         if ('' === $rate) {
             app('log')->debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
@@ -230,13 +229,13 @@ class ExchangeRateConverter
         if ($euroId === $currency->id) {
             return '1';
         }
-        $rate   = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
 
         if (null !== $rate) {
             //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
-        $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
+        $rate = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
             //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
@@ -245,7 +244,7 @@ class ExchangeRateConverter
         // grab backup values from config file:
         $backup = config(sprintf('cer.rates.%s', $currency->code));
         if (null !== $backup) {
-            return bcdiv('1', (string) $backup);
+            return bcdiv('1', (string)$backup);
             // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
             // return $backup;
         }
@@ -263,9 +262,9 @@ class ExchangeRateConverter
         $cache = new CacheProperties();
         $cache->addProperty('cer-euro-id');
         if ($cache->has()) {
-            return (int) $cache->get();
+            return (int)$cache->get();
         }
-        $euro  = Amount::getTransactionCurrencyByCode('EUR');
+        $euro = Amount::getTransactionCurrencyByCode('EUR');
         ++$this->queryCount;
         $cache->store($euro->id);
 

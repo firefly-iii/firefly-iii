@@ -39,7 +39,7 @@ trait CollectsAccountsFromFilter
         // always collect from the query parameter, even when it's empty.
         if (null !== $queryParameters['accounts']) {
             foreach ($queryParameters['accounts'] as $accountId) {
-                $account = $this->repository->find((int) $accountId);
+                $account = $this->repository->find((int)$accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }

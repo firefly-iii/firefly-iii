@@ -40,13 +40,13 @@ trait DateCalculation
      */
     public function activeDaysLeft(Carbon $start, Carbon $end): int
     {
-        $difference = (int) ($start->diffInDays($end, true) + 1);
+        $difference = (int)($start->diffInDays($end, true) + 1);
         $today      = today(config('app.timezone'))->startOfDay();
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $today->diffInDays($end) + 1;
         }
 
-        return (int) (0 === $difference ? 1 : $difference);
+        return (int)(0 === $difference ? 1 : $difference);
     }
 
     /**
@@ -63,7 +63,7 @@ trait DateCalculation
             $difference = $start->diffInDays($today, true) + 1;
         }
 
-        return (int) $difference;
+        return (int)$difference;
     }
 
     protected function calculateStep(Carbon $start, Carbon $end): string
@@ -90,19 +90,19 @@ trait DateCalculation
     protected function getNextPeriods(Carbon $date, string $range): array
     {
         // select thing for next 12 periods:
-        $loop    = [];
+        $loop = [];
 
         /** @var Carbon $current */
         $current = app('navigation')->startOfPeriod($date, $range);
         $current = app('navigation')->endOfPeriod($current, $range);
         $current->addDay();
-        $count   = 0;
+        $count = 0;
 
         while ($count < 12) {
             $current      = app('navigation')->endOfPeriod($current, $range);
             $currentStart = app('navigation')->startOfPeriod($current, $range);
 
-            $loop[]       = [
+            $loop[] = [
                 'label' => $current->format('Y-m-d'),
                 'title' => app('navigation')->periodShow($current, $range),
                 'start' => clone $currentStart,
@@ -122,7 +122,7 @@ trait DateCalculation
     protected function getPreviousPeriods(Carbon $date, string $range): array
     {
         // select thing for last 12 periods:
-        $loop    = [];
+        $loop = [];
 
         /** @var Carbon $current */
         $current = app('navigation')->startOfPeriod($date, $range);
