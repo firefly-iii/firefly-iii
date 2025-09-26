@@ -74,4 +74,9 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface
     {
         return $model->primaryPeriodStatistics()->where('start', '>=', $start)->where('end', '<=', $end)->get();
     }
+
+    public function deleteStatisticsForModel(Model $model, Carbon $date): void
+    {
+        $model->primaryPeriodStatistics()->where('start', '<=', $date)->where('end', '>=', $date)->delete();
+    }
 }

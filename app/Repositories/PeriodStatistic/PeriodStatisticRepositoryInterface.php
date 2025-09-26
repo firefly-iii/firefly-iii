@@ -37,4 +37,6 @@ interface PeriodStatisticRepositoryInterface
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
 
     public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection;
+
+    public function deleteStatisticsForModel(Model $model, Carbon $date): void;
 }
