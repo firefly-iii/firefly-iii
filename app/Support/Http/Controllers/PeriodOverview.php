@@ -330,7 +330,7 @@ trait PeriodOverview
         $types              = ['spent', 'earned', 'transferred_in', 'transferred_away'];
         $return             = [
             'title'              => Navigation::periodShow($start, $period),
-            'route'              => route('accounts.show', [$account->id, $start->format('Y-m-d'), $start->format('Y-m-d')]),
+            'route'              => route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]),
             'total_transactions' => 0,
         ];
         $this->transactions = [];
