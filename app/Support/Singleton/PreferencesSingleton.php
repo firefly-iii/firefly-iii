@@ -29,7 +29,7 @@ class PreferencesSingleton
 {
     private static ?PreferencesSingleton $instance = null;
 
-    private array $preferences = [];
+    private array $preferences                     = [];
 
     private function __construct()
     {

@@ -39,7 +39,7 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff3-config-' . $name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -53,7 +53,7 @@ class FireflyConfig
      */
     public function get(string $name, mixed $default = null): ?Configuration
     {
-        $fullName = 'ff3-config-' . $name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -61,7 +61,7 @@ class FireflyConfig
         try {
             /** @var null|Configuration $config */
             $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (Exception | QueryException $e) {
+        } catch (Exception|QueryException $e) {
             throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
         }
 
@@ -146,13 +146,13 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff3-config-' . $name);
+            Cache::forget('ff3-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff3-config-' . $name);
+        Cache::forget('ff3-config-'.$name);
 
         return $config;
     }

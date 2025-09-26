@@ -48,12 +48,13 @@ class Preferences
         }
 
         return Preference::where('user_id', $user->id)
-                         ->where('name', '!=', 'currencyPreference')
-                         ->where(function (Builder $q) use ($user): void {
-                             $q->whereNull('user_group_id');
-                             $q->orWhere('user_group_id', $user->user_group_id);
-                         })
-                         ->get();
+            ->where('name', '!=', 'currencyPreference')
+            ->where(function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->get()
+        ;
     }
 
     public function beginsWith(User $user, string $search): Collection
@@ -89,7 +90,7 @@ class Preferences
         Cache::put($key, '', 5);
     }
 
-    public function get(string $name, array | bool | int | string | null $default = null): ?Preference
+    public function get(string $name, array|bool|int|string|null $default = null): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -107,12 +108,13 @@ class Preferences
     {
         $result      = [];
         $preferences = Preference::where('user_id', $user->id)
-                                 ->where(function (Builder $q) use ($user): void {
-                                     $q->whereNull('user_group_id');
-                                     $q->orWhere('user_group_id', $user->user_group_id);
-                                 })
-                                 ->whereIn('name', $list)
-                                 ->get(['id', 'name', 'data']);
+            ->where(function (Builder $q) use ($user): void {
+                $q->whereNull('user_group_id');
+                $q->orWhere('user_group_id', $user->user_group_id);
+            })
+            ->whereIn('name', $list)
+            ->get(['id', 'name', 'data'])
+        ;
 
         /** @var Preference $preference */
         foreach ($preferences as $preference) {
@@ -154,7 +156,7 @@ class Preferences
         return $result;
     }
 
-    public function getEncryptedForUser(User $user, string $name, array | bool | int | string | null $default = null): ?Preference
+    public function getEncryptedForUser(User $user, string $name, array|bool|int|string|null $default = null): ?Preference
     {
         $result = $this->getForUser($user, $name, $default);
         if ('' === $result->data) {
@@ -179,7 +181,7 @@ class Preferences
         return $result;
     }
 
-    public function getForUser(User $user, string $name, array | bool | int | string | null $default = null): ?Preference
+    public function getForUser(User $user, string $name, array|bool|int|string|null $default = null): ?Preference
     {
         // Log::debug(sprintf('getForUser(#%d, "%s")', $user->id, $name));
         // don't care about user group ID, except for some specific preferences.
@@ -190,7 +192,7 @@ class Preferences
             $query->where('user_group_id', $userGroupId);
         }
 
-        $preference = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
+        $preference  = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $preference && null === $preference->data) {
             $preference->delete();
@@ -214,7 +216,7 @@ class Preferences
         return $this->setForUser($user, $name, $default);
     }
 
-    public function getFresh(string $name, array | bool | int | string | null $default = null): ?Preference
+    public function getFresh(string $name, array|bool|int|string|null $default = null): ?Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -233,8 +235,8 @@ class Preferences
      */
     public function lastActivity(): string
     {
-        $instance = PreferencesSingleton::getInstance();
-        $pref     = $instance->getPreference('last_activity');
+        $instance     = PreferencesSingleton::getInstance();
+        $pref         = $instance->getPreference('last_activity');
         if (null !== $pref) {
             // Log::debug(sprintf('Found last activity in singleton: %s', $pref));
             return $pref;
@@ -248,7 +250,7 @@ class Preferences
         if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
-        $setting = hash('sha256', (string)$lastActivity);
+        $setting      = hash('sha256', (string)$lastActivity);
         $instance->setPreference('last_activity', $setting);
 
         return $setting;
@@ -262,7 +264,7 @@ class Preferences
         Session::forget('first');
     }
 
-    public function set(string $name, array | bool | int | string | null $value): Preference
+    public function set(string $name, array|bool|int|string|null $value): Preference
     {
         /** @var null|User $user */
         $user = auth()->user();
@@ -291,21 +293,21 @@ class Preferences
         return $this->set($name, $encrypted);
     }
 
-    public function setForUser(User $user, string $name, array | bool | int | string | null $value): Preference
+    public function setForUser(User $user, string $name, array|bool|int|string|null $value): Preference
     {
-        $fullName    = sprintf('preference%s%s', $user->id, $name);
-        $userGroupId = $this->getUserGroupId($user, $name);
-        $userGroupId = 0 === (int)$userGroupId ? null : (int)$userGroupId;
+        $fullName         = sprintf('preference%s%s', $user->id, $name);
+        $userGroupId      = $this->getUserGroupId($user, $name);
+        $userGroupId      = 0 === (int)$userGroupId ? null : (int)$userGroupId;
 
         Cache::forget($fullName);
 
-        $query = Preference::where('user_id', $user->id)->where('name', $name);
+        $query            = Preference::where('user_id', $user->id)->where('name', $name);
         if (null !== $userGroupId) {
             Log::debug('Include user group ID in query');
             $query->where('user_group_id', $userGroupId);
         }
 
-        $preference = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
+        $preference       = $query->first(['id', 'user_id', 'user_group_id', 'name', 'data', 'updated_at', 'created_at']);
 
         if (null !== $preference && null === $value) {
             $preference->delete();

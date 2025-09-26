@@ -70,7 +70,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var CreateAutoBudgetLimits $job */
-        $job = app(CreateAutoBudgetLimits::class, [$this->date]);
+        $job                = app(CreateAutoBudgetLimits::class, [$this->date]);
         $job->setDate($this->date);
         $job->handle();
 

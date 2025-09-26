@@ -32,6 +32,7 @@ use Gdbots\QueryParser\QueryParser as BaseQueryParser;
 use Illuminate\Support\Facades\Log;
 use LogicException;
 use TypeError;
+
 use function Safe\fwrite;
 
 class GdbotsQueryParser implements QueryParserInterface
@@ -51,12 +52,12 @@ class GdbotsQueryParser implements QueryParserInterface
         try {
             $result = $this->parser->parse($query);
             $nodes  = array_map(
-                fn(GdbotsNode\Node $node) => $this->convertNode($node),
+                fn (GdbotsNode\Node $node) => $this->convertNode($node),
                 $result->getNodes()
             );
 
             return new NodeGroup($nodes);
-        } catch (LogicException | TypeError $e) {
+        } catch (LogicException|TypeError $e) {
             fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
             app('log')->error($e->getMessage());
             app('log')->error(sprintf('Could not parse search: "%s".', $query));
@@ -84,7 +85,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
                 return new NodeGroup(
                     array_map(
-                        fn(GdbotsNode\Node $subNode) => $this->convertNode($subNode),
+                        fn (GdbotsNode\Node $subNode) => $this->convertNode($subNode),
                         $node->getNodes()
                     )
                 );

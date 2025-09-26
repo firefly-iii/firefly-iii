@@ -52,6 +52,4 @@ class PeriodStatistic extends Model
         return $this->morphTo();
 
     }
-
-
 }

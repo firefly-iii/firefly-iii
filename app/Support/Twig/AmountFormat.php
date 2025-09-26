@@ -145,13 +145,13 @@ class AmountFormat extends AbstractExtension
             static function (string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string {
 
                 if (null === $symbol) {
-                    $message = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
+                    $message  = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
                     Log::error($message);
                     $currency = Amount::getPrimaryCurrency();
                 }
                 if (null !== $symbol) {
-                    $decimalPlaces            ??= 2;
-                    $coloured                 ??= true;
+                    $decimalPlaces ??= 2;
+                    $coloured      ??= true;
                     $currency                 = new TransactionCurrency();
                     $currency->symbol         = $symbol;
                     $currency->decimal_places = $decimalPlaces;

@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Crypt;
 use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 
@@ -65,7 +66,7 @@ class OAuthKeys
             try {
                 $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
                 $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
-            } catch (ContainerExceptionInterface | FireflyException | NotFoundExceptionInterface $e) {
+            } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
             }
@@ -98,8 +99,8 @@ class OAuthKeys
 
             return false;
         }
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
+        $private    = storage_path('oauth-private.key');
+        $public     = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 

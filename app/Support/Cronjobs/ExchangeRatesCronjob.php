@@ -71,7 +71,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var DownloadExchangeRates $job */
-        $job = app(DownloadExchangeRates::class);
+        $job                = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
         $job->handle();
 
