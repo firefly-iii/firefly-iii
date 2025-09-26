@@ -22,8 +22,8 @@ class PeriodStatistic extends Model
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
             'deleted_at'    => 'datetime',
-            'start' => SeparateTimezoneCaster::class,
-            'end'   => SeparateTimezoneCaster::class,
+            'start'         => SeparateTimezoneCaster::class,
+            'end'           => SeparateTimezoneCaster::class,
         ];
     }
 
@@ -54,6 +54,4 @@ class PeriodStatistic extends Model
         return $this->morphTo();
 
     }
-
-
 }

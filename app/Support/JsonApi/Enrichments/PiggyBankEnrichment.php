@@ -43,13 +43,13 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEnrichment implements EnrichmentInterface
 {
-    private array      $accountIds  = [];      // @phpstan-ignore-line
-    private array      $accounts    = [];      // @phpstan-ignore-line
-    private array      $amounts     = [];
+    private array      $accountIds                      = [];      // @phpstan-ignore-line
+    private array      $accounts                        = [];      // @phpstan-ignore-line
+    private array      $amounts                         = [];
     private Collection $collection;
-    private array      $currencies  = [];
-    private array      $currencyIds = [];
-    private array      $ids         = [];
+    private array      $currencies                      = [];
+    private array      $currencyIds                     = [];
+    private array      $ids                             = [];
     // private array               $accountCurrencies = [];
     private array                        $mappedObjects = [];
     private array                        $notes         = [];
@@ -77,7 +77,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(array | Model $model): array | Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -100,14 +100,14 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (PiggyBank $item) {
-            $id           = (int)$item->id;
-            $currencyId   = (int)$item->transaction_currency_id;
-            $currency     = $this->currencies[$currencyId] ?? $this->primaryCurrency;
-            $targetAmount = null;
+            $id                        = (int)$item->id;
+            $currencyId                = (int)$item->transaction_currency_id;
+            $currency                  = $this->currencies[$currencyId] ?? $this->primaryCurrency;
+            $targetAmount              = null;
             if (0 !== bccomp($item->target_amount, '0')) {
                 $targetAmount = $item->target_amount;
             }
-            $meta = [
+            $meta                      = [
                 'notes'              => $this->notes[$id] ?? null,
                 'currency'           => $this->currencies[$currencyId] ?? null,
                 //                'auto_budget' => $this->autoBudgets[$id] ?? null,
@@ -136,17 +136,17 @@ class PiggyBankEnrichment implements EnrichmentInterface
             }
             // add current amount(s).
             foreach ($this->amounts[$id] as $accountId => $row) {
-                $meta['accounts'][]     = [
+                $meta['accounts'][]        = [
                     'account_id'        => (string)$accountId,
                     'name'              => $this->accounts[$accountId]['name'] ?? '',
                     'current_amount'    => Steam::bcround($row['current_amount'], $currency->decimal_places),
                     'pc_current_amount' => Steam::bcround($row['pc_current_amount'], $this->primaryCurrency->decimal_places),
                 ];
-                $meta['current_amount'] = bcadd($meta['current_amount'], $row['current_amount']);
+                $meta['current_amount']    = bcadd($meta['current_amount'], $row['current_amount']);
                 // only add pc_current_amount when the pc_current_amount is set
                 $meta['pc_current_amount'] = null === $row['pc_current_amount'] ? null : bcadd($meta['pc_current_amount'], $row['pc_current_amount']);
             }
-            $meta['current_amount'] = Steam::bcround($meta['current_amount'], $currency->decimal_places);
+            $meta['current_amount']    = Steam::bcround($meta['current_amount'], $currency->decimal_places);
             // only round this number when pc_current_amount is set.
             $meta['pc_current_amount'] = null === $meta['pc_current_amount'] ? null : Steam::bcround($meta['pc_current_amount'], $this->primaryCurrency->decimal_places);
 
@@ -160,7 +160,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $meta['save_per_month']    = Steam::bcround($this->getSuggestedMonthlyAmount($item->start_date, $item->target_date, $meta['target_amount'], $meta['current_amount']), $currency->decimal_places);
             $meta['pc_save_per_month'] = Steam::bcround($this->getSuggestedMonthlyAmount($item->start_date, $item->target_date, $meta['pc_target_amount'], $meta['pc_current_amount']), $currency->decimal_places);
 
-            $item->meta = $meta;
+            $item->meta                = $meta;
 
             return $item;
         });
@@ -176,7 +176,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
             $this->ids[]            = $id;
             $this->currencyIds[$id] = (int)$piggy->transaction_currency_id;
         }
-        $this->ids = array_unique($this->ids);
+        $this->ids  = array_unique($this->ids);
 
         // collect currencies.
         $currencies = TransactionCurrency::whereIn('id', $this->currencyIds)->get();
@@ -185,10 +185,10 @@ class PiggyBankEnrichment implements EnrichmentInterface
         }
 
         // collect accounts
-        $set = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->ids)->get(['piggy_bank_id', 'account_id', 'current_amount', 'native_current_amount']);
+        $set        = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->ids)->get(['piggy_bank_id', 'account_id', 'current_amount', 'native_current_amount']);
         foreach ($set as $item) {
-            $id                 = (int)$item->piggy_bank_id;
-            $accountId          = (int)$item->account_id;
+            $id                                               = (int)$item->piggy_bank_id;
+            $accountId                                        = (int)$item->account_id;
             $this->amounts[$id] ??= [];
             if (!array_key_exists($id, $this->accountIds)) {
                 $this->accountIds[$id] = (int)$item->account_id;
@@ -206,7 +206,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         }
 
         // get account currency preference for ALL.
-        $set = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
+        $set        = AccountMeta::whereIn('account_id', array_values($this->accountIds))->where('name', 'currency_id')->get();
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {
@@ -219,7 +219,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         }
 
         // get account info.
-        $set = Account::whereIn('id', array_values($this->accountIds))->get();
+        $set        = Account::whereIn('id', array_values($this->accountIds))->get();
 
         /** @var Account $item */
         foreach ($set as $item) {
@@ -234,9 +234,10 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', PiggyBank::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', PiggyBank::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -245,12 +246,13 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
     private function collectObjectGroups(): void
     {
-        $set = DB::table('object_groupables')
-                 ->whereIn('object_groupable_id', $this->ids)
-                 ->where('object_groupable_type', PiggyBank::class)
-                 ->get(['object_groupable_id', 'object_group_id']);
+        $set    = DB::table('object_groupables')
+            ->whereIn('object_groupable_id', $this->ids)
+            ->where('object_groupable_type', PiggyBank::class)
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;

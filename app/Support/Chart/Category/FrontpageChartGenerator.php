@@ -65,16 +65,16 @@ class FrontpageChartGenerator
     public function generate(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $categories = $this->repository->getCategories();
-        $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
-        $collection = $this->collectExpensesAll($categories, $accounts);
+        $categories   = $this->repository->getCategories();
+        $accounts     = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);
+        $collection   = $this->collectExpensesAll($categories, $accounts);
 
         // collect for no-category:
-        $noCategory = $this->collectNoCatExpenses($accounts);
-        $collection = array_merge($collection, $noCategory);
+        $noCategory   = $this->collectNoCatExpenses($accounts);
+        $collection   = array_merge($collection, $noCategory);
 
         // sort temp array by amount.
-        $amounts = array_column($collection, 'sum_float');
+        $amounts      = array_column($collection, 'sum_float');
         array_multisort($amounts, SORT_ASC, $collection);
 
         $currencyData = $this->createCurrencyGroups($collection);

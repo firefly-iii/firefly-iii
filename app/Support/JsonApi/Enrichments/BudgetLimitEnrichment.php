@@ -73,7 +73,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(array | Model $model): array | Model
+    public function enrichSingle(array|Model $model): array|Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -115,12 +115,12 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectBudgets(): void
     {
-        $budgetIds = $this->collection->pluck('budget_id')->unique()->toArray();
-        $budgets   = Budget::whereIn('id', $budgetIds)->get();
+        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
+        $budgets    = Budget::whereIn('id', $budgetIds)->get();
 
         $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
+        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
@@ -151,8 +151,8 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectIds(): void
     {
-        $this->start = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
-        $this->end   = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
+        $this->start       = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
+        $this->end         = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
 
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
@@ -169,9 +169,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-                     ->whereNotNull('notes.text')
-                     ->where('notes.text', '!=', '')
-                     ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -180,7 +181,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        $result = array_filter($expenses, fn(array $item) => (int)$item['budget_id'] === $budget);
+        $result = array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
         Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
 
         return $result;
@@ -188,13 +189,13 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses = array_map(fn($first) => array_map(function ($second) {
+        $this->expenses   = array_map(fn ($first) => array_map(function ($second) {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);
 
-        $this->pcExpenses = array_map(fn($first) => array_map(function ($second) {
+        $this->pcExpenses = array_map(fn ($first) => array_map(function ($second) {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;

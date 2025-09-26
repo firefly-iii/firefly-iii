@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\preg_replace;
 
 /**
@@ -147,15 +148,15 @@ trait ConvertsDataTypes
     public function convertSortParameters(string $field, string $class): array
     {
         // assume this all works, because the validator would have caught any errors.
-        $parameter = (string)request()->query->get($field);
+        $parameter      = (string)request()->query->get($field);
         if ('' === $parameter) {
             return [];
         }
         $parts          = explode(',', $parameter);
         $sortParameters = [];
         foreach ($parts as $part) {
-            $part      = trim($part);
-            $direction = 'asc';
+            $part             = trim($part);
+            $direction        = 'asc';
             if ('-' === $part[0]) {
                 $part      = substr($part, 1);
                 $direction = 'desc';
@@ -459,7 +460,7 @@ trait ConvertsDataTypes
             if (!is_array($entry)) {
                 continue;
             }
-            $amount = null;
+            $amount   = null;
             if (array_key_exists('current_amount', $entry)) {
                 $amount = $this->clearString((string)($entry['current_amount'] ?? '0'));
                 if (null === $entry['current_amount']) {

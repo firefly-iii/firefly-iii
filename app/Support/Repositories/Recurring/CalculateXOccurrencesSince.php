@@ -87,7 +87,7 @@ trait CalculateXOccurrencesSince
                 ++$total;
             }
             ++$attempts;
-            $mutator = $mutator->endOfMonth()->addDay();
+            $mutator      = $mutator->endOfMonth()->addDay();
         }
         Log::debug('Collected enough occurrences.');
 
@@ -103,10 +103,10 @@ trait CalculateXOccurrencesSince
     protected function getXNDomOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $return   = [];
-        $total    = 0;
-        $attempts = 0;
-        $mutator  = clone $date;
+        $return     = [];
+        $total      = 0;
+        $attempts   = 0;
+        $mutator    = clone $date;
         $mutator->addDay(); // always assume today has passed.
         $mutator->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
@@ -137,15 +137,15 @@ trait CalculateXOccurrencesSince
     protected function getXWeeklyOccurrencesSince(Carbon $date, Carbon $afterDate, int $count, int $skipMod, string $moment): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $return   = [];
-        $total    = 0;
-        $attempts = 0;
-        $mutator  = clone $date;
+        $return        = [];
+        $total         = 0;
+        $attempts      = 0;
+        $mutator       = clone $date;
         // monday = 1
         // sunday = 7
         // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
         // $mutator->addDay(); // always assume today has passed.
-        $dayOfWeek = (int)$moment;
+        $dayOfWeek     = (int)$moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $mutator->addWeek();
@@ -189,7 +189,7 @@ trait CalculateXOccurrencesSince
             $date->addYear();
             Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
         }
-        $obj = clone $date;
+        $obj        = clone $date;
         while ($total < $count) {
             Log::debug(sprintf('total (%d) < count (%d) so go.', $total, $count));
             Log::debug(sprintf('attempts (%d) %% skipmod (%d) === %d', $attempts, $skipMod, $attempts % $skipMod));

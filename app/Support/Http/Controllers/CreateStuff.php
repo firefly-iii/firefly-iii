@@ -32,6 +32,7 @@ use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
+
 use function Safe\file_put_contents;
 
 /**
@@ -103,7 +104,7 @@ trait CreateStuff
             return;
         }
 
-        $key = RSA::createKey(4096);
+        $key                      = RSA::createKey(4096);
 
         Log::alert('NO OAuth keys were found. They have been created.');
 

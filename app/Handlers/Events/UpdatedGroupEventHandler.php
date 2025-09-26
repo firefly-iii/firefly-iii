@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
@@ -63,6 +62,7 @@ class UpdatedGroupEventHandler
     {
         /** @var PeriodStatisticRepositoryInterface $repository */
         $repository = app(PeriodStatisticRepositoryInterface::class);
+
         /** @var TransactionJournal $journal */
         foreach ($event->transactionGroup->transactionJournals as $journal) {
             $source = $journal->transactions()->where('amount', '<', '0')->first();

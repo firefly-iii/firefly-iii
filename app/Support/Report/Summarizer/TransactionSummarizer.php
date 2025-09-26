@@ -48,14 +48,14 @@ class TransactionSummarizer
         Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s", %s)', count($journals), $method, var_export($includeForeign, true)));
         $array = [];
         foreach ($journals as $journal) {
-            $field = 'amount';
+            $field                        = 'amount';
 
             // grab default currency information.
-            $currencyId            = (int)$journal['currency_id'];
-            $currencyName          = $journal['currency_name'];
-            $currencySymbol        = $journal['currency_symbol'];
-            $currencyCode          = $journal['currency_code'];
-            $currencyDecimalPlaces = $journal['currency_decimal_places'];
+            $currencyId                   = (int)$journal['currency_id'];
+            $currencyName                 = $journal['currency_name'];
+            $currencySymbol               = $journal['currency_symbol'];
+            $currencyCode                 = $journal['currency_code'];
+            $currencyDecimalPlaces        = $journal['currency_decimal_places'];
 
             // prepare foreign currency info:
             $foreignCurrencyId            = 0;
@@ -102,7 +102,7 @@ class TransactionSummarizer
             }
 
             // first process normal amount
-            $amount             = (string)($journal[$field] ?? '0');
+            $amount                       = (string)($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
@@ -121,7 +121,7 @@ class TransactionSummarizer
 
             // then process foreign amount, if it exists.
             if (0 !== $foreignCurrencyId && true === $includeForeign) {
-                $amount                    = (string)($journal['foreign_amount'] ?? '0');
+                $amount = (string)($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignCurrencyId,
@@ -179,7 +179,7 @@ class TransactionSummarizer
             if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
-            $key = sprintf('%s-%s', $journal[$idKey], $currencyId);
+            $key                   = sprintf('%s-%s', $journal[$idKey], $currencyId);
             // sum it all up or create a new array.
             $array[$key] ??= [
                 'id'                      => $journal[$idKey],
@@ -193,7 +193,7 @@ class TransactionSummarizer
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum'] = bcadd($array[$key]['sum'], Steam::{$method}((string)($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            $array[$key]['sum']    = bcadd($array[$key]['sum'], Steam::{$method}((string)($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
 
             // also do foreign amount, but only when convertToPrimary is false (otherwise we have it already)
@@ -201,7 +201,7 @@ class TransactionSummarizer
             if ((!$convertToPrimary || $journal['foreign_currency_id'] !== $primary->id) && 0 !== (int)$journal['foreign_currency_id']) {
                 Log::debug(sprintf('Use foreign amount from transaction #%d: %s %s. Sum: %s', $journal['transaction_group_id'], $currencyCode, $journal['foreign_amount'], $array[$key]['sum']));
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
-                $array[$key]        ??= [
+                $array[$key] ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
                     'sum'                     => '0',
