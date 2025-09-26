@@ -590,6 +590,11 @@ class Steam
      */
     public function getLocale(): string // get preference
     {
+        $singleton = PreferencesSingleton::getInstance();
+        $cached = $singleton->getPreference('locale');
+        if(null !== $cached) {
+            return $cached;
+        }
         $locale = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
         if (is_array($locale)) {
             $locale = 'equal';
@@ -601,9 +606,9 @@ class Steam
 
         // Check for Windows to replace the locale correctly.
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
-            return str_replace('_', '-', $locale);
+            $locale = str_replace('_', '-', $locale);
         }
-
+        $singleton->setPreference('locale', $locale);
         return $locale;
     }
 
