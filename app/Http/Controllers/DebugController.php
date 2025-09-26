@@ -30,6 +30,7 @@ use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
@@ -107,6 +108,8 @@ class DebugController extends Controller
         Artisan::call('config:clear');
         Artisan::call('route:clear');
         Artisan::call('view:clear');
+
+        PeriodStatistic::where('id','>',0)->delete();
 
         // also do some recalculations.
         Artisan::call('correction:recalculates-liabilities');

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('period_statistics', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->softDeletes();
             $table->integer('primary_statable_id', false, true)->nullable();
             $table->string('primary_statable_type', 255)->nullable();
 

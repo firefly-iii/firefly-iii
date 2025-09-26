@@ -14,14 +14,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class PeriodStatistic extends Model
 {
     use ReturnsIntegerUserIdTrait;
-    use SoftDeletes;
 
     protected function casts(): array
     {
         return [
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
-            'deleted_at'    => 'datetime',
             'start' => SeparateTimezoneCaster::class,
             'end'   => SeparateTimezoneCaster::class,
         ];
