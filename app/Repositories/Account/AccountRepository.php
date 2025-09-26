@@ -546,6 +546,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     #[Override]
     public function periodCollection(Account $account, Carbon $start, Carbon $end): array
     {
+        Log::debug(sprintf('periodCollection(#%d, %s, %s)', $account->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
         return $account->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')

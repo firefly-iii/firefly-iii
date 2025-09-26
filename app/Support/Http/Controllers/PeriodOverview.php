@@ -90,6 +90,9 @@ trait PeriodOverview
         $range                     = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
+        /** @var array $dates */
+        $dates = Navigation::blockPeriods($start, $end, $range);
+        [$start, $end] = $this->getPeriodFromBlocks($dates, $start, $end);
         $this->statistics = $this->periodStatisticRepo->allInRangeForModel($account, $start, $end);
 
         // TODO needs to be re-arranged:
@@ -97,10 +100,8 @@ trait PeriodOverview
         // loop blocks, an loop the types, and select the missing ones.
         // create new ones, or use collected.
 
-        /** @var array $dates */
-        $dates   = Navigation::blockPeriods($start, $end, $range);
+
         $entries = [];
-        $types   = ['spent', 'earned', 'transferred_in', 'transferred_away'];
         Log::debug(sprintf('Count of loops: %d', count($dates)));
         foreach ($dates as $currentDate) {
             $entries[] = $this->getSingleAccountPeriod($account, $currentDate['period'], $currentDate['start'], $currentDate['end']);
@@ -108,6 +109,25 @@ trait PeriodOverview
         Log::debug('End of getAccountPeriodOverview()');
 
         return $entries;
+    }
+
+    private function getPeriodFromBlocks(array $dates, Carbon $start, Carbon $end): array
+    {
+        Log::debug('Filter generated periods to select the oldest and newest date.');
+        foreach ($dates as $row) {
+            $currentStart = clone $row['start'];
+            $currentEnd   = clone $row['end'];
+            if ($currentStart->lt($start)) {
+                Log::debug(sprintf('New start: was %s, now %s', $start->format('Y-m-d'), $currentStart->format('Y-m-d')));
+                $start = $currentStart;
+            }
+            if ($currentEnd->gt($end)) {
+                Log::debug(sprintf('New end: was %s, now %s', $end->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+                $end = $currentEnd;
+            }
+        }
+
+        return [$start, $end];
     }
 
     /**
@@ -326,7 +346,7 @@ trait PeriodOverview
     {
         return $this->statistics->filter(
             function (PeriodStatistic $statistic) use ($start, $end, $type) {
-                if(
+                if (
                     !$statistic->end->equalTo($end)
                     && $statistic->end->format('Y-m-d H:i:s') === $end->format('Y-m-d H:i:s')
                 ) {
@@ -377,9 +397,9 @@ trait PeriodOverview
                     break;
             }
             // each result must be grouped by currency, then saved as period statistic.
+            Log::debug(sprintf('Going to group %d found journal(s)', count($result)));
             $grouped = $this->groupByCurrency($result);
 
-            // TODO save as statistic.
             $this->saveGroupedAsStatistics($account, $start, $end, $type, $grouped);
 
             return $grouped;
@@ -547,10 +567,12 @@ trait PeriodOverview
     protected function saveGroupedAsStatistics(Account $account, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
+        Log::debug(sprintf('saveGroupedAsStatistics(#%d, %s, %s, "%s", array(%d))', $account->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
         foreach ($array as $entry) {
             $this->periodStatisticRepo->saveStatistic($account, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
-        if(0 === count($array)) {
+        if (0 === count($array)) {
+            Log::debug('Save empty statistic.');
             $this->periodStatisticRepo->saveStatistic($account, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
         }
     }
