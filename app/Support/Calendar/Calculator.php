@@ -33,30 +33,9 @@ use SplObjectStorage;
  */
 class Calculator
 {
-    public const int DEFAULT_INTERVAL             = 1;
+    public const int DEFAULT_INTERVAL = 1;
     private static ?SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
     private static array             $intervals   = [];
-
-    /**
-     * @throws IntervalException
-     */
-    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
-    {
-        if (!self::isAvailablePeriodicity($periodicity)) {
-            throw IntervalException::unavailable($periodicity, self::$intervals);
-        }
-
-        /** @var Periodicity\Interval $periodicity */
-        $periodicity = self::$intervalMap->offsetGet($periodicity);
-        $interval    = $this->skipInterval($skipInterval);
-
-        return $periodicity->nextDate($epoch->clone(), $interval);
-    }
-
-    public function isAvailablePeriodicity(Periodicity $periodicity): bool
-    {
-        return self::containsInterval($periodicity);
-    }
 
     private static function containsInterval(Periodicity $periodicity): bool
     {
@@ -76,6 +55,27 @@ class Calculator
         }
 
         return self::$intervalMap;
+    }
+
+    public function isAvailablePeriodicity(Periodicity $periodicity): bool
+    {
+        return self::containsInterval($periodicity);
+    }
+
+    /**
+     * @throws IntervalException
+     */
+    public function nextDateByInterval(Carbon $epoch, Periodicity $periodicity, int $skipInterval = 0): Carbon
+    {
+        if (!self::isAvailablePeriodicity($periodicity)) {
+            throw IntervalException::unavailable($periodicity, self::$intervals);
+        }
+
+        /** @var Periodicity\Interval $periodicity */
+        $periodicity = self::$intervalMap->offsetGet($periodicity);
+        $interval    = $this->skipInterval($skipInterval);
+
+        return $periodicity->nextDate($epoch->clone(), $interval);
     }
 
     private function skipInterval(int $skip): int

@@ -40,9 +40,9 @@ class TagOrId implements BinderInterface
             $repository = app(TagRepositoryInterface::class);
             $repository->setUser(auth()->user());
 
-            $result     = $repository->findByTag($value);
+            $result = $repository->findByTag($value);
             if (null === $result) {
-                $result = $repository->find((int) $value);
+                $result = $repository->find((int)$value);
             }
             if (null !== $result) {
                 return $result;

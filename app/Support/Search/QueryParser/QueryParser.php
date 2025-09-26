@@ -46,22 +46,6 @@ class QueryParser implements QueryParserInterface
         return $this->buildNodeGroup(false);
     }
 
-    private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
-    {
-        $nodes      = [];
-        $nodeResult = $this->buildNextNode($isSubquery);
-
-        while ($nodeResult->node instanceof Node) {
-            $nodes[]    = $nodeResult->node;
-            if ($nodeResult->isSubqueryEnd) {
-                break;
-            }
-            $nodeResult = $this->buildNextNode($isSubquery);
-        }
-
-        return new NodeGroup($nodes, $prohibited);
-    }
-
     private function buildNextNode(bool $isSubquery): NodeResult
     {
         $tokenUnderConstruction = '';
@@ -155,7 +139,7 @@ class QueryParser implements QueryParserInterface
                     if ('' === $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
-                        $skipNext = true;
+                        $skipNext               = true;
                     }
                     if ('' !== $tokenUnderConstruction && !$skipNext) { // @phpstan-ignore-line
                         Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
@@ -187,11 +171,27 @@ class QueryParser implements QueryParserInterface
             ++$this->position;
         }
 
-        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName
+        $finalNode = '' !== $tokenUnderConstruction || '' !== $fieldName
             ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
             : null;
 
         return new NodeResult($finalNode, true);
+    }
+
+    private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
+    {
+        $nodes      = [];
+        $nodeResult = $this->buildNextNode($isSubquery);
+
+        while ($nodeResult->node instanceof Node) {
+            $nodes[] = $nodeResult->node;
+            if ($nodeResult->isSubqueryEnd) {
+                break;
+            }
+            $nodeResult = $this->buildNextNode($isSubquery);
+        }
+
+        return new NodeGroup($nodes, $prohibited);
     }
 
     private function createNode(string $token, string $fieldName, bool $prohibited): Node

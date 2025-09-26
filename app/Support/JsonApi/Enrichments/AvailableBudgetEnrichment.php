@@ -40,20 +40,20 @@ use Override;
 
 class AvailableBudgetEnrichment implements EnrichmentInterface
 {
-    private User                                   $user; // @phpstan-ignore-line
-    private UserGroup                              $userGroup;  // @phpstan-ignore-line
-    private readonly bool                                   $convertToPrimary;
-    private array                                  $ids                   = [];
-    private array                                  $currencyIds           = [];
+    private Collection                             $collection;        // @phpstan-ignore-line
+    private readonly bool                          $convertToPrimary;  // @phpstan-ignore-line
     private array                                  $currencies            = [];
-    private Collection                             $collection;
-    private array                                  $spentInBudgets        = [];
-    private array                                  $spentOutsideBudgets   = [];
-    private array                                  $pcSpentInBudgets      = [];
-    private array                                  $pcSpentOutsideBudgets = [];
+    private array                                  $currencyIds           = [];
+    private array                                  $ids                   = [];
     private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
     private readonly OperationsRepositoryInterface $opsRepository;
+    private array                                  $pcSpentInBudgets      = [];
+    private array                                  $pcSpentOutsideBudgets = [];
     private readonly BudgetRepositoryInterface     $repository;
+    private array                                  $spentInBudgets        = [];
+    private array                                  $spentOutsideBudgets   = [];
+    private User                                   $user;
+    private UserGroup                              $userGroup;
 
     public function __construct()
     {
@@ -79,7 +79,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     }
 
     #[Override]
-    public function enrichSingle(array|Model $model): array|Model
+    public function enrichSingle(array | Model $model): array | Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -102,6 +102,34 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $this->noBudgetRepository->setUserGroup($userGroup);
         $this->opsRepository->setUserGroup($userGroup);
         $this->repository->setUserGroup($userGroup);
+    }
+
+    private function appendCollectedData(): void
+    {
+        $this->collection = $this->collection->map(function (AvailableBudget $item) {
+            $id         = (int)$item->id;
+            $currencyId = $this->currencyIds[$id];
+            $currency   = $this->currencies[$currencyId];
+            $meta       = [
+                'currency'                 => $currency,
+                'spent_in_budgets'         => $this->spentInBudgets[$id] ?? [],
+                'pc_spent_in_budgets'      => $this->pcSpentInBudgets[$id] ?? [],
+                'spent_outside_budgets'    => $this->spentOutsideBudgets[$id] ?? [],
+                'pc_spent_outside_budgets' => $this->pcSpentOutsideBudgets[$id] ?? [],
+            ];
+            $item->meta = $meta;
+
+            return $item;
+        });
+    }
+
+    private function collectCurrencies(): void
+    {
+        $ids = array_unique(array_values($this->currencyIds));
+        $set = TransactionCurrency::whereIn('id', $ids)->get();
+        foreach ($set as $currency) {
+            $this->currencies[(int)$currency->id] = $currency;
+        }
     }
 
     private function collectIds(): void
@@ -136,34 +164,6 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
                 $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
                 $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
             }
-        }
-    }
-
-    private function appendCollectedData(): void
-    {
-        $this->collection = $this->collection->map(function (AvailableBudget $item) {
-            $id         = (int)$item->id;
-            $currencyId = $this->currencyIds[$id];
-            $currency   = $this->currencies[$currencyId];
-            $meta       = [
-                'currency'                 => $currency,
-                'spent_in_budgets'         => $this->spentInBudgets[$id] ?? [],
-                'pc_spent_in_budgets'      => $this->pcSpentInBudgets[$id] ?? [],
-                'spent_outside_budgets'    => $this->spentOutsideBudgets[$id] ?? [],
-                'pc_spent_outside_budgets' => $this->pcSpentOutsideBudgets[$id] ?? [],
-            ];
-            $item->meta = $meta;
-
-            return $item;
-        });
-    }
-
-    private function collectCurrencies(): void
-    {
-        $ids = array_unique(array_values($this->currencyIds));
-        $set = TransactionCurrency::whereIn('id', $ids)->get();
-        foreach ($set as $currency) {
-            $this->currencies[(int)$currency->id] = $currency;
         }
     }
 }

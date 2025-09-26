@@ -29,10 +29,10 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Facades\Log;
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Override;
 
 /**
  * Contains all amount formatting routines.
@@ -48,6 +48,17 @@ class AmountFormat extends AbstractExtension
         ];
     }
 
+    #[Override]
+    public function getFunctions(): array
+    {
+        return [
+            $this->formatAmountByAccount(),
+            $this->formatAmountBySymbol(),
+            $this->formatAmountByCurrency(),
+            $this->formatAmountByCode(),
+        ];
+    }
+
     protected function formatAmount(): TwigFilter
     {
         return new TwigFilter(
@@ -59,30 +70,6 @@ class AmountFormat extends AbstractExtension
             },
             ['is_safe' => ['html']]
         );
-    }
-
-    protected function formatAmountPlain(): TwigFilter
-    {
-        return new TwigFilter(
-            'formatAmountPlain',
-            static function (string $string): string {
-                $currency = Amount::getPrimaryCurrency();
-
-                return Amount::formatAnything($currency, $string, false);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    #[Override]
-    public function getFunctions(): array
-    {
-        return [
-            $this->formatAmountByAccount(),
-            $this->formatAmountBySymbol(),
-            $this->formatAmountByCurrency(),
-            $this->formatAmountByCode(),
-        ];
     }
 
     /**
@@ -100,50 +87,6 @@ class AmountFormat extends AbstractExtension
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
                 $currency     = $accountRepos->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-
-                return Amount::formatAnything($currency, $amount, $coloured);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * Will format the amount by the currency related to the given account.
-     */
-    protected function formatAmountBySymbol(): TwigFunction
-    {
-        return new TwigFunction(
-            'formatAmountBySymbol',
-            static function (string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string {
-
-                if (null === $symbol) {
-                    $message  = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
-                    Log::error($message);
-                    $currency = Amount::getPrimaryCurrency();
-                }
-                if (null !== $symbol) {
-                    $decimalPlaces ??= 2;
-                    $coloured      ??= true;
-                    $currency                 = new TransactionCurrency();
-                    $currency->symbol         = $symbol;
-                    $currency->decimal_places = $decimalPlaces;
-                }
-
-                return Amount::formatAnything($currency, $amount, $coloured);
-            },
-            ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * Will format the amount by the currency related to the given account.
-     */
-    protected function formatAmountByCurrency(): TwigFunction
-    {
-        return new TwigFunction(
-            'formatAmountByCurrency',
-            static function (TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
-                $coloured ??= true;
 
                 return Amount::formatAnything($currency, $amount, $coloured);
             },
@@ -171,6 +114,63 @@ class AmountFormat extends AbstractExtension
                 }
 
                 return Amount::formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Will format the amount by the currency related to the given account.
+     */
+    protected function formatAmountByCurrency(): TwigFunction
+    {
+        return new TwigFunction(
+            'formatAmountByCurrency',
+            static function (TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
+                $coloured ??= true;
+
+                return Amount::formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Will format the amount by the currency related to the given account.
+     */
+    protected function formatAmountBySymbol(): TwigFunction
+    {
+        return new TwigFunction(
+            'formatAmountBySymbol',
+            static function (string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string {
+
+                if (null === $symbol) {
+                    $message = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
+                    Log::error($message);
+                    $currency = Amount::getPrimaryCurrency();
+                }
+                if (null !== $symbol) {
+                    $decimalPlaces            ??= 2;
+                    $coloured                 ??= true;
+                    $currency                 = new TransactionCurrency();
+                    $currency->symbol         = $symbol;
+                    $currency->decimal_places = $decimalPlaces;
+                }
+
+                return Amount::formatAnything($currency, $amount, $coloured);
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    protected function formatAmountPlain(): TwigFilter
+    {
+        return new TwigFilter(
+            'formatAmountPlain',
+            static function (string $string): string {
+                $currency = Amount::getPrimaryCurrency();
+
+                return Amount::formatAnything($currency, $string, false);
             },
             ['is_safe' => ['html']]
         );

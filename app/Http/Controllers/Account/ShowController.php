@@ -102,7 +102,7 @@ class ShowController extends Controller
 
         // make sure dates are end of day and start of day:
         $start->startOfDay();
-        $end->endOfDay();
+        $end->endOfDay()->milli(0);
 
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);

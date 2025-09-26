@@ -46,20 +46,20 @@ use Illuminate\Support\Facades\Log;
 
 class SubscriptionEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup; // @phpstan-ignore-line
-    private Collection          $collection;
+    private BillDateCalculator           $calculator;
+    private Collection                   $collection; // @phpstan-ignore-line
     private readonly bool                $convertToPrimary;
-    private ?Carbon             $start           = null;
-    private ?Carbon             $end             = null;
-    private array               $subscriptionIds = [];
-    private array               $objectGroups    = [];
-    private array               $mappedObjects   = [];
-    private array               $paidDates       = [];
-    private array               $notes           = [];
-    private array               $payDates        = [];
+    private ?Carbon                      $end             = null;
+    private array                        $mappedObjects   = [];
+    private array                        $notes           = [];
+    private array                        $objectGroups    = [];
+    private array                        $paidDates       = [];
+    private array                        $payDates        = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private BillDateCalculator  $calculator;
+    private ?Carbon                      $start           = null;
+    private array                        $subscriptionIds = [];
+    private User                         $user;
+    private UserGroup                    $userGroup;
 
     public function __construct()
     {
@@ -86,11 +86,11 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $paidDates        = $this->paidDates;
         $payDates         = $this->payDates;
         $this->collection = $this->collection->map(function (Bill $item) use ($notes, $objectGroups, $paidDates, $payDates) {
-            $id            = (int)$item->id;
-            $currency      = $item->transactionCurrency;
-            $nem           = $this->getNextExpectedMatch($payDates[$id] ?? []);
+            $id       = (int)$item->id;
+            $currency = $item->transactionCurrency;
+            $nem      = $this->getNextExpectedMatch($payDates[$id] ?? []);
 
-            $meta          = [
+            $meta    = [
                 'notes'              => null,
                 'object_group_id'    => null,
                 'object_group_title' => null,
@@ -101,7 +101,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 'nem'                => $nem,
                 'nem_diff'           => $this->getNextExpectedMatchDiff($nem, $payDates[$id] ?? []),
             ];
-            $amounts       = [
+            $amounts = [
                 'amount_min'    => Steam::bcround($item->amount_min, $currency->decimal_places),
                 'amount_max'    => Steam::bcround($item->amount_max, $currency->decimal_places),
                 'average'       => Steam::bcround(bcdiv(bcadd($item->amount_min, $item->amount_max), '2'), $currency->decimal_places),
@@ -142,7 +142,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         return $collection;
     }
 
-    public function enrichSingle(array|Model $model): array|Model
+    public function enrichSingle(array | Model $model): array | Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -151,17 +151,14 @@ class SubscriptionEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    private function collectNotes(): void
+    public function setEnd(?Carbon $end): void
     {
-        $notes = Note::query()->whereIn('noteable_id', $this->subscriptionIds)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', Bill::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
-        foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
-        }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+        $this->end = $end;
+    }
+
+    public function setStart(?Carbon $start): void
+    {
+        $this->start = $start;
     }
 
     public function setUser(User $user): void
@@ -175,24 +172,49 @@ class SubscriptionEnrichment implements EnrichmentInterface
         $this->userGroup = $userGroup;
     }
 
-    private function collectSubscriptionIds(): void
+    /**
+     * Returns the latest date in the set, or start when set is empty.
+     */
+    protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
     {
-        /** @var Bill $bill */
-        foreach ($this->collection as $bill) {
-            $this->subscriptionIds[] = (int)$bill->id;
+        $filtered = $dates->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
+        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
+        if (0 === $filtered->count()) {
+            return $default;
         }
-        $this->subscriptionIds = array_unique($this->subscriptionIds);
+
+        $latest = $filtered->first()->date;
+
+        /** @var TransactionJournal $journal */
+        foreach ($filtered as $journal) {
+            if ($journal->date->gte($latest)) {
+                $latest = $journal->date;
+            }
+        }
+
+        return $latest;
+    }
+
+    private function collectNotes(): void
+    {
+        $notes = Note::query()->whereIn('noteable_id', $this->subscriptionIds)
+                     ->whereNotNull('notes.text')
+                     ->where('notes.text', '!=', '')
+                     ->where('noteable_type', Bill::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
+        foreach ($notes as $note) {
+            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+        }
+        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectObjectGroups(): void
     {
-        $set    = DB::table('object_groupables')
-            ->whereIn('object_groupable_id', $this->subscriptionIds)
-            ->where('object_groupable_type', Bill::class)
-            ->get(['object_groupable_id', 'object_group_id'])
-        ;
+        $set = DB::table('object_groupables')
+                 ->whereIn('object_groupable_id', $this->subscriptionIds)
+                 ->where('object_groupable_type', Bill::class)
+                 ->get(['object_groupable_id', 'object_group_id']);
 
-        $ids    = array_unique($set->pluck('object_group_id')->toArray());
+        $ids = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
@@ -220,13 +242,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
         // 2023-07-18 this particular date is used to search for the last paid date.
         // 2023-07-18 the cloned $searchDate is used to grab the correct transactions.
         /** @var Carbon $start */
-        $start           = clone $this->start;
-        $searchStart     = clone $start;
+        $start       = clone $this->start;
+        $searchStart = clone $start;
         $start->subDay();
 
         /** @var Carbon $end */
-        $end             = clone $this->end;
-        $searchEnd       = clone $end;
+        $end       = clone $this->end;
+        $searchEnd = clone $end;
 
         // move the search dates to the start of the day.
         $searchStart->startOfDay();
@@ -235,13 +257,13 @@ class SubscriptionEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Search parameters are: start: %s, end: %s', $searchStart->format('Y-m-d H:i:s'), $searchEnd->format('Y-m-d H:i:s')));
 
         // Get from database when bills were paid.
-        $set             = $this->user->transactionJournals()
-            ->whereIn('bill_id', $this->subscriptionIds)
-            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')
-            ->leftJoin('transaction_currencies AS foreign_currency', 'foreign_currency.id', '=', 'transactions.foreign_currency_id')
-            ->where('transactions.amount', '>', 0)
-            ->before($searchEnd)->after($searchStart)->get(
+        $set = $this->user->transactionJournals()
+                          ->whereIn('bill_id', $this->subscriptionIds)
+                          ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+                          ->leftJoin('transaction_currencies AS currency', 'currency.id', '=', 'transactions.transaction_currency_id')
+                          ->leftJoin('transaction_currencies AS foreign_currency', 'foreign_currency.id', '=', 'transactions.foreign_currency_id')
+                          ->where('transactions.amount', '>', 0)
+                          ->before($searchEnd)->after($searchStart)->get(
                 [
                     'transaction_journals.id',
                     'transaction_journals.date',
@@ -258,25 +280,24 @@ class SubscriptionEnrichment implements EnrichmentInterface
                     'transactions.amount',
                     'transactions.foreign_amount',
                 ]
-            )
-        ;
+            );
         Log::debug(sprintf('Count %d entries in set', $set->count()));
 
         // for each bill, do a loop.
-        $converter       = new ExchangeRateConverter();
+        $converter = new ExchangeRateConverter();
 
         /** @var Bill $subscription */
         foreach ($this->collection as $subscription) {
             // Grab from array the most recent payment. If none exist, fall back to the start date and pretend *that* was the last paid date.
             Log::debug(sprintf('Grab last paid date from function, return %s if it comes up with nothing.', $start->format('Y-m-d')));
-            $lastPaidDate                            = $this->lastPaidDate($subscription, $set, $start);
+            $lastPaidDate = $this->lastPaidDate($subscription, $set, $start);
             Log::debug(sprintf('Result of lastPaidDate is %s', $lastPaidDate->format('Y-m-d')));
 
             // At this point the "next match" is exactly after the last time the bill was paid.
-            $result                                  = [];
-            $filtered                                = $set->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
+            $result   = [];
+            $filtered = $set->filter(fn(TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
             foreach ($filtered as $entry) {
-                $array    = [
+                $array = [
                     'transaction_group_id'            => (string)$entry->transaction_group_id,
                     'transaction_journal_id'          => (string)$entry->id,
                     'date'                            => $entry->date->toAtomString(),
@@ -329,37 +350,47 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     }
 
-    public function setStart(?Carbon $start): void
+    private function collectPayDates(): void
     {
-        $this->start = $start;
-    }
+        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
+            Log::debug('Parameters are NULL, set empty array');
 
-    public function setEnd(?Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    /**
-     * Returns the latest date in the set, or start when set is empty.
-     */
-    protected function lastPaidDate(Bill $subscription, Collection $dates, Carbon $default): Carbon
-    {
-        $filtered = $dates->filter(fn (TransactionJournal $journal) => (int)$journal->bill_id === (int)$subscription->id);
-        Log::debug(sprintf('Filtered down from %d to %d entries for bill #%d.', $dates->count(), $filtered->count(), $subscription->id));
-        if (0 === $filtered->count()) {
-            return $default;
+            return;
         }
 
-        $latest   = $filtered->first()->date;
-
-        /** @var TransactionJournal $journal */
-        foreach ($filtered as $journal) {
-            if ($journal->date->gte($latest)) {
-                $latest = $journal->date;
+        /** @var Bill $subscription */
+        foreach ($this->collection as $subscription) {
+            $id                = (int)$subscription->id;
+            $lastPaidDate      = $this->getLastPaidDate($this->paidDates[$id] ?? []);
+            $payDates          = $this->calculator->getPayDates($this->start, $this->end, $subscription->date, $subscription->repeat_freq, $subscription->skip, $lastPaidDate);
+            $payDatesFormatted = [];
+            foreach ($payDates as $string) {
+                $date = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
+                if (!$date instanceof Carbon) {
+                    $date = today(config('app.timezone'));
+                }
+                $payDatesFormatted[] = $date->toAtomString();
             }
+            $this->payDates[$id] = $payDatesFormatted;
         }
+    }
 
-        return $latest;
+    private function collectSubscriptionIds(): void
+    {
+        /** @var Bill $bill */
+        foreach ($this->collection as $bill) {
+            $this->subscriptionIds[] = (int)$bill->id;
+        }
+        $this->subscriptionIds = array_unique($this->subscriptionIds);
+    }
+
+    private function filterPaidDates(array $entries): array
+    {
+        return array_map(function (array $entry) {
+            unset($entry['date_object']);
+
+            return $entry;
+        }, $entries);
     }
 
     private function getLastPaidDate(array $paidData): ?Carbon
@@ -384,40 +415,6 @@ class SubscriptionEnrichment implements EnrichmentInterface
         // Log::debug(sprintf('[c] Last paid date is: "%s"', $return?->format('Y-m-d')));
 
         return $return;
-    }
-
-    private function collectPayDates(): void
-    {
-        if (!$this->start instanceof Carbon || !$this->end instanceof Carbon) {
-            Log::debug('Parameters are NULL, set empty array');
-
-            return;
-        }
-
-        /** @var Bill $subscription */
-        foreach ($this->collection as $subscription) {
-            $id                  = (int)$subscription->id;
-            $lastPaidDate        = $this->getLastPaidDate($this->paidDates[$id] ?? []);
-            $payDates            = $this->calculator->getPayDates($this->start, $this->end, $subscription->date, $subscription->repeat_freq, $subscription->skip, $lastPaidDate);
-            $payDatesFormatted   = [];
-            foreach ($payDates as $string) {
-                $date                = Carbon::createFromFormat('!Y-m-d', $string, config('app.timezone'));
-                if (!$date instanceof Carbon) {
-                    $date = today(config('app.timezone'));
-                }
-                $payDatesFormatted[] = $date->toAtomString();
-            }
-            $this->payDates[$id] = $payDatesFormatted;
-        }
-    }
-
-    private function filterPaidDates(array $entries): array
-    {
-        return array_map(function (array $entry) {
-            unset($entry['date_object']);
-
-            return $entry;
-        }, $entries);
     }
 
     private function getNextExpectedMatch(array $payDates): ?Carbon

@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
-use Illuminate\Validation\Validator;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Models\Webhook;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 trait ValidatesWebhooks
 {
@@ -40,9 +40,9 @@ trait ValidatesWebhooks
                 if (count($validator->failed()) > 0) {
                     return;
                 }
-                $data           = $validator->getData();
-                $triggers       = $data['triggers'] ?? [];
-                $responses      = $data['responses'] ?? [];
+                $data      = $validator->getData();
+                $triggers  = $data['triggers'] ?? [];
+                $responses = $data['responses'] ?? [];
 
                 if (0 === count($triggers) || 0 === count($responses)) {
                     Log::debug('No trigger or response, return.');

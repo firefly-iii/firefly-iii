@@ -69,9 +69,9 @@ class FrontpageChartGenerator
         Log::debug('Now in generate for budget chart.');
         $budgets = $this->budgetRepository->getActiveBudgets();
         $data    = [
-            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
-            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string)trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         // loop al budgets:
@@ -80,6 +80,64 @@ class FrontpageChartGenerator
             $data = $this->processBudget($data, $budget);
         }
         Log::debug('DONE with generate budget chart.');
+
+        return $data;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * A basic setter for the user. Also updates the repositories with the right user.
+     */
+    public function setUser(User $user): void
+    {
+        $this->budgetRepository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+
+        $locale                  = app('steam')->getLocale();
+        $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
+    }
+
+    /**
+     * If a budget has budget limit, each limit is processed individually.
+     */
+    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
+    {
+        Log::debug('Start processing budget limits.');
+
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $data = $this->processLimit($data, $budget, $limit);
+        }
+        Log::debug('Done processing budget limits.');
+
+        return $data;
+    }
+
+    /**
+     * When no limits are present, the expenses of the whole period are collected and grouped.
+     * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
+     */
+    private function noBudgetLimits(array $data, Budget $budget): array
+    {
+        $spent = $this->opsRepository->sumExpenses($this->start, $this->end, null, new Collection()->push($budget));
+
+        /** @var array $entry */
+        foreach ($spent as $entry) {
+            $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+            $data[0]['entries'][$title] = bcmul((string)$entry['sum'], '-1');  // spent
+            $data[1]['entries'][$title] = 0;                                   // left to spend
+            $data[2]['entries'][$title] = 0;                                   // overspent
+        }
 
         return $data;
     }
@@ -109,41 +167,6 @@ class FrontpageChartGenerator
     }
 
     /**
-     * When no limits are present, the expenses of the whole period are collected and grouped.
-     * This is grouped per currency. Because there is no limit set, "left to spend" and "overspent" are empty.
-     */
-    private function noBudgetLimits(array $data, Budget $budget): array
-    {
-        $spent = $this->opsRepository->sumExpenses($this->start, $this->end, null, new Collection()->push($budget));
-
-        /** @var array $entry */
-        foreach ($spent as $entry) {
-            $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
-            $data[0]['entries'][$title] = bcmul((string) $entry['sum'], '-1'); // spent
-            $data[1]['entries'][$title] = 0;                                   // left to spend
-            $data[2]['entries'][$title] = 0;                                   // overspent
-        }
-
-        return $data;
-    }
-
-    /**
-     * If a budget has budget limit, each limit is processed individually.
-     */
-    private function budgetLimits(array $data, Budget $budget, Collection $limits): array
-    {
-        Log::debug('Start processing budget limits.');
-
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $data = $this->processLimit($data, $budget, $limit);
-        }
-        Log::debug('Done processing budget limits.');
-
-        return $data;
-    }
-
-    /**
      * For each limit, the expenses from the time range of the limit are collected. Each row from the result is
      * processed individually.
      */
@@ -158,7 +181,7 @@ class FrontpageChartGenerator
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+        $spent = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
 
         /** @var array $entry */
@@ -185,7 +208,7 @@ class FrontpageChartGenerator
      */
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
     {
-        $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+        $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
         Log::debug(sprintf('Title is "%s"', $title));
         if ($limit->start_date->startOfDay()->ne($this->start->startOfDay()) || $limit->end_date->startOfDay()->ne($this->end->startOfDay())) {
             $title = sprintf(
@@ -196,50 +219,27 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $usePrimary                 = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
-        $amount                     = $limit->amount;
+        $usePrimary = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
+        $amount     = $limit->amount;
         Log::debug(sprintf('Amount is "%s".', $amount));
         if ($usePrimary && $limit->transaction_currency_id !== $this->default->id) {
             $amount = $limit->native_amount;
             Log::debug(sprintf('Amount is now "%s".', $amount));
         }
         $amount                     ??= '0';
-        $sumSpent                   = bcmul((string) $entry['sum'], '-1'); // spent
+        $sumSpent                   = bcmul((string)$entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';
 
-        $data[0]['entries'][$title] = bcadd((string) $data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                                       // spent
-        $data[1]['entries'][$title] = bcadd((string) $data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd((string) $entry['sum'], $amount) : '0');              // left to spent
-        $data[2]['entries'][$title] = bcadd((string) $data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd((string) $entry['sum'], $amount), '-1')); // overspent
+        $data[0]['entries'][$title] = bcadd((string)$data[0]['entries'][$title], 1 === bccomp($sumSpent, $amount) ? $amount : $sumSpent);                                       // spent
+        $data[1]['entries'][$title] = bcadd((string)$data[1]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? bcadd((string)$entry['sum'], $amount) : '0');               // left to spent
+        $data[2]['entries'][$title] = bcadd((string)$data[2]['entries'][$title], 1 === bccomp($amount, $sumSpent) ? '0' : bcmul(bcadd((string)$entry['sum'], $amount), '-1'));  // overspent
 
         Log::debug(sprintf('Amount [spent]     is now %s.', $data[0]['entries'][$title]));
         Log::debug(sprintf('Amount [left]      is now %s.', $data[1]['entries'][$title]));
         Log::debug(sprintf('Amount [overspent] is now %s.', $data[2]['entries'][$title]));
 
         return $data;
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * A basic setter for the user. Also updates the repositories with the right user.
-     */
-    public function setUser(User $user): void
-    {
-        $this->budgetRepository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-
-        $locale                  = app('steam')->getLocale();
-        $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
     }
 }

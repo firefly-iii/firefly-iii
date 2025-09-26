@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -30,7 +31,6 @@ use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 /**
  * Class FireflyConfig.
@@ -39,16 +39,43 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff3-config-'.$name;
+        $fullName = 'ff3-config-' . $name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
         Configuration::where('name', $name)->forceDelete();
     }
 
-    public function has(string $name): bool
+    /**
+     * @param null|bool|int|string $default
+     *
+     * @throws FireflyException
+     */
+    public function get(string $name, mixed $default = null): ?Configuration
     {
-        return 1 === Configuration::where('name', $name)->count();
+        $fullName = 'ff3-config-' . $name;
+        if (Cache::has($fullName)) {
+            return Cache::get($fullName);
+        }
+
+        try {
+            /** @var null|Configuration $config */
+            $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        } catch (Exception | QueryException $e) {
+            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
+        }
+
+        if (null !== $config) {
+            Cache::forever($fullName, $config);
+
+            return $config;
+        }
+        // no preference found and default is null:
+        if (null === $default) {
+            return null;
+        }
+
+        return $this->set($name, $default);
     }
 
     public function getEncrypted(string $name, mixed $default = null): ?Configuration
@@ -74,28 +101,10 @@ class FireflyConfig
         return $result;
     }
 
-    /**
-     * @param null|bool|int|string $default
-     *
-     * @throws FireflyException
-     */
-    public function get(string $name, mixed $default = null): ?Configuration
+    public function getFresh(string $name, mixed $default = null): ?Configuration
     {
-        $fullName = 'ff3-config-'.$name;
-        if (Cache::has($fullName)) {
-            return Cache::get($fullName);
-        }
-
-        try {
-            /** @var null|Configuration $config */
-            $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        } catch (Exception|QueryException $e) {
-            throw new FireflyException(sprintf('Could not poll the database: %s', $e->getMessage()), 0, $e);
-        }
-
+        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if (null !== $config) {
-            Cache::forever($fullName, $config);
-
             return $config;
         }
         // no preference found and default is null:
@@ -104,6 +113,19 @@ class FireflyConfig
         }
 
         return $this->set($name, $default);
+    }
+
+    public function has(string $name): bool
+    {
+        return 1 === Configuration::where('name', $name)->count();
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function put(string $name, $value): Configuration
+    {
+        return $this->set($name, $value);
     }
 
     public function set(string $name, mixed $value): Configuration
@@ -124,37 +146,15 @@ class FireflyConfig
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff3-config-'.$name);
+            Cache::forget('ff3-config-' . $name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff3-config-'.$name);
+        Cache::forget('ff3-config-' . $name);
 
         return $config;
-    }
-
-    public function getFresh(string $name, mixed $default = null): ?Configuration
-    {
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if (null !== $config) {
-            return $config;
-        }
-        // no preference found and default is null:
-        if (null === $default) {
-            return null;
-        }
-
-        return $this->set($name, $default);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function put(string $name, $value): Configuration
-    {
-        return $this->set($name, $value);
     }
 
     public function setEncrypted(string $name, mixed $value): Configuration

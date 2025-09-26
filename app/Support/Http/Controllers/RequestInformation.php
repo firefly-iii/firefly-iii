@@ -53,6 +53,22 @@ trait RequestInformation
         return $parts['host'] ?? '';
     }
 
+    final protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     */
+    final protected function getSpecificPageName(): string // get request info
+    {
+        /** @var null|string $param */
+        $param = RouteFacade::current()->parameter('objectType');
+
+        return null === $param ? '' : sprintf('_%s', $param);
+    }
+
     /**
      * Get a list of triggers.
      */
@@ -100,22 +116,6 @@ trait RequestInformation
         }
 
         return $shownDemo;
-    }
-
-    final protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     */
-    final protected function getSpecificPageName(): string // get request info
-    {
-        /** @var null|string $param */
-        $param = RouteFacade::current()->parameter('objectType');
-
-        return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**

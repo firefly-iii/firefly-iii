@@ -39,12 +39,98 @@ use Spatie\Period\Precision;
 
 trait RecalculatesAvailableBudgetsTrait
 {
+    private function calculateAmount(AvailableBudget $availableBudget): void
+    {
+        $repository = app(BudgetLimitRepositoryInterface::class);
+        $repository->setUser($availableBudget->user);
+        $newAmount = '0';
+        $abPeriod  = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
+        Log::debug(
+            sprintf(
+                'Now at AB #%d, ("%s" to "%s")',
+                $availableBudget->id,
+                $availableBudget->start_date->format('Y-m-d'),
+                $availableBudget->end_date->format('Y-m-d')
+            )
+        );
+        // have to recalculate everything just in case.
+        $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
+        Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
+
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($set as $budgetLimit) {
+            Log::debug(
+                sprintf(
+                    'Found interesting budget limit #%d ("%s" to "%s")',
+                    $budgetLimit->id,
+                    $budgetLimit->start_date->format('Y-m-d'),
+                    $budgetLimit->end_date->format('Y-m-d')
+                )
+            );
+            // overlap in days:
+            $limitPeriod = Period::make(
+                            $budgetLimit->start_date,
+                            $budgetLimit->end_date,
+                precision : Precision::DAY(),
+                boundaries: Boundaries::EXCLUDE_NONE()
+            );
+            // if both equal each other, amount from this BL must be added to the AB
+            if ($limitPeriod->equals($abPeriod)) {
+                Log::debug('This budget limit is equal to the available budget period.');
+                $newAmount = bcadd($newAmount, (string)$budgetLimit->amount);
+            }
+            // if budget limit period is inside AB period, it can be added in full.
+            if (!$limitPeriod->equals($abPeriod) && $abPeriod->contains($limitPeriod)) {
+                Log::debug('This budget limit is smaller than the available budget period.');
+                $newAmount = bcadd($newAmount, (string)$budgetLimit->amount);
+            }
+            if (!$limitPeriod->equals($abPeriod) && !$abPeriod->contains($limitPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
+                Log::debug('This budget limit is something else entirely!');
+                $overlap = $abPeriod->overlap($limitPeriod);
+                if ($overlap instanceof Period) {
+                    $length    = $overlap->length();
+                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string)$length);
+                    $newAmount = bcadd($newAmount, $daily);
+                }
+            }
+        }
+        if (0 === bccomp('0', $newAmount)) {
+            Log::debug('New amount is zero, deleting AB.');
+            $availableBudget->delete();
+
+            return;
+        }
+        Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
+        $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
+        $availableBudget->save();
+    }
+
+    private function getDailyAmount(BudgetLimit $budgetLimit): string
+    {
+        if (0 === $budgetLimit->id) {
+            return '0';
+        }
+        $limitPeriod = Period::make(
+                        $budgetLimit->start_date,
+                        $budgetLimit->end_date,
+            precision : Precision::DAY(),
+            boundaries: Boundaries::EXCLUDE_NONE()
+        );
+        $days        = $limitPeriod->length();
+        $amount      = bcdiv($budgetLimit->amount, (string)$days, 12);
+        Log::debug(
+            sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount)
+        );
+
+        return $amount;
+    }
+
     private function updateAvailableBudget(BudgetLimit $budgetLimit): void
     {
         Log::debug(sprintf('Now in updateAvailableBudget(limit #%d)', $budgetLimit->id));
 
         /** @var null|Budget $budget */
-        $budget      = Budget::find($budgetLimit->budget_id);
+        $budget = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
             Log::warning('Budget is null, probably deleted, find deleted version.');
 
@@ -59,7 +145,7 @@ trait RecalculatesAvailableBudgetsTrait
         }
 
         /** @var null|User $user */
-        $user        = $budget->user;
+        $user = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
         if (null === $user) {
@@ -75,7 +161,7 @@ trait RecalculatesAvailableBudgetsTrait
         // all have to be created or updated.
         try {
             $viewRange = app('preferences')->getForUser($user, 'viewRange', '1M')->data;
-        } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
+        } catch (ContainerExceptionInterface | NotFoundExceptionInterface $e) {
             Log::error($e->getMessage());
             $viewRange = '1M';
         }
@@ -83,20 +169,20 @@ trait RecalculatesAvailableBudgetsTrait
         if (null === $viewRange || is_array($viewRange)) {
             $viewRange = '1M';
         }
-        $viewRange   = (string) $viewRange;
+        $viewRange = (string)$viewRange;
 
-        $start       = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
-        $end         = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
-        $end         = app('navigation')->endOfPeriod($end, $viewRange);
+        $start = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
+        $end   = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
+        $end   = app('navigation')->endOfPeriod($end, $viewRange);
 
         // limit period in total is:
         $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
         Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $current     = clone $start;
+        $current = clone $start;
         while ($current <= $end) {
-            $currentEnd      = app('navigation')->endOfPeriod($current, $viewRange);
+            $currentEnd = app('navigation')->endOfPeriod($current, $viewRange);
 
             // create or find AB for this particular period, and set the amount accordingly.
             /** @var null|AvailableBudget $availableBudget */
@@ -111,7 +197,7 @@ trait RecalculatesAvailableBudgetsTrait
                 // if not exists:
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
                 $daily         = $this->getDailyAmount($budgetLimit);
-                $amount        = bcmul($daily, (string) $currentPeriod->length(), 12);
+                $amount        = bcmul($daily, (string)$currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {
@@ -141,93 +227,7 @@ trait RecalculatesAvailableBudgetsTrait
             }
 
             // prep for next loop
-            $current         = app('navigation')->addPeriod($current, $viewRange, 0);
+            $current = app('navigation')->addPeriod($current, $viewRange, 0);
         }
-    }
-
-    private function calculateAmount(AvailableBudget $availableBudget): void
-    {
-        $repository              = app(BudgetLimitRepositoryInterface::class);
-        $repository->setUser($availableBudget->user);
-        $newAmount               = '0';
-        $abPeriod                = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
-        Log::debug(
-            sprintf(
-                'Now at AB #%d, ("%s" to "%s")',
-                $availableBudget->id,
-                $availableBudget->start_date->format('Y-m-d'),
-                $availableBudget->end_date->format('Y-m-d')
-            )
-        );
-        // have to recalculate everything just in case.
-        $set                     = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
-        Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
-
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($set as $budgetLimit) {
-            Log::debug(
-                sprintf(
-                    'Found interesting budget limit #%d ("%s" to "%s")',
-                    $budgetLimit->id,
-                    $budgetLimit->start_date->format('Y-m-d'),
-                    $budgetLimit->end_date->format('Y-m-d')
-                )
-            );
-            // overlap in days:
-            $limitPeriod = Period::make(
-                $budgetLimit->start_date,
-                $budgetLimit->end_date,
-                precision : Precision::DAY(),
-                boundaries: Boundaries::EXCLUDE_NONE()
-            );
-            // if both equal each other, amount from this BL must be added to the AB
-            if ($limitPeriod->equals($abPeriod)) {
-                Log::debug('This budget limit is equal to the available budget period.');
-                $newAmount = bcadd($newAmount, (string) $budgetLimit->amount);
-            }
-            // if budget limit period is inside AB period, it can be added in full.
-            if (!$limitPeriod->equals($abPeriod) && $abPeriod->contains($limitPeriod)) {
-                Log::debug('This budget limit is smaller than the available budget period.');
-                $newAmount = bcadd($newAmount, (string) $budgetLimit->amount);
-            }
-            if (!$limitPeriod->equals($abPeriod) && !$abPeriod->contains($limitPeriod) && $abPeriod->overlapsWith($limitPeriod)) {
-                Log::debug('This budget limit is something else entirely!');
-                $overlap = $abPeriod->overlap($limitPeriod);
-                if ($overlap instanceof Period) {
-                    $length    = $overlap->length();
-                    $daily     = bcmul($this->getDailyAmount($budgetLimit), (string) $length);
-                    $newAmount = bcadd($newAmount, $daily);
-                }
-            }
-        }
-        if (0 === bccomp('0', $newAmount)) {
-            Log::debug('New amount is zero, deleting AB.');
-            $availableBudget->delete();
-
-            return;
-        }
-        Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
-        $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
-        $availableBudget->save();
-    }
-
-    private function getDailyAmount(BudgetLimit $budgetLimit): string
-    {
-        if (0 === $budgetLimit->id) {
-            return '0';
-        }
-        $limitPeriod = Period::make(
-            $budgetLimit->start_date,
-            $budgetLimit->end_date,
-            precision : Precision::DAY(),
-            boundaries: Boundaries::EXCLUDE_NONE()
-        );
-        $days        = $limitPeriod->length();
-        $amount      = bcdiv($budgetLimit->amount, (string) $days, 12);
-        Log::debug(
-            sprintf('Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s', $budgetLimit->id, $budgetLimit->amount, $days, $amount)
-        );
-
-        return $amount;
     }
 }

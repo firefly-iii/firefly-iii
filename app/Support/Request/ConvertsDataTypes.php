@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
 use function Safe\preg_replace;
 
 /**
@@ -99,28 +98,6 @@ trait ConvertsDataTypes
         return Steam::filterSpaces($string);
     }
 
-    public function convertSortParameters(string $field, string $class): array
-    {
-        // assume this all works, because the validator would have caught any errors.
-        $parameter      = (string)request()->query->get($field);
-        if ('' === $parameter) {
-            return [];
-        }
-        $parts          = explode(',', $parameter);
-        $sortParameters = [];
-        foreach ($parts as $part) {
-            $part             = trim($part);
-            $direction        = 'asc';
-            if ('-' === $part[0]) {
-                $part      = substr($part, 1);
-                $direction = 'desc';
-            }
-            $sortParameters[] = [$part, $direction];
-        }
-
-        return $sortParameters;
-    }
-
     public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
@@ -160,6 +137,36 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Return integer value.
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int)$this->get($field);
+    }
+
+    public function convertSortParameters(string $field, string $class): array
+    {
+        // assume this all works, because the validator would have caught any errors.
+        $parameter = (string)request()->query->get($field);
+        if ('' === $parameter) {
+            return [];
+        }
+        $parts          = explode(',', $parameter);
+        $sortParameters = [];
+        foreach ($parts as $part) {
+            $part      = trim($part);
+            $direction = 'asc';
+            if ('-' === $part[0]) {
+                $part      = substr($part, 1);
+                $direction = 'desc';
+            }
+            $sortParameters[] = [$part, $direction];
+        }
+
+        return $sortParameters;
+    }
+
+    /**
      * Return string value.
      */
     public function convertString(string $field, string $default = ''): string
@@ -177,14 +184,6 @@ trait ConvertsDataTypes
      * trait, OR a stub needs to be added by any other class that uses this train.
      */
     abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Return integer value.
-     */
-    public function convertInteger(string $field): int
-    {
-        return (int)$this->get($field);
-    }
 
     /**
      * TODO duplicate, see SelectTransactionsRequest
@@ -217,6 +216,16 @@ trait ConvertsDataTypes
 
         return $collection;
     }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    abstract public function has($key);
 
     /**
      * Return string value with newlines.
@@ -387,16 +396,6 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    abstract public function has($key);
-
-    /**
      * Return date or NULL.
      */
     protected function getCarbonDate(string $field): ?Carbon
@@ -416,6 +415,21 @@ trait ConvertsDataTypes
         }
 
         return $result;
+    }
+
+    /**
+     * Parse to integer
+     */
+    protected function integerFromValue(?string $string): ?int
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (int)$string;
     }
 
     /**
@@ -445,7 +459,7 @@ trait ConvertsDataTypes
             if (!is_array($entry)) {
                 continue;
             }
-            $amount   = null;
+            $amount = null;
             if (array_key_exists('current_amount', $entry)) {
                 $amount = $this->clearString((string)($entry['current_amount'] ?? '0'));
                 if (null === $entry['current_amount']) {
@@ -462,20 +476,5 @@ trait ConvertsDataTypes
         }
 
         return $return;
-    }
-
-    /**
-     * Parse to integer
-     */
-    protected function integerFromValue(?string $string): ?int
-    {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
-            return null;
-        }
-
-        return (int)$string;
     }
 }

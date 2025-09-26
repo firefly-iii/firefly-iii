@@ -38,18 +38,18 @@ use Illuminate\Support\Facades\Log;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private User       $user;
-    private UserGroup  $userGroup;
+    private array      $earned      = [];
+    private ?Carbon    $end         = null;
     private array      $ids         = [];
     private array      $notes       = [];
-    private ?Carbon    $start       = null;
-    private ?Carbon    $end         = null;
-    private array      $spent       = [];
-    private array      $pcSpent     = [];
-    private array      $earned      = [];
     private array      $pcEarned    = [];
-    private array      $transfers   = [];
+    private array      $pcSpent     = [];
     private array      $pcTransfers = [];
+    private array      $spent       = [];
+    private ?Carbon    $start       = null;
+    private array      $transfers   = [];
+    private User       $user;
+    private UserGroup  $userGroup;
 
     public function enrich(Collection $collection): Collection
     {
@@ -62,13 +62,23 @@ class CategoryEnrichment implements EnrichmentInterface
         return $collection;
     }
 
-    public function enrichSingle(array|Model $model): array|Model
+    public function enrichSingle(array | Model $model): array | Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 
         return $collection->first();
+    }
+
+    public function setEnd(?Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(?Carbon $start): void
+    {
+        $this->start = $start;
     }
 
     public function setUser(User $user): void
@@ -80,15 +90,6 @@ class CategoryEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
-    }
-
-    private function collectIds(): void
-    {
-        /** @var Category $category */
-        foreach ($this->collection as $category) {
-            $this->ids[] = (int)$category->id;
-        }
-        $this->ids = array_unique($this->ids);
     }
 
     private function appendCollectedData(): void
@@ -110,23 +111,21 @@ class CategoryEnrichment implements EnrichmentInterface
         });
     }
 
-    public function setEnd(?Carbon $end): void
+    private function collectIds(): void
     {
-        $this->end = $end;
-    }
-
-    public function setStart(?Carbon $start): void
-    {
-        $this->start = $start;
+        /** @var Category $category */
+        foreach ($this->collection as $category) {
+            $this->ids[] = (int)$category->id;
+        }
+        $this->ids = array_unique($this->ids);
     }
 
     private function collectNotes(): void
     {
         $notes = Note::query()->whereIn('noteable_id', $this->ids)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', Category::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
+                     ->whereNotNull('notes.text')
+                     ->where('notes.text', '!=', '')
+                     ->where('noteable_type', Category::class)->get(['notes.noteable_id', 'notes.text'])->toArray();
         foreach ($notes as $note) {
             $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
         }
@@ -140,9 +139,9 @@ class CategoryEnrichment implements EnrichmentInterface
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
-            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
-            $income        = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
-            $transfers     = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
+            $expenses  = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
+            $income    = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
+            $transfers = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
                 $id                     = (int)$item->id;
                 $this->spent[$id]       = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative', false));

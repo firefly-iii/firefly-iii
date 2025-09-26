@@ -40,22 +40,22 @@ class WholePeriodChartGenerator
 
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
-        $collection        = new Collection()->push($category);
+        $collection = new Collection()->push($category);
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository     = app(OperationsRepositoryInterface::class);
+        $opsRepository = app(OperationsRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
-        $types             = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
-        $accounts          = $accountRepository->getAccountsByType($types);
-        $step              = $this->calculateStep($start, $end);
-        $chartData         = [];
-        $spent             = [];
-        $earned            = [];
+        $types     = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+        $accounts  = $accountRepository->getAccountsByType($types);
+        $step      = $this->calculateStep($start, $end);
+        $chartData = [];
+        $spent     = [];
+        $earned    = [];
 
-        $current           = clone $start;
+        $current = clone $start;
 
         while ($current <= $end) {
             $key          = $current->format('Y-m-d');
@@ -65,33 +65,33 @@ class WholePeriodChartGenerator
             $current      = app('navigation')->addPeriod($current, $step, 0);
         }
 
-        $currencies        = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
+        $currencies = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
 
         // generate chart data (for each currency)
         /** @var array $currency */
         foreach ($currencies as $currency) {
-            $code                                      = $currency['currency_code'];
-            $name                                      = $currency['currency_name'];
-            $chartData[sprintf('spent-in-%s', $code)]  = [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $name]),
+            $code                                     = $currency['currency_code'];
+            $name                                     = $currency['currency_name'];
+            $chartData[sprintf('spent-in-%s', $code)] = [
+                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ];
 
             $chartData[sprintf('earned-in-%s', $code)] = [
-                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $name]),
+                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ];
         }
 
-        $current           = clone $start;
+        $current = clone $start;
 
         while ($current <= $end) {
-            $key     = $current->format('Y-m-d');
-            $label   = app('navigation')->periodShow($current, $step);
+            $key   = $current->format('Y-m-d');
+            $label = app('navigation')->periodShow($current, $step);
 
             /** @var array $currency */
             foreach ($currencies as $currency) {

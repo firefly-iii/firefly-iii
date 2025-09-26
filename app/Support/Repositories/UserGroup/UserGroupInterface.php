@@ -37,7 +37,7 @@ interface UserGroupInterface
 
     public function getUserGroup(): ?UserGroup;
 
-    public function setUser(Authenticatable|User|null $user): void;
+    public function setUser(Authenticatable | User | null $user): void;
 
     public function setUserGroup(UserGroup $userGroup): void;
 

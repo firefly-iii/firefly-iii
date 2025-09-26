@@ -66,4 +66,9 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface
 
         return $stat;
     }
+
+    public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection
+    {
+        return $model->primaryPeriodStatistics()->where('start','>=', $start)->where('end','<=', $end)->get();
+    }
 }

@@ -29,7 +29,7 @@ class PreferencesSingleton
 {
     private static ?PreferencesSingleton $instance = null;
 
-    private array $preferences                     = [];
+    private array $preferences = [];
 
     private function __construct()
     {
@@ -45,6 +45,11 @@ class PreferencesSingleton
         return self::$instance;
     }
 
+    public function getPreference(string $key): mixed
+    {
+        return $this->preferences[$key] ?? null;
+    }
+
     public function resetPreferences(): void
     {
         $this->preferences = [];
@@ -53,10 +58,5 @@ class PreferencesSingleton
     public function setPreference(string $key, mixed $value): void
     {
         $this->preferences[$key] = $value;
-    }
-
-    public function getPreference(string $key): mixed
-    {
-        return $this->preferences[$key] ?? null;
     }
 }

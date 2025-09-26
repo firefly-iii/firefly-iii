@@ -22,7 +22,8 @@ class PeriodStatistic extends Model
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
             'deleted_at'    => 'datetime',
-            'date'          => SeparateTimezoneCaster::class,
+            'start' => SeparateTimezoneCaster::class,
+            'end'   => SeparateTimezoneCaster::class,
         ];
     }
 

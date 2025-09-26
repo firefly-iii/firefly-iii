@@ -43,16 +43,15 @@ use stdClass;
 class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private User       $user; // @phpstan-ignore-line
-    private UserGroup  $userGroup; // @phpstan-ignore-line
-    private array      $ids          = [];
-    private array      $deliveries   = [];
-    private array      $responses    = [];
-    private array      $triggers     = [];
-
-    private array $webhookDeliveries = [];
-    private array $webhookResponses  = [];
-    private array $webhookTriggers   = [];
+    private array      $deliveries        = [];      // @phpstan-ignore-line
+    private array      $ids               = [];      // @phpstan-ignore-line
+    private array      $responses         = [];
+    private array      $triggers          = [];
+    private User       $user;
+    private UserGroup  $userGroup;
+    private array      $webhookDeliveries = [];
+    private array      $webhookResponses  = [];
+    private array      $webhookTriggers   = [];
 
     public function enrich(Collection $collection): Collection
     {
@@ -67,7 +66,7 @@ class WebhookEnrichment implements EnrichmentInterface
         return $this->collection;
     }
 
-    public function enrichSingle(array|Model $model): array|Model
+    public function enrichSingle(array | Model $model): array | Model
     {
         Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
@@ -84,6 +83,20 @@ class WebhookEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
+    }
+
+    private function appendCollectedInfo(): void
+    {
+        $this->collection = $this->collection->map(function (Webhook $item) {
+            $meta       = [
+                'deliveries' => $this->webhookDeliveries[$item->id] ?? [],
+                'responses'  => $this->webhookResponses[$item->id] ?? [],
+                'triggers'   => $this->webhookTriggers[$item->id] ?? [],
+            ];
+            $item->meta = $meta;
+
+            return $item;
+        });
     }
 
     private function collectIds(): void
@@ -146,19 +159,5 @@ class WebhookEnrichment implements EnrichmentInterface
             $triggerId                    = $item->webhook_trigger_id;
             $this->webhookTriggers[$id][] = WebhookTriggerEnum::from($this->triggers[$triggerId])->name;
         }
-    }
-
-    private function appendCollectedInfo(): void
-    {
-        $this->collection = $this->collection->map(function (Webhook $item) {
-            $meta       = [
-                'deliveries' => $this->webhookDeliveries[$item->id] ?? [],
-                'responses'  => $this->webhookResponses[$item->id] ?? [],
-                'triggers'   => $this->webhookTriggers[$item->id] ?? [],
-            ];
-            $item->meta = $meta;
-
-            return $item;
-        });
     }
 }
