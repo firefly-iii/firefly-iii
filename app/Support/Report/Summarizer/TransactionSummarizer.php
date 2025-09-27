@@ -193,7 +193,7 @@ class TransactionSummarizer
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum']    = bcadd($array[$key]['sum'], Steam::{$method}((string)($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) Steam::{$method}((string)($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
 
             // also do foreign amount, but only when convertToPrimary is false (otherwise we have it already)
@@ -211,7 +211,7 @@ class TransactionSummarizer
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], Steam::{$method}((string)$journal['foreign_amount'])); // @phpstan-ignore-line
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) Steam::{$method}((string)$journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 

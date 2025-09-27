@@ -28,7 +28,6 @@ namespace FireflyIII\Casts;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class SeparateTimezoneCaster

@@ -38,7 +38,7 @@ class Timer
 
     public static function getInstance(): self
     {
-        if (null === self::$instance) {
+        if (!self::$instance instanceof \FireflyIII\Support\Debug\Timer) {
             self::$instance = new self();
         }
 

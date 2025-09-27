@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Tag;
 
+use Override;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Factory\TagFactory;
@@ -380,7 +381,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $tag->locations()->first();
     }
 
-    #[\Override]
+    #[Override]
     public function periodCollection(Tag $tag, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')));

@@ -68,7 +68,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface
         Log::debug(sprintf(
             'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
             $stat->id,
-            get_class($model),
+            $model::class,
             $model->id,
             $stat->transaction_currency_id,
             $stat->start->toW3cString(),

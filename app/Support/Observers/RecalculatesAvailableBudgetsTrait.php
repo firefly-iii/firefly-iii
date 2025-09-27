@@ -197,7 +197,7 @@ trait RecalculatesAvailableBudgetsTrait
                 // if not exists:
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
                 $daily         = $this->getDailyAmount($budgetLimit);
-                $amount        = bcmul($daily, (string)$currentPeriod->length(), 12);
+                $amount        = bcmul((string) $daily, (string)$currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {

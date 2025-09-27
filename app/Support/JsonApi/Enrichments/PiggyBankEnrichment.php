@@ -142,9 +142,9 @@ class PiggyBankEnrichment implements EnrichmentInterface
                     'current_amount'    => Steam::bcround($row['current_amount'], $currency->decimal_places),
                     'pc_current_amount' => Steam::bcround($row['pc_current_amount'], $this->primaryCurrency->decimal_places),
                 ];
-                $meta['current_amount']    = bcadd($meta['current_amount'], $row['current_amount']);
+                $meta['current_amount']    = bcadd($meta['current_amount'], (string) $row['current_amount']);
                 // only add pc_current_amount when the pc_current_amount is set
-                $meta['pc_current_amount'] = null === $row['pc_current_amount'] ? null : bcadd($meta['pc_current_amount'], $row['pc_current_amount']);
+                $meta['pc_current_amount'] = null === $row['pc_current_amount'] ? null : bcadd((string) $meta['pc_current_amount'], (string) $row['pc_current_amount']);
             }
             $meta['current_amount']    = Steam::bcround($meta['current_amount'], $currency->decimal_places);
             // only round this number when pc_current_amount is set.
@@ -152,8 +152,8 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
             // calculate left to save, only when there is a target amount.
             if (null !== $targetAmount) {
-                $meta['left_to_save']    = bcsub($meta['target_amount'], $meta['current_amount']);
-                $meta['pc_left_to_save'] = null === $meta['pc_target_amount'] ? null : bcsub($meta['pc_target_amount'], $meta['pc_current_amount']);
+                $meta['left_to_save']    = bcsub((string) $meta['target_amount'], (string) $meta['current_amount']);
+                $meta['pc_left_to_save'] = null === $meta['pc_target_amount'] ? null : bcsub((string) $meta['pc_target_amount'], (string) $meta['pc_current_amount']);
             }
 
             // get suggested per month.
@@ -199,7 +199,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
                     'pc_current_amount' => '0',
                 ];
             }
-            $this->amounts[$id][$accountId]['current_amount'] = bcadd($this->amounts[$id][$accountId]['current_amount'], (string)$item->current_amount);
+            $this->amounts[$id][$accountId]['current_amount'] = bcadd((string) $this->amounts[$id][$accountId]['current_amount'], (string)$item->current_amount);
             if (null !== $this->amounts[$id][$accountId]['pc_current_amount'] && null !== $item->native_current_amount) {
                 $this->amounts[$id][$accountId]['pc_current_amount'] = bcadd($this->amounts[$id][$accountId]['pc_current_amount'], (string)$item->native_current_amount);
             }

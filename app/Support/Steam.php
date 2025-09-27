@@ -756,7 +756,7 @@ class Steam
                 $current = $converter->convert($currency, $primary, $date, $amount);
                 Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $primary->code, $current));
             }
-            $total      = bcadd($current, $total);
+            $total      = bcadd((string) $current, $total);
         }
 
         return $total;

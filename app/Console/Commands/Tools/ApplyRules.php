@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Tools;
 
+use Carbon\CarbonInterface;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
@@ -283,7 +284,7 @@ class ApplyRules extends Command
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
-        if (null === $inputEnd || null === $inputStart) {
+        if (!$inputEnd instanceof Carbon || null === $inputStart) {
             Log::error('Could not parse start or end date in verifyInputDate().');
 
             return;

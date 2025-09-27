@@ -724,7 +724,7 @@ trait PeriodOverview
     protected function saveGroupedAsStatistics(Model $model, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
-        Log::debug(sprintf('saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))', get_class($model), $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
+        Log::debug(sprintf('saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
         foreach ($array as $entry) {
             $this->periodStatisticRepo->saveStatistic($model, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
@@ -899,7 +899,7 @@ trait PeriodOverview
             ];
 
 
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $amount);
+            $return[$currencyId]['amount'] = bcadd((string) $return[$currencyId]['amount'], $amount);
             ++$return[$currencyId]['count'];
             ++$return['count'];
         }

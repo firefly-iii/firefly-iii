@@ -67,7 +67,7 @@ trait ModifiesPiggyBanks
     {
         $currentAmount                = $this->getCurrentAmount($piggyBank, $account);
         $pivot                        = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
-        $pivot->current_amount        = bcsub($currentAmount, $amount);
+        $pivot->current_amount        = bcsub((string) $currentAmount, $amount);
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
@@ -90,7 +90,7 @@ trait ModifiesPiggyBanks
     {
         $currentAmount                = $this->getCurrentAmount($piggyBank, $account);
         $pivot                        = $piggyBank->accounts()->where('accounts.id', $account->id)->first()->pivot;
-        $pivot->current_amount        = bcadd($currentAmount, $amount);
+        $pivot->current_amount        = bcadd((string) $currentAmount, $amount);
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
@@ -122,13 +122,13 @@ trait ModifiesPiggyBanks
 
 
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
-            $leftToSave = bcsub($piggyBank->target_amount, $savedSoFar);
-            $maxAmount  = 1 === bccomp($leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
+            $leftToSave = bcsub($piggyBank->target_amount, (string) $savedSoFar);
+            $maxAmount  = 1 === bccomp((string) $leftOnAccount, $leftToSave) ? $leftToSave : $leftOnAccount;
             Log::debug(sprintf('Left to save: %s', $leftToSave));
             Log::debug(sprintf('Maximum amount: %s', $maxAmount));
         }
 
-        $compare       = bccomp($amount, $maxAmount);
+        $compare       = bccomp($amount, (string) $maxAmount);
         $result        = $compare <= 0;
 
         Log::debug(sprintf('Compare <= 0? %d, so canAddAmount is %s', $compare, var_export($result, true)));
@@ -140,7 +140,7 @@ trait ModifiesPiggyBanks
     {
         $savedSoFar = $this->getCurrentAmount($piggyBank, $account);
 
-        return bccomp($amount, $savedSoFar) <= 0;
+        return bccomp($amount, (string) $savedSoFar) <= 0;
     }
 
     /**
@@ -234,9 +234,9 @@ trait ModifiesPiggyBanks
         // if the piggy bank is now smaller than the sum of the money saved,
         // remove money from all accounts until the piggy bank is the right amount.
         $currentAmount = $this->getCurrentAmount($piggyBank);
-        if (1 === bccomp($currentAmount, (string)$piggyBank->target_amount) && 0 !== bccomp((string)$piggyBank->target_amount, '0')) {
+        if (1 === bccomp((string) $currentAmount, (string)$piggyBank->target_amount) && 0 !== bccomp((string)$piggyBank->target_amount, '0')) {
             Log::debug(sprintf('Current amount is %s, target amount is %s', $currentAmount, $piggyBank->target_amount));
-            $difference = bcsub((string)$piggyBank->target_amount, $currentAmount);
+            $difference = bcsub((string)$piggyBank->target_amount, (string) $currentAmount);
 
             // an amount will be removed, create "negative" event:
             //            Log::debug(sprintf('ChangedAmount: is triggered with difference "%s"', $difference));
