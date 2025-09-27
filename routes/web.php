@@ -20,19 +20,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
 
-
-
-
 Route::get('/___ping', static fn () => 'pong');
-
-
-
 
 if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
@@ -143,8 +135,6 @@ Route::group(
     }
 );
 
-// For all other routes, the user must be fully authenticated and have an activated account.
-
 // Home Controller.
 Route::group(
     ['middleware' => ['user-full-auth'], 'namespace' => 'FireflyIII\Http\Controllers'],
@@ -157,7 +147,6 @@ Route::group(
 );
 
 // show inactive
-
 /*
  * Account Controller.
  * DROP ME WHEN v2 hits
@@ -196,31 +185,26 @@ Route::group(
         Route::get('show/{account}/all', ['uses' => 'Account\ShowController@showAll', 'as' => 'show.all']);
         Route::get('show/{account?}/{start_date?}/{end_date?}', ['uses' => 'Account\ShowController@show', 'as' => 'show'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         // reconcile routes:
         Route::get('reconcile/{account}/index/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@reconcile', 'as' => 'reconcile'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::post('reconcile/{account}/submit/{start_date?}/{end_date?}', ['uses' => 'Account\ReconcileController@submit', 'as' => 'reconcile.submit'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         // reconcile JSON routes
         Route::get('reconcile/{account}/overview/{start_date?}/{end_date?}', ['uses' => 'Json\ReconcileController@overview', 'as' => 'reconcile.overview'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'reconcile/{account}/transactions/{start_date?}/{end_date?}',
             ['uses' => 'Json\ReconcileController@transactions', 'as' => 'reconcile.transactions']
         )
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -345,15 +329,13 @@ Route::group(
         Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show.all']);
         Route::get('show/{category}/{start_date?}/{end_date?}', ['uses' => 'Category\ShowController@show', 'as' => 'show'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         // no category controller:
         Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category.all']);
         Route::get('list/no-category/{start_date?}/{end_date?}', ['uses' => 'Category\NoCategoryController@show', 'as' => 'no-category'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -378,12 +360,6 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
         Route::get('{fromCurrencyCode}/{toCurrencyCode}', ['uses' => 'IndexController@rates', 'as' => 'rates']);
-        //        Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
-        //        Route::get('edit/{currency}', ['uses' => 'EditController@edit', 'as' => 'edit']);
-        //        Route::get('delete/{currency}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
-        //        Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
-        //        Route::post('update/{currency}', ['uses' => 'EditController@update', 'as' => 'update']);
-        //        Route::post('destroy/{currency}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
     }
 );
 
@@ -396,12 +372,10 @@ Route::group(
         Route::get('revenue', ['uses' => 'AccountController@revenueAccounts', 'as' => 'revenue']);
         Route::get('report/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@report', 'as' => 'report'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('period/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@period', 'as' => 'period'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('income-category/{account}/all/all', ['uses' => 'AccountController@incomeCategoryAll', 'as' => 'income-category-all']);
         Route::get('expense-category/{account}/all/all', ['uses' => 'AccountController@expenseCategoryAll', 'as' => 'expense-category-all']);
@@ -409,16 +383,13 @@ Route::group(
 
         Route::get('income-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@incomeCategory', 'as' => 'income-category'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('expense-category/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseCategory', 'as' => 'expense-category'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('expense-budget/{account}/{start_date}/{end_date}', ['uses' => 'AccountController@expenseBudget', 'as' => 'expense-budget'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -438,46 +409,40 @@ Route::group(
         Route::get('frontpage', ['uses' => 'BudgetController@frontpage', 'as' => 'frontpage']);
         Route::get('period/0/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@periodNoBudget', 'as' => 'period.no-budget'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('period/{budget}/{currency}/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('budget/{budget}/{budgetLimit}', ['uses' => 'BudgetController@budgetLimit', 'as' => 'budget-limit']);
         Route::get('budget/{budget}', ['uses' => 'BudgetController@budget', 'as' => 'budget']);
 
-        // these charts are used in budget/show:
+        // charts used in budget/show:
         Route::get('expense-category/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseCategory', 'as' => 'expense-category']);
         Route::get('expense-asset/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseAsset', 'as' => 'expense-asset']);
         Route::get('expense-expense/{budget}/{budgetLimit?}', ['uses' => 'BudgetController@expenseExpense', 'as' => 'expense-expense']);
 
-        // these charts are used in reports (category reports):
+        // charts used in reports (category reports):
         Route::get(
             'category/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetReportController@categoryExpense', 'as' => 'category-expense']
         )
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'budget/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetReportController@budgetExpense', 'as' => 'budget-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'source-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetReportController@sourceAccountExpense', 'as' => 'source-account-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'destination-account/expense/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetReportController@destinationAccountExpense', 'as' => 'destination-account-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('operations/{accountList}/{budget}/{start_date}/{end_date}', ['uses' => 'BudgetReportController@mainChart', 'as' => 'main']);
     }
 );
@@ -494,61 +459,51 @@ Route::group(
             'report-period/0/{accountList}/{start_date}/{end_date}',
             ['uses' => 'CategoryController@reportPeriodNoCategory', 'as' => 'period.no-category']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('report-period/{category}/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@reportPeriod', 'as' => 'period'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get(
             'category/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@categoryExpense', 'as' => 'category-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'category/income/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@categoryIncome', 'as' => 'category-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'budget/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@budgetExpense', 'as' => 'budget-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'source/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@sourceExpense', 'as' => 'source-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'source/income/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@sourceIncome', 'as' => 'source-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'dest/expense/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@destinationExpense', 'as' => 'dest-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'dest/income/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryReportController@destinationIncome', 'as' => 'dest-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('operations/{accountList}/{category}/{start_date}/{end_date}', ['uses' => 'CategoryReportController@mainChart', 'as' => 'main'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -558,61 +513,51 @@ Route::group(
     static function (): void {
         Route::get('tag/expense/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@tagExpense', 'as' => 'tag-expense'])
             ->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('tag/income/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagReportController@tagIncome', 'as' => 'tag-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'category/expense/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@categoryExpense', 'as' => 'category-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'category/income/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@categoryIncome', 'as' => 'category-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'budget/expense/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@budgetExpense', 'as' => 'budget-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'source/expense/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@sourceExpense', 'as' => 'source-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'source/income/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@sourceIncome', 'as' => 'source-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'dest/expense/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@destinationExpense', 'as' => 'dest-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'dest/income/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagReportController@destinationIncome', 'as' => 'dest-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('operations/{accountList}/{tag}/{start_date}/{end_date}', ['uses' => 'TagReportController@mainChart', 'as' => 'main'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -623,40 +568,34 @@ Route::group(
         Route::get('main/{accountList}/{account}/{start_date}/{end_date}', ['uses' => 'DoubleReportController@mainChart', 'as' => 'main'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get(
             'category/expense/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleReportController@categoryExpense', 'as' => 'category-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'category/income/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleReportController@categoryIncome', 'as' => 'category-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'budget/expense/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleReportController@budgetExpense', 'as' => 'budget-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get(
             'tag/expense/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleReportController@tagExpense', 'as' => 'tag-expense']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'tag/income/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleReportController@tagIncome', 'as' => 'tag-income']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -675,13 +614,11 @@ Route::group(
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'ReportController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('net-worth/{accountList}/{start_date}/{end_date}/', ['uses' => 'ReportController@netWorth', 'as' => 'net-worth'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -692,22 +629,18 @@ Route::group(
         Route::get('categories/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@categories', 'as' => 'categories'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('budgets/{start_date}/{end_date}', ['uses' => 'TransactionController@budgets', 'as' => 'budgets'])->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'destinationAccounts/{objectType}/{start_date}/{end_date}',
             ['uses' => 'TransactionController@destinationAccounts', 'as' => 'destinationAccounts']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('sourceAccounts/{objectType}/{start_date}/{end_date}', ['uses' => 'TransactionController@sourceAccounts', 'as' => 'sourceAccounts'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -720,6 +653,7 @@ Route::group(
         Route::post('export', ['uses' => 'Export\IndexController@export', 'as' => 'export']);
     }
 );
+
 // Object group controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'groups', 'as' => 'object-groups.'],
@@ -748,7 +682,7 @@ Route::group(
     }
 );
 
-// JScript Controller.
+// JScript Controller v2.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v2/jscript', 'as' => 'javascript.v2.'],
     static function (): void {
@@ -765,8 +699,7 @@ Route::group(
             'budget/total-budgeted/{currency}/{start_date}/{end_date}',
             ['uses' => 'Json\BudgetController@getBudgetInformation', 'as' => 'budget.total-budgeted']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         // boxes
         Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
         Route::get('box/available', ['uses' => 'Json\BoxController@available', 'as' => 'box.available']);
@@ -778,9 +711,6 @@ Route::group(
 
         // front page
         Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
-
-        // currency conversion:
-        // Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
         // intro things:
         Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
@@ -848,8 +778,6 @@ Route::group(
 
         Route::get('logout-others', ['uses' => 'ProfileController@logoutOtherSessions', 'as' => 'logout-others']);
         Route::post('logout-others', ['uses' => 'ProfileController@postLogoutOtherSessions', 'as' => 'logout-others.post']);
-
-
     }
 );
 
@@ -867,17 +795,12 @@ Route::group(
         Route::get('backup-codes', ['uses' => 'Profile\MfaController@backupCodes', 'as' => 'backup-codes']);
         Route::post('backup-codes', ['uses' => 'Profile\MfaController@backupCodesPost', 'as' => 'backup-codes.post']);
 
-        // enable MFA
-        //        Route::get('2fa/code', ['uses' => 'Profile\MfaController@code', 'as' => 'code']);
-
         // disable MFA
         Route::get('/disableMFA', ['uses' => 'Profile\MfaController@disableMFA', 'as' => 'disableMFA']);
         Route::post('/disableMFA', ['uses' => 'Profile\MfaController@disableMFAPost', 'as' => 'disableMFA.post']);
-
-
-
     }
 );
+
 // Recurring Transactions Controller.
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'],
@@ -928,8 +851,7 @@ Route::group(
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'AccountController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -940,8 +862,7 @@ Route::group(
         Route::get('overview/{accountList}/{start_date}/{end_date}', ['uses' => 'BillController@overview', 'as' => 'overview'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -953,38 +874,32 @@ Route::group(
         Route::get('operations/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'DoubleController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'ops-asset/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleController@operationsPerAsset', 'as' => 'ops-asset']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get(
             'top-expenses/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleController@topExpenses', 'as' => 'top-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'avg-expenses/{accountList}/{doubleList}/{start_date}/{end_date}',
             ['uses' => 'DoubleController@avgExpenses', 'as' => 'avg-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('top-income/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'DoubleController@topIncome', 'as' => 'top-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('avg-income/{accountList}/{doubleList}/{start_date}/{end_date}', ['uses' => 'DoubleController@avgIncome', 'as' => 'avg-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1000,18 +915,15 @@ Route::group(
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@income', 'as' => 'income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'OperationsController@expenses', 'as' => 'expenses'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1028,59 +940,49 @@ Route::group(
         Route::get('operations/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@operations', 'as' => 'operations'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('income/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@income', 'as' => 'income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('expenses/{accountList}/{start_date}/{end_date}', ['uses' => 'CategoryController@expenses', 'as' => 'expenses'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('accounts/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryController@accounts', 'as' => 'accounts'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('categories/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryController@categories', 'as' => 'categories'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'account-per-category/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryController@accountPerCategory', 'as' => 'account-per-category']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get(
             'top-expenses/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryController@topExpenses', 'as' => 'top-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'avg-expenses/{accountList}/{categoryList}/{start_date}/{end_date}',
             ['uses' => 'CategoryController@avgExpenses', 'as' => 'avg-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('top-income/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryController@topIncome', 'as' => 'top-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('avg-income/{accountList}/{categoryList}/{start_date}/{end_date}', ['uses' => 'CategoryController@avgIncome', 'as' => 'avg-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1096,41 +998,34 @@ Route::group(
         Route::get('accounts/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@accounts', 'as' => 'accounts'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('tags/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@tags', 'as' => 'tags'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'account-per-tag/{accountList}/{tagList}/{start_date}/{end_date}',
             ['uses' => 'TagController@accountPerTag', 'as' => 'account-per-tag']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('top-expenses/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@topExpenses', 'as' => 'top-expenses'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('avg-expenses/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@avgExpenses', 'as' => 'avg-expenses'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('top-income/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@topIncome', 'as' => 'top-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('avg-income/{accountList}/{tagList}/{start_date}/{end_date}', ['uses' => 'TagController@avgIncome', 'as' => 'avg-income'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1141,8 +1036,7 @@ Route::group(
         Route::get('general/{accountList}/{start_date}/{end_date}', ['uses' => 'BalanceController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1153,41 +1047,34 @@ Route::group(
         Route::get('general/{accountList}/{start_date}/{end_date}/', ['uses' => 'BudgetController@general', 'as' => 'general'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         // TODO is route still used?
         Route::get('period/{accountList}/{start_date}/{end_date}', ['uses' => 'BudgetController@period', 'as' => 'period'])->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('accounts/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@accounts', 'as' => 'accounts'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get('budgets/{accountList}/{budgetList}/{start_date}/{end_date}', ['uses' => 'BudgetController@budgets', 'as' => 'budgets'])->where(
             ['start_date' => DATEFORMAT]
         )
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'account-per-budget/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetController@accountPerBudget', 'as' => 'account-per-budget']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'top-expenses/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetController@topExpenses', 'as' => 'top-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
         Route::get(
             'avg-expenses/{accountList}/{budgetList}/{start_date}/{end_date}',
             ['uses' => 'BudgetController@avgExpenses', 'as' => 'avg-expenses']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
     }
 );
 
@@ -1260,8 +1147,7 @@ Route::group(
 
         Route::get('show/{tagOrId}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
         Route::get('show/{tagOrId}/{start_date?}/{end_date?}', ['uses' => 'TagController@show', 'as' => 'show'])->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
         Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);
@@ -1286,8 +1172,7 @@ Route::group(
         Route::get('{objectType}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
             ['objectType' => 'withdrawal|deposit|transfers|transfer|all']
         )->where(['start_date' => DATEFORMAT])
-            ->where(['end_date' => DATEFORMAT])
-        ;
+            ->where(['end_date' => DATEFORMAT]);
 
         // create group:
         Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
@@ -1437,65 +1322,70 @@ Route::group(
         Route::get('create', ['uses' => 'UserGroup\CreateController@create', 'as' => 'create']);
         Route::get('edit/{userGroup}', ['uses' => 'UserGroup\EditController@edit', 'as' => 'edit']);
         // Route::get('show/{userGroup}', ['uses' => 'UserGroup\ShowController@show', 'as' => 'show']);
-
-        //        Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);
-        //        Route::get('delete/{bill}', ['uses' => 'Bill\DeleteController@delete', 'as' => 'delete']);
-        //
-        //        Route::post('store', ['uses' => 'Bill\CreateController@store', 'as' => 'store']);
-        //        Route::post('update/{bill}', ['uses' => 'Bill\EditController@update', 'as' => 'update']);
-        //        Route::post('destroy/{bill}', ['uses' => 'Bill\DeleteController@destroy', 'as' => 'destroy']);
-        //
-        //        Route::post('set-order/{bill}', ['uses' => 'Bill\IndexController@setOrder', 'as' => 'set-order']);
     }
 );
 
-
-use FireflyIII\Http\Controllers\ReceiptInboxController;
-
+// Receipts (Inbox / Parse / Post / Search / Show / Download)
 Route::group(
-    ['middleware' => 'user-full-auth'],
+    [
+        'middleware' => 'user-full-auth',
+        'namespace'  => 'FireflyIII\Http\Controllers',
+        'prefix'     => 'receipts',
+        'as'         => 'receipts.',
+    ],
     static function (): void {
-        Route::get('receipts/inbox', [ReceiptInboxController::class, 'index'])->name('receipts.inbox');
-        Route::post('receipts/parse', [ReceiptInboxController::class, 'parse'])->name('receipts.parse');
-        Route::post('receipts/post',  [ReceiptInboxController::class, 'post'])->name('receipts.post');
+        Route::get('inbox',  ['uses' => 'ReceiptInboxController@index',  'as' => 'inbox']);
+        Route::post('parse', ['uses' => 'ReceiptInboxController@parse',  'as' => 'parse']);
+        Route::post('post',  ['uses' => 'ReceiptInboxController@post',   'as' => 'post']);
+
+        Route::get('search',               ['uses' => 'ReceiptInboxController@search',   'as' => 'search']);
+        Route::get('{receiptId}/download', ['uses' => 'ReceiptInboxController@download', 'as' => 'download']);
+        Route::get('{receiptId}',          ['uses' => 'ReceiptInboxController@show',     'as' => 'show']);
     }
 );
 
+// Small JSON helpers for front-end autocompletes (accounts/currencies)
+Route::group(
+    [
+        'middleware' => ['web', 'user-full-auth'],
+        'namespace'  => 'FireflyIII\Http\Controllers',
+        'prefix'     => 'api/v1/autocomplete',
+        'as'         => 'api.autocomplete.',
+    ],
+    static function (): void {
 
-Route::middleware(['web','user-full-auth'])->group(function () {
+        Route::get('accounts', static function () {
+            $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@accounts');
+            $js   = trim($resp->getContent());
+            $json = preg_replace('/^\s*(?:var|let|const)?\s*accounts\s*=\s*/', '', $js);
+            $json = rtrim($json, ";\r\n\t ");
+            $data = json_decode($json, true);
 
-    Route::get('api/v1/autocomplete/accounts', static function () {
-        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@accounts');
-        $js   = trim($resp->getContent());
-        $json = preg_replace('/^\s*(?:var|let|const)?\s*accounts\s*=\s*/', '', $js);
-        $json = rtrim($json, ";\r\n\t ");
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'error' => 'parse_failed',
+                    'msg'   => json_last_error_msg(),
+                    'peek'  => mb_substr($js, 0, 120),
+                ], 500);
+            }
+            return response()->json($data);
+        })->name('accounts');
 
-        $data = json_decode($json, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return response()->json([
-                'error' => 'parse_failed',
-                'msg'   => json_last_error_msg(),
-                'peek'  => mb_substr($js, 0, 120),
-            ], 500);
-        }
-        return response()->json($data);
-    })->name('api.autocomplete.accounts');
+        Route::get('currencies', static function () {
+            $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@currencies');
+            $js   = trim($resp->getContent());
+            $json = preg_replace('/^\s*(?:var|let|const)?\s*currencies\s*=\s*/', '', $js);
+            $json = rtrim($json, ";\r\n\t ");
+            $data = json_decode($json, true);
 
-    Route::get('api/v1/autocomplete/currencies', static function () {
-        $resp = app()->call(\FireflyIII\Http\Controllers\JavascriptController::class.'@currencies');
-        $js   = trim($resp->getContent());
-        $json = preg_replace('/^\s*(?:var|let|const)?\s*currencies\s*=\s*/', '', $js);
-        $json = rtrim($json, ";\r\n\t ");
-
-        $data = json_decode($json, true);
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            return response()->json([
-                'error' => 'parse_failed',
-                'msg'   => json_last_error_msg(),
-                'peek'  => mb_substr($js, 0, 120),
-            ], 500);
-        }
-        return response()->json($data);
-    })->name('api.autocomplete.currencies');
-
-});
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                return response()->json([
+                    'error' => 'parse_failed',
+                    'msg'   => json_last_error_msg(),
+                    'peek'  => mb_substr($js, 0, 120),
+                ], 500);
+            }
+            return response()->json($data);
+        })->name('currencies');
+    }
+);

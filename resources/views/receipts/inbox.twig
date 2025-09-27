@@ -59,6 +59,13 @@
 
                     <form action="{{ route('receipts.post') }}" method="post" class="form-horizontal">
                         {{ csrf_field() }}
+                        {# S3 info (from parse step) #}
+                        {% if s3info is defined and s3info %}
+                        <input type="hidden" name="_s3[s3_key]" value="{{ s3info.s3_key }}">
+                        <input type="hidden" name="_s3[mime]"   value="{{ s3info.mime|default('') }}">
+                        <input type="hidden" name="_s3[size]"   value="{{ s3info.size|default('') }}">
+                        {% endif %}
+
                         {# hidden parsed fields #}
                         <input type="hidden" name="receipt_id"    value="{{ parsed.receipt_id|default('') }}">
                         <input type="hidden" name="merchant"      value="{{ parsed.merchant|default('') }}">
@@ -110,6 +117,60 @@
                 </div>
             </div>
         {% endif %}
+
+        {# Search #}
+        <div class="panel panel-default">
+        <div class="panel-heading">Search receipts</div>
+        <div class="panel-body">
+            <form action="{{ route('receipts.search') }}" method="get" class="form-inline">
+            <div class="form-group">
+                <label for="id">Receipt ID:</label>
+                <input type="text" name="id" id="id" class="form-control" placeholder="UUID / parser id">
+            </div>
+            <div class="form-group" style="margin-left:10px">
+                <label for="merchant">Merchant:</label>
+                <input type="text" name="merchant" id="merchant" class="form-control" placeholder="e.g., SuperMart">
+            </div>
+            <button type="submit" class="btn btn-default" style="margin-left:10px">Search</button>
+            </form>
+        </div>
+        </div>
+
+        {% if results is defined and results|length %}
+        <div class="panel panel-info">
+            <div class="panel-heading">Search results ({{ results|length }})</div>
+            <div class="panel-body table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Receipt ID</th>
+                    <th>Merchant</th>
+                    <th>Date</th>
+                    <th>Total</th>
+                    <th>Currency</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for r in results %}
+                <tr>
+                    <td><code>{{ r.receipt_id }}</code></td>
+                    <td>{{ r.merchant|default('—') }}</td>
+                    <td>{{ r.purchase_date|default('—') }}</td>
+                    <td>{{ r.total_amount|default('—') }}</td>
+                    <td>{{ r.currency|default('—') }}</td>
+                    <td>
+                    <a class="btn btn-xs btn-primary" href="{{ route('receipts.show', [r.receipt_id]) }}" target="_blank">JSON</a>
+                    <a class="btn btn-xs btn-default" href="{{ route('receipts.download', [r.receipt_id]) }}">Download</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        </div>
+        {% endif %}
+
 
     </div>
 </div>
