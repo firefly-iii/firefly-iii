@@ -104,4 +104,9 @@ class Tag extends Model
             'user_group_id' => 'integer',
         ];
     }
+
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
 }
