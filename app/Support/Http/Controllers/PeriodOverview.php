@@ -27,17 +27,20 @@ namespace FireflyIII\Support\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Generator\Report\Category\YearReportGenerator;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Navigation;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -71,6 +74,7 @@ use Illuminate\Support\Facades\Log;
 trait PeriodOverview
 {
     protected AccountRepositoryInterface         $accountRepository;
+    protected CategoryRepositoryInterface         $categoryRepository;
     protected JournalRepositoryInterface         $journalRepos;
     protected PeriodStatisticRepositoryInterface $periodStatisticRepo;
     private Collection                           $statistics;   // temp data holder
@@ -87,6 +91,7 @@ trait PeriodOverview
     {
         Log::debug(sprintf('Now in getAccountPeriodOverview(#%d, %s %s)', $account->id, $start->format('Y-m-d H:i:s.u'), $end->format('Y-m-d H:i:s.u')));
         $this->accountRepository   = app(AccountRepositoryInterface::class);
+        $this->accountRepository->setUser($account->user);
         $this->periodStatisticRepo = app(PeriodStatisticRepositoryInterface::class);
         $range                     = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
@@ -138,24 +143,27 @@ trait PeriodOverview
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
+        $this->categoryRepository   = app(CategoryRepositoryInterface::class);
+        $this->categoryRepository->setUser($category->user);
+        $this->periodStatisticRepo = app(PeriodStatisticRepositoryInterface::class);
+
         $range = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($range);
-        $cache->addProperty('category-show-period-entries');
-        $cache->addProperty($category->id);
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
 
         /** @var array $dates */
         $dates   = Navigation::blockPeriods($start, $end, $range);
         $entries = [];
+        [$start, $end] = $this->getPeriodFromBlocks($dates, $start, $end);
+        $this->statistics = $this->periodStatisticRepo->allInRangeForModel($category, $start, $end);
+
+
+        Log::debug(sprintf('Count of loops: %d', count($dates)));
+        foreach ($dates as $currentDate) {
+            $entries[] = $this->getSingleCategoryPeriod($category, $currentDate['period'], $currentDate['start'], $currentDate['end']);
+        }
+
+        return $entries;
+
 
         // collect all expenses in this period:
         /** @var GroupCollectorInterface $collector */
@@ -199,7 +207,6 @@ trait PeriodOverview
                 'transferred'        => $this->groupByCurrency($transferred),
             ];
         }
-        $cache->store($entries);
 
         return $entries;
     }
@@ -324,6 +331,7 @@ trait PeriodOverview
         return $entries;
     }
 
+
     protected function getSingleAccountPeriod(Account $account, string $period, Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Now in getSingleAccountPeriod(#%d, %s %s)', $account->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -336,6 +344,26 @@ trait PeriodOverview
         $this->transactions = [];
         foreach ($types as $type) {
             $set                          = $this->getSingleAccountPeriodByType($account, $start, $end, $type);
+            $return['total_transactions'] += $set['count'];
+            unset($set['count']);
+            $return[$type] = $set;
+        }
+
+        return $return;
+    }
+
+    protected function getSingleCategoryPeriod(Category $category, string $period, Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('Now in getSingleCategoryPeriod(#%d, %s %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        $types              = ['spent', 'earned', 'transferred_in', 'transferred_away'];
+        $return             = [
+            'title'              => Navigation::periodShow($start, $period),
+            'route'              => route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]),
+            'total_transactions' => 0,
+        ];
+        $this->transactions = [];
+        foreach ($types as $type) {
+            $set                          = $this->getSingleCategoryPeriodByType($category, $start, $end, $type);
             $return['total_transactions'] += $set['count'];
             unset($set['count']);
             $return[$type] = $set;
@@ -406,6 +434,73 @@ trait PeriodOverview
             $grouped = $this->groupByCurrency($result);
 
             $this->saveGroupedAsStatistics($account, $start, $end, $type, $grouped);
+
+            return $grouped;
+        }
+        $grouped = [
+            'count' => 0,
+        ];
+
+        /** @var PeriodStatistic $statistic */
+        foreach ($statistics as $statistic) {
+            $id               = (int)$statistic->transaction_currency_id;
+            $currency         = Amount::getTransactionCurrencyById($id);
+            $grouped[$id]     = [
+                'amount'                  => (string)$statistic->amount,
+                'count'                   => (int)$statistic->count,
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+            ];
+            $grouped['count'] += (int)$statistic->count;
+        }
+
+        return $grouped;
+    }
+
+    protected function getSingleCategoryPeriodByType(Category $category, Carbon $start, Carbon $end, string $type): array
+    {
+        Log::debug(sprintf('Now in getSingleCategoryPeriodByType(#%d, %s %s, %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type));
+        $statistics = $this->filterStatistics($start, $end, $type);
+
+        // nothing found, regenerate them.
+        if (0 === $statistics->count()) {
+            Log::debug(sprintf('Found nothing in this period for type "%s"', $type));
+            if (0 === count($this->transactions)) {
+                $this->transactions = $this->categoryRepository->periodCollection($category, $start, $end);
+            }
+
+            switch ($type) {
+                default:
+                    throw new FireflyException(sprintf('Cannot deal with category period type %s', $type));
+
+                case 'spent':
+                    $result = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $start, $end);
+
+                    break;
+
+                case 'earned':
+                    $result = $this->filterTransactionsByType(TransactionTypeEnum::DEPOSIT, $start, $end);
+
+                    break;
+
+                case 'transferred_in':
+                    $result = $this->filterTransfers('in', $start, $end);
+
+                    break;
+
+                case 'transferred_away':
+                    $result = $this->filterTransfers('away', $start, $end);
+
+                    break;
+            }
+            // each result must be grouped by currency, then saved as period statistic.
+            Log::debug(sprintf('Going to group %d found journal(s)', count($result)));
+            $grouped = $this->groupByCurrency($result);
+
+            $this->saveGroupedAsStatistics($category, $start, $end, $type, $grouped);
 
             return $grouped;
         }
@@ -569,16 +664,16 @@ trait PeriodOverview
         return $entries;
     }
 
-    protected function saveGroupedAsStatistics(Account $account, Carbon $start, Carbon $end, string $type, array $array): void
+    protected function saveGroupedAsStatistics(Model $model, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
-        Log::debug(sprintf('saveGroupedAsStatistics(#%d, %s, %s, "%s", array(%d))', $account->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
+        Log::debug(sprintf('saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))',get_class($model), $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
         foreach ($array as $entry) {
-            $this->periodStatisticRepo->saveStatistic($account, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
+            $this->periodStatisticRepo->saveStatistic($model, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
         if (0 === count($array)) {
             Log::debug('Save empty statistic.');
-            $this->periodStatisticRepo->saveStatistic($account, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
+            $this->periodStatisticRepo->saveStatistic($model, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
         }
     }
 
