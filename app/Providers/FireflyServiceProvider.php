@@ -163,12 +163,23 @@ class FireflyServiceProvider extends ServiceProvider
 
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
         $this->app->bind(ALERepositoryInterface::class, ALERepository::class);
-        $this->app->bind(PeriodStatisticRepositoryInterface::class, PeriodStatisticRepository::class);
 
         $this->app->bind(
             static function (Application $app): ObjectGroupRepositoryInterface {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            static function (Application $app): PeriodStatisticRepositoryInterface {
+                /** @var PeriodStatisticRepository $repository */
+                $repository = app(PeriodStatisticRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }

@@ -8,6 +8,7 @@ use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class PeriodStatistic extends Model
@@ -22,6 +23,11 @@ class PeriodStatistic extends Model
             'start'         => SeparateTimezoneCaster::class,
             'end'           => SeparateTimezoneCaster::class,
         ];
+    }
+
+    public function userGroup(): BelongsTo
+    {
+        return $this->belongsTo(UserGroup::class);
     }
 
     protected function count(): Attribute

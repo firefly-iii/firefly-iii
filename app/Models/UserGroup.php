@@ -77,6 +77,14 @@ class UserGroup extends Model
     }
 
     /**
+     * Link to accounts.
+     */
+    public function periodStatistics(): HasMany
+    {
+        return $this->hasMany(PeriodStatistic::class);
+    }
+
+    /**
      * Link to attachments.
      */
     public function attachments(): HasMany

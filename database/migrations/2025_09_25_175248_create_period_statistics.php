@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('period_statistics', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
+
+            // reference to user group id.
+            $table->bigInteger('user_group_id', false, true);
+
             $table->integer('primary_statable_id', false, true)->nullable();
             $table->string('primary_statable_type', 255)->nullable();
 
@@ -33,6 +37,7 @@ return new class extends Migration
             $table->string('type',255);
             $table->integer('count', false, true)->default(0);
             $table->decimal('amount', 32, 12);
+            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
         });
     }
 

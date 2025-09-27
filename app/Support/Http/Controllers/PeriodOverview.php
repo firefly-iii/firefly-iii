@@ -169,117 +169,129 @@ trait PeriodOverview
      *
      * @throws FireflyException
      */
-    protected function getNoBudgetPeriodOverview(Carbon $start, Carbon $end): array
+    protected function getNoModelPeriodOverview(string $model, Carbon $start, Carbon $end): array
     {
-        $range = Navigation::getViewRange(true);
-
+        Log::debug(sprintf('Now in getNoModelPeriodOverview(%s, %s %s)', $model, $start->format('Y-m-d'), $end->format('Y-m-d')));
+        $this->periodStatisticRepo = app(PeriodStatisticRepositoryInterface::class);
+        $range                     = Navigation::getViewRange(true);
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($this->convertToPrimary);
-        $cache->addProperty('no-budget-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get();
-        }
-
         /** @var array $dates */
-        $dates   = Navigation::blockPeriods($start, $end, $range);
-        $entries = [];
-
-        // get all expenses without a budget.
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->withoutBudget()->withAccountInformation()->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $journals = $collector->getExtractedJournals();
+        $dates = Navigation::blockPeriods($start, $end, $range);
+        [$start, $end] = $this->getPeriodFromBlocks($dates, $start, $end);
+        $entries          = [];
+        $this->statistics = $this->periodStatisticRepo->allInRangeForPrefix(sprintf('no_%s', $model), $start, $end);
+        Log::debug(sprintf('Collected %d stats', $this->statistics->count()));
 
         foreach ($dates as $currentDate) {
-            $set   = $this->filterJournalsByDate($journals, $currentDate['start'], $currentDate['end']);
-            $title = Navigation::periodShow($currentDate['end'], $currentDate['period']);
-            $entries[]
-                   = [
-                'title'              => $title,
-                'route'              => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                'total_transactions' => count($set),
-                'spent'              => $this->groupByCurrency($set),
-                'earned'             => [],
-                'transferred_away'   => [],
-                'transferred_in'     => [],
-            ];
+            $entries[] = $this->getSingleNoModelPeriodOverview($model, $currentDate['start'], $currentDate['end'], $currentDate['period']);
         }
-        $cache->store($entries);
 
         return $entries;
     }
 
-    /**
-     * TODO fix the date.
-     *
-     * Show period overview for no category view.
-     *
-     * @throws FireflyException
-     */
-    protected function getNoCategoryPeriodOverview(Carbon $theDate): array
+    private function getSingleNoModelPeriodOverview(string $model, Carbon $start, Carbon $end, string $period): array
     {
-        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range = Navigation::getViewRange(true);
-        $first = $this->journalRepos->firstNull();
-        $start = null === $first ? new Carbon() : $first->date;
-        $end   = clone $theDate;
-        $end   = Navigation::endOfPeriod($end, $range);
+        Log::debug(sprintf('getSingleNoModelPeriodOverview(%s, %s, %s, %s)', $model, $start->format('Y-m-d'), $end->format('Y-m-d'), $period));
+        $statistics = $this->filterPrefixedStatistics($start, $end, sprintf('no_%s', $model));
+        $title      = Navigation::periodShow($end, $period);
 
-        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
+        if (0 === $statistics->count()) {
+            Log::debug(sprintf('Found no statistics in period %s - %s, regenerating them.', $start->format('Y-m-d'), $end->format('Y-m-d')));
+            switch ($model) {
+                default:
+                    throw new FireflyException(sprintf('Cannot deal with model of type "%s"', $model));
+                case 'budget':
+                    // get all expenses without a budget.
+                    /** @var GroupCollectorInterface $collector */
+                    $collector = app(GroupCollectorInterface::class);
+                    $collector->setRange($start, $end)->withoutBudget()->withAccountInformation()->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
+                    $spent       = $collector->getExtractedJournals();
+                    $earned      = [];
+                    $transferred = [];
+                    break;
+                case 'category':
+                    // collect all expenses in this period:
+                    /** @var GroupCollectorInterface $collector */
+                    $collector = app(GroupCollectorInterface::class);
+                    $collector->withoutCategory();
+                    $collector->setRange($start, $end);
+                    $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
+                    $earned = $collector->getExtractedJournals();
 
-        // properties for cache
-        $dates   = Navigation::blockPeriods($start, $end, $range);
-        $entries = [];
+                    // collect all income in this period:
+                    /** @var GroupCollectorInterface $collector */
+                    $collector = app(GroupCollectorInterface::class);
+                    $collector->withoutCategory();
+                    $collector->setRange($start, $end);
+                    $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
+                    $spent = $collector->getExtractedJournals();
 
-        // collect all expenses in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->withoutCategory();
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $earnedSet = $collector->getExtractedJournals();
-
-        // collect all income in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->withoutCategory();
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $spentSet = $collector->getExtractedJournals();
-
-        // collect all transfers in this period:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->withoutCategory();
-        $collector->setRange($start, $end);
-        $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
-        $transferSet = $collector->getExtractedJournals();
-
-        /** @var array $currentDate */
-        foreach ($dates as $currentDate) {
-            $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
-            $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
-            $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
-            $title       = Navigation::periodShow($currentDate['end'], $currentDate['period']);
-            $entries[]
-                         = [
+                    // collect all transfers in this period:
+                    /** @var GroupCollectorInterface $collector */
+                    $collector = app(GroupCollectorInterface::class);
+                    $collector->withoutCategory();
+                    $collector->setRange($start, $end);
+                    $collector->setTypes([TransactionTypeEnum::TRANSFER->value]);
+                    $transferred = $collector->getExtractedJournals();
+                    break;
+            }
+            $groupedSpent       = $this->groupByCurrency($spent);
+            $groupedEarned      = $this->groupByCurrency($earned);
+            $groupedTransferred = $this->groupByCurrency($transferred);
+            $entry
+                                = [
                 'title'              => $title,
-                'route'              => route('categories.no-category', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                'total_transactions' => count($spent) + count($earned) + count($transferred),
-                'spent'              => $this->groupByCurrency($spent),
-                'earned'             => $this->groupByCurrency($earned),
-                'transferred'        => $this->groupByCurrency($transferred),
+                'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
+                'total_transactions' => count($spent),
+                'spent'              => $groupedSpent,
+                'earned'             => $groupedEarned,
+                'transferred'        => $groupedTransferred,
             ];
+            $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'spent', $groupedSpent);
+            $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'earned', $groupedEarned);
+            $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'transferred', $groupedTransferred);
+            return $entry;
         }
-        Log::debug('End of loops');
+        Log::debug(sprintf('Found %d statistics in period %s - %s.', count($statistics), $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        return $entries;
+        $entry
+                 = [
+            'title'              => $title,
+            'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
+            'total_transactions' => 0,
+            'spent'              => [],
+            'earned'             => [],
+            'transferred'        => [],
+        ];
+        $grouped = [];
+        /** @var PeriodStatistic $statistic */
+        foreach ($statistics as $statistic) {
+            $type                    = str_replace(sprintf('no_%s_', $model), '', $statistic->type);
+            $id                      = (int)$statistic->transaction_currency_id;
+            $currency                = Amount::getTransactionCurrencyById($id);
+            $grouped[$type]['count'] ??= 0;
+            $grouped[$type][$id]     = [
+                'amount'                  => (string)$statistic->amount,
+                'count'                   => (int)$statistic->count,
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+            ];
+            $grouped[$type]['count'] += (int)$statistic->count;
+        }
+        $types = ['spent', 'earned', 'transferred'];
+        foreach ($types as $type) {
+            if (array_key_exists($type, $grouped)) {
+                $entry['total_transactions'] += $grouped[$type]['count'];
+                unset($grouped[$type]['count']);
+                $entry[$type] = $grouped[$type];
+            }
+
+        }
+        return $entry;
     }
 
     protected function getSingleModelPeriod(Model $model, string $period, Carbon $start, Carbon $end): array
@@ -303,30 +315,34 @@ trait PeriodOverview
     }
 
 
-    protected function filterStatistics(Carbon $start, Carbon $end, string $type): Collection
+    private function filterStatistics(Carbon $start, Carbon $end, string $type): Collection
     {
+        if (0 === $this->statistics->count()) {
+            Log::warning('Have no statistic to filter!');
+            return new Collection;
+        }
         return $this->statistics->filter(
             function (PeriodStatistic $statistic) use ($start, $end, $type) {
-                if (
-                    !$statistic->end->equalTo($end)
-                    && $statistic->end->format('Y-m-d H:i:s') === $end->format('Y-m-d H:i:s')
-                ) {
-                    echo sprintf('End:   "%s" vs "%s": %s', $statistic->end->toW3cString(), $end->toW3cString(), var_export($statistic->end->eq($end), true));
-                    var_dump($statistic->end);
-                    var_dump($end);
-
-                    exit;
-                }
-
-
                 return $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type;
             }
         );
     }
 
+    private function filterPrefixedStatistics(Carbon $start, Carbon $end, string $prefix): Collection
+    {
+        if (0 === $this->statistics->count()) {
+            Log::warning('Have no statistic to filter!');
+            return new Collection;
+        }
+        return $this->statistics->filter(
+            function (PeriodStatistic $statistic) use ($start, $end, $prefix) {
+                return $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix);
+            }
+        );
+    }
 
 
-    protected function getSingleModelPeriodByType(Model $model, Carbon $start, Carbon $end, string $type): array
+    private function getSingleModelPeriodByType(Model $model, Carbon $start, Carbon $end, string $type): array
     {
         Log::debug(sprintf('Now in getSingleModelPeriodByType(%s #%d, %s %s, %s)', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type));
         $statistics = $this->filterStatistics($start, $end, $type);
@@ -497,7 +513,7 @@ trait PeriodOverview
         return $entries;
     }
 
-    protected function saveGroupedAsStatistics(Model $model, Carbon $start, Carbon $end, string $type, array $array): void
+    private function saveGroupedAsStatistics(Model $model, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
         Log::debug(sprintf('saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
@@ -507,6 +523,19 @@ trait PeriodOverview
         if (0 === count($array)) {
             Log::debug('Save empty statistic.');
             $this->periodStatisticRepo->saveStatistic($model, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
+        }
+    }
+
+    private function saveGroupedForPrefix(string $prefix, Carbon $start, Carbon $end, string $type, array $array): void
+    {
+        unset($array['count']);
+        Log::debug(sprintf('saveGroupedForPrefix("%s", %s, %s, "%s", array(%d))', $prefix, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
+        foreach ($array as $entry) {
+            $this->periodStatisticRepo->savePrefixedStatistic($prefix, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
+        }
+        if (0 === count($array)) {
+            Log::debug('Save empty statistic.');
+            $this->periodStatisticRepo->savePrefixedStatistic($prefix, $this->primaryCurrency->id, $start, $end, $type, 0, '0');
         }
     }
 
@@ -584,6 +613,9 @@ trait PeriodOverview
         $return = [
             'count' => 0,
         ];
+        if (0 === count($journals)) {
+            return $return;
+        }
 
         /** @var array $journal */
         foreach ($journals as $journal) {
