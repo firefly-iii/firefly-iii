@@ -115,7 +115,8 @@ class CreateController extends Controller
         $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
         $subTitleIcon               = 'fa-plus';
-        /** @var array|null $optionalFields */
+
+        /** @var null|array $optionalFields */
         $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
         $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
         $accountToTypes             = config('firefly.account_to_transaction');

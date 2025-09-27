@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Tools;
 
-use Carbon\CarbonInterface;
 use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Console\Commands\VerifiesAccessToken;

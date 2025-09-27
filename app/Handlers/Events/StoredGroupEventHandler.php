@@ -109,10 +109,10 @@ class StoredGroupEventHandler
             $dest   = $journal->transactions()->where('amount', '>', '0')->first();
             $repository->deleteStatisticsForModel($source->account, $journal->date);
             $repository->deleteStatisticsForModel($dest->account, $journal->date);
-            foreach($journal->categories as $category) {
+            foreach ($journal->categories as $category) {
                 $repository->deleteStatisticsForModel($category, $journal->date);
             }
-            foreach($journal->tags as $tag) {
+            foreach ($journal->tags as $tag) {
                 $repository->deleteStatisticsForModel($tag, $journal->date);
             }
         }

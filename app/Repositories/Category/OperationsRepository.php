@@ -510,7 +510,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static fn(array $expense): bool => $expense['category_id'] === $category->id);
+        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['category_id'] === $category->id);
 
         return $summarizer->groupByCurrencyId($expenses, $method, false);
     }

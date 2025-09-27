@@ -38,7 +38,7 @@ class PreferencesSingleton
 
     public static function getInstance(): self
     {
-        if (!self::$instance instanceof PreferencesSingleton) {
+        if (!self::$instance instanceof self) {
             self::$instance = new self();
         }
 
