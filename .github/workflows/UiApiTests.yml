@@ -1,4 +1,10 @@
-name: UI Tests on Pull Request
+
+
+
+
+
+
+name: UI + API + Parser Tests
 
 on:
   pull_request:
@@ -8,18 +14,17 @@ permissions:
   contents: read
 
 jobs:
+  # === 1) UI (כבר עבד לך) ===
   ui-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 30
-
     env:
-      FIREFLY_URL: "http://54.217.40.63:8082"   # ← ה-URL החיצוני שלך
+      FIREFLY_URL: "http://54.217.40.63:8080"
       EMAIL: ${{ secrets.FIREFLY_EMAIL }}
       PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
       HEADLESS: "true"
       CI: "true"
       PYTHONUNBUFFERED: "1"
-
     steps:
       - name: Checkout Firefly III repository (PR code)
         uses: actions/checkout@v4
@@ -47,22 +52,14 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
           pip install "selenium>=4.13" pillow pytest pytest-timeout
 
-      - name: Show versions (debug)
-        run: |
-          google-chrome --version || true
-          python -c "import selenium,sys; print('selenium', selenium.__version__); print(sys.version)"
-          echo "FIREFLY_URL=${FIREFLY_URL}"
-
       - name: Wait for Firefly to be ready
         run: |
           echo "Waiting for ${FIREFLY_URL}..."
           for i in $(seq 1 40); do
             if curl -fsSL -o /dev/null "${FIREFLY_URL}/login" || curl -fsSL -o /dev/null "${FIREFLY_URL}/api/v1/ping"; then
-              echo "✅ Firefly is reachable"
-              exit 0
+              echo "✅ Firefly is reachable"; exit 0
             fi
-            echo "Attempt $i/40: not ready, sleeping 3s..."
-            sleep 3
+            echo "Attempt $i/40: not ready, sleeping 3s..."; sleep 3
           done
           echo "❌ Firefly did not become ready."
           curl -I "${FIREFLY_URL}/login" || true
@@ -73,7 +70,7 @@ jobs:
           cd firefly-UI
           pytest tests/ -v --disable-warnings --timeout=120
 
-      - name: Upload test artifacts (optional)
+      - name: Upload UI artifacts (optional)
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -82,3 +79,227 @@ jobs:
             firefly-UI/reports/**
             firefly-UI/screenshots/**
           if-no-files-found: ignore
+
+  # === 2) receipt-parser ===
+  receipt-parser-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout receipt-parser
+        uses: actions/checkout@v4
+        with:
+          repository: tmeraslan/receipt-parser
+          path: receipt-parser
+          # אם repo פרטי: הוסף token עם גישת read
+          # token: ${{ secrets.CI_GH_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          cd receipt-parser
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          cd receipt-parser
+          pytest tests -v --disable-warnings
+
+      - name: Upload parser artifacts (optional)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: receipt-parser-artifacts
+          path: |
+            receipt-parser/.pytest_cache/**
+          if-no-files-found: ignore
+
+  # === 3) firefly API tests (auto-detect: PHP/Python/Postman/Node) ===
+  firefly-api-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      FIREFLY_URL: "http://54.217.40.63:8080"
+      FIREFLY_API_TOKEN: ${{ secrets.FIREFLY_API_TOKEN }}   # אם צריך טוקן ל-API
+      CI: "true"
+    steps:
+      - name: Checkout firefly (API repo)
+        uses: actions/checkout@v4
+        with:
+          repository: tmeraslan/firefly
+          path: firefly-api
+          # אם repo פרטי: הוסף token עם גישת read
+          # token: ${{ secrets.CI_GH_TOKEN }}
+
+      - name: Detect & run API tests
+        shell: bash
+        working-directory: firefly-api
+        run: |
+          set -Eeuo pipefail
+          echo "🔎 Detecting project type in $(pwd)..."
+
+          has_php=false
+          has_py=false
+          has_node=false
+          has_postman=false
+
+          [[ -f composer.json ]] && has_php=true
+          # אם יש requirements.txt או קבצי טסטים ב-Python
+          if [[ -f requirements.txt ]]; then
+            has_py=true
+          elif compgen -G "tests/*.py" >/dev/null; then
+            has_py=true
+          fi
+          [[ -f package.json ]] && has_node=true
+          compgen -G "*.postman_collection.json" >/dev/null && has_postman=true
+
+          if $has_php; then
+            echo "→ PHP project detected"
+            sudo apt-get update
+            sudo apt-get install -y php-cli php-xml php-mbstring php-curl unzip
+            curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+            composer install --no-interaction --prefer-dist
+            if [[ -x vendor/bin/pest ]]; then
+              vendor/bin/pest -v
+            elif [[ -f phpunit.xml || -f phpunit.xml.dist ]]; then
+              vendor/bin/phpunit --testdox
+            else
+              echo "❌ No Pest/PHPUnit config found."
+              exit 1
+            fi
+
+          elif $has_py; then
+            echo "→ Python API tests detected"
+            python -m pip install --upgrade pip
+            if [[ -f requirements.txt ]]; then pip install -r requirements.txt; fi
+            pip install pytest requests
+            pytest tests -v --disable-warnings
+
+          elif $has_node; then
+            echo "→ Node/Postman project detected"
+            npm ci || npm install
+            if $has_postman; then
+              npm i -g newman
+              shopt -s nullglob
+              if compgen -G "*.postman_environment.json" >/dev/null; then
+                for c in *.postman_collection.json; do
+                  for e in *.postman_environment.json; do
+                    echo "Running newman: $c with $e"
+                    newman run "$c" -e "$e" --env-var baseUrl="${FIREFLY_URL}" --env-var token="${FIREFLY_API_TOKEN}"
+                  done
+                done
+              else
+                for c in *.postman_collection.json; do
+                  echo "Running newman: $c"
+                  newman run "$c" --env-var baseUrl="${FIREFLY_URL}" --env-var token="${FIREFLY_API_TOKEN}"
+                done
+              fi
+            else
+              echo "Running npm test"
+              npm test --silent || npm run test
+            fi
+
+          else
+            echo "❌ Could not detect project type (no composer.json / requirements.txt / package.json / tests)."
+            ls -la
+            exit 1
+          fi
+
+
+
+
+
+
+
+
+
+
+# name: UI Tests
+
+# on:
+#   pull_request:
+#     branches: [ main ]
+
+# permissions:
+#   contents: read
+
+# jobs:
+#   ui-tests:
+#     runs-on: ubuntu-latest
+#     timeout-minutes: 30
+
+#     env:
+#       FIREFLY_URL: "http://54.217.40.63:8080"   # ← ה-URL החיצוני שלך
+#       EMAIL: ${{ secrets.FIREFLY_EMAIL }}
+#       PASSWORD: ${{ secrets.FIREFLY_PASSWORD }}
+#       HEADLESS: "true"
+#       CI: "true"
+#       PYTHONUNBUFFERED: "1"
+
+#     steps:
+#       - name: Checkout Firefly III repository (PR code)
+#         uses: actions/checkout@v4
+
+#       - name: Checkout Firefly-UI (tests repo)
+#         uses: actions/checkout@v4
+#         with:
+#           repository: tmeraslan/firefly-UI
+#           path: firefly-UI
+
+#       - name: Setup Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.11"
+
+#       - name: Setup Chrome (stable)
+#         uses: browser-actions/setup-chrome@v1
+#         with:
+#           chrome-version: stable
+
+#       - name: Install Python dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           cd firefly-UI
+#           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+#           pip install "selenium>=4.13" pillow pytest pytest-timeout
+
+#       - name: Show versions (debug)
+#         run: |
+#           google-chrome --version || true
+#           python -c "import selenium,sys; print('selenium', selenium.__version__); print(sys.version)"
+#           echo "FIREFLY_URL=${FIREFLY_URL}"
+
+#       - name: Wait for Firefly to be ready
+#         run: |
+#           echo "Waiting for ${FIREFLY_URL}..."
+#           for i in $(seq 1 40); do
+#             if curl -fsSL -o /dev/null "${FIREFLY_URL}/login" || curl -fsSL -o /dev/null "${FIREFLY_URL}/api/v1/ping"; then
+#               echo "✅ Firefly is reachable"
+#               exit 0
+#             fi
+#             echo "Attempt $i/40: not ready, sleeping 3s..."
+#             sleep 3
+#           done
+#           echo "❌ Firefly did not become ready."
+#           curl -I "${FIREFLY_URL}/login" || true
+#           exit 1
+
+#       - name: Run Selenium UI tests (headless)
+#         run: |
+#           cd firefly-UI
+#           pytest tests/ -v --disable-warnings --timeout=120
+
+#       - name: Upload test artifacts (optional)
+#         if: always()
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: ui-test-artifacts
+#           path: |
+#             firefly-UI/reports/**
+#             firefly-UI/screenshots/**
+#           if-no-files-found: ignore
