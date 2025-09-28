@@ -33,8 +33,8 @@ services:
       RECEIPT_PARSER_URL: "http://host.docker.internal:8000"
 
       # === S3 ===
-      AWS_ACCESS_KEY_ID: "AKIATKJU5R37TGA7TQEY"
-      AWS_SECRET_ACCESS_KEY: "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"
+      AWS_ACCESS_KEY_ID: 
+      AWS_SECRET_ACCESS_KEY: 
       AWS_DEFAULT_REGION: "eu-west-1"
       AWS_BUCKET: "tameerfirefly"
       RECEIPT_S3_BUCKET: "tameerfirefly"   # ← תואם ל-AWS_BUCKET
