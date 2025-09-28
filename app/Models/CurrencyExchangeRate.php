@@ -37,7 +37,8 @@ class CurrencyExchangeRate extends Model
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
-    protected $fillable = ['user_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
+
+    protected $fillable = ['user_id', 'user_group_id', 'from_currency_id', 'to_currency_id', 'date', 'date_tz', 'rate'];
 
     public function fromCurrency(): BelongsTo
     {
@@ -54,34 +55,6 @@ class CurrencyExchangeRate extends Model
         return $this->belongsTo(User::class);
     }
 
-    protected function fromCurrencyId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function rate(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string) $value,
-        );
-    }
-
-    protected function toCurrencyId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function userRate(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -95,5 +68,33 @@ class CurrencyExchangeRate extends Model
             'rate'             => 'string',
             'user_rate'        => 'string',
         ];
+    }
+
+    protected function fromCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function rate(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
+    protected function toCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function userRate(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (string)$value,
+        );
     }
 }

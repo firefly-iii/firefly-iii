@@ -40,19 +40,19 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetEnrichment implements EnrichmentInterface
 {
-    private Collection          $collection;
-    private User                $user;
-    private UserGroup           $userGroup;
-    private array               $ids           = [];
-    private array               $notes         = [];
-    private array               $autoBudgets   = [];
-    private array               $currencies    = [];
-    private ?Carbon             $start         = null;
-    private ?Carbon             $end           = null;
-    private array               $spent         = [];
-    private array               $pcSpent       = [];
-    private array               $objectGroups  = [];
-    private array               $mappedObjects = [];
+    private array      $autoBudgets   = [];
+    private Collection $collection;
+    private array      $currencies    = [];
+    private ?Carbon    $end           = null;
+    private array      $ids           = [];
+    private array      $mappedObjects = [];
+    private array      $notes         = [];
+    private array      $objectGroups  = [];
+    private array      $pcSpent       = [];
+    private array      $spent         = [];
+    private ?Carbon    $start         = null;
+    private User       $user;
+    private UserGroup  $userGroup;
 
     public function __construct() {}
 
@@ -79,6 +79,16 @@ class BudgetEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
+    public function setEnd(?Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(?Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
     public function setUser(User $user): void
     {
         $this->user = $user;
@@ -88,28 +98,6 @@ class BudgetEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
-    }
-
-    private function collectIds(): void
-    {
-        /** @var Budget $budget */
-        foreach ($this->collection as $budget) {
-            $this->ids[] = (int)$budget->id;
-        }
-        $this->ids = array_unique($this->ids);
-    }
-
-    private function collectNotes(): void
-    {
-        $notes = Note::query()->whereIn('noteable_id', $this->ids)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
-        foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
-        }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function appendCollectedData(): void
@@ -130,7 +118,7 @@ class BudgetEnrichment implements EnrichmentInterface
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string)$this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
@@ -177,14 +165,26 @@ class BudgetEnrichment implements EnrichmentInterface
         }
     }
 
-    public function setEnd(?Carbon $end): void
+    private function collectIds(): void
     {
-        $this->end = $end;
+        /** @var Budget $budget */
+        foreach ($this->collection as $budget) {
+            $this->ids[] = (int)$budget->id;
+        }
+        $this->ids = array_unique($this->ids);
     }
 
-    public function setStart(?Carbon $start): void
+    private function collectNotes(): void
     {
-        $this->start = $start;
+        $notes = Note::query()->whereIn('noteable_id', $this->ids)
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
+        foreach ($notes as $note) {
+            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+        }
+        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectObjectGroups(): void

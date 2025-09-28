@@ -74,7 +74,7 @@ class UpdateController extends Controller
     public function updateByDate(UpdateRequest $request, TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (null === $exchangeRate) {
+        if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new NotFoundHttpException();
         }
         $date         = $request->getDate();

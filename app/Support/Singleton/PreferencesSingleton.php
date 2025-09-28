@@ -38,11 +38,16 @@ class PreferencesSingleton
 
     public static function getInstance(): self
     {
-        if (null === self::$instance) {
+        if (!self::$instance instanceof self) {
             self::$instance = new self();
         }
 
         return self::$instance;
+    }
+
+    public function getPreference(string $key): mixed
+    {
+        return $this->preferences[$key] ?? null;
     }
 
     public function resetPreferences(): void
@@ -53,10 +58,5 @@ class PreferencesSingleton
     public function setPreference(string $key, mixed $value): void
     {
         $this->preferences[$key] = $value;
-    }
-
-    public function getPreference(string $key): mixed
-    {
-        return $this->preferences[$key] ?? null;
     }
 }

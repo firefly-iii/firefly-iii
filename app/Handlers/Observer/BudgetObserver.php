@@ -31,6 +31,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
+use FireflyIII\Support\Singleton\PreferencesSingleton;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -45,32 +46,43 @@ class BudgetObserver
     {
         Log::debug(sprintf('Observe "created" of budget #%d ("%s").', $budget->id, $budget->name));
 
-        // fire event.
-        $user   = $budget->user;
+        // this is a lame trick to communicate with the observer.
+        $singleton = PreferencesSingleton::getInstance();
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($budget));
-        $engine->setTrigger(WebhookTrigger::STORE_BUDGET);
-        $engine->generateMessages();
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        if (true === $singleton->getPreference('fire_webhooks_budget_create')) {
+            // fire event.
+            $user   = $budget->user;
+
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser($user);
+            $engine->setObjects(new Collection()->push($budget));
+            $engine->setTrigger(WebhookTrigger::STORE_BUDGET);
+            $engine->generateMessages();
+            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
+            event(new RequestedSendWebhookMessages());
+        }
     }
 
     public function updated(Budget $budget): void
     {
         Log::debug(sprintf('Observe "updated" of budget #%d ("%s").', $budget->id, $budget->name));
-        $user   = $budget->user;
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($budget));
-        $engine->setTrigger(WebhookTrigger::UPDATE_BUDGET);
-        $engine->generateMessages();
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        // this is a lame trick to communicate with the observer.
+        $singleton = PreferencesSingleton::getInstance();
+
+        if (true === $singleton->getPreference('fire_webhooks_budget_update')) {
+            $user   = $budget->user;
+
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser($user);
+            $engine->setObjects(new Collection()->push($budget));
+            $engine->setTrigger(WebhookTrigger::UPDATE_BUDGET);
+            $engine->generateMessages();
+            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
+            event(new RequestedSendWebhookMessages());
+        }
     }
 
     public function deleting(Budget $budget): void

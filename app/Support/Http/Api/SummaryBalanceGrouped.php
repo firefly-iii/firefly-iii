@@ -60,7 +60,7 @@ class SummaryBalanceGrouped
             $return[] = [
                 'key'                     => sprintf('%s-in-pc', $title),
                 'value'                   => $this->amounts[$key]['primary'] ?? '0',
-                'currency_id'             => (string) $this->default->id,
+                'currency_id'             => (string)$this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
                 'currency_decimal_places' => $this->default->decimal_places,
@@ -73,7 +73,7 @@ class SummaryBalanceGrouped
                 // skip primary entries.
                 continue;
             }
-            $currencyId                    = (int) $currencyId;
+            $currencyId                    = (int)$currencyId;
             $currency                      = $this->currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
             $this->currencies[$currencyId] = $currency;
             // create objects for big array.
@@ -87,7 +87,7 @@ class SummaryBalanceGrouped
                 $return[] = [
                     'key'                     => sprintf('%s-in-%s', $title, $currency->code),
                     'value'                   => $this->amounts[$key][$currencyId] ?? '0',
-                    'currency_id'             => (string) $currency->id,
+                    'currency_id'             => (string)$currency->id,
                     'currency_code'           => $currency->code,
                     'currency_symbol'         => $currency->symbol,
                     'currency_decimal_places' => $currency->decimal_places,
@@ -109,12 +109,12 @@ class SummaryBalanceGrouped
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId                            = (int) $journal['currency_id'];
-            $amount                                = bcmul((string) $journal['amount'], $multiplier);
+            $currencyId                            = (int)$journal['currency_id'];
+            $amount                                = bcmul((string)$journal['amount'], $multiplier);
             $currency                              = $this->currencies[$currencyId] ?? Amount::getTransactionCurrencyById($currencyId);
             $this->currencies[$currencyId]         = $currency;
             $pcAmount                              = $converter->convert($currency, $this->default, $journal['date'], $amount);
-            if ((int) $journal['foreign_currency_id'] === $this->default->id) {
+            if ((int)$journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $pcAmount = $journal['foreign_amount'];
             }
@@ -126,10 +126,10 @@ class SummaryBalanceGrouped
             $this->amounts[self::SUM]['primary']   ??= '0';
 
             // add values:
-            $this->amounts[$key][$currencyId]      = bcadd((string) $this->amounts[$key][$currencyId], $amount);
-            $this->amounts[self::SUM][$currencyId] = bcadd((string) $this->amounts[self::SUM][$currencyId], $amount);
-            $this->amounts[$key]['primary']        = bcadd((string) $this->amounts[$key]['primary'], (string) $pcAmount);
-            $this->amounts[self::SUM]['primary']   = bcadd((string) $this->amounts[self::SUM]['primary'], (string) $pcAmount);
+            $this->amounts[$key][$currencyId]      = bcadd((string)$this->amounts[$key][$currencyId], $amount);
+            $this->amounts[self::SUM][$currencyId] = bcadd((string)$this->amounts[self::SUM][$currencyId], $amount);
+            $this->amounts[$key]['primary']        = bcadd((string)$this->amounts[$key]['primary'], (string)$pcAmount);
+            $this->amounts[self::SUM]['primary']   = bcadd((string)$this->amounts[self::SUM]['primary'], (string)$pcAmount);
         }
         $converter->summarize();
     }

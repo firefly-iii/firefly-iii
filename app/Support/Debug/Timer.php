@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Log;
 
 class Timer
 {
-    private array         $times    = [];
     private static ?Timer $instance = null;
+    private array         $times    = [];
 
     private function __construct()
     {
@@ -38,7 +38,7 @@ class Timer
 
     public static function getInstance(): self
     {
-        if (null === self::$instance) {
+        if (!self::$instance instanceof self) {
             self::$instance = new self();
         }
 

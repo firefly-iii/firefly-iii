@@ -43,22 +43,18 @@ class OAuthKeys
     private const string PRIVATE_KEY = 'oauth_private_key';
     private const string PUBLIC_KEY  = 'oauth_public_key';
 
-    public static function verifyKeysRoutine(): void
+    public static function generateKeys(): void
     {
-        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::generateKeys();
-            self::storeKeysInDB();
+        Artisan::registerCommand(new KeysCommand());
+        Artisan::call('firefly-iii:laravel-passport-keys');
+    }
 
-            return;
-        }
-        if (self::keysInDatabase() && !self::hasKeyFiles()) {
-            self::restoreKeysFromDB();
+    public static function hasKeyFiles(): bool
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
 
-            return;
-        }
-        if (!self::keysInDatabase() && self::hasKeyFiles()) {
-            self::storeKeysInDB();
-        }
+        return file_exists($private) && file_exists($public);
     }
 
     public static function keysInDatabase(): bool
@@ -68,8 +64,8 @@ class OAuthKeys
         // better check if keys are in the database:
         if (app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY)) {
             try {
-                $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-                $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+                $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+                $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
             } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
@@ -82,35 +78,13 @@ class OAuthKeys
         return false;
     }
 
-    public static function hasKeyFiles(): bool
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-
-        return file_exists($private) && file_exists($public);
-    }
-
-    public static function generateKeys(): void
-    {
-        Artisan::registerCommand(new KeysCommand());
-        Artisan::call('firefly-iii:laravel-passport-keys');
-    }
-
-    public static function storeKeysInDB(): void
-    {
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
-    }
-
     /**
      * @throws FireflyException
      */
     public static function restoreKeysFromDB(): bool
     {
-        $privateKey = (string) app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-        $publicKey  = (string) app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
 
         try {
             $privateContent = Crypt::decrypt($privateKey);
@@ -131,5 +105,31 @@ class OAuthKeys
         file_put_contents($public, $publicContent);
 
         return true;
+    }
+
+    public static function storeKeysInDB(): void
+    {
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
+        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
+    }
+
+    public static function verifyKeysRoutine(): void
+    {
+        if (!self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::generateKeys();
+            self::storeKeysInDB();
+
+            return;
+        }
+        if (self::keysInDatabase() && !self::hasKeyFiles()) {
+            self::restoreKeysFromDB();
+
+            return;
+        }
+        if (!self::keysInDatabase() && self::hasKeyFiles()) {
+            self::storeKeysInDB();
+        }
     }
 }

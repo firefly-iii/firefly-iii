@@ -38,16 +38,16 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventEnrichment implements EnrichmentInterface
 {
-    private User       $user; // @phpstan-ignore-line
-    private UserGroup  $userGroup; // @phpstan-ignore-line
+    private array      $accountCurrencies = [];      // @phpstan-ignore-line
+    private array      $accountIds        = [];      // @phpstan-ignore-line
     private Collection $collection;
+    private array      $currencies        = [];
+    private array      $groupIds          = [];
     private array      $ids               = [];
     private array      $journalIds        = [];
-    private array      $groupIds          = [];
-    private array      $accountIds        = [];
     private array      $piggyBankIds      = [];
-    private array      $accountCurrencies = [];
-    private array      $currencies        = [];
+    private User       $user;
+    private UserGroup  $userGroup;
     // private bool       $convertToPrimary  = false;
     // private TransactionCurrency $primaryCurrency;
 
@@ -84,6 +84,30 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
+    }
+
+    private function appendCollectedData(): void
+    {
+        $this->collection = $this->collection->map(function (PiggyBankEvent $item) {
+            $id         = (int)$item->id;
+            $piggyId    = (int)$item->piggy_bank_id;
+            $journalId  = (int)$item->transaction_journal_id;
+            $currency   = null;
+            if (array_key_exists($piggyId, $this->accountIds)) {
+                $accountId = $this->accountIds[$piggyId];
+                if (array_key_exists($accountId, $this->accountCurrencies)) {
+                    $currency = $this->accountCurrencies[$accountId];
+                }
+            }
+            $meta       = [
+                'transaction_group_id' => array_key_exists($journalId, $this->groupIds) ? (string)$this->groupIds[$journalId] : null,
+                'currency'             => $currency,
+            ];
+            $item->meta = $meta;
+
+            return $item;
+        });
+
     }
 
     private function collectIds(): void
@@ -124,29 +148,5 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
             }
             $this->accountCurrencies[$accountId] = $this->currencies[$currencyId];
         }
-    }
-
-    private function appendCollectedData(): void
-    {
-        $this->collection = $this->collection->map(function (PiggyBankEvent $item) {
-            $id         = (int)$item->id;
-            $piggyId    = (int)$item->piggy_bank_id;
-            $journalId  = (int)$item->transaction_journal_id;
-            $currency   = null;
-            if (array_key_exists($piggyId, $this->accountIds)) {
-                $accountId = $this->accountIds[$piggyId];
-                if (array_key_exists($accountId, $this->accountCurrencies)) {
-                    $currency = $this->accountCurrencies[$accountId];
-                }
-            }
-            $meta       = [
-                'transaction_group_id' => array_key_exists($journalId, $this->groupIds) ? (string)$this->groupIds[$journalId] : null,
-                'currency'             => $currency,
-            ];
-            $item->meta = $meta;
-
-            return $item;
-        });
-
     }
 }

@@ -23,24 +23,33 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use Config;
 use Override;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 /**
  * Class Rule.
  */
 class Rule extends AbstractExtension
 {
-    #[Override]
-    public function getFunctions(): array
+    public function allActionTriggers(): TwigFunction
     {
-        return [
-            $this->allJournalTriggers(),
-            $this->allRuleTriggers(),
-            $this->allActionTriggers(),
-        ];
+        return new TwigFunction(
+            'allRuleActions',
+            static function () {
+                // array of valid values for actions
+                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+                $possibleActions = [];
+                foreach ($ruleActions as $key) {
+                    $possibleActions[$key] = (string)trans('firefly.rule_action_'.$key.'_choice');
+                }
+                unset($ruleActions);
+                asort($possibleActions);
+
+                return $possibleActions;
+            }
+        );
     }
 
     public function allJournalTriggers(): TwigFunction
@@ -48,9 +57,9 @@ class Rule extends AbstractExtension
         return new TwigFunction(
             'allJournalTriggers',
             static fn () => [
-                'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
-                'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
-                'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
+                'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
+                'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
+                'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
             ]
         );
     }
@@ -64,7 +73,7 @@ class Rule extends AbstractExtension
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
                     if ('user_action' !== $key) {
-                        $possibleTriggers[$key] = (string) trans('firefly.rule_trigger_'.$key.'_choice');
+                        $possibleTriggers[$key] = (string)trans('firefly.rule_trigger_'.$key.'_choice');
                     }
                 }
                 unset($ruleTriggers);
@@ -75,22 +84,13 @@ class Rule extends AbstractExtension
         );
     }
 
-    public function allActionTriggers(): TwigFunction
+    #[Override]
+    public function getFunctions(): array
     {
-        return new TwigFunction(
-            'allRuleActions',
-            static function () {
-                // array of valid values for actions
-                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-                $possibleActions = [];
-                foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
-                }
-                unset($ruleActions);
-                asort($possibleActions);
-
-                return $possibleActions;
-            }
-        );
+        return [
+            $this->allJournalTriggers(),
+            $this->allRuleTriggers(),
+            $this->allActionTriggers(),
+        ];
     }
 }

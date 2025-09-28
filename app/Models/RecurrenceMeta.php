@@ -44,13 +44,6 @@ class RecurrenceMeta extends Model
         return $this->belongsTo(Recurrence::class);
     }
 
-    protected function recurrenceId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -60,5 +53,12 @@ class RecurrenceMeta extends Model
             'name'       => 'string',
             'value'      => 'string',
         ];
+    }
+
+    protected function recurrenceId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

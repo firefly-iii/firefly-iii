@@ -86,6 +86,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return $this->handleAttachment($request, $e);
 
             case 'bills.show':
+            case 'subscriptions.show':
                 $request->session()->reflash();
 
                 return redirect(route('bills.index'));

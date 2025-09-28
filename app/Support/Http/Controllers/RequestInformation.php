@@ -32,9 +32,9 @@ use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Route as RouteFacade;
+use Illuminate\Support\Facades\Validator;
 
 use function Safe\parse_url;
 
@@ -54,6 +54,22 @@ trait RequestInformation
         return $parts['host'] ?? '';
     }
 
+    final protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     */
+    final protected function getSpecificPageName(): string // get request info
+    {
+        /** @var null|string $param */
+        $param = RouteFacade::current()->parameter('objectType');
+
+        return null === $param ? '' : sprintf('_%s', $param);
+    }
+
     /**
      * Get a list of triggers.
      */
@@ -67,7 +83,7 @@ trait RequestInformation
                     'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
                     'prohibited'      => $triggerInfo['prohibited'] ?? false,
-                    'stop_processing' => 1 === (int) ($triggerInfo['stop_processing'] ?? '0'),
+                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];
                 $current    = RuleFormRequest::replaceAmountTrigger($current);
                 $triggers[] = $current;
@@ -101,22 +117,6 @@ trait RequestInformation
         }
 
         return $shownDemo;
-    }
-
-    final protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     */
-    final protected function getSpecificPageName(): string // get request info
-    {
-        /** @var null|string $param */
-        $param = RouteFacade::current()->parameter('objectType');
-
-        return null === $param ? '' : sprintf('_%s', $param);
     }
 
     /**
@@ -172,11 +172,11 @@ trait RequestInformation
     final protected function validatePassword(User $user, string $current, string $new): bool // get request info
     {
         if (!Hash::check($current, $user->password)) {
-            throw new ValidationException((string) trans('firefly.invalid_current_password'));
+            throw new ValidationException((string)trans('firefly.invalid_current_password'));
         }
 
         if ($current === $new) {
-            throw new ValidationException((string) trans('firefly.should_change'));
+            throw new ValidationException((string)trans('firefly.should_change'));
         }
 
         return true;

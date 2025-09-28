@@ -50,60 +50,6 @@ class CurrencyForm
     }
 
     /**
-     * @phpstan-param view-string $view
-     *
-     * @throws FireflyException
-     */
-    protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
-
-        /** @var Collection $currencies */
-        $currencies      = app('amount')->getCurrencies();
-        unset($options['currency'], $options['placeholder']);
-        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled       = session('preFilled');
-        if (!is_array($preFilled)) {
-            $preFilled = [];
-        }
-        $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $primaryCurrency->id;
-
-        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
-
-        // find this currency in set of currencies:
-        foreach ($currencies as $currency) {
-            if ($currency->id === $sentCurrencyId) {
-                $primaryCurrency = $currency;
-                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
-
-                break;
-            }
-        }
-
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
-        }
-
-        try {
-            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
-            $html = 'Could not render currencyField.';
-
-            throw new FireflyException($html, 0, $e);
-        }
-
-        return $html;
-    }
-
-    /**
      * TODO describe and cleanup.
      *
      * @param mixed $value
@@ -113,63 +59,6 @@ class CurrencyForm
     public function balanceAll(string $name, $value = null, ?array $options = null): string
     {
         return $this->allCurrencyField($name, 'balance', $value, $options);
-    }
-
-    /**
-     * TODO describe and cleanup
-     *
-     * @param mixed $value
-     *
-     * @throws FireflyException
-     */
-    protected function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
-
-        /** @var Collection $currencies */
-        $currencies      = app('amount')->getAllCurrencies();
-        unset($options['currency'], $options['placeholder']);
-
-        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled       = session('preFilled');
-        if (!is_array($preFilled)) {
-            $preFilled = [];
-        }
-        $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $primaryCurrency->id;
-
-        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
-
-        // find this currency in set of currencies:
-        foreach ($currencies as $currency) {
-            if ($currency->id === $sentCurrencyId) {
-                $primaryCurrency = $currency;
-                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
-
-                break;
-            }
-        }
-
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
-        }
-
-        try {
-            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
-            $html = 'Could not render currencyField.';
-
-            throw new FireflyException($html, 0, $e);
-        }
-
-        return $html;
     }
 
     /**
@@ -207,7 +96,7 @@ class CurrencyForm
         // get all currencies:
         $list          = $currencyRepos->get();
         $array         = [
-            0 => (string) trans('firefly.no_currency'),
+            0 => (string)trans('firefly.no_currency'),
         ];
 
         /** @var TransactionCurrency $currency */
@@ -216,5 +105,116 @@ class CurrencyForm
         }
 
         return $this->select($name, $array, $value, $options);
+    }
+
+    /**
+     * TODO describe and cleanup
+     *
+     * @param mixed $value
+     *
+     * @throws FireflyException
+     */
+    protected function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
+
+        /** @var Collection $currencies */
+        $currencies      = app('amount')->getAllCurrencies();
+        unset($options['currency'], $options['placeholder']);
+
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled       = session('preFilled');
+        if (!is_array($preFilled)) {
+            $preFilled = [];
+        }
+        $key             = 'amount_currency_id_'.$name;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
+
+        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $primaryCurrency = $currency;
+                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
+
+                break;
+            }
+        }
+
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
+        }
+
+        try {
+            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
+    }
+
+    /**
+     * @phpstan-param view-string $view
+     *
+     * @throws FireflyException
+     */
+    protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
+
+        /** @var Collection $currencies */
+        $currencies      = app('amount')->getCurrencies();
+        unset($options['currency'], $options['placeholder']);
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled       = session('preFilled');
+        if (!is_array($preFilled)) {
+            $preFilled = [];
+        }
+        $key             = 'amount_currency_id_'.$name;
+        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
+
+        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $primaryCurrency = $currency;
+                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
+
+                break;
+            }
+        }
+
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
+        }
+
+        try {
+            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+
+            throw new FireflyException($html, 0, $e);
+        }
+
+        return $html;
     }
 }

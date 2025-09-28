@@ -78,10 +78,10 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.4.0',
-    'build_time'                   => 1757781366,
+    'version'                      => 'develop/2025-09-27',
+    'build_time'                   => 1758945787,
     'api_version'                  => '2.1.0', // field is no longer used.
-    'db_version'                   => 26,
+    'db_version'                   => 27,
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB

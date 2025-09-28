@@ -38,18 +38,18 @@ use Illuminate\Support\Facades\Log;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private User       $user;
-    private UserGroup  $userGroup;
+    private array      $earned      = [];
+    private ?Carbon    $end         = null;
     private array      $ids         = [];
     private array      $notes       = [];
-    private ?Carbon    $start       = null;
-    private ?Carbon    $end         = null;
-    private array      $spent       = [];
-    private array      $pcSpent     = [];
-    private array      $earned      = [];
     private array      $pcEarned    = [];
-    private array      $transfers   = [];
+    private array      $pcSpent     = [];
     private array      $pcTransfers = [];
+    private array      $spent       = [];
+    private ?Carbon    $start       = null;
+    private array      $transfers   = [];
+    private User       $user;
+    private UserGroup  $userGroup;
 
     public function enrich(Collection $collection): Collection
     {
@@ -71,6 +71,16 @@ class CategoryEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
+    public function setEnd(?Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(?Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
     public function setUser(User $user): void
     {
         $this->user = $user;
@@ -80,15 +90,6 @@ class CategoryEnrichment implements EnrichmentInterface
     public function setUserGroup(UserGroup $userGroup): void
     {
         $this->userGroup = $userGroup;
-    }
-
-    private function collectIds(): void
-    {
-        /** @var Category $category */
-        foreach ($this->collection as $category) {
-            $this->ids[] = (int)$category->id;
-        }
-        $this->ids = array_unique($this->ids);
     }
 
     private function appendCollectedData(): void
@@ -110,14 +111,13 @@ class CategoryEnrichment implements EnrichmentInterface
         });
     }
 
-    public function setEnd(?Carbon $end): void
+    private function collectIds(): void
     {
-        $this->end = $end;
-    }
-
-    public function setStart(?Carbon $start): void
-    {
-        $this->start = $start;
+        /** @var Category $category */
+        foreach ($this->collection as $category) {
+            $this->ids[] = (int)$category->id;
+        }
+        $this->ids = array_unique($this->ids);
     }
 
     private function collectNotes(): void
@@ -135,7 +135,7 @@ class CategoryEnrichment implements EnrichmentInterface
 
     private function collectTransactions(): void
     {
-        if (null !== $this->start && null !== $this->end) {
+        if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
             /** @var OperationsRepositoryInterface $opsRepository */
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);

@@ -42,7 +42,7 @@ class UpdateCheckCronjob extends AbstractCronjob
 
         // should not check for updates:
         $permission         = FireflyConfig::get('permission_update_check', -1);
-        $value              = (int) $permission->data;
+        $value              = (int)$permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             // get stuff from job:

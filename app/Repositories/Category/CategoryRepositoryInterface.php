@@ -48,6 +48,8 @@ interface CategoryRepositoryInterface
 
     public function categoryStartsWith(string $query, int $limit): Collection;
 
+    public function periodCollection(Category $category, Carbon $start, Carbon $end): array;
+
     public function destroy(Category $category): bool;
 
     /**

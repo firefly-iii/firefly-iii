@@ -72,7 +72,7 @@ class DestroyController extends Controller
     public function destroySingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (null !== $exchangeRate) {
+        if ($exchangeRate instanceof CurrencyExchangeRate) {
             $this->repository->deleteRate($exchangeRate);
         }
 

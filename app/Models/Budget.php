@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Handlers\Observer\BudgetObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -35,6 +37,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([BudgetObserver::class])]
 class Budget extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -53,7 +56,7 @@ class Budget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $budgetId = (int) $value;
+            $budgetId = (int)$value;
 
             /** @var User $user */
             $user     = auth()->user();
@@ -106,13 +109,6 @@ class Budget extends Model
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }
 
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -124,5 +120,12 @@ class Budget extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

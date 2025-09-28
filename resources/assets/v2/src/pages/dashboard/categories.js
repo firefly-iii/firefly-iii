@@ -54,46 +54,69 @@ export default () => ({
             if (data.hasOwnProperty(i)) {
                 let current = data[i];
                 let code = current.currency_code;
-                if (!series.hasOwnProperty(code)) {
-                    series[code] = {
-                        name: code,
-                        yAxisID: '',
-                        data: {},
-                    };
+
+                // create two series, "spent" and "earned".
+                for(const type of ['spent', 'earned']) {
+                    let typeCode = code + '_' + type;
+                    if (!series.hasOwnProperty(typeCode)) {
+                        series[typeCode] = {
+                            name: typeCode,
+                            code: code,
+                            type: type,
+                            yAxisID: '',
+                            data: {},
+                        };
+                    }
+                }
+                if (!currencies.includes(code)) {
                     currencies.push(code);
                 }
             }
         }
-
         // loop data again to add amounts to each series.
         for (const i in data) {
             if (data.hasOwnProperty(i)) {
                 let yAxis = 'y';
                 let current = data[i];
+
+                // allow switch to primary currency.
                 let code = current.currency_code;
+                if(this.convertToPrimary) {
+                    code = current.primary_currency_code;
+                }
 
-                // loop series, add 0 if not present or add actual amount.
-                for (const ii in series) {
-                    if (series.hasOwnProperty(ii)) {
-                        let amount = 0.0;
-                        if (code === ii) {
-                            // this series' currency matches this column's currency.
-                            amount = parseFloat(current.amount);
-                            yAxis = 'y' + current.currency_code;
-                        }
-                        if (series[ii].data.hasOwnProperty(current.label)) {
-                            // there is a value for this particular currency. The amount from this column will be added.
-                            // (even if this column isn't recorded in this currency and a new filler value is written)
-                            // this is so currency conversion works.
-                            series[ii].data[current.label] = series[ii].data[current.label] + amount;
-                        }
+                // twice again, for speny AND earned.
+                for(const type of ['spent', 'earned']) {
+                    let typeCode = code + '_' + type;
+                    // loop series, add 0 if not present or add actual amount.
+                    for (const ii in series) {
+                        if (series.hasOwnProperty(typeCode)) {
+                            let amount = 0.0;
+                            if (typeCode === ii) {
+                                // this series' currency matches this column's currency.
+                                amount = parseFloat(current.entries[type]);
+                                if(this.convertToPrimary) {
+                                    amount = parseFloat(current.entries.pc_entries[type]);
+                                }
+                                yAxis = 'y' + typeCode;
+                            }
+                            if (series[typeCode].data.hasOwnProperty(current.label)) {
+                                // there is a value for this particular currency. The amount from this column will be added.
+                                // (even if this column isn't recorded in this currency and a new filler value is written)
+                                // this is so currency conversion works.
+                                series[typeCode].data[current.label] = series[typeCode].data[current.label] + amount;
+                            }
 
-                        if (!series[ii].data.hasOwnProperty(current.label)) {
-                            // this column's amount is not yet set in this series.
-                            series[ii].data[current.label] = amount;
+                            if (!series[typeCode].data.hasOwnProperty(current.label)) {
+                                // this column's amount is not yet set in this series.
+                                series[typeCode].data[current.label] = amount;
+                            }
                         }
                     }
                 }
+
+
+
                 // add label to x-axis, not unimportant.
                 if (!options.data.labels.includes(current.label)) {
                     options.data.labels.push(current.label);
@@ -103,11 +126,11 @@ export default () => ({
         // loop the series and create ChartJS-compatible data sets.
         let count = 0;
         for (const i in series) {
-            // console.log('series');
             let yAxisID = 'y' + i;
+            let currencyCode = i.replace('_spent', '').replace('_earned', '');
             let dataset = {
                 label: i,
-                currency_code: i,
+                currency_code: currencyCode,
                 yAxisID: yAxisID,
                 data: [],
                 // backgroundColor: getColors(null, 'background'),
@@ -148,16 +171,15 @@ export default () => ({
         const end = new Date(window.store.get('end'));
         const cacheKey = getCacheKey('ds_ct_chart', {convertToPrimary: this.convertToPrimary, start: start, end: end});
 
-        const cacheValid = window.store.get('cacheValid');
+        // const cacheValid = window.store.get('cacheValid');
+        const cacheValid = false;
         let cachedData = window.store.get(cacheKey);
-
         if (cacheValid && typeof cachedData !== 'undefined') {
             chartData = cachedData; // save chart data for later.
             this.drawChart(this.generateOptions(chartData));
             this.loading = false;
             return;
         }
-
         const dashboard = new Dashboard();
         dashboard.dashboard(start, end, null).then((response) => {
             chartData = response.data; // save chart data for later.
@@ -181,7 +203,6 @@ export default () => ({
         this.getFreshData();
     },
     init() {
-        // console.log('categories init');
         Promise.all([getVariable('convert_to_primary', false),]).then((values) => {
             this.convertToPrimary = values[0];
             afterPromises = true;

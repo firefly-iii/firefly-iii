@@ -3,7 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.0 - 2025-09-19
+## 6.4.1 - 2025-09-15
+
+### Fixed
+
+- Fixed a missing filter from [issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803).
+- #10891
+- #10920
+- #10921
+- #10833
+
+### API
+
+- #10908
+
+
+## 6.4.0 - 2025-09-14
 
 ### Added
 

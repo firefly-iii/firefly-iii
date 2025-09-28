@@ -70,6 +70,7 @@ class StoreController extends Controller
         $data               = $request->getAll();
         $data['start_date'] = $data['start'];
         $data['end_date']   = $data['end'];
+        $data['fire_webhooks'] ??= true;
         $data['budget_id']  = $budget->id;
 
         $budgetLimit        = $this->blRepository->store($data);

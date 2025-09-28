@@ -45,9 +45,9 @@ class RecurringCronjob extends AbstractCronjob
 
         /** @var Configuration $config */
         $config        = FireflyConfig::get('last_rt_job', 0);
-        $lastTime      = (int) $config->data;
-        $diff          = Carbon::now()->getTimestamp() - $lastTime;
-        $diffForHumans = today(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
+        $lastTime      = (int)$config->data;
+        $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
+        $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
         if (0 === $lastTime) {
             Log::info('Recurring transactions cron-job has never fired before.');
@@ -90,8 +90,8 @@ class RecurringCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Recurring transactions cron job fired successfully.';
 
-        FireflyConfig::set('last_rt_job', (int) $this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
+        FireflyConfig::set('last_rt_job', (int)$this->date->format('U'));
+        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int)$this->date->format('U')));
         Log::info('Done with recurring cron job task.');
     }
 }

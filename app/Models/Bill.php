@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
+use FireflyIII\Handlers\Observer\BillObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,6 +38,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([BillObserver::class])]
 class Bill extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -75,7 +78,7 @@ class Bill extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $billId = (int) $value;
+            $billId = (int)$value;
 
             /** @var User $user */
             $user   = auth()->user();
@@ -121,7 +124,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string) $value;
+        $this->attributes['amount_max'] = (string)$value;
     }
 
     /**
@@ -129,7 +132,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string) $value;
+        $this->attributes['amount_min'] = (string)$value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -148,7 +151,7 @@ class Bill extends Model
     protected function amountMax(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -158,31 +161,7 @@ class Bill extends Model
     protected function amountMin(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
-        );
-    }
-
-    protected function order(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    /**
-     * Get the skip
-     */
-    protected function skip(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function transactionCurrencyId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn ($value) => (string)$value,
         );
     }
 
@@ -205,5 +184,29 @@ class Bill extends Model
             'native_amount_min' => 'string',
             'native_amount_max' => 'string',
         ];
+    }
+
+    protected function order(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    /**
+     * Get the skip
+     */
+    protected function skip(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
+    }
+
+    protected function transactionCurrencyId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

@@ -31,6 +31,7 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
@@ -49,10 +50,35 @@ class UpdatedGroupEventHandler
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
+        $this->removePeriodStatistics($event);
         if ($event->runRecalculations) {
             $this->updateRunningBalance($event);
         }
 
+
+    }
+
+    /**
+     * TODO duplicate
+     */
+    private function removePeriodStatistics(UpdatedTransactionGroup $event): void
+    {
+        /** @var PeriodStatisticRepositoryInterface $repository */
+        $repository = app(PeriodStatisticRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        foreach ($event->transactionGroup->transactionJournals as $journal) {
+            $source = $journal->transactions()->where('amount', '<', '0')->first();
+            $dest   = $journal->transactions()->where('amount', '>', '0')->first();
+            $repository->deleteStatisticsForModel($source->account, $journal->date);
+            $repository->deleteStatisticsForModel($dest->account, $journal->date);
+            foreach ($journal->categories as $category) {
+                $repository->deleteStatisticsForModel($category, $journal->date);
+            }
+            foreach ($journal->tags as $tag) {
+                $repository->deleteStatisticsForModel($tag, $journal->date);
+            }
+        }
     }
 
     /**

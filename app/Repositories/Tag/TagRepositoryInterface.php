@@ -51,6 +51,8 @@ interface TagRepositoryInterface
      */
     public function destroy(Tag $tag): bool;
 
+    public function periodCollection(Tag $tag, Carbon $start, Carbon $end): array;
+
     /**
      * Destroy all tags.
      */

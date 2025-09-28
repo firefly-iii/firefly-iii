@@ -92,7 +92,7 @@ class ShowController extends Controller
         // get first journal ever to set off the budget period overview.
         $first     = $this->journalRepos->firstNull();
         $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
-        $periods   = $this->getNoBudgetPeriodOverview($firstDate, $end);
+        $periods   = $this->getNoModelPeriodOverview('budget', $firstDate, $end);
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
 

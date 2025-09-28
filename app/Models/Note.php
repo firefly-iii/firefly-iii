@@ -44,13 +44,6 @@ class Note extends Model
         return $this->morphTo();
     }
 
-    protected function noteableId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
     protected function casts(): array
     {
         return [
@@ -58,5 +51,12 @@ class Note extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
+    }
+
+    protected function noteableId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 }

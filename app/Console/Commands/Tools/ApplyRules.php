@@ -283,7 +283,7 @@ class ApplyRules extends Command
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
-        if (null === $inputEnd || null === $inputStart) {
+        if (!$inputEnd instanceof Carbon || null === $inputStart) {
             Log::error('Could not parse start or end date in verifyInputDate().');
 
             return;

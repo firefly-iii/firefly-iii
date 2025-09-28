@@ -94,6 +94,149 @@ class ExchangeRateConverter
         return '0' === $rate ? '1' : $rate;
     }
 
+    public function setIgnoreSettings(bool $ignoreSettings): void
+    {
+        $this->ignoreSettings = $ignoreSettings;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
+    }
+
+    public function summarize(): void
+    {
+        if (false === $this->enabled()) {
+            return;
+        }
+        Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
+    }
+
+    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
+    {
+        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getEuroId(): int
+    {
+        Log::debug('getEuroId()');
+        $cache = new CacheProperties();
+        $cache->addProperty('cer-euro-id');
+        if ($cache->has()) {
+            return (int)$cache->get();
+        }
+        $euro  = Amount::getTransactionCurrencyByCode('EUR');
+        ++$this->queryCount;
+        $cache->store($euro->id);
+
+        return $euro->id;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
+    {
+        $euroId = $this->getEuroId();
+        if ($euroId === $currency->id) {
+            return '1';
+        }
+        $rate   = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
+
+        if (null !== $rate) {
+            //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
+            return $rate;
+        }
+        $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
+        if (null !== $rate) {
+            return bcdiv('1', $rate);
+            //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
+            // return $rate;
+        }
+        // grab backup values from config file:
+        $backup = config(sprintf('cer.rates.%s', $currency->code));
+        if (null !== $backup) {
+            return bcdiv('1', (string)$backup);
+            // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
+            // return $backup;
+        }
+
+        //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
+        return '0';
+    }
+
+    private function getFromDB(int $from, int $to, string $date): ?string
+    {
+        if ($from === $to) {
+            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
+
+            return '1';
+        }
+        $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
+
+        // perhaps the rate has been cached during this particular run
+        $preparedRate = $this->prepared[$date][$from][$to] ?? null;
+        if (null !== $preparedRate && 0 !== bccomp('0', $preparedRate)) {
+            Log::debug(sprintf('ExchangeRateConverter: Found prepared rate from #%d to #%d on %s.', $from, $to, $date));
+
+            return $preparedRate;
+        }
+
+        $cache        = new CacheProperties();
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            $rate = $cache->get();
+            if ('' === $rate) {
+                return null;
+            }
+            Log::debug(sprintf('ExchangeRateConverter: Found cached rate from #%d to #%d on %s.', $from, $to, $date));
+
+            return $rate;
+        }
+
+        /** @var null|CurrencyExchangeRate $result */
+        $result       = $this->userGroup->currencyExchangeRates()
+            ->where('from_currency_id', $from)
+            ->where('to_currency_id', $to)
+            ->where('date', '<=', $date)
+            ->orderBy('date', 'DESC')
+            ->first()
+        ;
+        ++$this->queryCount;
+        $rate         = (string)$result?->rate;
+
+        if ('' === $rate) {
+            app('log')->debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
+
+            return null;
+        }
+        if (0 === bccomp('0', $rate)) {
+            app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB, but it\'s zero.', $from, $to, $date));
+
+            return null;
+        }
+        app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB: %s.', $from, $to, $date, $rate));
+        $cache->store($rate);
+
+        // if the rate has not been cached during this particular run, save it
+        $this->prepared[$date] ??= [
+            $from => [
+                $to => $rate,
+            ],
+        ];
+        // also save the exchange rate the other way around:
+        $this->prepared[$date] ??= [
+            $to => [
+                $from => bcdiv('1', $rate),
+            ],
+        ];
+
+        return $rate;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -145,148 +288,5 @@ class ExchangeRateConverter
         Cache::forever($key, $rate);
 
         return $rate;
-    }
-
-    private function getCacheKey(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
-    {
-        return sprintf('cer-%d-%d-%s', $from->id, $to->id, $date->format('Y-m-d'));
-    }
-
-    private function getFromDB(int $from, int $to, string $date): ?string
-    {
-        if ($from === $to) {
-            Log::debug('ExchangeRateConverter: From and to are the same, return "1".');
-
-            return '1';
-        }
-        $key          = sprintf('cer-%d-%d-%s', $from, $to, $date);
-
-        // perhaps the rate has been cached during this particular run
-        $preparedRate = $this->prepared[$date][$from][$to] ?? null;
-        if (null !== $preparedRate && 0 !== bccomp('0', $preparedRate)) {
-            Log::debug(sprintf('ExchangeRateConverter: Found prepared rate from #%d to #%d on %s.', $from, $to, $date));
-
-            return $preparedRate;
-        }
-
-        $cache        = new CacheProperties();
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            $rate = $cache->get();
-            if ('' === $rate) {
-                return null;
-            }
-            Log::debug(sprintf('ExchangeRateConverter: Found cached rate from #%d to #%d on %s.', $from, $to, $date));
-
-            return $rate;
-        }
-
-        /** @var null|CurrencyExchangeRate $result */
-        $result       = $this->userGroup->currencyExchangeRates()
-            ->where('from_currency_id', $from)
-            ->where('to_currency_id', $to)
-            ->where('date', '<=', $date)
-            ->orderBy('date', 'DESC')
-            ->first()
-        ;
-        ++$this->queryCount;
-        $rate         = (string) $result?->rate;
-
-        if ('' === $rate) {
-            app('log')->debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
-
-            return null;
-        }
-        if (0 === bccomp('0', $rate)) {
-            app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB, but it\'s zero.', $from, $to, $date));
-
-            return null;
-        }
-        app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB: %s.', $from, $to, $date, $rate));
-        $cache->store($rate);
-
-        // if the rate has not been cached during this particular run, save it
-        $this->prepared[$date] ??= [
-            $from => [
-                $to => $rate,
-            ],
-        ];
-        // also save the exchange rate the other way around:
-        $this->prepared[$date] ??= [
-            $to => [
-                $from => bcdiv('1', $rate),
-            ],
-        ];
-
-        return $rate;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getEuroRate(TransactionCurrency $currency, Carbon $date): string
-    {
-        $euroId = $this->getEuroId();
-        if ($euroId === $currency->id) {
-            return '1';
-        }
-        $rate   = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
-
-        if (null !== $rate) {
-            //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
-            return $rate;
-        }
-        $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
-        if (null !== $rate) {
-            return bcdiv('1', $rate);
-            //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
-            // return $rate;
-        }
-        // grab backup values from config file:
-        $backup = config(sprintf('cer.rates.%s', $currency->code));
-        if (null !== $backup) {
-            return bcdiv('1', (string) $backup);
-            // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
-            // return $backup;
-        }
-
-        //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
-        return '0';
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getEuroId(): int
-    {
-        Log::debug('getEuroId()');
-        $cache = new CacheProperties();
-        $cache->addProperty('cer-euro-id');
-        if ($cache->has()) {
-            return (int) $cache->get();
-        }
-        $euro  = Amount::getTransactionCurrencyByCode('EUR');
-        ++$this->queryCount;
-        $cache->store($euro->id);
-
-        return $euro->id;
-    }
-
-    public function setIgnoreSettings(bool $ignoreSettings): void
-    {
-        $this->ignoreSettings = $ignoreSettings;
-    }
-
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-    }
-
-    public function summarize(): void
-    {
-        if (false === $this->enabled()) {
-            return;
-        }
-        Log::debug(sprintf('ExchangeRateConverter ran %d queries.', $this->queryCount));
     }
 }

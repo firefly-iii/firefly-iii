@@ -59,8 +59,8 @@ class Balance
 
         $result     = $query->get(['transactions.account_id', 'transactions.transaction_currency_id', 'transactions.balance_after']);
         foreach ($result as $entry) {
-            $accountId                       = (int) $entry->account_id;
-            $currencyId                      = (int) $entry->transaction_currency_id;
+            $accountId                       = (int)$entry->account_id;
+            $currencyId                      = (int)$entry->transaction_currency_id;
             $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
             $return[$accountId]      ??= [];
             if (array_key_exists($currencyId, $return[$accountId])) {

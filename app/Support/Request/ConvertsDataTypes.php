@@ -99,28 +99,6 @@ trait ConvertsDataTypes
         return Steam::filterSpaces($string);
     }
 
-    public function convertSortParameters(string $field, string $class): array
-    {
-        // assume this all works, because the validator would have caught any errors.
-        $parameter      = (string)request()->query->get($field);
-        if ('' === $parameter) {
-            return [];
-        }
-        $parts          = explode(',', $parameter);
-        $sortParameters = [];
-        foreach ($parts as $part) {
-            $part             = trim($part);
-            $direction        = 'asc';
-            if ('-' === $part[0]) {
-                $part      = substr($part, 1);
-                $direction = 'desc';
-            }
-            $sortParameters[] = [$part, $direction];
-        }
-
-        return $sortParameters;
-    }
-
     public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
@@ -160,6 +138,36 @@ trait ConvertsDataTypes
     }
 
     /**
+     * Return integer value.
+     */
+    public function convertInteger(string $field): int
+    {
+        return (int)$this->get($field);
+    }
+
+    public function convertSortParameters(string $field, string $class): array
+    {
+        // assume this all works, because the validator would have caught any errors.
+        $parameter      = (string)request()->query->get($field);
+        if ('' === $parameter) {
+            return [];
+        }
+        $parts          = explode(',', $parameter);
+        $sortParameters = [];
+        foreach ($parts as $part) {
+            $part             = trim($part);
+            $direction        = 'asc';
+            if ('-' === $part[0]) {
+                $part      = substr($part, 1);
+                $direction = 'desc';
+            }
+            $sortParameters[] = [$part, $direction];
+        }
+
+        return $sortParameters;
+    }
+
+    /**
      * Return string value.
      */
     public function convertString(string $field, string $default = ''): string
@@ -177,14 +185,6 @@ trait ConvertsDataTypes
      * trait, OR a stub needs to be added by any other class that uses this train.
      */
     abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
-     * Return integer value.
-     */
-    public function convertInteger(string $field): int
-    {
-        return (int)$this->get($field);
-    }
 
     /**
      * TODO duplicate, see SelectTransactionsRequest
@@ -217,6 +217,16 @@ trait ConvertsDataTypes
 
         return $collection;
     }
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    abstract public function has($key);
 
     /**
      * Return string value with newlines.
@@ -256,6 +266,12 @@ trait ConvertsDataTypes
             return true;
         }
         if ('yes' === $value) {
+            return true;
+        }
+        if ('on' === $value) {
+            return true;
+        }
+        if ('y' === $value) {
             return true;
         }
         if ('1' === $value) {
@@ -381,16 +397,6 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    abstract public function has($key);
-
-    /**
      * Return date or NULL.
      */
     protected function getCarbonDate(string $field): ?Carbon
@@ -410,6 +416,21 @@ trait ConvertsDataTypes
         }
 
         return $result;
+    }
+
+    /**
+     * Parse to integer
+     */
+    protected function integerFromValue(?string $string): ?int
+    {
+        if (null === $string) {
+            return null;
+        }
+        if ('' === $string) {
+            return null;
+        }
+
+        return (int)$string;
     }
 
     /**
@@ -456,20 +477,5 @@ trait ConvertsDataTypes
         }
 
         return $return;
-    }
-
-    /**
-     * Parse to integer
-     */
-    protected function integerFromValue(?string $string): ?int
-    {
-        if (null === $string) {
-            return null;
-        }
-        if ('' === $string) {
-            return null;
-        }
-
-        return (int)$string;
     }
 }

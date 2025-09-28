@@ -40,19 +40,19 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup; // @phpstan-ignore-line
-    private Collection          $collection;
-    private array               $ids              = [];
-    private array               $notes            = [];
-    private Carbon              $start;
-    private Carbon              $end;
-    private array               $expenses         = [];
-    private array               $pcExpenses       = [];
-    private array               $currencyIds      = [];
-    private array               $currencies       = [];
-    private bool                $convertToPrimary = true;
+    private Collection                   $collection;
+    private bool                         $convertToPrimary = true; // @phpstan-ignore-line
+    private array                        $currencies       = [];
+    private array                        $currencyIds      = [];
+    private Carbon                       $end;
+    private array                        $expenses         = [];
+    private array                        $ids              = [];
+    private array                        $notes            = [];
+    private array                        $pcExpenses       = [];
     private readonly TransactionCurrency $primaryCurrency;
+    private Carbon                       $start;
+    private User                         $user;
+    private UserGroup                    $userGroup;
 
     public function __construct()
     {
@@ -93,36 +93,6 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $this->userGroup = $userGroup;
     }
 
-    private function collectIds(): void
-    {
-        $this->start       = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
-        $this->end         = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
-
-        /** @var BudgetLimit $limit */
-        foreach ($this->collection as $limit) {
-            $id          = (int)$limit->id;
-            $this->ids[] = $id;
-            if (0 !== (int)$limit->transaction_currency_id) {
-                $this->currencyIds[$id] = (int)$limit->transaction_currency_id;
-            }
-        }
-        $this->ids         = array_unique($this->ids);
-        $this->currencyIds = array_unique($this->currencyIds);
-    }
-
-    private function collectNotes(): void
-    {
-        $notes = Note::query()->whereIn('noteable_id', $this->ids)
-            ->whereNotNull('notes.text')
-            ->where('notes.text', '!=', '')
-            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
-        foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
-        }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
-    }
-
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (BudgetLimit $item) {
@@ -154,9 +124,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
+            Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
             $id                  = (int)$budgetLimit->id;
             $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
-            $filteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
+            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
             $this->expenses[$id] = array_values($filteredExpenses);
 
             if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
@@ -178,6 +149,44 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         }
     }
 
+    private function collectIds(): void
+    {
+        $this->start       = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
+        $this->end         = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
+
+        /** @var BudgetLimit $limit */
+        foreach ($this->collection as $limit) {
+            $id          = (int)$limit->id;
+            $this->ids[] = $id;
+            if (0 !== (int)$limit->transaction_currency_id) {
+                $this->currencyIds[$id] = (int)$limit->transaction_currency_id;
+            }
+        }
+        $this->ids         = array_unique($this->ids);
+        $this->currencyIds = array_unique($this->currencyIds);
+    }
+
+    private function collectNotes(): void
+    {
+        $notes = Note::query()->whereIn('noteable_id', $this->ids)
+            ->whereNotNull('notes.text')
+            ->where('notes.text', '!=', '')
+            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+        ;
+        foreach ($notes as $note) {
+            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+        }
+        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+    }
+
+    private function filterToBudget(array $expenses, int $budget): array
+    {
+        $result = array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
+        Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
+
+        return $result;
+    }
+
     private function stringifyIds(): void
     {
         $this->expenses   = array_map(fn ($first) => array_map(function ($second) {
@@ -191,10 +200,5 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
             return $second;
         }, $first), $this->expenses);
-    }
-
-    private function filterToBudget(array $expenses, int $budget): array
-    {
-        return array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
     }
 }
