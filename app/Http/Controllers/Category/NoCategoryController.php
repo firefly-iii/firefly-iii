@@ -84,7 +84,7 @@ class NoCategoryController extends Controller
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
         $subTitle  = trans('firefly.without_category_between', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]);
-        $first = $this->journalRepos->firstNull()->date ?? clone $start;
+        $first     = $this->journalRepos->firstNull()->date ?? clone $start;
         $periods   = $this->getNoModelPeriodOverview('category', $first, $end);
 
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
