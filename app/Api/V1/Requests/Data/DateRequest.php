@@ -46,6 +46,16 @@ class DateRequest extends FormRequest
     {
         $start = $this->getCarbonDate('start');
         $end   = $this->getCarbonDate('end');
+        if(null === $start) {
+            $start = now()->startOfMonth();
+        }
+        if(null === $end) {
+            $end = now()->endOfMonth();
+        }
+        // sanity check on dates:
+        [$start, $end]             = $end < $start ? [$end, $start] : [$start, $end];
+
+
         $start->startOfDay();
         $end->endOfDay();
         if ($start->diffInYears($end, true) > 5) {
