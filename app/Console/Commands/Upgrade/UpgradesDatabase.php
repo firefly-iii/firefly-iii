@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
 
@@ -86,10 +87,8 @@ class UpgradesDatabase extends Command
             $this->friendlyLine(sprintf('Now executing %s', $command));
             $this->call($command, $args);
         }
-        // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
 
         return 0;
     }

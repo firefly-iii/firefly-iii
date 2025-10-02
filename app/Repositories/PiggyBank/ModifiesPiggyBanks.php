@@ -36,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
@@ -227,7 +228,6 @@ trait ModifiesPiggyBanks
         $factory->user = $this->user;
 
         // the piggy bank currency is set or updated FIRST, if it exists.
-
         $factory->linkToAccountIds($piggyBank, $data['accounts'] ?? []);
 
 
@@ -244,7 +244,7 @@ trait ModifiesPiggyBanks
 
             // question is, from which account(s) to remove the difference?
             // solution: just start from the top until there is no more money left to remove.
-            $this->removeAmountFromAll($piggyBank, app('steam')->positive($difference));
+            $this->removeAmountFromAll($piggyBank, Steam::positive($difference));
         }
 
         // update using name:
