@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\FireflyConfig;
 use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
@@ -40,6 +39,7 @@ use Illuminate\Support\Facades\Log;
 class Installer
 {
     use IsOldVersion;
+
     /**
      * Handle an incoming request.
      *
