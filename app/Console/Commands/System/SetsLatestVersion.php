@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 
 class SetsLatestVersion extends Command
@@ -45,8 +46,7 @@ class SetsLatestVersion extends Command
 
             return 0;
         }
-        app('fireflyconfig')->set('db_version', config('firefly.db_version'));
-        app('fireflyconfig')->set('ff3_version', config('firefly.version'));
+        FireflyConfig::set('ff3_version', config('firefly.version'));
         $this->friendlyInfo('Updated version.');
 
         return 0;

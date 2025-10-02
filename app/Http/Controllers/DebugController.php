@@ -184,7 +184,6 @@ class DebugController extends Controller
         $currentDriver = DB::getDriverName();
 
         return [
-            'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
             'uname'           => php_uname('m'),

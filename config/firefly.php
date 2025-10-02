@@ -81,7 +81,7 @@ return [
     'version'                      => 'develop/2025-09-29',
     'build_time'                   => 1759116036,
     'api_version'                  => '2.1.0', // field is no longer used.
-    'db_version'                   => 28,
+    'db_version'                   => 28, // field is no longer used.
 
     // generic settings
     'maxUploadSize'                => 1073741824, // 1 GB
