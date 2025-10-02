@@ -5,16 +5,31 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.4.1 - 2025-09-15
 
+### Added
+
+- #10979
+
 ### Fixed
 
 - Fixed a missing filter from [issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803).
+- #10833
+- #10854
 - #10891
+- #10916
 - #10920
 - #10921
-- #10833
+- #10924
+- #10938
+- #10940
+- #10954
+- #10956
+- #10960
+- #10974
+- #10990
 
 ### API
 
+- #10803
 - #10908
 
 
