@@ -40,6 +40,7 @@ use function Safe\json_decode;
 class UpdateRequest implements UpdateRequestInterface
 {
     use IsOldVersion;
+
     public function getUpdateInformation(string $channel): array
     {
         Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
@@ -185,7 +186,7 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseResultDevelop(string $current, string $latest, array $information): array
     {
         Log::debug(sprintf('User is running develop version "%s"', $current));
-        $compare = $this->compareDevelopVersions($current, $latest);
+        $compare           = $this->compareDevelopVersions($current, $latest);
         $return            = [];
 
         if (-1 === $compare) {

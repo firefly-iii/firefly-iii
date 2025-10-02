@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * IsOldVersion.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -27,7 +29,6 @@ use Illuminate\Support\Facades\Log;
 
 trait IsOldVersion
 {
-
     /**
      * By default, version_compare() returns -1 if the first version is lower than the second, 0 if they are equal, and
      * 1 if the second is lower.
@@ -38,18 +39,21 @@ trait IsOldVersion
         $latestParts  = explode('/', $latest);
         if (2 !== count($currentParts) || 2 !== count($latestParts)) {
             Log::error(sprintf('Version "%s" or "%s" is not a valid develop-version.', $current, $latest));
+
             return 0;
         }
 
-        $currentDate = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
-        $latestDate  = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
+        $currentDate  = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
+        $latestDate   = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
 
         if ($currentDate->lt($latestDate)) {
             Log::debug(sprintf('This current version is older, current = %s, latest version %s.', $current, $latest));
+
             return -1;
         }
         if ($currentDate->gt($latestDate)) {
             Log::debug(sprintf('This current version is newer, current = %s, latest version %s.', $current, $latest));
+
             return 1;
         }
         Log::debug(sprintf('This current version is of the same age, current = %s, latest version %s.', $current, $latest));
@@ -89,6 +93,7 @@ trait IsOldVersion
 
             return true;
         }
+
         return false;
     }
 }

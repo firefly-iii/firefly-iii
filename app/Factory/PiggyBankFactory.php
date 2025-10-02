@@ -243,6 +243,7 @@ class PiggyBankFactory
             }
         }
         Log::debug('Looping all accounts.');
+
         /** @var array $info */
         foreach ($accounts as $info) {
             $account = $this->accountRepository->find((int)($info['account_id'] ?? 0));
