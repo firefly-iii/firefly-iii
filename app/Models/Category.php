@@ -81,7 +81,7 @@ class Category extends Model
     }
 
     /**
-     * Get all of the category's notes.
+     * Get all the category's notes.
      */
     public function notes(): MorphMany
     {
