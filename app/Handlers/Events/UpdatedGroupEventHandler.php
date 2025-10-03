@@ -68,8 +68,8 @@ class UpdatedGroupEventHandler
 
         /** @var TransactionJournal $journal */
         foreach ($event->transactionGroup->transactionJournals as $journal) {
-            $source = $journal->transactions()->where('amount', '<', '0')->first();
-            $dest   = $journal->transactions()->where('amount', '>', '0')->first();
+            $source     = $journal->transactions()->where('amount', '<', '0')->first();
+            $dest       = $journal->transactions()->where('amount', '>', '0')->first();
             $repository->deleteStatisticsForModel($source->account, $journal->date);
             $repository->deleteStatisticsForModel($dest->account, $journal->date);
 
