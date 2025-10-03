@@ -177,17 +177,17 @@ class UpdatePiggyBank implements ActionInterface
 
     private function removeAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
     {
-        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository        = app(PiggyBankRepositoryInterface::class);
         $accountRepository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
         $accountRepository->setUser($account->user);
 
         // how much can we remove from this piggy bank?
-        $toRemove   = $repository->getCurrentAmount($piggyBank, $account);
+        $toRemove          = $repository->getCurrentAmount($piggyBank, $account);
         Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
 
         // if $amount is bigger than $toRemove, shrink it.
-        $amount     = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
+        $amount            = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
         Log::debug(sprintf('Amount is now %s', $amount));
 
         // if amount is zero, stop.
@@ -212,7 +212,7 @@ class UpdatePiggyBank implements ActionInterface
 
     private function addAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
     {
-        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository        = app(PiggyBankRepositoryInterface::class);
         $accountRepository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
         $accountRepository->setUser($account->user);
