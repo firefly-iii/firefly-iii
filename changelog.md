@@ -24,9 +24,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 10954](https://github.com/firefly-iii/firefly-iii/issues/10954) (Internal Server Error when trying to access (default) account) reported by @thomaschristory
 - [Issue 10956](https://github.com/firefly-iii/firefly-iii/issues/10956) (Manual webhook trigger fail) reported by @dudu7731
 - [Issue 10960](https://github.com/firefly-iii/firefly-iii/issues/10960) (404 after deleting subscription) reported by @lindely
+- #10965
 - [Discussion 10974](https://github.com/orgs/firefly-iii/discussions/10974) (Big webhook_messages table) started by @Billos
 - #10988
 - [Issue 10990](https://github.com/firefly-iii/firefly-iii/issues/10990) (duplicate piggy event via API) reported by @4e868df3
+- #10994
 
 ### API
 
