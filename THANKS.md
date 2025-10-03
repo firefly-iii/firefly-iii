@@ -6,7 +6,6 @@ Please find below all the people who contributed to the Firefly III code. Their 
 ## 2025
 - Nicky De Maeyer
 - Denis Iskandarov
-- =
 - Lompi
 - Jose Diaz-Gonzalez
 - SoftBrix
