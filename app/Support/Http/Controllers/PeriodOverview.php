@@ -325,7 +325,7 @@ trait PeriodOverview
     private function filterStatistics(Carbon $start, Carbon $end, string $type): Collection
     {
         if (0 === $this->statistics->count()) {
-            Log::warning('Have no statistic to filter!');
+            Log::debug('Have no statistic to filter!');
 
             return new Collection();
         }
@@ -338,7 +338,7 @@ trait PeriodOverview
     private function filterPrefixedStatistics(Carbon $start, Carbon $end, string $prefix): Collection
     {
         if (0 === $this->statistics->count()) {
-            Log::warning('Have no statistic to filter!');
+            Log::debug('Have no statistic to filter!');
 
             return new Collection();
         }

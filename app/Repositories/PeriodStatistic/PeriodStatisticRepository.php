@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PeriodStatistic;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -39,26 +40,24 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection
     {
         return $model->primaryPeriodStatistics()
-            ->where('start', $start)
-            ->where('end', $end)
-            ->whereIn('type', $types)
-            ->get()
-        ;
+                     ->where('start', $start)
+                     ->where('end', $end)
+                     ->whereIn('type', $types)
+                     ->get();
     }
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection
     {
         return $model->primaryPeriodStatistics()
-            ->where('start', $start)
-            ->where('end', $end)
-            ->where('type', $type)
-            ->get()
-        ;
+                     ->where('start', $start)
+                     ->where('end', $end)
+                     ->where('type', $type)
+                     ->get();
     }
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat                          = new PeriodStatistic();
+        $stat = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
         $stat->user_group_id           = $this->getUserGroup()->id;
@@ -72,16 +71,16 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $model::class,
-            $model->id,
-            $stat->transaction_currency_id,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $model::class,
+                       $model->id,
+                       $stat->transaction_currency_id,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
     }
@@ -100,9 +99,8 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection
     {
         return $this->userGroup->periodStatistics()
-            ->where('type', 'LIKE', sprintf('%s%%', $prefix))
-            ->where('start', '>=', $start)->where('end', '<=', $end)->get()
-        ;
+                               ->where('type', 'LIKE', sprintf('%s%%', $prefix))
+                               ->where('start', '>=', $start)->where('end', '<=', $end)->get();
     }
 
     #[Override]
@@ -121,16 +119,22 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $stat->transaction_currency_id,
-            $stat->type,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $stat->transaction_currency_id,
+                       $stat->type,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
+    }
+
+    #[\Override]
+    public function deleteStatisticsForPrefix(UserGroup $userGroup, string $prefix, Carbon $date): void
+    {
+        $userGroup->periodStatistics()->where('start', '<=', $date)->where('end', '>=', $date)->where('type', 'LIKE', sprintf('%s%%', $prefix))->delete();
     }
 }
