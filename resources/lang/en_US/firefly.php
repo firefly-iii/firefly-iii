@@ -909,6 +909,7 @@ return [
     'rule_trigger_tag_is'                                 => 'Any tag is ":trigger_value"',
     'rule_trigger_tag_contains_choice'                    => 'Any tag contains..',
     'rule_trigger_tag_contains'                           => 'Any tag contains ":trigger_value"',
+    'rule_trigger_not_tag_contains'                           => 'No tag contains ":trigger_value"',
     'rule_trigger_tag_ends_choice'                        => 'Any tag ends with..',
     'rule_trigger_tag_ends'                               => 'Any tag ends with ":trigger_value"',
     'rule_trigger_tag_starts_choice'                      => 'Any tag starts with..',
