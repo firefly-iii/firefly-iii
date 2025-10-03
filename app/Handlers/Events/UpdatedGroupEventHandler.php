@@ -72,11 +72,25 @@ class UpdatedGroupEventHandler
             $dest   = $journal->transactions()->where('amount', '>', '0')->first();
             $repository->deleteStatisticsForModel($source->account, $journal->date);
             $repository->deleteStatisticsForModel($dest->account, $journal->date);
-            foreach ($journal->categories as $category) {
+
+            $categories = $journal->categories;
+            $tags       = $journal->tags;
+            $budgets    = $journal->budgets;
+
+            foreach ($categories as $category) {
                 $repository->deleteStatisticsForModel($category, $journal->date);
             }
-            foreach ($journal->tags as $tag) {
+            foreach ($tags as $tag) {
                 $repository->deleteStatisticsForModel($tag, $journal->date);
+            }
+            foreach ($budgets as $budget) {
+                $repository->deleteStatisticsForModel($budget, $journal->date);
+            }
+            if (0 === $categories->count()) {
+                $repository->deleteStatisticsForPrefix($journal->userGroup, 'no_category', $journal->date);
+            }
+            if (0 === $budgets->count()) {
+                $repository->deleteStatisticsForPrefix($journal->userGroup, 'no_budget', $journal->date);
             }
         }
     }
