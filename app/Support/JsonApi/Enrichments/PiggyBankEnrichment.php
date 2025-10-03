@@ -62,7 +62,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
     public function __construct()
     {
         $this->primaryCurrency = Amount::getPrimaryCurrency();
-        $this->date = now(config('app.timezone'));
+        $this->date            = now(config('app.timezone'));
     }
 
     public function enrich(Collection $collection): Collection
@@ -171,9 +171,6 @@ class PiggyBankEnrichment implements EnrichmentInterface
     {
         $this->date = $date;
     }
-
-
-
 
     private function collectIds(): void
     {

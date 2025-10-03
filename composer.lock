@@ -6193,16 +6193,16 @@
         },
         {
             "name": "spatie/laravel-html",
-            "version": "3.12.0",
+            "version": "3.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/laravel-html.git",
-                "reference": "3655f335609d853f51e431698179ddfe05851126"
+                "reference": "72af3cad24d153c230ff6e1da9fa3b7b702834c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/3655f335609d853f51e431698179ddfe05851126",
-                "reference": "3655f335609d853f51e431698179ddfe05851126",
+                "url": "https://api.github.com/repos/spatie/laravel-html/zipball/72af3cad24d153c230ff6e1da9fa3b7b702834c9",
+                "reference": "72af3cad24d153c230ff6e1da9fa3b7b702834c9",
                 "shasum": ""
             },
             "require": {
@@ -6259,7 +6259,7 @@
                 "spatie"
             ],
             "support": {
-                "source": "https://github.com/spatie/laravel-html/tree/3.12.0"
+                "source": "https://github.com/spatie/laravel-html/tree/3.12.1"
             },
             "funding": [
                 {
@@ -6267,7 +6267,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-03-21T08:58:06+00:00"
+            "time": "2025-10-02T07:26:38+00:00"
         },
         {
             "name": "spatie/laravel-ignition",
@@ -11333,16 +11333,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.29",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phpstan/phpstan-phar-composer-source.git",
-                "reference": "git"
-            },
+            "version": "2.1.30",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
-                "reference": "d618573eed4a1b6b75e37b2e0b65ac65c885d88e",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a4a7f159927983dd4f7c8020ed227d80b7f39d7d",
+                "reference": "a4a7f159927983dd4f7c8020ed227d80b7f39d7d",
                 "shasum": ""
             },
             "require": {
@@ -11387,7 +11382,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-09-25T06:58:18+00:00"
+            "time": "2025-10-02T16:07:52+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
