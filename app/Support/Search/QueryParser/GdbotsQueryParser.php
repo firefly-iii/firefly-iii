@@ -33,7 +33,6 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use Safe\Exceptions\FilesystemException;
 use TypeError;
-
 use function Safe\fwrite;
 
 class GdbotsQueryParser implements QueryParserInterface

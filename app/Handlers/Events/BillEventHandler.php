@@ -33,7 +33,6 @@ use FireflyIII\Notifications\User\SubscriptionsOverdueReminder;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-
 use function Safe\json_encode;
 
 /**

@@ -34,8 +34,8 @@ use FireflyIII\User;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use Symfony\Component\HttpFoundation\Response;
 use Override;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**

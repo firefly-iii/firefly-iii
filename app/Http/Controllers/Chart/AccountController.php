@@ -44,7 +44,6 @@ use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
 use Safe\Exceptions\JsonException;
 use function Safe\json_encode;
 

@@ -27,7 +27,6 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\WebhookMessage;
 use Illuminate\Support\Facades\Log;
 use JsonException;
-
 use function Safe\json_encode;
 
 /**

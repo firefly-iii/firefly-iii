@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\User;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\GroupMembership;
@@ -35,7 +36,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Exception;
 use Override;
 
 /**

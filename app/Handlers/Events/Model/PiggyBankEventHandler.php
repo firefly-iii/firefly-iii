@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Model;
 
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
-use FireflyIII\Models\PiggyBankEvent;
 
 /**
  * Class PiggyBankEventHandler

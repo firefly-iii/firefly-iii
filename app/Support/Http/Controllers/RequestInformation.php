@@ -35,7 +35,6 @@ use Illuminate\Routing\Route;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route as RouteFacade;
 use Illuminate\Support\Facades\Validator;
-
 use function Safe\parse_url;
 
 /**

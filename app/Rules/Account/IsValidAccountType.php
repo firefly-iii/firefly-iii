@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules\Account;
 
+use Closure;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 use Override;
 
 class IsValidAccountType implements ValidationRule

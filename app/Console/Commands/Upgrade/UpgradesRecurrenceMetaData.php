@@ -29,7 +29,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use Illuminate\Console\Command;
-
 use function Safe\json_encode;
 
 class UpgradesRecurrenceMetaData extends Command

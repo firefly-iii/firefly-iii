@@ -51,7 +51,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-
 use function Safe\json_decode;
 
 class RecurringEnrichment implements EnrichmentInterface

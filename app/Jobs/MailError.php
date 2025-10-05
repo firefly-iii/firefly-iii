@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Message;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,12 +32,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportException;
-use Exception;
-
-use function Safe\json_encode;
+use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 use function Safe\json_decode;
-use function Safe\file_get_contents;
+use function Safe\json_encode;
 
 /**
  * Class MailError.

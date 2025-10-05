@@ -51,10 +51,8 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use function Safe\file_get_contents;
 use function Safe\ini_get;
-
 use const PHP_INT_SIZE;
 use const PHP_SAPI;
 

@@ -40,7 +40,6 @@ use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ValueError;
-
 use function Safe\parse_url;
 use function Safe\preg_replace;
 

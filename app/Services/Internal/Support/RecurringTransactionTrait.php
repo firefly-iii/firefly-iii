@@ -42,7 +42,6 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
-
 use function Safe\json_encode;
 
 /**

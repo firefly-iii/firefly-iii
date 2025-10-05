@@ -24,10 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
-
 use function Safe\set_time_limit;
 
 try {
@@ -35,9 +36,6 @@ try {
 } catch (InfoException) {
     Log::warning('set_time_limit returned false. This could be an issue, unless you also run XDebug.');
 }
-
-use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use Illuminate\Console\Command;
 
 class UpgradesDatabase extends Command
 {

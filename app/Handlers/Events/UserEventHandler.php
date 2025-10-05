@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Carbon\Carbon;
 use Database\Seeders\ExchangeRateSeeder;
+use Exception;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
@@ -55,7 +56,6 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Exception;
 
 /**
  * Class UserEventHandler.

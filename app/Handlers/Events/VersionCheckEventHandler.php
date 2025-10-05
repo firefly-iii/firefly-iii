@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;

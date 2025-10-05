@@ -34,7 +34,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use Illuminate\Support\Facades\Log;
 use JsonException;
-
 use function Safe\json_encode;
 
 /**

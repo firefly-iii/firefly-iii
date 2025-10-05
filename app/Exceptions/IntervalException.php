@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-use FireflyIII\Support\Calendar\Periodicity;
 use Exception;
+use FireflyIII\Support\Calendar\Periodicity;
 use Throwable;
 
 /**

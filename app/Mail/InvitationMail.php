@@ -27,7 +27,6 @@ namespace FireflyIII\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-
 use function Safe\parse_url;
 
 /**

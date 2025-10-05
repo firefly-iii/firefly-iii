@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII;
 
 use Deprecated;
+use Exception;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
@@ -67,7 +68,6 @@ use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Exception;
 
 class User extends Authenticatable
 {

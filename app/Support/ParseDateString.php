@@ -29,7 +29,6 @@ use Carbon\CarbonInterface;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Log;
-
 use Safe\Exceptions\PcreException;
 use function Safe\preg_match;
 

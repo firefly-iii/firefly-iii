@@ -44,7 +44,6 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
-
 use Safe\Exceptions\JsonException;
 use function Safe\json_encode;
 

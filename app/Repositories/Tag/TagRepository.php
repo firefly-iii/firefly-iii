@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Tag;
 
-use Override;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -39,7 +39,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Exception;
+use Override;
 
 /**
  * Class TagRepository.

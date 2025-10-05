@@ -40,12 +40,10 @@ use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-
 use Illuminate\Support\Facades\Log;
-use function Safe\mb_regex_encoding;
 use function Safe\json_encode;
+use function Safe\mb_regex_encoding;
 
 /**
  * This command was inspired by https://github.com/elliot-gh. It will check all amount fields

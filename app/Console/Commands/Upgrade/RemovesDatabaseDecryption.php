@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
-
 use function Safe\json_decode;
 
 class RemovesDatabaseDecryption extends Command

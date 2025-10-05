@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 
-use Illuminate\Validation\Validator;
-use JsonException;
 use FireflyIII\Enums\ClauseType;
 use FireflyIII\Rules\IsValidBulkClause;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -33,7 +31,8 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-
+use Illuminate\Validation\Validator;
+use JsonException;
 use function Safe\json_decode;
 
 /**

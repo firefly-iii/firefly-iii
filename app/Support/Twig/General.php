@@ -37,7 +37,6 @@ use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-
 use function Safe\parse_url;
 
 /**

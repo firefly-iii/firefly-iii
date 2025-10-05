@@ -36,7 +36,6 @@ use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
-
 use function Safe\parse_url;
 
 /**

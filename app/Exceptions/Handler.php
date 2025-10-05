@@ -24,8 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Exceptions;
 
-use Carbon\Carbon;
 use Brick\Math\Exception\NumberFormatException;
+use Carbon\Carbon;
+use ErrorException;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
@@ -40,16 +41,14 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
+use Override;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use ErrorException;
-use Override;
 use Throwable;
-
 use function Safe\json_encode;
 use function Safe\parse_url;
 
