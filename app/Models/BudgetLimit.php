@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\BudgetLimitObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -33,6 +34,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class BudgetLimit
+ *
+ * @property TransactionCurrency $transactionCurrency
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ */
 #[ObservedBy([BudgetLimitObserver::class])]
 class BudgetLimit extends Model
 {
@@ -50,10 +58,9 @@ class BudgetLimit extends Model
         if (auth()->check()) {
             $budgetLimitId = (int)$value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
-                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-                ->where('budgets.user_id', auth()->user()->id)
-                ->first(['budget_limits.*'])
-            ;
+                                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                                 ->where('budgets.user_id', auth()->user()->id)
+                                 ->first(['budget_limits.*']);
             if (null !== $budgetLimit) {
                 return $budgetLimit;
             }
@@ -86,14 +93,14 @@ class BudgetLimit extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn($value) => (string)$value,
         );
     }
 
     protected function budgetId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int)$value,
         );
     }
 
@@ -113,7 +120,7 @@ class BudgetLimit extends Model
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn($value) => (int)$value,
         );
     }
 }

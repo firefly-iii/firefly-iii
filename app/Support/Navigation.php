@@ -442,8 +442,6 @@ class Navigation
         Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
-
-        return $date->format('Y-m-d');
     }
 
     /**

@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpgradesAttachments extends Command
 {
@@ -75,7 +76,7 @@ class UpgradesAttachments extends Command
                 $att->description = '';
                 $att->save();
 
-                app('log')->debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
+                Log::debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
                 ++$count;
             }
         }

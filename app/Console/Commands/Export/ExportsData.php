@@ -37,6 +37,7 @@ use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 use function Safe\file_put_contents;
@@ -189,7 +190,7 @@ class ExportsData extends Command
             try {
                 $date = Carbon::createFromFormat('!Y-m-d', $this->option($field));
             } catch (InvalidArgumentException $e) {
-                app('log')->error($e->getMessage());
+                Log::error($e->getMessage());
                 $this->friendlyError(sprintf('%s date "%s" must be formatted YYYY-MM-DD. Field will be ignored.', $field, $this->option('start')));
                 $error = true;
             }
@@ -200,7 +201,7 @@ class ExportsData extends Command
             }
         }
         if (null === $this->option($field)) {
-            app('log')->info(sprintf('No date given in field "%s"', $field));
+            Log::info(sprintf('No date given in field "%s"', $field));
             $error = true;
         }
 

@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpgradesJournalNotes extends Command
 {
@@ -66,7 +67,7 @@ class UpgradesJournalNotes extends Command
 
             $note->text = $meta->data;
             $note->save();
-            app('log')->debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
+            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             $meta->delete();
 
             ++$count;

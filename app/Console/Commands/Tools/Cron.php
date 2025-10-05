@@ -76,8 +76,8 @@ class Cron extends Command
             try {
                 $this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }
@@ -87,8 +87,8 @@ class Cron extends Command
             try {
                 $this->checkForUpdates($force);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }
@@ -98,8 +98,8 @@ class Cron extends Command
             try {
                 $this->recurringCronJob($force, $date);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }
@@ -109,8 +109,8 @@ class Cron extends Command
             try {
                 $this->autoBudgetCronJob($force, $date);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }
@@ -120,8 +120,8 @@ class Cron extends Command
             try {
                 $this->subscriptionWarningCronJob($force, $date);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }
@@ -130,8 +130,8 @@ class Cron extends Command
             try {
                 $this->webhookCronJob($force, $date);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 $this->friendlyError($e->getMessage());
             }
         }

@@ -36,6 +36,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
@@ -98,51 +99,51 @@ class Handler extends ExceptionHandler
     {
         $expectsJson = $request->expectsJson();
 
-        app('log')->debug('Now in Handler::render()');
+        Log::debug('Now in Handler::render()');
 
         if ($e instanceof LaravelValidationException && $expectsJson) {
             // ignore it: controller will handle it.
 
-            app('log')->debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
+            Log::debug(sprintf('Return to parent to handle LaravelValidationException(%d)', $e->status));
 
             return parent::render($request, $e);
         }
         if ($e instanceof NotFoundHttpException && $expectsJson) {
             // JSON error:
-            app('log')->debug('Return JSON not found error.');
+            Log::debug('Return JSON not found error.');
 
             return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
         if ($e instanceof AuthorizationException && $expectsJson) {
             // somehow Laravel handler does not catch this:
-            app('log')->debug('Return JSON unauthorized error.');
+            Log::debug('Return JSON unauthorized error.');
 
             return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthorizationException'], 401);
         }
 
         if ($e instanceof AuthenticationException && $expectsJson) {
             // somehow Laravel handler does not catch this:
-            app('log')->debug('Return JSON unauthenticated error.');
+            Log::debug('Return JSON unauthenticated error.');
 
             return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthenticationException'], 401);
         }
 
         if ($e instanceof OAuthServerException && $expectsJson) {
-            app('log')->debug('Return JSON OAuthServerException.');
+            Log::debug('Return JSON OAuthServerException.');
 
             // somehow Laravel handler does not catch this:
             return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
         if ($e instanceof BadRequestHttpException) {
-            app('log')->debug('Return JSON BadRequestHttpException.');
+            Log::debug('Return JSON BadRequestHttpException.');
 
             return response()->json(['message' => $e->getMessage(), 'exception' => 'HttpException'], 400);
         }
 
         if ($e instanceof BadHttpHeaderException) {
             // is always API exception.
-            app('log')->debug('Return JSON BadHttpHeaderException.');
+            Log::debug('Return JSON BadHttpHeaderException.');
 
             return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
         }
@@ -161,7 +162,7 @@ class Handler extends ExceptionHandler
 
             $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
-                app('log')->debug(sprintf('Return JSON %s with debug.', $e::class));
+                Log::debug(sprintf('Return JSON %s with debug.', $e::class));
 
                 return response()->json(
                     [
@@ -174,7 +175,7 @@ class Handler extends ExceptionHandler
                     $errorCode
                 );
             }
-            app('log')->debug(sprintf('Return JSON %s.', $e::class));
+            Log::debug(sprintf('Return JSON %s.', $e::class));
 
             return response()->json(
                 ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => 'UndisclosedException'],
@@ -183,7 +184,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($e instanceof NotFoundHttpException) {
-            app('log')->debug('Refer to GracefulNotFoundHandler');
+            Log::debug('Refer to GracefulNotFoundHandler');
             $handler = app(GracefulNotFoundHandler::class);
 
             return $handler->render($request, $e);
@@ -191,20 +192,20 @@ class Handler extends ExceptionHandler
 
         // special view for database errors with extra instructions
         if ($e instanceof QueryException) {
-            app('log')->debug('Return Firefly III database exception view.');
+            Log::debug('Return Firefly III database exception view.');
             $isDebug = config('app.debug');
 
             return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
         if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
-            app('log')->debug('Return Firefly III error view.');
+            Log::debug('Return Firefly III error view.');
             $isDebug = config('app.debug');
 
             return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
         }
 
-        app('log')->debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', $e::class));
+        Log::debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', $e::class));
 
         return parent::render($request, $e);
     }

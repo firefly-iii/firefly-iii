@@ -43,6 +43,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 
+use Illuminate\Support\Facades\Log;
 use function Safe\mb_regex_encoding;
 use function Safe\json_encode;
 
@@ -95,7 +96,7 @@ class ForcesDecimalSize extends Command
      */
     public function handle(): int
     {
-        app('log')->debug('Now in ForceDecimalSize::handle()');
+        Log::debug('Now in ForceDecimalSize::handle()');
         $this->determineDatabaseType();
 
         $this->friendlyError('Running this command is dangerous and can cause data loss.');

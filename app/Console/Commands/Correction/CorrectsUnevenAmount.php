@@ -152,7 +152,7 @@ class CorrectsUnevenAmount extends Command
                     $entry->the_sum
                 );
                 $this->friendlyWarning($message);
-                app('log')->warning($message);
+                Log::warning($message);
                 ++$this->count;
 
                 continue;
@@ -230,7 +230,7 @@ class CorrectsUnevenAmount extends Command
         $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
 
         $this->friendlyWarning($message);
-        app('log')->warning($message);
+        Log::warning($message);
 
         $destination->amount = $amount;
         $destination->save();

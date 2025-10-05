@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class AddsTransactionIdentifiers extends Command
@@ -147,7 +148,7 @@ class AddsTransactionIdentifiers extends Command
                 ->first()
             ;
         } catch (QueryException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
             $this->friendlyError('Please run "php artisan migrate --force" to add this field to the table.');

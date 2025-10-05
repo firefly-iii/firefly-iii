@@ -35,6 +35,7 @@ use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpgradesLiabilitiesEight extends Command
 {
@@ -186,7 +187,7 @@ class UpgradesLiabilitiesEight extends Command
 
             return;
         }
-        app('log')->warning('Did not find opening balance.');
+        Log::warning('Did not find opening balance.');
     }
 
     private function deleteTransactions(Account $account): int

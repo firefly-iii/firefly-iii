@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class UpgradesTransferCurrencies extends Command
 {
@@ -262,7 +263,7 @@ class UpgradesTransferCurrencies extends Command
         // source account must have a currency preference.
         if (!$this->sourceCurrency instanceof TransactionCurrency) {
             $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
-            app('log')->error($message);
+            Log::error($message);
             $this->friendlyError($message);
 
             return true;
@@ -275,7 +276,7 @@ class UpgradesTransferCurrencies extends Command
                 $this->destinationAccount->id,
                 $this->destinationAccount->name
             );
-            app('log')->error($message);
+            Log::error($message);
             $this->friendlyError($message);
 
             return true;

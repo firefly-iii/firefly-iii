@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait VerifiesAccessToken.
@@ -76,19 +77,19 @@ trait VerifiesAccessToken
         $user        = $repository->find($userId);
 
         if (null === $user) {
-            app('log')->error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
+            Log::error(sprintf('verifyAccessToken(): no such user for input "%d"', $userId));
 
             return false;
         }
         $accessToken = app('preferences')->getForUser($user, 'access_token');
         if (null === $accessToken) {
-            app('log')->error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
+            Log::error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
 
             return false;
         }
         if ($accessToken->data !== $token) {
-            app('log')->error(sprintf('Invalid access token for user #%d.', $userId));
-            app('log')->error(sprintf('Token given is "%s", expected something else.', $token));
+            Log::error(sprintf('Invalid access token for user #%d.', $userId));
+            Log::error(sprintf('Token given is "%s", expected something else.', $token));
 
             return false;
         }
