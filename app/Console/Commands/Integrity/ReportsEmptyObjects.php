@@ -70,7 +70,7 @@ class ReportsEmptyObjects extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no transaction journals.',
+                'User #%d (%s) has budget #%d ("%s") which has no transactions.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
@@ -96,7 +96,7 @@ class ReportsEmptyObjects extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
-                'User #%d (%s) has category #%d ("%s") which has no transaction journals.',
+                'User #%d (%s) has category #%d ("%s") which has no transactions.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
@@ -119,7 +119,7 @@ class ReportsEmptyObjects extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf(
-                'User #%d (%s) has tag #%d ("%s") which has no transaction journals.',
+                'User #%d (%s) has tag #%d ("%s") which has no transactions.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
