@@ -40,6 +40,7 @@ use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use ValueError;
+
 use function Safe\parse_url;
 use function Safe\preg_replace;
 
@@ -534,8 +535,6 @@ class Steam
         return Amount::getTransactionCurrencyById((int)$result->data);
     }
 
-    /**
-     */
     public function getHostName(string $ipAddress): string
     {
         $host = '';
@@ -557,7 +556,6 @@ class Steam
     /**
      * Get user's language.
      *
-     * @return string
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

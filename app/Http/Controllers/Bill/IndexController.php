@@ -147,8 +147,6 @@ class IndexController extends Controller
         return view('bills.index', compact('bills', 'sums', 'total', 'totals', 'today'));
     }
 
-    /**
-     */
     private function getSums(array $bills): array
     {
         $sums  = [];

@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Log;
 use LogicException;
 use Safe\Exceptions\FilesystemException;
 use TypeError;
+
 use function Safe\fwrite;
 
 class GdbotsQueryParser implements QueryParserInterface
@@ -45,9 +46,6 @@ class GdbotsQueryParser implements QueryParserInterface
     }
 
     /**
-     * @param string $query
-     *
-     * @return NodeGroup
      * @throws FireflyException
      * @throws FilesystemException
      */

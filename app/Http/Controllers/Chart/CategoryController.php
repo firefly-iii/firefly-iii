@@ -66,7 +66,6 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      * TODO test method, for category refactor.
-     *
      */
     public function all(Category $category): JsonResponse
     {
@@ -256,10 +255,6 @@ class CategoryController extends Controller
      * Chart for a specific period.
      * TODO test me, for category refactor.
      *
-     * @param Category $category
-     * @param Carbon   $date
-     *
-     * @return JsonResponse
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

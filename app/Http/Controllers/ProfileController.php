@@ -138,7 +138,6 @@ class ProfileController extends Controller
     /**
      * Index for profile.
      *
-     * @return Factory|View
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -49,6 +49,7 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

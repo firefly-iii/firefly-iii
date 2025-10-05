@@ -87,7 +87,6 @@ class IntroController extends Controller
 
     /**
      * Enable the boxes for a specific page again.
-     *
      */
     public function postEnable(string $route, ?string $specialPage = null): JsonResponse
     {
@@ -106,7 +105,6 @@ class IntroController extends Controller
 
     /**
      * Set that you saw them.
-     *
      */
     public function postFinished(string $route, ?string $specialPage = null): JsonResponse
     {

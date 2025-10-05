@@ -85,7 +85,6 @@ class NewUserController extends Controller
      * Store his new settings.
      *
      * @return Redirector|RedirectResponse
-     *
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
     {

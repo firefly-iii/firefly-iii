@@ -55,6 +55,7 @@ use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use JsonException;
+
 use function Safe\json_encode;
 
 /**
@@ -342,8 +343,6 @@ class TransactionJournalFactory
     /**
      * If this transaction already exists, throw an error.
      *
-     * @param string $hash
-     *
      * @throws DuplicateTransactionException
      * @throws JsonException
      * @throws \Safe\Exceptions\JsonException
@@ -480,8 +479,6 @@ class TransactionJournalFactory
         };
     }
 
-    /**
-     */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         Log::debug(sprintf('Now in getCurrency(#%d, "%s")', $currency?->id, $account->name));

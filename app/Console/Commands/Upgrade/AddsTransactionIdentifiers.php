@@ -52,7 +52,6 @@ class AddsTransactionIdentifiers extends Command
      *
      * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more
      * often than you would think. So each set gets a number (1,2,3) to keep them apart.
-     *
      */
     public function handle(): int
     {
@@ -99,6 +98,7 @@ class AddsTransactionIdentifiers extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
 
     }

@@ -36,6 +36,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use Safe\Exceptions\PcreException;
+
 use function Safe\preg_match;
 
 /**
@@ -133,7 +134,6 @@ class ReportFormRequest extends FormRequest
     /**
      * Validate end date.
      *
-     * @return Carbon
      * @throws FireflyException
      * @throws PcreException
      */
@@ -173,7 +173,6 @@ class ReportFormRequest extends FormRequest
     /**
      * Validate start date.
      *
-     * @return Carbon
      * @throws FireflyException
      * @throws PcreException
      */

@@ -114,8 +114,7 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param Request $request
-     * @param null    $token
+     * @param null $token
      *
      * @return Factory|View
      *

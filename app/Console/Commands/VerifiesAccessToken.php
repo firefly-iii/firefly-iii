@@ -64,7 +64,6 @@ trait VerifiesAccessToken
 
     /**
      * Returns false when given token does not match given user token.
-     *
      */
     protected function verifyAccessToken(): bool
     {

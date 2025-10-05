@@ -71,10 +71,6 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
      *
      * @throws ContainerExceptionInterface
@@ -114,9 +110,8 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

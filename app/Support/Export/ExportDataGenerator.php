@@ -107,7 +107,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return array
      * @throws CannotInsertRecord
      * @throws ContainerExceptionInterface
      * @throws Exception
@@ -754,7 +753,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @return string
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException

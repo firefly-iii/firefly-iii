@@ -68,7 +68,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listBudget
      *
      * Display a listing of the resource.
-     *
      */
     public function index(): JsonResponse
     {

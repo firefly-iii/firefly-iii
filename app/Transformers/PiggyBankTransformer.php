@@ -45,7 +45,6 @@ class PiggyBankTransformer extends AbstractTransformer
 
     /**
      * Transform the piggy bank.
-     *
      */
     public function transform(PiggyBank $piggyBank): array
     {

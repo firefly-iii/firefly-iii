@@ -78,7 +78,8 @@ class AccountFactory
         if (!$type instanceof AccountType) {
             throw new FireflyException(sprintf('Cannot find account type "%s"', $accountType));
         }
-        /** @var Account|null $return */
+
+        /** @var null|Account $return */
         $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
 
         if (null === $return) {

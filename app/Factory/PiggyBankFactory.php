@@ -36,6 +36,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\json_encode;
 
 /**

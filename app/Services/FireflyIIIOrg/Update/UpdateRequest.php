@@ -31,6 +31,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
 use JsonException;
+
 use function Safe\json_decode;
 
 /**

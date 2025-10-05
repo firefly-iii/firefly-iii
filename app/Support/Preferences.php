@@ -230,8 +230,6 @@ class Preferences
         return $this->getForUser($user, $name, $default);
     }
 
-    /**
-     */
     public function lastActivity(): string
     {
         $instance     = PreferencesSingleton::getInstance();

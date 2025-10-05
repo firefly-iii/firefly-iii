@@ -154,6 +154,7 @@ class UserController extends Controller
      * Show index of user manager.
      *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws FireflyException
      * @throws NotFoundExceptionInterface

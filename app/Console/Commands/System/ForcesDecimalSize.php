@@ -42,6 +42,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\json_encode;
 use function Safe\mb_regex_encoding;
 

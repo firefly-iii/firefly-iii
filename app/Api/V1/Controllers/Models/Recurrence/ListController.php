@@ -67,7 +67,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/listTransactionByRecurrence
      *
      * Show transactions for this recurrence.
-     *
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {

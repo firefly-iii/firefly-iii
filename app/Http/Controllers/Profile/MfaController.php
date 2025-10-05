@@ -84,8 +84,6 @@ class MfaController extends Controller
 
     }
 
-    /**
-     */
     public function backupCodes(Request $request): Factory|RedirectResponse|View
     {
         if (!$this->internalAuth) {
@@ -230,8 +228,6 @@ class MfaController extends Controller
     /**
      * Submit 2FA for the first time.
      *
-     * @param TokenFormRequest $request
-     *
      * @return Redirector|RedirectResponse
      *
      * @throws ContainerExceptionInterface
@@ -292,8 +288,6 @@ class MfaController extends Controller
 
     /**
      * TODO duplicate code.
-     *
-     * @param string $mfaCode
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

@@ -28,6 +28,7 @@ use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Validator;
 use JsonException;
+
 use function Safe\json_decode;
 
 /**

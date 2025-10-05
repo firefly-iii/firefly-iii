@@ -35,7 +35,6 @@ class CLIToken implements BinderInterface
 {
     /**
      * @return mixed
-     *
      */
     public static function routeBinder(string $value, Route $route)
     {

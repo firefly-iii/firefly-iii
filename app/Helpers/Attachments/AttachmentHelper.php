@@ -38,11 +38,13 @@ use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
 use Safe\Exceptions\StringsException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+
 use function Safe\fclose;
 use function Safe\finfo_open;
 use function Safe\fwrite;
 use function Safe\md5_file;
 use function Safe\tmpfile;
+
 use const DIRECTORY_SEPARATOR;
 
 /**
@@ -220,10 +222,6 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Process the upload of a file.
      *
-     * @param UploadedFile $file
-     * @param Model        $model
-     *
-     * @return Attachment|null
      * @throws StringsException
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment

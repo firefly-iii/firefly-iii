@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
+
 use function Safe\json_decode;
 
 class RemovesDatabaseDecryption extends Command
@@ -98,6 +99,7 @@ class RemovesDatabaseDecryption extends Command
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }
+
         return (bool)$configVar?->data;
 
     }

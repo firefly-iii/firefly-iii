@@ -57,7 +57,6 @@ class PiggyBankController extends Controller
      * Shows the piggy bank history.
      *
      * TODO this chart is not multi currency aware.
-     *
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {

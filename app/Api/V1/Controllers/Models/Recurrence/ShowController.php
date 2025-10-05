@@ -64,7 +64,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/listRecurrence
      *
      * List all of them.
-     *
      */
     public function index(): JsonResponse
     {

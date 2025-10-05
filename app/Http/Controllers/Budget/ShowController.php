@@ -75,10 +75,6 @@ class ShowController extends Controller
     /**
      * Show transactions without a budget.
      *
-     * @param Request     $request
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
      *
      * @throws ContainerExceptionInterface
@@ -118,9 +114,8 @@ class ShowController extends Controller
     /**
      * Shows ALL transactions without a budget.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -147,10 +142,8 @@ class ShowController extends Controller
     /**
      * Show a single budget.
      *
-     * @param Request $request
-     * @param Budget  $budget
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -182,10 +175,6 @@ class ShowController extends Controller
 
     /**
      * Show a single budget by a budget limit.
-     *
-     * @param Request     $request
-     * @param Budget      $budget
-     * @param BudgetLimit $budgetLimit
      *
      * @return Factory|View
      *

@@ -31,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
 use Illuminate\Http\Response as LaravelResponse;
 use Safe\Exceptions\DatetimeException;
+
 use function Safe\date;
 
 /**
@@ -60,11 +61,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function accounts(ExportRequest $request): LaravelResponse
@@ -102,11 +101,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function bills(ExportRequest $request): LaravelResponse
@@ -117,11 +114,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function budgets(ExportRequest $request): LaravelResponse
@@ -132,11 +127,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function categories(ExportRequest $request): LaravelResponse
@@ -147,11 +140,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function piggyBanks(ExportRequest $request): LaravelResponse
@@ -162,11 +153,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function recurring(ExportRequest $request): LaravelResponse
@@ -177,11 +166,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function rules(ExportRequest $request): LaravelResponse
@@ -192,11 +179,9 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
+     *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function tags(ExportRequest $request): LaravelResponse
@@ -207,9 +192,6 @@ class ExportController extends Controller
     }
 
     /**
-     * @param ExportRequest $request
-     *
-     * @return LaravelResponse
      * @throws DatetimeException
      * @throws FireflyException
      */

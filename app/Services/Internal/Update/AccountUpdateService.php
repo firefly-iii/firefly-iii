@@ -284,8 +284,6 @@ class AccountUpdateService
         }
     }
 
-    /**
-     */
     private function updatePreferences(Account $account): void
     {
         $account->refresh();

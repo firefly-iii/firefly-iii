@@ -36,10 +36,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-
 /**
- * @property User $user
- * @property UserGroup $userGroup
+ * @property User                           $user
+ * @property UserGroup                      $userGroup
  * @property Collection<TransactionJournal> $transactionJournals
  */
 #[ObservedBy([TransactionGroupObserver::class])]

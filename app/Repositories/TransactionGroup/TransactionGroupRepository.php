@@ -49,6 +49,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+
 use function Safe\json_decode;
 
 /**
@@ -176,6 +177,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             ->where('noteable_type', TransactionJournal::class)
             ->first()
         ;
+
         return $note?->text;
 
     }

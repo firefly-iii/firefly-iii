@@ -69,11 +69,6 @@ class IndexController extends Controller
     /**
      * Index for a range of transactions.
      *
-     * @param Request     $request
-     * @param string      $objectType
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
      *
      * @throws ContainerExceptionInterface
@@ -132,10 +127,8 @@ class IndexController extends Controller
     /**
      * Index for ALL transactions.
      *
-     * @param Request $request
-     * @param string  $objectType
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

@@ -67,7 +67,6 @@ class ShowController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
      */
     public function index(ShowRequest $request): JsonResponse
     {

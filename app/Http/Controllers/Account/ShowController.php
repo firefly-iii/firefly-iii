@@ -78,11 +78,6 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request     $request
-     * @param Account     $account
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|Redirector|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
@@ -201,9 +196,6 @@ class ShowController extends Controller
 
     /**
      * Show an account.
-     *
-     * @param Request $request
-     * @param Account $account
      *
      * @return Factory|Redirector|RedirectResponse|View
      *

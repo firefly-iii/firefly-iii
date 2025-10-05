@@ -369,8 +369,6 @@ class OperatorQuerySearch implements SearchInterface
         }
     }
 
-    /**
-     */
     private function parseDateRange(string $type, string $value): array
     {
         $parser = new ParseDateString();

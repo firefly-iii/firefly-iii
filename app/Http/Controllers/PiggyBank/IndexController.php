@@ -76,7 +76,6 @@ class IndexController extends Controller
      * TODO very complicated function.
      *
      * @return Factory|View
-     *
      */
     public function index()
     {

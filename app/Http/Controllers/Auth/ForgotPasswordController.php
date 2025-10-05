@@ -36,6 +36,7 @@ use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
+
 use function Safe\parse_url;
 
 /**
@@ -61,10 +62,8 @@ class ForgotPasswordController extends Controller
     /**
      * Send a reset link to the given user.
      *
-     * @param Request                 $request
-     * @param UserRepositoryInterface $repository
-     *
      * @return Factory|RedirectResponse|View
+     *
      * @throws FireflyException
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)

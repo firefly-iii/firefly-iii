@@ -132,8 +132,6 @@ class CreateController extends Controller
     /**
      * Store the new account.
      *
-     * @param AccountFormRequest $request
-     *
      * @return Redirector|RedirectResponse
      *
      * @throws ContainerExceptionInterface

@@ -67,10 +67,8 @@ class DeleteController extends Controller
     /**
      * Deletes a currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
      * @return Factory|Redirector|RedirectResponse|View
+     *
      * @throws FireflyException
      */
     public function delete(Request $request, TransactionCurrency $currency)
@@ -104,10 +102,8 @@ class DeleteController extends Controller
     /**
      * Destroys a currency.
      *
-     * @param Request             $request
-     * @param TransactionCurrency $currency
-     *
      * @return Redirector|RedirectResponse
+     *
      * @throws FireflyException
      */
     public function destroy(Request $request, TransactionCurrency $currency)

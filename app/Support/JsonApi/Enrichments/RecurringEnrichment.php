@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\json_decode;
 
 class RecurringEnrichment implements EnrichmentInterface
@@ -60,7 +61,7 @@ class RecurringEnrichment implements EnrichmentInterface
     //    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
     private bool  $convertToPrimary;
-    private array $currencies            = [];
+    private array $currencies                                   = [];
     private array                        $currencyIds           = [];
     private array                        $destinationAccountIds = [];
     private array                        $foreignCurrencyIds    = [];

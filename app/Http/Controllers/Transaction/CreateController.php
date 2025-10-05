@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
+
 use function Safe\parse_url;
 
 /**
@@ -98,8 +99,6 @@ class CreateController extends Controller
 
     /**
      * Create a new transaction group.
-     *
-     * @param string|null $objectType
      *
      * @return Factory|View
      *

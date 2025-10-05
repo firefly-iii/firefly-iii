@@ -30,6 +30,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\PcreException;
+
 use function Safe\preg_match;
 
 /**
@@ -72,11 +73,9 @@ class ParseDateString
     }
 
     /**
-     * @param string $date
-     *
-     * @return Carbon
      * @throws FireflyException
      * @throws PcreException
+     *
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     public function parseDate(string $date): Carbon

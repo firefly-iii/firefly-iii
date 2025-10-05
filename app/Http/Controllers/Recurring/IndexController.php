@@ -73,8 +73,6 @@ class IndexController extends Controller
      * TODO the notes of a recurrence are pretty pointless at this moment.
      * Show all recurring transactions.
      *
-     * @param Request $request
-     *
      * @return Factory|View
      *
      * @throws FireflyException
