@@ -243,7 +243,7 @@ class ExchangeRateConverter
     private function getRate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): string
     {
         $key    = $this->getCacheKey($from, $to, $date);
-        $res    = Cache::get($key, null);
+        $res    = Cache::get($key);
 
         // find in cache
         if (null !== $res) {

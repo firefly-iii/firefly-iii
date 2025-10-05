@@ -50,7 +50,6 @@ class PreferencesController extends Controller
      *
      * List all of them.
      *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

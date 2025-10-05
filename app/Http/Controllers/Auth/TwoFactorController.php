@@ -37,6 +37,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use PragmaRX\Google2FALaravel\Support\Authenticator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TwoFactorController.
@@ -59,7 +61,11 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
      * @return Redirector|RedirectResponse
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function submitMFA(Request $request)
     {

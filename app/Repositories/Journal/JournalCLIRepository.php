@@ -166,11 +166,8 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     public function getNoteText(TransactionJournal $journal): ?string
     {
         $note = $journal->notes()->first();
-        if (null === $note) {
-            return null;
-        }
+        return $note?->text;
 
-        return $note->text;
     }
 
     /**

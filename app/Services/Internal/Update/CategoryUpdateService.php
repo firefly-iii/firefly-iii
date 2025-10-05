@@ -139,9 +139,7 @@ class CategoryUpdateService
         }
         if ('' === $note) {
             $dbNote = $category->notes()->first();
-            if (null !== $dbNote) {
-                $dbNote->delete();
-            }
+            $dbNote?->delete();
 
             return;
         }

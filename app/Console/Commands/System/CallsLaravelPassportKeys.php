@@ -42,7 +42,7 @@ class CallsLaravelPassportKeys extends Command
      */
     public function handle(): int
     {
-        Artisan::call('passport:keys --no-interaction', []);
+        Artisan::call('passport:keys --no-interaction');
         $result = Artisan::output();
         if (str_contains($result, 'Encryption keys already exist')) {
             $this->friendlyInfo('Encryption keys exist already.');

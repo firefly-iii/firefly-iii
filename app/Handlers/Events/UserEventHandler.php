@@ -165,7 +165,6 @@ class UserEventHandler
     /**
      * Set the demo user back to English.
      *
-     * @throws FireflyException
      */
     public function demoUserBackToEnglish(Login $event): void
     {
@@ -183,7 +182,6 @@ class UserEventHandler
     }
 
     /**
-     * @throws FireflyException
      */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
@@ -448,7 +446,6 @@ class UserEventHandler
     }
 
     /**
-     * @throws FireflyException
      */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {

@@ -431,7 +431,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Parse the repetition in a string that is user readable.
      *
-     * @throws FireflyException
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {

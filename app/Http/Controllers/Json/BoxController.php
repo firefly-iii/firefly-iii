@@ -52,7 +52,7 @@ class BoxController extends Controller
     #[Deprecated]
     public function available(): JsonResponse
     {
-        return response()->json([]);
+        return response()->json();
     }
 
     /**

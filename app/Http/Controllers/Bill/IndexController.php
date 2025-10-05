@@ -149,7 +149,6 @@ class IndexController extends Controller
     }
 
     /**
-     * @throws FireflyException
      */
     private function getSums(array $bills): array
     {

@@ -87,9 +87,7 @@ class TriggerController extends Controller
 
         // enrich groups and return them:
 
-        if (0 === $groups->count()) {
-            $paginator = new LengthAwarePaginator(new Collection(), 0, 1);
-        }
+        $paginator = new LengthAwarePaginator(new Collection(), 0, 1);
         if ($groups->count() > 0) {
             /** @var User $admin */
             $admin     = auth()->user();

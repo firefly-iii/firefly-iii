@@ -91,7 +91,6 @@ class UserController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

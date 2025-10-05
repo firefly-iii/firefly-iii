@@ -100,7 +100,6 @@ class UpgradesAccountCurrencies extends Command
     }
 
     /**
-     * @throws FireflyException
      */
     private function updateCurrenciesForUser(User $user): void
     {

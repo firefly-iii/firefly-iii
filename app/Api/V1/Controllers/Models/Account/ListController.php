@@ -71,7 +71,6 @@ class ListController extends Controller
     }
 
     /**
-     * @throws FireflyException
      */
     public function attachments(Account $account): JsonResponse
     {
@@ -97,7 +96,6 @@ class ListController extends Controller
     }
 
     /**
-     * @throws FireflyException
      */
     public function piggyBanks(Account $account): JsonResponse
     {
@@ -136,7 +134,6 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

@@ -72,7 +72,6 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @throws FireflyException
      */
     public function attachments(Bill $bill): JsonResponse
     {
@@ -103,7 +102,6 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @throws FireflyException
      */
     public function rules(Bill $bill): JsonResponse
     {
@@ -136,7 +134,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {

@@ -45,6 +45,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+use Safe\Exceptions\JsonException;
 use function Safe\json_encode;
 
 /**
@@ -482,7 +483,13 @@ class AccountController extends Controller
     /**
      * Shows overview of account during a single period.
      *
+     * @param Account $account
+     * @param Carbon  $start
+     * @param Carbon  $end
+     *
+     * @return JsonResponse
      * @throws FireflyException
+     * @throws JsonException
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -571,7 +578,7 @@ class AccountController extends Controller
                 $label                           = $current->isoFormat($format);
                 $return[$key]['entries'][$label] = $amount;
             }
-            $current       = app('navigation')->addPeriod($current, $step, 0);
+            $current       = app('navigation')->addPeriod($current, $step);
             // here too, to fix #8041, the data is corrected to the end of the period.
             $current       = app('navigation')->endOfX($current, $step, null);
         }

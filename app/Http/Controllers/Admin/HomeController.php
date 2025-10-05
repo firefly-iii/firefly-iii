@@ -28,6 +28,8 @@ use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class HomeController.
@@ -47,6 +49,8 @@ class HomeController extends Controller
      * Index of the admin.
      *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index()
     {

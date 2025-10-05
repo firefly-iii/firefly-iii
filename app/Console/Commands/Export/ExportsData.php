@@ -40,6 +40,7 @@ use Exception;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
+use Safe\Exceptions\FilesystemException;
 use function Safe\file_put_contents;
 
 class ExportsData extends Command
@@ -275,7 +276,11 @@ class ExportsData extends Command
     }
 
     /**
+     * @param array $options
+     * @param array $data
+     *
      * @throws FireflyException
+     * @throws FilesystemException
      */
     private function exportData(array $options, array $data): void
     {

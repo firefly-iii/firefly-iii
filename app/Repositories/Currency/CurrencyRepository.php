@@ -45,6 +45,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
 
+use Safe\Exceptions\JsonException;
 use function Safe\json_encode;
 
 /**
@@ -65,7 +66,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * @throws FireflyException
+     * @param TransactionCurrency $currency
+     *
+     * @return string|null
+     * @throws JsonException
      */
     public function currencyInUseAt(TransactionCurrency $currency): ?string
     {
@@ -234,7 +238,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @throws FireflyException
      */
     public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {

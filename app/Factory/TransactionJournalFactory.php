@@ -343,7 +343,11 @@ class TransactionJournalFactory
     /**
      * If this transaction already exists, throw an error.
      *
+     * @param string $hash
+     *
      * @throws DuplicateTransactionException
+     * @throws JsonException
+     * @throws \Safe\Exceptions\JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {
@@ -478,7 +482,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * @throws FireflyException
      */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {

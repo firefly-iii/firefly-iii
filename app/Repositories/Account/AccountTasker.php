@@ -144,7 +144,6 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     }
 
     /**
-     * @throws FireflyException
      */
     private function groupExpenseByDestination(array $array): array
     {
@@ -232,7 +231,6 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
     }
 
     /**
-     * @throws FireflyException
      */
     private function groupIncomeBySource(array $array): array
     {

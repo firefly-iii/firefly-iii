@@ -161,11 +161,8 @@ class UserRepository implements UserRepositoryInterface
     {
         /** @var null|Role $role */
         $role = $user->roles()->first();
-        if (null !== $role) {
-            return $role->name;
-        }
+        return $role?->name;
 
-        return null;
     }
 
     /**
@@ -379,7 +376,6 @@ class UserRepository implements UserRepositoryInterface
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the
      * undo/confirm routine can't catch this one. The user is NOT blocked.
      *
-     * @throws FireflyException
      *
      * @see changeEmail
      */

@@ -35,6 +35,8 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class IndexController
@@ -66,10 +68,14 @@ class IndexController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param string  $objectType
+     *
      * @return Factory|View
      *
-     * @throws FireflyException
-     *                                              */
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function inactive(Request $request, string $objectType)
     {
         $inactivePage  = true;
@@ -136,10 +142,14 @@ class IndexController extends Controller
     /**
      * Show list of accounts.
      *
+     * @param Request $request
+     * @param string  $objectType
+     *
      * @return Factory|View
      *
-     * @throws FireflyException
-     *                                              */
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function index(Request $request, string $objectType)
     {
         app('log')->debug(sprintf('Now at %s', __METHOD__));

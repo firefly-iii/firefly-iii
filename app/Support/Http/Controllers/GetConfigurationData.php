@@ -118,7 +118,7 @@ trait GetConfigurationData
             $previousEnd    = app('navigation')->endOfPeriod($previousStart, $viewRange);
             $ranges[$index] = [$previousStart, $previousEnd];
 
-            $nextDate       = app('navigation')->addPeriod($start, $viewRange, 0);
+            $nextDate       = app('navigation')->addPeriod($start, $viewRange);
             $index          = app('navigation')->periodShow($nextDate, $viewRange);
             $nextStart      = app('navigation')->startOfPeriod($nextDate, $viewRange);
             $nextEnd        = app('navigation')->endOfPeriod($nextStart, $viewRange);

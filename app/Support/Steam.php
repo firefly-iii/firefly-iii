@@ -37,6 +37,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use ValueError;
 
 use function Safe\parse_url;
@@ -534,7 +536,6 @@ class Steam
     }
 
     /**
-     * @throws FireflyException
      */
     public function getHostName(string $ipAddress): string
     {
@@ -557,7 +558,10 @@ class Steam
     /**
      * Get user's language.
      *
+     * @return string
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function getLanguage(): string // get preference
     {

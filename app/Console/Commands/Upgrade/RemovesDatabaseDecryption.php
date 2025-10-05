@@ -99,11 +99,8 @@ class RemovesDatabaseDecryption extends Command
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
+        return (bool)$configVar?->data;
 
-        return false;
     }
 
     private function decryptField(string $table, string $field): void

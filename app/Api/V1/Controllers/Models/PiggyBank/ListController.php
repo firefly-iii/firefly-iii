@@ -68,7 +68,6 @@ class ListController extends Controller
      *
      * List single resource.
      *
-     * @throws FireflyException
      */
     public function accounts(PiggyBank $piggyBank): JsonResponse
     {
@@ -106,7 +105,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAttachmentByPiggyBank
      *
-     * @throws FireflyException
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
@@ -137,7 +135,6 @@ class ListController extends Controller
      *
      * List single resource.
      *
-     * @throws FireflyException
      */
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {

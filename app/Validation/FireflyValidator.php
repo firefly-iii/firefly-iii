@@ -46,6 +46,9 @@ use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FALaravel\Facade;
 use Config;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\JsonException;
 use ValueError;
 
 use function Safe\preg_match;
@@ -62,10 +65,12 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      *
+     * @return bool
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
-     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validate2faCode($attribute, $value): bool
@@ -628,6 +633,8 @@ class FireflyValidator extends Validator
      * @param mixed $value
      * @param mixed $parameters
      *
+     * @return bool
+     * @throws JsonException
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool

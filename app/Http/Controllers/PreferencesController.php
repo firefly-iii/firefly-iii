@@ -43,6 +43,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
+use Safe\Exceptions\FilesystemException;
 use function Safe\json_decode;
 use function Safe\file_get_contents;
 
@@ -71,9 +72,12 @@ class PreferencesController extends Controller
     /**
      * Show overview of preferences.
      *
+     * @param AccountRepositoryInterface $repository
+     *
      * @return Factory|View
      *
      * @throws FireflyException
+     * @throws FilesystemException
      */
     public function index(AccountRepositoryInterface $repository)
     {

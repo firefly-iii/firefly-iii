@@ -377,9 +377,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
             return;
         }
-        if (null !== $dbNote) {
-            $dbNote->delete();
-        }
+        $dbNote?->delete();
     }
 
     public function getAutoBudget(Budget $budget): ?AutoBudget
@@ -389,7 +387,6 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     }
 
     /**
-     * @throws FireflyException
      */
     private function updateAutoBudget(Budget $budget, array $data): void
     {
@@ -527,11 +524,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function firstUseDate(Budget $budget): ?Carbon
     {
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
-        if (null !== $journal) {
-            return $journal->date;
-        }
+        return $journal?->date;
 
-        return null;
     }
 
     public function getAttachments(Budget $budget): Collection
@@ -570,11 +564,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function getNoteText(Budget $budget): ?string
     {
         $note = $budget->notes()->first();
-        if (null === $note) {
-            return null;
-        }
+        return $note?->text;
 
-        return $note->text;
     }
 
     public function searchBudget(string $query, int $limit): Collection

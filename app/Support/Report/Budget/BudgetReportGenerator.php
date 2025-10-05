@@ -133,7 +133,6 @@ class BudgetReportGenerator
     }
 
     /**
-     * @throws FireflyException
      */
     public function setUser(User $user): void
     {

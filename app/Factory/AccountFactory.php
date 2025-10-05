@@ -83,7 +83,6 @@ class AccountFactory
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
-            /** @var Account $return */
             $return = $this->create(
                 [
                     'user_id'           => $this->user->id,

@@ -44,6 +44,8 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use PragmaRX\Recovery\Recovery;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class MfaController
@@ -84,7 +86,6 @@ class MfaController extends Controller
     }
 
     /**
-     * @throws FireflyException
      */
     public function backupCodes(Request $request): Factory|RedirectResponse|View
     {
@@ -230,9 +231,12 @@ class MfaController extends Controller
     /**
      * Submit 2FA for the first time.
      *
+     * @param TokenFormRequest $request
+     *
      * @return Redirector|RedirectResponse
      *
-     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function enableMFAPost(TokenFormRequest $request)
     {
@@ -290,7 +294,10 @@ class MfaController extends Controller
     /**
      * TODO duplicate code.
      *
-     * @throws FireflyException
+     * @param string $mfaCode
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function addToMFAHistory(string $mfaCode): void
     {

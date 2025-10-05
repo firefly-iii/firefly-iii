@@ -46,7 +46,6 @@ class IsValidAccountType implements ValidationRule
             $filtered = [];
             $keys     = array_keys($this->types);
 
-            /** @var mixed $entry */
             foreach ($value as $entry) {
                 $entry = (string) $entry;
                 if (!in_array($entry, $keys, true)) {

@@ -60,8 +60,8 @@ class RecurringEnrichment implements EnrichmentInterface
     private Collection $collection;
     //    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
-    private bool                         $convertToPrimary      = false;
-    private array                        $currencies            = [];
+    private bool  $convertToPrimary;
+    private array $currencies            = [];
     private array                        $currencyIds           = [];
     private array                        $destinationAccountIds = [];
     private array                        $foreignCurrencyIds    = [];

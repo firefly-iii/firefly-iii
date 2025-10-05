@@ -159,7 +159,9 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
             // get suggested per month.
             $meta['save_per_month']    = Steam::bcround($this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['target_amount'], $meta['current_amount']), $currency->decimal_places);
-            $meta['pc_save_per_month'] = Steam::bcround($this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['pc_target_amount'], $meta['pc_current_amount']), $currency->decimal_places);
+            if(null !== $meta['pc_current_amount']) {
+                $meta['pc_save_per_month'] = Steam::bcround($this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['pc_target_amount'], $meta['pc_current_amount']), $currency->decimal_places);
+            }
 
             $item->meta                = $meta;
 

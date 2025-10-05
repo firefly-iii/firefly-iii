@@ -135,9 +135,7 @@ class RemovesOrphanedTransactions extends Command
             // delete journals
             /** @var null|TransactionJournal $journal */
             $journal = TransactionJournal::find($transaction->transaction_journal_id);
-            if (null !== $journal) {
-                $journal->delete();
-            }
+            $journal?->delete();
             Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
             $this->friendlyWarning(
                 sprintf(

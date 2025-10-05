@@ -54,9 +54,7 @@ trait RecurringTransactionTrait
     {
         if ('' === $note) {
             $dbNote = $recurrence->notes()->first();
-            if (null !== $dbNote) {
-                $dbNote->delete();
-            }
+            $dbNote?->delete();
 
             return true;
         }

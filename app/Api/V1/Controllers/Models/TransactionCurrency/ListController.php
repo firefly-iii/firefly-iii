@@ -72,7 +72,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
      *
-     * @throws FireflyException
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -130,7 +129,6 @@ class ListController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @throws FireflyException
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
@@ -165,7 +163,6 @@ class ListController extends Controller
      *
      * List all bills
      *
-     * @throws FireflyException
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
@@ -212,7 +209,6 @@ class ListController extends Controller
      *
      * List all budget limits
      *
-     * @throws FireflyException
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
     {
@@ -250,7 +246,6 @@ class ListController extends Controller
      *
      * List all recurring transactions.
      *
-     * @throws FireflyException
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
@@ -303,7 +298,6 @@ class ListController extends Controller
      *
      * List all of them.
      *
-     * @throws FireflyException
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
@@ -348,7 +342,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @throws FireflyException
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {

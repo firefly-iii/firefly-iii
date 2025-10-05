@@ -69,7 +69,6 @@ class ListController extends Controller
      *
      * Show transactions for this recurrence.
      *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {

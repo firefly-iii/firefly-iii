@@ -70,7 +70,6 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {
@@ -100,7 +99,6 @@ class ShowController extends Controller
      *
      * Show a currency.
      *
-     * @throws FireflyException
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
@@ -124,7 +122,6 @@ class ShowController extends Controller
     /**
      * Show a currency.
      *
-     * @throws FireflyException
      */
     public function showPrimary(): JsonResponse
     {

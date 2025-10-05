@@ -39,6 +39,8 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
@@ -73,9 +75,15 @@ class ShowController extends Controller
     /**
      * Show transactions without a budget.
      *
+     * @param Request     $request
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -110,7 +118,11 @@ class ShowController extends Controller
     /**
      * Shows ALL transactions without a budget.
      *
+     * @param Request $request
+     *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function noBudgetAll(Request $request)
     {
@@ -135,7 +147,12 @@ class ShowController extends Controller
     /**
      * Show a single budget.
      *
+     * @param Request $request
+     * @param Budget  $budget
+     *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Budget $budget)
     {
@@ -166,9 +183,15 @@ class ShowController extends Controller
     /**
      * Show a single budget by a budget limit.
      *
+     * @param Request     $request
+     * @param Budget      $budget
+     * @param BudgetLimit $budgetLimit
+     *
      * @return Factory|View
      *
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {

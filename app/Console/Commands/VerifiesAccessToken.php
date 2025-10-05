@@ -65,7 +65,6 @@ trait VerifiesAccessToken
     /**
      * Returns false when given token does not match given user token.
      *
-     * @throws FireflyException
      */
     protected function verifyAccessToken(): bool
     {

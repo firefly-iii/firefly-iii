@@ -37,6 +37,8 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CreateController
@@ -131,9 +133,12 @@ class CreateController extends Controller
     /**
      * Store the new account.
      *
+     * @param AccountFormRequest $request
+     *
      * @return Redirector|RedirectResponse
      *
-     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function store(AccountFormRequest $request)
     {

@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 
+use Safe\Exceptions\JsonException;
 use function Safe\json_decode;
 
 class VerifySecurityAlerts extends Command
@@ -44,7 +45,9 @@ class VerifySecurityAlerts extends Command
     /**
      * Execute the console command.
      *
+     * @return int
      * @throws FilesystemException
+     * @throws JsonException
      */
     public function handle(): int
     {

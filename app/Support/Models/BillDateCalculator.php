@@ -98,7 +98,7 @@ class BillDateCalculator
                 $diffEOM      = $daysUntilEOM - $nextUntilEOM;
                 if ($diffEOM > 0) {
                     Log::debug(sprintf('Bill start is %d days from the end of the month. nextExceptedMatch is %d days from the end of the month.', $daysUntilEOM, $nextUntilEOM));
-                    $nextExpectedMatch->subDays(1);
+                    $nextExpectedMatch->subDays();
                     Log::debug(sprintf('Subtract %d days from next expected match, which is now %s', $diffEOM, $nextExpectedMatch->format('Y-m-d')));
                 }
             }

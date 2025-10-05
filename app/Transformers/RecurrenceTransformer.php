@@ -41,7 +41,6 @@ class RecurrenceTransformer extends AbstractTransformer
     /**
      * Transform the recurring transaction.
      *
-     * @throws FireflyException
      */
     public function transform(Recurrence $recurrence): array
     {

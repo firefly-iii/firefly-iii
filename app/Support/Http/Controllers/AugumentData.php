@@ -219,7 +219,7 @@ trait AugumentData
             $entry->pc_spent = $spent;
 
             // normal amount:
-            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency);
             $spent           = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
             $entry->spent    = $spent;
 

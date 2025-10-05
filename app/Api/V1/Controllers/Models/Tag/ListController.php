@@ -72,7 +72,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/tags/listAttachmentByTag
      *
-     * @throws FireflyException
      */
     public function attachments(Tag $tag): JsonResponse
     {
@@ -103,7 +102,6 @@ class ListController extends Controller
      *
      * Show all transactions.
      *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {

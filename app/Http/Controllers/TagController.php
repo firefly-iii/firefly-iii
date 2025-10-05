@@ -37,6 +37,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TagController.
@@ -218,9 +220,16 @@ class TagController extends Controller
     /**
      * Show a single tag.
      *
+     * @param Request     $request
+     * @param Tag         $tag
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Tag $tag, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -261,7 +270,12 @@ class TagController extends Controller
     /**
      * Show a single tag over all time.
      *
+     * @param Request $request
+     * @param Tag     $tag
+     *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Tag $tag)
     {

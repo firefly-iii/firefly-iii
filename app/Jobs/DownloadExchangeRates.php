@@ -41,6 +41,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
+use Safe\Exceptions\JsonException;
 use function Safe\json_decode;
 
 /**
@@ -94,7 +95,10 @@ class DownloadExchangeRates implements ShouldQueue
     }
 
     /**
+     * @param TransactionCurrency $currency
+     *
      * @throws GuzzleException
+     * @throws JsonException
      */
     private function downloadRates(TransactionCurrency $currency): void
     {

@@ -38,7 +38,6 @@ class UserTransformer extends AbstractTransformer
     /**
      * Transform user.
      *
-     * @throws FireflyException
      */
     public function transform(User $user): array
     {

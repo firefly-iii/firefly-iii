@@ -231,7 +231,6 @@ class Preferences
     }
 
     /**
-     * @throws FireflyException
      */
     public function lastActivity(): string
     {

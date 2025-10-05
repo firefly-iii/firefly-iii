@@ -213,11 +213,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $query  = $category->transactionJournals()->orderBy('date', 'ASC');
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     private function getFirstTransactionDate(Category $category): ?Carbon
@@ -264,11 +261,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
-        if (null === $dbNote) {
-            return null;
-        }
+        return $dbNote?->text;
 
-        return $dbNote->text;
     }
 
     /**
@@ -307,11 +301,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     /**

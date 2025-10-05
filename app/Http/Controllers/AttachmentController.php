@@ -194,7 +194,6 @@ class AttachmentController extends Controller
      * View attachment in browser.
      *
      * @throws FireflyException
-     * @throws BindingResolutionException
      */
     public function view(Attachment $attachment): LaravelResponse
     {

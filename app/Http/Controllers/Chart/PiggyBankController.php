@@ -59,7 +59,6 @@ class PiggyBankController extends Controller
      *
      * TODO this chart is not multi currency aware.
      *
-     * @throws FireflyException
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
@@ -95,7 +94,7 @@ class PiggyBankController extends Controller
             $currentSum        = $filtered->sum('amount');
             $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
-            $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
+            $oldest            = app('navigation')->addPeriod($oldest, $step);
         }
         $finalFiltered          = $set->filter(
             static fn (PiggyBankEvent $event) => $event->date->lte($today)

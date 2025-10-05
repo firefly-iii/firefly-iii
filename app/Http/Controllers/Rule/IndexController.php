@@ -82,7 +82,7 @@ class IndexController extends Controller
         $order = (int) $request->get('order');
         $this->ruleRepos->moveRule($rule, $ruleGroup, $order);
 
-        return response()->json([]);
+        return response()->json();
     }
 
     public function search(Rule $rule): RedirectResponse

@@ -71,7 +71,6 @@ class ShowController extends Controller
      *
      * Display a listing of the webhooks of the user.
      *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

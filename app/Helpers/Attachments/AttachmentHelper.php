@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
+use Safe\Exceptions\StringsException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use function Safe\tmpfile;
@@ -222,8 +223,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Process the upload of a file.
      *
-     * @throws FireflyException
-     * @throws EncryptException
+     * @param UploadedFile $file
+     * @param Model        $model
+     *
+     * @return Attachment|null
+     * @throws StringsException
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {

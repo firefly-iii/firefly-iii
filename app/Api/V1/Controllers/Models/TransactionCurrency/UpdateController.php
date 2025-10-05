@@ -99,7 +99,6 @@ class UpdateController extends Controller
     }
 
     /**
-     * @throws FireflyException
      */
     public function makePrimary(TransactionCurrency $currency): JsonResponse
     {
@@ -128,7 +127,6 @@ class UpdateController extends Controller
      *
      * Enable a currency.
      *
-     * @throws FireflyException
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {

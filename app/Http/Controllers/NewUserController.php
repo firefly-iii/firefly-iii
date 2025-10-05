@@ -87,7 +87,6 @@ class NewUserController extends Controller
      *
      * @return Redirector|RedirectResponse
      *
-     * @throws FireflyException
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
     {

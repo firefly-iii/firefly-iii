@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Middleware;
 use FireflyIII\Exceptions\BadHttpHeaderException;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Safe\Exceptions\PcreException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 use function Safe\preg_match;
@@ -36,9 +37,13 @@ class AcceptHeaders
     /**
      * Handle the incoming requests.
      *
+     * @param Request  $request
+     * @param callable $next
+     *
      * @return Response
      *
      * @throws BadHttpHeaderException
+     * @throws PcreException
      */
     public function handle(Request $request, callable $next): mixed
     {

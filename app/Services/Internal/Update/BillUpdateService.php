@@ -47,7 +47,6 @@ class BillUpdateService
     protected User $user;
 
     /**
-     * @throws FireflyException
      */
     public function update(Bill $bill, array $data): Bill
     {

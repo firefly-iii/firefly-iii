@@ -150,7 +150,7 @@ class BudgetLimitController extends Controller
         $end      = Carbon::createFromFormat('Y-m-d', $request->get('end'));
 
         if (!$start instanceof Carbon || !$end instanceof Carbon) {
-            return response()->json([]);
+            return response()->json();
         }
 
         $amount   = (string) $request->get('amount');
@@ -158,7 +158,7 @@ class BudgetLimitController extends Controller
         $end->startOfDay();
 
         if ('' === $amount) {
-            return response()->json([]);
+            return response()->json();
         }
 
         app('log')->debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
@@ -172,7 +172,7 @@ class BudgetLimitController extends Controller
             }
 
             // return empty=ish array:
-            return response()->json([]);
+            return response()->json();
         }
         if ((int) $amount > 268435456) { // intentional cast to integer
             $amount = '268435456';

@@ -37,6 +37,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class NoCategoryController
@@ -69,9 +71,15 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
+     * @param Request     $request
+     * @param Carbon|null $start
+     * @param Carbon|null $end
+     *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -106,7 +114,11 @@ class NoCategoryController extends Controller
     /**
      * Show all transactions without a category.
      *
+     * @param Request $request
+     *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request)
     {

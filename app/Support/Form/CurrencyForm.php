@@ -165,8 +165,6 @@ class CurrencyForm
     }
 
     /**
-     * @phpstan-param view-string $view
-     *
      * @throws FireflyException
      */
     protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string

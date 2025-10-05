@@ -80,6 +80,6 @@ class IndexController extends Controller
         $newOrder = (int) $request->get('order');
         $this->repository->setOrder($objectGroup, $newOrder);
 
-        return response()->json([]);
+        return response()->json();
     }
 }

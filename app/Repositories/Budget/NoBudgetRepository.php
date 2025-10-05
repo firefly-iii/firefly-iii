@@ -41,6 +41,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
 {
     use UserGroupTrait;
 
+    #[\Deprecated]
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);

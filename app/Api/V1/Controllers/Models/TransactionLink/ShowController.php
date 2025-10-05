@@ -70,7 +70,6 @@ class ShowController extends Controller
      *
      * List all transaction links there are.
      *
-     * @throws FireflyException
      */
     public function index(Request $request): JsonResponse
     {

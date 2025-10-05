@@ -37,7 +37,6 @@ class CLIToken implements BinderInterface
     /**
      * @return mixed
      *
-     * @throws FireflyException
      */
     public static function routeBinder(string $value, Route $route)
     {

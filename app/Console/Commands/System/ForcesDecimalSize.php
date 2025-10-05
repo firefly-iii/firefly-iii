@@ -156,7 +156,6 @@ class ForcesDecimalSize extends Command
      */
     private function correctAmountsByCurrency(): void
     {
-        /** @var Collection $enabled */
         $enabled = TransactionCurrency::whereEnabled(1)->get();
 
         /** @var TransactionCurrency $currency */
@@ -301,7 +300,7 @@ class ForcesDecimalSize extends Command
             }
         );
 
-        $result            = $query->get(['*']);
+        $result            = $query->get();
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All %s in %s are OK', $table, $currency->code));
 
@@ -533,7 +532,7 @@ class ForcesDecimalSize extends Command
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
         );
 
-        $result = $query->get(['*']);
+        $result = $query->get();
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All transactions in foreign currency %s are OK', $currency->code));
 

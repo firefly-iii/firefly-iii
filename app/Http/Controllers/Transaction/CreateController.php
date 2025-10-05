@@ -37,6 +37,9 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\UrlException;
 use function Safe\parse_url;
 
 /**
@@ -98,10 +101,14 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
+     * @param string|null $objectType
+     *
      * @return Factory|View
      *
-     * @throws FireflyException
-     *                                              */
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws UrlException
+     */
     public function create(?string $objectType)
     {
         Preferences::mark();

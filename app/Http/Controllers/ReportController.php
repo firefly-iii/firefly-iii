@@ -39,6 +39,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ReportController.
@@ -225,7 +227,11 @@ class ReportController extends Controller
     /**
      * Show index.
      *
+     * @param AccountRepositoryInterface $repository
+     *
      * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(AccountRepositoryInterface $repository)
     {

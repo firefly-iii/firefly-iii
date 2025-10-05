@@ -89,7 +89,6 @@ class IntroController extends Controller
     /**
      * Enable the boxes for a specific page again.
      *
-     * @throws FireflyException
      */
     public function postEnable(string $route, ?string $specialPage = null): JsonResponse
     {
@@ -109,7 +108,6 @@ class IntroController extends Controller
     /**
      * Set that you saw them.
      *
-     * @throws FireflyException
      */
     public function postFinished(string $route, ?string $specialPage = null): JsonResponse
     {

@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
+use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use function Safe\file_get_contents;
@@ -131,7 +132,7 @@ class DebugController extends Controller
      *
      * @return Factory|View
      *
-     * @throws FireflyException
+     * @throws FilesystemException
      */
     public function index()
     {

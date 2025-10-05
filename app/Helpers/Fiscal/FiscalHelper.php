@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Fiscal;
 
 use Carbon\Carbon;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class FiscalHelper.
@@ -62,7 +64,11 @@ class FiscalHelper implements FiscalHelperInterface
     }
 
     /**
+     * @param Carbon $date
+     *
      * @return Carbon date object
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {

@@ -48,6 +48,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ProfileController.
@@ -136,7 +138,9 @@ class ProfileController extends Controller
     /**
      * Index for profile.
      *
-     * @throws FireflyException
+     * @return Factory|View
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(): Factory|View
     {

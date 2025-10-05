@@ -67,7 +67,6 @@ class StoreController extends Controller
      *
      * Store new currency.
      *
-     * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {

@@ -53,7 +53,6 @@ class ShowController extends Controller
      *
      * Show all transactions.
      *
-     * @throws FireflyException
      */
     public function index(Request $request): JsonResponse
     {
