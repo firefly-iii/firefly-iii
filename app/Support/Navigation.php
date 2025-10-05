@@ -423,6 +423,7 @@ class Navigation
             'month'   => (string)trans('config.month_js'),
             'monthly' => (string)trans('config.month_js'),
             '1Y'      => (string)trans('config.year_js'),
+            'YTD'      => (string)trans('config.year_js'),
             'year'    => (string)trans('config.year_js'),
             'yearly'  => (string)trans('config.year_js'),
             '6M'      => (string)trans('config.half_year_js'),
