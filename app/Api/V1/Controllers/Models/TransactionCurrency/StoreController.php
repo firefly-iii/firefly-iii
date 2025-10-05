@@ -65,7 +65,6 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/storeCurrency
      *
      * Store new currency.
-     *
      */
     public function store(StoreRequest $request): JsonResponse
     {

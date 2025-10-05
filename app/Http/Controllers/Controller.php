@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+
 use function Safe\ini_get;
 use function Safe\realpath;
 

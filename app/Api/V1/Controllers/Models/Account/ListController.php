@@ -69,8 +69,6 @@ class ListController extends Controller
         );
     }
 
-    /**
-     */
     public function attachments(Account $account): JsonResponse
     {
         $manager     = $this->getManager();
@@ -94,8 +92,6 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     */
     public function piggyBanks(Account $account): JsonResponse
     {
         // create some objects:
@@ -132,7 +128,6 @@ class ListController extends Controller
 
     /**
      * Show all transaction groups related to the account.
-     *
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

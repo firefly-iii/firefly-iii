@@ -45,6 +45,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
+
 use function Safe\json_encode;
 
 /**
@@ -482,11 +483,6 @@ class AccountController extends Controller
     /**
      * Shows overview of account during a single period.
      *
-     * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
-     *
-     * @return JsonResponse
      * @throws FireflyException
      * @throws JsonException
      */

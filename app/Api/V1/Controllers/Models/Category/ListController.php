@@ -67,7 +67,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/listAttachmentByCategory
-     *
      */
     public function attachments(Category $category): JsonResponse
     {
@@ -97,7 +96,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/categories/listTransactionByCategory
      *
      * Show all transactions.
-     *
      */
     public function transactions(Request $request, Category $category): JsonResponse
     {

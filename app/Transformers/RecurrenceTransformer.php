@@ -39,7 +39,6 @@ class RecurrenceTransformer extends AbstractTransformer
 
     /**
      * Transform the recurring transaction.
-     *
      */
     public function transform(Recurrence $recurrence): array
     {

@@ -63,9 +63,8 @@ class IndexController extends Controller
     /**
      * Show overview of currencies.
      *
-     * @param Request $request
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

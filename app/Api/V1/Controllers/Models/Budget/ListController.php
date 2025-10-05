@@ -72,7 +72,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listAttachmentByBudget
-     *
      */
     public function attachments(Budget $budget): JsonResponse
     {
@@ -102,7 +101,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listBudgetLimitByBudget
      *
      * Display a listing of the resource.
-     *
      */
     public function budgetLimits(Budget $budget): JsonResponse
     {
@@ -137,7 +135,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionByBudget
      *
      * Show all transactions.
-     *
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -198,7 +195,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionWithoutBudget
      *
      * Show all transactions.
-     *
      */
     public function withoutBudget(Request $request): JsonResponse
     {

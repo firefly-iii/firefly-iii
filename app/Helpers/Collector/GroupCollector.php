@@ -48,6 +48,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
 use Safe\Exceptions\JsonException;
+
 use function Safe\json_decode;
 
 /**
@@ -564,9 +565,6 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * @param TransactionJournal $augumentedJournal
-     *
-     * @return array
      * @throws FireflyException
      * @throws JsonException
      */

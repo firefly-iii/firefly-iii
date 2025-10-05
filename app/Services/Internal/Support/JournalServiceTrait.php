@@ -39,6 +39,7 @@ use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
+
 use function Safe\json_encode;
 
 /**
@@ -265,11 +266,6 @@ trait JournalServiceTrait
     }
 
     /**
-     * @param Account|null $account
-     * @param array        $data
-     * @param string       $preferredType
-     *
-     * @return Account|null
      * @throws FireflyException
      * @throws JsonException
      */

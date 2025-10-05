@@ -98,8 +98,6 @@ class UpgradesAccountCurrencies extends Command
         }
     }
 
-    /**
-     */
     private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);

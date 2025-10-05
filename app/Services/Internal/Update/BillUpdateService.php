@@ -45,8 +45,6 @@ class BillUpdateService
 
     protected User $user;
 
-    /**
-     */
     public function update(Bill $bill, array $data): Bill
     {
         $this->user = $bill->user;

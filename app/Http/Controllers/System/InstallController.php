@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
+
 use function Safe\file_put_contents;
 
 /**

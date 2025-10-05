@@ -98,8 +98,6 @@ class UpdateController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     */
     public function makePrimary(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
@@ -126,7 +124,6 @@ class UpdateController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/enableCurrency
      *
      * Enable a currency.
-     *
      */
     public function enable(TransactionCurrency $currency): JsonResponse
     {

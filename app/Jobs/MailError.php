@@ -32,6 +32,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Symfony\Component\Mailer\Exception\TransportException;
+
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 use function Safe\json_decode;

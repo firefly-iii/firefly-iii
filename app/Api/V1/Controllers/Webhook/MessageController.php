@@ -62,7 +62,6 @@ class MessageController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/getWebhookMessages
-     *
      */
     public function index(Webhook $webhook): JsonResponse
     {

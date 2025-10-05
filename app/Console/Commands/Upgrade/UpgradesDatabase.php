@@ -29,6 +29,7 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
+
 use function Safe\set_time_limit;
 
 try {

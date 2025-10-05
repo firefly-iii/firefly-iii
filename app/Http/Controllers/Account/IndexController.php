@@ -67,9 +67,6 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param string  $objectType
-     *
      * @return Factory|View
      *
      * @throws ContainerExceptionInterface
@@ -140,9 +137,6 @@ class IndexController extends Controller
 
     /**
      * Show list of accounts.
-     *
-     * @param Request $request
-     * @param string  $objectType
      *
      * @return Factory|View
      *

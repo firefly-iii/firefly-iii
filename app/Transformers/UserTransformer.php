@@ -36,7 +36,6 @@ class UserTransformer extends AbstractTransformer
 
     /**
      * Transform user.
-     *
      */
     public function transform(User $user): array
     {

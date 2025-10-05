@@ -386,8 +386,6 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         return $budget->autoBudgets()->first();
     }
 
-    /**
-     */
     private function updateAutoBudget(Budget $budget, array $data): void
     {
         // update or create auto-budget:
@@ -524,6 +522,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function firstUseDate(Budget $budget): ?Carbon
     {
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
+
         return $journal?->date;
 
     }
@@ -564,6 +563,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function getNoteText(Budget $budget): ?string
     {
         $note = $budget->notes()->first();
+
         return $note?->text;
 
     }

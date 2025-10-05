@@ -29,6 +29,7 @@ use Closure;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
+
 use function Safe\json_encode;
 
 class IsValidPositiveAmount implements ValidationRule

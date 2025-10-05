@@ -70,7 +70,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
-     *
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -127,7 +126,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAvailableBudgetByCurrency
      *
      * Display a listing of the resource.
-     *
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
@@ -161,7 +159,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBillByCurrency
      *
      * List all bills
-     *
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
@@ -207,7 +204,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBudgetLimitByCurrency
      *
      * List all budget limits
-     *
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
     {
@@ -244,7 +240,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRecurrenceByCurrency
      *
      * List all recurring transactions.
-     *
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
@@ -296,7 +291,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRuleByCurrency
      *
      * List all of them.
-     *
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
@@ -340,7 +334,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listTransactionByCurrency
      *
      * Show all transactions.
-     *
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {

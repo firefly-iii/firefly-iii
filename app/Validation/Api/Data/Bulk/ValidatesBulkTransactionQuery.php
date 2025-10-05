@@ -26,6 +26,7 @@ namespace FireflyIII\Validation\Api\Data\Bulk;
 
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Validation\Validator;
+
 use function Safe\json_decode;
 
 trait ValidatesBulkTransactionQuery

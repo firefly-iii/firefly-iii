@@ -261,6 +261,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
+
         return $dbNote?->text;
 
     }

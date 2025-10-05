@@ -259,7 +259,6 @@ class BudgetController extends Controller
         return $return;
     }
 
-
     private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
     {
         $amount    = '0';

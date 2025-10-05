@@ -92,10 +92,6 @@ class JavascriptController extends Controller
     /**
      * Show some common variables to be used in scripts.
      *
-     * @param Request                    $request
-     * @param AccountRepositoryInterface $repository
-     *
-     * @return Response
      * @throws FireflyException
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

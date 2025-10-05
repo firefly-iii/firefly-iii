@@ -96,7 +96,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
     /**
      * Returns all groups the user is member in.
-     *
      */
     public function get(): Collection
     {
@@ -165,7 +164,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
     /**
      * Returns all groups.
-     *
      */
     public function getAll(): Collection
     {

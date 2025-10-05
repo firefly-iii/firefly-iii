@@ -43,6 +43,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Safe\Exceptions\FilesystemException;
+
 use function Safe\file_get_contents;
 use function Safe\json_decode;
 
@@ -70,8 +71,6 @@ class PreferencesController extends Controller
 
     /**
      * Show overview of preferences.
-     *
-     * @param AccountRepositoryInterface $repository
      *
      * @return Factory|View
      *

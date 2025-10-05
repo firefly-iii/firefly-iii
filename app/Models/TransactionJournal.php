@@ -47,6 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method        EloquentBuilder|static before()
  * @method        EloquentBuilder|static after()
  * @method static EloquentBuilder|static query()
+ *
  * @property TransactionGroup $transactionGroup
  */
 #[ObservedBy([TransactionJournalObserver::class])]

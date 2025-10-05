@@ -37,6 +37,7 @@ use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
+
 use function Safe\parse_url;
 
 /**
@@ -67,9 +68,8 @@ class EditController extends Controller
     }
 
     /**
-     * @param TransactionGroup $transactionGroup
-     *
      * @return Factory|Redirector|RedirectResponse|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws UrlException

@@ -221,8 +221,6 @@ class LoginController extends Controller
     /**
      * Show the application's login form.
      *
-     * @param Request $request
-     *
      * @return Application|Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException

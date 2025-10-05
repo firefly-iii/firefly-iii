@@ -61,9 +61,8 @@ class TwoFactorController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return Redirector|RedirectResponse
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

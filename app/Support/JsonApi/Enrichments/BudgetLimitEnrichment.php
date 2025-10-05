@@ -42,13 +42,13 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private Collection                   $collection;
     private bool                         $convertToPrimary; // @phpstan-ignore-line
-    private array                        $currencies       = [];
-    private array                        $currencyIds      = [];
+    private array                        $currencies  = [];
+    private array                        $currencyIds = [];
     private Carbon                       $end;
-    private array                        $expenses         = [];
-    private array                        $ids              = [];
-    private array                        $notes            = [];
-    private array                        $pcExpenses       = [];
+    private array                        $expenses    = [];
+    private array                        $ids         = [];
+    private array                        $notes       = [];
+    private array                        $pcExpenses  = [];
     private readonly TransactionCurrency $primaryCurrency;
     private Carbon                       $start;
     private User                         $user;

@@ -68,7 +68,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listCurrency
      *
      * Display a listing of the resource.
-     *
      */
     public function index(): JsonResponse
     {
@@ -97,7 +96,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/getCurrency
      *
      * Show a currency.
-     *
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
@@ -120,7 +118,6 @@ class ShowController extends Controller
 
     /**
      * Show a currency.
-     *
      */
     public function showPrimary(): JsonResponse
     {

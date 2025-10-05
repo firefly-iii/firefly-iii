@@ -87,6 +87,7 @@ class UpgradesVariousCurrencyInformation extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+
         return (bool)$configVar?->data;
 
     }

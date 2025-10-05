@@ -32,6 +32,7 @@ use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
+
 use function Safe\file_put_contents;
 
 /**

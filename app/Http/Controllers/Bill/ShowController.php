@@ -115,10 +115,8 @@ class ShowController extends Controller
     /**
      * Show a bill.
      *
-     * @param Request $request
-     * @param Bill    $bill
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

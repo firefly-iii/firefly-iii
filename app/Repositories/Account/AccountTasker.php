@@ -143,8 +143,6 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         return $report;
     }
 
-    /**
-     */
     private function groupExpenseByDestination(array $array): array
     {
         $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
@@ -230,8 +228,6 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         return $report;
     }
 
-    /**
-     */
     private function groupIncomeBySource(array $array): array
     {
         $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);

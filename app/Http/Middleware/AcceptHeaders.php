@@ -29,15 +29,13 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Safe\Exceptions\PcreException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+
 use function Safe\preg_match;
 
 class AcceptHeaders
 {
     /**
      * Handle the incoming requests.
-     *
-     * @param Request  $request
-     * @param callable $next
      *
      * @return Response
      *

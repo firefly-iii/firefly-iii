@@ -131,8 +131,6 @@ class BudgetReportGenerator
         $this->start = $start;
     }
 
-    /**
-     */
     public function setUser(User $user): void
     {
         $this->repository->setUser($user);

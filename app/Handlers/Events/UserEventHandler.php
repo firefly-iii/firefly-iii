@@ -164,7 +164,6 @@ class UserEventHandler
 
     /**
      * Set the demo user back to English.
-     *
      */
     public function demoUserBackToEnglish(Login $event): void
     {
@@ -181,8 +180,6 @@ class UserEventHandler
         }
     }
 
-    /**
-     */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
         $user = $event->user;
@@ -445,8 +442,6 @@ class UserEventHandler
         Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 
-    /**
-     */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         app('log')->debug('Now in storeUserIPAddress');

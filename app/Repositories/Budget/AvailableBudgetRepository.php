@@ -113,7 +113,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         ;
     }
 
-    #[\Deprecated]
+    #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
         $amount          = '0';

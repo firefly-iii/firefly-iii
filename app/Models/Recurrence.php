@@ -40,8 +40,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property Carbon $first_date
- * @property Carbon|null $latest_date
+ * @property Carbon      $first_date
+ * @property null|Carbon $latest_date
  */
 #[ObservedBy([RecurrenceObserver::class])]
 class Recurrence extends Model

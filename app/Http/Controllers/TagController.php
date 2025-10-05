@@ -220,11 +220,6 @@ class TagController extends Controller
     /**
      * Show a single tag.
      *
-     * @param Request     $request
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return Factory|View
      *
      * @throws ContainerExceptionInterface
@@ -270,10 +265,8 @@ class TagController extends Controller
     /**
      * Show a single tag over all time.
      *
-     * @param Request $request
-     * @param Tag     $tag
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

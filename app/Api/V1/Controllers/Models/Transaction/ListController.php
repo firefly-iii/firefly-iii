@@ -68,7 +68,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listAttachmentByTransaction
-     *
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -99,7 +98,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listEventByTransaction
-     *
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -141,7 +139,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listLinksByJournal
-     *
      */
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {

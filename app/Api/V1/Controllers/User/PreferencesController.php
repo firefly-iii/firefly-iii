@@ -49,7 +49,6 @@ class PreferencesController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/preferences/listPreference
      *
      * List all of them.
-     *
      */
     public function index(): JsonResponse
     {

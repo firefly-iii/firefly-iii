@@ -339,8 +339,6 @@ trait AccountServiceTrait
         return $this->accountRepository->getOpeningBalanceGroup($account);
     }
 
-    /**
-     */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
         // find currency, or use default currency instead.

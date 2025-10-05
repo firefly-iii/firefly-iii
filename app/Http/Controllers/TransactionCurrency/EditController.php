@@ -107,10 +107,8 @@ class EditController extends Controller
     /**
      * Updates a currency.
      *
-     * @param CurrencyFormRequest $request
-     * @param TransactionCurrency $currency
-     *
      * @return Redirector|RedirectResponse
+     *
      * @throws FireflyException
      */
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency)

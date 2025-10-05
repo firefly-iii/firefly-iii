@@ -227,9 +227,8 @@ class ReportController extends Controller
     /**
      * Show index.
      *
-     * @param AccountRepositoryInterface $repository
-     *
      * @return Factory|View
+     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

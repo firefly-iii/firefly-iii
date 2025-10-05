@@ -67,7 +67,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listBillByObjectGroup
      *
      * List all bills in this object group
-     *
      */
     public function bills(ObjectGroup $objectGroup): JsonResponse
     {
@@ -107,7 +106,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listPiggyBankByObjectGroup
      *
      * List all piggies under the object group.
-     *
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse
     {

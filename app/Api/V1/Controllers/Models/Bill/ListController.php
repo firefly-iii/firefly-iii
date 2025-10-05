@@ -70,7 +70,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listAttachmentByBill
      *
      * Display a listing of the resource.
-     *
      */
     public function attachments(Bill $bill): JsonResponse
     {
@@ -100,7 +99,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listRuleByBill
      *
      * List all of them.
-     *
      */
     public function rules(Bill $bill): JsonResponse
     {
@@ -132,7 +130,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listTransactionByBill
      *
      * Show all transactions.
-     *
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {
