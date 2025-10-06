@@ -29,6 +29,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 10988](https://github.com/orgs/firefly-iii/discussions/10988) (Call to a member function startOfDay() on null.) started by @molnarti
 - [Issue 10990](https://github.com/firefly-iii/firefly-iii/issues/10990) (duplicate piggy event via API) reported by @4e868df3
 - [Discussion 10994](https://github.com/orgs/firefly-iii/discussions/10994) (How does the save per month attribute from a piggy bank is calculated?) started by @AdriDevelopsThings
+- #11005
+- #11007
 
 ### API
 
