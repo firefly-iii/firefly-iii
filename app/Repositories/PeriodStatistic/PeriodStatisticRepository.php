@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PeriodStatistic;
+use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Model;
@@ -132,5 +133,11 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         ));
 
         return $stat;
+    }
+
+    #[Override]
+    public function deleteStatisticsForPrefix(UserGroup $userGroup, string $prefix, Carbon $date): void
+    {
+        $userGroup->periodStatistics()->where('start', '<=', $date)->where('end', '>=', $date)->where('type', 'LIKE', sprintf('%s%%', $prefix))->delete();
     }
 }

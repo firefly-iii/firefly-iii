@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Exception;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
@@ -45,9 +43,13 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ProfileController.
@@ -136,7 +138,8 @@ class ProfileController extends Controller
     /**
      * Index for profile.
      *
-     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(): Factory|View
     {

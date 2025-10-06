@@ -174,7 +174,7 @@ class IndexController extends Controller
             $array['end_date']    = $entry->end_date;
 
             // spent in period:
-            $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency, false);
+            $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
             $array['spent']       = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
             $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
             // budgeted in period:
@@ -235,7 +235,7 @@ class IndexController extends Controller
 
             /** @var TransactionCurrency $currency */
             foreach ($currencies as $currency) {
-                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($current), $currency, false);
+                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($current), $currency);
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;

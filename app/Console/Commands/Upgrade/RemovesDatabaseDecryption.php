@@ -31,6 +31,7 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
 
@@ -96,13 +97,11 @@ class RemovesDatabaseDecryption extends Command
         try {
             $configVar = app('fireflyconfig')->get($configName, false);
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
-        }
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
+            Log::error($e->getMessage());
         }
 
-        return false;
+        return (bool)$configVar?->data;
+
     }
 
     private function decryptField(string $table, string $field): void
@@ -129,8 +128,8 @@ class RemovesDatabaseDecryption extends Command
         } catch (FireflyException $e) {
             $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
             $this->friendlyError($message);
-            app('log')->error($message);
-            app('log')->error($e->getTraceAsString());
+            Log::error($message);
+            Log::error($e->getTraceAsString());
         }
 
         // A separate routine for preferences table:
@@ -175,9 +174,9 @@ class RemovesDatabaseDecryption extends Command
         } catch (JsonException $e) {
             $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
             $this->friendlyError($message);
-            app('log')->warning($message);
-            app('log')->warning($value);
-            app('log')->warning($e->getTraceAsString());
+            Log::warning($message);
+            Log::warning($value);
+            Log::warning($e->getTraceAsString());
 
             return;
         }

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Summary;
 
-use Exception;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DateRequest;
 use FireflyIII\Enums\AccountTypeEnum;

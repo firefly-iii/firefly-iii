@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
@@ -65,8 +64,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listPiggyBank
      *
      * List all of them.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

@@ -260,7 +260,7 @@ class ReportController extends Controller
                     $expense['entries'][$title] = '0';
 
                 }
-                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange, 0);
+                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange);
             }
             Log::debug('End of sub-loop');
 

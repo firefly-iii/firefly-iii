@@ -1427,7 +1427,7 @@ Route::group(
     static function (): void {
         Route::get('', ['uses' => 'UserGroup\IndexController@index', 'as' => 'index']);
         Route::get('create', ['uses' => 'UserGroup\CreateController@create', 'as' => 'create']);
-        Route::get('edit/{userGroup}', ['uses' => 'UserGroup\EditController@edit', 'as' => 'edit']);
+        Route::get('edit/{userGroup?}', ['uses' => 'UserGroup\EditController@edit', 'as' => 'edit']);
         // Route::get('show/{userGroup}', ['uses' => 'UserGroup\ShowController@show', 'as' => 'show']);
 
         //        Route::post('rescan/{bill}', ['uses' => 'Bill\ShowController@rescan', 'as' => 'rescan']);

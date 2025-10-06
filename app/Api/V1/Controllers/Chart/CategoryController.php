@@ -107,11 +107,11 @@ class CategoryController extends Controller
             $type                           = $journal['transaction_type_type'];
             $currency                       = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
             $currencies[$journalCurrencyId] = $currency;
-            $currencyId                     = (int)$currency->id;
-            $currencyName                   = (string)$currency->name;
-            $currencyCode                   = (string)$currency->code;
-            $currencySymbol                 = (string)$currency->symbol;
-            $currencyDecimalPlaces          = (int)$currency->decimal_places;
+            $currencyId                     = $currency->id;
+            $currencyName                   = $currency->name;
+            $currencyCode                   = $currency->code;
+            $currencySymbol                 = $currency->symbol;
+            $currencyDecimalPlaces          = $currency->decimal_places;
             $amount                         = Steam::positive((string)$journal['amount']);
             $pcAmount                       = null;
 
@@ -120,11 +120,11 @@ class CategoryController extends Controller
                 $pcAmount = $amount;
             }
             if ($this->convertToPrimary && $journalCurrencyId !== $this->primaryCurrency->id) {
-                $currencyId            = (int)$this->primaryCurrency->id;
-                $currencyName          = (string)$this->primaryCurrency->name;
-                $currencyCode          = (string)$this->primaryCurrency->code;
-                $currencySymbol        = (string)$this->primaryCurrency->symbol;
-                $currencyDecimalPlaces = (int)$this->primaryCurrency->decimal_places;
+                $currencyId            = $this->primaryCurrency->id;
+                $currencyName          = $this->primaryCurrency->name;
+                $currencyCode          = $this->primaryCurrency->code;
+                $currencySymbol        = $this->primaryCurrency->symbol;
+                $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
                 $pcAmount              = $converter->convert($currency, $this->primaryCurrency, $journal['date'], $amount);
                 Log::debug(sprintf('Converted %s %s to %s %s', $journal['currency_code'], $amount, $this->primaryCurrency->code, $pcAmount));
             }
@@ -141,10 +141,10 @@ class CategoryController extends Controller
                 'currency_symbol'                 => $currencySymbol,
                 'currency_decimal_places'         => $currencyDecimalPlaces,
                 'primary_currency_id'             => (string)$this->primaryCurrency->id,
-                'primary_currency_name'           => (string)$this->primaryCurrency->name,
-                'primary_currency_code'           => (string)$this->primaryCurrency->code,
-                'primary_currency_symbol'         => (string)$this->primaryCurrency->symbol,
-                'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
+                'primary_currency_name'           => $this->primaryCurrency->name,
+                'primary_currency_code'           => $this->primaryCurrency->code,
+                'primary_currency_symbol'         => $this->primaryCurrency->symbol,
+                'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
                 'period'                          => null,
                 'start_date'                      => $start->toAtomString(),
                 'end_date'                        => $end->toAtomString(),

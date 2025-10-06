@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;

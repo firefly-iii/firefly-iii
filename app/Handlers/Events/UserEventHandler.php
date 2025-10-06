@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use Carbon\Carbon;
 use Database\Seeders\ExchangeRateSeeder;
+use Exception;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
@@ -55,7 +56,6 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use Exception;
 
 /**
  * Class UserEventHandler.
@@ -164,8 +164,6 @@ class UserEventHandler
 
     /**
      * Set the demo user back to English.
-     *
-     * @throws FireflyException
      */
     public function demoUserBackToEnglish(Login $event): void
     {
@@ -182,9 +180,6 @@ class UserEventHandler
         }
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function notifyNewIPAddress(DetectedNewIPAddress $event): void
     {
         $user = $event->user;
@@ -447,9 +442,6 @@ class UserEventHandler
         Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         app('log')->debug('Now in storeUserIPAddress');

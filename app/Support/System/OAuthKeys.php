@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Crypt;
 use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\FilesystemException;
 
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
@@ -79,7 +80,10 @@ class OAuthKeys
     }
 
     /**
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
+     * @throws FilesystemException
      */
     public static function restoreKeysFromDB(): bool
     {

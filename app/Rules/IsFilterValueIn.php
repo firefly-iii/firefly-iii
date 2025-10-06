@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Closure;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsFilterValueIn implements ValidationRule
 {

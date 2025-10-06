@@ -33,6 +33,8 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 class IndexController extends Controller
 {
@@ -62,6 +64,9 @@ class IndexController extends Controller
      * Show overview of currencies.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function index(Request $request)
     {

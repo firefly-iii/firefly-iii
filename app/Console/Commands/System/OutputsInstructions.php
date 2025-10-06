@@ -26,12 +26,14 @@ namespace FireflyIII\Console\Commands\System;
 
 use Carbon\Carbon;
 use FireflyIII\Support\System\GeneratesInstallationId;
+use FireflyIII\Support\System\IsOldVersion;
 use Illuminate\Console\Command;
 use Random\RandomException;
 
 class OutputsInstructions extends Command
 {
     use GeneratesInstallationId;
+    use IsOldVersion;
 
     protected $description = 'Instructions in case of upgrade trouble.';
 
@@ -58,7 +60,7 @@ class OutputsInstructions extends Command
      */
     private function updateInstructions(): void
     {
-        $version = (string) config('firefly.version');
+        $version = (string)config('firefly.version');
 
         /** @var array $config */
         $config  = config('upgrade.text.upgrade');
@@ -68,12 +70,12 @@ class OutputsInstructions extends Command
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string) $config[$compare];
+                $text = (string)$config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string) config('app.env')) {
+        if ('' === $text && 'local' === (string)config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
@@ -191,7 +193,7 @@ class OutputsInstructions extends Command
      */
     private function installInstructions(): void
     {
-        $version = (string) config('firefly.version');
+        $version = (string)config('firefly.version');
 
         /** @var array $config */
         $config  = config('upgrade.text.install');
@@ -201,12 +203,12 @@ class OutputsInstructions extends Command
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string) $config[$compare];
+                $text = (string)$config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string) config('app.env')) {
+        if ('' === $text && 'local' === (string)config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
@@ -242,14 +244,15 @@ class OutputsInstructions extends Command
 
     private function someQuote(): void
     {
-        $lines     = [
-            'Forgive yourself for not being at peace.',
-            'Doesn\'t look like anything to me.',
-            'Be proud of what you make.',
-            'Be there or forever wonder.',
-            'A year from now you will wish you had started today.',
+        $lines = [
+            '"Forgive yourself for not being at peace."',
+            '"Doesn\'t look like anything to me."',
+            '"Be proud of what you make."',
+            '"Be there or forever wonder."',
+            '"A year from now you will wish you had started today."',
+            '🇺🇦 Слава Україні!',
+            '🇺🇦 Slava Ukraini!',
         ];
-        $addQuotes = true;
 
         // fuck the Russian aggression in Ukraine.
 
@@ -260,8 +263,7 @@ class OutputsInstructions extends Command
         // going on, to allow that to happen.
 
         if ('ru_RU' === config('firefly.default_language')) {
-            $addQuotes = false;
-            $lines     = [
+            $lines = [
                 '🇺🇦 Слава Україні!',
                 '🇺🇦 Slava Ukraini!',
             ];
@@ -271,11 +273,6 @@ class OutputsInstructions extends Command
             $random = random_int(0, count($lines) - 1);
         } catch (RandomException) {
             $random = 0;
-        }
-        if ($addQuotes) {
-            $this->line(sprintf('       "%s"', $lines[$random]));
-
-            return;
         }
         $this->line(sprintf('       %s', $lines[$random]));
 

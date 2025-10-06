@@ -153,8 +153,8 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
             $id                             = (int)$availableBudget->id;
             $currencyId                     = $this->currencyIds[$id];
             $currency                       = $this->currencies[$currencyId];
-            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
-            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
+            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency);
+            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency);
             $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
             $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
 

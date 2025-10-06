@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
@@ -70,8 +69,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/listWebhook
      *
      * Display a listing of the webhooks of the user.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

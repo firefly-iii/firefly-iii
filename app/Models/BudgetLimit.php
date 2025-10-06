@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\BudgetLimitObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -33,6 +34,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * Class BudgetLimit
+ *
+ * @property TransactionCurrency $transactionCurrency
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ */
 #[ObservedBy([BudgetLimitObserver::class])]
 class BudgetLimit extends Model
 {

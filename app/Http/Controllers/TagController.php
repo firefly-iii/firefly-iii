@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Models\Location;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
+use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
@@ -37,6 +37,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class TagController.
@@ -220,7 +222,9 @@ class TagController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Tag $tag, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -262,6 +266,9 @@ class TagController extends Controller
      * Show a single tag over all time.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request, Tag $tag)
     {

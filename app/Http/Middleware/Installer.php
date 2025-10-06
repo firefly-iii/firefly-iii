@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\System\IsOldVersion;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -37,6 +38,8 @@ use Illuminate\Support\Facades\Log;
  */
 class Installer
 {
+    use IsOldVersion;
+
     /**
      * Handle an incoming request.
      *
@@ -65,7 +68,7 @@ class Installer
         // run installer when no tables are present,
         // or when old scheme version
         // or when old firefly version
-        if ($this->hasNoTables() || $this->oldDBVersion() || $this->oldVersion()) {
+        if ($this->hasNoTables() || $this->isOldVersionInstalled()) {
             return response()->redirectTo(route('installer.index'));
         }
         OAuthKeys::verifyKeysRoutine();
@@ -125,60 +128,5 @@ class Installer
     protected function noTablesExist(string $message): bool
     {
         return false !== stripos($message, 'Base table or view not found');
-    }
-
-    /**
-     * Check if the "db_version" variable is correct.
-     */
-    private function oldDBVersion(): bool
-    {
-        // older version in config than database?
-        $configVersion = (int) config('firefly.db_version');
-        $dbVersion     = (int) app('fireflyconfig')->getFresh('db_version', 1)->data;
-        if ($configVersion > $dbVersion) {
-            Log::warning(
-                sprintf(
-                    'The current configured version (%d) is older than the required version (%d). Redirect to migrate routine.',
-                    $dbVersion,
-                    $configVersion
-                )
-            );
-
-            return true;
-        }
-
-        // Log::info(sprintf('Configured DB version (%d) equals expected DB version (%d)', $dbVersion, $configVersion));
-
-        return false;
-    }
-
-    /**
-     * Check if the "firefly_version" variable is correct.
-     */
-    private function oldVersion(): bool
-    {
-        // version compare thing.
-        $configVersion = (string) config('firefly.version');
-        $dbVersion     = (string) app('fireflyconfig')->getFresh('ff3_version', '1.0')->data;
-        if (str_starts_with($configVersion, 'develop')) {
-            Log::debug('Skipping version check for develop version.');
-
-            return false;
-        }
-        if (1 === version_compare($configVersion, $dbVersion)) {
-            Log::warning(
-                sprintf(
-                    'The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.',
-                    $dbVersion,
-                    $configVersion
-                )
-            );
-
-            return true;
-        }
-
-        // Log::info(sprintf('Installed Firefly III version (%s) equals expected Firefly III version (%s)', $dbVersion, $configVersion));
-
-        return false;
     }
 }

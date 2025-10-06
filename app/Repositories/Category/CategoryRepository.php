@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
@@ -39,7 +40,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Exception;
 
 /**
  * Class CategoryRepository.
@@ -213,11 +213,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $query  = $category->transactionJournals()->orderBy('date', 'ASC');
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     private function getFirstTransactionDate(Category $category): ?Carbon
@@ -264,11 +261,9 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
-        if (null === $dbNote) {
-            return null;
-        }
 
-        return $dbNote->text;
+        return $dbNote?->text;
+
     }
 
     /**
@@ -307,11 +302,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     /**

@@ -41,14 +41,14 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private Collection                   $collection;
-    private bool                         $convertToPrimary = true; // @phpstan-ignore-line
-    private array                        $currencies       = [];
-    private array                        $currencyIds      = [];
+    private bool                         $convertToPrimary; // @phpstan-ignore-line
+    private array                        $currencies  = [];
+    private array                        $currencyIds = [];
     private Carbon                       $end;
-    private array                        $expenses         = [];
-    private array                        $ids              = [];
-    private array                        $notes            = [];
-    private array                        $pcExpenses       = [];
+    private array                        $expenses    = [];
+    private array                        $ids         = [];
+    private array                        $notes       = [];
+    private array                        $pcExpenses  = [];
     private readonly TransactionCurrency $primaryCurrency;
     private Carbon                       $start;
     private User                         $user;
@@ -120,14 +120,14 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
         $repository = app(OperationsRepository::class);
         $repository->setUser($this->user);
-        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
+        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets);
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
             Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
             $id                  = (int)$budgetLimit->id;
             $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
-            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
+            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency);
             $this->expenses[$id] = array_values($filteredExpenses);
 
             if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {

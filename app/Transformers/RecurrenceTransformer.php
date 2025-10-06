@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use Illuminate\Support\Facades\Log;
 
@@ -40,8 +39,6 @@ class RecurrenceTransformer extends AbstractTransformer
 
     /**
      * Transform the recurring transaction.
-     *
-     * @throws FireflyException
      */
     public function transform(Recurrence $recurrence): array
     {

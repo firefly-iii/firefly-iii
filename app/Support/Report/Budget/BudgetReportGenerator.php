@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Report\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -132,9 +131,6 @@ class BudgetReportGenerator
         $this->start = $start;
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function setUser(User $user): void
     {
         $this->repository->setUser($user);

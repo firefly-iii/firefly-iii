@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Exception;
 use stdClass;
 
 /**
@@ -135,9 +135,7 @@ class RemovesOrphanedTransactions extends Command
             // delete journals
             /** @var null|TransactionJournal $journal */
             $journal = TransactionJournal::find($transaction->transaction_journal_id);
-            if (null !== $journal) {
-                $journal->delete();
-            }
+            $journal?->delete();
             Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)->delete();
             $this->friendlyWarning(
                 sprintf(

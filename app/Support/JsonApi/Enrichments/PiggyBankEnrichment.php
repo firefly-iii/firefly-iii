@@ -57,10 +57,12 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private readonly TransactionCurrency $primaryCurrency;
     private User                         $user;
     private UserGroup                    $userGroup;
+    private ?Carbon $date;
 
     public function __construct()
     {
         $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->date            = now(config('app.timezone'));
     }
 
     public function enrich(Collection $collection): Collection
@@ -69,7 +71,6 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $this->collectIds();
         $this->collectObjectGroups();
         $this->collectNotes();
-        $this->collectCurrentAmounts();
 
 
         $this->appendCollectedData();
@@ -157,8 +158,10 @@ class PiggyBankEnrichment implements EnrichmentInterface
             }
 
             // get suggested per month.
-            $meta['save_per_month']    = Steam::bcround($this->getSuggestedMonthlyAmount($item->start_date, $item->target_date, $meta['target_amount'], $meta['current_amount']), $currency->decimal_places);
-            $meta['pc_save_per_month'] = Steam::bcround($this->getSuggestedMonthlyAmount($item->start_date, $item->target_date, $meta['pc_target_amount'], $meta['pc_current_amount']), $currency->decimal_places);
+            $meta['save_per_month']    = Steam::bcround($this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['target_amount'], $meta['current_amount']), $currency->decimal_places);
+            if (null !== $meta['pc_current_amount']) {
+                $meta['pc_save_per_month'] = Steam::bcround($this->getSuggestedMonthlyAmount($this->date, $item->target_date, $meta['pc_target_amount'], $meta['pc_current_amount']), $currency->decimal_places);
+            }
 
             $item->meta                = $meta;
 
@@ -166,7 +169,10 @@ class PiggyBankEnrichment implements EnrichmentInterface
         });
     }
 
-    private function collectCurrentAmounts(): void {}
+    public function setDate(?Carbon $date): void
+    {
+        $this->date = $date;
+    }
 
     private function collectIds(): void
     {

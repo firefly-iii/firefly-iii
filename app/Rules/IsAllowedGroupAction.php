@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
@@ -31,7 +32,6 @@ use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
-use Closure;
 use Override;
 
 class IsAllowedGroupAction implements ValidationRule

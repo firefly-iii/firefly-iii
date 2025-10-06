@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use FireflyIII\Models\CurrencyExchangeRate;
 use Carbon\Carbon;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -40,6 +40,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Safe\Exceptions\JsonException;
 
 use function Safe\json_decode;
 
@@ -95,6 +96,7 @@ class DownloadExchangeRates implements ShouldQueue
 
     /**
      * @throws GuzzleException
+     * @throws JsonException
      */
     private function downloadRates(TransactionCurrency $currency): void
     {

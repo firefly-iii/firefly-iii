@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Carbon\Carbon;
-use FireflyIII\User;
-use Illuminate\Support\Facades\Cookie;
 use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\Security\UserAttemptedLogin;
@@ -33,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -43,9 +42,12 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**
@@ -151,7 +153,7 @@ class LoginController extends Controller
         $this->sendFailedLoginResponse($request);
 
         // @noinspection PhpUnreachableStatementInspection
-        return response()->json([]);
+        return response()->json();
     }
 
     /**
@@ -222,6 +224,8 @@ class LoginController extends Controller
      * @return Application|Factory|Redirector|RedirectResponse|View
      *
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request)
     {

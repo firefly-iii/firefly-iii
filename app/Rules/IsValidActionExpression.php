@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\TransactionRules\Expressions\ActionExpression;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Translation\PotentiallyTranslatedString;
-use Closure;
 
 class IsValidActionExpression implements ValidationRule
 {

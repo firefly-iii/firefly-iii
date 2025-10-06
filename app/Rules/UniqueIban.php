@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 
 /**
  * Class UniqueIban

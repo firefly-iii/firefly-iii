@@ -96,8 +96,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
     /**
      * Returns all groups the user is member in.
-     *
-     * {@inheritDoc}
      */
     public function get(): Collection
     {
@@ -137,7 +135,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             if (!$existingGroup instanceof UserGroup) {
                 $exists        = false;
 
-                /** @var UserGroup $existingGroup */
                 $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
             $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
@@ -167,8 +164,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
 
     /**
      * Returns all groups.
-     *
-     * {@inheritDoc}
      */
     public function getAll(): Collection
     {

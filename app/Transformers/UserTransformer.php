@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 
@@ -37,8 +36,6 @@ class UserTransformer extends AbstractTransformer
 
     /**
      * Transform user.
-     *
-     * @throws FireflyException
      */
     public function transform(User $user): array
     {

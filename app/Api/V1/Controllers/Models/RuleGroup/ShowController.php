@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\RuleGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Transformers\RuleGroupTransformer;
@@ -66,8 +65,6 @@ class ShowController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/rule_groups/listRuleGroup
      * List all of them.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

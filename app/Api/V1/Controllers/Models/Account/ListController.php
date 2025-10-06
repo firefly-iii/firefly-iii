@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -70,9 +69,6 @@ class ListController extends Controller
         );
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function attachments(Account $account): JsonResponse
     {
         $manager     = $this->getManager();
@@ -96,9 +92,6 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function piggyBanks(Account $account): JsonResponse
     {
         // create some objects:
@@ -135,8 +128,6 @@ class ListController extends Controller
 
     /**
      * Show all transaction groups related to the account.
-     *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {

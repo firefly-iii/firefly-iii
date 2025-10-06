@@ -35,8 +35,8 @@ use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use ValueError;
 use stdClass;
+use ValueError;
 
 class CorrectsUnevenAmount extends Command
 {
@@ -152,7 +152,7 @@ class CorrectsUnevenAmount extends Command
                     $entry->the_sum
                 );
                 $this->friendlyWarning($message);
-                app('log')->warning($message);
+                Log::warning($message);
                 ++$this->count;
 
                 continue;
@@ -230,7 +230,7 @@ class CorrectsUnevenAmount extends Command
         $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
 
         $this->friendlyWarning($message);
-        app('log')->warning($message);
+        Log::warning($message);
 
         $destination->amount = $amount;
         $destination->save();

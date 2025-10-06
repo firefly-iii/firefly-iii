@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Routing\Route;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -36,8 +35,6 @@ class CLIToken implements BinderInterface
 {
     /**
      * @return mixed
-     *
-     * @throws FireflyException
      */
     public static function routeBinder(string $value, Route $route)
     {

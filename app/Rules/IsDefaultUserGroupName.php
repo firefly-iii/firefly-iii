@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 
 /**
  * Class IsDefaultUserGroupName

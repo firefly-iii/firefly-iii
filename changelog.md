@@ -5,17 +5,37 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## 6.4.1 - 2025-09-15
 
+### Added
+
+- [PR 10979](https://github.com/firefly-iii/firefly-iii/pull/10979) (Add Kazakhstani Tenge (KZT) currency) reported by @maksimkurb
+
 ### Fixed
 
 - Fixed a missing filter from [issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803).
-- #10891
-- #10920
-- #10921
-- #10833
+- [Issue 10833](https://github.com/firefly-iii/firefly-iii/issues/10833) (Can't open transaction after assigning a tag to it) reported by @zynexiz
+- [Issue 10854](https://github.com/firefly-iii/firefly-iii/issues/10854) (string / null in budget causes budget page to not render) reported by @4e868df3
+- [Discussion 10891](https://github.com/orgs/firefly-iii/discussions/10891) (User group id is null when downloading new exchange rates) started by @dakennguyen
+- [Discussion 10916](https://github.com/orgs/firefly-iii/discussions/10916) (Errors/Warnings in Logs after Batch API Import) started by @Mr-Kanister
+- [Issue 10920](https://github.com/firefly-iii/firefly-iii/issues/10920) (Liability transaction with same source and destination possible) reported by @Mr-Kanister
+- [Issue 10921](https://github.com/firefly-iii/firefly-iii/issues/10921) (Transaction type between asset and liability not correctly enforced using API) reported by @Mr-Kanister
+- [Issue 10924](https://github.com/firefly-iii/firefly-iii/issues/10924) (Recurring transactions don't save (or show) selected subscription) reported by @SteffoSpieler
+- [Discussion 10938](https://github.com/orgs/firefly-iii/discussions/10938) (Unable to apply default rule group to certain transactions) started by @praemon
+- [Issue 10940](https://github.com/firefly-iii/firefly-iii/issues/10940) (Internal Server Error when trying to open piggy banks) reported by @mattephi
+- [Issue 10954](https://github.com/firefly-iii/firefly-iii/issues/10954) (Internal Server Error when trying to access (default) account) reported by @thomaschristory
+- [Issue 10956](https://github.com/firefly-iii/firefly-iii/issues/10956) (Manual webhook trigger fail) reported by @dudu7731
+- [Issue 10960](https://github.com/firefly-iii/firefly-iii/issues/10960) (404 after deleting subscription) reported by @lindely
+- [Issue 10965](https://github.com/firefly-iii/firefly-iii/issues/10965) (Fix running balance on liability overview) reported by @JC5
+- [Discussion 10974](https://github.com/orgs/firefly-iii/discussions/10974) (Big webhook_messages table) started by @Billos
+- [Discussion 10988](https://github.com/orgs/firefly-iii/discussions/10988) (Call to a member function startOfDay() on null.) started by @molnarti
+- [Issue 10990](https://github.com/firefly-iii/firefly-iii/issues/10990) (duplicate piggy event via API) reported by @4e868df3
+- [Discussion 10994](https://github.com/orgs/firefly-iii/discussions/10994) (How does the save per month attribute from a piggy bank is calculated?) started by @AdriDevelopsThings
+- #11005
+- #11007
 
 ### API
 
-- #10908
+- [Issue 10803](https://github.com/firefly-iii/firefly-iii/issues/10803) (Issue in /v1/budget-limits spent attribute) reported by @Billos
+- [Discussion 10908](https://github.com/orgs/firefly-iii/discussions/10908) (New fields for BudgetLimit object) started by @Billos
 
 
 ## 6.4.0 - 2025-09-14

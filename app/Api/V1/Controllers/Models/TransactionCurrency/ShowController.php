@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -69,8 +68,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listCurrency
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {
@@ -99,8 +96,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/getCurrency
      *
      * Show a currency.
-     *
-     * @throws FireflyException
      */
     public function show(TransactionCurrency $currency): JsonResponse
     {
@@ -123,8 +118,6 @@ class ShowController extends Controller
 
     /**
      * Show a currency.
-     *
-     * @throws FireflyException
      */
     public function showPrimary(): JsonResponse
     {

@@ -26,6 +26,7 @@ namespace FireflyIII\Events\Test;
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UserTestNotificationChannel
 {
@@ -38,7 +39,7 @@ class UserTestNotificationChannel
      */
     public function __construct(string $channel, public User $user)
     {
-        app('log')->debug(sprintf('Triggered UserTestNotificationChannel("%s")', $channel));
+        Log::debug(sprintf('Triggered UserTestNotificationChannel("%s")', $channel));
         $this->channel = $channel;
     }
 }

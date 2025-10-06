@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use FireflyIII\Support\Facades\Navigation;
-use Throwable;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -32,11 +30,13 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Report\Budget\BudgetReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use Throwable;
 
 /**
  * Class BudgetController.

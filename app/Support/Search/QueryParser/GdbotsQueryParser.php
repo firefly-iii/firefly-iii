@@ -31,6 +31,7 @@ use Gdbots\QueryParser\Node as GdbotsNode;
 use Gdbots\QueryParser\QueryParser as BaseQueryParser;
 use Illuminate\Support\Facades\Log;
 use LogicException;
+use Safe\Exceptions\FilesystemException;
 use TypeError;
 
 use function Safe\fwrite;
@@ -46,6 +47,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
     /**
      * @throws FireflyException
+     * @throws FilesystemException
      */
     public function parse(string $query): NodeGroup
     {

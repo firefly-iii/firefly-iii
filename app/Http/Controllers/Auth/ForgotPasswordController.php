@@ -33,6 +33,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
 
 use function Safe\parse_url;
@@ -61,6 +63,8 @@ class ForgotPasswordController extends Controller
      * Send a reset link to the given user.
      *
      * @return Factory|RedirectResponse|View
+     *
+     * @throws FireflyException
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
@@ -126,6 +130,8 @@ class ForgotPasswordController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showLinkRequestForm()
     {

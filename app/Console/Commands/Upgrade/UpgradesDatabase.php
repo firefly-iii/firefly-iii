@@ -24,6 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\InfoException;
 
@@ -34,9 +37,6 @@ try {
 } catch (InfoException) {
     Log::warning('set_time_limit returned false. This could be an issue, unless you also run XDebug.');
 }
-
-use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use Illuminate\Console\Command;
 
 class UpgradesDatabase extends Command
 {
@@ -86,10 +86,8 @@ class UpgradesDatabase extends Command
             $this->friendlyLine(sprintf('Now executing %s', $command));
             $this->call($command, $args);
         }
-        // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
+        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
 
         return 0;
     }

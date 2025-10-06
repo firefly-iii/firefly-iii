@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -155,9 +155,7 @@ trait AccountServiceTrait
     {
         $dbNote       = $account->notes()->first();
         if ('' === $note) {
-            if (null !== $dbNote) {
-                $dbNote->delete();
-            }
+            $dbNote?->delete();
 
             return true;
         }
@@ -341,9 +339,6 @@ trait AccountServiceTrait
         return $this->accountRepository->getOpeningBalanceGroup($account);
     }
 
-    /**
-     * @throws FireflyException
-     */
     protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
     {
         // find currency, or use default currency instead.
@@ -377,7 +372,7 @@ trait AccountServiceTrait
 
             throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
         }
-        // if direction is "debit" (i owe this debt), amount is negative.
+        // if direction is "debit" (I owe this debt), amount is negative.
         // which means the liability will have a negative balance which the user must fill.
         $openingBalance                              = app('steam')->negative($openingBalance);
 

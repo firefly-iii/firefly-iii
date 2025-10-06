@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 
 /**
  * Class IsTransferAccount

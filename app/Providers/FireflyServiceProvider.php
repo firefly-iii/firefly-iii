@@ -77,8 +77,8 @@ use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Override;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Class FireflyServiceProvider.

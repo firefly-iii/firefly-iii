@@ -156,10 +156,10 @@ class BudgetEnrichment implements EnrichmentInterface
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
             // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget))
-            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection, null);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
                 $id                 = (int)$item->id;
-                $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, false));
+                $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item));
                 $this->pcSpent[$id] = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, true));
             }
         }

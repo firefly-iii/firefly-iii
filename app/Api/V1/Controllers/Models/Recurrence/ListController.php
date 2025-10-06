@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -68,8 +67,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/recurrences/listTransactionByRecurrence
      *
      * Show transactions for this recurrence.
-     *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {

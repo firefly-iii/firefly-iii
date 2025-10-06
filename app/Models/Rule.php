@@ -35,6 +35,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property User $user
+ */
 #[ObservedBy([RuleObserver::class])]
 class Rule extends Model
 {

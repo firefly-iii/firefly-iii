@@ -52,6 +52,8 @@ class ReportNewJournalsMail extends Mailable
      * Build the message.
      *
      * @return $this
+     *
+     * @throws FireflyException
      */
     public function build(): self
     {

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
@@ -65,8 +64,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/bills/listBill
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

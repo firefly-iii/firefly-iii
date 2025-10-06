@@ -41,7 +41,6 @@ trait AttachmentCollection
         $this->withAttachmentInformation();
 
         /**
-         * @param int   $index
          * @param array $object
          *
          * @return bool
@@ -120,7 +119,6 @@ trait AttachmentCollection
         $this->withAttachmentInformation();
 
         /**
-         * @param int   $index
          * @param array $object
          *
          * @return bool
@@ -155,7 +153,6 @@ trait AttachmentCollection
         $this->withAttachmentInformation();
 
         /**
-         * @param int   $index
          * @param array $object
          *
          * @return bool
@@ -190,7 +187,6 @@ trait AttachmentCollection
         $this->withAttachmentInformation();
 
         /**
-         * @param int   $index
          * @param array $object
          *
          * @return bool

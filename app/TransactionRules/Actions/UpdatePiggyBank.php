@@ -31,7 +31,9 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -175,15 +177,17 @@ class UpdatePiggyBank implements ActionInterface
 
     private function removeAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
     {
-        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository        = app(PiggyBankRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
+        $accountRepository->setUser($account->user);
 
         // how much can we remove from this piggy bank?
-        $toRemove   = $repository->getCurrentAmount($piggyBank, $account);
+        $toRemove          = $repository->getCurrentAmount($piggyBank, $account);
         Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
 
         // if $amount is bigger than $toRemove, shrink it.
-        $amount     = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
+        $amount            = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
         Log::debug(sprintf('Amount is now %s', $amount));
 
         // if amount is zero, stop.
@@ -196,7 +200,8 @@ class UpdatePiggyBank implements ActionInterface
 
         if (false === $repository->canRemoveAmount($piggyBank, $account, $amount)) {
             Log::warning(sprintf('Cannot remove %s from piggy bank.', $amount));
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));
+            $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => Amount::formatAnything($amount, $currency, false), 'name' => $piggyBank->name])));
 
             return;
         }
@@ -207,8 +212,10 @@ class UpdatePiggyBank implements ActionInterface
 
     private function addAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
     {
-        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository        = app(PiggyBankRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
+        $accountRepository->setUser($account->user);
 
         // how much can we add to the piggy bank?
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
@@ -233,7 +240,8 @@ class UpdatePiggyBank implements ActionInterface
 
         if (false === $repository->canAddAmount($piggyBank, $account, $amount)) {
             Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => $amount, 'name' => $piggyBank->name])));
+            $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => Amount::formatAnything($amount, $currency, false), 'name' => $piggyBank->name])));
 
             return;
         }

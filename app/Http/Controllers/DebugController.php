@@ -49,6 +49,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
+use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use function Safe\file_get_contents;
@@ -131,7 +132,7 @@ class DebugController extends Controller
      *
      * @return Factory|View
      *
-     * @throws FireflyException
+     * @throws FilesystemException
      */
     public function index()
     {
@@ -184,7 +185,6 @@ class DebugController extends Controller
         $currentDriver = DB::getDriverName();
 
         return [
-            'db_version'      => app('fireflyconfig')->get('db_version', 1)->data,
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
             'uname'           => php_uname('m'),

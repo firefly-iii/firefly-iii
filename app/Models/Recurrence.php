@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Handlers\Observer\RecurrenceObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
@@ -38,6 +39,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property Carbon      $first_date
+ * @property null|Carbon $latest_date
+ */
 #[ObservedBy([RecurrenceObserver::class])]
 class Recurrence extends Model
 {

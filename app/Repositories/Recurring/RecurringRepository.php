@@ -51,8 +51,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-use function Safe\json_encode;
 use function Safe\json_decode;
+use function Safe\json_encode;
 
 /**
  * Class RecurringRepository
@@ -430,8 +430,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
 
     /**
      * Parse the repetition in a string that is user readable.
-     *
-     * @throws FireflyException
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {

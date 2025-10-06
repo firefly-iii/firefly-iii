@@ -230,9 +230,6 @@ class Preferences
         return $this->getForUser($user, $name, $default);
     }
 
-    /**
-     * @throws FireflyException
-     */
     public function lastActivity(): string
     {
         $instance     = PreferencesSingleton::getInstance();

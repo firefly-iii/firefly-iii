@@ -128,4 +128,9 @@ class Budget extends Model
             get: static fn ($value) => (int)$value,
         );
     }
+
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
 }

@@ -26,6 +26,7 @@ namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
 use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Support\System\IsOldVersion;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Support\Facades\Log;
@@ -38,6 +39,8 @@ use function Safe\json_decode;
  */
 class UpdateRequest implements UpdateRequestInterface
 {
+    use IsOldVersion;
+
     public function getUpdateInformation(string $channel): array
     {
         Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
@@ -183,20 +186,15 @@ class UpdateRequest implements UpdateRequestInterface
     private function parseResultDevelop(string $current, string $latest, array $information): array
     {
         Log::debug(sprintf('User is running develop version "%s"', $current));
-        $parts             = explode('/', $current);
+        $compare           = $this->compareDevelopVersions($current, $latest);
         $return            = [];
 
-        /** @var Carbon $devDate */
-        $devDate           = Carbon::createFromFormat('Y-m-d', $parts[1]);
-
-        if ($devDate->lte($information['date'])) {
-            Log::debug(sprintf('This development release is older, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
+        if (-1 === $compare) {
             $return['level']   = 'info';
             $return['message'] = (string) trans('firefly.update_current_dev_older', ['version' => $current, 'new_version' => $latest]);
 
             return $return;
         }
-        Log::debug(sprintf('This development release is newer, release = %s, latest version %s = %s', $devDate->format('Y-m-d'), $latest, $information['date']->format('Y-m-d')));
         $return['level']   = 'info';
         $return['message'] = (string) trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
 

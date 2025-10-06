@@ -66,11 +66,9 @@ class UpgradesRecurrenceMetaData extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
 
-        return false;
+        return (bool)$configVar?->data;
+
     }
 
     private function migrateMetaData(): int

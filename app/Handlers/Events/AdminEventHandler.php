@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
@@ -36,7 +37,6 @@ use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
 use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
-use Exception;
 
 /**
  * Class AdminEventHandler.

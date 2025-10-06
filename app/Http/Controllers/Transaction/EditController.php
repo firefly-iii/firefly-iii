@@ -34,6 +34,9 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\UrlException;
 
 use function Safe\parse_url;
 
@@ -66,6 +69,10 @@ class EditController extends Controller
 
     /**
      * @return Factory|Redirector|RedirectResponse|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws UrlException
      */
     public function edit(TransactionGroup $transactionGroup)
     {

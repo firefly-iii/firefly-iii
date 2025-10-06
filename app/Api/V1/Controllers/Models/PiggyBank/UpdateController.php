@@ -68,10 +68,6 @@ class UpdateController extends Controller
         $data        = $request->getAll();
         $piggyBank   = $this->repository->update($piggyBank, $data);
 
-        if (array_key_exists('current_amount', $data) && '' !== $data['current_amount']) {
-            $this->repository->setCurrentAmount($piggyBank, $data['current_amount']);
-        }
-
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();

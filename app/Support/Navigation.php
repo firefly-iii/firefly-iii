@@ -413,19 +413,20 @@ class Navigation
     {
         $date      = clone $theDate;
         $formatMap = [
-            '1D'      => (string)trans('config.specific_day_js'),
-            'daily'   => (string)trans('config.specific_day_js'),
-            'custom'  => (string)trans('config.specific_day_js'),
-            '1W'      => (string)trans('config.week_in_year_js'),
-            'week'    => (string)trans('config.week_in_year_js'),
-            'weekly'  => (string)trans('config.week_in_year_js'),
-            '1M'      => (string)trans('config.month_js'),
-            'month'   => (string)trans('config.month_js'),
-            'monthly' => (string)trans('config.month_js'),
-            '1Y'      => (string)trans('config.year_js'),
-            'year'    => (string)trans('config.year_js'),
-            'yearly'  => (string)trans('config.year_js'),
-            '6M'      => (string)trans('config.half_year_js'),
+            '1D'       => (string)trans('config.specific_day_js'),
+            'daily'    => (string)trans('config.specific_day_js'),
+            'custom'   => (string)trans('config.specific_day_js'),
+            '1W'       => (string)trans('config.week_in_year_js'),
+            'week'     => (string)trans('config.week_in_year_js'),
+            'weekly'   => (string)trans('config.week_in_year_js'),
+            '1M'       => (string)trans('config.month_js'),
+            'month'    => (string)trans('config.month_js'),
+            'monthly'  => (string)trans('config.month_js'),
+            '1Y'       => (string)trans('config.year_js'),
+            'YTD'      => (string)trans('config.year_js'),
+            'year'     => (string)trans('config.year_js'),
+            'yearly'   => (string)trans('config.year_js'),
+            '6M'       => (string)trans('config.half_year_js'),
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
@@ -441,8 +442,6 @@ class Navigation
         Log::error(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
 
         throw new FireflyException(sprintf('No date formats for frequency "%s"!', $repeatFrequency));
-
-        return $date->format('Y-m-d');
     }
 
     /**

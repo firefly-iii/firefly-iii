@@ -227,7 +227,7 @@ trait RecalculatesAvailableBudgetsTrait
             }
 
             // prep for next loop
-            $current         = app('navigation')->addPeriod($current, $viewRange, 0);
+            $current         = app('navigation')->addPeriod($current, $viewRange);
         }
     }
 }

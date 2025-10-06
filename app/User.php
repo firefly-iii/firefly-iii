@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII;
 
 use Deprecated;
+use Exception;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
@@ -67,7 +68,6 @@ use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Exception;
 
 class User extends Authenticatable
 {
@@ -259,7 +259,6 @@ class User extends Authenticatable
         $dbRolesIds       = $dbRoles->pluck('id')->toArray();
         $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
 
-        /** @var Collection $groupMemberships */
         $groupMemberships = $this->groupMemberships()->whereIn('user_role_id', $dbRolesIds)->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
             app('log')->error(sprintf(

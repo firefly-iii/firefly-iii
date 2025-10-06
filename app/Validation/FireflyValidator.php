@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use Config;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -45,12 +46,14 @@ use PragmaRX\Google2FA\Exceptions\IncompatibleWithGoogleAuthenticatorException;
 use PragmaRX\Google2FA\Exceptions\InvalidCharactersException;
 use PragmaRX\Google2FA\Exceptions\SecretKeyTooShortException;
 use PragmaRX\Google2FALaravel\Facade;
-use Config;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\JsonException;
 use ValueError;
 
-use function Safe\preg_match;
 use function Safe\iconv;
 use function Safe\json_encode;
+use function Safe\preg_match;
 
 /**
  * Class FireflyValidator.
@@ -65,6 +68,8 @@ class FireflyValidator extends Validator
      * @throws IncompatibleWithGoogleAuthenticatorException
      * @throws InvalidCharactersException
      * @throws SecretKeyTooShortException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -627,6 +632,8 @@ class FireflyValidator extends Validator
      * @param mixed $attribute
      * @param mixed $value
      * @param mixed $parameters
+     *
+     * @throws JsonException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */

@@ -263,13 +263,13 @@ trait PeriodOverview
 
         $entry
                     = [
-                     'title'              => $title,
-                     'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
-                     'total_transactions' => 0,
-                     'spent'              => [],
-                     'earned'             => [],
-                     'transferred'        => [],
-                 ];
+                        'title'              => $title,
+                        'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
+                        'total_transactions' => 0,
+                        'spent'              => [],
+                        'earned'             => [],
+                        'transferred'        => [],
+                    ];
         $grouped    = [];
 
         /** @var PeriodStatistic $statistic */
@@ -325,30 +325,26 @@ trait PeriodOverview
     private function filterStatistics(Carbon $start, Carbon $end, string $type): Collection
     {
         if (0 === $this->statistics->count()) {
-            Log::warning('Have no statistic to filter!');
+            Log::debug('Have no statistic to filter!');
 
             return new Collection();
         }
 
         return $this->statistics->filter(
-            function (PeriodStatistic $statistic) use ($start, $end, $type) {
-                return $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type;
-            }
+            fn (PeriodStatistic $statistic) => $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type
         );
     }
 
     private function filterPrefixedStatistics(Carbon $start, Carbon $end, string $prefix): Collection
     {
         if (0 === $this->statistics->count()) {
-            Log::warning('Have no statistic to filter!');
+            Log::debug('Have no statistic to filter!');
 
             return new Collection();
         }
 
         return $this->statistics->filter(
-            function (PeriodStatistic $statistic) use ($start, $end, $prefix) {
-                return $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix);
-            }
+            fn (PeriodStatistic $statistic) => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
         );
     }
 
@@ -515,13 +511,13 @@ trait PeriodOverview
             }
             $entries[]
                    = [
-                    'title'              => $title,
-                    'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'total_transactions' => count($spent) + count($earned) + count($transferred),
-                    'spent'              => $this->groupByCurrency($spent),
-                    'earned'             => $this->groupByCurrency($earned),
-                    'transferred'        => $this->groupByCurrency($transferred),
-                ];
+                       'title'              => $title,
+                       'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                       'total_transactions' => count($spent) + count($earned) + count($transferred),
+                       'spent'              => $this->groupByCurrency($spent),
+                       'earned'             => $this->groupByCurrency($earned),
+                       'transferred'        => $this->groupByCurrency($transferred),
+                   ];
             ++$loops;
         }
 

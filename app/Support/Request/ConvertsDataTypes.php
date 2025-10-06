@@ -314,7 +314,8 @@ trait ConvertsDataTypes
 
         // is an atom string, I hope?
         try {
-            $carbon = Carbon::parse($value, $value, config('app.timezone'));
+            $carbon = Carbon::parse($value);
+            $carbon->setTimezone(config('app.timezone'));
         } catch (InvalidDateException $e) { // @phpstan-ignore-line
             Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
 

@@ -36,11 +36,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
-use function Safe\realpath;
 use function Safe\ini_get;
+use function Safe\realpath;
 
 /**
  * Class Controller.

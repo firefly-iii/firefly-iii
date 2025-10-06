@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PeriodStatistic;
+use FireflyIII\Models\UserGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
@@ -43,4 +44,6 @@ interface PeriodStatisticRepositoryInterface
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
 
     public function deleteStatisticsForModel(Model $model, Carbon $date): void;
+
+    public function deleteStatisticsForPrefix(UserGroup $userGroup, string $prefix, Carbon $date): void;
 }

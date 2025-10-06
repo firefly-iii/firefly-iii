@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
+use Safe\Exceptions\JsonException;
 
 use function Safe\json_encode;
 
@@ -266,6 +267,7 @@ trait JournalServiceTrait
 
     /**
      * @throws FireflyException
+     * @throws JsonException
      */
     private function createAccount(?Account $account, array $data, string $preferredType): ?Account
     {

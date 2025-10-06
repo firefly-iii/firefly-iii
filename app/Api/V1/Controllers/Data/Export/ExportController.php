@@ -61,6 +61,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -100,6 +101,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -112,6 +114,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -124,6 +127,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -136,6 +140,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -148,6 +153,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -160,6 +166,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -172,6 +179,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -184,6 +192,7 @@ class ExportController extends Controller
     }
 
     /**
+     * @throws DatetimeException
      * @throws FireflyException
      */
     public function transactions(ExportRequest $request): LaravelResponse

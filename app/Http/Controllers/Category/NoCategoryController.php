@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
@@ -37,6 +37,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class NoCategoryController
@@ -71,7 +73,9 @@ class NoCategoryController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -107,6 +111,9 @@ class NoCategoryController extends Controller
      * Show all transactions without a category.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request)
     {

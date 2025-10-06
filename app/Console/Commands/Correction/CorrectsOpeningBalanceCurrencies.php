@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CorrectsOpeningBalanceCurrencies extends Command
 {
@@ -78,7 +79,7 @@ class CorrectsOpeningBalanceCurrencies extends Command
         $account = $this->getAccount($journal);
         if (!$account instanceof Account) {
             $message = sprintf('Transaction journal #%d has no valid account. Can\'t fix this line.', $journal->id);
-            app('log')->warning($message);
+            Log::warning($message);
             $this->friendlyError($message);
 
             return 0;

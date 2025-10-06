@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Transformers\TransactionLinkTransformer;
@@ -69,8 +68,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/links/listTransactionLink
      *
      * List all transaction links there are.
-     *
-     * @throws FireflyException
      */
     public function index(Request $request): JsonResponse
     {

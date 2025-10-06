@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\Account;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -242,6 +242,7 @@ class PiggyBankFactory
                 }
             }
         }
+        Log::debug('Looping all accounts.');
 
         /** @var array $info */
         foreach ($accounts as $info) {
@@ -251,6 +252,7 @@ class PiggyBankFactory
 
                 continue;
             }
+            Log::debug(sprintf('Working on account #%d', $account->id));
             if (array_key_exists('current_amount', $info) && null !== $info['current_amount']) {
                 // an amount is set, first check out if there is a difference with the previous amount.
                 $previous                 = $toBeLinked[$account->id]['current_amount'] ?? '0';
@@ -258,22 +260,24 @@ class PiggyBankFactory
 
                 // create event for difference.
                 if (0 !== bccomp($diff, '0')) {
+                    // 2025-10-01 for issue #10990 disable this event.
                     Log::debug(sprintf('[a] Will save event for difference %s (previous value was %s)', $diff, $previous));
-                    event(new ChangedAmount($piggyBank, $diff, null, null));
+                    // event(new ChangedAmount($piggyBank, $diff, null, null));
                 }
 
                 $toBeLinked[$account->id] = ['current_amount' => $info['current_amount']];
                 Log::debug(sprintf('[a] Will link account #%d with amount %s', $account->id, $info['current_amount']));
             }
             if (array_key_exists('current_amount', $info) && null === $info['current_amount']) {
-                // an amount is set, first check out if there is a difference with the previous amount.
+                // no amount is set, first check out if there is a difference with the previous amount.
                 $previous                 = $toBeLinked[$account->id]['current_amount'] ?? '0';
                 $diff                     = bcsub('0', $previous);
 
                 // create event for difference.
                 if (0 !== bccomp($diff, '0')) {
+                    // 2025-10-01 for issue #10990 disable this event.
                     Log::debug(sprintf('[b] Will save event for difference %s (previous value was %s)', $diff, $previous));
-                    event(new ChangedAmount($piggyBank, $diff, null, null));
+                    // event(new ChangedAmount($piggyBank, $diff, null, null));
                 }
 
                 // no amount set, use previous amount or go to ZERO.
@@ -282,7 +286,8 @@ class PiggyBankFactory
 
                 // create event:
                 Log::debug('linkToAccountIds: Trigger change for positive amount [b].');
-                event(new ChangedAmount($piggyBank, $toBeLinked[$account->id]['current_amount'] ?? '0', null, null));
+                // 2025-10-01 for issue #10990 disable this event.
+                // event(new ChangedAmount($piggyBank, $toBeLinked[$account->id]['current_amount'] ?? '0', null, null));
             }
             if (!array_key_exists('current_amount', $info)) {
                 $toBeLinked[$account->id] ??= [];

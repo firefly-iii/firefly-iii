@@ -40,11 +40,11 @@ use FireflyIII\Models\TransactionCurrency;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-use function Safe\mb_regex_encoding;
 use function Safe\json_encode;
+use function Safe\mb_regex_encoding;
 
 /**
  * This command was inspired by https://github.com/elliot-gh. It will check all amount fields
@@ -95,7 +95,7 @@ class ForcesDecimalSize extends Command
      */
     public function handle(): int
     {
-        app('log')->debug('Now in ForceDecimalSize::handle()');
+        Log::debug('Now in ForceDecimalSize::handle()');
         $this->determineDatabaseType();
 
         $this->friendlyError('Running this command is dangerous and can cause data loss.');
@@ -155,7 +155,6 @@ class ForcesDecimalSize extends Command
      */
     private function correctAmountsByCurrency(): void
     {
-        /** @var Collection $enabled */
         $enabled = TransactionCurrency::whereEnabled(1)->get();
 
         /** @var TransactionCurrency $currency */
@@ -300,7 +299,7 @@ class ForcesDecimalSize extends Command
             }
         );
 
-        $result            = $query->get(['*']);
+        $result            = $query->get();
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All %s in %s are OK', $table, $currency->code));
 
@@ -532,7 +531,7 @@ class ForcesDecimalSize extends Command
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
         );
 
-        $result = $query->get(['*']);
+        $result = $query->get();
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All transactions in foreign currency %s are OK', $currency->code));
 

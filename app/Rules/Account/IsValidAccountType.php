@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules\Account;
 
+use Closure;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 use Override;
 
 class IsValidAccountType implements ValidationRule
@@ -46,7 +46,6 @@ class IsValidAccountType implements ValidationRule
             $filtered = [];
             $keys     = array_keys($this->types);
 
-            /** @var mixed $entry */
             foreach ($value as $entry) {
                 $entry = (string) $entry;
                 if (!in_array($entry, $keys, true)) {

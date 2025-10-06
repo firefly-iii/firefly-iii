@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
 use FireflyIII\Models\TransactionCurrency;
@@ -107,6 +108,8 @@ class EditController extends Controller
      * Updates a currency.
      *
      * @return Redirector|RedirectResponse
+     *
+     * @throws FireflyException
      */
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency)
     {

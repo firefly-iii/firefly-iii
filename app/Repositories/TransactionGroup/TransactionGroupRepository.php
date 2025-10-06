@@ -177,11 +177,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             ->where('noteable_type', TransactionJournal::class)
             ->first()
         ;
-        if (null === $note) {
-            return null;
-        }
 
-        return $note->text;
+        return $note?->text;
+
     }
 
     /**

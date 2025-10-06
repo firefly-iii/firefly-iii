@@ -119,8 +119,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/attachments/listAttachment
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

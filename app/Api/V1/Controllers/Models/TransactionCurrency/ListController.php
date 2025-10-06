@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -71,8 +70,6 @@ class ListController extends Controller
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAccountByCurrency
      * Display a list of accounts.
-     *
-     * @throws FireflyException
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -131,8 +128,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listAvailableBudgetByCurrency
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function availableBudgets(TransactionCurrency $currency): JsonResponse
     {
@@ -166,8 +161,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBillByCurrency
      *
      * List all bills
-     *
-     * @throws FireflyException
      */
     public function bills(TransactionCurrency $currency): JsonResponse
     {
@@ -213,8 +206,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listBudgetLimitByCurrency
      *
      * List all budget limits
-     *
-     * @throws FireflyException
      */
     public function budgetLimits(TransactionCurrency $currency): JsonResponse
     {
@@ -251,8 +242,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRecurrenceByCurrency
      *
      * List all recurring transactions.
-     *
-     * @throws FireflyException
      */
     public function recurrences(TransactionCurrency $currency): JsonResponse
     {
@@ -304,8 +293,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listRuleByCurrency
      *
      * List all of them.
-     *
-     * @throws FireflyException
      */
     public function rules(TransactionCurrency $currency): JsonResponse
     {
@@ -349,8 +336,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/listTransactionByCurrency
      *
      * Show all transactions.
-     *
-     * @throws FireflyException
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {
