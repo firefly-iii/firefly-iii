@@ -12,7 +12,7 @@ Everything from v6.4.1, plus:
 
 - [Issue 11015](https://github.com/firefly-iii/firefly-iii/issues/11015) (Call to a member function subSecond() on null when viewing accounts) reported by @sirgio145
 - [Issue 11016](https://github.com/firefly-iii/firefly-iii/issues/11016) (Undefined array key 1 when viewing subscriptions) reported by @anuneo
-- #11018
+- [Issue 11018](https://github.com/firefly-iii/firefly-iii/issues/11018) (/v1/accounts balance_difference last day is not accounted for) reported by @ctrl-f5
 
 ## 6.4.1 - 2025-10-07
 
