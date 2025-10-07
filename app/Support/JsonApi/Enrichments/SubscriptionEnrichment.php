@@ -121,8 +121,8 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
-                $key                        = $this->mappedObjects[$id];
-                if(array_key_exists($key, $this->objectGroups)) {
+                $key = $this->mappedObjects[$id];
+                if (array_key_exists($key, $this->objectGroups)) {
                     $meta['object_group_id']    = (string)$this->objectGroups[$key]['id'];
                     $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                     $meta['object_group_order'] = $this->objectGroups[$key]['order'];
