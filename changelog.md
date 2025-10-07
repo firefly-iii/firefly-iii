@@ -34,9 +34,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 10908](https://github.com/orgs/firefly-iii/discussions/10908) (New fields for BudgetLimit object) started by @Billos
 - [Issue 10921](https://github.com/firefly-iii/firefly-iii/issues/10921) (Transaction type between asset and liability not correctly enforced using API) reported by @Mr-Kanister
 - [Issue 10990](https://github.com/firefly-iii/firefly-iii/issues/10990) (duplicate piggy event via API) reported by @4e868df3
-- #11005
-- #11007
-- #11010
+- [Issue 11005](https://github.com/firefly-iii/firefly-iii/issues/11005) (PUT /v1/accounts/{id} timezone error) reported by @cioraneanu
+- [Issue 11007](https://github.com/firefly-iii/firefly-iii/issues/11007) (/v1/accounts balance_difference takes time into account, but api only accepts days) reported by @ctrl-f5
+- [Issue 11010](https://github.com/firefly-iii/firefly-iii/issues/11010) (/v1/currencies/{code}/accounts does not use start and end date for account enrichment) reported by @ctrl-f5
 
 
 ## 6.4.0 - 2025-09-14
