@@ -100,6 +100,9 @@ class ListController extends Controller
         $count             = $collection->count();
         $accounts          = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
+        // #11007 go to the end of the previous day.
+        $this->parameters->set('start', $this->parameters->get('start')->subSecond());
+
         // enrich
         /** @var User $admin */
         $admin             = auth()->user();
