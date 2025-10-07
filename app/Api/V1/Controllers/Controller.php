@@ -67,6 +67,7 @@ abstract class Controller extends BaseController
 
     protected bool                $convertToPrimary = false;
     protected TransactionCurrency $primaryCurrency;
+    /** @deprecated use Request classes */
     protected ParameterBag        $parameters;
 
     /**
@@ -98,6 +99,7 @@ abstract class Controller extends BaseController
     }
 
     /**
+     * @deprecated use Request classes
      * Method to grab all parameters from the URL.
      */
     private function getParameters(): ParameterBag

@@ -1,9 +1,7 @@
 <?php
 
-declare(strict_types=1);
 /*
- * ShowRequest.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * Copyright (c) 2021 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,23 +19,27 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Requests\Models\Account;
+declare(strict_types=1);
 
-use FireflyIII\Api\V1\Requests\AggregateFormRequest;
-use FireflyIII\Api\V1\Requests\DateRangeRequest;
-use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\PaginationRequest;
-use FireflyIII\Models\Account;
+namespace FireflyIII\Api\V1\Requests;
 
-class ShowRequest extends AggregateFormRequest
+use FireflyIII\Exceptions\ValidationException;
+use FireflyIII\Support\Request\ChecksLogin;
+use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
+
+class ApiRequest extends FormRequest
 {
-    protected function getRequests(): array
+    use ChecksLogin;
+    use ConvertsDataTypes;
+
+    protected string $required = '';
+
+    public function handleConfig(array $config): void
     {
-        return [
-            [PaginationRequest::class, 'sort_class' => Account::class],
-            DateRangeRequest::class,
-            DateRequest::class,
-            AccountTypeApiRequest::class,
-        ];
+        if (in_array('required', $config)) {
+            $this->required = 'required';
+        }
     }
 }
