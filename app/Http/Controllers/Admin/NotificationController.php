@@ -122,6 +122,11 @@ class NotificationController extends Controller
 
     public function testNotification(Request $request): RedirectResponse
     {
+        if (true === auth()->user()->hasRole('demo')) {
+            session()->flash('error', (string) trans('firefly.not_available_demo_user'));
+
+            return redirect(route('settings.notification.index'));
+        }
 
         $all     = $request->all();
         $channel = $all['test_submit'] ?? '';

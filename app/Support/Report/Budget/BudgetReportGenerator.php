@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Report\Budget;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -92,43 +91,6 @@ class BudgetReportGenerator
     }
 
     /**
-     * Process each row of expenses collected for the "Account per budget" partial
-     */
-    private function processExpenses(array $expenses): void
-    {
-        foreach ($expenses['budgets'] as $budget) {
-            $this->processBudgetExpenses($expenses, $budget);
-        }
-    }
-
-    /**
-     * Process each set of transactions for each row of expenses.
-     */
-    private function processBudgetExpenses(array $expenses, array $budget): void
-    {
-        $budgetId   = (int) $budget['id'];
-        $currencyId = (int) $expenses['currency_id'];
-        foreach ($budget['transaction_journals'] as $journal) {
-            $sourceAccountId = $journal['source_account_id'];
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]
-                ??= [
-                    'currency_id'             => $expenses['currency_id'],
-                    'currency_symbol'         => $expenses['currency_symbol'],
-                    'currency_name'           => $expenses['currency_name'],
-                    'currency_decimal_places' => $expenses['currency_decimal_places'],
-                    'budgets'                 => [],
-                ];
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                ??= '0';
-
-            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
-                             = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], (string) $journal['amount']);
-        }
-    }
-
-    /**
      * Generates the data necessary to create the card that displays
      * the budget overview in the general report.
      */
@@ -144,6 +106,40 @@ class BudgetReportGenerator
         $this->percentageReport();
     }
 
+    public function getReport(): array
+    {
+        return $this->report;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setBudgets(Collection $budgets): void
+    {
+        $this->budgets = $budgets;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->repository->setUser($user);
+        $this->blRepository->setUser($user);
+        $this->opsRepository->setUser($user);
+        $this->nbRepository->setUser($user);
+        $this->currency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+    }
+
     /**
      * Start the budgets block on the default report by processing every budget.
      */
@@ -154,6 +150,90 @@ class BudgetReportGenerator
         /** @var Budget $budget */
         foreach ($budgetList as $budget) {
             $this->processBudget($budget);
+        }
+    }
+
+    /**
+     * Calculate the expenses for transactions without a budget. Part of the "budgets" block of the default report.
+     */
+    private function noBudgetReport(): void
+    {
+        // add no budget info.
+        $this->report['budgets'][0] = [
+            'budget_id'     => null,
+            'budget_name'   => null,
+            'no_budget'     => true,
+            'budget_limits' => [],
+        ];
+
+        $noBudget                   = $this->nbRepository->sumExpenses($this->start, $this->end, $this->accounts);
+        foreach ($noBudget as $noBudgetEntry) {
+            // currency information:
+            $nbCurrencyId                                                   = (int)($noBudgetEntry['currency_id'] ?? $this->currency->id);
+            $nbCurrencyCode                                                 = $noBudgetEntry['currency_code'] ?? $this->currency->code;
+            $nbCurrencyName                                                 = $noBudgetEntry['currency_name'] ?? $this->currency->name;
+            $nbCurrencySymbol                                               = $noBudgetEntry['currency_symbol'] ?? $this->currency->symbol;
+            $nbCurrencyDp                                                   = $noBudgetEntry['currency_decimal_places'] ?? $this->currency->decimal_places;
+
+            $this->report['budgets'][0]['budget_limits'][]                  = [
+                'budget_limit_id'         => null,
+                'start_date'              => $this->start,
+                'end_date'                => $this->end,
+                'budgeted'                => '0',
+                'budgeted_pct'            => '0',
+                'spent'                   => $noBudgetEntry['sum'],
+                'spent_pct'               => '0',
+                'left'                    => '0',
+                'overspent'               => '0',
+                'currency_id'             => $nbCurrencyId,
+                'currency_code'           => $nbCurrencyCode,
+                'currency_name'           => $nbCurrencyName,
+                'currency_symbol'         => $nbCurrencySymbol,
+                'currency_decimal_places' => $nbCurrencyDp,
+            ];
+            $this->report['sums'][$nbCurrencyId]['spent']                   = bcadd($this->report['sums'][$nbCurrencyId]['spent'] ?? '0', (string)$noBudgetEntry['sum']);
+            // append currency info because it may be missing:
+            $this->report['sums'][$nbCurrencyId]['currency_id']             = $nbCurrencyId;
+            $this->report['sums'][$nbCurrencyId]['currency_code']           = $nbCurrencyCode;
+            $this->report['sums'][$nbCurrencyId]['currency_name']           = $nbCurrencyName;
+            $this->report['sums'][$nbCurrencyId]['currency_symbol']         = $nbCurrencySymbol;
+            $this->report['sums'][$nbCurrencyId]['currency_decimal_places'] = $nbCurrencyDp;
+
+            // append other sums because they might be missing:
+            $this->report['sums'][$nbCurrencyId]['overspent'] ??= '0';
+            $this->report['sums'][$nbCurrencyId]['left']      ??= '0';
+            $this->report['sums'][$nbCurrencyId]['budgeted']  ??= '0';
+        }
+    }
+
+    /**
+     * Calculate the percentages for each budget. Part of the "budgets" block on the default report.
+     */
+    private function percentageReport(): void
+    {
+        // make percentages based on total amount.
+        foreach ($this->report['budgets'] as $budgetId => $data) {
+            foreach ($data['budget_limits'] as $limitId => $entry) {
+                $budgetId                                                                      = (int)$budgetId;
+                $limitId                                                                       = (int)$limitId;
+                $currencyId                                                                    = (int)$entry['currency_id'];
+                $spent                                                                         = $entry['spent'];
+                $totalSpent                                                                    = $this->report['sums'][$currencyId]['spent'] ?? '0';
+                $spentPct                                                                      = '0';
+                $budgeted                                                                      = $entry['budgeted'];
+                $totalBudgeted                                                                 = $this->report['sums'][$currencyId]['budgeted'] ?? '0';
+                $budgetedPct                                                                   = '0';
+
+                if (0 !== bccomp((string)$spent, '0') && 0 !== bccomp($totalSpent, '0')) {
+                    $spentPct = round((float)bcmul(bcdiv((string)$spent, $totalSpent), '100'));
+                }
+                if (0 !== bccomp((string)$budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
+                    $budgetedPct = round((float)bcmul(bcdiv((string)$budgeted, $totalBudgeted), '100'));
+                }
+                $this->report['sums'][$currencyId]['budgeted'] ??= '0';
+                $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
+                $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
+            }
         }
     }
 
@@ -176,6 +256,43 @@ class BudgetReportGenerator
         /** @var BudgetLimit $limit */
         foreach ($limits as $limit) {
             $this->processLimit($budget, $limit);
+        }
+    }
+
+    /**
+     * Process each set of transactions for each row of expenses.
+     */
+    private function processBudgetExpenses(array $expenses, array $budget): void
+    {
+        $budgetId   = (int)$budget['id'];
+        $currencyId = (int)$expenses['currency_id'];
+        foreach ($budget['transaction_journals'] as $journal) {
+            $sourceAccountId = $journal['source_account_id'];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]
+                ??= [
+                    'currency_id'             => $expenses['currency_id'],
+                    'currency_symbol'         => $expenses['currency_symbol'],
+                    'currency_name'           => $expenses['currency_name'],
+                    'currency_decimal_places' => $expenses['currency_decimal_places'],
+                    'budgets'                 => [],
+                ];
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                ??= '0';
+
+            $this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId]
+                             = bcadd($this->report[$sourceAccountId]['currencies'][$currencyId]['budgets'][$budgetId], (string)$journal['amount']);
+        }
+    }
+
+    /**
+     * Process each row of expenses collected for the "Account per budget" partial
+     */
+    private function processExpenses(array $expenses): void
+    {
+        foreach ($expenses['budgets'] as $budget) {
+            $this->processBudgetExpenses($expenses, $budget);
         }
     }
 
@@ -223,130 +340,9 @@ class BudgetReportGenerator
                                                                            'currency_symbol'         => $limitCurrency->symbol,
                                                                            'currency_decimal_places' => $limitCurrency->decimal_places,
                                                                        ];
-        $this->report['sums'][$currencyId]['budgeted']  = bcadd((string) $this->report['sums'][$currencyId]['budgeted'], $limit->amount);
-        $this->report['sums'][$currencyId]['spent']     = bcadd((string) $this->report['sums'][$currencyId]['spent'], $spent);
-        $this->report['sums'][$currencyId]['left']      = bcadd((string) $this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
-        $this->report['sums'][$currencyId]['overspent'] = bcadd((string) $this->report['sums'][$currencyId]['overspent'], $overspent);
-    }
-
-    /**
-     * Calculate the expenses for transactions without a budget. Part of the "budgets" block of the default report.
-     */
-    private function noBudgetReport(): void
-    {
-        // add no budget info.
-        $this->report['budgets'][0] = [
-            'budget_id'     => null,
-            'budget_name'   => null,
-            'no_budget'     => true,
-            'budget_limits' => [],
-        ];
-
-        $noBudget                   = $this->nbRepository->sumExpenses($this->start, $this->end, $this->accounts);
-        foreach ($noBudget as $noBudgetEntry) {
-            // currency information:
-            $nbCurrencyId                                                   = (int) ($noBudgetEntry['currency_id'] ?? $this->currency->id);
-            $nbCurrencyCode                                                 = $noBudgetEntry['currency_code'] ?? $this->currency->code;
-            $nbCurrencyName                                                 = $noBudgetEntry['currency_name'] ?? $this->currency->name;
-            $nbCurrencySymbol                                               = $noBudgetEntry['currency_symbol'] ?? $this->currency->symbol;
-            $nbCurrencyDp                                                   = $noBudgetEntry['currency_decimal_places'] ?? $this->currency->decimal_places;
-
-            $this->report['budgets'][0]['budget_limits'][]                  = [
-                'budget_limit_id'         => null,
-                'start_date'              => $this->start,
-                'end_date'                => $this->end,
-                'budgeted'                => '0',
-                'budgeted_pct'            => '0',
-                'spent'                   => $noBudgetEntry['sum'],
-                'spent_pct'               => '0',
-                'left'                    => '0',
-                'overspent'               => '0',
-                'currency_id'             => $nbCurrencyId,
-                'currency_code'           => $nbCurrencyCode,
-                'currency_name'           => $nbCurrencyName,
-                'currency_symbol'         => $nbCurrencySymbol,
-                'currency_decimal_places' => $nbCurrencyDp,
-            ];
-            $this->report['sums'][$nbCurrencyId]['spent']                   = bcadd($this->report['sums'][$nbCurrencyId]['spent'] ?? '0', (string) $noBudgetEntry['sum']);
-            // append currency info because it may be missing:
-            $this->report['sums'][$nbCurrencyId]['currency_id']             = $nbCurrencyId;
-            $this->report['sums'][$nbCurrencyId]['currency_code']           = $nbCurrencyCode;
-            $this->report['sums'][$nbCurrencyId]['currency_name']           = $nbCurrencyName;
-            $this->report['sums'][$nbCurrencyId]['currency_symbol']         = $nbCurrencySymbol;
-            $this->report['sums'][$nbCurrencyId]['currency_decimal_places'] = $nbCurrencyDp;
-
-            // append other sums because they might be missing:
-            $this->report['sums'][$nbCurrencyId]['overspent'] ??= '0';
-            $this->report['sums'][$nbCurrencyId]['left']      ??= '0';
-            $this->report['sums'][$nbCurrencyId]['budgeted']  ??= '0';
-        }
-    }
-
-    /**
-     * Calculate the percentages for each budget. Part of the "budgets" block on the default report.
-     */
-    private function percentageReport(): void
-    {
-        // make percentages based on total amount.
-        foreach ($this->report['budgets'] as $budgetId => $data) {
-            foreach ($data['budget_limits'] as $limitId => $entry) {
-                $budgetId                                                                      = (int) $budgetId;
-                $limitId                                                                       = (int) $limitId;
-                $currencyId                                                                    = (int) $entry['currency_id'];
-                $spent                                                                         = $entry['spent'];
-                $totalSpent                                                                    = $this->report['sums'][$currencyId]['spent'] ?? '0';
-                $spentPct                                                                      = '0';
-                $budgeted                                                                      = $entry['budgeted'];
-                $totalBudgeted                                                                 = $this->report['sums'][$currencyId]['budgeted'] ?? '0';
-                $budgetedPct                                                                   = '0';
-
-                if (0 !== bccomp((string) $spent, '0') && 0 !== bccomp($totalSpent, '0')) {
-                    $spentPct = round((float) bcmul(bcdiv((string) $spent, $totalSpent), '100'));
-                }
-                if (0 !== bccomp((string) $budgeted, '0') && 0 !== bccomp($totalBudgeted, '0')) {
-                    $budgetedPct = round((float) bcmul(bcdiv((string) $budgeted, $totalBudgeted), '100'));
-                }
-                $this->report['sums'][$currencyId]['budgeted'] ??= '0';
-                $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['spent_pct']    = $spentPct;
-                $this->report['budgets'][$budgetId]['budget_limits'][$limitId]['budgeted_pct'] = $budgetedPct;
-            }
-        }
-    }
-
-    public function getReport(): array
-    {
-        return $this->report;
-    }
-
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
-    public function setBudgets(Collection $budgets): void
-    {
-        $this->budgets = $budgets;
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function setUser(User $user): void
-    {
-        $this->repository->setUser($user);
-        $this->blRepository->setUser($user);
-        $this->opsRepository->setUser($user);
-        $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->report['sums'][$currencyId]['budgeted']  = bcadd((string)$this->report['sums'][$currencyId]['budgeted'], $limit->amount);
+        $this->report['sums'][$currencyId]['spent']     = bcadd((string)$this->report['sums'][$currencyId]['spent'], $spent);
+        $this->report['sums'][$currencyId]['left']      = bcadd((string)$this->report['sums'][$currencyId]['left'], bcadd($limit->amount, $spent));
+        $this->report['sums'][$currencyId]['overspent'] = bcadd((string)$this->report['sums'][$currencyId]['overspent'], $overspent);
     }
 }

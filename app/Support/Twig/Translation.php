@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
+use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
-use Override;
 
 /**
  * Class Budget.
@@ -39,7 +39,7 @@ class Translation extends AbstractExtension
         return [
             new TwigFilter(
                 '_',
-                static fn ($name) => (string) trans(sprintf('firefly.%s', $name)),
+                static fn ($name) => (string)trans(sprintf('firefly.%s', $name)),
                 ['is_safe' => ['html']]
             ),
         ];

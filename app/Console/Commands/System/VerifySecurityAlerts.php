@@ -27,8 +27,10 @@ namespace FireflyIII\Console\Commands\System;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
+use Safe\Exceptions\JsonException;
 
 use function Safe\json_decode;
 
@@ -44,6 +46,7 @@ class VerifySecurityAlerts extends Command
      * Execute the console command.
      *
      * @throws FilesystemException
+     * @throws JsonException
      */
     public function handle(): int
     {
@@ -54,7 +57,7 @@ class VerifySecurityAlerts extends Command
         $disk    = Storage::disk('resources');
         // Next line is ignored because it's a Laravel Facade.
         if (!$disk->has('alerts.json')) { // @phpstan-ignore-line
-            app('log')->debug('No alerts.json file present.');
+            Log::debug('No alerts.json file present.');
 
             return 0;
         }
@@ -64,19 +67,19 @@ class VerifySecurityAlerts extends Command
         /** @var array $array */
         foreach ($json as $array) {
             if ($version === $array['version'] && true === $array['advisory']) {
-                app('log')->debug(sprintf('Version %s has an alert!', $array['version']));
+                Log::debug(sprintf('Version %s has an alert!', $array['version']));
                 // add advisory to configuration.
                 $this->saveSecurityAdvisory($array);
 
                 // depends on level
                 if ('info' === $array['level']) {
-                    app('log')->debug('INFO level alert');
+                    Log::debug('INFO level alert');
                     $this->friendlyInfo($array['message']);
 
                     return 0;
                 }
                 if ('warning' === $array['level']) {
-                    app('log')->debug('WARNING level alert');
+                    Log::debug('WARNING level alert');
                     $this->friendlyWarning('------------------------ :o');
                     $this->friendlyWarning($array['message']);
                     $this->friendlyWarning('------------------------ :o');
@@ -84,7 +87,7 @@ class VerifySecurityAlerts extends Command
                     return 0;
                 }
                 if ('danger' === $array['level']) {
-                    app('log')->debug('DANGER level alert');
+                    Log::debug('DANGER level alert');
                     $this->friendlyError('------------------------ :-(');
                     $this->friendlyError($array['message']);
                     $this->friendlyError('------------------------ :-(');
@@ -95,7 +98,7 @@ class VerifySecurityAlerts extends Command
                 return 0;
             }
         }
-        app('log')->debug(sprintf('No security alerts for version %s', $version));
+        Log::debug(sprintf('No security alerts for version %s', $version));
         $this->friendlyPositive(sprintf('No security alerts for version %s', $version));
 
         return 0;
@@ -107,7 +110,7 @@ class VerifySecurityAlerts extends Command
             app('fireflyconfig')->delete('upgrade_security_message');
             app('fireflyconfig')->delete('upgrade_security_level');
         } catch (QueryException $e) {
-            app('log')->debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
         }
     }
 
@@ -117,7 +120,7 @@ class VerifySecurityAlerts extends Command
             app('fireflyconfig')->set('upgrade_security_message', $array['message']);
             app('fireflyconfig')->set('upgrade_security_level', $array['level']);
         } catch (QueryException $e) {
-            app('log')->debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
         }
     }
 }

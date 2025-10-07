@@ -24,15 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\PiggyBank;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Location;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -53,7 +54,6 @@ use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use Exception;
 use JsonException;
 
 use function Safe\json_encode;
@@ -222,7 +222,7 @@ class TransactionJournalFactory
         Log::debug('Source info:', $sourceInfo);
         Log::debug('Destination info:', $destInfo);
         $sourceAccount         = $this->getAccount($type->type, 'source', $sourceInfo);
-        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo);
+        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo, $sourceAccount);
         Log::debug('Done with getAccount(2x)');
 
 
@@ -344,6 +344,8 @@ class TransactionJournalFactory
      * If this transaction already exists, throw an error.
      *
      * @throws DuplicateTransactionException
+     * @throws JsonException
+     * @throws \Safe\Exceptions\JsonException
      */
     private function errorIfDuplicate(string $hash): void
     {
@@ -477,9 +479,6 @@ class TransactionJournalFactory
         };
     }
 
-    /**
-     * @throws FireflyException
-     */
     private function getCurrency(?TransactionCurrency $currency, Account $account): TransactionCurrency
     {
         Log::debug(sprintf('Now in getCurrency(#%d, "%s")', $currency?->id, $account->name));

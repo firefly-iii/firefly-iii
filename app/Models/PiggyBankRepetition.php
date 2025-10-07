@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Attributes\Scope;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
@@ -43,10 +43,46 @@ class PiggyBankRepetition extends Model
         return $this->belongsTo(PiggyBank::class);
     }
 
+    /**
+     * @param mixed $value
+     */
+    public function setCurrentAmountAttribute($value): void
+    {
+        $this->attributes['current_amount'] = (string)$value;
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'      => 'datetime',
+            'updated_at'      => 'datetime',
+            'start_date'      => SeparateTimezoneCaster::class,
+            'target_date'     => SeparateTimezoneCaster::class,
+            'virtual_balance' => 'string',
+        ];
+    }
+
+    /**
+     * Get the amount
+     */
+    protected function currentAmount(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (string)$value,
+        );
+    }
+
     #[Scope]
     protected function onDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
         return $query->where('start_date', $start->format('Y-m-d'))->where('target_date', $target->format('Y-m-d'));
+    }
+
+    protected function piggyBankId(): Attribute
+    {
+        return Attribute::make(
+            get: static fn ($value) => (int)$value,
+        );
     }
 
     /**
@@ -68,41 +104,5 @@ class PiggyBankRepetition extends Model
                 }
             )
         ;
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function setCurrentAmountAttribute($value): void
-    {
-        $this->attributes['current_amount'] = (string) $value;
-    }
-
-    /**
-     * Get the amount
-     */
-    protected function currentAmount(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (string) $value,
-        );
-    }
-
-    protected function piggyBankId(): Attribute
-    {
-        return Attribute::make(
-            get: static fn ($value) => (int) $value,
-        );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'created_at'      => 'datetime',
-            'updated_at'      => 'datetime',
-            'start_date'      => SeparateTimezoneCaster::class,
-            'target_date'     => SeparateTimezoneCaster::class,
-            'virtual_balance' => 'string',
-        ];
     }
 }

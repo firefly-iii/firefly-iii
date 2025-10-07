@@ -86,7 +86,7 @@ class RemoteUserGuard implements Guard
         $header        = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
@@ -102,13 +102,6 @@ class RemoteUserGuard implements Guard
         $this->user    = $retrievedUser;
     }
 
-    public function guest(): bool
-    {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-
-        return !$this->check();
-    }
-
     public function check(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
@@ -116,17 +109,11 @@ class RemoteUserGuard implements Guard
         return $this->user() instanceof User;
     }
 
-    public function user(): ?User
+    public function guest(): bool
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $user = $this->user;
-        if (!$user instanceof User) {
-            Log::debug('User is NULL');
 
-            return null;
-        }
-
-        return $user;
+        return !$this->check();
     }
 
     public function hasUser(): bool
@@ -155,6 +142,19 @@ class RemoteUserGuard implements Guard
             return;
         }
         Log::error(sprintf('Did not set user at %s', __METHOD__));
+    }
+
+    public function user(): ?User
+    {
+        Log::debug(sprintf('Now at %s', __METHOD__));
+        $user = $this->user;
+        if (!$user instanceof User) {
+            Log::debug('User is NULL');
+
+            return null;
+        }
+
+        return $user;
     }
 
     /**

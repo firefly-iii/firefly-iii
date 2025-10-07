@@ -27,6 +27,7 @@ namespace FireflyIII\Events\Model\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleActionFailedOnObject
@@ -37,6 +38,6 @@ class RuleActionFailedOnObject
 
     public function __construct(public RuleAction $ruleAction, public TransactionJournal $journal, public string $error)
     {
-        app('log')->debug('Created new RuleActionFailedOnObject');
+        Log::debug('Created new RuleActionFailedOnObject');
     }
 }

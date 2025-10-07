@@ -25,12 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 class AddsTransactionIdentifiers extends Command
@@ -52,8 +52,6 @@ class AddsTransactionIdentifiers extends Command
      *
      * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more
      * often than you would think. So each set gets a number (1,2,3) to keep them apart.
-     *
-     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -100,11 +98,9 @@ class AddsTransactionIdentifiers extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
 
-        return false;
+        return (bool)$configVar?->data;
+
     }
 
     /**
@@ -147,7 +143,7 @@ class AddsTransactionIdentifiers extends Command
                 ->first()
             ;
         } catch (QueryException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
             $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
             $this->friendlyError('Please run "php artisan migrate --force" to add this field to the table.');

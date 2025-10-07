@@ -40,19 +40,19 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
-    private User                $user;
-    private UserGroup           $userGroup; // @phpstan-ignore-line
-    private Collection          $collection;
-    private array               $ids              = [];
-    private array               $notes            = [];
-    private Carbon              $start;
-    private Carbon              $end;
-    private array               $expenses         = [];
-    private array               $pcExpenses       = [];
-    private array               $currencyIds      = [];
-    private array               $currencies       = [];
-    private bool                $convertToPrimary = true;
+    private Collection                   $collection;
+    private bool                         $convertToPrimary; // @phpstan-ignore-line
+    private array                        $currencies  = [];
+    private array                        $currencyIds = [];
+    private Carbon                       $end;
+    private array                        $expenses    = [];
+    private array                        $ids         = [];
+    private array                        $notes       = [];
+    private array                        $pcExpenses  = [];
     private readonly TransactionCurrency $primaryCurrency;
+    private Carbon                       $start;
+    private User                         $user;
+    private UserGroup                    $userGroup;
 
     public function __construct()
     {
@@ -93,6 +93,62 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $this->userGroup = $userGroup;
     }
 
+    private function appendCollectedData(): void
+    {
+        $this->collection = $this->collection->map(function (BudgetLimit $item) {
+            $id         = (int)$item->id;
+            $currencyId = (int)$item->transaction_currency_id;
+            if (0 === $currencyId) {
+                $currencyId = $this->primaryCurrency->id;
+            }
+            $meta       = [
+                'notes'    => $this->notes[$id] ?? null,
+                'spent'    => $this->expenses[$id] ?? [],
+                'pc_spent' => $this->pcExpenses[$id] ?? [],
+                'currency' => $this->currencies[$currencyId],
+            ];
+            $item->meta = $meta;
+
+            return $item;
+        });
+    }
+
+    private function collectBudgets(): void
+    {
+        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
+        $budgets    = Budget::whereIn('id', $budgetIds)->get();
+
+        $repository = app(OperationsRepository::class);
+        $repository->setUser($this->user);
+        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets);
+
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($this->collection as $budgetLimit) {
+            Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
+            $id                  = (int)$budgetLimit->id;
+            $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
+            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency);
+            $this->expenses[$id] = array_values($filteredExpenses);
+
+            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
+                $pcFilteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, true);
+                $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
+            }
+            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
+                $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
+            }
+        }
+    }
+
+    private function collectCurrencies(): void
+    {
+        $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
+        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot('id', $this->primaryCurrency->id)->get();
+        foreach ($currencies as $currency) {
+            $this->currencies[(int)$currency->id] = $currency;
+        }
+    }
+
     private function collectIds(): void
     {
         $this->start       = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
@@ -123,59 +179,12 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
-    private function appendCollectedData(): void
+    private function filterToBudget(array $expenses, int $budget): array
     {
-        $this->collection = $this->collection->map(function (BudgetLimit $item) {
-            $id         = (int)$item->id;
-            $currencyId = (int)$item->transaction_currency_id;
-            if (0 === $currencyId) {
-                $currencyId = $this->primaryCurrency->id;
-            }
-            $meta       = [
-                'notes'    => $this->notes[$id] ?? null,
-                'spent'    => $this->expenses[$id] ?? [],
-                'pc_spent' => $this->pcExpenses[$id] ?? [],
-                'currency' => $this->currencies[$currencyId],
-            ];
-            $item->meta = $meta;
+        $result = array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
+        Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
 
-            return $item;
-        });
-    }
-
-    private function collectBudgets(): void
-    {
-        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
-        $budgets    = Budget::whereIn('id', $budgetIds)->get();
-
-        $repository = app(OperationsRepository::class);
-        $repository->setUser($this->user);
-        $expenses   = $repository->collectExpenses($this->start, $this->end, null, $budgets, null);
-
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($this->collection as $budgetLimit) {
-            $id                  = (int)$budgetLimit->id;
-            $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
-            $filteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, false);
-            $this->expenses[$id] = array_values($filteredExpenses);
-
-            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
-                $pcFilteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, true);
-                $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
-            }
-            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
-                $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
-            }
-        }
-    }
-
-    private function collectCurrencies(): void
-    {
-        $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
-        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot('id', $this->primaryCurrency->id)->get();
-        foreach ($currencies as $currency) {
-            $this->currencies[(int)$currency->id] = $currency;
-        }
+        return $result;
     }
 
     private function stringifyIds(): void
@@ -191,10 +200,5 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
             return $second;
         }, $first), $this->expenses);
-    }
-
-    private function filterToBudget(array $expenses, int $budget): array
-    {
-        return array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
     }
 }

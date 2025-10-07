@@ -28,8 +28,10 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -96,6 +98,7 @@ class PiggyBankController extends Controller
 
         /** @var PiggyBank $piggy */
         foreach ($piggies as $piggy) {
+            /** @var TransactionCurrency $currency */
             $currency      = $piggy->transactionCurrency;
             $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);
             $objectGroup   = $piggy->objectGroups()->first();
@@ -105,8 +108,8 @@ class PiggyBankController extends Controller
                 'name_with_balance'       => sprintf(
                     '%s (%s / %s)',
                     $piggy->name,
-                    app('amount')->formatAnything($currency, $currentAmount, false),
-                    app('amount')->formatAnything($currency, $piggy->target_amount, false),
+                    Amount::formatAnything($currency, $currentAmount, false),
+                    Amount::formatAnything($currency, $piggy->target_amount, false),
                 ),
                 'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,

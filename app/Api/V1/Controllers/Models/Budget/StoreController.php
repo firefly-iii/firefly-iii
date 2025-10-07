@@ -67,7 +67,9 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $budget      = $this->repository->store($request->getAll());
+        $data        = $request->getAll();
+        $data['fire_webhooks'] ??= true;
+        $budget      = $this->repository->store($data);
         $budget->refresh();
         $manager     = $this->getManager();
 

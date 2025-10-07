@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Budget;
@@ -37,7 +38,7 @@ use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Exception;
+use Illuminate\Support\Facades\Log;
 
 class UpgradesToGroups extends Command
 {
@@ -97,11 +98,9 @@ class UpgradesToGroups extends Command
     private function isMigrated(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
 
-        return false;
+        return (bool)$configVar?->data;
+
     }
 
     /**
@@ -127,11 +126,11 @@ class UpgradesToGroups extends Command
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
-            app('log')->debug(sprintf('Will not try to convert journal #%d because it has 2 or fewer transactions.', $journal->id));
+            Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or fewer transactions.', $journal->id));
 
             return;
         }
-        app('log')->debug(sprintf('Will now try to convert journal #%d', $journal->id));
+        Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
         $this->journalRepository->setUser($journal->user);
         $this->groupFactory->setUser($journal->user);
@@ -144,15 +143,15 @@ class UpgradesToGroups extends Command
         ];
         $destTransactions = $this->getDestinationTransactions($journal);
 
-        app('log')->debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
+        Log::debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
 
         /** @var Transaction $transaction */
         foreach ($destTransactions as $transaction) {
             $data['transactions'][] = $this->generateTransaction($journal, $transaction);
         }
-        app('log')->debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
+        Log::debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
         $group            = $this->groupFactory->create($data);
-        app('log')->debug('Done calling transaction journal factory');
+        Log::debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
         $this->service->destroy($journal);
@@ -160,7 +159,7 @@ class UpgradesToGroups extends Command
         ++$this->count;
 
         // report on result:
-        app('log')->debug(
+        Log::debug(
             sprintf(
                 'Migrated journal #%d into group #%d with these journals: #%s',
                 $journal->id,
@@ -190,7 +189,7 @@ class UpgradesToGroups extends Command
      */
     private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
     {
-        app('log')->debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
+        Log::debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
         $opposingTr     = $this->findOpposingTransaction($journal, $transaction);
 
         if (!$opposingTr instanceof Transaction) {
@@ -282,8 +281,8 @@ class UpgradesToGroups extends Command
             static function (Transaction $subject) use ($transaction) {
                 $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
-                app('log')->debug(sprintf('Amount the same? %s', var_export($amount, true)));
-                app('log')->debug(sprintf('ID the same?     %s', var_export($identifier, true)));
+                Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
+                Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
 
                 return $amount && $identifier;
             }
@@ -294,13 +293,13 @@ class UpgradesToGroups extends Command
 
     private function getTransactionBudget(Transaction $left, Transaction $right): ?int
     {
-        app('log')->debug('Now in getTransactionBudget()');
+        Log::debug('Now in getTransactionBudget()');
 
         // try to get a budget ID from the left transaction:
         /** @var null|Budget $budget */
         $budget = $left->budgets()->first();
         if (null !== $budget) {
-            app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $left->id));
 
             return $budget->id;
         }
@@ -309,11 +308,11 @@ class UpgradesToGroups extends Command
         /** @var null|Budget $budget */
         $budget = $right->budgets()->first();
         if (null !== $budget) {
-            app('log')->debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
+            Log::debug(sprintf('Return budget #%d, from transaction #%d', $budget->id, $right->id));
 
             return $budget->id;
         }
-        app('log')->debug('Neither left or right have a budget, return NULL');
+        Log::debug('Neither left or right have a budget, return NULL');
 
         // if all fails, return NULL.
         return null;
@@ -321,13 +320,13 @@ class UpgradesToGroups extends Command
 
     private function getTransactionCategory(Transaction $left, Transaction $right): ?int
     {
-        app('log')->debug('Now in getTransactionCategory()');
+        Log::debug('Now in getTransactionCategory()');
 
         // try to get a category ID from the left transaction:
         /** @var null|Category $category */
         $category = $left->categories()->first();
         if (null !== $category) {
-            app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $left->id));
 
             return $category->id;
         }
@@ -336,11 +335,11 @@ class UpgradesToGroups extends Command
         /** @var null|Category $category */
         $category = $right->categories()->first();
         if (null !== $category) {
-            app('log')->debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
+            Log::debug(sprintf('Return category #%d, from transaction #%d', $category->id, $category->id));
 
             return $category->id;
         }
-        app('log')->debug('Neither left or right have a category, return NULL');
+        Log::debug('Neither left or right have a category, return NULL');
 
         // if all fails, return NULL.
         return null;
@@ -354,7 +353,7 @@ class UpgradesToGroups extends Command
         $orphanedJournals = $this->cliRepository->getJournalsWithoutGroup();
         $total            = count($orphanedJournals);
         if ($total > 0) {
-            app('log')->debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
+            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $total));
             $this->friendlyInfo(sprintf('Going to convert %d transaction journals. Please hold..', $total));
 
             /** @var array $array */

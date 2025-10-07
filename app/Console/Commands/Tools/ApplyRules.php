@@ -283,7 +283,7 @@ class ApplyRules extends Command
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
-        if (null === $inputEnd || null === $inputStart) {
+        if (!$inputEnd instanceof Carbon || null === $inputStart) {
             Log::error('Could not parse start or end date in verifyInputDate().');
 
             return;
@@ -315,7 +315,7 @@ class ApplyRules extends Command
                 // if in rule selection, or group in selection or all rules, it's included.
                 $test = $this->includeRule($rule, $group);
                 if (true === $test) {
-                    app('log')->debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $rulesToApply->push($rule);
                 }
             }

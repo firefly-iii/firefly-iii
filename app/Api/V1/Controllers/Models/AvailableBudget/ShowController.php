@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\AvailableBudget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\AvailableBudgetEnrichment;
@@ -67,8 +66,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/available_budgets/getAvailableBudget
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {

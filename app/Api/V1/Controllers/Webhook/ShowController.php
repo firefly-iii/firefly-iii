@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
@@ -70,8 +69,6 @@ class ShowController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/webhooks/listWebhook
      *
      * Display a listing of the webhooks of the user.
-     *
-     * @throws FireflyException
      */
     public function index(): JsonResponse
     {
@@ -158,18 +155,23 @@ class ShowController extends Controller
         Log::debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
 
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser(auth()->user());
 
-        // tell the generator which trigger it should look for
-        $engine->setTrigger(WebhookTrigger::tryFrom($webhook->trigger));
-        // tell the generator which objects to process
-        $engine->setObjects(new Collection()->push($group));
-        // set the webhook to trigger
-        $engine->setWebhooks(new Collection()->push($webhook));
-        // tell the generator to generate the messages
-        $engine->generateMessages();
+        /** @var \FireflyIII\Models\WebhookTrigger $trigger */
+        foreach ($webhook->webhookTriggers as $trigger) {
+            /** @var MessageGeneratorInterface $engine */
+            $engine = app(MessageGeneratorInterface::class);
+            $engine->setUser(auth()->user());
+
+            // tell the generator which trigger it should look for
+            $engine->setTrigger(WebhookTrigger::tryFrom((int)$trigger->key));
+            // tell the generator which objects to process
+            $engine->setObjects(new Collection()->push($group));
+            // set the webhook to trigger
+            $engine->setWebhooks(new Collection()->push($webhook));
+            // tell the generator to generate the messages
+            $engine->generateMessages();
+        }
+
 
         // trigger event to send them:
         Log::debug('send event RequestedSendWebhookMessages from ShowController::triggerTransaction()');

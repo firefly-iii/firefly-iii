@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Closure;
 
 /**
  * Class IsAssetAccountId

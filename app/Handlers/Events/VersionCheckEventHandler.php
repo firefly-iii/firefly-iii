@@ -23,14 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class VersionCheckEventHandler
@@ -42,7 +44,9 @@ class VersionCheckEventHandler
     /**
      * Checks with GitHub to see if there is a new version.
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     #[Deprecated(message: '?')]
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
@@ -88,6 +92,8 @@ class VersionCheckEventHandler
 
     /**
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {

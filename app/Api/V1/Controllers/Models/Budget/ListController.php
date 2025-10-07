@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Budget;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
@@ -73,8 +72,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listAttachmentByBudget
-     *
-     * @throws FireflyException
      */
     public function attachments(Budget $budget): JsonResponse
     {
@@ -104,8 +101,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listBudgetLimitByBudget
      *
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function budgetLimits(Budget $budget): JsonResponse
     {
@@ -140,8 +135,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionByBudget
      *
      * Show all transactions.
-     *
-     * @throws FireflyException
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
@@ -202,8 +195,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/listTransactionWithoutBudget
      *
      * Show all transactions.
-     *
-     * @throws FireflyException
      */
     public function withoutBudget(Request $request): JsonResponse
     {

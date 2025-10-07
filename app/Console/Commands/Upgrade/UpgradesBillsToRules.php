@@ -99,17 +99,13 @@ class UpgradesBillsToRules extends Command
     private function isExecuted(): bool
     {
         $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
-        if (null !== $configVar) {
-            return (bool) $configVar->data;
-        }
 
-        return false;
+        return (bool)$configVar?->data;
+
     }
 
     /**
      * Migrate bills to new rule structure for a specific user.
-     *
-     * @throws FireflyException
      */
     private function migrateUser(User $user): void
     {

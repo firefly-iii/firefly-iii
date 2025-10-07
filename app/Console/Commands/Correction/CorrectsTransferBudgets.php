@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class CorrectsTransferBudgets extends Command
 {
@@ -53,13 +54,13 @@ class CorrectsTransferBudgets extends Command
         foreach ($set as $entry) {
             $message = sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type);
             $this->friendlyInfo($message);
-            app('log')->debug($message);
+            Log::debug($message);
             $entry->budgets()->sync([]);
             ++$count;
         }
         if (0 !== $count) {
             $message = sprintf('Corrected %d invalid budget/journal entries (entry).', $count);
-            app('log')->debug($message);
+            Log::debug($message);
             $this->friendlyInfo($message);
         }
 

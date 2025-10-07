@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\User;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\GroupMembership;
@@ -35,7 +36,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Exception;
 use Override;
 
 /**
@@ -161,11 +161,9 @@ class UserRepository implements UserRepositoryInterface
     {
         /** @var null|Role $role */
         $role = $user->roles()->first();
-        if (null !== $role) {
-            return $role->name;
-        }
 
-        return null;
+        return $role?->name;
+
     }
 
     /**
@@ -378,8 +376,6 @@ class UserRepository implements UserRepositoryInterface
     /**
      * This updates the users email address. Same as changeEmail just without most logging. This makes sure that the
      * undo/confirm routine can't catch this one. The user is NOT blocked.
-     *
-     * @throws FireflyException
      *
      * @see changeEmail
      */

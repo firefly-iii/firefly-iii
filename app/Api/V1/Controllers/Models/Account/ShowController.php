@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Account\ShowRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -68,8 +67,6 @@ class ShowController extends Controller
 
     /**
      * Display a listing of the resource.
-     *
-     * @throws FireflyException
      */
     public function index(ShowRequest $request): JsonResponse
     {
@@ -89,6 +86,9 @@ class ShowController extends Controller
         // TODO if the user sorts on DB dependent field there must be no slice before enrichment, only after.
         // TODO still need to figure out how to do this easily.
         $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $params['limit'], $params['limit']);
+
+        // #11007 go to the end of the previous day.
+        $this->parameters->set('start', $this->parameters->get('start')->subSecond());
 
         // enrich
         /** @var User $admin */
@@ -127,6 +127,9 @@ class ShowController extends Controller
         $this->repository->resetAccountOrder();
         $account->refresh();
         $manager     = $this->getManager();
+
+        // #11007 go to the end of the previous day.
+        $this->parameters->set('start', $this->parameters->get('start')->subSecond());
 
         // enrich
         /** @var User $admin */

@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules\Admin;
 
+use Closure;
 use FireflyIII\Support\Validation\ValidatesAmountsTrait;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
-use Closure;
 
 class IsValidSlackUrl implements ValidationRule
 {

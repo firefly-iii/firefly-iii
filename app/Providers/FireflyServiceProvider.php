@@ -43,6 +43,8 @@ use FireflyIII\Repositories\AuditLogEntry\ALERepository;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepository;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepository;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
@@ -75,8 +77,8 @@ use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
-use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Override;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 /**
  * Class FireflyServiceProvider.
@@ -166,6 +168,18 @@ class FireflyServiceProvider extends ServiceProvider
             static function (Application $app): ObjectGroupRepositoryInterface {
                 /** @var ObjectGroupRepository $repository */
                 $repository = app(ObjectGroupRepository::class);
+                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
+
+        $this->app->bind(
+            static function (Application $app): PeriodStatisticRepositoryInterface {
+                /** @var PeriodStatisticRepository $repository */
+                $repository = app(PeriodStatisticRepository::class);
                 if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
                     $repository->setUser(auth()->user());
                 }

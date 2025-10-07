@@ -26,6 +26,7 @@ namespace FireflyIII\Events\Model\Rule;
 
 use FireflyIII\Models\RuleAction;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleActionFailedOnArray
@@ -36,6 +37,6 @@ class RuleActionFailedOnArray
 
     public function __construct(public RuleAction $ruleAction, public array $journal, public string $error)
     {
-        app('log')->debug('Created new RuleActionFailedOnArray');
+        Log::debug('Created new RuleActionFailedOnArray');
     }
 }

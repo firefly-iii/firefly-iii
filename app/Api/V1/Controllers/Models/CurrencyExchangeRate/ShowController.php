@@ -95,7 +95,7 @@ class ShowController extends Controller
         $transformer->setParameters($this->parameters);
 
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if (null === $exchangeRate) {
+        if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new NotFoundHttpException();
         }
 

@@ -284,9 +284,6 @@ class AccountUpdateService
         }
     }
 
-    /**
-     * @throws FireflyException
-     */
     private function updatePreferences(Account $account): void
     {
         $account->refresh();

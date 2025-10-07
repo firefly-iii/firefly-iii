@@ -57,15 +57,10 @@ class UpdateController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/budgets/updateBudget
-     *
-     * Update a budget.
-     */
     public function update(UpdateRequest $request, Budget $budget): JsonResponse
     {
         $data        = $request->getAll();
+        $data['fire_webhooks'] ??= true;
         $budget      = $this->repository->update($budget, $data);
         $manager     = $this->getManager();
 

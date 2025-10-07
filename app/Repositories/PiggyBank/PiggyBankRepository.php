@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\PiggyBank;
 
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
-use FireflyIII\User;
 use Carbon\Carbon;
+use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Account;
@@ -40,6 +39,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
-use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -32,6 +31,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
@@ -39,6 +39,8 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ShowController
@@ -75,7 +77,9 @@ class ShowController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
@@ -92,7 +96,7 @@ class ShowController extends Controller
         // get first journal ever to set off the budget period overview.
         $first     = $this->journalRepos->firstNull();
         $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
-        $periods   = $this->getNoBudgetPeriodOverview($firstDate, $end);
+        $periods   = $this->getNoModelPeriodOverview('budget', $firstDate, $end);
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
 
@@ -111,6 +115,9 @@ class ShowController extends Controller
      * Shows ALL transactions without a budget.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function noBudgetAll(Request $request)
     {
@@ -136,6 +143,9 @@ class ShowController extends Controller
      * Show a single budget.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, Budget $budget)
     {
@@ -169,6 +179,8 @@ class ShowController extends Controller
      * @return Factory|View
      *
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {

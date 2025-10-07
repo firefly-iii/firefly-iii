@@ -31,6 +31,7 @@ use Gdbots\QueryParser\Node as GdbotsNode;
 use Gdbots\QueryParser\QueryParser as BaseQueryParser;
 use Illuminate\Support\Facades\Log;
 use LogicException;
+use Safe\Exceptions\FilesystemException;
 use TypeError;
 
 use function Safe\fwrite;
@@ -46,6 +47,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
     /**
      * @throws FireflyException
+     * @throws FilesystemException
      */
     public function parse(string $query): NodeGroup
     {
@@ -76,7 +78,7 @@ class GdbotsQueryParser implements QueryParserInterface
             case $node instanceof GdbotsNode\Field:
                 return new FieldNode(
                     $node->getValue(),
-                    (string) $node->getNode()->getValue(),
+                    (string)$node->getNode()->getValue(),
                     BoolOperator::PROHIBITED === $node->getBoolOperator()
                 );
 
@@ -98,7 +100,7 @@ class GdbotsQueryParser implements QueryParserInterface
             case $node instanceof GdbotsNode\Mention:
             case $node instanceof GdbotsNode\Emoticon:
             case $node instanceof GdbotsNode\Emoji:
-                return new StringNode((string) $node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
+                return new StringNode((string)$node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             default:
                 throw new FireflyException(

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\ObjectGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\PiggyBankEnrichment;
@@ -68,8 +67,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listBillByObjectGroup
      *
      * List all bills in this object group
-     *
-     * @throws FireflyException
      */
     public function bills(ObjectGroup $objectGroup): JsonResponse
     {
@@ -109,8 +106,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/object_groups/listPiggyBankByObjectGroup
      *
      * List all piggies under the object group.
-     *
-     * @throws FireflyException
      */
     public function piggyBanks(ObjectGroup $objectGroup): JsonResponse
     {

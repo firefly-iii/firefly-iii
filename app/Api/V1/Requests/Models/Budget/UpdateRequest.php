@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
-use Illuminate\Validation\Validator;
 use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
@@ -33,6 +32,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest
@@ -50,15 +50,18 @@ class UpdateRequest extends FormRequest
     {
         // this is the way:
         $fields  = [
-            'name'               => ['name', 'convertString'],
-            'active'             => ['active', 'boolean'],
-            'order'              => ['order', 'convertInteger'],
-            'notes'              => ['notes', 'convertString'],
-            'currency_id'        => ['auto_budget_currency_id', 'convertInteger'],
-            'currency_code'      => ['auto_budget_currency_code', 'convertString'],
-            'auto_budget_type'   => ['auto_budget_type', 'convertString'],
-            'auto_budget_amount' => ['auto_budget_amount', 'convertString'],
-            'auto_budget_period' => ['auto_budget_period', 'convertString'],
+            'name'                    => ['name', 'convertString'],
+            'active'                  => ['active', 'boolean'],
+            'order'                   => ['order', 'convertInteger'],
+            'notes'                   => ['notes', 'convertString'],
+            'currency_id'             => ['auto_budget_currency_id', 'convertInteger'],
+            'currency_code'           => ['auto_budget_currency_code', 'convertString'],
+            'auto_budget_type'        => ['auto_budget_type', 'convertString'],
+            'auto_budget_amount'      => ['auto_budget_amount', 'convertString'],
+            'auto_budget_period'      => ['auto_budget_period', 'convertString'],
+
+            // webhooks
+            'fire_webhooks'           => ['fire_webhooks', 'boolean'],
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {
@@ -83,14 +86,17 @@ class UpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         return [
-            'name'                      => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
-            'active'                    => [new IsBoolean()],
-            'notes'                     => 'nullable|min:1|max:32768',
-            'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
-            'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
-            'auto_budget_currency_code' => 'exists:transaction_currencies,code',
-            'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
-            'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+            'name'                       => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
+            'active'                     => [new IsBoolean()],
+            'notes'                      => 'nullable|min:1|max:32768',
+            'auto_budget_type'           => 'in:reset,rollover,adjusted,none',
+            'auto_budget_currency_id'    => 'exists:transaction_currencies,id',
+            'auto_budget_currency_code'  => 'exists:transaction_currencies,code',
+            'auto_budget_amount'         => ['nullable', new IsValidPositiveAmount()],
+            'auto_budget_period'         => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+
+            // webhooks
+            'fire_webhooks'              => [new IsBoolean()],
         ];
     }
 

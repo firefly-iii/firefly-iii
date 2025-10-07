@@ -24,15 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Cache;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
@@ -81,10 +82,7 @@ class InstallController extends Controller
     {
         app('view')->share('FF_VERSION', config('firefly.version'));
         // index will set FF3 version.
-        app('fireflyconfig')->set('ff3_version', (string) config('firefly.version'));
-
-        // set new DB version.
-        app('fireflyconfig')->set('db_version', (int) config('firefly.db_version'));
+        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
 
         return view('install.index');
     }

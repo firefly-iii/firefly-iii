@@ -80,6 +80,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
         $currencies[] = ['code' => 'NOK', 'name' => 'Norwegian krone', 'symbol' => 'kr.', 'decimal_places' => 2];
         $currencies[] = ['code' => 'CZK', 'name' => 'Czech koruna', 'symbol' => 'Kč', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'KZT', 'name' => 'Kazakhstani tenge', 'symbol' => '₸', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
             if (null === TransactionCurrency::where('code', $currency['code'])->first()) {

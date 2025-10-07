@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -43,16 +43,16 @@ class AccountMeta extends Model
         return $this->belongsTo(Account::class);
     }
 
-    protected function data(): Attribute
-    {
-        return Attribute::make(get: fn (mixed $value) => (string) json_decode((string) $value, true), set: fn (mixed $value) => ['data' => json_encode($value)]);
-    }
-
     protected function casts(): array
     {
         return [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    protected function data(): Attribute
+    {
+        return Attribute::make(get: fn (mixed $value) => (string)json_decode((string)$value, true), set: fn (mixed $value) => ['data' => json_encode($value)]);
     }
 }

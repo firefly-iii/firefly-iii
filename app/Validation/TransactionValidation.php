@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Validation\Validator;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -37,6 +36,7 @@ use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Trait TransactionValidation

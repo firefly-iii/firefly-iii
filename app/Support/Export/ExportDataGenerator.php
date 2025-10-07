@@ -62,6 +62,8 @@ use Illuminate\Support\Facades\Log;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class ExportDataGenerator
@@ -85,7 +87,7 @@ class ExportDataGenerator
     private bool       $exportTransactions;
     private Carbon     $start;
     private User       $user;
-    private UserGroup $userGroup; // @phpstan-ignore-line
+    private UserGroup  $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -105,7 +107,11 @@ class ExportDataGenerator
     }
 
     /**
+     * @throws CannotInsertRecord
+     * @throws ContainerExceptionInterface
+     * @throws Exception
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function export(): array
     {
@@ -139,6 +145,92 @@ class ExportDataGenerator
         }
 
         return $return;
+    }
+
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return null;
+    }
+
+    /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
+    public function has(mixed $key): mixed
+    {
+        return null;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setEnd(Carbon $end): void
+    {
+        $this->end = $end;
+    }
+
+    public function setExportAccounts(bool $exportAccounts): void
+    {
+        $this->exportAccounts = $exportAccounts;
+    }
+
+    public function setExportBills(bool $exportBills): void
+    {
+        $this->exportBills = $exportBills;
+    }
+
+    public function setExportBudgets(bool $exportBudgets): void
+    {
+        $this->exportBudgets = $exportBudgets;
+    }
+
+    public function setExportCategories(bool $exportCategories): void
+    {
+        $this->exportCategories = $exportCategories;
+    }
+
+    public function setExportPiggies(bool $exportPiggies): void
+    {
+        $this->exportPiggies = $exportPiggies;
+    }
+
+    public function setExportRecurring(bool $exportRecurring): void
+    {
+        $this->exportRecurring = $exportRecurring;
+    }
+
+    public function setExportRules(bool $exportRules): void
+    {
+        $this->exportRules = $exportRules;
+    }
+
+    public function setExportTags(bool $exportTags): void
+    {
+        $this->exportTags = $exportTags;
+    }
+
+    public function setExportTransactions(bool $exportTransactions): void
+    {
+        $this->exportTransactions = $exportTransactions;
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+        $this->userGroup = $userGroup;
     }
 
     /**
@@ -220,11 +312,6 @@ class ExportDataGenerator
         }
 
         return $string;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
     }
 
     /**
@@ -589,14 +676,6 @@ class ExportDataGenerator
     }
 
     /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function get(string $key, mixed $default = null): mixed
-    {
-        return null;
-    }
-
-    /**
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
@@ -677,6 +756,8 @@ class ExportDataGenerator
      * @throws CannotInsertRecord
      * @throws Exception
      * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     private function exportTags(): string
     {
@@ -828,11 +909,6 @@ class ExportDataGenerator
         return $string;
     }
 
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
-    }
-
     private function mergeTags(array $tags): string
     {
         if (0 === count($tags)) {
@@ -844,73 +920,5 @@ class ExportDataGenerator
         }
 
         return implode(',', $smol);
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function has(mixed $key): mixed
-    {
-        return null;
-    }
-
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
-
-    public function setExportAccounts(bool $exportAccounts): void
-    {
-        $this->exportAccounts = $exportAccounts;
-    }
-
-    public function setExportBills(bool $exportBills): void
-    {
-        $this->exportBills = $exportBills;
-    }
-
-    public function setExportBudgets(bool $exportBudgets): void
-    {
-        $this->exportBudgets = $exportBudgets;
-    }
-
-    public function setExportCategories(bool $exportCategories): void
-    {
-        $this->exportCategories = $exportCategories;
-    }
-
-    public function setExportPiggies(bool $exportPiggies): void
-    {
-        $this->exportPiggies = $exportPiggies;
-    }
-
-    public function setExportRecurring(bool $exportRecurring): void
-    {
-        $this->exportRecurring = $exportRecurring;
-    }
-
-    public function setExportRules(bool $exportRules): void
-    {
-        $this->exportRules = $exportRules;
-    }
-
-    public function setExportTags(bool $exportTags): void
-    {
-        $this->exportTags = $exportTags;
-    }
-
-    public function setExportTransactions(bool $exportTransactions): void
-    {
-        $this->exportTransactions = $exportTransactions;
-    }
-
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
-    }
-
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
     }
 }

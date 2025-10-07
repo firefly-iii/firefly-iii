@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Chart\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -96,6 +95,30 @@ class FrontpageChartGenerator
         ];
     }
 
+    private function collectExpensesAll(Collection $categories, Collection $accounts): array
+    {
+        Log::debug(sprintf('Collect expenses for %d category(ies).', count($categories)));
+        $spent    = $this->opsRepos->collectExpenses($this->start, $this->end, $accounts, $categories);
+        $tempData = [];
+        foreach ($categories as $category) {
+            $sums = $this->opsRepos->sumCollectedTransactionsByCategory($spent, $category, 'negative', $this->convertToPrimary);
+            if (0 === count($sums)) {
+                continue;
+            }
+            foreach ($sums as $currency) {
+                $this->addCurrency($currency);
+                $tempData[] = [
+                    'name'        => $category->name,
+                    'sum'         => $currency['sum'],
+                    'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
+                    'currency_id' => (int)$currency['currency_id'],
+                ];
+            }
+        }
+
+        return $tempData;
+    }
+
     private function collectNoCatExpenses(Collection $accounts): array
     {
         $noCatExp = $this->noCatRepos->sumExpenses($this->start, $this->end, $accounts);
@@ -146,29 +169,5 @@ class FrontpageChartGenerator
         }
 
         return $currencyData;
-    }
-
-    private function collectExpensesAll(Collection $categories, Collection $accounts): array
-    {
-        Log::debug(sprintf('Collect expenses for %d category(ies).', count($categories)));
-        $spent    = $this->opsRepos->collectExpenses($this->start, $this->end, $accounts, $categories);
-        $tempData = [];
-        foreach ($categories as $category) {
-            $sums = $this->opsRepos->sumCollectedTransactionsByCategory($spent, $category, 'negative', $this->convertToPrimary);
-            if (0 === count($sums)) {
-                continue;
-            }
-            foreach ($sums as $currency) {
-                $this->addCurrency($currency);
-                $tempData[] = [
-                    'name'        => $category->name,
-                    'sum'         => $currency['sum'],
-                    'sum_float'   => round((float)$currency['sum'], $currency['currency_decimal_places']),
-                    'currency_id' => (int)$currency['currency_id'],
-                ];
-            }
-        }
-
-        return $tempData;
     }
 }

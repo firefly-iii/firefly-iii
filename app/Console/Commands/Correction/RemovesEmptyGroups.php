@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Console\Command;
-use Exception;
 
 class RemovesEmptyGroups extends Command
 {

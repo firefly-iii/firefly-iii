@@ -27,7 +27,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Contracts\Filesystem\Filesystem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -37,13 +36,14 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Safe\Exceptions\FileinfoException;
 use Safe\Exceptions\FilesystemException;
+use Safe\Exceptions\StringsException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-use function Safe\tmpfile;
-use function Safe\fwrite;
-use function Safe\finfo_open;
 use function Safe\fclose;
+use function Safe\finfo_open;
+use function Safe\fwrite;
 use function Safe\md5_file;
+use function Safe\tmpfile;
 
 use const DIRECTORY_SEPARATOR;
 
@@ -222,8 +222,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Process the upload of a file.
      *
-     * @throws FireflyException
-     * @throws EncryptException
+     * @throws StringsException
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {

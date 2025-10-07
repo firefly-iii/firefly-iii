@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
+use Exception;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
@@ -31,7 +32,6 @@ use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Facades\Notification;
-use Exception;
 
 /**
  * Class AutomationHandler

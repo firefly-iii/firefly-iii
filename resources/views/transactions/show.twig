@@ -203,7 +203,7 @@
         {% set boxSize = 4 %}
     {% endif %}
     <div class="row">
-        {% for index,journal in selectedGroup.transactions %}
+        {% for index, journal in selectedGroup.transactions %}
             <div class="col-lg-{{ boxSize }}">
                 <div class="box">
                     <div class="box-header with-border">
@@ -440,7 +440,7 @@
                                     <td style="width:40%;">{{ 'tags'|_ }}</td>
                                     <td>
                                         {% for tag in journal.tags %}
-                                            {% if null != tag.id %}
+                                            {% if null != tag.id and '' != tag.id %}
                                                 <h4 style="display: inline;"><a class="label label-success" href="{{ route('tags.show', [tag.id]) }}"><span class="fa fa-fw fa-tag"></span>{{ tag.tag }}</a></h4>
                                             {% endif %}
                                         {% endfor %}

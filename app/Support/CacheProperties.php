@@ -78,6 +78,14 @@ class CacheProperties
         return Cache::has($this->hash);
     }
 
+    /**
+     * @param mixed $data
+     */
+    public function store($data): void
+    {
+        Cache::forever($this->hash, $data);
+    }
+
     private function hash(): void
     {
         $content    = '';
@@ -86,17 +94,9 @@ class CacheProperties
                 $content = sprintf('%s%s', $content, json_encode($property, JSON_THROW_ON_ERROR));
             } catch (JsonException) {
                 // @ignoreException
-                $content = sprintf('%s%s', $content, hash('sha256', (string) Carbon::now()->getTimestamp()));
+                $content = sprintf('%s%s', $content, hash('sha256', (string)Carbon::now()->getTimestamp()));
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);
-    }
-
-    /**
-     * @param mixed $data
-     */
-    public function store($data): void
-    {
-        Cache::forever($this->hash, $data);
     }
 }

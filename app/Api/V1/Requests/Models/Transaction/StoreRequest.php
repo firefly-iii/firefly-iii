@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
-use Illuminate\Validation\Validator;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -40,6 +39,7 @@ use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Validator;
 
 /**
  * Class StoreRequest
@@ -183,6 +183,7 @@ class StoreRequest extends FormRequest
             // basic fields for group:
             'group_title'                          => 'min:1|max:1000|nullable',
             'error_if_duplicate_hash'              => [new IsBoolean()],
+            'fire_webhooks'                        => [new IsBoolean()],
             'apply_rules'                          => [new IsBoolean()],
 
             // location rules

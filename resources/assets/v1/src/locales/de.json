@@ -164,7 +164,7 @@
         "title": "Titel",
         "date": "Datum",
         "book_date": "Buchungsdatum",
-        "process_date": "Bearbeitungsdatum",
+        "process_date": "Wertstellungsdatum",
         "due_date": "F\u00e4lligkeitstermin",
         "foreign_amount": "Ausl\u00e4ndischer Betrag",
         "payment_date": "Zahlungsdatum",

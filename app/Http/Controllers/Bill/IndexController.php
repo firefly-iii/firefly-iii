@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -148,9 +147,6 @@ class IndexController extends Controller
         return view('bills.index', compact('bills', 'sums', 'total', 'totals', 'today'));
     }
 
-    /**
-     * @throws FireflyException
-     */
     private function getSums(array $bills): array
     {
         $sums  = [];

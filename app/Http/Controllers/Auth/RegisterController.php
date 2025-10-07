@@ -142,7 +142,9 @@ class RegisterController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function showInviteForm(Request $request, string $code)
     {
@@ -174,7 +176,9 @@ class RegisterController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function showRegistrationForm(?Request $request = null)
     {

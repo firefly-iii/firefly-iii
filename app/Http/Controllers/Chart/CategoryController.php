@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
@@ -40,6 +39,8 @@ use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CategoryController.
@@ -65,8 +66,6 @@ class CategoryController extends Controller
     /**
      * Show an overview for a category for all time, per month/week/year.
      * TODO test method, for category refactor.
-     *
-     * @throws FireflyException
      */
     public function all(Category $category): JsonResponse
     {
@@ -256,7 +255,8 @@ class CategoryController extends Controller
      * Chart for a specific period.
      * TODO test me, for category refactor.
      *
-     * @throws FireflyException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {

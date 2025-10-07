@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
@@ -113,6 +113,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         ;
     }
 
+    #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
         $amount          = '0';

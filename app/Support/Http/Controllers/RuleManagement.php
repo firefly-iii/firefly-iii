@@ -51,7 +51,7 @@ trait RuleManagement
                         [
                             'oldAction'  => $oldAction['type'],
                             'oldValue'   => $oldAction['value'] ?? '',
-                            'oldChecked' => 1 === (int) ($oldAction['stop_processing'] ?? '0'),
+                            'oldChecked' => 1 === (int)($oldAction['stop_processing'] ?? '0'),
                             'count'      => $index + 1,
                         ]
                     )->render();
@@ -78,7 +78,7 @@ trait RuleManagement
         $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -94,8 +94,8 @@ trait RuleManagement
                         [
                             'oldTrigger'    => OperatorQuerySearch::getRootOperator($oldTrigger['type']),
                             'oldValue'      => $oldTrigger['value'] ?? '',
-                            'oldChecked'    => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
-                            'oldProhibited' => 1 === (int) ($oldTrigger['prohibited'] ?? '0'),
+                            'oldChecked'    => 1 === (int)($oldTrigger['stop_processing'] ?? '0'),
+                            'oldProhibited' => 1 === (int)($oldTrigger['prohibited'] ?? '0'),
                             'count'         => $index + 1,
                             'triggers'      => $triggers,
                         ]
@@ -124,7 +124,7 @@ trait RuleManagement
         $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
@@ -132,7 +132,7 @@ trait RuleManagement
         $index           = 0;
         foreach ($submittedOperators as $operator) {
             $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
-            $needsContext = (bool) config(sprintf('search.operators.%s.needs_context', $rootOperator));
+            $needsContext = (bool)config(sprintf('search.operators.%s.needs_context', $rootOperator));
 
             try {
                 $renderedEntries[] = view(
@@ -164,8 +164,8 @@ trait RuleManagement
         $repository = app(RuleGroupRepositoryInterface::class);
         if (0 === $repository->count()) {
             $data = [
-                'title'       => (string) trans('firefly.default_rule_group_name'),
-                'description' => (string) trans('firefly.default_rule_group_description'),
+                'title'       => (string)trans('firefly.default_rule_group_name'),
+                'description' => (string)trans('firefly.default_rule_group_description'),
                 'active'      => true,
             ];
 

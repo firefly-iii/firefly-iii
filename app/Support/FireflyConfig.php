@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -30,7 +31,6 @@ use Illuminate\Contracts\Encryption\EncryptException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Exception;
 
 /**
  * Class FireflyConfig.
@@ -44,34 +44,6 @@ class FireflyConfig
             Cache::forget($fullName);
         }
         Configuration::where('name', $name)->forceDelete();
-    }
-
-    public function has(string $name): bool
-    {
-        return 1 === Configuration::where('name', $name)->count();
-    }
-
-    public function getEncrypted(string $name, mixed $default = null): ?Configuration
-    {
-        $result = $this->get($name, $default);
-        if (!$result instanceof Configuration) {
-            return null;
-        }
-        if ('' === $result->data) {
-            Log::warning(sprintf('Empty encrypted configuration value found: "%s"', $name));
-
-            return $result;
-        }
-
-        try {
-            $result->data = decrypt($result->data);
-        } catch (DecryptException $e) {
-            Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
-
-            return $result;
-        }
-
-        return $result;
     }
 
     /**
@@ -106,6 +78,56 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
+    public function getEncrypted(string $name, mixed $default = null): ?Configuration
+    {
+        $result = $this->get($name, $default);
+        if (!$result instanceof Configuration) {
+            return null;
+        }
+        if ('' === $result->data) {
+            Log::warning(sprintf('Empty encrypted configuration value found: "%s"', $name));
+
+            return $result;
+        }
+
+        try {
+            $result->data = decrypt($result->data);
+        } catch (DecryptException $e) {
+            Log::error(sprintf('Could not decrypt configuration value "%s": %s', $name, $e->getMessage()));
+
+            return $result;
+        }
+
+        return $result;
+    }
+
+    public function getFresh(string $name, mixed $default = null): ?Configuration
+    {
+        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
+        if (null !== $config) {
+            return $config;
+        }
+        // no preference found and default is null:
+        if (null === $default) {
+            return null;
+        }
+
+        return $this->set($name, $default);
+    }
+
+    public function has(string $name): bool
+    {
+        return 1 === Configuration::where('name', $name)->count();
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function put(string $name, $value): Configuration
+    {
+        return $this->set($name, $value);
+    }
+
     public function set(string $name, mixed $value): Configuration
     {
         try {
@@ -133,28 +155,6 @@ class FireflyConfig
         Cache::forget('ff3-config-'.$name);
 
         return $config;
-    }
-
-    public function getFresh(string $name, mixed $default = null): ?Configuration
-    {
-        $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
-        if (null !== $config) {
-            return $config;
-        }
-        // no preference found and default is null:
-        if (null === $default) {
-            return null;
-        }
-
-        return $this->set($name, $default);
-    }
-
-    /**
-     * @param mixed $value
-     */
-    public function put(string $name, $value): Configuration
-    {
-        return $this->set($name, $value);
     }
 
     public function setEncrypted(string $name, mixed $value): Configuration

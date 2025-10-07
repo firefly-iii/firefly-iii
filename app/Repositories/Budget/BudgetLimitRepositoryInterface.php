@@ -81,5 +81,5 @@ interface BudgetLimitRepositoryInterface
 
     public function update(BudgetLimit $budgetLimit, array $data): BudgetLimit;
 
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
+    // public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit;
 }

@@ -28,6 +28,7 @@ use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
@@ -36,6 +37,8 @@ use Illuminate\Support\Facades\Log;
 
 /**
  * Class StoredGroupEventHandler
+ *
+ * TODO migrate to observer?
  */
 class StoredGroupEventHandler
 {
@@ -44,6 +47,7 @@ class StoredGroupEventHandler
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
+        $this->removePeriodStatistics($event);
     }
 
     /**
@@ -92,6 +96,38 @@ class StoredGroupEventHandler
         $object = app(CreditRecalculateService::class);
         $object->setGroup($group);
         $object->recalculate();
+    }
+
+    private function removePeriodStatistics(StoredTransactionGroup $event): void
+    {
+        /** @var PeriodStatisticRepositoryInterface $repository */
+        $repository = app(PeriodStatisticRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        foreach ($event->transactionGroup->transactionJournals as $journal) {
+            $source     = $journal->transactions()->where('amount', '<', '0')->first();
+            $dest       = $journal->transactions()->where('amount', '>', '0')->first();
+            $repository->deleteStatisticsForModel($source->account, $journal->date);
+            $repository->deleteStatisticsForModel($dest->account, $journal->date);
+            $categories = $journal->categories;
+            $tags       = $journal->tags;
+            $budgets    = $journal->budgets;
+            foreach ($categories as $category) {
+                $repository->deleteStatisticsForModel($category, $journal->date);
+            }
+            foreach ($tags as $tag) {
+                $repository->deleteStatisticsForModel($tag, $journal->date);
+            }
+            foreach ($budgets as $budget) {
+                $repository->deleteStatisticsForModel($budget, $journal->date);
+            }
+            if (0 === $categories->count()) {
+                $repository->deleteStatisticsForPrefix($journal->userGroup, 'no_category', $journal->date);
+            }
+            if (0 === $budgets->count()) {
+                $repository->deleteStatisticsForPrefix($journal->userGroup, 'no_budget', $journal->date);
+            }
+        }
     }
 
     /**

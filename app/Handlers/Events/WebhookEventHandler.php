@@ -62,5 +62,8 @@ class WebhookEventHandler
                 Log::debug(sprintf('Skip message #%d', $message->id));
             }
         }
+
+        // clean up sent messages table:
+        WebhookMessage::where('webhook_messages.sent', true)->where('webhook_messages.created_at', '<', now()->subDays(30))->delete();
     }
 }

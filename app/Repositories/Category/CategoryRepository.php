@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Attachment;
@@ -39,7 +40,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use Exception;
 
 /**
  * Class CategoryRepository.
@@ -213,11 +213,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $query  = $category->transactionJournals()->orderBy('date', 'ASC');
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     private function getFirstTransactionDate(Category $category): ?Carbon
@@ -264,11 +261,9 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function getNoteText(Category $category): ?string
     {
         $dbNote = $category->notes()->first();
-        if (null === $dbNote) {
-            return null;
-        }
 
-        return $dbNote->text;
+        return $dbNote?->text;
+
     }
 
     /**
@@ -307,11 +302,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
         $result = $query->first(['transaction_journals.*']);
 
-        if (null !== $result) {
-            return $result->date;
-        }
+        return $result?->date;
 
-        return null;
     }
 
     /**
@@ -357,5 +349,44 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $service->setUser($this->user);
 
         return $service->update($category, $data);
+    }
+
+    public function periodCollection(Category $category, Carbon $start, Carbon $end): array
+    {
+        Log::debug(sprintf('periodCollection(#%d, %s, %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
+
+        return $category->transactionJournals()
+            ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currencies', 'foreign_currencies.id', '=', 'transactions.foreign_currency_id')
+            ->where('transaction_journals.date', '>=', $start)
+            ->where('transaction_journals.date', '<=', $end)
+            ->where('transactions.amount', '>', 0)
+            ->get([
+                // currencies
+                'transaction_currencies.id as currency_id',
+                'transaction_currencies.code as currency_code',
+                'transaction_currencies.name as currency_name',
+                'transaction_currencies.symbol as currency_symbol',
+                'transaction_currencies.decimal_places as currency_decimal_places',
+
+                // foreign
+                'foreign_currencies.id as foreign_currency_id',
+                'foreign_currencies.code as foreign_currency_code',
+                'foreign_currencies.name as foreign_currency_name',
+                'foreign_currencies.symbol as foreign_currency_symbol',
+                'foreign_currencies.decimal_places as foreign_currency_decimal_places',
+
+                // fields
+                'transaction_journals.date',
+                'transaction_types.type',
+                'transaction_journals.transaction_currency_id',
+                'transactions.amount',
+                'transactions.native_amount as pc_amount',
+                'transactions.foreign_amount',
+            ])
+            ->toArray()
+        ;
     }
 }

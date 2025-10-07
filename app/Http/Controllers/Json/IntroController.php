@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
@@ -88,8 +87,6 @@ class IntroController extends Controller
 
     /**
      * Enable the boxes for a specific page again.
-     *
-     * @throws FireflyException
      */
     public function postEnable(string $route, ?string $specialPage = null): JsonResponse
     {
@@ -108,8 +105,6 @@ class IntroController extends Controller
 
     /**
      * Set that you saw them.
-     *
-     * @throws FireflyException
      */
     public function postFinished(string $route, ?string $specialPage = null): JsonResponse
     {

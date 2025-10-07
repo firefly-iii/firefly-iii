@@ -146,25 +146,7 @@ class ShowController extends Controller
         $attachments     = $this->repository->getAttachments($transactionGroup);
         $links           = $this->repository->getLinks($transactionGroup);
 
-        return view(
-            'transactions.show',
-            compact(
-                'transactionGroup',
-                'amounts',
-                'first',
-                'type',
-                'logEntries',
-                'groupLogEntries',
-                'subTitle',
-                'splits',
-                'selectedGroup',
-                'groupArray',
-                'events',
-                'attachments',
-                'links',
-                'accounts',
-            )
-        );
+        return view('transactions.show', compact('transactionGroup', 'amounts', 'first', 'type', 'logEntries', 'groupLogEntries', 'subTitle', 'splits', 'selectedGroup', 'groupArray', 'events', 'attachments', 'links', 'accounts'));
     }
 
     private function getAmounts(array $group): array

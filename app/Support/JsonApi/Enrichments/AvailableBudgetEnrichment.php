@@ -40,20 +40,20 @@ use Override;
 
 class AvailableBudgetEnrichment implements EnrichmentInterface
 {
-    private User                                   $user; // @phpstan-ignore-line
-    private UserGroup                              $userGroup;  // @phpstan-ignore-line
-    private readonly bool                                   $convertToPrimary;
-    private array                                  $ids                   = [];
-    private array                                  $currencyIds           = [];
+    private Collection                             $collection;        // @phpstan-ignore-line
+    private readonly bool                          $convertToPrimary;  // @phpstan-ignore-line
     private array                                  $currencies            = [];
-    private Collection                             $collection;
-    private array                                  $spentInBudgets        = [];
-    private array                                  $spentOutsideBudgets   = [];
-    private array                                  $pcSpentInBudgets      = [];
-    private array                                  $pcSpentOutsideBudgets = [];
+    private array                                  $currencyIds           = [];
+    private array                                  $ids                   = [];
     private readonly NoBudgetRepositoryInterface   $noBudgetRepository;
     private readonly OperationsRepositoryInterface $opsRepository;
+    private array                                  $pcSpentInBudgets      = [];
+    private array                                  $pcSpentOutsideBudgets = [];
     private readonly BudgetRepositoryInterface     $repository;
+    private array                                  $spentInBudgets        = [];
+    private array                                  $spentOutsideBudgets   = [];
+    private User                                   $user;
+    private UserGroup                              $userGroup;
 
     public function __construct()
     {
@@ -104,41 +104,6 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $this->repository->setUserGroup($userGroup);
     }
 
-    private function collectIds(): void
-    {
-        /** @var AvailableBudget $availableBudget */
-        foreach ($this->collection as $availableBudget) {
-            $this->ids[]                                  = (int)$availableBudget->id;
-            $this->currencyIds[(int)$availableBudget->id] = (int)$availableBudget->transaction_currency_id;
-        }
-        $this->ids = array_unique($this->ids);
-    }
-
-    private function collectSpentInfo(): void
-    {
-        $start               = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
-        $end                 = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
-        $allActive           = $this->repository->getActiveBudgets();
-        $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive);
-        $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end);
-        foreach ($this->collection as $availableBudget) {
-            $id                             = (int)$availableBudget->id;
-            $currencyId                     = $this->currencyIds[$id];
-            $currency                       = $this->currencies[$currencyId];
-            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
-            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, false);
-            $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
-            $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
-
-            if (true === $this->convertToPrimary) {
-                $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
-                $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
-                $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
-                $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
-            }
-        }
-    }
-
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (AvailableBudget $item) {
@@ -164,6 +129,41 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
         $set = TransactionCurrency::whereIn('id', $ids)->get();
         foreach ($set as $currency) {
             $this->currencies[(int)$currency->id] = $currency;
+        }
+    }
+
+    private function collectIds(): void
+    {
+        /** @var AvailableBudget $availableBudget */
+        foreach ($this->collection as $availableBudget) {
+            $this->ids[]                                  = (int)$availableBudget->id;
+            $this->currencyIds[(int)$availableBudget->id] = (int)$availableBudget->transaction_currency_id;
+        }
+        $this->ids = array_unique($this->ids);
+    }
+
+    private function collectSpentInfo(): void
+    {
+        $start               = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
+        $end                 = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
+        $allActive           = $this->repository->getActiveBudgets();
+        $spentInBudgets      = $this->opsRepository->collectExpenses($start, $end, null, $allActive);
+        $spentOutsideBudgets = $this->noBudgetRepository->collectExpenses($start, $end);
+        foreach ($this->collection as $availableBudget) {
+            $id                             = (int)$availableBudget->id;
+            $currencyId                     = $this->currencyIds[$id];
+            $currency                       = $this->currencies[$currencyId];
+            $filteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency);
+            $filteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency);
+            $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
+            $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
+
+            if (true === $this->convertToPrimary) {
+                $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
+                $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
+                $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);
+                $this->pcSpentOutsideBudgets[$id] = array_values($pcFilteredSpentOutsideBudgets);
+            }
         }
     }
 }

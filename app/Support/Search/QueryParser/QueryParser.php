@@ -46,22 +46,6 @@ class QueryParser implements QueryParserInterface
         return $this->buildNodeGroup(false);
     }
 
-    private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
-    {
-        $nodes      = [];
-        $nodeResult = $this->buildNextNode($isSubquery);
-
-        while ($nodeResult->node instanceof Node) {
-            $nodes[]    = $nodeResult->node;
-            if ($nodeResult->isSubqueryEnd) {
-                break;
-            }
-            $nodeResult = $this->buildNextNode($isSubquery);
-        }
-
-        return new NodeGroup($nodes, $prohibited);
-    }
-
     private function buildNextNode(bool $isSubquery): NodeResult
     {
         $tokenUnderConstruction = '';
@@ -192,6 +176,22 @@ class QueryParser implements QueryParserInterface
             : null;
 
         return new NodeResult($finalNode, true);
+    }
+
+    private function buildNodeGroup(bool $isSubquery, bool $prohibited = false): NodeGroup
+    {
+        $nodes      = [];
+        $nodeResult = $this->buildNextNode($isSubquery);
+
+        while ($nodeResult->node instanceof Node) {
+            $nodes[]    = $nodeResult->node;
+            if ($nodeResult->isSubqueryEnd) {
+                break;
+            }
+            $nodeResult = $this->buildNextNode($isSubquery);
+        }
+
+        return new NodeGroup($nodes, $prohibited);
     }
 
     private function createNode(string $token, string $fieldName, bool $prohibited): Node

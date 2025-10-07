@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Security;
 
+use Exception;
 use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFABackupFewLeft;
@@ -39,7 +40,6 @@ use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
 use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
 use Illuminate\Support\Facades\Notification;
-use Exception;
 
 class MFAHandler
 {

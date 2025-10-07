@@ -24,15 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Handlers\Observer\AvailableBudgetObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([AvailableBudgetObserver::class])]
 class AvailableBudget extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -49,7 +52,7 @@ class AvailableBudget extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $availableBudgetId = (int) $value;
+            $availableBudgetId = (int)$value;
 
             /** @var User $user */
             $user              = auth()->user();
@@ -77,8 +80,24 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string) $value,
+            get: static fn ($value) => (string)$value,
         );
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'created_at'              => 'datetime',
+            'updated_at'              => 'datetime',
+            'deleted_at'              => 'datetime',
+            'start_date'              => 'date',
+            'end_date'                => 'date',
+            'transaction_currency_id' => 'int',
+            'amount'                  => 'string',
+            'native_amount'           => 'string',
+            'user_id'                 => 'integer',
+            'user_group_id'           => 'integer',
+        ];
     }
 
     protected function endDate(): Attribute
@@ -100,23 +119,7 @@ class AvailableBudget extends Model
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int) $value,
+            get: static fn ($value) => (int)$value,
         );
-    }
-
-    protected function casts(): array
-    {
-        return [
-            'created_at'              => 'datetime',
-            'updated_at'              => 'datetime',
-            'deleted_at'              => 'datetime',
-            'start_date'              => 'date',
-            'end_date'                => 'date',
-            'transaction_currency_id' => 'int',
-            'amount'                  => 'string',
-            'native_amount'           => 'string',
-            'user_id'                 => 'integer',
-            'user_group_id'           => 'integer',
-        ];
     }
 }

@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Illuminate\Database\Eloquent\Model;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Throwable;
 

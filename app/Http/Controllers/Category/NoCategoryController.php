@@ -24,18 +24,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-use FireflyIII\Models\TransactionJournal;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class NoCategoryController
@@ -70,11 +73,13 @@ class NoCategoryController extends Controller
      *
      * @return Factory|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
+     * @throws NotFoundExceptionInterface
      */
     public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null)
     {
-        app('log')->debug('Start of noCategory()');
+        Log::debug('Start of noCategory()');
         $start ??= session('start');
         $end   ??= session('end');
 
@@ -82,14 +87,12 @@ class NoCategoryController extends Controller
         /** @var Carbon $end */
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
-        $subTitle  = trans(
-            'firefly.without_category_between',
-            ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]
-        );
-        $periods   = $this->getNoCategoryPeriodOverview($start);
+        $subTitle  = trans('firefly.without_category_between', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]);
+        $first     = $this->journalRepos->firstNull()->date ?? clone $start;
+        $periods   = $this->getNoModelPeriodOverview('category', $first, $end);
 
-        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -108,6 +111,9 @@ class NoCategoryController extends Controller
      * Show all transactions without a category.
      *
      * @return Factory|View
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function showAll(Request $request)
     {
@@ -117,13 +123,13 @@ class NoCategoryController extends Controller
         $periods   = new Collection();
         $page      = (int) $request->get('page');
         $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
-        app('log')->debug('Start of noCategory()');
+        Log::debug('Start of noCategory()');
         $subTitle  = (string) trans('firefly.all_journals_without_category');
         $first     = $this->journalRepos->firstNull();
         $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
-        app('log')->debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        app('log')->debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
+        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

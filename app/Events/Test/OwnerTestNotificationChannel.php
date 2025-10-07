@@ -26,6 +26,7 @@ namespace FireflyIII\Events\Test;
 
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class OwnerTestNotificationChannel
 {
@@ -38,7 +39,7 @@ class OwnerTestNotificationChannel
      */
     public function __construct(string $channel, public OwnerNotifiable $owner)
     {
-        app('log')->debug(sprintf('Triggered OwnerTestNotificationChannel("%s")', $channel));
+        Log::debug(sprintf('Triggered OwnerTestNotificationChannel("%s")', $channel));
         $this->channel = $channel;
     }
 }

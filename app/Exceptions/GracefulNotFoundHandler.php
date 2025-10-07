@@ -33,8 +33,9 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Support\Facades\Log;
 use Override;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
@@ -65,7 +66,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
         switch ($name) {
             default:
-                app('log')->warning(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
+                Log::warning(sprintf('GracefulNotFoundHandler cannot handle route with name "%s"', $name));
 
                 return parent::render($request, $e);
 
@@ -86,6 +87,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
                 return $this->handleAttachment($request, $e);
 
             case 'bills.show':
+            case 'subscriptions.show':
                 $request->session()->reflash();
 
                 return redirect(route('bills.index'));
@@ -151,7 +153,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleAccount(Request $request, Throwable $exception): Response
     {
-        app('log')->debug('404 page is probably a deleted account. Redirect to overview of account types.');
+        Log::debug('404 page is probably a deleted account. Redirect to overview of account types.');
 
         /** @var User $user */
         $user      = auth()->user();
@@ -168,7 +170,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var null|Account $account */
         $account   = $user->accounts()->withTrashed()->with(['accountType'])->find($accountId);
         if (null === $account) {
-            app('log')->error(sprintf('Could not find account %d, so give big fat error.', $accountId));
+            Log::error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 
             return parent::render($request, $exception);
         }
@@ -186,7 +188,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleGroup(Request $request, Throwable $exception)
     {
-        app('log')->debug('404 page is probably a deleted group. Redirect to overview of group types.');
+        Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
 
         /** @var User $user */
         $user    = auth()->user();
@@ -197,7 +199,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var null|TransactionGroup $group */
         $group   = $user->transactionGroups()->withTrashed()->find($groupId);
         if (null === $group) {
-            app('log')->error(sprintf('Could not find group %d, so give big fat error.', $groupId));
+            Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
@@ -205,7 +207,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var null|TransactionJournal $journal */
         $journal = $group->transactionJournals()->withTrashed()->first();
         if (null === $journal) {
-            app('log')->error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
+            Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
 
             return parent::render($request, $exception);
         }
@@ -226,7 +228,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
      */
     private function handleAttachment(Request $request, Throwable $exception)
     {
-        app('log')->debug('404 page is probably a deleted attachment. Redirect to parent object.');
+        Log::debug('404 page is probably a deleted attachment. Redirect to parent object.');
 
         /** @var User $user */
         $user         = auth()->user();
@@ -237,7 +239,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         /** @var null|Attachment $attachment */
         $attachment   = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {
-            app('log')->error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
+            Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
 
             return parent::render($request, $exception);
         }
@@ -259,7 +261,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
             }
         }
 
-        app('log')->error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
+        Log::error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
 
         return parent::render($request, $exception);
     }

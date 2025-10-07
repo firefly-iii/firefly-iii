@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
@@ -35,11 +36,11 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
-use function Safe\realpath;
 use function Safe\ini_get;
+use function Safe\realpath;
 
 /**
  * Class Controller.
@@ -133,7 +134,7 @@ abstract class Controller extends BaseController
                     $this->primaryCurrency  = Amount::getPrimaryCurrency();
                     $language               = Steam::getLanguage();
                     $locale                 = Steam::getLocale();
-                    $darkMode               = app('preferences')->get('darkMode', 'browser')->data;
+                    $darkMode               = Preferences::get('darkMode', 'browser')->data;
                     $this->convertToPrimary = Amount::convertToPrimary();
                     $page                   = $this->getPageName();
                     $shownDemo              = $this->hasSeenDemo();

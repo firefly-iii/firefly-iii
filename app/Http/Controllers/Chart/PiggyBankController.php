@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
@@ -58,8 +57,6 @@ class PiggyBankController extends Controller
      * Shows the piggy bank history.
      *
      * TODO this chart is not multi currency aware.
-     *
-     * @throws FireflyException
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
@@ -95,7 +92,7 @@ class PiggyBankController extends Controller
             $currentSum        = $filtered->sum('amount');
             $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
-            $oldest            = app('navigation')->addPeriod($oldest, $step, 0);
+            $oldest            = app('navigation')->addPeriod($oldest, $step);
         }
         $finalFiltered          = $set->filter(
             static fn (PiggyBankEvent $event) => $event->date->lte($today)

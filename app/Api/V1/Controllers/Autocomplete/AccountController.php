@@ -90,7 +90,7 @@ class AccountController extends Controller
         $timer->start(sprintf('AC accounts "%s"', $query));
         $result      = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
 
-        // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
+        // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
         $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);

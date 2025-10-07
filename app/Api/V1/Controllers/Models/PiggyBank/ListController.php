@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
@@ -67,8 +66,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAccountByPiggyBank
      *
      * List single resource.
-     *
-     * @throws FireflyException
      */
     public function accounts(PiggyBank $piggyBank): JsonResponse
     {
@@ -105,8 +102,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listAttachmentByPiggyBank
-     *
-     * @throws FireflyException
      */
     public function attachments(PiggyBank $piggyBank): JsonResponse
     {
@@ -136,8 +131,6 @@ class ListController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/piggy_banks/listEventByPiggyBank
      *
      * List single resource.
-     *
-     * @throws FireflyException
      */
     public function piggyBankEvents(PiggyBank $piggyBank): JsonResponse
     {

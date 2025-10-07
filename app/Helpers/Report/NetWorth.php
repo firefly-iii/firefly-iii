@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;

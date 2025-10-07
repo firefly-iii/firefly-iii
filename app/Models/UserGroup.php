@@ -47,7 +47,7 @@ class UserGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $userGroupId = (int) $value;
+            $userGroupId = (int)$value;
 
             /** @var User $user */
             $user        = auth()->user();
@@ -74,6 +74,14 @@ class UserGroup extends Model
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
+    }
+
+    /**
+     * Link to accounts.
+     */
+    public function periodStatistics(): HasMany
+    {
+        return $this->hasMany(PeriodStatistic::class);
     }
 
     /**

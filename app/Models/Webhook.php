@@ -27,9 +27,11 @@ namespace FireflyIII\Models;
 use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
 use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
 use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
+use FireflyIII\Handlers\Observer\WebhookObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -37,6 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+#[ObservedBy([WebhookObserver::class])]
 class Webhook extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -151,14 +154,14 @@ class Webhook extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function webhookMessages(): HasMany
-    {
-        return $this->hasMany(WebhookMessage::class);
-    }
-
     public function webhookDeliveries(): BelongsToMany
     {
         return $this->belongsToMany(WebhookDelivery::class);
+    }
+
+    public function webhookMessages(): HasMany
+    {
+        return $this->hasMany(WebhookMessage::class);
     }
 
     public function webhookResponses(): BelongsToMany

@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalAPIRepositoryInterface;
@@ -69,8 +68,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listAttachmentByTransaction
-     *
-     * @throws FireflyException
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -101,8 +98,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listEventByTransaction
-     *
-     * @throws FireflyException
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -144,8 +139,6 @@ class ListController extends Controller
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/listLinksByJournal
-     *
-     * @throws FireflyException
      */
     public function transactionLinks(TransactionJournal $transactionJournal): JsonResponse
     {

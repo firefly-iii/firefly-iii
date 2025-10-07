@@ -40,6 +40,8 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -78,8 +80,10 @@ class ShowController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      *
+     * @throws ContainerExceptionInterface
      * @throws FireflyException
-     *                                              */
+     * @throws NotFoundExceptionInterface
+     */
     public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
     {
         if (0 === $account->id) {
@@ -102,7 +106,7 @@ class ShowController extends Controller
 
         // make sure dates are end of day and start of day:
         $start->startOfDay();
-        $end->endOfDay();
+        $end->endOfDay()->milli(0);
 
         $location         = $this->repository->getLocation($account);
         $attachments      = $this->repository->getAttachments($account);
@@ -195,8 +199,9 @@ class ShowController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      *
-     * @throws FireflyException
-     *                                              */
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     public function showAll(Request $request, Account $account)
     {
         if (!$this->isEditableAccount($account)) {

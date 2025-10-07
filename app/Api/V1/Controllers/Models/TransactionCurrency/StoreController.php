@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionCurrency;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\StoreRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
@@ -66,8 +65,6 @@ class StoreController extends Controller
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/storeCurrency
      *
      * Store new currency.
-     *
-     * @throws FireflyException
      */
     public function store(StoreRequest $request): JsonResponse
     {

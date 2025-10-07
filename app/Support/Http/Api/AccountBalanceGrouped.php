@@ -44,10 +44,10 @@ class AccountBalanceGrouped
     private readonly ExchangeRateConverter $converter;
     private array                          $currencies = [];
     private array                          $data       = [];
-    private TransactionCurrency            $primary;
     private Carbon                         $end;
     private array                          $journals   = [];
     private string                         $preferredRange;
+    private TransactionCurrency            $primary;
     private Carbon                         $start;
 
     public function __construct()
@@ -146,48 +146,49 @@ class AccountBalanceGrouped
         $converter->summarize();
     }
 
-    private function processJournal(array $journal): void
+    public function setAccounts(Collection $accounts): void
     {
-        // format the date according to the period
-        $period                                          = $journal['date']->format($this->carbonFormat);
-        $currencyId                                      = (int)$journal['currency_id'];
-        $currency                                        = $this->findCurrency($currencyId);
-
-        // set the array with monetary info, if it does not exist.
-        $this->createDefaultDataEntry($journal);
-        // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
-        $this->createDefaultPeriodEntry($journal);
-
-        // is this journal's amount in- our outgoing?
-        $key                                             = $this->getDataKey($journal);
-        $amount                                          = 'spent' === $key ? Steam::negative($journal['amount']) : Steam::positive($journal['amount']);
-
-        // get conversion rate
-        $rate                                            = $this->getRate($currency, $journal['date']);
-        $amountConverted                                 = bcmul($amount, $rate);
-
-        // perhaps transaction already has the foreign amount in the primary currency.
-        if ((int)$journal['foreign_currency_id'] === $this->primary->id) {
-            $amountConverted = $journal['foreign_amount'] ?? '0';
-            $amountConverted = 'earned' === $key ? Steam::positive($amountConverted) : Steam::negative($amountConverted);
-        }
-
-        // add normal entry
-        $this->data[$currencyId][$period][$key]          = bcadd((string)$this->data[$currencyId][$period][$key], $amount);
-
-        // add converted entry
-        $convertedKey                                    = sprintf('pc_%s', $key);
-        $this->data[$currencyId][$period][$convertedKey] = bcadd((string)$this->data[$currencyId][$period][$convertedKey], $amountConverted);
+        $this->accountIds = $accounts->pluck('id')->toArray();
     }
 
-    private function findCurrency(int $currencyId): TransactionCurrency
+    public function setEnd(Carbon $end): void
     {
-        if (array_key_exists($currencyId, $this->currencies)) {
-            return $this->currencies[$currencyId];
-        }
-        $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
+        $this->end = $end;
+    }
 
-        return $this->currencies[$currencyId];
+    public function setJournals(array $journals): void
+    {
+        $this->journals = $journals;
+    }
+
+    public function setPreferredRange(string $preferredRange): void
+    {
+        $this->preferredRange = $preferredRange;
+        $this->carbonFormat   = Navigation::preferredCarbonFormatByPeriod($preferredRange);
+    }
+
+    public function setPrimary(TransactionCurrency $primary): void
+    {
+        $this->primary                  = $primary;
+        $primaryCurrencyId              = $primary->id;
+        $this->currencies               = [$primary->id => $primary]; // currency cache
+        $this->data[$primaryCurrencyId] = [
+            'currency_id'                     => (string)$primaryCurrencyId,
+            'currency_symbol'                 => $primary->symbol,
+            'currency_code'                   => $primary->code,
+            'currency_name'                   => $primary->name,
+            'currency_decimal_places'         => $primary->decimal_places,
+            'primary_currency_id'             => (string)$primaryCurrencyId,
+            'primary_currency_symbol'         => $primary->symbol,
+            'primary_currency_code'           => $primary->code,
+            'primary_currency_name'           => $primary->name,
+            'primary_currency_decimal_places' => $primary->decimal_places,
+        ];
+    }
+
+    public function setStart(Carbon $start): void
+    {
+        $this->start = $start;
     }
 
     private function createDefaultDataEntry(array $journal): void
@@ -218,6 +219,16 @@ class AccountBalanceGrouped
             'pc_spent'  => '0',
             'pc_earned' => '0',
         ];
+    }
+
+    private function findCurrency(int $currencyId): TransactionCurrency
+    {
+        if (array_key_exists($currencyId, $this->currencies)) {
+            return $this->currencies[$currencyId];
+        }
+        $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
+
+        return $this->currencies[$currencyId];
     }
 
     private function getDataKey(array $journal): string
@@ -254,48 +265,37 @@ class AccountBalanceGrouped
         return $rate;
     }
 
-    public function setAccounts(Collection $accounts): void
+    private function processJournal(array $journal): void
     {
-        $this->accountIds = $accounts->pluck('id')->toArray();
-    }
+        // format the date according to the period
+        $period                                          = $journal['date']->format($this->carbonFormat);
+        $currencyId                                      = (int)$journal['currency_id'];
+        $currency                                        = $this->findCurrency($currencyId);
 
-    public function setPrimary(TransactionCurrency $primary): void
-    {
-        $this->primary                  = $primary;
-        $primaryCurrencyId              = $primary->id;
-        $this->currencies               = [$primary->id => $primary]; // currency cache
-        $this->data[$primaryCurrencyId] = [
-            'currency_id'                     => (string)$primaryCurrencyId,
-            'currency_symbol'                 => $primary->symbol,
-            'currency_code'                   => $primary->code,
-            'currency_name'                   => $primary->name,
-            'currency_decimal_places'         => $primary->decimal_places,
-            'primary_currency_id'             => (string)$primaryCurrencyId,
-            'primary_currency_symbol'         => $primary->symbol,
-            'primary_currency_code'           => $primary->code,
-            'primary_currency_name'           => $primary->name,
-            'primary_currency_decimal_places' => $primary->decimal_places,
-        ];
-    }
+        // set the array with monetary info, if it does not exist.
+        $this->createDefaultDataEntry($journal);
+        // set the array (in monetary info) with spent/earned in this $period, if it does not exist.
+        $this->createDefaultPeriodEntry($journal);
 
-    public function setEnd(Carbon $end): void
-    {
-        $this->end = $end;
-    }
+        // is this journal's amount in- our outgoing?
+        $key                                             = $this->getDataKey($journal);
+        $amount                                          = 'spent' === $key ? Steam::negative($journal['amount']) : Steam::positive($journal['amount']);
 
-    public function setJournals(array $journals): void
-    {
-        $this->journals = $journals;
-    }
+        // get conversion rate
+        $rate                                            = $this->getRate($currency, $journal['date']);
+        $amountConverted                                 = bcmul($amount, $rate);
 
-    public function setPreferredRange(string $preferredRange): void
-    {
-        $this->preferredRange = $preferredRange;
-        $this->carbonFormat   = Navigation::preferredCarbonFormatByPeriod($preferredRange);
-    }
+        // perhaps transaction already has the foreign amount in the primary currency.
+        if ((int)$journal['foreign_currency_id'] === $this->primary->id) {
+            $amountConverted = $journal['foreign_amount'] ?? '0';
+            $amountConverted = 'earned' === $key ? Steam::positive($amountConverted) : Steam::negative($amountConverted);
+        }
 
-    public function setStart(Carbon $start): void
-    {
-        $this->start = $start;
+        // add normal entry
+        $this->data[$currencyId][$period][$key]          = bcadd((string)$this->data[$currencyId][$period][$key], $amount);
+
+        // add converted entry
+        $convertedKey                                    = sprintf('pc_%s', $key);
+        $this->data[$currencyId][$period][$convertedKey] = bcadd((string)$this->data[$currencyId][$period][$convertedKey], $amountConverted);
     }
 }

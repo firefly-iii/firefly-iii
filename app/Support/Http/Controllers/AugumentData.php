@@ -110,8 +110,8 @@ trait AugumentData
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {
-            $parts     = explode('-', (string) $combinedId);
-            $accountId = (int) $parts[0];
+            $parts     = explode('-', (string)$combinedId);
+            $accountId = (int)$parts[0];
             if (array_key_exists($accountId, $grouped)) {
                 $return[$accountId] = $grouped[$accountId][0]['name'];
             }
@@ -136,7 +136,7 @@ trait AugumentData
                 $return[$budgetId] = $grouped[$budgetId][0]['name'];
             }
         }
-        $return[0]  = (string) trans('firefly.no_budget');
+        $return[0]  = (string)trans('firefly.no_budget');
 
         return $return;
     }
@@ -152,13 +152,13 @@ trait AugumentData
         $grouped    = $categories->groupBy('id')->toArray();
         $return     = [];
         foreach ($categoryIds as $combinedId) {
-            $parts      = explode('-', (string) $combinedId);
-            $categoryId = (int) $parts[0];
+            $parts      = explode('-', (string)$combinedId);
+            $categoryId = (int)$parts[0];
             if (array_key_exists($categoryId, $grouped)) {
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0]  = (string) trans('firefly.no_category');
+        $return[0]  = (string)trans('firefly.no_category');
 
         return $return;
     }
@@ -219,7 +219,7 @@ trait AugumentData
             $entry->pc_spent = $spent;
 
             // normal amount:
-            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, false);
+            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency);
             $spent           = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
             $entry->spent    = $spent;
 
@@ -249,7 +249,7 @@ trait AugumentData
             }
 
             $grouped[$name] ??= '0';
-            $grouped[$name] = bcadd((string) $journal['amount'], $grouped[$name]);
+            $grouped[$name] = bcadd((string)$journal['amount'], $grouped[$name]);
         }
 
         return $grouped;
@@ -272,7 +272,7 @@ trait AugumentData
         ];
         // loop to support multi currency
         foreach ($journals as $journal) {
-            $currencyId                              = (int) $journal['currency_id'];
+            $currencyId                              = (int)$journal['currency_id'];
 
             // if not set, set to zero:
             if (!array_key_exists($currencyId, $sum['per_currency'])) {
@@ -287,8 +287,8 @@ trait AugumentData
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string) $journal['amount']);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], (string) $journal['amount']);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string)$journal['amount']);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], (string)$journal['amount']);
         }
 
         return $sum;
