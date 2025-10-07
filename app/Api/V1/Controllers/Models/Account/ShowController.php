@@ -89,6 +89,8 @@ class ShowController extends Controller
 
         // #11007 go to the end of the previous day.
         $this->parameters->set('start', $this->parameters->get('start')?->subSecond());
+        // #11018 also end of the day.
+        $this->parameters->set('end', $this->parameters->get('end')?->endOfDay());
 
         // enrich
         /** @var User $admin */
@@ -130,6 +132,8 @@ class ShowController extends Controller
 
         // #11007 go to the end of the previous day.
         $this->parameters->set('start', $this->parameters->get('start')?->subSecond());
+        // #11018 also end of the day.
+        $this->parameters->set('end', $this->parameters->get('end')?->endOfDay());
 
         // enrich
         /** @var User $admin */
