@@ -82,10 +82,9 @@ class SubscriptionEnrichment implements EnrichmentInterface
         // TODO clean me up.
 
         $notes            = $this->notes;
-        $objectGroups     = $this->objectGroups;
         $paidDates        = $this->paidDates;
         $payDates         = $this->payDates;
-        $this->collection = $this->collection->map(function (Bill $item) use ($notes, $objectGroups, $paidDates, $payDates) {
+        $this->collection = $this->collection->map(function (Bill $item) use ($notes, $paidDates, $payDates) {
             $id            = (int)$item->id;
             $currency      = $item->transactionCurrency;
             $nem           = $this->getNextExpectedMatch($payDates[$id] ?? []);
@@ -122,10 +121,12 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
-                $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = (string)$objectGroups[$key]['id'];
-                $meta['object_group_title'] = $objectGroups[$key]['title'];
-                $meta['object_group_order'] = $objectGroups[$key]['order'];
+                $key = $this->mappedObjects[$id];
+                if (array_key_exists($key, $this->objectGroups)) {
+                    $meta['object_group_id']    = (string)$this->objectGroups[$key]['id'];
+                    $meta['object_group_title'] = $this->objectGroups[$key]['title'];
+                    $meta['object_group_order'] = $this->objectGroups[$key]['order'];
+                }
             }
 
             // Add notes if available.

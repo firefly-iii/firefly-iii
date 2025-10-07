@@ -3,7 +3,18 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.1 - 2025-09-15
+
+## 6.4.2 - 2055-10-07
+
+Everything from v6.4.1, plus:
+
+### Fixed
+
+- [Issue 11015](https://github.com/firefly-iii/firefly-iii/issues/11015) (Call to a member function subSecond() on null when viewing accounts) reported by @sirgio145
+- [Issue 11016](https://github.com/firefly-iii/firefly-iii/issues/11016) (Undefined array key 1 when viewing subscriptions) reported by @anuneo
+- [Issue 11018](https://github.com/firefly-iii/firefly-iii/issues/11018) (/v1/accounts balance_difference last day is not accounted for) reported by @ctrl-f5
+
+## 6.4.1 - 2025-10-07
 
 ### Added
 
