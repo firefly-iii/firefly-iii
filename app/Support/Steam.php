@@ -49,7 +49,7 @@ use function Safe\preg_replace;
  */
 class Steam
 {
-    public function accountsBalancesOptimized(Collection $accounts, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
+    public function accountsBalancesOptimized(Collection $accounts, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array
     {
         Log::debug(sprintf('accountsBalancesOptimized: Called for %d account(s) with date/time "%s"', $accounts->count(), $date->toIso8601String()));
         $result      = [];
@@ -61,7 +61,7 @@ class Steam
         $arrayOfSums = Transaction::whereIn('account_id', $accounts->pluck('id')->toArray())
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
-            ->where('transaction_journals.date', '<=', $date->format('Y-m-d H:i:s'))
+            ->where('transaction_journals.date', $inclusive ? '<=': '<', $date->format('Y-m-d H:i:s'))
             ->groupBy(['transactions.account_id', 'transaction_currencies.code'])
             ->get(['transactions.account_id', 'transaction_currencies.code', DB::raw('SUM(transactions.amount) as sum_of_amount')])->toArray()
         ;
@@ -123,6 +123,14 @@ class Steam
         }
 
         return $result;
+    }
+
+    public function accountsBalancesInRange(Carbon $start, Carbon $end, Collection $accounts, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
+    {
+        return [
+            $this->accountsBalancesOptimized($accounts, $start, $primary, $convertToPrimary, inclusive: false),
+            $this->accountsBalancesOptimized($accounts, $end, $primary, $convertToPrimary),
+        ];
     }
 
     /**

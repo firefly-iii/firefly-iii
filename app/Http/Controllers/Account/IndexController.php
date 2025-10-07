@@ -91,14 +91,12 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        // #10618 go to the end of the previous day.
-        $start->subSecond();
-
         $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('inactive start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('inactive end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('inactive start: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 
@@ -169,14 +167,12 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        // #10618 go to the end of the previous day.
-        $start->subSecond();
-
         $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('index start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('index end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('index: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 

@@ -84,7 +84,7 @@ class AccountController extends Controller
         $data        = $request->getData();
         $types       = $data['types'];
         $query       = $data['query'];
-        $date        = $data['date'] ?? today(config('app.timezone'));
+        $date        = $data['date'];
         $return      = [];
         $timer       = Timer::getInstance();
         $timer->start(sprintf('AC accounts "%s"', $query));

@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 /**
  * Request class for end points that require date parameters.
@@ -54,7 +55,6 @@ class DateRequest extends FormRequest
         }
         // sanity check on dates:
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
-
 
         $start->startOfDay();
         $end->endOfDay();
