@@ -105,6 +105,8 @@ class ListController extends Controller
         $admin             = auth()->user();
         $enrichment        = new AccountEnrichment();
         $enrichment->setDate($this->parameters->get('date'));
+        $enrichment->setStart($this->parameters->get('start'));
+        $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($admin);
         $accounts          = $enrichment->enrich($accounts);
 
