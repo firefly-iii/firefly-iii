@@ -3,7 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.1 - 2025-09-15
+
+## 6.4.2 - 2055-10-07
+
+Everything from v6.4.1, plus:
+
+### Fixed
+
+- #11015
+- #11016
+
+## 6.4.1 - 2025-10-07
 
 ### Added
 
