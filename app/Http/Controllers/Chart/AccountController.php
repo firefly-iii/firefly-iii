@@ -522,9 +522,9 @@ class AccountController extends Controller
         $range           = Steam::filterAccountBalances($range, $account, $this->convertToPrimary, $accountCurrency);
         Log::debug('Get and filter balance for entire range end');
         // temp, get end balance.
-//        Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-//        Steam::finalAccountBalance($account, $end);
-//        Log::debug('END temp get end balance done');
+        //        Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
+        //        Steam::finalAccountBalance($account, $end);
+        //        Log::debug('END temp get end balance done');
 
         $previous        = array_values($range)[0];
         $accountCurrency ??= $this->primaryCurrency; // do this AFTER getting the balances.
@@ -671,7 +671,7 @@ class AccountController extends Controller
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($accounts, $start, $end , $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
 
 
         // loop the accounts, then check for balance and currency info.

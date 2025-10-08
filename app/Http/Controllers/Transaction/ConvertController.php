@@ -232,10 +232,10 @@ class ConvertController extends Controller
             Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
             // $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
-            $balance = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
+            $balance                     = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
-            $role                        = sprintf('l_%s',$account->accountType->type);
-            $key                         = (string) trans(sprintf('firefly.opt_group_%s',$role));
+            $role                        = sprintf('l_%s', $account->accountType->type);
+            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
             $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, Amount::formatAnything($currency, $balance, false));
         }
 
@@ -258,7 +258,7 @@ class ConvertController extends Controller
             Log::debug(sprintf('getAssetAccounts: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
             // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
             // $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
-            $balance = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
+            $balance                     = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
 
             $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
             $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
@@ -266,7 +266,7 @@ class ConvertController extends Controller
                 $role = 'no_account_type';
             }
 
-            $key                         = (string) trans(sprintf('firefly.opt_group_%s',$role));
+            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
             $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, Amount::formatAnything($currency, $balance, false));
         }
 

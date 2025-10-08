@@ -74,30 +74,30 @@ class IndexController extends Controller
      */
     public function inactive(Request $request, string $objectType)
     {
-        $inactivePage  = true;
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
-        $collection    = $this->repository->getInactiveAccountsByType($types);
-        $total         = $collection->count();
-        $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
-        $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactivePage = true;
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $collection   = $this->repository->getInactiveAccountsByType($types);
+        $total        = $collection->count();
+        $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
 
         /** @var Carbon $start */
-        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start        = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end          = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $ids           = $accounts->pluck('id')->toArray();
+        $ids          = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('inactive start: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
-        $activities    = Steam::getLastActivities($ids);
+        ]             = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
+        $activities   = Steam::getLastActivities($ids);
 
 
         $accounts->each(
@@ -117,7 +117,7 @@ class IndexController extends Controller
         );
 
         // make paginator:
-        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts     = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
