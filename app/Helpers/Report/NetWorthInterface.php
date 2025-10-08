@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use Deprecated;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -49,5 +48,4 @@ interface NetWorthInterface
     public function setUser(Authenticatable|User|null $user): void;
 
     public function setUserGroup(UserGroup $userGroup): void;
-
 }

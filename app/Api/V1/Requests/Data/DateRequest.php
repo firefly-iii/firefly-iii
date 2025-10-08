@@ -28,7 +28,6 @@ use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 /**
  * Request class for end points that require date parameters.

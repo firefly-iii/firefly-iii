@@ -170,7 +170,7 @@ class ShowController extends Controller
         }
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-        $balances = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
+        $balances         = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
         // $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
@@ -243,7 +243,7 @@ class ShowController extends Controller
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
         // $balances = Steam::finalAccountBalance($account, $end);
         // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
-        $balances = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
+        $balances        = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
 
         return view(
             'accounts.show',

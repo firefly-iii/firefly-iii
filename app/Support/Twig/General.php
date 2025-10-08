@@ -160,7 +160,7 @@ class General extends AbstractExtension
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
                 // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-                $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+                $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
                 // $info             = Steam::finalAccountBalance($account, $date);
                 $currency         = Steam::getAccountCurrency($account);
                 $primary          = Amount::getPrimaryCurrency();
