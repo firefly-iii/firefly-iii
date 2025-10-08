@@ -50,11 +50,4 @@ interface NetWorthInterface
 
     public function setUserGroup(UserGroup $userGroup): void;
 
-    /**
-     * TODO move to repository
-     *
-     * Same as above but cleaner function with less dependencies.
-     */
-    #[Deprecated]
-    public function sumNetWorthByCurrency(Carbon $date): array;
 }
