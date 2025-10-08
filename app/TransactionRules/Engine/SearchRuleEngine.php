@@ -506,20 +506,21 @@ class SearchRuleEngine implements RuleEngineInterface
      */
     private function fireGroup(RuleGroup $group): void
     {
-        $rules  =[];
-        if($group->relationLoaded('rules')) {
+        $rules = [];
+        if ($group->relationLoaded('rules')) {
             Log::debug('Group rules have been pre-loaded, do not reload them.');
             $rules = $group->rules;
         }
-        if(!$group->relationLoaded('rules')) {
+        if (!$group->relationLoaded('rules')) {
             Log::debug('Group rules have NOT been pre-loaded, load them NOW.');
             $rules = $group->rules()
-                         ->orderBy('rules.order', 'ASC')
+                ->orderBy('rules.order', 'ASC')
 //                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
 //                         ->where('rule_triggers.trigger_type', 'user_action')
 //                         ->where('rule_triggers.trigger_value', 'store-journal')
-                         ->where('rules.active', true)
-                         ->get(['rules.*']);
+                ->where('rules.active', true)
+                ->get(['rules.*'])
+            ;
         }
         Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $rules->count()));
 
