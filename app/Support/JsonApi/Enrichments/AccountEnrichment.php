@@ -289,8 +289,10 @@ class AccountEnrichment implements EnrichmentInterface
     {
         $this->balances = Steam::accountsBalancesOptimized($this->collection, $this->getDate(), $this->primaryCurrency, $this->convertToPrimary);
         if ($this->start instanceof Carbon && $this->end instanceof Carbon) {
-            $this->startBalances = Steam::accountsBalancesOptimized($this->collection, $this->start, $this->primaryCurrency, $this->convertToPrimary);
-            $this->endBalances   = Steam::accountsBalancesOptimized($this->collection, $this->end, $this->primaryCurrency, $this->convertToPrimary);
+            [
+                $this->startBalances,
+                $this->endBalances,
+            ] = Steam::accountsBalancesInRange($this->start, $this->end, $this->collection, $this->primaryCurrency, $this->convertToPrimary);
         }
     }
 

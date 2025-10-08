@@ -589,8 +589,6 @@ class BasicController extends Controller
 
     private function getNetWorthInfo(Carbon $end): array
     {
-        $end->endOfDay();
-
         /** @var User $user */
         $user           = auth()->user();
         Log::debug(sprintf('getNetWorthInfo up until "%s".', $end->format('Y-m-d H:i:s')));

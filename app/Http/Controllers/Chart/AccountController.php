@@ -116,10 +116,11 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        Log::debug(sprintf('expenseAccounts: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('expenseAccounts: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('expenseAccounts: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
         Log::debug('Done collecting balances');
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
@@ -666,10 +667,11 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        Log::debug(sprintf('revAccounts: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('revAccounts: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('revAccounts: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
 
 
         // loop the accounts, then check for balance and currency info.
