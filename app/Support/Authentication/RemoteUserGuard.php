@@ -49,14 +49,14 @@ class RemoteUserGuard implements Guard
     {
         /** @var null|Request $request */
         $request           = $app->get('request');
-        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
+        // Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
         $this->user        = null;
     }
 
     public function authenticate(): void
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
         if ($this->user instanceof User) {
             Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
@@ -104,21 +104,21 @@ class RemoteUserGuard implements Guard
 
     public function check(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         return $this->user() instanceof User;
     }
 
     public function guest(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         return !$this->check();
     }
 
     public function hasUser(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException('Did not implement RemoteUserGuard::hasUser()');
     }
@@ -128,14 +128,14 @@ class RemoteUserGuard implements Guard
      */
     public function id(): int|string|null
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         return $this->user?->id;
     }
 
     public function setUser(Authenticatable|User|null $user): void // @phpstan-ignore-line
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
         if ($user instanceof User) {
             $this->user = $user;
 
@@ -146,7 +146,7 @@ class RemoteUserGuard implements Guard
 
     public function user(): ?User
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;
         if (!$user instanceof User) {
             Log::debug('User is NULL');
@@ -164,14 +164,14 @@ class RemoteUserGuard implements Guard
      */
     public function validate(array $credentials = []): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException('Did not implement RemoteUserGuard::validate()');
     }
 
     public function viaRemember(): bool
     {
-        Log::debug(sprintf('Now at %s', __METHOD__));
+        // Log::debug(sprintf('Now at %s', __METHOD__));
 
         return false;
     }
