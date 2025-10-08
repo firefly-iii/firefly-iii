@@ -120,7 +120,7 @@ class AccountController extends Controller
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
         Log::debug('Done collecting balances');
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
@@ -671,7 +671,7 @@ class AccountController extends Controller
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end , $this->primaryCurrency, $this->convertToPrimary);
 
 
         // loop the accounts, then check for balance and currency info.

@@ -54,7 +54,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         [
             $startSet,
             $endSet,
-        ]              = Steam::accountsBalancesInRange($yesterday, $end, $accounts);
+        ]              = Steam::accountsBalancesInRange($accounts, $yesterday, $end);
         Log::debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */

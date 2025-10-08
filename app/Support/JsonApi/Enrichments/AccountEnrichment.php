@@ -292,7 +292,7 @@ class AccountEnrichment implements EnrichmentInterface
             [
                 $this->startBalances,
                 $this->endBalances,
-            ] = Steam::accountsBalancesInRange($this->start, $this->end, $this->collection, $this->primaryCurrency, $this->convertToPrimary);
+            ] = Steam::accountsBalancesInRange($this->collection, $this->start, $this->end, $this->primaryCurrency, $this->convertToPrimary);
         }
     }
 

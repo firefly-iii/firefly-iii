@@ -127,7 +127,7 @@ class Steam
     /**
      * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it properly gets the balance of a range.
      */
-    public function accountsBalancesInRange(Carbon $start, Carbon $end, Collection $accounts, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
+    public function accountsBalancesInRange(Collection $accounts, Carbon $start, Carbon $end, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
     {
         return [
             $this->accountsBalancesOptimized($accounts, $start, $primary, $convertToPrimary, inclusive: false),
@@ -373,6 +373,9 @@ class Steam
         return $final;
     }
 
+    /**
+     * @deprecated
+     */
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToPrimary): array
     {
         // expand period.

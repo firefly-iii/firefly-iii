@@ -96,7 +96,7 @@ class IndexController extends Controller
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 
@@ -172,7 +172,7 @@ class IndexController extends Controller
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($start, $end, $accounts, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 
