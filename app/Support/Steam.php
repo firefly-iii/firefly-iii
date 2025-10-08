@@ -122,6 +122,9 @@ class Steam
         return $result;
     }
 
+    /**
+     * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it properly gets the balance of a range.
+     */
     public function accountsBalancesInRange(Carbon $start, Carbon $end, Collection $accounts, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
     {
         return [
@@ -281,6 +284,7 @@ class Steam
     }
 
     /**
+     * @deprecated
      * By default this method returns "smaller than or equal to", so be careful with END OF DAY.
      * If you need end of day balance, use "inclusive = false".
      *
