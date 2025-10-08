@@ -241,7 +241,8 @@ class ShowController extends Controller
         Log::debug(sprintf('showAll: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-        // $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToPrimary, $accountCurrency);
+        // $balances = Steam::finalAccountBalance($account, $end);
+        // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
         $balances = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
 
         return view(
