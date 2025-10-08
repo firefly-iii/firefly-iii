@@ -48,7 +48,8 @@ class AutocompleteRequest extends FormRequest
         // remove 'initial balance' from allowed types. its internal
         $array = array_diff($array, [AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::RECONCILIATION->value]);
 
-        $date = $this->getCarbonDate('date') ?? today(config('app.timezone'));
+        $date  = $this->getCarbonDate('date') ?? today(config('app.timezone'));
+
         return [
             'types' => $array,
             'query' => $this->convertString('query'),

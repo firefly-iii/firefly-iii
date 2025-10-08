@@ -114,18 +114,18 @@ class ReconcileController extends Controller
         $start->startOfDay();
         $end->endOfDay();
 
-//        $startDate       = clone $start;
-//        $startDate->subDay()->endOfDay(); // this is correct, subday endofday ends at 23:59:59
+        //        $startDate       = clone $start;
+        //        $startDate->subDay()->endOfDay(); // this is correct, subday endofday ends at 23:59:59
         // both are validated and are correct.
-//        Log::debug(sprintf('reconcile: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
-//        Log::debug(sprintf('reconcile2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-//        $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
-//        $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
+        //        Log::debug(sprintf('reconcile: Call finalAccountBalance with date/time "%s"', $startDate->toIso8601String()));
+        //        Log::debug(sprintf('reconcile2: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
+        //        $startBalance    = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
+        //        $endBalance      = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
 
         // 2025-10-08 replace with accountsBalancesOptimized
         // no longer need to do subday->endofday on $start, set inclusive = false for the same effect.
-        $startBalance = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $start, convertToPrimary: null, inclusive: false)[$account->id]['balance'], $currency->decimal_places);
-        $endBalance = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id]['balance'], $currency->decimal_places);
+        $startBalance    = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $start, convertToPrimary: null, inclusive: false)[$account->id]['balance'], $currency->decimal_places);
+        $endBalance      = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id]['balance'], $currency->decimal_places);
 
 
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));

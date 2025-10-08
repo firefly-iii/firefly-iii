@@ -201,11 +201,11 @@ class ReconcileController extends Controller
         Log::debug(sprintf('transactions2: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized
-//        $startBalance   = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
-//        $endBalance     = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
+        //        $startBalance   = Steam::bcround(Steam::finalAccountBalance($account, $startDate)['balance'], $currency->decimal_places);
+        //        $endBalance     = Steam::bcround(Steam::finalAccountBalance($account, $end)['balance'], $currency->decimal_places);
 
-        $startBalance = Steam::accountsBalancesOptimized(new Collection()->push($account), $startDate)[$account->id];
-        $endBalance = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
+        $startBalance   = Steam::accountsBalancesOptimized(new Collection()->push($account), $startDate)[$account->id];
+        $endBalance     = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
 
 
         // get the transactions
