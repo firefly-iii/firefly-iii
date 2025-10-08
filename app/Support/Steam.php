@@ -374,14 +374,14 @@ class Steam
     }
 
     /**
-     * @deprecated
+     * Returns the balance for the given account in the range, with daily precision.
      */
     public function finalAccountBalanceInRange(Account $account, Carbon $start, Carbon $end, bool $convertToPrimary): array
     {
         // expand period.
         $start->startOfDay();
         $end->endOfDay();
-        Log::debug(sprintf('finalAccountBalanceInRange(#%d, %s, %s)', $account->id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('called finalAccountBalanceInRange(#%d, %s, %s)', $account->id, $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
 
         // set up cache
         $cache = new CacheProperties();
@@ -391,27 +391,20 @@ class Steam
         $cache->addProperty($convertToPrimary);
         $cache->addProperty($end);
         if ($cache->has()) {
-            return $cache->get();
+            Log::debug('Return cached finalAccountBalanceInRange');
+            // return $cache->get();
         }
 
         $balances  = [];
         $formatted = $start->format('Y-m-d');
-        /*
-         * To make sure the start balance is correct, we need to get the balance at the exact end of the previous day.
-         * Since we just did "startOfDay" we can do subDay()->endOfDay() to get the correct moment.
-         * THAT will be the start balance.
-         */
-        $request = clone $start;
-        $request->subDay()->endOfDay();
         Log::debug('Get first balance to start.');
-        Log::debug(sprintf('finalAccountBalanceInRange: Call finalAccountBalance with date/time "%s"', $request->toIso8601String()));
-        $startBalance    = $this->finalAccountBalance($account, $request);
+        // 2025-10-08 replaced finalAccountBalance with accountsBalancesOptimized:
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $startBalance = $this->accountsBalancesOptimized(new Collection()->push($account), $start, $primaryCurrency, $convertToPrimary, false)[$account->id];
         $accountCurrency = $this->getAccountCurrency($account);
         $hasCurrency     = $accountCurrency instanceof TransactionCurrency;
         $currency        = $accountCurrency ?? $primaryCurrency;
         Log::debug(sprintf('Currency is %s', $currency->code));
-
 
         // set start balances:
         $startBalance[$currency->code] ??= '0';
