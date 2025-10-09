@@ -59,9 +59,7 @@ class UpdatePiggyBank implements ActionInterface
 
         $piggyBank   = $this->findPiggyBank($user, $actionValue);
         if (!$piggyBank instanceof PiggyBank) {
-            Log::info(
-                sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id)
-            );
+            Log::info(sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
 
             return false;

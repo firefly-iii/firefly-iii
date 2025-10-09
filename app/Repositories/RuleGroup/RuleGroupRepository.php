@@ -263,6 +263,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 [ // @phpstan-ignore-line
                     'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
+                        $query->where('rules.active', true);
                     },
                     'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
@@ -319,6 +320,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 [ // @phpstan-ignore-line
                     'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
+                        $query->where('rules.active', true);
                     },
                     'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
