@@ -420,6 +420,7 @@ class Navigation
             'week'     => (string)trans('config.week_in_year_js'),
             'weekly'   => (string)trans('config.week_in_year_js'),
             '1M'       => (string)trans('config.month_js'),
+            'MTD'      => (string)trans('config.month_js'),
             'month'    => (string)trans('config.month_js'),
             'monthly'  => (string)trans('config.month_js'),
             '1Y'       => (string)trans('config.year_js'),
