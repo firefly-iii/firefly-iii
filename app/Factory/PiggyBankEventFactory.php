@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Create piggy bank events.
