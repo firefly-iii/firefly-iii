@@ -428,11 +428,11 @@ class Navigation
             'year'     => (string)trans('config.year_js'),
             'yearly'   => (string)trans('config.year_js'),
             '6M'       => (string)trans('config.half_year_js'),
-            'last7' => (string)trans('config.specific_day_js'),
-            'last30' => (string)trans('config.month_js'),
-            'last90' => (string)trans('config.month_js'),
-            'last365' => (string)trans('config.year_js'),
-            'QTD' => (string)trans('config.month_js'),
+            'last7'    => (string)trans('config.specific_day_js'),
+            'last30'   => (string)trans('config.month_js'),
+            'last90'   => (string)trans('config.month_js'),
+            'last365'  => (string)trans('config.year_js'),
+            'QTD'      => (string)trans('config.month_js'),
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {
