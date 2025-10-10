@@ -225,6 +225,8 @@ return [
         // plain files
         'text/plain',
         'text/html',
+        'text/xml',
+        'application/xml',
 
         // images
         'image/jpeg',
