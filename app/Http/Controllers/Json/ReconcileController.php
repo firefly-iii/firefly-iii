@@ -81,12 +81,12 @@ class ReconcileController extends Controller
         if (!$start instanceof Carbon && !$end instanceof Carbon) {
             throw new FireflyException('Invalid dates submitted.');
         }
-        if(!is_numeric($startBalance)) {
+        if (!is_numeric($startBalance)) {
             $startBalance = '0';
         }
-        if(!is_numeric($endBalance)) {
+        if (!is_numeric($endBalance)) {
             $endBalance = '0';
-    }
+        }
         if ($end->lt($start)) {
             [$start, $end] = [$end, $start];
         }
