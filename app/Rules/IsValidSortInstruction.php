@@ -32,9 +32,14 @@ class IsValidSortInstruction implements ValidationRule
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $shortClass      = str_replace('FireflyIII\Models\\', '', $this->class);
+        $shortClass = str_replace('FireflyIII\Models\\', '', $this->class);
         if (!is_string($value)) {
             $fail('validation.invalid_sort_instruction')->translate(['object' => $shortClass]);
+
+            return;
+        }
+        if ('' === $value) {
+            // don't validate.
 
             return;
         }
@@ -44,7 +49,7 @@ class IsValidSortInstruction implements ValidationRule
 
             return;
         }
-        $parts           = explode(',', $value);
+        $parts = explode(',', $value);
         foreach ($parts as $i => $part) {
             $part = trim($part);
             if (strlen($part) < 2) {
