@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -72,6 +73,16 @@ class ExecutionController extends Controller
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
+
+        // add date operators.
+        if (null !== $request->get('start')) {
+            $startDate = new Carbon($request->get('start'));
+            $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+        }
+        if (null !== $request->get('end')) {
+            $endDate = new Carbon($request->get('end'));
+            $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+        }
 
         // add extra operators:
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
