@@ -23,11 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 class ApiRequest extends FormRequest
 {
@@ -38,7 +36,7 @@ class ApiRequest extends FormRequest
 
     public function handleConfig(array $config): void
     {
-        if (in_array('required', $config)) {
+        if (in_array('required', $config, true)) {
             $this->required = 'required';
         }
     }

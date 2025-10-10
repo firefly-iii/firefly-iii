@@ -30,7 +30,7 @@ class DateRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'date'  => 'date|after:1970-01-02|before:2038-01-17|' . $this->required,
+            'date'  => 'date|after:1970-01-02|before:2038-01-17|'.$this->required,
         ];
     }
 

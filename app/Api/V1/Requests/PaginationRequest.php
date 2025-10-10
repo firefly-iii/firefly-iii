@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Validation\Validator;
+use RuntimeException;
 
 class PaginationRequest extends ApiRequest
 {
@@ -40,10 +40,9 @@ class PaginationRequest extends ApiRequest
         $this->sortClass = $config['sort_class'] ?? null;
 
         if (!$this->sortClass) {
-            throw new \RuntimeException('PaginationRequest requires a sort_class config');
+            throw new RuntimeException('PaginationRequest requires a sort_class config');
         }
     }
-
 
     public function rules(): array
     {
@@ -62,7 +61,7 @@ class PaginationRequest extends ApiRequest
                     return;
                 }
 
-                $limit = $this->convertInteger('limit');
+                $limit  = $this->convertInteger('limit');
                 if (0 === $limit) {
                     // get default for user:
                     /** @var User $user */
@@ -70,10 +69,10 @@ class PaginationRequest extends ApiRequest
                     $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
                 }
 
-                $page = $this->convertInteger('page');
-                $page = min(max(1, $page), 2 ** 16);
+                $page   = $this->convertInteger('page');
+                $page   = min(max(1, $page), 2 ** 16);
                 $offset = ($page - 1) * $limit;
-                $sort = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
+                $sort   = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
 
                 $this->attributes->set('limit', $limit);
                 $this->attributes->set('sort', $sort);

@@ -23,10 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Validator;
 
 class DateRangeRequest extends ApiRequest
@@ -34,8 +30,8 @@ class DateRangeRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|' , $this->required),
-            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|' , $this->required),
+            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|', $this->required),
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|', $this->required),
         ];
     }
 

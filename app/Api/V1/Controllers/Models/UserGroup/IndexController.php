@@ -56,8 +56,8 @@ class IndexController extends Controller
     {
         $administrations = $this->repository->get();
         [
-            'page' => $page,
-            'limit' => $limit,
+            'page'   => $page,
+            'limit'  => $limit,
             'offset' => $offset,
         ]                = $request->attributes->all();
         $count           = $administrations->count();
