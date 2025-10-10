@@ -128,25 +128,25 @@ class ShowController extends Controller
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
         $account->refresh();
-        $manager              = $this->getManager();
-        [  'start'  => $start,
-           'end'    => $end,
-           'date'   => $date,] = $request->attributes->all();
+        $manager                = $this->getManager();
+        ['start'     => $start,
+            'end'    => $end,
+            'date'   => $date,] = $request->attributes->all();
 
         // enrich
         /** @var User $admin */
-        $admin                = auth()->user();
-        $enrichment           = new AccountEnrichment();
+        $admin                  = auth()->user();
+        $enrichment             = new AccountEnrichment();
         $enrichment->setDate($date);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
         $enrichment->setUser($admin);
-        $account              = $enrichment->enrichSingle($account);
+        $account                = $enrichment->enrichSingle($account);
 
 
         /** @var AccountTransformer $transformer */
-        $transformer          = app(AccountTransformer::class);
-        $resource             = new Item($account, $transformer, self::RESOURCE_KEY);
+        $transformer            = app(AccountTransformer::class);
+        $resource               = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
