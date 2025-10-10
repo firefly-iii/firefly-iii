@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Summary;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -94,10 +94,10 @@ class BasicController extends Controller
      *
      * @throws Exception
      */
-    public function basic(DateRequest $request): JsonResponse
+    public function basic(DateRangeRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $dates        = $request->getAll();
+        $dates        = $request->attributes->all();
         $start        = $dates['start'];
         $end          = $dates['end'];
         $code         = $request->get('currency_code');

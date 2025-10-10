@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\UserGroup;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
@@ -52,16 +52,20 @@ class IndexController extends Controller
         );
     }
 
-    public function index(DateRequest $request): JsonResponse
+    public function index(PaginationRequest $request): JsonResponse
     {
         $administrations = $this->repository->get();
-        $pageSize        = $this->parameters->get('limit');
+        [
+            'page' => $page,
+            'limit' => $limit,
+            'offset' => $offset,
+        ]                = $request->attributes->all();
         $count           = $administrations->count();
-        $administrations = $administrations->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator       = new LengthAwarePaginator($administrations, $count, $pageSize, $this->parameters->get('page'));
+        $administrations = $administrations->slice($offset, $limit);
+        $paginator       = new LengthAwarePaginator($administrations, $count, $limit, $page);
         $transformer     = new UserGroupTransformer();
 
-        $transformer->setParameters($this->parameters); // give params to transformer
+        $transformer->setParameters($request->attributes); // give params to transformer
 
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))

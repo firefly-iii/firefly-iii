@@ -23,21 +23,35 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
-use FireflyIII\Api\V1\Requests\AggregateFormRequest;
-use FireflyIII\Api\V1\Requests\DateRangeRequest;
-use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\PaginationRequest;
-use FireflyIII\Models\Account;
+use FireflyIII\Api\V1\Requests\ApiRequest;
+use FireflyIII\Support\Http\Api\AccountFilter;
+use Illuminate\Validation\Validator;
 
-class ShowRequest extends AggregateFormRequest
+class AccountTypeApiRequest extends ApiRequest
 {
-    protected function getRequests(): array
+    use AccountFilter;
+
+    public function rules(): array
     {
         return [
-            [PaginationRequest::class, 'sort_class' => Account::class],
-            DateRangeRequest::class,
-            DateRequest::class,
-            AccountTypeApiRequest::class,
+            'type'  => sprintf('in:%s', implode(',', array_keys($this->types))),
         ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator): void {
+                if (!$validator->valid()) {
+                    return;
+                }
+
+                $type = $this->convertString('type', 'all');
+                $this->attributes->add([
+                    'type' => $type,
+                    'types' => $this->mapAccountTypes($type),
+                ]);
+            }
+        );
     }
 }
