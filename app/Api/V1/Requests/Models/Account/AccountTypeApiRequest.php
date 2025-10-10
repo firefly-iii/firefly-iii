@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 /*
- * ShowRequest.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * AccountTypeApiRequest.php
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *

@@ -65,8 +65,6 @@ class IndexController extends Controller
         $paginator       = new LengthAwarePaginator($administrations, $count, $limit, $page);
         $transformer     = new UserGroupTransformer();
 
-        $transformer->setParameters($request->attributes); // give params to transformer
-
         return response()
             ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
             ->header('Content-Type', self::CONTENT_TYPE)

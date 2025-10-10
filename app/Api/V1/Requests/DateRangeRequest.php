@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 james@firefly-iii.org
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,14 +27,15 @@ use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
 class DateRangeRequest extends ApiRequest
 {
     public function rules(): array
     {
         return [
-            'start' => 'date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|' . $this->required,
-            'end'   => 'date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|' . $this->required,
+            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|' , $this->required),
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|' , $this->required),
         ];
     }
 

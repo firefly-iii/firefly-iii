@@ -1,7 +1,7 @@
 <?php
 
 /*
- * Copyright (c) 2021 james@firefly-iii.org
+ * Copyright (c) 2025 https://github.com/ctrl-f5
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
