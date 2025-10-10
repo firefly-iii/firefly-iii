@@ -47,7 +47,7 @@ class PaginationRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'sort'  => ['nullable', new IsValidSortInstruction($this->sortClass)],
+            'sort'  => ['nullable', new IsValidSortInstruction((string)$this->sortClass)],
             'limit' => 'numeric|min:1|max:131337',
             'page'  => 'numeric|min:1|max:131337',
         ];
