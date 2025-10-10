@@ -129,7 +129,9 @@ class ShowController extends Controller
         $this->repository->resetAccountOrder();
         $account->refresh();
         $manager              = $this->getManager();
-        [$start, $end, $date] = $request->attributes->all();
+        [  'start'  => $start,
+           'end'    => $end,
+           'date'   => $date,] = $request->attributes->all();
 
         // enrich
         /** @var User $admin */
