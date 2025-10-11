@@ -79,7 +79,7 @@ return [
         // see cer.php for exchange rates feature flag.
     ],
     'version'                      => 'develop/2025-10-11',
-    'build_time'                   => 1760159380,
+    'build_time'                   => 1760188898,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 28, // field is no longer used.
 
