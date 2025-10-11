@@ -43,6 +43,7 @@ class DateRangeRequest extends ApiRequest
                     // set null values
                     $this->attributes->set('start', null);
                     $this->attributes->set('end', null);
+
                     return;
                 }
                 $start = $this->getCarbonDate('start')?->startOfDay();

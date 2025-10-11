@@ -48,7 +48,7 @@ class DateRequest extends ApiRequest
                 // if we also have a range, date must be in that range
                 $start = $this->attributes->get('start');
                 $end   = $this->attributes->get('end');
-                if ($date instanceOf Carbon && $start instanceOf Carbon && $end instanceOf Carbon && !$date->between($start, $end)) {
+                if ($date instanceof Carbon && $start instanceof Carbon && $end instanceof Carbon && !$date->between($start, $end)) {
                     $validator->errors()->add('date', (string)trans('validation.between_date'));
                 }
 
