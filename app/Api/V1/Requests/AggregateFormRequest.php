@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Validator;
 use RuntimeException;
 
@@ -43,12 +44,14 @@ abstract class AggregateFormRequest extends ApiRequest
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
+        Log::debug('Initializing AggregateFormRequest.');
         foreach ($this->getRequests() as $config) {
             $requestClass         = is_array($config) ? array_shift($config) : $config;
 
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
             }
+            Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
             $instance             = $this->requests[] = new $requestClass();
             $instance->request    = $this->request;
@@ -63,6 +66,7 @@ abstract class AggregateFormRequest extends ApiRequest
                 $instance->handleConfig(is_array($config) ? $config : []);
             }
         }
+        Log::debug('Done initializing AggregateFormRequest.');
     }
 
     public function rules(): array
@@ -85,6 +89,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // register all subrequests' validators
         foreach ($this->requests as $request) {
             if (method_exists($request, 'withValidator')) {
+                Log::debug(sprintf('Process withValidator from class %s', get_class($request)));
                 $request->withValidator($validator);
             }
         }

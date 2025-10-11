@@ -1,7 +1,7 @@
 <?php
-
 /*
- * Copyright (c) 2025 https://github.com/ctrl-f5
+ * CurrencyCodeRequest.php
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,19 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
-namespace FireflyIII\Api\V1\Requests;
-
+use FireflyIII\Api\V1\Requests\ApiRequest;
 use Illuminate\Validation\Validator;
 
-class DateRangeRequest extends ApiRequest
+class CurrencyCodeRequest extends ApiRequest
 {
+
     public function rules(): array
     {
         return [
-            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|%s', $this->required),
-            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required),
+            'code' => sprintf('exists:transaction_currencies,code|%s', $this->required),
         ];
     }
 
@@ -42,11 +41,8 @@ class DateRangeRequest extends ApiRequest
                 if (!$validator->valid()) {
                     return;
                 }
-                $start = $this->getCarbonDate('start')?->startOfDay();
-                $end   = $this->getCarbonDate('end')?->endOfDay();
-
-                $this->attributes->set('start', $start);
-                $this->attributes->set('end', $end);
+                $code = $this->convertString('code', '');
+                $this->attributes->set('code', $code);
             }
         );
     }

@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
+use FireflyIII\Api\V1\Requests\Summary\BasicRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -88,19 +89,10 @@ class BasicController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/summary/getBasicSummary
-     *
-     * @throws Exception
-     */
-    public function basic(DateRangeRequest $request): JsonResponse
+    public function basic(BasicRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $dates        = $request->attributes->all();
-        $start        = $dates['start'];
-        $end          = $dates['end'];
-        $code         = $request->get('currency_code');
+        ['start' => $start, 'end' => $end, 'code' => $code] = $request->attributes->all();
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getSubscriptionInformation($start, $end);
@@ -115,7 +107,7 @@ class BasicController extends Controller
         // give new keys
         $return       = [];
         foreach ($total as $entry) {
-            if (null === $code || ($code === $entry['currency_code'])) {
+            if ('' === $code || ($code === $entry['currency_code'])) {
                 $return[$entry['key']] = $entry;
             }
         }
