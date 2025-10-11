@@ -43,8 +43,8 @@ trait IsOldVersion
             return 0;
         }
 
-        $currentDate  = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
-        $latestDate   = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
+        $currentDate = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
+        $latestDate  = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
 
         if ($currentDate->lt($latestDate)) {
             Log::debug(sprintf('This current version is older, current = %s, latest version %s.', $current, $latest));
@@ -67,33 +67,15 @@ trait IsOldVersion
     protected function isOldVersionInstalled(): bool
     {
         // version compare thing.
-        $configVersion = (string)config('firefly.version');
-        $dbVersion     = (string)FireflyConfig::getFresh('ff3_version', '1.0')->data;
-        $compare       = 0;
-        // compare develop to develop
-        if (str_starts_with($configVersion, 'develop') && str_starts_with($dbVersion, 'develop')) {
-            $compare = $this->compareDevelopVersions($configVersion, $dbVersion);
-        }
-        // user has develop installed, goes to normal version.
-        if (!str_starts_with($configVersion, 'develop') && str_starts_with($dbVersion, 'develop')) {
+        $configBuildTime = (int)config('firefly.build_time');
+        $dbBuildTime     = (int)FireflyConfig::getFresh('ff3_build_time', 123)->data;
+        $configTime      = Carbon::createFromTimestamp($configBuildTime, config('app.timezone'));
+        $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
+        if ($dbBuildTime < $configBuildTime) {
+            Log::warning(sprintf('Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s'),));
             return true;
         }
-
-        // user has normal, goes to develop version.
-        if (str_starts_with($configVersion, 'develop') && !str_starts_with($dbVersion, 'develop')) {
-            return true;
-        }
-
-        // compare normal with normal.
-        if (!str_starts_with($configVersion, 'develop') && !str_starts_with($dbVersion, 'develop')) {
-            $compare = version_compare($configVersion, $dbVersion);
-        }
-        if (-1 === $compare) {
-            Log::warning(sprintf('The current configured Firefly III version (%s) is older than the required version (%s). Redirect to migrate routine.', $dbVersion, $configVersion));
-
-            return true;
-        }
-
+        Log::debug(sprintf('Your database is up to date (I see %s, I expect %s).', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s'),));
         return false;
     }
 }
