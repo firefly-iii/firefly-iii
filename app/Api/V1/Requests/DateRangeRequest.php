@@ -30,8 +30,8 @@ class DateRangeRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|', $this->required),
-            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|', $this->required),
+            'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|%s', $this->required),
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required),
         ];
     }
 
@@ -39,6 +39,8 @@ class DateRangeRequest extends ApiRequest
     {
         $validator->after(
             function (Validator $validator): void {
+                $this->attributes->set('start', null);
+                $this->attributes->set('end', null);
                 if (!$validator->valid()) {
                     return;
                 }

@@ -38,6 +38,7 @@ class DateRequest extends ApiRequest
     {
         $validator->after(
             function (Validator $validator): void {
+                $this->attributes->set('date', null);
                 if (!$validator->valid()) {
                     return;
                 }
