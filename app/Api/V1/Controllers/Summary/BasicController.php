@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V1\Controllers\Summary;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Api\V1\Requests\Summary\BasicRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -94,18 +93,18 @@ class BasicController extends Controller
         // parameters for boxes:
         ['start' => $start, 'end' => $end, 'code' => $code] = $request->attributes->all();
         // balance information:
-        $balanceData  = $this->getBalanceInformation($start, $end);
-        $billData     = $this->getSubscriptionInformation($start, $end);
-        $spentData    = $this->getLeftToSpendInfo($start, $end);
-        $netWorthData = $this->getNetWorthInfo($end);
+        $balanceData                                        = $this->getBalanceInformation($start, $end);
+        $billData                                           = $this->getSubscriptionInformation($start, $end);
+        $spentData                                          = $this->getLeftToSpendInfo($start, $end);
+        $netWorthData                                       = $this->getNetWorthInfo($end);
         //                        $balanceData  = [];
         //                        $billData     = [];
         //                $spentData    = [];
         //                        $netWorthData = [];
-        $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
+        $total                                              = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
-        $return       = [];
+        $return                                             = [];
         foreach ($total as $entry) {
             if ('' === $code || ($code === $entry['currency_code'])) {
                 $return[$entry['key']] = $entry;
