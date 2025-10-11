@@ -40,6 +40,9 @@ class DateRangeRequest extends ApiRequest
         $validator->after(
             function (Validator $validator): void {
                 if (!$validator->valid()) {
+                    // set null values
+                    $this->attributes->set('start', null);
+                    $this->attributes->set('end', null);
                     return;
                 }
                 $start = $this->getCarbonDate('start')?->startOfDay();

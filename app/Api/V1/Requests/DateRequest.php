@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Carbon\Carbon;
 use Illuminate\Validation\Validator;
 
 class DateRequest extends ApiRequest
@@ -47,7 +48,7 @@ class DateRequest extends ApiRequest
                 // if we also have a range, date must be in that range
                 $start = $this->attributes->get('start');
                 $end   = $this->attributes->get('end');
-                if ($date && $start && $end && !$date->between($start, $end)) {
+                if ($date instanceOf Carbon && $start instanceOf Carbon && $end instanceOf Carbon && !$date->between($start, $end)) {
                     $validator->errors()->add('date', (string)trans('validation.between_date'));
                 }
 
