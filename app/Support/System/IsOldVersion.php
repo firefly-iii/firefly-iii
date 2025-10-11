@@ -43,8 +43,8 @@ trait IsOldVersion
             return 0;
         }
 
-        $currentDate = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
-        $latestDate  = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
+        $currentDate  = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
+        $latestDate   = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
 
         if ($currentDate->lt($latestDate)) {
             Log::debug(sprintf('This current version is older, current = %s, latest version %s.', $current, $latest));
@@ -72,10 +72,12 @@ trait IsOldVersion
         $configTime      = Carbon::createFromTimestamp($configBuildTime, config('app.timezone'));
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {
-            Log::warning(sprintf('Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s'),));
+            Log::warning(sprintf('Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s')));
+
             return true;
         }
-        Log::debug(sprintf('Your database is up to date (I see %s, I expect %s).', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s'),));
+        Log::debug(sprintf('Your database is up to date (I see %s, I expect %s).', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s')));
+
         return false;
     }
 }

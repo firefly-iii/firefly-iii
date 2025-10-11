@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * CurrencyCodeRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -26,7 +28,6 @@ use Illuminate\Validation\Validator;
 
 class CurrencyCodeRequest extends ApiRequest
 {
-
     public function rules(): array
     {
         return [
