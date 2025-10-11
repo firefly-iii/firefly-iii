@@ -46,7 +46,7 @@ class SetsLatestVersion extends Command
 
             return 0;
         }
-        FireflyConfig::set('ff3_version', config('firefly.version'));
+        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
         $this->friendlyInfo('Updated version.');
 
         return 0;
