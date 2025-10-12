@@ -225,6 +225,11 @@ class TransactionJournalFactory
         $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo, $sourceAccount);
         Log::debug('Done with getAccount(2x)');
 
+        // there is a safety catch here. If either account is NULL, they will be replaced with the cash account.
+        if(null === $destinationAccount) {
+            Log::warning('Destination account is NULL, will replace with cash account.');
+            $destinationAccount = $this->accountRepository->getCashAccount();
+        }
 
         // this is the moment for a reconciliation sanity check (again).
         if (TransactionTypeEnum::RECONCILIATION->value === $type->type) {
