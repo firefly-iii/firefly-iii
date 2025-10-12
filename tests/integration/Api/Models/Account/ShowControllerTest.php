@@ -28,7 +28,6 @@ namespace Tests\integration\Api\Models\Account;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
-use Override;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
 
