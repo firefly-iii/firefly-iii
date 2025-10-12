@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -69,22 +70,25 @@ class ListController extends Controller
         );
     }
 
-    public function attachments(Account $account): JsonResponse
+    public function attachments(Account $account, PaginationRequest $request): JsonResponse
     {
         $manager     = $this->getManager();
-        $pageSize    = $this->parameters->get('limit');
+        [
+            'limit' => $limit,
+            'offset' => $offset,
+            'page'  => $page,
+        ] = $request->attributes->all();
         $collection  = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
-        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $attachments = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($attachments, $count, $limit, $page);
         $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
