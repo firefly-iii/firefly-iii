@@ -88,7 +88,7 @@ trait JournalServiceTrait
 
         // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case
         $creatableType = $this->getCreatableType($expectedTypes[$transactionType]);
-        Log::debug(sprintf('Creatable type is "%s"', $creatableType ), $expectedTypes[$transactionType]);
+        Log::debug(sprintf('Creatable type is "%s"', $creatableType), $expectedTypes[$transactionType]);
 
         // if the result is NULL but the ID is set, an account could exist of the wrong type.
         // that data can be used to create a new account of the right type.
