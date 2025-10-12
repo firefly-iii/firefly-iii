@@ -42,7 +42,7 @@ class AccountTypeApiRequest extends ApiRequest
     {
         $validator->after(
             function (Validator $validator): void {
-                if (!$validator->valid()) {
+                if ($validator->failed()) {
                     return;
                 }
 
