@@ -28,7 +28,6 @@ namespace Tests\integration\Api\Models\Account;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Factory\AttachmentFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Category;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
@@ -48,7 +47,7 @@ final class ListControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->createAuthenticatedUser();
+        $this->user    = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
         $this->account = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
