@@ -74,10 +74,10 @@ class ListController extends Controller
     {
         $manager     = $this->getManager();
         [
-            'limit' => $limit,
+            'limit'  => $limit,
             'offset' => $offset,
-            'page'  => $page,
-        ] = $request->attributes->all();
+            'page'   => $page,
+        ]            = $request->attributes->all();
         $collection  = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
