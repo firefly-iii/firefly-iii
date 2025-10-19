@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  firefly:
+    image: ghcr.io/POWERFULMOVES/pmoves-firefly-iii:main
+    restart: unless-stopped
+    networks: [pmoves-net]
+    ports: ["8080:8080"]
+networks:
+  pmoves-net:
+    external: true
+
