@@ -154,6 +154,9 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         $this->start       = $this->collection->min('start_date') ?? Carbon::now()->startOfMonth();
         $this->end         = $this->collection->max('end_date') ?? Carbon::now()->endOfMonth();
 
+        // #11096 make sure that the max end date is also at the end of the day,
+        $this->end->endOfDay();
+
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
             $id          = (int)$limit->id;

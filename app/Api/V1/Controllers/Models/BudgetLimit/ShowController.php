@@ -172,7 +172,6 @@ class ShowController extends Controller
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($budgetLimit, $transformer, 'budget_limits');
 
