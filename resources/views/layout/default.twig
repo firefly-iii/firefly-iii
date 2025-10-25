@@ -111,7 +111,16 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
+                    <li class="hidden-sm hidden-xs">
+                        <a href="#" id="anonymous">
+                            {% if anonymous %}
+                                <span class="text-danger fa fa-eye-slash"></span>
+                            {% endif %}
+                            {% if not anonymous %}
+                                <span class="text-success fa fa-eye"></span>
+                            {% endif %}
+                        </a>
+                    </li>
                     <li class="hidden-sm hidden-xs">
                         <a href="#" id="help" data-route="{{ original_route_name }}"
                            data-extra="{{ objectType|default("") }}">

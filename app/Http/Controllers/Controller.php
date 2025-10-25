@@ -131,6 +131,7 @@ abstract class Controller extends BaseController
                 $this->primaryCurrency   = null;
                 // get shown-intro-preference:
                 if (auth()->check()) {
+                    View::share('anonymous', Steam::anonymous());
                     $this->primaryCurrency  = Amount::getPrimaryCurrency();
                     $language               = Steam::getLanguage();
                     $locale                 = Steam::getLocale();

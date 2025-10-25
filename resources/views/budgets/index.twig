@@ -267,9 +267,14 @@
                                             <div class="input-group">
                                                 <div class="input-group-addon">{{ primaryCurrency.symbol }}</div>
                                                 <input type="hidden" name="balance_currency_id" value="{{ primaryCurrency.id }}"/>
+                                                {% if not anonymous %}
                                                 <input class="form-control budget_amount" data-original="0" data-id="{{ budget.id }}"
                                                        data-currency="{{ primaryCurrency.id }}" data-limit="0" value="0" autocomplete="off" min="0" name="amount"
                                                        type="number">
+                                                {% endif %}
+                                                {% if anonymous %}
+                                                ---
+                                                {% endif %}
                                             </div>
                                             <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
                                                   style="display:none;"></span>
@@ -283,10 +288,15 @@
                                                 {% endif %}
                                                 <div class="input-group bl_entry" data-budget-limit-id="{{ budgetLimit.id }}">
                                                     <div class="input-group-addon">{{ budgetLimit.currency_symbol }}</div>
+                                                    {% if not anonymous %}
                                                     <input class="form-control budget_amount" data-original="{{ budgetLimit.amount }}"
                                                            data-id="{{ budget.id }}" data-limit="{{ budgetLimit.id }}" value="{{ budgetLimit.amount }}"
                                                            autocomplete="off"
                                                            min="0" name="amount" type="number">
+                                                    {% endif %}
+                                                    {% if anonymous %}
+                                                        ---
+                                                    {% endif %}
                                                     <div class="input-group-btn">
                                                         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false"><span class="caret"></span></button>

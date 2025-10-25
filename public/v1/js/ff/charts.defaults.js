@@ -42,13 +42,11 @@ function formatLabel(str, maxwidth) {
             if (concat.length > maxwidth) {
                 sections.push(temp);
                 temp = "";
-            }
-            else {
+            } else {
                 if (index === (words.length - 1)) {
                     sections.push(concat);
                     return;
-                }
-                else {
+                } else {
                     temp = concat;
                     return;
                 }
@@ -62,8 +60,7 @@ function formatLabel(str, maxwidth) {
 
         if (item.length < maxwidth) {
             temp = item;
-        }
-        else {
+        } else {
             sections.push(item);
         }
 
@@ -98,9 +95,11 @@ var defaultChartOptions = {
             ticks: {
                 callback: function (tickValue) {
                     "use strict";
+                    if (anonymous) {
+                        return accounting.formatMoney(0);
+                    }
                     // use first symbol or null:
                     return accounting.formatMoney(tickValue);
-
                 },
                 beginAtZero: true
             }
@@ -112,8 +111,11 @@ var defaultChartOptions = {
         callbacks: {
             label: function (tooltipItem, data) {
                 "use strict";
-                return data.datasets[tooltipItem.datasetIndex].label + ': ' +
-                       accounting.formatMoney(tooltipItem.yLabel, data.datasets[tooltipItem.datasetIndex].currency_symbol);
+                var string = accounting.formatMoney(tooltipItem.yLabel, data.datasets[tooltipItem.datasetIndex].currency_symbol);
+                if (anonymous) {
+                    string = accounting.formatMoney(0);
+                }
+                return data.datasets[tooltipItem.datasetIndex].label + ': ' + string;
             }
         }
     }
@@ -125,7 +127,11 @@ var pieOptionsWithCurrency = {
             label: function (tooltipItem, data) {
                 "use strict";
                 var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, data.datasets[tooltipItem.datasetIndex].currency_symbol[tooltipItem.index]);
+                var string = accounting.formatMoney(value, data.datasets[tooltipItem.datasetIndex].currency_symbol[tooltipItem.index]);
+                if (anonymous) {
+                    string = accounting.formatMoney(0);
+                }
+                return data.labels[tooltipItem.index] + ': ' + string;
             }
         }
     },
@@ -139,7 +145,11 @@ var defaultPieOptions = {
             label: function (tooltipItem, data) {
                 "use strict";
                 var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
+                var string = accounting.formatMoney(value);
+                if (anonymous) {
+                    string = accounting.formatMoney(0);
+                }
+                return data.labels[tooltipItem.index] + ': ' + string;
             }
         }
     },
@@ -153,7 +163,11 @@ var neutralDefaultPieOptions = {
             label: function (tooltipItem, data) {
                 "use strict";
                 var value = data.datasets[0].data[tooltipItem.index];
-                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, '¤');
+                var string = accounting.formatMoney(value, '¤');
+                if(anonymous) {
+                    string = accounting.formatMoney(0);
+                }
+                return data.labels[tooltipItem.index] + ': ' + string;
             }
         }
     },

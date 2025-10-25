@@ -627,6 +627,19 @@ class Steam
         return $locale;
     }
 
+    public function anonymous(): bool // get preference
+    {
+        $singleton = PreferencesSingleton::getInstance();
+        $cached    = $singleton->getPreference('anonymous');
+        if (null !== $cached) {
+            return $cached;
+        }
+        $anonymous    = app('preferences')->get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
+        $singleton->setPreference('anonymous', $anonymous);
+
+        return $anonymous;
+    }
+
     public function getLocaleArray(string $locale): array
     {
         return [

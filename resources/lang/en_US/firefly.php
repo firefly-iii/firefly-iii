@@ -235,6 +235,8 @@ return [
     'advanced_options_explain'                  => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                           => 'Hic sunt dracones',
     'bad_date_transaction'                      => 'Firefly III has detected you have transactions from before the year 1970. Please correct these transactions at your earliest convenience.',
+    'anonymous_warning_on'                      => 'For your privacy, all amounts are now displayed as "zero". Warning: text input boxes may still show the original amounts!',
+    'anonymous_warning_off'                     => 'Amounts will be visible again. Please be mindful of your surroundings.',
 
     // Webhooks
     'webhooks'                                  => 'Webhooks',

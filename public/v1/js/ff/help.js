@@ -17,12 +17,41 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-/** global: token, helpPageTitle */
+/** global: token, helpPageTitle, anonymous */
 $(function () {
     "use strict";
     $('#help').click(showHelp);
+    $('#anonymous').click(changeAnonymity)
 
 });
+
+function submitAnonymity(value) {
+    $.ajax({
+        url: 'api/v1/preferences/anonymous',
+        data: JSON.stringify({data: value}),
+        type: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content'),
+        },
+    });
+}
+
+function changeAnonymity(e) {
+    if (anonymous) {
+        console.log('Will DISABLE.');
+        submitAnonymity(false);
+        alert(anonymous_warning_off_txt);
+        window.location.reload(true);
+    }
+    if (!anonymous) {
+        console.log('Will ENABLE.');
+        submitAnonymity(true);
+        alert(anonymous_warning_on_txt);
+        window.location.reload(true);
+    }
+    return false;
+}
 
 function showHelp(e) {
     "use strict";
