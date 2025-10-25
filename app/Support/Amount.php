@@ -163,7 +163,7 @@ class Amount
      */
     public function formatFlat(string $symbol, int $decimalPlaces, string $amount, ?bool $coloured = null): string
     {
-        $amount = Steam::anonymous() ? '0' : $amount;
+        $amount  = Steam::anonymous() ? '0' : $amount;
         $locale  = Steam::getLocale();
         $rounded = Steam::bcround($amount, $decimalPlaces);
         $coloured ??= true;

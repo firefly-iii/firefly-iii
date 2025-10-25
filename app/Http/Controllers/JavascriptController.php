@@ -115,7 +115,7 @@ class JavascriptController extends Controller
             'currencyCode'         => $currency->code,
             'currencySymbol'       => $currency->symbol,
             'accountingLocaleInfo' => $accounting,
-            'anonymous' => var_export(Steam::anonymous(), true),
+            'anonymous'            => var_export(Steam::anonymous(), true),
             'language'             => $lang,
             'dateRangeTitle'       => $dateRange['title'],
             'locale'               => $locale,
