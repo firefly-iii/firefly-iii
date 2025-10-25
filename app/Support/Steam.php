@@ -634,7 +634,7 @@ class Steam
         if (null !== $cached) {
             return $cached;
         }
-        $anonymous    = app('preferences')->get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
+        $anonymous = app('preferences')->get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
         $singleton->setPreference('anonymous', $anonymous);
 
         return $anonymous;
