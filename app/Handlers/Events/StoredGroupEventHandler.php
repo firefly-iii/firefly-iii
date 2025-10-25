@@ -106,15 +106,16 @@ class StoredGroupEventHandler
 
         /** @var TransactionJournal $journal */
         foreach ($event->transactionGroup->transactionJournals as $journal) {
-            /** @var Transaction|null $source */
+            /** @var null|Transaction $source */
             $source     = $journal->transactions()->where('amount', '<', '0')->first();
-            /** @var Transaction|null $dest */
+
+            /** @var null|Transaction $dest */
             $dest       = $journal->transactions()->where('amount', '>', '0')->first();
 
-            if(null !== $source) {
+            if (null !== $source) {
                 $repository->deleteStatisticsForModel($source->account, $journal->date);
             }
-            if(null !== $dest) {
+            if (null !== $dest) {
                 $repository->deleteStatisticsForModel($dest->account, $journal->date);
             }
             $categories = $journal->categories;
