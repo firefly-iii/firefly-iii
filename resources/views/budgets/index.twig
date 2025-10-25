@@ -465,11 +465,11 @@
 {% endblock %}
 
 {% block styles %}
-    <link href="v1/css/bootstrap-sortable.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/bootstrap-sortable.css?v={{ FF_BUILD_TIME }}" type="text/css" rel="stylesheet" media="all" nonce="{{ JS_NONCE }}">
 {% endblock %}
 
 {% block scripts %}
-    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
 
         // index route.
@@ -488,6 +488,6 @@
         var periodStart = "{{ start.format('Y-m-d') }}";
         var periodEnd = "{{ end.format('Y-m-d') }}";
     </script>
-    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/budgets/index.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-sortable.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/budgets/index.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 {% endblock %}

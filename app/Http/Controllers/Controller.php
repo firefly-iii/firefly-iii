@@ -77,6 +77,7 @@ abstract class Controller extends BaseController
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
         View::share('DEMO_PASSWORD', config('firefly.demo_password'));
         View::share('FF_VERSION', config('firefly.version'));
+        View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
         // is webhooks enabled?
         View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
