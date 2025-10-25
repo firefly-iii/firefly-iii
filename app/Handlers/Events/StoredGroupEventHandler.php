@@ -27,6 +27,7 @@ use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -105,10 +106,17 @@ class StoredGroupEventHandler
 
         /** @var TransactionJournal $journal */
         foreach ($event->transactionGroup->transactionJournals as $journal) {
+            /** @var Transaction|null $source */
             $source     = $journal->transactions()->where('amount', '<', '0')->first();
+            /** @var Transaction|null $dest */
             $dest       = $journal->transactions()->where('amount', '>', '0')->first();
-            $repository->deleteStatisticsForModel($source->account, $journal->date);
-            $repository->deleteStatisticsForModel($dest->account, $journal->date);
+
+            if(null !== $source) {
+                $repository->deleteStatisticsForModel($source->account, $journal->date);
+            }
+            if(null !== $dest) {
+                $repository->deleteStatisticsForModel($dest->account, $journal->date);
+            }
             $categories = $journal->categories;
             $tags       = $journal->tags;
             $budgets    = $journal->budgets;
