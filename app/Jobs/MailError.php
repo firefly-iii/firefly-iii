@@ -127,6 +127,7 @@ class MailError extends Job implements ShouldQueue
 
         if (!file_exists($file)) {
             Log::debug(sprintf('Wrote new file in "%s"', $file));
+
             try {
                 file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
             } catch (FilesystemException $e) {
@@ -137,6 +138,7 @@ class MailError extends Job implements ShouldQueue
         }
         if (file_exists($file)) {
             Log::debug(sprintf('Read file in "%s"', $file));
+
             try {
                 $limits = json_decode(file_get_contents($file), true);
             } catch (FilesystemException $e) {
@@ -171,6 +173,7 @@ class MailError extends Job implements ShouldQueue
             }
             ++$limits[$type]['sent'];
         }
+
         try {
             file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
         } catch (FilesystemException $e) {
