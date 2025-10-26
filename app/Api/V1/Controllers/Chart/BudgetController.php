@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
+use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
@@ -83,15 +84,13 @@ class BudgetController extends Controller
      *
      * @throws FireflyException
      */
-    public function overview(SameDateRequest $request): JsonResponse
+    public function overview(DateRangeRequest $request): JsonResponse
     {
-        $params  = $request->getAll();
-
         /** @var Carbon $start */
-        $start   = $params['start'];
+        $start   = $request->attributes->get('start');
 
         /** @var Carbon $end */
-        $end     = $params['end'];
+        $end     = $request->attributes->get('end');
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();

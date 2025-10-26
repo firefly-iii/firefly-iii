@@ -90,10 +90,9 @@ class PiggyBankController extends Controller
         return response()->api($response);
     }
 
-    public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
+    public function piggyBanksWithBalance(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $piggies  = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
+        $piggies  = $this->piggyRepository->searchPiggyBank($request->attributes->get('query'), $request->attributes->get('limit'));
         $response = [];
 
         /** @var PiggyBank $piggy */

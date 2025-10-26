@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
+use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\UserRoleEnum;
@@ -80,13 +80,13 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function overview(SameDateRequest $request): JsonResponse
+    public function overview(DateRangeRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start      = $this->parameters->get('start');
+        $start = $request->attributes->get('start');
 
         /** @var Carbon $end */
-        $end        = $this->parameters->get('end');
+        $end        = $request->attributes->get('end');
         $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value]);
         $currencies = [];
         $return     = [];
@@ -94,11 +94,11 @@ class CategoryController extends Controller
 
         // get journals for entire period:
         /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setRange($start, $end)->withAccountInformation();
         $collector->setXorAccounts($accounts)->withCategoryInformation();
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value]);
-        $journals   = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($journals as $journal) {
@@ -130,8 +130,8 @@ class CategoryController extends Controller
             }
 
 
-            $categoryName                   = $journal['category_name'] ?? (string)trans('firefly.no_category');
-            $key                            = sprintf('%s-%s', $categoryName, $currencyCode);
+            $categoryName = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $key          = sprintf('%s-%s', $categoryName, $currencyCode);
             // create arrays
             $return[$key] ??= [
                 'label'                           => $categoryName,
@@ -178,10 +178,10 @@ class CategoryController extends Controller
                 }
             }
         }
-        $return     = array_values($return);
+        $return = array_values($return);
 
         // order by amount
-        usort($return, static fn (array $a, array $b) => ((float)$a['entries']['spent'] + (float)$a['entries']['earned']) < ((float)$b['entries']['spent'] + (float)$b['entries']['earned']) ? 1 : -1);
+        usort($return, static fn(array $a, array $b) => ((float)$a['entries']['spent'] + (float)$a['entries']['earned']) < ((float)$b['entries']['spent'] + (float)$b['entries']['earned']) ? 1 : -1);
 
         return response()->json($this->clean($return));
     }

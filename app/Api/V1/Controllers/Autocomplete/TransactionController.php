@@ -86,13 +86,12 @@ class TransactionController extends Controller
         return response()->api($array);
     }
 
-    public function transactionsWithID(AutocompleteRequest $request): JsonResponse
+    public function transactionsWithID(AutocompleteApiRequest $request): JsonResponse
     {
-        $data   = $request->getData();
         $result = new Collection();
-        if (is_numeric($data['query'])) {
+        if (is_numeric($request->attributes->get('query'))) {
             // search for group, not journal.
-            $firstResult = $this->groupRepository->find((int) $data['query']);
+            $firstResult = $this->groupRepository->find((int) $request->attributes->get('query'));
             if ($firstResult instanceof TransactionGroup) {
                 // group may contain multiple journals, each a result:
                 foreach ($firstResult->transactionJournals as $journal) {
@@ -100,8 +99,8 @@ class TransactionController extends Controller
                 }
             }
         }
-        if (!is_numeric($data['query'])) {
-            $result = $this->repository->searchJournalDescriptions($data['query'], $this->parameters->get('limit'));
+        if (!is_numeric($request->attributes->get('query'))) {
+            $result = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
         }
 
         // limit and unique
