@@ -81,11 +81,16 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
-        $types = $request->attributes->get('types');
-        $query = $request->attributes->get('query');
-        $date  = $request->attributes->get('date');
-        $limit = $request->attributes->get('limit');
-        $date  = $date ?? today(config('app.timezone'));
+        [
+            'types' => $types,
+            'query' => $query,
+            'date'  => $date,
+            'limit' => $limit,
+        ]
+            = $request->attributes->all();
+
+
+        $date = $date ?? today(config('app.timezone'));
 
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
