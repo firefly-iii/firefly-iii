@@ -82,7 +82,6 @@ class UpdateController extends Controller
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
 
         $transformer  = new ExchangeRateTransformer();
-        $transformer->setParameters($this->parameters);
 
         return response()
             ->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))

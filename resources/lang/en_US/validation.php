@@ -32,6 +32,7 @@ return [
     'webhook_account_info'           => 'Cannot deliver account information for budget related webhooks.',
     'webhook_transaction_info'       => 'Cannot deliver transaction information for budget related webhooks.',
     'invalid_account_type'           => 'A piggy bank can only be linked to asset accounts and liabilities',
+    'unique_currency_code' => 'This currency code is already in use',
     'invalid_account_currency'       => 'This account does not use the currency you have selected',
     'current_amount_too_much'        => 'The combined amount in "current_amount" cannot exceed the "target_amount".',
     'filter_must_be_in'              => 'Filter ":filter" must be one of: :values',
