@@ -88,7 +88,7 @@ trait UserGroupTrait
     public function setUserGroup(UserGroup $userGroup): void
     {
         if (null === $this->user) {
-            Log::warning(sprintf('User is not set in repository %s', static::class));
+            Log::warning(sprintf('User is not set in repository %s. This does not have to be a problem.', static::class));
         }
         $this->userGroup = $userGroup;
     }
