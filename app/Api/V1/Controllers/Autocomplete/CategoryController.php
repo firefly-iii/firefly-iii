@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Category;
@@ -61,10 +62,9 @@ class CategoryController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getCategoriesAC
      */
-    public function categories(AutocompleteRequest $request): JsonResponse
+    public function categories(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $result   = $this->repository->searchCategory($data['query'], $this->parameters->get('limit'));
+        $result   = $this->repository->searchCategory($request->attributes->get('query'), $request->attributes->get('limit'));
         $filtered = $result->map(
             static fn (Category $item) => [
                 'id'   => (string) $item->id,

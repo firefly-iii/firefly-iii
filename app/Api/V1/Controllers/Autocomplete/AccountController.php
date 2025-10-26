@@ -84,6 +84,7 @@ class AccountController extends Controller
         $types = $request->attributes->get('types');
         $query = $request->attributes->get('query');
         $date  = $request->attributes->get('date');
+        $limit = $request->attributes->get('limit');
         $date  = $date ?? today(config('app.timezone'));
 
         // set date to end-of-day for account balance. so it is at $date 23:59:59
@@ -92,7 +93,7 @@ class AccountController extends Controller
         $return = [];
         $timer  = Timer::getInstance();
         $timer->start(sprintf('AC accounts "%s"', $query));
-        $result      = $this->repository->searchAccount((string)$query, $types, $this->parameters->get('limit'));
+        $result      = $this->repository->searchAccount((string)$query, $types, $limit);
         $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */

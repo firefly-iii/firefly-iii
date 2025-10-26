@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionGroup;
@@ -64,10 +65,9 @@ class TransactionController extends Controller
         );
     }
 
-    public function transactions(AutocompleteRequest $request): JsonResponse
+    public function transactions(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $result   = $this->repository->searchJournalDescriptions($data['query'], $this->parameters->get('limit'));
+        $result   = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
 
         // limit and unique
         $filtered = $result->unique('description');

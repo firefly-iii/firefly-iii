@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\RuleGroup;
@@ -57,10 +58,9 @@ class RuleGroupController extends Controller
         );
     }
 
-    public function ruleGroups(AutocompleteRequest $request): JsonResponse
+    public function ruleGroups(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $groups   = $this->repository->searchRuleGroup($data['query'], $this->parameters->get('limit'));
+        $groups   = $this->repository->searchRuleGroup($request->attributes->get('query'), $request->attributes->get('limit'));
         $response = [];
 
         /** @var RuleGroup $group */

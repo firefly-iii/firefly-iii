@@ -26,6 +26,8 @@ use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\Generic\QueryRequest;
 use FireflyIII\Api\V1\Requests\Models\Account\AccountTypeApiRequest;
 use FireflyIII\Api\V1\Requests\Models\Account\AccountTypesApiRequest;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
+use FireflyIII\Models\Account;
 
 class AutocompleteApiRequest extends AggregateFormRequest
 
@@ -36,6 +38,7 @@ class AutocompleteApiRequest extends AggregateFormRequest
     {
         return [
             DateRequest::class,
+            [PaginationRequest::class, 'sort_class' => Account::class],
             AccountTypesApiRequest::class,
             QueryRequest::class,
         ];
