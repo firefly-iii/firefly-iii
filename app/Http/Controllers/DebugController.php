@@ -81,11 +81,11 @@ class DebugController extends Controller
      */
     public function displayError(): void
     {
-        app('log')->debug('This is a test message at the DEBUG level.');
-        app('log')->info('This is a test message at the INFO level.');
+        Log::debug('This is a test message at the DEBUG level.');
+        Log::info('This is a test message at the INFO level.');
         Log::notice('This is a test message at the NOTICE level.');
-        app('log')->warning('This is a test message at the WARNING level.');
-        app('log')->error('This is a test message at the ERROR level.');
+        Log::warning('This is a test message at the WARNING level.');
+        Log::error('This is a test message at the ERROR level.');
         Log::critical('This is a test message at the CRITICAL level.');
         Log::alert('This is a test message at the ALERT level.');
         Log::emergency('This is a test message at the EMERGENCY level.');
@@ -187,6 +187,8 @@ class DebugController extends Controller
         return [
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
+            'build_time' => config('firefly.build_time'),
+            'build_time_nice' => Carbon::parse(config('firefly.build_time'), 'Europe/Amsterdam')->setTimezone('Europe/Amsterdam')->format('Y-m-d H:i:s e'),
             'uname'           => php_uname('m'),
             'interface'       => PHP_SAPI,
             'bits'            => PHP_INT_SIZE * 8,
@@ -212,11 +214,11 @@ class DebugController extends Controller
         try {
             if (file_exists('/var/www/counter-main.txt')) {
                 $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
-                app('log')->debug(sprintf('build is now "%s"', $return['build']));
+                Log::debug(sprintf('build is now "%s"', $return['build']));
             }
         } catch (Exception $e) {
-            app('log')->debug('Could not check build counter, but thats ok.');
-            app('log')->warning($e->getMessage());
+            Log::debug('Could not check build counter, but thats ok.');
+            Log::warning($e->getMessage());
         }
 
         try {
@@ -224,8 +226,8 @@ class DebugController extends Controller
                 $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
             }
         } catch (Exception $e) {
-            app('log')->debug('Could not check build date, but thats ok.');
-            app('log')->warning($e->getMessage());
+            Log::debug('Could not check build date, but thats ok.');
+            Log::warning($e->getMessage());
         }
         if ('' !== (string) env('BASE_IMAGE_BUILD')) {       // @phpstan-ignore-line
             $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
@@ -282,7 +284,7 @@ class DebugController extends Controller
         $parts          = Steam::getLocaleArray(Steam::getLocale());
         foreach ($parts as $code) {
             $code                  = trim($code);
-            app('log')->debug(sprintf('Trying to set %s', $code));
+            Log::debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }

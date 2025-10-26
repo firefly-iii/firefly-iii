@@ -14,6 +14,10 @@
         <td>Firefly III</td>
         <td>{% if FF_IS_DEVELOP %}<!-- .Z9JBCmw64Zkx1pQw -->{% endif %}{% if not FF_IS_DEVELOP %}v{% endif %}{{ FF_VERSION }}</td>
     </tr>
+    <tr>
+        <td>Build time</td>
+        <td>{{ system.build_time_nice }} ({{ system.build_time }})</td>
+    </tr>
     {# PHP version + settings #}
     <tr>
         <td>PHP version</td>
