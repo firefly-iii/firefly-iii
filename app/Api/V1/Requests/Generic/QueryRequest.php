@@ -1,8 +1,7 @@
 <?php
-
 /*
- * DateRequest.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * QueryRequest.php
+ * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,41 +19,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Api\V1\Requests\Generic;
 
-use Carbon\Carbon;
+use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Validator;
 
-/**
- * Request class for end points that require a date parameter.
- *
- * Class SingleDateRequest
- * @deprecated
- */
-class SingleDateRequest extends FormRequest
+class QueryRequest extends ApiRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    /**
-     * Get all data from the request.
-     */
-    public function getDate(): Carbon
-    {
-        return $this->getCarbonDate('date');
-    }
-
-    /**
-     * The rules that the incoming request must be matched against.
-     */
     public function rules(): array
     {
         return [
-            'date' => 'required|date|after:1970-01-02|before:2038-01-17',
+            'query' => sprintf('min:1|max:50|%s', $this->required),
         ];
     }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator): void {
+                if ($validator->failed()) {
+                    return;
+                }
+                $query = $this->convertString('query');
+                $this->attributes->set('query', $query);
+            }
+        );
+    }
+
 }
