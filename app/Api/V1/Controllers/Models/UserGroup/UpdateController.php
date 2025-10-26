@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\UserGroup\UpdateRequest;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -59,7 +60,7 @@ class UpdateController extends Controller
         $data        = $request->getData();
         $userGroup   = $this->repository->update($userGroup, $data);
         $userGroup->refresh();
-        app('preferences')->mark();
+        Preferences::mark();
 
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);

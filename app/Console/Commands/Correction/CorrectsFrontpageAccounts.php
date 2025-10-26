@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -47,7 +48,7 @@ class CorrectsFrontpageAccounts extends Command
 
         /** @var User $user */
         foreach ($users as $user) {
-            $preference = app('preferences')->getForUser($user, 'frontpageAccounts');
+            $preference = Preferences::getForUser($user, 'frontpageAccounts');
             if (null !== $preference) {
                 $this->fixPreference($preference);
             }
@@ -79,6 +80,6 @@ class CorrectsFrontpageAccounts extends Command
                 }
             }
         }
-        app('preferences')->setForUser($preference->user, 'frontpageAccounts', $fixed);
+        Preferences::setForUser($preference->user, 'frontpageAccounts', $fixed);
     }
 }

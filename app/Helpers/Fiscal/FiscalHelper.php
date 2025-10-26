@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Fiscal;
 
 use Carbon\Carbon;
+use FireflyIII\Support\Facades\Preferences;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
@@ -40,7 +41,7 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function __construct()
     {
-        $this->useCustomFiscalYear = (bool) app('preferences')->get('customFiscalYear', false)->data;
+        $this->useCustomFiscalYear = (bool) Preferences::get('customFiscalYear', false)->data;
     }
 
     /**
@@ -74,7 +75,7 @@ class FiscalHelper implements FiscalHelperInterface
         // get start mm-dd. Then create a start date in the year passed.
         $startDate = clone $date;
         if (true === $this->useCustomFiscalYear) {
-            $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
+            $prefStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
             if (is_array($prefStartStr)) {
                 $prefStartStr = '01-01';
             }

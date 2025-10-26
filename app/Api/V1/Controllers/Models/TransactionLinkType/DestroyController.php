@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -73,7 +74,7 @@ class DestroyController extends Controller
             throw new FireflyException('200020: Link type cannot be changed.');
         }
         $this->repository->destroy($linkType);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

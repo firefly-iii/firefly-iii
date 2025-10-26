@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\TransactionLink;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -66,7 +67,7 @@ class DestroyController extends Controller
     public function destroy(TransactionJournalLink $link): JsonResponse
     {
         $this->repository->destroyLink($link);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

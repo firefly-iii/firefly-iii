@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -92,7 +93,7 @@ class DestroyController extends Controller
 
         $this->groupRepository->destroy($transactionGroup);
 
-        app('preferences')->mark();
+        Preferences::mark();
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -112,7 +113,7 @@ class DestroyController extends Controller
     public function destroyJournal(TransactionJournal $transactionJournal): JsonResponse
     {
         $this->repository->destroyJournal($transactionJournal);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

@@ -30,6 +30,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Facades\Notification;
 
@@ -52,7 +53,7 @@ class AutomationHandler
         $user        = $repository->find($event->userId);
 
         /** @var bool $sendReport */
-        $sendReport  = app('preferences')->getForUser($user, 'notification_transaction_creation', false)->data;
+        $sendReport  = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
             app('log')->debug('Not sending report, because config says so.');

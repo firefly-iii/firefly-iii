@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Validator;
@@ -89,7 +90,7 @@ class DestroyController extends Controller
         }
 
         $this->repository->destroy($currency);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

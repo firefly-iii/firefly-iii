@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Middleware\ApiDemoUser;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -74,7 +75,7 @@ class DestroyController extends Controller
         }
 
         $this->repository->destroy($attachment);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

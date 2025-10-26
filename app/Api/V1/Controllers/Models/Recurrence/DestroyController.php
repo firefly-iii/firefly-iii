@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -61,7 +62,7 @@ class DestroyController extends Controller
     public function destroy(Recurrence $recurrence): JsonResponse
     {
         $this->repository->destroy($recurrence);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

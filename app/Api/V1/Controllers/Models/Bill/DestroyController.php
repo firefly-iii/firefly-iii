@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Bill;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -61,7 +62,7 @@ class DestroyController extends Controller
     public function destroy(Bill $bill): JsonResponse
     {
         $this->repository->destroy($bill);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

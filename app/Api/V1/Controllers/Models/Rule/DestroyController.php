@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Rule;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 
@@ -65,7 +66,7 @@ class DestroyController extends Controller
     public function destroy(Rule $rule): JsonResponse
     {
         $this->ruleRepository->destroy($rule);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

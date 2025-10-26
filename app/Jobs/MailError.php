@@ -56,7 +56,7 @@ class MailError extends Job implements ShouldQueue
         $debug = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
-        app('log')->error(sprintf('Exception is: %s', json_encode($debug)));
+        Log::error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
@@ -92,17 +92,17 @@ class MailError extends Job implements ShouldQueue
             } catch (Exception|TransportException $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
-                    app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    Log::warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
 
                     return;
                 }
                 if (str_contains($message, 'RFC 2822')) {
-                    app('log')->warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    Log::warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
 
                     return;
                 }
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
         }
     }

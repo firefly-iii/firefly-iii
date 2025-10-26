@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\User\PreferenceStoreRequest;
 use FireflyIII\Api\V1\Requests\User\PreferenceUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -52,7 +53,7 @@ class PreferencesController extends Controller
      */
     public function index(): JsonResponse
     {
-        $collection  = app('preferences')->all();
+        $collection  = Preferences::all();
         $manager     = $this->getManager();
         $count       = $collection->count();
         $pageSize    = $this->parameters->get('limit');
@@ -110,7 +111,7 @@ class PreferencesController extends Controller
             throw new FireflyException('Please use api/v1/currencies/default instead.');
         }
 
-        $pref        = app('preferences')->set($data['name'], $data['data']);
+        $pref        = Preferences::set($data['name'], $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);
@@ -135,7 +136,7 @@ class PreferencesController extends Controller
 
         $manager     = $this->getManager();
         $data        = $request->getAll();
-        $pref        = app('preferences')->set($preference->name, $data['data']);
+        $pref        = Preferences::set($preference->name, $data['data']);
 
         /** @var PreferenceTransformer $transformer */
         $transformer = app(PreferenceTransformer::class);

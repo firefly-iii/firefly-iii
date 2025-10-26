@@ -33,6 +33,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Rules\IsDuplicateTransaction;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\TransactionGroupTransformer;
@@ -107,7 +108,7 @@ class StoreController extends Controller
 
             throw new ValidationException($validator);
         }
-        app('preferences')->mark();
+        Preferences::mark();
         $applyRules         = $data['apply_rules'] ?? true;
         $fireWebhooks       = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));

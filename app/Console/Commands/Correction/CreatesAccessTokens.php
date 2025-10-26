@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use Exception;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -54,10 +55,10 @@ class CreatesAccessTokens extends Command
 
         /** @var User $user */
         foreach ($users as $user) {
-            $pref = app('preferences')->getForUser($user, 'access_token');
+            $pref = Preferences::getForUser($user, 'access_token');
             if (null === $pref) {
                 $token = $user->generateAccessToken();
-                app('preferences')->setForUser($user, 'access_token', $token);
+                Preferences::setForUser($user, 'access_token', $token);
                 $this->friendlyInfo(sprintf('Generated access token for user %s', $user->email));
                 ++$count;
             }
