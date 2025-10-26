@@ -187,7 +187,7 @@ class DebugController extends Controller
         return [
             'php_version'     => PHP_VERSION,
             'php_os'          => PHP_OS,
-            'build_time' => config('firefly.build_time'),
+            'build_time'      => config('firefly.build_time'),
             'build_time_nice' => Carbon::parse(config('firefly.build_time'), 'Europe/Amsterdam')->setTimezone('Europe/Amsterdam')->format('Y-m-d H:i:s e'),
             'uname'           => php_uname('m'),
             'interface'       => PHP_SAPI,
