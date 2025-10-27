@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * QueryRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -50,5 +52,4 @@ class QueryRequest extends ApiRequest
             }
         );
     }
-
 }

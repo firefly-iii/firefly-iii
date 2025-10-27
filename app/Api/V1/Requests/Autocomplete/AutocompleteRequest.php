@@ -31,6 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class AutocompleteRequest
+ *
  * @deprecated
  */
 class AutocompleteRequest extends FormRequest
