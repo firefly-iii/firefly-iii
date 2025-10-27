@@ -825,6 +825,8 @@ return [
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
     'applied_rule_group_selection'                        => 'Rule group ":title" has been applied to your selection.',
+    'rule_run_after_creation' => 'If you check this box, you get the opportunity to run the rule after it has been created.',
+    'rule_run_after_edit' => 'If you check this box, you get the opportunity to run the rule after it has been updated.',
 
     // actions and triggers
     'rule_trigger_store_journal'                          => 'When a transaction is created',

@@ -54,6 +54,7 @@ class RuleFormRequest extends FormRequest
             'description'     => $this->stringWithNewlines('description'),
             'stop_processing' => $this->boolean('stop_processing'),
             'strict'          => $this->boolean('strict'),
+            'run_after_form' => $this->boolean('run_after_form'),
             'triggers'        => $this->getRuleTriggerData(),
             'actions'         => $this->getRuleActionData(),
         ];
@@ -150,6 +151,7 @@ class RuleFormRequest extends FormRequest
             'actions.*.type'   => 'required|in:'.implode(',', $validActions),
             'actions.*.value'  => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
             'strict'           => 'in:0,1',
+            'run_after_form'           => 'in:0,1',
         ];
 
         /** @var null|Rule $rule */

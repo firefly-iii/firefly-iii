@@ -132,6 +132,7 @@
                         <h3 class="box-title">{{ 'options'|_ }}</h3>
                     </div>
                     <div class="box-body">
+                        {{ ExpandedForm.checkbox('run_after_form',1,null, {helpText: trans('firefly.rule_run_after_creation')}) }}
                         {{ ExpandedForm.optionsList('create','rule') }}
                     </div>
                     <div class="box-footer">

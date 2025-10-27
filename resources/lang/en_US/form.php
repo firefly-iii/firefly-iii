@@ -66,6 +66,7 @@ return [
     'opening_balance'              => 'Opening balance',
     'tag_mode'                      => 'Tag mode',
     'virtual_balance'              => 'Virtual balance',
+    'run_after_form' => 'Run this rule',
 
 
 
