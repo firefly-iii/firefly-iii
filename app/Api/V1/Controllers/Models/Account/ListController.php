@@ -125,7 +125,7 @@ class ListController extends Controller
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
-        //$transformer->setParameters($this->parameters);
+        // $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($piggyBanks, $transformer, 'piggy-banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));

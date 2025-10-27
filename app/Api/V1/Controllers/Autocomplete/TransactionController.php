@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
