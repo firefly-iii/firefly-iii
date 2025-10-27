@@ -19,7 +19,7 @@
         "@fortawesome/fontawesome-free": "^7",
         "@popperjs/core": "^2.11.8",
         "admin-lte": "^4.0.0-rc4",
-        "alpinejs": "^3.13.7",
+        "alpinejs": "^3.15.1",
         "bootstrap": "^5",
         "bootstrap5-autocomplete": "^1",
         "bootstrap5-tags": "^1",
