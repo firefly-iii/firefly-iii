@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * AutocompleteApiRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -24,16 +26,14 @@ namespace FireflyIII\Api\V1\Requests\Autocomplete;
 use FireflyIII\Api\V1\Requests\AggregateFormRequest;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\Generic\QueryRequest;
-use FireflyIII\Api\V1\Requests\Models\Account\AccountTypeApiRequest;
 use FireflyIII\Api\V1\Requests\Models\Account\AccountTypesApiRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Account;
+use Override;
 
 class AutocompleteApiRequest extends AggregateFormRequest
-
 {
-
-    #[\Override]
+    #[Override]
     protected function getRequests(): array
     {
         return [
