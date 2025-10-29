@@ -54,7 +54,7 @@ class RuleFormRequest extends FormRequest
             'description'     => $this->stringWithNewlines('description'),
             'stop_processing' => $this->boolean('stop_processing'),
             'strict'          => $this->boolean('strict'),
-            'run_after_form' => $this->boolean('run_after_form'),
+            'run_after_form'  => $this->boolean('run_after_form'),
             'triggers'        => $this->getRuleTriggerData(),
             'actions'         => $this->getRuleActionData(),
         ];
@@ -141,16 +141,16 @@ class RuleFormRequest extends FormRequest
 
         // initial set of rules:
         $rules           = [
-            'title'            => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
-            'description'      => 'min:1|max:32768|nullable',
-            'stop_processing'  => 'boolean',
-            'rule_group_id'    => 'required|belongsToUser:rule_groups',
-            'trigger'          => 'required|in:store-journal,update-journal,manual-activation',
-            'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.type'   => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'  => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
-            'strict'           => 'in:0,1',
+            'title'                    => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
+            'description'              => 'min:1|max:32768|nullable',
+            'stop_processing'          => 'boolean',
+            'rule_group_id'            => 'required|belongsToUser:rule_groups',
+            'trigger'                  => 'required|in:store-journal,update-journal,manual-activation',
+            'triggers.*.type'          => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'         => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
+            'actions.*.type'           => 'required|in:'.implode(',', $validActions),
+            'actions.*.value'          => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
+            'strict'                   => 'in:0,1',
             'run_after_form'           => 'in:0,1',
         ];
 
