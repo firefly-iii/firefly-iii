@@ -143,9 +143,19 @@ There is also a [security policy](https://github.com/firefly-iii/firefly-iii/sec
 
 ## Support the development of Firefly III
 
-If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved! 🥳
+Firefly III is a side gig. With your sponsorship or support, I can spend more time on Firefly III. So, if you like Firefly III, and if it helps you save lots of money, why not send me a dime for every dollar saved! 🥳
 
-OK that was a joke. If you feel Firefly III made your life better, please consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. You can also [buy me a ☕️ coffee at ko-fi.com](https://ko-fi.com/Q5Q5R4SH1). Thank you for your consideration.
+OK, that was a joke. But for real, when you feel Firefly III made your life better, please consider contributing as a sponsor. Please check out my [Patreon](https://www.patreon.com/jc5) and [GitHub Sponsors](https://github.com/sponsors/JC5) page for more information. You can also [buy me a ☕️ coffee at ko-fi.com](https://ko-fi.com/Q5Q5R4SH1) or send something my way using [Liberapay](https://liberapay.com/JC5). Thank you for your consideration.
+
+### Sponsorships
+
+Firefly III is sponsored by LamdaTest. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
+
+<p style="font-size:21px; color:black;">Browser testing via
+<a href="https://www.lambdatest.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
+<img src="https://www.lambdatest.com/blue-logo.png" style="vertical-align: middle;" width="250" height="45" />
+</a>
+</p>
 
 <!-- END OF SPONSOR TEXT -->
 
