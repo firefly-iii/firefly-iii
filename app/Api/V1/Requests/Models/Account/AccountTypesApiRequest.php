@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
+use FireflyIII\Rules\Account\IsValidAccountType;
+use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Validation\Validator;
 
@@ -33,8 +35,9 @@ class AccountTypesApiRequest extends ApiRequest
 
     public function rules(): array
     {
+        //  sprintf('in:%s', implode(',', array_keys($this->types))),
         return [
-            'types'  => sprintf('in:%s', implode(',', array_keys($this->types))),
+            'types'  => new IsValidAccountTypeList(),
         ];
     }
 
