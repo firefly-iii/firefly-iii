@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
 use FireflyIII\Api\V1\Requests\ApiRequest;
-use FireflyIII\Rules\Account\IsValidAccountType;
 use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Validation\Validator;

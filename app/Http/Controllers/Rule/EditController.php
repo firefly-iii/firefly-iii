@@ -206,7 +206,7 @@ class EditController extends Controller
         app('preferences')->mark();
         $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
 
-        if(true === $data['run_after_form']) {
+        if (true === $data['run_after_form']) {
             return redirect(route('rules.select-transactions', [$rule->id]));
         }
 

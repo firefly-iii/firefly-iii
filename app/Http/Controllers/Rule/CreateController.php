@@ -282,7 +282,7 @@ class CreateController extends Controller
         if ((int) $request->get('bill_id') > 0) {
             return redirect($this->getPreviousUrl('bills.create.url'));
         }
-        if(true === $data['run_after_form']) {
+        if (true === $data['run_after_form']) {
             return redirect(route('rules.select-transactions', [$rule->id]));
         }
 
