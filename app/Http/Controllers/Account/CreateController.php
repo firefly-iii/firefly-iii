@@ -96,9 +96,9 @@ class CreateController extends Controller
         ];
 
         // interest calculation periods:
-        $interestPeriods = [];
-        foreach(config('firefly.interest_periods') as $period) {
-            $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s' , $period));
+        $interestPeriods     = [];
+        foreach (config('firefly.interest_periods') as $period) {
+            $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
         // pre fill some data

@@ -7,30 +7,30 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- #11019
-- #11024
-- #11028
-- #11039
-- #11041
-- #10993
-- #11056
-- #11052
-- #11102
-- #11109
-- #11132
+- [PR 11019](https://github.com/firefly-iii/firefly-iii/pull/11019) (fix #11015 set end date time to end of day) reported by @ctrl-f5
+- [PR 11024](https://github.com/firefly-iii/firefly-iii/pull/11024) (improved balance range date handling) reported by @ctrl-f5
+- [PR 11028](https://github.com/firefly-iii/firefly-iii/pull/11028) (Adding Latin American Currency Support) reported by @codearena-bot
+- [PR 11039](https://github.com/firefly-iii/firefly-iii/pull/11039) (proposal for improved request handling) reported by @ctrl-f5
+- [PR 11041](https://github.com/firefly-iii/firefly-iii/pull/11041) (Add XML mimetypes to the allowedMimes list) reported by @jreyesr
+- [PR 10993](https://github.com/firefly-iii/firefly-iii/pull/10993) (use correct translation key for category report income table) reported by @ctrl-f5
+- [PR 11056](https://github.com/firefly-iii/firefly-iii/pull/11056) (account/attachments endpoint use request object for pagination, add test) reported by @ctrl-f5
+- [PR 11052](https://github.com/firefly-iii/firefly-iii/pull/11052) (correct validator function to check for errors + `Account\ShowControllerTest`) reported by @ctrl-f5
+- [Issue 11102](https://github.com/firefly-iii/firefly-iii/issues/11102) (Allow to redact account totals in web ui) reported by @edvgui
+- [Issue 11109](https://github.com/firefly-iii/firefly-iii/issues/11109) (Could not find a transaction currency with code "Korean Won"/"Russian ruble") reported by @mattephi
+- [Issue 11132](https://github.com/firefly-iii/firefly-iii/issues/11132) (Add a 6 month interest period) reported by @CiramorDev
 
 ### Fixed
 
-- #11031
-- #11038
-- #11042
-- #11050
-- #11054
-- #11096
-- #11063
-- #11104
-- #11122
-- #11134
+- [Issue 11031](https://github.com/firefly-iii/firefly-iii/issues/11031) (Rule with trigger "When a transaction is created" being triggered on transaction updates) reported by @pvieira84
+- [Issue 11038](https://github.com/firefly-iii/firefly-iii/issues/11038) (Missing date formats when using "MTD" on the frontpage) reported by @cristiangrossano
+- [Issue 11042](https://github.com/firefly-iii/firefly-iii/issues/11042) (Option to apply rules on a specific date range has disappeared from the UI) reported by @angelbarrera92
+- [Issue 11050](https://github.com/firefly-iii/firefly-iii/issues/11050) (Dev Version: `/api/v1/accounts/get/$id` requires (optional) `start` parameter, throws error otherwise) reported by @dreautall
+- [Issue 11054](https://github.com/firefly-iii/firefly-iii/issues/11054) (Autocreation of revenue account when depositing to liability) reported by @Mr-Kanister
+- [Issue 11096](https://github.com/firefly-iii/firefly-iii/issues/11096) (Budget Limit API ignores transactions on the last day of the month) reported by @edbingo
+- [Issue 11063](https://github.com/firefly-iii/firefly-iii/issues/11063) ("bcadd: argument must be of type string, int given" when viewing categories or tags) reported by @df911
+- [Discussion 11104](https://github.com/orgs/firefly-iii/discussions/11104) (Personal Access Token failing on 6.4.2 for data-importer) started by @marcoblancas
+- [Discussion 11122](https://github.com/orgs/firefly-iii/discussions/11122) (Convenient Rules Creation) started by @viewmatic2025
+- [Issue 11134](https://github.com/firefly-iii/firefly-iii/issues/11134) (Rules are not applied if description in quotes) reported by @beatbesmer
 
 ### Security
 
