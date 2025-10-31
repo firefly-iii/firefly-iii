@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.3 - 2025-11-01
+
+### Added
+
+- #11019
+- #11024
+- #11028
+- #11039
+- #11041
+- #10993
+- #11056
+- #11052
+- #11102
+- #11109
+- #11132
+
+### Fixed
+
+- #11031
+- #11038
+- #11042
+- #11050
+- #11054
+- #11096
+- #11063
+- #11104
+- #11122
+- #11134
+
+### Security
+
+- Debug route is now behind 2FA
 
 ## 6.4.2 - 2055-10-07
 
