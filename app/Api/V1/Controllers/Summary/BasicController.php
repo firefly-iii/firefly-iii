@@ -27,7 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Summary;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\DateRequest;
+use FireflyIII\Api\V1\Requests\Summary\BasicRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -88,34 +88,25 @@ class BasicController extends Controller
         );
     }
 
-    /**
-     * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/summary/getBasicSummary
-     *
-     * @throws Exception
-     */
-    public function basic(DateRequest $request): JsonResponse
+    public function basic(BasicRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $dates        = $request->getAll();
-        $start        = $dates['start'];
-        $end          = $dates['end'];
-        $code         = $request->get('currency_code');
+        ['start' => $start, 'end' => $end, 'code' => $code] = $request->attributes->all();
         // balance information:
-        $balanceData  = $this->getBalanceInformation($start, $end);
-        $billData     = $this->getSubscriptionInformation($start, $end);
-        $spentData    = $this->getLeftToSpendInfo($start, $end);
-        $netWorthData = $this->getNetWorthInfo($end);
+        $balanceData                                        = $this->getBalanceInformation($start, $end);
+        $billData                                           = $this->getSubscriptionInformation($start, $end);
+        $spentData                                          = $this->getLeftToSpendInfo($start, $end);
+        $netWorthData                                       = $this->getNetWorthInfo($end);
         //                        $balanceData  = [];
         //                        $billData     = [];
         //                $spentData    = [];
         //                        $netWorthData = [];
-        $total        = array_merge($balanceData, $billData, $spentData, $netWorthData);
+        $total                                              = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
-        $return       = [];
+        $return                                             = [];
         foreach ($total as $entry) {
-            if (null === $code || ($code === $entry['currency_code'])) {
+            if ('' === $code || ($code === $entry['currency_code'])) {
                 $return[$entry['key']] = $entry;
             }
         }
@@ -589,8 +580,6 @@ class BasicController extends Controller
 
     private function getNetWorthInfo(Carbon $end): array
     {
-        $end->endOfDay();
-
         /** @var User $user */
         $user           = auth()->user();
         Log::debug(sprintf('getNetWorthInfo up until "%s".', $end->format('Y-m-d H:i:s')));

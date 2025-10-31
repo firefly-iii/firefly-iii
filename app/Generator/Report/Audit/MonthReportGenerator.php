@@ -137,9 +137,12 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);
-        // this call is correct.
-        Log::debug(sprintf('getAuditReport: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
+
+        Log::debug(sprintf('getAuditReport: Call accountsBalancesOptimized with date/time "%s"', $date->toIso8601String()));
+        // 2025-10-08 replace with accountsBalancesOptimized.
+        // $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
+        $dayBeforeBalance  = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+
         $startBalance      = $dayBeforeBalance['balance'];
         $primaryCurrency   = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $primaryCurrency;
@@ -176,12 +179,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
         // call is correct.
         Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
 
+        // 2025-10-08 replace with accountsBalancesOptimized:
         return [
             'journals'         => $journals,
             'currency'         => $currency,
             'exists'           => 0 !== count($journals),
             'end'              => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
-            'endBalance'       => Steam::finalAccountBalance($account, $this->end)['balance'],
+            // 'endBalance'       => Steam::finalAccountBalance($account, $this->end)['balance'],
+            'endBalance'       => Steam::accountsBalancesOptimized(new Collection()->push($account), $this->end)[$account->id]['balance'],
             'dayBefore'        => $date->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
             'dayBeforeBalance' => $dayBeforeBalance,
         ];

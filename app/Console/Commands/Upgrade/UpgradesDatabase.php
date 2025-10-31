@@ -87,7 +87,7 @@ class UpgradesDatabase extends Command
             $this->call($command, $args);
         }
         // index will set FF3 version.
-        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
+        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
 
         return 0;
     }

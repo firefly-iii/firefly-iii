@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use Deprecated;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionCurrency;
@@ -62,10 +63,9 @@ class CurrencyController extends Controller
      * Documentation for this endpoint is at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/autocomplete/getCurrenciesAC
      */
-    public function currencies(AutocompleteRequest $request): JsonResponse
+    public function currencies(AutocompleteApiRequest $request): JsonResponse
     {
-        $data       = $request->getData();
-        $collection = $this->repository->searchCurrency($data['query'], $this->parameters->get('limit'));
+        $collection = $this->repository->searchCurrency($request->attributes->get('query'), $request->attributes->get('limit'));
         $result     = [];
 
         /** @var TransactionCurrency $currency */

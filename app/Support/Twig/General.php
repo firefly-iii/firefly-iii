@@ -30,6 +30,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use League\CommonMark\GithubFlavoredMarkdownConverter;
@@ -155,9 +156,12 @@ class General extends AbstractExtension
                 }
 
                 /** @var Carbon $date */
-                $date             = session('end', today(config('app.timezone'))->endOfMonth());
+                $date             = now();
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $info             = Steam::finalAccountBalance($account, $date);
+
+                // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+                $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+                // $info             = Steam::finalAccountBalance($account, $date);
                 $currency         = Steam::getAccountCurrency($account);
                 $primary          = Amount::getPrimaryCurrency();
                 $convertToPrimary = Amount::convertToPrimary();

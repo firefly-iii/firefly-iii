@@ -30,7 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AccountTransformer
@@ -46,7 +45,6 @@ class AccountTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->parameters       = new ParameterBag();
         $this->repository       = app(AccountRepositoryInterface::class);
         $this->convertToPrimary = Amount::convertToPrimary();
         $this->primary          = Amount::getPrimaryCurrency();

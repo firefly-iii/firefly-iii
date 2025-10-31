@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
@@ -74,6 +75,9 @@ class DestroyController extends Controller
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
         if ($exchangeRate instanceof CurrencyExchangeRate) {
             $this->repository->deleteRate($exchangeRate);
+        }
+        if (!$exchangeRate instanceof CurrencyExchangeRate) {
+            throw new FireflyException('Bla');
         }
 
         return response()->json([], 204);

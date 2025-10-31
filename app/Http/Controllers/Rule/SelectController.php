@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SelectTransactionsRequest;
@@ -56,7 +57,7 @@ class SelectController extends Controller
 
         $this->middleware(
             static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
@@ -73,10 +74,19 @@ class SelectController extends Controller
         /** @var User $user */
         $user          = auth()->user();
         $accounts      = implode(',', $request->get('accounts'));
-
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
+
+        // add date operators.
+        if (null !== $request->get('start')) {
+            $startDate = new Carbon($request->get('start'));
+            $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+        }
+        if (null !== $request->get('end')) {
+            $endDate = new Carbon($request->get('end'));
+            $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+        }
 
         // add extra operators:
         $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
@@ -102,7 +112,7 @@ class SelectController extends Controller
             return redirect(route('rules.index'));
         }
         // does the user have shared accounts?
-        $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
         return view('rules.rule.select-transactions', compact('rule', 'subTitle'));
     }
@@ -127,7 +137,7 @@ class SelectController extends Controller
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
         }
 
         foreach ($textTriggers as $textTrigger) {
@@ -160,7 +170,7 @@ class SelectController extends Controller
         // Warn the user if only a subset of transactions is returned
         $warning            = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions');
+            $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
@@ -190,7 +200,7 @@ class SelectController extends Controller
         $triggers      = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return response()->json(['html' => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
         }
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
@@ -202,7 +212,7 @@ class SelectController extends Controller
 
         $warning       = '';
         if (0 === count($collection)) {
-            $warning = (string) trans('firefly.warning_no_matching_transactions');
+            $warning = (string)trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response

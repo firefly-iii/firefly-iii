@@ -30,6 +30,7 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -70,7 +71,7 @@ class DestroyController extends Controller
 
         Log::channel('audit')->info(sprintf('User destroys webhook #%d.', $webhook->id));
         $this->repository->destroy($webhook);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }
@@ -101,7 +102,7 @@ class DestroyController extends Controller
         Log::channel('audit')->info(sprintf('User destroys webhook #%d, message #%d, attempt #%d.', $webhook->id, $message->id, $attempt->id));
 
         $this->repository->destroyAttempt($attempt);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }
@@ -128,7 +129,7 @@ class DestroyController extends Controller
         Log::channel('audit')->info(sprintf('User destroys webhook #%d, message #%d.', $webhook->id, $message->id));
 
         $this->repository->destroyMessage($message);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

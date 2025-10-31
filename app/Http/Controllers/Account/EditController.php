@@ -108,11 +108,10 @@ class EditController extends Controller
         ];
 
         // interest calculation periods:
-        $interestPeriods      = [
-            'daily'   => (string) trans('firefly.interest_calc_daily'),
-            'monthly' => (string) trans('firefly.interest_calc_monthly'),
-            'yearly'  => (string) trans('firefly.interest_calc_yearly'),
-        ];
+        $interestPeriods      = [];
+        foreach (config('firefly.interest_periods') as $period) {
+            $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
+        }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('accounts.edit.fromUpdate')) {

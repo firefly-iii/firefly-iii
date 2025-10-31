@@ -116,10 +116,11 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        Log::debug(sprintf('expenseAccounts: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('expenseAccounts: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('expenseAccounts: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
         Log::debug('Done collecting balances');
         // loop the accounts, then check for balance and currency info.
         foreach ($accounts as $account) {
@@ -521,9 +522,9 @@ class AccountController extends Controller
         $range           = Steam::filterAccountBalances($range, $account, $this->convertToPrimary, $accountCurrency);
         Log::debug('Get and filter balance for entire range end');
         // temp, get end balance.
-        Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        Steam::finalAccountBalance($account, $end);
-        Log::debug('END temp get end balance done');
+        //        Log::debug(sprintf('period: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
+        //        Steam::finalAccountBalance($account, $end);
+        //        Log::debug('END temp get end balance done');
 
         $previous        = array_values($range)[0];
         $accountCurrency ??= $this->primaryCurrency; // do this AFTER getting the balances.
@@ -666,10 +667,11 @@ class AccountController extends Controller
         $accountNames  = $this->extractNames($accounts);
 
         // grab all balances
-        Log::debug(sprintf('revAccounts: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('revAccounts: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('revAccounts: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
 
 
         // loop the accounts, then check for balance and currency info.

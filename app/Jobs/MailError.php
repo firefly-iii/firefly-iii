@@ -31,6 +31,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Safe\Exceptions\FilesystemException;
+use Safe\Exceptions\JsonException;
 use Symfony\Component\Mailer\Exception\TransportException;
 
 use function Safe\file_get_contents;
@@ -54,7 +56,7 @@ class MailError extends Job implements ShouldQueue
         $debug = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
-        app('log')->error(sprintf('Exception is: %s', json_encode($debug)));
+        Log::error(sprintf('Exception is: %s', json_encode($debug)));
     }
 
     /**
@@ -90,17 +92,17 @@ class MailError extends Job implements ShouldQueue
             } catch (Exception|TransportException $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
-                    app('log')->warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    Log::warning('[Bcc] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
 
                     return;
                 }
                 if (str_contains($message, 'RFC 2822')) {
-                    app('log')->warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
+                    Log::warning('[RFC] Could not email or log the error. Please validate your email settings, use the .env.example file as a guide.');
 
                     return;
                 }
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
         }
     }
@@ -125,11 +127,25 @@ class MailError extends Job implements ShouldQueue
 
         if (!file_exists($file)) {
             Log::debug(sprintf('Wrote new file in "%s"', $file));
-            file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+
+            try {
+                file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+            } catch (FilesystemException $e) {
+                Log::warning(sprintf('[a] Could not write file "%s": %s', $file, $e->getMessage()));
+            } catch (JsonException $e) {
+                Log::warning(sprintf('[b] Could not parse file "%s": %s', $file, $e->getMessage()));
+            }
         }
         if (file_exists($file)) {
             Log::debug(sprintf('Read file in "%s"', $file));
-            $limits = json_decode(file_get_contents($file), true);
+
+            try {
+                $limits = json_decode(file_get_contents($file), true);
+            } catch (FilesystemException $e) {
+                Log::warning(sprintf('[c] Could not read file "%s": %s', $file, $e->getMessage()));
+            } catch (JsonException $e) {
+                Log::warning(sprintf('[d] Could not parse file "%s": %s', $file, $e->getMessage()));
+            }
         }
         // limit reached?
         foreach ($types as $type => $info) {
@@ -157,7 +173,14 @@ class MailError extends Job implements ShouldQueue
             }
             ++$limits[$type]['sent'];
         }
-        file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+
+        try {
+            file_put_contents($file, json_encode($limits, JSON_PRETTY_PRINT));
+        } catch (FilesystemException $e) {
+            Log::warning(sprintf('[c] Could not write file "%s": %s', $file, $e->getMessage()));
+        } catch (JsonException $e) {
+            Log::warning(sprintf('[c] Could not parse file "%s": %s', $file, $e->getMessage()));
+        }
         Log::debug('No limits reached, return FALSE.');
 
         return false;

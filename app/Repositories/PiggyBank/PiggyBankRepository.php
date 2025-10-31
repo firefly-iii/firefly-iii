@@ -375,7 +375,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     {
         Log::debug(sprintf('leftOnAccount("%s","%s","%s")', $piggyBank->name, $account->name, $date->format('Y-m-d H:i:s')));
         Log::debug(sprintf('leftOnAccount: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-        $balance = Steam::finalAccountBalance($account, $date)['balance'];
+        // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+        $balance = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'];
+        // $balance = Steam::finalAccountBalance($account, $date)['balance'];
 
         Log::debug(sprintf('Balance is: %s', $balance));
 

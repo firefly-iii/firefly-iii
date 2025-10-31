@@ -46,6 +46,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
@@ -102,7 +103,7 @@ class DestroyController extends Controller
             default                  => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects)),
         };
 
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

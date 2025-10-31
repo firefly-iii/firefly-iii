@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 
@@ -79,7 +80,7 @@ trait VerifiesAccessToken
 
             return false;
         }
-        $accessToken = app('preferences')->getForUser($user, 'access_token');
+        $accessToken = Preferences::getForUser($user, 'access_token');
         if (null === $accessToken) {
             Log::error(sprintf('User #%d has no access token, so cannot access command line options.', $userId));
 

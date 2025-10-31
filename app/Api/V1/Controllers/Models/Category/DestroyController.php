@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Category;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -61,7 +62,7 @@ class DestroyController extends Controller
     public function destroy(Category $category): JsonResponse
     {
         $this->repository->destroy($category);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

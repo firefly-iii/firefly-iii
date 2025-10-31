@@ -139,7 +139,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         /** @var Rule $entry */
         foreach ($set as $entry) {
             if ($entry->order !== $count) {
-                app('log')->debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
+                Log::debug(sprintf('Rule #%d was on spot %d but must be on spot %d', $entry->id, $entry->order, $count));
                 $entry->order = $count;
                 $entry->save();
             }
@@ -167,7 +167,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             if ($action->order !== $index) {
                 $action->order = $index;
                 $action->save();
-                app('log')->debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
+                Log::debug(sprintf('Rule action #%d was on spot %d but must be on spot %d', $action->id, $action->order, $index));
             }
             ++$index;
         }
@@ -189,7 +189,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             if ($order !== $index) {
                 $trigger->order = $index;
                 $trigger->save();
-                app('log')->debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
+                Log::debug(sprintf('Rule trigger #%d was on spot %d but must be on spot %d', $trigger->id, $order, $index));
             }
             ++$index;
         }
@@ -235,6 +235,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group->rules()
+            ->orderBy('rules.order', 'ASC')
             ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
             ->where('rule_triggers.trigger_type', 'user_action')
             ->where('rule_triggers.trigger_value', 'store-journal')
@@ -262,6 +263,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 [ // @phpstan-ignore-line
                     'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
+                        $query->where('rules.active', true);
                     },
                     'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
@@ -275,23 +277,23 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         if (null === $filter) {
             return $groups;
         }
-        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
             static function (RuleGroup $group) use ($filter) { // @phpstan-ignore-line
-                app('log')->debug(sprintf('Now filtering group #%d', $group->id));
+                Log::debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
                     static function (Rule $rule) use ($filter) {
-                        app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
+                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
-                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
 
                                 return true;
                             }
                         }
-                        app('log')->debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
 
                         return false;
                     }
@@ -318,6 +320,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 [ // @phpstan-ignore-line
                     'rules'              => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
+                        $query->where('rules.active', true);
                     },
                     'rules.ruleTriggers' => static function (HasMany $query): void {
                         $query->orderBy('order', 'ASC');
@@ -331,23 +334,23 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         if (null === $filter) {
             return $groups;
         }
-        app('log')->debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
+        Log::debug(sprintf('Will filter getRuleGroupsWithRules on "%s".', $filter));
 
         return $groups->map(
             static function (RuleGroup $group) use ($filter) { // @phpstan-ignore-line
-                app('log')->debug(sprintf('Now filtering group #%d', $group->id));
+                Log::debug(sprintf('Now filtering group #%d', $group->id));
                 // filter the rules in the rule group:
                 $group->rules = $group->rules->filter(
                     static function (Rule $rule) use ($filter) {
-                        app('log')->debug(sprintf('Now filtering rule #%d', $rule->id));
+                        Log::debug(sprintf('Now filtering rule #%d', $rule->id));
                         foreach ($rule->ruleTriggers as $trigger) {
                             if ('user_action' === $trigger->trigger_type && $filter === $trigger->trigger_value) {
-                                app('log')->debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
+                                Log::debug(sprintf('Rule #%d triggers on %s, include it.', $rule->id, $filter));
 
                                 return true;
                             }
                         }
-                        app('log')->debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
+                        Log::debug(sprintf('Rule #%d does not trigger on %s, do not include it.', $rule->id, $filter));
 
                         return false;
                     }
@@ -414,7 +417,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 ->decrement('order')
             ;
             $ruleGroup->order = $newOrder;
-            app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+            Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
 
             return;
@@ -425,7 +428,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->increment('order')
         ;
         $ruleGroup->order = $newOrder;
-        app('log')->debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
+        Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
         $ruleGroup->save();
     }
 

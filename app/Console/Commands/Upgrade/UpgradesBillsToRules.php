@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -114,7 +115,7 @@ class UpgradesBillsToRules extends Command
         $this->ruleRepository->setUser($user);
 
         /** @var Preference $lang */
-        $lang       = app('preferences')->getForUser($user, 'language', 'en_US');
+        $lang       = Preferences::getForUser($user, 'language', 'en_US');
         $language   = null !== $lang->data && !is_array($lang->data) ? (string) $lang->data : 'en_US';
         $groupTitle = (string) trans('firefly.rulegroup_for_bills_title', [], $language);
         $ruleGroup  = $this->ruleGroupRepository->findByTitle($groupTitle);

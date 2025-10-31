@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -57,10 +57,9 @@ class RecurrenceController extends Controller
         );
     }
 
-    public function recurring(AutocompleteRequest $request): JsonResponse
+    public function recurring(AutocompleteApiRequest $request): JsonResponse
     {
-        $data        = $request->getData();
-        $recurrences = $this->repository->searchRecurrence($data['query'], $this->parameters->get('limit'));
+        $recurrences = $this->repository->searchRecurrence($request->attributes->get('query'), $request->attributes->get('limit'));
         $response    = [];
 
         /** @var Recurrence $recurrence */

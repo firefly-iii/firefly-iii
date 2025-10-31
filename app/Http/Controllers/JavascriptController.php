@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -114,6 +115,7 @@ class JavascriptController extends Controller
             'currencyCode'         => $currency->code,
             'currencySymbol'       => $currency->symbol,
             'accountingLocaleInfo' => $accounting,
+            'anonymous'            => var_export(Steam::anonymous(), true),
             'language'             => $lang,
             'dateRangeTitle'       => $dateRange['title'],
             'locale'               => $locale,

@@ -26,7 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
+use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\UserRoleEnum;
@@ -80,13 +80,13 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function overview(SameDateRequest $request): JsonResponse
+    public function overview(DateRangeRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start      = $this->parameters->get('start');
+        $start      = $request->attributes->get('start');
 
         /** @var Carbon $end */
-        $end        = $this->parameters->get('end');
+        $end        = $request->attributes->get('end');
         $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value]);
         $currencies = [];
         $return     = [];

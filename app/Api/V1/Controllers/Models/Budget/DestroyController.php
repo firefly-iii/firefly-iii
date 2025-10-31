@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Budget;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -61,7 +62,7 @@ class DestroyController extends Controller
     public function destroy(Budget $budget): JsonResponse
     {
         $this->repository->destroy($budget);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

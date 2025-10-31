@@ -38,6 +38,11 @@ class IsValidSortInstruction implements ValidationRule
 
             return;
         }
+        if ('' === $value) {
+            // don't validate.
+
+            return;
+        }
         $validParameters = config(sprintf('firefly.allowed_sort_parameters.%s', $shortClass));
         if (!is_array($validParameters)) {
             $fail('validation.no_sort_instructions')->translate(['object' => $shortClass]);

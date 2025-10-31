@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Report;
 
 use Carbon\Carbon;
-use Deprecated;
-use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\UserGroup;
@@ -129,56 +127,5 @@ class NetWorth implements NetWorthInterface
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
 
-    }
-
-    #[Deprecated]
-    public function sumNetWorthByCurrency(Carbon $date): array
-    {
-        /**
-         * Collect accounts
-         */
-        $accounts = $this->getAccounts();
-        $return   = [];
-        Log::debug(sprintf('SumNetWorth: accountsBalancesOptimized("%s")', $date->format('Y-m-d H:i:s')));
-        $balances = Steam::accountsBalancesOptimized($accounts, $date);
-        foreach ($accounts as $account) {
-            $currency                     = $this->accountRepository->getAccountCurrency($account);
-            $balance                      = $balances[$account->id]['balance'] ?? '0';
-
-            // always subtract virtual balance.
-            $virtualBalance               = $account->virtual_balance;
-            if ('' !== $virtualBalance) {
-                $balance = bcsub($balance, (string) $virtualBalance);
-            }
-
-            $return[$currency->id] ??= [
-                'id'             => (string) $currency->id,
-                'name'           => $currency->name,
-                'symbol'         => $currency->symbol,
-                'code'           => $currency->code,
-                'decimal_places' => $currency->decimal_places,
-                'sum'            => '0',
-            ];
-            $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], (string) $balance);
-        }
-
-        return $return;
-    }
-
-    private function getAccounts(): Collection
-    {
-        $accounts = $this->accountRepository->getAccountsByType(
-            [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]
-        );
-        $filtered = new Collection();
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if (1 === (int) $this->accountRepository->getMetaValue($account, 'include_net_worth')) {
-                $filtered->push($account);
-            }
-        }
-
-        return $filtered;
     }
 }

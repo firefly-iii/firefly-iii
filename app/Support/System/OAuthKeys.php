@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\System;
 
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Crypt;
@@ -63,10 +64,10 @@ class OAuthKeys
         $privateKey = '';
         $publicKey  = '';
         // better check if keys are in the database:
-        if (app('fireflyconfig')->has(self::PRIVATE_KEY) && app('fireflyconfig')->has(self::PUBLIC_KEY)) {
+        if (FireflyConfig::has(self::PRIVATE_KEY) && FireflyConfig::has(self::PUBLIC_KEY)) {
             try {
-                $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-                $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+                $privateKey = (string)FireflyConfig::get(self::PRIVATE_KEY)?->data;
+                $publicKey  = (string)FireflyConfig::get(self::PUBLIC_KEY)?->data;
             } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 app('log')->error($e->getTraceAsString());
@@ -87,8 +88,8 @@ class OAuthKeys
      */
     public static function restoreKeysFromDB(): bool
     {
-        $privateKey = (string)app('fireflyconfig')->get(self::PRIVATE_KEY)?->data;
-        $publicKey  = (string)app('fireflyconfig')->get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string)FireflyConfig::get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string)FireflyConfig::get(self::PUBLIC_KEY)?->data;
 
         try {
             $privateContent = Crypt::decrypt($privateKey);
@@ -98,8 +99,8 @@ class OAuthKeys
             app('log')->error($e->getMessage());
 
             // delete config vars from DB:
-            app('fireflyconfig')->delete(self::PRIVATE_KEY);
-            app('fireflyconfig')->delete(self::PUBLIC_KEY);
+            FireflyConfig::delete(self::PRIVATE_KEY);
+            FireflyConfig::delete(self::PUBLIC_KEY);
 
             return false;
         }
@@ -115,8 +116,8 @@ class OAuthKeys
     {
         $private = storage_path('oauth-private.key');
         $public  = storage_path('oauth-public.key');
-        app('fireflyconfig')->set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
-        app('fireflyconfig')->set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
+        FireflyConfig::set(self::PRIVATE_KEY, Crypt::encrypt(file_get_contents($private)));
+        FireflyConfig::set(self::PUBLIC_KEY, Crypt::encrypt(file_get_contents($public)));
     }
 
     public static function verifyKeysRoutine(): void

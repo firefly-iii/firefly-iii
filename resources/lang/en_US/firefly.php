@@ -235,6 +235,8 @@ return [
     'advanced_options_explain'                  => 'Some pages in Firefly III have advanced options hidden behind this button. This page doesn\'t have anything fancy here, but do check out the others!',
     'here_be_dragons'                           => 'Hic sunt dracones',
     'bad_date_transaction'                      => 'Firefly III has detected you have transactions from before the year 1970. Please correct these transactions at your earliest convenience.',
+    'anonymous_warning_on'                      => 'For your privacy, all amounts are now displayed as "zero". Warning: text input boxes may still show the original amounts!',
+    'anonymous_warning_off'                     => 'Amounts will be visible again. Please be mindful of your surroundings.',
 
     // Webhooks
     'webhooks'                                  => 'Webhooks',
@@ -823,6 +825,8 @@ return [
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
     'applied_rule_group_selection'                        => 'Rule group ":title" has been applied to your selection.',
+    'rule_run_after_creation' => 'If you check this box, you get the opportunity to run the rule after it has been created.',
+    'rule_run_after_edit' => 'If you check this box, you get the opportunity to run the rule after it has been updated.',
 
     // actions and triggers
     'rule_trigger_store_journal'                          => 'When a transaction is created',

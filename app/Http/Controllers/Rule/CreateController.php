@@ -268,7 +268,6 @@ class CreateController extends Controller
     public function store(RuleFormRequest $request)
     {
         $data     = $request->getRuleData();
-
         $rule     = $this->ruleRepos->store($data);
         session()->flash('success_url', route('rules.select-transactions', [$rule->id]));
         session()->flash('success', (string) trans('firefly.stored_new_rule', ['title' => $rule->title]));
@@ -282,6 +281,9 @@ class CreateController extends Controller
         // redirect to new bill creation.
         if ((int) $request->get('bill_id') > 0) {
             return redirect($this->getPreviousUrl('bills.create.url'));
+        }
+        if (true === $data['run_after_form']) {
+            return redirect(route('rules.select-transactions', [$rule->id]));
         }
 
         $redirect = redirect($this->getPreviousUrl('rules.create.url'));

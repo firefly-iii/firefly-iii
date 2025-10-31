@@ -29,14 +29,14 @@
     </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     {# CSS things #}
-    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ JS_NONCE }}">
-    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ JS_NONCE }}">
 
 
     {# the theme #}
-    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ JS_NONCE }}">
     {% if 'browser' == darkMode %}
         <script nonce="{{ JS_NONCE }}">
@@ -46,43 +46,43 @@
                 document.documentElement.style.display = 'none';
                 document.head.insertAdjacentHTML(
                     'beforeend',
-                    '<link rel="stylesheet" href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}" onload="document.documentElement.style.display = \'\'">',
+                    '<link rel="stylesheet" href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}" onload="document.documentElement.style.display = \'\'">',
                 );
             }
         </script>
-        <link href="v1/css/daterangepicker-default.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/css/daterangepicker-default.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: dark)">
-        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
     {% endif %}
     {% if 'dark' == darkMode %}
-        <link href="v1/css/daterangepicker-dark.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/css/daterangepicker-dark.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
     {% endif %}
     {% if 'light' == darkMode %}
-        <link href="v1/css/daterangepicker-light.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/css/daterangepicker-light.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
-        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
     {% endif %}
     {# Firefly III customisations #}
-    <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
+    <link href="v1/css/firefly.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css" nonce="{{ JS_NONCE }}">
 
     {# Extra CSS for the demo: #}
     {% if not shownDemo %}
-        <link href="v1/lib/intro/introjs.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"
+        <link href="v1/lib/intro/introjs.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
     {% endif %}
 
     {# Any local custom CSS.  #}
     {% block styles %}{% endblock %}
     <!--[if lt IE 9]>
-    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script src="v1/js/lib/respond.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/html5shiv.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/lib/respond.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
     <![endif]-->
 
     {# this entry is in the header so it's loaded early #}
@@ -111,7 +111,16 @@
             </a>
             <div class="navbar-custom-menu">
                 <ul class="nav navbar-nav">
-
+                    <li class="hidden-sm hidden-xs">
+                        <a href="#" id="anonymous">
+                            {% if anonymous %}
+                                <span class="text-danger fa fa-eye-slash"></span>
+                            {% endif %}
+                            {% if not anonymous %}
+                                <span class="text-success fa fa-eye"></span>
+                            {% endif %}
+                        </a>
+                    </li>
                     <li class="hidden-sm hidden-xs">
                         <a href="#" id="help" data-route="{{ original_route_name }}"
                            data-extra="{{ objectType|default("") }}">
@@ -219,8 +228,8 @@
 {% block definitions %}{% endblock %}
 
 {# Moment JS #}
-<script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-<script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ FF_VERSION }}" type="text/javascript"
+<script src="v1/js/lib/moment.min.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="v1/js/lib/moment/{{ language|replace({'-':'_'}) }}.js?v={{ FF_BUILD_TIME }}" type="text/javascript"
         nonce="{{ JS_NONCE }}"></script>
 
 {# All kinds of variables. #}
@@ -229,32 +238,32 @@
     type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# Base script: jquery and bootstrap #}
-<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="v1/js/app.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
 
 {# Vue scripts and components. Only loaded when needed #}
 {% if VUE_SCRIPT_NAME %}
-    <script src="v1/js/app_vue.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-    <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ FF_VERSION }}" type="text/javascript"
+    <script src="v1/js/app_vue.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+    <script src="v1/js/{{ VUE_SCRIPT_NAME }}.js?v={{ FF_BUILD_TIME }}" type="text/javascript"
             nonce="{{ JS_NONCE }}"></script>
 {% endif %}
 
 {# date range picker, current template, etc. #}
-<script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
-<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"
+<script src="v1/js/lib/daterangepicker.js?v={{ FF_BUILD_TIME }}" type="text/javascript" nonce="{{ JS_NONCE }}"></script>
+<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_BUILD_TIME }}" type="text/javascript"
         nonce="{{ JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 
 {# Firefly III code #}
-<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-<script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+<script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 {% if not shownDemo %}
     <script type="text/javascript" nonce="{{ JS_NONCE }}">
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUrl = "{{ route('json.intro', [current_route_name, objectType|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, objectType|default("")]) }}";
     </script>
-    <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
-    <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
+    <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 {% endif %}
 
 {% block scripts %}{% endblock %}

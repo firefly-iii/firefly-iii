@@ -33,6 +33,8 @@ use Illuminate\Foundation\Http\FormRequest;
  * Request class for end points that require a date parameter.
  *
  * Class SingleDateRequest
+ *
+ * @deprecated
  */
 class SingleDateRequest extends FormRequest
 {

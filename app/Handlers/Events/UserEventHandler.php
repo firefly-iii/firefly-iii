@@ -51,6 +51,7 @@ use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
@@ -174,9 +175,10 @@ class UserEventHandler
         $user       = $event->user;
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
-            app('preferences')->setForUser($user, 'language', 'en_US');
-            app('preferences')->setForUser($user, 'locale', 'equal');
-            app('preferences')->mark();
+            Preferences::setForUser($user, 'language', 'en_US');
+            Preferences::setForUser($user, 'locale', 'equal');
+            Preferences::setForUser($user, 'anonymous', false);
+            Preferences::mark();
         }
     }
 
@@ -188,7 +190,7 @@ class UserEventHandler
             return; // do not email demo user.
         }
 
-        $list = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+        $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -217,12 +219,12 @@ class UserEventHandler
             $list[$index]['notified'] = true;
         }
 
-        app('preferences')->setForUser($user, 'login_ip_history', $list);
+        Preferences::setForUser($user, 'login_ip_history', $list);
     }
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool) app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool)app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             $owner = $event->owner;
 
@@ -257,7 +259,7 @@ class UserEventHandler
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
-        $token    = app('preferences')->getForUser($user, 'email_change_confirm_token', 'invalid');
+        $token    = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid');
         $url      = route('profile.confirm-email-change', [$token->data]);
 
         try {
@@ -281,8 +283,8 @@ class UserEventHandler
         $newEmail = $event->newEmail;
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
-        $token    = app('preferences')->getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
+        $token    = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
+        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 
         try {
@@ -365,7 +367,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool) app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool)app('fireflyconfig')->get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
@@ -455,7 +457,7 @@ class UserEventHandler
 
         try {
             /** @var array $preference */
-            $preference = app('preferences')->getForUser($user, 'login_ip_history', [])->data;
+            $preference = Preferences::getForUser($user, 'login_ip_history', [])->data;
         } catch (FireflyException $e) {
             // don't care.
             app('log')->error($e->getMessage());
@@ -491,8 +493,8 @@ class UserEventHandler
         $preference = array_values($preference);
 
         /** @var bool $send */
-        $send       = app('preferences')->getForUser($user, 'notification_user_login', true)->data;
-        app('preferences')->setForUser($user, 'login_ip_history', $preference);
+        $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
+        Preferences::setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {
             event(new DetectedNewIPAddress($user));

@@ -221,10 +221,26 @@ class TransactionJournalFactory
         ];
         Log::debug('Source info:', $sourceInfo);
         Log::debug('Destination info:', $destInfo);
-        $sourceAccount         = $this->getAccount($type->type, 'source', $sourceInfo);
-        $destinationAccount    = $this->getAccount($type->type, 'destination', $destInfo, $sourceAccount);
+        $destinationAccount    = null;
+        $sourceAccount         = null;
+        if (TransactionTypeEnum::DEPOSIT->value === $type->type) {
+            Log::debug('Transaction type is deposit, start with destination first.');
+            $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo);
+            $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo, $destinationAccount);
+        }
+        if (TransactionTypeEnum::DEPOSIT->value !== $type->type) {
+            Log::debug('Transaction type is not deposit, start with source first.');
+            $sourceAccount      = $this->getAccount($type->type, 'source', $sourceInfo);
+            $destinationAccount = $this->getAccount($type->type, 'destination', $destInfo, $sourceAccount);
+        }
+
         Log::debug('Done with getAccount(2x)');
 
+        // there is a safety catch here. If either account is NULL, they will be replaced with the cash account.
+        if (null === $destinationAccount) {
+            Log::warning('Destination account is NULL, will replace with cash account.');
+            $destinationAccount = $this->accountRepository->getCashAccount();
+        }
 
         // this is the moment for a reconciliation sanity check (again).
         if (TransactionTypeEnum::RECONCILIATION->value === $type->type) {

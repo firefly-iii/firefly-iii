@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -57,10 +57,9 @@ class RuleController extends Controller
         );
     }
 
-    public function rules(AutocompleteRequest $request): JsonResponse
+    public function rules(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $rules    = $this->repository->searchRule($data['query'], $this->parameters->get('limit'));
+        $rules    = $this->repository->searchRule($request->attributes->get('query'), $request->attributes->get('limit'));
         $response = [];
 
         /** @var Rule $rule */

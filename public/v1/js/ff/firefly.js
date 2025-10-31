@@ -47,7 +47,6 @@ function parseToLocalDates() {
 $(function () {
     "use strict";
 
-
     configAccounting(currencySymbol);
 
     // on submit of logout button:

@@ -38,6 +38,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BoxController.
@@ -165,7 +166,7 @@ class BoxController extends Controller
         $allAccounts       = $accountRepository->getActiveAccountsByType(
             [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]
         );
-        app('log')->debug(sprintf('Found %d accounts.', $allAccounts->count()));
+        Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
         $filtered          = $allAccounts->filter(
@@ -173,7 +174,7 @@ class BoxController extends Controller
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth || '1' === $includeNetWorth;
                 if (false === $result) {
-                    app('log')->debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
                 }
 
                 return $result;

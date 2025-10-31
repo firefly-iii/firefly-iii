@@ -34,6 +34,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
@@ -81,8 +82,10 @@ class InstallController extends Controller
     public function index()
     {
         app('view')->share('FF_VERSION', config('firefly.version'));
+
         // index will set FF3 version.
         FireflyConfig::set('ff3_version', (string) config('firefly.version'));
+        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
 
         return view('install.index');
     }
@@ -98,18 +101,18 @@ class InstallController extends Controller
             'errorMessage'   => null,
         ];
 
-        app('log')->debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
+        Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
         $indexes      = array_keys($this->upgradeCommands);
         if (array_key_exists($requestIndex, $indexes)) {
             $command                    = $indexes[$requestIndex];
             $parameters                 = $this->upgradeCommands[$command];
-            app('log')->debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
+            Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
 
             try {
                 $result = $this->executeCommand($command, $parameters);
             } catch (FireflyException $e) {
-                app('log')->error($e->getMessage());
-                app('log')->error($e->getTraceAsString());
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
                 if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
                     $this->lastError = self::BASEDIR_ERROR;
                 }
@@ -134,7 +137,7 @@ class InstallController extends Controller
      */
     private function executeCommand(string $command, array $args): bool
     {
-        app('log')->debug(sprintf('Will now call command %s with args.', $command), $args);
+        Log::debug(sprintf('Will now call command %s with args.', $command), $args);
 
         try {
             if ('generate-keys' === $command) {
@@ -142,7 +145,7 @@ class InstallController extends Controller
             }
             if ('generate-keys' !== $command) {
                 Artisan::call($command, $args);
-                app('log')->debug(Artisan::output());
+                Log::debug(Artisan::output());
             }
         } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);

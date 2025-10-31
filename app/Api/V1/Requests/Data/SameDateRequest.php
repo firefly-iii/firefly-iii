@@ -32,6 +32,8 @@ use Illuminate\Foundation\Http\FormRequest;
  * Request class for end points that require date parameters.
  *
  * Class SameDateRequest
+ *
+ * @deprecated Replaced by DateRangeRequest
  */
 class SameDateRequest extends FormRequest
 {

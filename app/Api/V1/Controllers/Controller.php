@@ -29,6 +29,7 @@ use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\BadHttpHeaderException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\AbstractTransformer;
@@ -67,6 +68,8 @@ abstract class Controller extends BaseController
 
     protected bool                $convertToPrimary = false;
     protected TransactionCurrency $primaryCurrency;
+
+    /** @deprecated use Request classes */
     protected ParameterBag        $parameters;
 
     /**
@@ -98,7 +101,8 @@ abstract class Controller extends BaseController
     }
 
     /**
-     * Method to grab all parameters from the URL.
+     * @deprecated use Request classes
+     * Method to grab all parameters from the URL
      */
     private function getParameters(): ParameterBag
     {
@@ -156,7 +160,7 @@ abstract class Controller extends BaseController
                 /** @var User $user */
                 $user     = auth()->user();
 
-                $pageSize = (int)app('preferences')->getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }

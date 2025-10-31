@@ -402,21 +402,21 @@ trait ConvertsDataTypes
      */
     protected function getCarbonDate(string $field): ?Carbon
     {
-        $result = null;
+        $data = (string)$this->get($field);
+        Log::debug(sprintf('Date string is "%s"', $data));
 
-        Log::debug(sprintf('Date string is "%s"', (string)$this->get($field)));
+        if ('' === $data) {
+            return null;
+        }
 
         try {
-            $result = '' !== (string)$this->get($field) ? new Carbon((string)$this->get($field), config('app.timezone')) : null;
+            return new Carbon($data, config('app.timezone'));
         } catch (InvalidFormatException) {
             // @ignoreException
-            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
-        }
-        if (!$result instanceof Carbon) {
-            Log::debug(sprintf('Exception when parsing date "%s".', $this->get($field)));
+            Log::debug(sprintf('Exception when parsing date "%s".', $data));
         }
 
-        return $result;
+        return null;
     }
 
     /**

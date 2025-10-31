@@ -27,6 +27,7 @@ namespace FireflyIII\Handlers\Events\Model;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Notifications\User\RuleActionFailed;
+use FireflyIII\Support\Facades\Preferences;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
@@ -42,7 +43,7 @@ class RuleHandler
         $rule        = $ruleAction->rule;
 
         /** @var bool $preference */
-        $preference  = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        $preference  = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
         }
@@ -71,7 +72,7 @@ class RuleHandler
         $rule        = $ruleAction->rule;
 
         /** @var bool $preference */
-        $preference  = app('preferences')->getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        $preference  = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
         }

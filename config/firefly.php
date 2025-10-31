@@ -78,8 +78,8 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.4.2',
-    'build_time'                   => 1759824590,
+    'version'                      => '6.4.3',
+    'build_time'                   => 1761889776,
     'api_version'                  => '2.1.0', // field is no longer used.
     'db_version'                   => 28, // field is no longer used.
 
@@ -182,6 +182,7 @@ return [
     'darkMode'                     => 'browser',
     'list_length'                  => 10, // to be removed if v1 is cancelled.
     'default_preferences'          => [
+        'anonymous'          => false,
         'frontpageAccounts'  => [],
         'listPageSize'       => 50,
         'currencyPreference' => 'EUR',
@@ -225,6 +226,8 @@ return [
         // plain files
         'text/plain',
         'text/html',
+        'text/xml',
+        'application/xml',
 
         // images
         'image/jpeg',
@@ -306,7 +309,7 @@ return [
 
     // "period must be in this list" values
     'bill_periods'                 => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'             => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     // settings to translate X to Y
     'range_to_repeat_freq'         => [

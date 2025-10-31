@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
@@ -64,10 +64,9 @@ class PiggyBankController extends Controller
         );
     }
 
-    public function piggyBanks(AutocompleteRequest $request): JsonResponse
+    public function piggyBanks(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $piggies  = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
+        $piggies  = $this->piggyRepository->searchPiggyBank($request->attributes->get('query'), $request->attributes->get('limit'));
         $response = [];
 
         /** @var PiggyBank $piggy */
@@ -90,10 +89,9 @@ class PiggyBankController extends Controller
         return response()->api($response);
     }
 
-    public function piggyBanksWithBalance(AutocompleteRequest $request): JsonResponse
+    public function piggyBanksWithBalance(AutocompleteApiRequest $request): JsonResponse
     {
-        $data     = $request->getData();
-        $piggies  = $this->piggyRepository->searchPiggyBank($data['query'], $this->parameters->get('limit'));
+        $piggies  = $this->piggyRepository->searchPiggyBank($request->attributes->get('query'), $request->attributes->get('limit'));
         $response = [];
 
         /** @var PiggyBank $piggy */

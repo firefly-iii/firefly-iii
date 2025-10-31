@@ -26,6 +26,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Create piggy bank events.
@@ -36,9 +37,9 @@ class PiggyBankEventFactory
 {
     public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {
-        app('log')->debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
+        Log::debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
         if (!$piggyBank instanceof PiggyBank) {
-            app('log')->debug('Piggy bank is null');
+            Log::debug('Piggy bank is null');
 
             return;
         }
@@ -49,7 +50,7 @@ class PiggyBankEventFactory
 
         $amount     = $piggyRepos->getExactAmount($piggyBank, $journal);
         if (0 === bccomp($amount, '0')) {
-            app('log')->debug('Amount is zero, will not create event.');
+            Log::debug('Amount is zero, will not create event.');
 
             return;
         }

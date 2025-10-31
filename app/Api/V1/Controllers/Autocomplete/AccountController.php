@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -79,20 +79,26 @@ class AccountController extends Controller
      * @throws FireflyException
      * @throws FireflyException
      */
-    public function accounts(AutocompleteRequest $request): JsonResponse
+    public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
-        $data        = $request->getData();
-        $types       = $data['types'];
-        $query       = $data['query'];
-        $date        = $data['date'] ?? today(config('app.timezone'));
-        $return      = [];
-        $timer       = Timer::getInstance();
-        $timer->start(sprintf('AC accounts "%s"', $query));
-        $result      = $this->repository->searchAccount((string) $query, $types, $this->parameters->get('limit'));
+        [
+            'types' => $types,
+            'query' => $query,
+            'date'  => $date,
+            'limit' => $limit,
+        ]
+                     = $request->attributes->all();
+
+
+        $date ??= today(config('app.timezone'));
 
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
+        $return      = [];
+        $timer       = Timer::getInstance();
+        $timer->start(sprintf('AC accounts "%s"', $query));
+        $result      = $this->repository->searchAccount((string)$query, $types, $limit);
         $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */
@@ -111,17 +117,17 @@ class AccountController extends Controller
             }
 
             $return[]        = [
-                'id'                              => (string) $account->id,
+                'id'                              => (string)$account->id,
                 'name'                            => $account->name,
                 'name_with_balance'               => $nameWithBalance,
                 'active'                          => $account->active,
                 'type'                            => $account->accountType->type,
-                'currency_id'                     => (string) $useCurrency->id,
+                'currency_id'                     => (string)$useCurrency->id,
                 'currency_name'                   => $useCurrency->name,
                 'currency_code'                   => $useCurrency->code,
                 'currency_symbol'                 => $useCurrency->symbol,
                 'currency_decimal_places'         => $useCurrency->decimal_places,
-                'account_currency_id'             => (string) $currency->id,
+                'account_currency_id'             => (string)$currency->id,
                 'account_currency_name'           => $currency->name,
                 'account_currency_code'           => $currency->code,
                 'account_currency_symbol'         => $currency->symbol,
@@ -134,8 +140,8 @@ class AccountController extends Controller
             $return,
             static function (array $left, array $right) {
                 $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
-                $posA  = (int) array_search($left['type'], $order, true);
-                $posB  = (int) array_search($right['type'], $order, true);
+                $posA  = (int)array_search($left['type'], $order, true);
+                $posB  = (int)array_search($right['type'], $order, true);
 
                 return $posA - $posB;
             }

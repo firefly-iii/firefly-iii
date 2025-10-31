@@ -7,10 +7,10 @@
     <title>{{ 'login_page_title'|_  }}</title>
 
     <!-- fonts and styles -->
-    <link rel="stylesheet" href="v3-local/css/fonts.css?v={{ FF_VERSION }}">
-    <link rel="stylesheet" href="v3-local/lib/fontawesome-free/css/all.min.css?v={{ FF_VERSION }}">
-    <link rel="stylesheet" href="v3-local/lib/icheck-bootstrap/icheck-bootstrap.min.css?v={{ FF_VERSION }}">
-    <link rel="stylesheet" href="v3-local/dist/css/adminlte.min.css?v={{ FF_VERSION }}">
+    <link rel="stylesheet" href="v3-local/css/fonts.css?v={{ FF_BUILD_TIME }}">
+    <link rel="stylesheet" href="v3-local/lib/fontawesome-free/css/all.min.css?v={{ FF_BUILD_TIME }}">
+    <link rel="stylesheet" href="v3-local/lib/icheck-bootstrap/icheck-bootstrap.min.css?v={{ FF_BUILD_TIME }}">
+    <link rel="stylesheet" href="v3-local/dist/css/adminlte.min.css?v={{ FF_BUILD_TIME }}">
 
     {# favicons #}
     {% include 'partials.favicons' %}
@@ -19,11 +19,11 @@
 {% block content %}{% endblock %}
 
 <!-- jQuery -->
-<script src="v3-local/lib/jquery/jquery.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script src="v3-local/lib/jquery/jquery.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 <!-- Bootstrap 4 -->
-<script src="v3-local/lib/bootstrap/js/bootstrap.bundle.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script src="v3-local/lib/bootstrap/js/bootstrap.bundle.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 <!-- AdminLTE App -->
-<script src="v3-local/dist/js/adminlte.min.js?v={{ FF_VERSION }}" nonce="{{ JS_NONCE }}"></script>
+<script src="v3-local/dist/js/adminlte.min.js?v={{ FF_BUILD_TIME }}" nonce="{{ JS_NONCE }}"></script>
 {% block scripts %}
 {% endblock %}
 </body>

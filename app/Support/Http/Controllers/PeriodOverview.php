@@ -634,10 +634,10 @@ trait PeriodOverview
             $currencySymbol                = $journal['currency_symbol'];
             $currencyDecimalPlaces         = $journal['currency_decimal_places'];
             $foreignCurrencyId             = $journal['foreign_currency_id'];
-            $amount                        = $journal['amount'] ?? '0';
+            $amount                        = (string) ($journal['amount'] ?? '0');
 
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId !== $this->primaryCurrency->id) {
-                $amount                = $journal['pc_amount'] ?? '0';
+                $amount                = (string)  ($journal['pc_amount'] ?? '0');
                 $currencyId            = $this->primaryCurrency->id;
                 $currencyCode          = $this->primaryCurrency->code;
                 $currencyName          = $this->primaryCurrency->name;
@@ -650,7 +650,7 @@ trait PeriodOverview
                 $currencyName          = $journal['foreign_currency_name'];
                 $currencySymbol        = $journal['foreign_currency_symbol'];
                 $currencyDecimalPlaces = $journal['foreign_currency_decimal_places'];
-                $amount                = $journal['foreign_amount'] ?? '0';
+                $amount                = (string) ($journal['foreign_amount'] ?? '0');
             }
             $return[$currencyId] ??= [
                 'amount'                  => '0',

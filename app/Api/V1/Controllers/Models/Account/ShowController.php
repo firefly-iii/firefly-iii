@@ -71,45 +71,45 @@ class ShowController extends Controller
     public function index(ShowRequest $request): JsonResponse
     {
         $manager     = $this->getManager();
-        $params      = $request->getParameters();
-        $this->parameters->set('type', $params['type']);
-
-        // types to get, page size:
-        $types       = $this->mapAccountTypes($params['type']);
+        [
+            'types'  => $types,
+            'page'   => $page,
+            'limit'  => $limit,
+            'offset' => $offset,
+            'sort'   => $sort,
+            'start'  => $start,
+            'end'    => $end,
+            'date'   => $date,
+        ]
+                     = $request->attributes->all();
 
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
-        $collection  = $this->repository->getAccountsByType($types, $params['sort']);
+        $collection  = $this->repository->getAccountsByType($types, $sort);
         $count       = $collection->count();
 
         // continue sort:
         // TODO if the user sorts on DB dependent field there must be no slice before enrichment, only after.
         // TODO still need to figure out how to do this easily.
-        $accounts    = $collection->slice(($this->parameters->get('page') - 1) * $params['limit'], $params['limit']);
-
-        // #11007 go to the end of the previous day.
-        $this->parameters->set('start', $this->parameters->get('start')?->subSecond());
-        // #11018 also end of the day.
-        $this->parameters->set('end', $this->parameters->get('end')?->endOfDay());
+        $accounts    = $collection->slice($offset, $limit);
 
         // enrich
         /** @var User $admin */
         $admin       = auth()->user();
         $enrichment  = new AccountEnrichment();
-        $enrichment->setSort($params['sort']);
-        $enrichment->setDate($this->parameters->get('date'));
-        $enrichment->setStart($this->parameters->get('start'));
-        $enrichment->setEnd($this->parameters->get('end'));
+        $enrichment->setSort($sort);
+        $enrichment->setDate($date);
+        $enrichment->setStart($start);
+        $enrichment->setEnd($end);
         $enrichment->setUser($admin);
         $accounts    = $enrichment->enrich($accounts);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($accounts, $count, $params['limit'], $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($accounts, $count, $limit, $page);
         $paginator->setPath(route('api.v1.accounts.index').$this->buildParams());
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($accounts, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -128,28 +128,25 @@ class ShowController extends Controller
         // get list of accounts. Count it and split it.
         $this->repository->resetAccountOrder();
         $account->refresh();
-        $manager     = $this->getManager();
-
-        // #11007 go to the end of the previous day.
-        $this->parameters->set('start', $this->parameters->get('start')?->subSecond());
-        // #11018 also end of the day.
-        $this->parameters->set('end', $this->parameters->get('end')?->endOfDay());
+        $manager                = $this->getManager();
+        ['start'     => $start,
+            'end'    => $end,
+            'date'   => $date,] = $request->attributes->all();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new AccountEnrichment();
-        $enrichment->setDate($this->parameters->get('date'));
-        $enrichment->setStart($this->parameters->get('start'));
-        $enrichment->setEnd($this->parameters->get('end'));
+        $admin                  = auth()->user();
+        $enrichment             = new AccountEnrichment();
+        $enrichment->setDate($date);
+        $enrichment->setStart($start);
+        $enrichment->setEnd($end);
         $enrichment->setUser($admin);
-        $account     = $enrichment->enrichSingle($account);
+        $account                = $enrichment->enrichSingle($account);
 
 
         /** @var AccountTransformer $transformer */
-        $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
-        $resource    = new Item($account, $transformer, self::RESOURCE_KEY);
+        $transformer            = app(AccountTransformer::class);
+        $resource               = new Item($account, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

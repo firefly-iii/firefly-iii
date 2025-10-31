@@ -74,32 +74,30 @@ class IndexController extends Controller
      */
     public function inactive(Request $request, string $objectType)
     {
-        $inactivePage  = true;
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
-        $collection    = $this->repository->getInactiveAccountsByType($types);
-        $total         = $collection->count();
-        $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
-        $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $inactivePage = true;
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts_inactive', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $collection   = $this->repository->getInactiveAccountsByType($types);
+        $total        = $collection->count();
+        $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
 
         /** @var Carbon $start */
-        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start        = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end          = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        // #10618 go to the end of the previous day.
-        $start->subSecond();
-
-        $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('inactive start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('inactive end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
-        $activities    = Steam::getLastActivities($ids);
+        $ids          = $accounts->pluck('id')->toArray();
+        Log::debug(sprintf('inactive start: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]             = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
+        $activities   = Steam::getLastActivities($ids);
 
 
         $accounts->each(
@@ -119,7 +117,7 @@ class IndexController extends Controller
         );
 
         // make paginator:
-        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts     = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
         return view('accounts.index', compact('objectType', 'inactivePage', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
@@ -169,14 +167,12 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        // #10618 go to the end of the previous day.
-        $start->subSecond();
-
         $ids           = $accounts->pluck('id')->toArray();
-        Log::debug(sprintf('index start: accountsBalancesOptimized("%s")', $start->format('Y-m-d H:i:s')));
-        Log::debug(sprintf('index end: accountsBalancesOptimized("%s")', $end->format('Y-m-d H:i:s')));
-        $startBalances = Steam::accountsBalancesOptimized($accounts, $start, $this->primaryCurrency, $this->convertToPrimary);
-        $endBalances   = Steam::accountsBalancesOptimized($accounts, $end, $this->primaryCurrency, $this->convertToPrimary);
+        Log::debug(sprintf('index: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+        [
+            $startBalances,
+            $endBalances,
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 

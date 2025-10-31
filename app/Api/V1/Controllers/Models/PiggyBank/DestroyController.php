@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\PiggyBank;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -61,7 +62,7 @@ class DestroyController extends Controller
     public function destroy(PiggyBank $piggyBank): JsonResponse
     {
         $this->repository->destroy($piggyBank);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

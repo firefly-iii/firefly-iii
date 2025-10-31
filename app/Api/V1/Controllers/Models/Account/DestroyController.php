@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Account;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -60,7 +61,7 @@ class DestroyController extends Controller
     public function destroy(Account $account): JsonResponse
     {
         $this->repository->destroy($account, null);
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json([], 204);
     }

@@ -420,6 +420,7 @@ class Navigation
             'week'     => (string)trans('config.week_in_year_js'),
             'weekly'   => (string)trans('config.week_in_year_js'),
             '1M'       => (string)trans('config.month_js'),
+            'MTD'      => (string)trans('config.month_js'),
             'month'    => (string)trans('config.month_js'),
             'monthly'  => (string)trans('config.month_js'),
             '1Y'       => (string)trans('config.year_js'),
@@ -427,6 +428,11 @@ class Navigation
             'year'     => (string)trans('config.year_js'),
             'yearly'   => (string)trans('config.year_js'),
             '6M'       => (string)trans('config.half_year_js'),
+            'last7'    => (string)trans('config.specific_day_js'),
+            'last30'   => (string)trans('config.month_js'),
+            'last90'   => (string)trans('config.month_js'),
+            'last365'  => (string)trans('config.year_js'),
+            'QTD'      => (string)trans('config.month_js'),
         ];
 
         if (array_key_exists($repeatFrequency, $formatMap)) {

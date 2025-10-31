@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -69,22 +70,25 @@ class ListController extends Controller
         );
     }
 
-    public function attachments(Account $account): JsonResponse
+    public function attachments(PaginationRequest $request, Account $account): JsonResponse
     {
         $manager     = $this->getManager();
-        $pageSize    = $this->parameters->get('limit');
+        [
+            'limit'  => $limit,
+            'offset' => $offset,
+            'page'   => $page,
+        ]            = $request->attributes->all();
         $collection  = $this->repository->getAttachments($account);
 
         $count       = $collection->count();
-        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $attachments = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($attachments, $count, $limit, $page);
         $paginator->setPath(route('api.v1.accounts.attachments', [$account->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -92,18 +96,21 @@ class ListController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    public function piggyBanks(Account $account): JsonResponse
+    public function piggyBanks(PaginationRequest $request, Account $account): JsonResponse
     {
         // create some objects:
         $manager     = $this->getManager();
 
-        // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
+        [
+            'limit'  => $limit,
+            'offset' => $offset,
+            'page'   => $page,
+        ]            = $request->attributes->all();
 
         // get list of piggy banks. Count it and split it.
         $collection  = $this->repository->getPiggyBanks($account);
         $count       = $collection->count();
-        $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $piggyBanks  = $collection->slice(($page - 1) * $limit, $limit);
 
         // enrich
         /** @var User $admin */
@@ -113,12 +120,12 @@ class ListController extends Controller
         $piggyBanks  = $enrichment->enrich($piggyBanks);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($piggyBanks, $count, $limit, $page);
         $paginator->setPath(route('api.v1.accounts.piggy-banks', [$account->id]).$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
-        $transformer->setParameters($this->parameters);
+        // $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($piggyBanks, $transformer, 'piggy-banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));

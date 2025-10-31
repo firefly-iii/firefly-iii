@@ -26,6 +26,7 @@ ranges: ranges
 };
 
 var uid = "{{ uid }}";
+var anonymous = {{ anonymous }};
 var language = "{{ language|escape }}";
 var locale = "{{ locale|escape }}";
 var currencyCode = '{{ currencyCode|escape('js') }}';
@@ -50,6 +51,9 @@ var acc_config_new = {format: accountingConfig};
 // strings and translations used often:
 var helpPageTitle = "{{ trans('firefly.help_for_this_page')|escape('js') }}";
 var helpPageBody = "{{ trans('firefly.help_for_this_page_body')|escape('js') }}";
+
+var anonymous_warning_on_txt = "{{ trans('firefly.anonymous_warning_on')|escape('js') }}";
+var anonymous_warning_off_txt= "{{ trans('firefly.anonymous_warning_off')|escape('js') }}";
 
 var edit_selected_txt = "{{ trans('firefly.mass_edit')|escape('js') }}";
 var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";

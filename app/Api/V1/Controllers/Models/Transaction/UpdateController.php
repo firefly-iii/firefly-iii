@@ -30,6 +30,7 @@ use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
@@ -79,7 +80,7 @@ class UpdateController extends Controller
         $newHash           = $this->groupRepository->getCompareHash($transactionGroup);
         $manager           = $this->getManager();
 
-        app('preferences')->mark();
+        Preferences::mark();
         $applyRules        = $data['apply_rules'] ?? true;
         $fireWebhooks      = $data['fire_webhooks'] ?? true;
         $runRecalculations = $oldHash !== $newHash;

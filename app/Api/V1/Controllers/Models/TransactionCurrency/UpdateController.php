@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\Models\TransactionCurrency\UpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CurrencyTransformer;
@@ -105,7 +106,7 @@ class UpdateController extends Controller
         $this->repository->enable($currency);
         $this->repository->makePrimary($currency);
 
-        app('preferences')->mark();
+        Preferences::mark();
 
         $manager     = $this->getManager();
         $currency->refreshForUser($user);
@@ -172,14 +173,13 @@ class UpdateController extends Controller
 
         $currency    = $this->repository->update($currency, $data);
 
-        app('preferences')->mark();
+        Preferences::mark();
 
         $manager     = $this->getManager();
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($currency, $transformer, 'currencies');
 

@@ -62,12 +62,13 @@ trait AccountCollection
                 if (null === $account) {
                     continue;
                 }
+
+                // 2025-10-08 replace with accountsBalancesOptimized
                 // the balance must be found BEFORE the transaction date.
-                // so sub one second. This is not perfect, but works well enough.
-                $date      = clone $transaction['date'];
-                $date->subSecond();
-                Log::debug(sprintf('accountBalanceIs: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-                $balance   = Steam::finalAccountBalance($account, $date);
+                // so inclusive = false
+                Log::debug(sprintf('accountBalanceIs: Call accountsBalancesOptimized with date/time "%s"', $transaction['date']->toIso8601String()));
+                $balance   = Steam::accountsBalancesOptimized(new Collection()->push($account), $transaction['date'], convertToPrimary: null, inclusive: false)[$account->id];
+                // $balance   = Steam::finalAccountBalance($account, $date);
                 $result    = bccomp((string) $balance['balance'], $value);
                 Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
 

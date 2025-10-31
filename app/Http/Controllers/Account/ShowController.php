@@ -169,8 +169,9 @@ class ShowController extends Controller
             $now = $end;
         }
 
-        Log::debug(sprintf('show: Call finalAccountBalance with date/time "%s"', $now->toIso8601String()));
-        $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
+        // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+        $balances         = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
+        // $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
         return view(
             'accounts.show',
@@ -237,8 +238,12 @@ class ShowController extends Controller
         $chartUrl        = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll         = true;
         // correct
-        Log::debug(sprintf('showAll: Call finalAccountBalance with date/time "%s"', $end->toIso8601String()));
-        $balances        = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $end), $account, $this->convertToPrimary, $accountCurrency);
+        Log::debug(sprintf('showAll: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
+
+        // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+        // $balances = Steam::finalAccountBalance($account, $end);
+        // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
+        $balances        = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
 
         return view(
             'accounts.show',

@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteRequest;
+use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
@@ -55,10 +55,9 @@ class TransactionTypeController extends Controller
         );
     }
 
-    public function transactionTypes(AutocompleteRequest $request): JsonResponse
+    public function transactionTypes(AutocompleteApiRequest $request): JsonResponse
     {
-        $data  = $request->getData();
-        $types = $this->repository->searchTypes($data['query'], $this->parameters->get('limit'));
+        $types = $this->repository->searchTypes($request->attributes->get('query'), $request->attributes->get('limit'));
         $array = [];
 
         /** @var TransactionType $type */
