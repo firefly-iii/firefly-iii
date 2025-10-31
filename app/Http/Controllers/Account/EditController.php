@@ -108,9 +108,9 @@ class EditController extends Controller
         ];
 
         // interest calculation periods:
-        $interestPeriods = [];
-        foreach(config('firefly.interest_periods') as $period) {
-            $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s' , $period));
+        $interestPeriods      = [];
+        foreach (config('firefly.interest_periods') as $period) {
+            $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
