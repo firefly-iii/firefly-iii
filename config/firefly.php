@@ -309,7 +309,7 @@ return [
 
     // "period must be in this list" values
     'bill_periods'                 => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'interest_periods'             => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'             => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     // settings to translate X to Y
     'range_to_repeat_freq'         => [
