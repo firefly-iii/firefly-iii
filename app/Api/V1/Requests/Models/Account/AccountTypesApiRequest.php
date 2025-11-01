@@ -47,7 +47,7 @@ class AccountTypesApiRequest extends ApiRequest
                 if ($validator->failed()) {
                     return;
                 }
-                $types = explode(',', $this->convertString('types', 'all'));
+                $types  = explode(',', $this->convertString('types', 'all'));
                 $result = [];
                 // split and find all types:
                 foreach ($types as $type) {
