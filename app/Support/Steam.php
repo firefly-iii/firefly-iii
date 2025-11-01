@@ -672,16 +672,20 @@ class Steam
     {
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl      = $safeUrl;
+
         try {
             $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
         } catch (UrlException $e) {
             Log::error(sprintf('Could not parse "%s": %s', $unknownUrl, $e->getMessage()));
+
             return $returnUrl;
         }
+
         try {
             $safeHost = parse_url($safeUrl, PHP_URL_HOST);
         } catch (UrlException $e) {
             Log::error(sprintf('Could not parse "%s": %s', $unknownUrl, $e->getMessage()));
+
             return $returnUrl;
         }
 
