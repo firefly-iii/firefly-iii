@@ -47,11 +47,14 @@ class AccountTypesApiRequest extends ApiRequest
                 if ($validator->failed()) {
                     return;
                 }
-
-                $type = $this->convertString('types', 'all');
-                $this->attributes->add([
-                    'types' => $this->mapAccountTypes($type),
-                ]);
+                $types  = explode(',', $this->convertString('types', 'all'));
+                $result = [];
+                // split and find all types:
+                foreach ($types as $type) {
+                    $result = array_merge($result, $this->mapAccountTypes($type));
+                }
+                $result = array_unique($result);
+                $this->attributes->set('types', $result);
             }
         );
     }

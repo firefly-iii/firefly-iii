@@ -89,9 +89,9 @@ function selectAllReconcile(e) {
         console.log('in selectAllReconcile(' + journalId + ') with amount ' + amount + ' and selected amount ' + selectedAmount);
 
         // do nothing if line is already in target state
-        if (check.prop('checked') === doCheck )
+        if (check.prop('checked') === doCheck)
             return;
-    
+
         check.prop('checked', doCheck);
         // if checked, add to selected amount
         if (doCheck === true && check.data('younger') === false) {
@@ -201,6 +201,7 @@ function getTransactionsForRange() {
 
     $.getJSON(url).done(placeTransactions).catch(exceptionHandling)
 }
+
 function exceptionHandling() {
     $('#transactions_holder').empty().append($('<p>').addClass('text-center lead').html(selectRangeAndBalance));
     $('.start_reconcile').show();
@@ -254,8 +255,8 @@ function placeTransactions(data) {
     selectedAmount = 0;
     // update start + end balance when user has not touched them.
     if (!changedBalances) {
-        $('input[name="start_balance"]').val(data.startBalance);
-        $('input[name="end_balance"]').val(data.endBalance);
+        $('input[name="start_balance"]').val(data.startBalance.balance);
+        $('input[name="end_balance"]').val(data.endBalance.balance);
     }
 
     // as long as the dates are equal, changing the balance does not matter.

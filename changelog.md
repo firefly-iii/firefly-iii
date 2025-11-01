@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.4 - 2025-11-02
+
+### Added
+
+- [PR 11140](https://github.com/firefly-iii/firefly-iii/pull/11140) (Add Saudi Riyal (SAR) currency) reported by @Jihad
+
+### Fixed
+
+- [Issue 11144](https://github.com/firefly-iii/firefly-iii/issues/11144) (Initial balance is auto suggested as an account) reported by @elliot-gh
+- [Issue 11147](https://github.com/firefly-iii/firefly-iii/issues/11147) (Start and End Balance gets blanked out during reconciliation) reported by @lrdshaper
+
 ## 6.4.3 - 2025-11-01
 
 ### Added

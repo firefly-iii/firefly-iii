@@ -68,12 +68,10 @@ class PaginationRequest extends ApiRequest
                     $user  = auth()->user();
                     $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
                 }
-
                 $page   = $this->convertInteger('page');
                 $page   = min(max(1, $page), 2 ** 16);
                 $offset = ($page - 1) * $limit;
                 $sort   = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
-
                 $this->attributes->set('limit', $limit);
                 $this->attributes->set('sort', $sort);
                 $this->attributes->set('page', $page);

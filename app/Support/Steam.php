@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use Safe\Exceptions\UrlException;
 use ValueError;
 
 use function Safe\parse_url;
@@ -671,8 +672,22 @@ class Steam
     {
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl      = $safeUrl;
-        $unknownHost    = parse_url($unknownUrl, PHP_URL_HOST);
-        $safeHost       = parse_url($safeUrl, PHP_URL_HOST);
+
+        try {
+            $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
+        } catch (UrlException $e) {
+            Log::error(sprintf('Could not parse "%s": %s', $unknownUrl, $e->getMessage()));
+
+            return $returnUrl;
+        }
+
+        try {
+            $safeHost = parse_url($safeUrl, PHP_URL_HOST);
+        } catch (UrlException $e) {
+            Log::error(sprintf('Could not parse "%s": %s', $unknownUrl, $e->getMessage()));
+
+            return $returnUrl;
+        }
 
         if (null !== $unknownHost && $unknownHost === $safeHost) {
             $returnUrl = $unknownUrl;
