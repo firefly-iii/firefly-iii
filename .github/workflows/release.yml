@@ -18,6 +18,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Validate input
+        run: |
+          # validate argument
+          if  [[ $version != d* ]] && [[ $version != v* ]] && [[ $version != b* ]] ;
+          then
+            echo "Argument '$version' does not start with a d or with a v or a b"
+            exit 1
+          fi
+        env:
+          version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Checkout
         uses: actions/checkout@v5
         with:
