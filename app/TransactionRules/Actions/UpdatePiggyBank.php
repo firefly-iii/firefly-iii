@@ -239,7 +239,7 @@ class UpdatePiggyBank implements ActionInterface
         if (false === $repository->canAddAmount($piggyBank, $account, $amount)) {
             Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
             $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => Amount::formatAnything($amount, $currency, false), 'name' => $piggyBank->name])));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => $piggyBank->name])));
 
             return;
         }
