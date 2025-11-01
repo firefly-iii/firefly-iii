@@ -37,7 +37,7 @@ class AutocompleteApiRequest extends AggregateFormRequest
     protected function getRequests(): array
     {
         return [
-            DateRequest::class,
+             DateRequest::class,
             [PaginationRequest::class, 'sort_class' => Account::class],
             AccountTypesApiRequest::class,
             QueryRequest::class,

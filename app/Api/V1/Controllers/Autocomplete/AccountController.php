@@ -81,6 +81,7 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
+        Log::debug('Before All.');
         [
             'types' => $types,
             'query' => $query,
@@ -88,7 +89,6 @@ class AccountController extends Controller
             'limit' => $limit,
         ]
                      = $request->attributes->all();
-
 
         $date ??= today(config('app.timezone'));
 
