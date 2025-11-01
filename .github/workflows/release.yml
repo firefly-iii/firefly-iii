@@ -36,6 +36,14 @@ jobs:
           extensions: mbstring, intl, zip, bcmath
       - name: Switch and pull
         run: |
+          # validate argument
+          if  [[ $version != d* ]] && [[ $version != v* ]] ;
+          then
+            echo 'Argument does not start with a d or with a v'
+            exit 1
+          fi
+
+
           #
           # Always check out origin/develop, unless its a branch release.
           #
