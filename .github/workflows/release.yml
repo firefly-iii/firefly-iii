@@ -21,7 +21,7 @@ jobs:
       - name: Validate input
         run: |
           # validate argument
-          if  [[ $version != d* ]] && [[ $version != v* ]] && [[ $version != b* ]] ;
+          if  [[ $version != develo* ]] && [[ $version != v* ]] && [[ $version != branch* ]] ;
           then
             echo "Argument '$version' does not start with a d or with a v or a b"
             exit 1
