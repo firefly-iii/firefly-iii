@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support;
 
 use Carbon\Carbon;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use JsonException;
@@ -44,6 +45,7 @@ class CacheProperties
         if (auth()->check()) {
             $this->addProperty(auth()->user()->id);
             $this->addProperty(app('preferences')->lastActivity());
+            $this->addProperty(Steam::anonymous());
         }
     }
 
