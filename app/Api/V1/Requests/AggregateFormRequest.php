@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -45,6 +46,7 @@ abstract class AggregateFormRequest extends ApiRequest
 
         // instantiate all subrequests and share current requests' bags with them
         Log::debug('Initializing AggregateFormRequest.');
+
         foreach ($this->getRequests() as $config) {
             $requestClass         = is_array($config) ? array_shift($config) : $config;
 

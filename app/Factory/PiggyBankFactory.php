@@ -38,7 +38,6 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 
 use function Safe\json_encode;
-
 /**
  * Class PiggyBankFactory
  */
@@ -92,7 +91,7 @@ class PiggyBankFactory
             /** @var PiggyBank $piggyBank */
             $piggyBank = PiggyBank::createQuietly($piggyBankData);
         } catch (QueryException $e) {
-            app('log')->error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyBankData);
+            Log::error(sprintf('Could not store piggy bank: %s', $e->getMessage()), $piggyBankData);
 
             throw new FireflyException('400005: Could not store new piggy bank.', 0, $e);
         }
@@ -211,7 +210,7 @@ class PiggyBankFactory
         $current = 1;
         foreach ($set as $piggyBank) {
             if ($piggyBank->order !== $current) {
-                app('log')->debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
+                Log::debug(sprintf('Piggy bank #%d ("%s") was at place %d but should be on %d', $piggyBank->id, $piggyBank->name, $piggyBank->order, $current));
                 $piggyBank->order = $current;
                 $piggyBank->save();
             }

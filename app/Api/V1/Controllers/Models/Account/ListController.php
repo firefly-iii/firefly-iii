@@ -136,12 +136,16 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      */
-    public function transactions(Request $request, Account $account): JsonResponse
+    public function transactions(PaginationRequest $request, Account $account): JsonResponse
     {
-        $pageSize     = $this->parameters->get('limit');
+        [
+            'limit'  => $limit,
+            'offset' => $offset,
+            'page'   => $page,
+        ]            = $request->attributes->all();
+
         $type         = $request->get('type') ?? 'default';
-        $this->parameters->set('type', $type);
-        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        $types        = $this->mapTransactionTypes($type);
         $manager      = $this->getManager();
 
         /** @var User $admin */
@@ -151,7 +155,7 @@ class ListController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setAccounts(new Collection()->push($account))
-            ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types)
+            ->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types)
         ;
 
         if (null !== $this->parameters->get('start')) {

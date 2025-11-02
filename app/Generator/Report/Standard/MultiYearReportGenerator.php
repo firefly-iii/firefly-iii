@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
 use Throwable;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MonthReportGenerator.
@@ -60,8 +61,8 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
                 compact('accountIds', 'reportType')
             )->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = sprintf('Could not render report view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);

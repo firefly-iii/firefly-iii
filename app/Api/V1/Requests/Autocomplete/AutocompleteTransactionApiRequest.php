@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /*
- * ShowRequest.php
+ * AutocompleteApiRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,25 +21,27 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Requests\Models\Account;
+namespace FireflyIII\Api\V1\Requests\Autocomplete;
 
 use FireflyIII\Api\V1\Requests\AggregateFormRequest;
-use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\Generic\ObjectTypeApiRequest;
+use FireflyIII\Api\V1\Requests\Generic\QueryRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
+use Override;
 
-class ShowRequest extends AggregateFormRequest
+class AutocompleteTransactionApiRequest extends AggregateFormRequest
 {
+    #[Override]
     protected function getRequests(): array
     {
         return [
-            [PaginationRequest::class, 'sort_class' => Account::class],
-            DateRangeRequest::class,
             DateRequest::class,
-            AccountTypeApiRequest::class,
-            [ObjectTypeApiRequest::class, 'object_type' => Account::class],
+            [PaginationRequest::class, 'sort_class' => Account::class],
+            [ObjectTypeApiRequest::class, 'object_type' => Transaction::class],
+            QueryRequest::class,
         ];
     }
 }

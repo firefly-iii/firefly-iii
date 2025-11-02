@@ -28,6 +28,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TagFactory
@@ -40,12 +41,12 @@ class TagFactory
     public function findOrCreate(string $tag): ?Tag
     {
         $tag    = trim($tag);
-        app('log')->debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
+        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
 
         /** @var null|Tag $dbTag */
         $dbTag  = $this->user->tags()->where('tag', $tag)->first();
         if (null !== $dbTag) {
-            app('log')->debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
+            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
 
             return $dbTag;
         }
@@ -60,11 +61,11 @@ class TagFactory
             ]
         );
         if (!$newTag instanceof Tag) {
-            app('log')->error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
 
             return null;
         }
-        app('log')->debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
+        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
 
         return $newTag;
     }
