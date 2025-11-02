@@ -31,6 +31,7 @@ use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class PiggyBankEventHandler
@@ -70,7 +71,7 @@ class PiggyBankEventHandler
                 ->exists()
             ;
             if ($exists) {
-                app('log')->warning('Already have event for this journal and piggy, will not create another.');
+                Log::warning('Already have event for this journal and piggy, will not create another.');
 
                 return;
             }
