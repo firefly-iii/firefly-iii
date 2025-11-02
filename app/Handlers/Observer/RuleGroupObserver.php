@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\RuleGroup;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleGroupObserver
@@ -32,7 +33,7 @@ class RuleGroupObserver
 {
     public function deleting(RuleGroup $ruleGroup): void
     {
-        app('log')->debug('Observe "deleting" of a rule group.');
+        Log::debug('Observe "deleting" of a rule group.');
         foreach ($ruleGroup->rules()->get() as $rule) {
             $rule->delete();
         }

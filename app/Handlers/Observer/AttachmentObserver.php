@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Attachment;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AttachmentObserver
@@ -32,7 +33,7 @@ class AttachmentObserver
 {
     public function deleting(Attachment $attachment): void
     {
-        app('log')->debug('Observe "deleting" of an attachment.');
+        Log::debug('Observe "deleting" of an attachment.');
         $attachment->notes()->delete();
     }
 }

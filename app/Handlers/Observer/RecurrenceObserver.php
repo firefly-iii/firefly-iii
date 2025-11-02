@@ -26,6 +26,7 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceObserver
@@ -34,7 +35,7 @@ class RecurrenceObserver
 {
     public function deleting(Recurrence $recurrence): void
     {
-        app('log')->debug('Observe "deleting" of a recurrence.');
+        Log::debug('Observe "deleting" of a recurrence.');
 
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($recurrence->user);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\RecurrenceTransaction;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceTransactionObserver
@@ -32,7 +33,7 @@ class RecurrenceTransactionObserver
 {
     public function deleting(RecurrenceTransaction $transaction): void
     {
-        app('log')->debug('Observe "deleting" of a recurrence transaction.');
+        Log::debug('Observe "deleting" of a recurrence transaction.');
         $transaction->recurrenceTransactionMeta()->delete();
     }
 }
