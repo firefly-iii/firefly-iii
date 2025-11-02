@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Generic\PaginationDateRangeRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -110,7 +111,7 @@ class ListController extends Controller
         // get list of piggy banks. Count it and split it.
         $collection  = $this->repository->getPiggyBanks($account);
         $count       = $collection->count();
-        $piggyBanks  = $collection->slice(($page - 1) * $limit, $limit);
+        $piggyBanks  = $collection->slice($offset, $limit);
 
         // enrich
         /** @var User $admin */
@@ -136,16 +137,15 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      */
-    public function transactions(PaginationRequest $request, Account $account): JsonResponse
+    public function transactions(PaginationDateRangeRequest $request, Account $account): JsonResponse
     {
         [
             'limit'  => $limit,
-            'offset' => $offset,
             'page'   => $page,
+            'start'  => $start,
+            'end'    => $end,
+            'types' => $types,
         ]            = $request->attributes->all();
-
-        $type         = $request->get('type') ?? 'default';
-        $types        = $this->mapTransactionTypes($type);
         $manager      = $this->getManager();
 
         /** @var User $admin */
@@ -154,15 +154,12 @@ class ListController extends Controller
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
-        $collector->setUser($admin)->setAccounts(new Collection()->push($account))
-            ->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types)
-        ;
-
-        if (null !== $this->parameters->get('start')) {
-            $collector->setStart($this->parameters->get('start'));
+        $collector->setUser($admin)->setAccounts(new Collection()->push($account))->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types);
+        if (null !== $start) {
+            $collector->setStart($start);
         }
-        if (null !== $this->parameters->get('end')) {
-            $collector->setEnd($this->parameters->get('end'));
+        if (null !== $end) {
+            $collector->setEnd($end);
         }
 
         $paginator    = $collector->getPaginatedGroups();

@@ -81,7 +81,6 @@ class UpdateController extends Controller
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($attachment, $transformer, 'attachments');
 

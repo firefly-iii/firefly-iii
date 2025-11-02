@@ -81,7 +81,6 @@ class StoreController extends Controller
 
         /** @var AccountTransformer $transformer */
         $transformer = app(AccountTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($account, $transformer, self::RESOURCE_KEY);
 
