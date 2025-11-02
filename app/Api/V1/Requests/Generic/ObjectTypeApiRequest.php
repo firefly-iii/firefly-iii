@@ -60,9 +60,13 @@ class ObjectTypeApiRequest extends ApiRequest
         if (Transaction::class === $this->objectType) {
             $rule = new IsValidTransactionTypeList();
         }
-        return [
-            'types' => $rule,
+        $rules = [
+            'types' => [$rule],
         ];
+        if ('' !== $this->required) {
+            $rules['types'][] = $this->required;
+        }
+        return $rules;
     }
 
     public function withValidator(Validator $validator): void
