@@ -28,9 +28,9 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
 use JsonException;
+use Illuminate\Support\Facades\Log;
 
 use function Safe\json_encode;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class Sha3SignatureGenerator

@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
-
 /**
  * Class PiggyBankObserver
  */

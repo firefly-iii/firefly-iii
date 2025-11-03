@@ -53,7 +53,7 @@ class ObjectTypeApiRequest extends ApiRequest
 
     public function rules(): array
     {
-        $rule = null;
+        $rule  = null;
         if (Account::class === $this->objectType) {
             $rule = new IsValidAccountTypeList();
         }
@@ -66,6 +66,7 @@ class ObjectTypeApiRequest extends ApiRequest
         if ('' !== $this->required) {
             $rules['types'][] = $this->required;
         }
+
         return $rules;
     }
 
@@ -78,14 +79,20 @@ class ObjectTypeApiRequest extends ApiRequest
                 }
                 $type = $this->convertString('types', 'all');
                 $this->attributes->set('type', $type);
+
                 switch ($this->objectType) {
                     default:
                         $this->attributes->set('types', []);
+
+                        // no break
                     case Account::class:
                         $this->attributes->set('types', $this->mapAccountTypes($type));
+
                         break;
+
                     case Transaction::class:
                         $this->attributes->set('types', $this->mapTransactionTypes($type));
+
                         break;
                 }
             }
