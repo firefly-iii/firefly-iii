@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Webhook;
 use Illuminate\Support\Facades\Log;
+
 /**
  * Class WebhookObserver
  */

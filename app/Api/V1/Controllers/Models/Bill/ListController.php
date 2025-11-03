@@ -37,7 +37,6 @@ use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -141,10 +140,10 @@ class ListController extends Controller
         [
             'limit'  => $limit,
             'page'   => $page,
-            'types' => $types,
+            'types'  => $types,
             'start'  => $start,
             'end'    => $end,
-        ]            = $request->attributes->all();
+        ]             = $request->attributes->all();
 
         $manager      = $this->getManager();
 

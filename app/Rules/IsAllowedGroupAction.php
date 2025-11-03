@@ -72,7 +72,6 @@ class IsAllowedGroupAction implements ValidationRule
         $this->validateUserGroup((int)$value, $fail);
     }
 
-
     private function validateUserGroup(int $userGroupId, Closure $fail): void
     {
         try {
@@ -80,7 +79,8 @@ class IsAllowedGroupAction implements ValidationRule
         } catch (FireflyException $e) {
             Log::error($e->getTraceAsString());
         }
-        die('here we are');
+
+        exit('here we are');
         Log::debug(sprintf('validateUserGroup: %s', static::class));
         if (!auth()->check()) {
             Log::debug('validateUserGroup: user is not logged in, return NULL.');
@@ -90,7 +90,7 @@ class IsAllowedGroupAction implements ValidationRule
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user        = auth()->user();
         if (0 !== $userGroupId) {
             Log::debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $userGroupId));
         }
@@ -110,7 +110,7 @@ class IsAllowedGroupAction implements ValidationRule
         }
 
         // need to get the group from the membership:
-        $userGroup = $this->repository->getById($userGroupId);
+        $userGroup   = $this->repository->getById($userGroupId);
         if (null === $userGroup) {
             Log::debug(sprintf('validateUserGroup: group #%d does not exist.', $userGroupId));
             $fail('validation.belongs_user_or_user_group')->translate();

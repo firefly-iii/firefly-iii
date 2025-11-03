@@ -27,7 +27,6 @@ use FireflyIII\Api\V1\Requests\AggregateFormRequest;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\Generic\ObjectTypeApiRequest;
 use FireflyIII\Api\V1\Requests\Generic\QueryRequest;
-use FireflyIII\Api\V1\Requests\Models\Account\AccountTypesApiRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\Account;
 use Override;

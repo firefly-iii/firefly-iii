@@ -30,7 +30,6 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
-
 /**
  * Class BillObserver
  */
