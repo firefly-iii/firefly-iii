@@ -36,7 +36,7 @@ abstract class AggregateFormRequest extends ApiRequest
      */
     protected array $requests = [];
 
-    /** @return array<string|array> */
+    /** @return array<array|string> */
     abstract protected function getRequests(): array;
 
     public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null): void
