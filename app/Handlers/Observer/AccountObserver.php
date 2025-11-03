@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-
 /**
  * Class AccountObserver
  */
