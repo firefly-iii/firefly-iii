@@ -42,6 +42,7 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Override;
+use Sentry\Laravel\Integration;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -49,11 +50,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
-
 use function Safe\json_encode;
 use function Safe\parse_url;
 
 // temp
+
 /**
  * Class Handler
  */
@@ -65,7 +66,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<Throwable>>
      */
     protected $dontReport
-                                        = [
+        = [
             AuthenticationException::class,
             LaravelValidationException::class,
             NotFoundHttpException::class,
@@ -81,7 +82,14 @@ class Handler extends ExceptionHandler
      * Register the exception handling callbacks for the application.
      */
     #[Override]
-    public function register(): void {}
+    public function register(): void
+    {
+        if (true === config('firefly.track_errors')) {
+            $this->reportable(function (Throwable $e) {
+                Integration::captureUnhandledException($e);
+            });
+        }
+    }
 
     /**
      * Render an exception into an HTTP response. It's complex but lucky for us, we never use it because
@@ -160,7 +168,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug   = (bool) config('app.debug', false);
+            $isDebug = (bool)config('app.debug', false);
             if ($isDebug) {
                 Log::debug(sprintf('Return JSON %s with debug.', $e::class));
 
@@ -219,13 +227,13 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e): void
     {
         self::$lastError = $e;
-        $doMailError     = (bool) config('firefly.send_error_message');
+        $doMailError     = (bool)config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
             return;
         }
-        $userData        = [
+        $userData = [
             'id'    => 0,
             'email' => 'unknown@example.com',
         ];
@@ -234,9 +242,9 @@ class Handler extends ExceptionHandler
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers         = request()->headers->all();
+        $headers = request()->headers->all();
 
-        $data            = [
+        $data = [
             'class'        => $e::class,
             'errorMessage' => $e->getMessage(),
             'time'         => Carbon::now()->format('r'),
@@ -254,8 +262,8 @@ class Handler extends ExceptionHandler
         ];
 
         // create job that will mail.
-        $ipAddress       = request()->ip() ?? '0.0.0.0';
-        $job             = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $ipAddress = request()->ip() ?? '0.0.0.0';
+        $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
@@ -264,9 +272,9 @@ class Handler extends ExceptionHandler
     private function shouldntReportLocal(Throwable $e): bool
     {
         return null !== Arr::first(
-            $this->dontReport,
-            static fn ($type) => $e instanceof $type
-        );
+                $this->dontReport,
+                static fn($type) => $e instanceof $type
+            );
     }
 
     /**
@@ -275,7 +283,7 @@ class Handler extends ExceptionHandler
      * @param Request $request
      */
     #[Override]
-    protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
+    protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response | JsonResponse | RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.
         $previous = app('steam')->getSafePreviousUrl();
@@ -283,8 +291,7 @@ class Handler extends ExceptionHandler
 
         return redirect($redirect ?? $previous)
             ->withInput(Arr::except($request->input(), $this->dontFlash))
-            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag))
-        ;
+            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
     }
 
     /**

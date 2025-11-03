@@ -37,7 +37,7 @@ abstract class AggregateFormRequest extends ApiRequest
      */
     protected array $requests = [];
 
-    /** @return class-string[] */
+    /** @return array<string|array> */
     abstract protected function getRequests(): array;
 
     public function initialize(array $query = [], array $request = [], array $attributes = [], array $cookies = [], array $files = [], array $server = [], $content = null): void
@@ -47,6 +47,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // instantiate all subrequests and share current requests' bags with them
         Log::debug('Initializing AggregateFormRequest.');
 
+        /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
             $requestClass         = is_array($config) ? array_shift($config) : $config;
 
