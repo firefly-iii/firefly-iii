@@ -1,5 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
+use Illuminate\Auth\AuthenticationException;
+
 /**
  * Sentry Laravel SDK configuration file.
  *
@@ -13,13 +17,13 @@ return [
     'environment'          => env('SENTRY_ENVIRONMENT'),
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#sample_rate
-    'sample_rate'          => env('SENTRY_SAMPLE_RATE') === null ? 1.0 : (float)env('SENTRY_SAMPLE_RATE'),
+    'sample_rate'          => null === env('SENTRY_SAMPLE_RATE') ? 1.0 : (float)env('SENTRY_SAMPLE_RATE'),
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#traces_sample_rate
-    'traces_sample_rate'   => env('SENTRY_TRACES_SAMPLE_RATE') === null ? null : (float)env('SENTRY_TRACES_SAMPLE_RATE'),
+    'traces_sample_rate'   => null === env('SENTRY_TRACES_SAMPLE_RATE') ? null : (float)env('SENTRY_TRACES_SAMPLE_RATE'),
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#profiles-sample-rate
-    'profiles_sample_rate' => env('SENTRY_PROFILES_SAMPLE_RATE') === null ? null : (float)env('SENTRY_PROFILES_SAMPLE_RATE'),
+    'profiles_sample_rate' => null === env('SENTRY_PROFILES_SAMPLE_RATE') ? null : (float)env('SENTRY_PROFILES_SAMPLE_RATE'),
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#enable_logs
     'enable_logs'          => env('SENTRY_ENABLE_LOGS', false),
@@ -32,7 +36,7 @@ return [
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#ignore_exceptions
     'ignore_exceptions'    => [
-        \Illuminate\Auth\AuthenticationException::class,
+        AuthenticationException::class,
     ],
 
     // @see: https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/#ignore_transactions
