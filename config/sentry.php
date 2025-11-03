@@ -10,7 +10,7 @@ use Illuminate\Auth\AuthenticationException;
  * @see https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/
  */
 return [
-    'dsn'                  => 'SENTRY_LARAVEL_DSN=https://cf9d7aea92537db1e97e3e758b88b0a3@o4510302583848960.ingest.de.sentry.io/4510302585290832',
+    'dsn'                  => 'https://cf9d7aea92537db1e97e3e758b88b0a3@o4510302583848960.ingest.de.sentry.io/4510302585290832',
     'release'              => env('SENTRY_RELEASE'),
 
     // When left empty or `null` the Laravel environment will be used (usually discovered from `APP_ENV` in your `.env`)
