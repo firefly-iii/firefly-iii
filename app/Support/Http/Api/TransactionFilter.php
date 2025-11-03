@@ -70,7 +70,7 @@ trait TransactionFilter
         $return = [];
         $parts  = explode(',', $type);
         foreach ($parts as $part) {
-            if(array_key_exists($part, $this->transactionTypes)) {
+            if (array_key_exists($part, $this->transactionTypes)) {
                 $return = array_merge($return, $this->transactionTypes[$part]);
             }
         }

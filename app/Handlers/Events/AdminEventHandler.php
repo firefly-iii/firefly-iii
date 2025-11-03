@@ -38,7 +38,6 @@ use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-
 /**
  * Class AdminEventHandler.
  */

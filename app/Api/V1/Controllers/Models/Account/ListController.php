@@ -38,7 +38,6 @@ use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -144,8 +143,8 @@ class ListController extends Controller
             'page'   => $page,
             'start'  => $start,
             'end'    => $end,
-            'types' => $types,
-        ]            = $request->attributes->all();
+            'types'  => $types,
+        ]             = $request->attributes->all();
         $manager      = $this->getManager();
 
         /** @var User $admin */

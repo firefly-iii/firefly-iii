@@ -75,9 +75,9 @@ class ShowController extends Controller
             'limit'  => $limit,
             'offset' => $offset,
             'page'   => $page,
-            'start' => $start,
-            'end'   => $end,
-        ]            = $request->attributes->all();
+            'start'  => $start,
+            'end'    => $end,
+        ]                 = $request->attributes->all();
 
         // get list of available budgets. Count it and split it.
         $collection       = $this->abRepository->getAvailableBudgetsByDate($start, $end);
