@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use Illuminate\Auth\AuthenticationException;
 
-/**
+/*
  * Sentry Laravel SDK configuration file.
  *
  * @see https://docs.sentry.io/platforms/php/guides/laravel/configuration/options/
