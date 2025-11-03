@@ -36,7 +36,7 @@ class QueryRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'query' => sprintf('min:1|max:50|%s', $this->required),
+            'query' => sprintf('min:0|max:50|%s', $this->required),
         ];
     }
 
