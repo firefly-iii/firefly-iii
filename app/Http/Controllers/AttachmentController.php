@@ -95,7 +95,7 @@ class AttachmentController extends Controller
     /**
      * Download attachment to PC.
      *
-     * @return LaravelResponse
+     * @return LaravelResponse|View
      *
      * @throws FireflyException
      */
@@ -121,8 +121,8 @@ class AttachmentController extends Controller
 
             return $response;
         }
-
-        throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
+        $message = 'Could not find the indicated attachment. The file is no longer there.';
+        return view('errors.error', compact('message'));
     }
 
     /**
@@ -194,7 +194,7 @@ class AttachmentController extends Controller
      *
      * @throws FireflyException
      */
-    public function view(Attachment $attachment): LaravelResponse
+    public function view(Attachment $attachment): LaravelResponse|View
     {
         if ($this->repository->exists($attachment)) {
             $content = $this->repository->getContent($attachment);
@@ -223,6 +223,7 @@ class AttachmentController extends Controller
             );
         }
 
-        throw new FireflyException('Could not find the indicated attachment. The file is no longer there.');
+        $message = 'Could not find the indicated attachment. The file is no longer there.';
+        return view('errors.error', compact('message'));
     }
 }

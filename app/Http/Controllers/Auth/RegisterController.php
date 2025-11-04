@@ -158,12 +158,12 @@ class RegisterController extends Controller
         if (true === $allowRegistration) {
             $message = 'You do not need an invite code on this installation.';
 
-            return view('error', compact('message'));
+            return view('errors.error', compact('message'));
         }
         if (false === $validCode) {
             $message = 'Invalid code.';
 
-            return view('error', compact('message'));
+            return view('errors.error', compact('message'));
         }
 
         $email             = $request->old('email');
@@ -189,7 +189,7 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available. If you are the administrator, you can enable this in the administration.';
 
-            return view('error', compact('message'));
+            return view('errors.error', compact('message'));
         }
 
         $email             = $request?->old('email');
