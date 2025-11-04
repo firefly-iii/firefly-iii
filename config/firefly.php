@@ -107,7 +107,7 @@ return [
     'demo_password'                => env('DEMO_PASSWORD', ''),
     'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
     'tracker_url'                  => env('TRACKER_URL', ''),
-    'track_errors'                 => env('TRACK_ERRORS', false),
+    'report_errors_online'                 => env('REPORT_ERRORS_ONLINE', false),
 
     // authentication settings
     'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),

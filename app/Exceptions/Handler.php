@@ -85,7 +85,7 @@ class Handler extends ExceptionHandler
     #[Override]
     public function register(): void
     {
-        if (true === config('firefly.track_errors')) {
+        if (true === config('firefly.report_errors_online')) {
             $this->reportable(function (Throwable $e): void {
                 Integration::captureUnhandledException($e);
             });
