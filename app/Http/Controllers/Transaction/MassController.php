@@ -131,6 +131,10 @@ class MassController extends Controller
         $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
         $withdrawalSources   = $accountRepository->getAccountsByType($array);
 
+        // valid withdrawal destinations:
+        $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionTypeEnum::WITHDRAWAL->value, AccountTypeEnum::ASSET->value));
+        $withdrawalDestinations = $accountRepository->getAccountsByType($array);
+
         // valid deposit destinations:
         $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionTypeEnum::DEPOSIT->value, AccountTypeEnum::REVENUE->value));
         $depositDestinations = $accountRepository->getAccountsByType($array);
@@ -148,7 +152,7 @@ class MassController extends Controller
 
         $this->rememberPreviousUrl('transactions.mass-edit.url');
 
-        return view('transactions.mass.edit', compact('journals', 'subTitle', 'withdrawalSources', 'depositDestinations', 'budgets'));
+        return view('transactions.mass.edit', compact('journals', 'subTitle', 'withdrawalSources', 'withdrawalDestinations', 'depositDestinations', 'budgets'));
     }
 
     /**

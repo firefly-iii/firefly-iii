@@ -140,10 +140,13 @@
 
                                         {# DESTINATION ACCOUNT NAME FOR WITHDRAWAL #}
                                         {% if journal.transaction_type_type == 'Withdrawal' %}
-                                            <input class="form-control input-sm" spellcheck="false"
-                                                   placeholder="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}"
-                                                   name="destination_name[{{ journal.transaction_journal_id }}]" type="text" autocomplete="off"
-                                                   value="{% if journal.destination_type != 'Cash account' %}{{ journal.destination_account_name }}{% endif %}">
+
+                                            <select class="form-control input-sm" name="destination_id[{{ journal.transaction_journal_id }}]">
+                                                {% for account in withdrawalDestinations %}
+                                                    <option value="{{ account.id }}"{% if account.id == journal.destination_account_id %} selected="selected"{% endif %}
+                                                            label="{{ account.name }}">{{ account.name }}</option>
+                                                {% endfor %}
+                                            </select>
                                         {% endif %}
                                         {% endif %}
                                     </td>
