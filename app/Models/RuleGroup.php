@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property User $user
+ * @property User       $user
  * @property Collection $rules
  */
 #[ObservedBy([RuleGroupObserver::class])]

@@ -122,6 +122,7 @@ class AttachmentController extends Controller
             return $response;
         }
         $message = 'Could not find the indicated attachment. The file is no longer there.';
+
         return view('errors.error', compact('message'));
     }
 
@@ -224,6 +225,7 @@ class AttachmentController extends Controller
         }
 
         $message = 'Could not find the indicated attachment. The file is no longer there.';
+
         return view('errors.error', compact('message'));
     }
 }
