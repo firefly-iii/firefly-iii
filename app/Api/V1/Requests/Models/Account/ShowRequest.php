@@ -39,7 +39,7 @@ class ShowRequest extends AggregateFormRequest
             DateRangeRequest::class,
             DateRequest::class,
             AccountTypeApiRequest::class,
-            [ObjectTypeApiRequest::class, 'object_type' => Account::class],
+            //[ObjectTypeApiRequest::class, 'object_type' => Account::class],
         ];
     }
 }
