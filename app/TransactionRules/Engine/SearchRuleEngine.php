@@ -278,7 +278,7 @@ class SearchRuleEngine implements RuleEngineInterface
             ++$count;
             // if trigger says stop processing, do so.
             if (true === $ruleTrigger->stop_processing && $result->count() > 0) {
-                Log::debug('The trigger says to stop processing, so stop processing other triggers.');
+                Log::debug('The trigger in this rule trigger says to stop processing, so stop processing other triggers.');
 
                 break;
             }
