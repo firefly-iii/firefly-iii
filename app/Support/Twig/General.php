@@ -157,6 +157,14 @@ class General extends AbstractExtension
 
                 /** @var Carbon $date */
                 $date             = now();
+
+                // get the date from the current session. If it's in the future, keep `now()`.
+                /** @var Carbon $session */
+                $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
+                if ($session->lt($date)) {
+                    $date = $session->copy();
+                    $date->endOfDay();
+                }
                 Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
                 // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
