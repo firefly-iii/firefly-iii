@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Issue 11157](https://github.com/firefly-iii/firefly-iii/issues/11157) (Redacted amounts misbehave with Reports) reported by @barreeeiroo
-- #11166
+- [Issue 11166](https://github.com/firefly-iii/firefly-iii/issues/11166) (Optional transaction information field not saved when updating a recuring transaction) reported by @Old-Veeh
 - [Issue 11185](https://github.com/firefly-iii/firefly-iii/issues/11185) (Internal server error after apply rule) reported by @Citroene
 
 ## 6.4.4 - 2025-11-02
