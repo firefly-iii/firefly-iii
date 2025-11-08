@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupFactory
@@ -55,7 +56,7 @@ class TransactionGroupFactory
      */
     public function create(array $data): TransactionGroup
     {
-        app('log')->debug('Now in TransactionGroupFactory::create()');
+        Log::debug('Now in TransactionGroupFactory::create()');
         $this->journalFactory->setUser($data['user']);
         $this->journalFactory->setUserGroup($data['user_group']);
         $this->journalFactory->setErrorOnHash($data['error_if_duplicate_hash'] ?? false);
@@ -63,7 +64,7 @@ class TransactionGroupFactory
         try {
             $collection = $this->journalFactory->create($data);
         } catch (DuplicateTransactionException $e) {
-            app('log')->warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
+            Log::warning('GroupFactory::create() caught journalFactory::create() with a duplicate!');
 
             throw new DuplicateTransactionException($e->getMessage(), 0, $e);
         }

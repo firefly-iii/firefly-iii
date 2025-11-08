@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Update;
 
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait UpdateTrait
@@ -38,7 +39,7 @@ trait UpdateTrait
      */
     public function getLatestRelease(): array
     {
-        app('log')->debug('Now in getLatestRelease()');
+        Log::debug('Now in getLatestRelease()');
 
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);

@@ -42,6 +42,7 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Override;
+use Sentry\Laravel\Integration;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -54,6 +55,7 @@ use function Safe\json_encode;
 use function Safe\parse_url;
 
 // temp
+
 /**
  * Class Handler
  */
@@ -81,7 +83,14 @@ class Handler extends ExceptionHandler
      * Register the exception handling callbacks for the application.
      */
     #[Override]
-    public function register(): void {}
+    public function register(): void
+    {
+        if (true === config('firefly.report_errors_online')) {
+            $this->reportable(function (Throwable $e): void {
+                Integration::captureUnhandledException($e);
+            });
+        }
+    }
 
     /**
      * Render an exception into an HTTP response. It's complex but lucky for us, we never use it because
@@ -160,7 +169,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug   = (bool) config('app.debug', false);
+            $isDebug   = (bool)config('app.debug', false);
             if ($isDebug) {
                 Log::debug(sprintf('Return JSON %s with debug.', $e::class));
 
@@ -219,7 +228,7 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e): void
     {
         self::$lastError = $e;
-        $doMailError     = (bool) config('firefly.send_error_message');
+        $doMailError     = (bool)config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
@@ -255,7 +264,7 @@ class Handler extends ExceptionHandler
 
         // create job that will mail.
         $ipAddress       = request()->ip() ?? '0.0.0.0';
-        $job             = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $job             = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);

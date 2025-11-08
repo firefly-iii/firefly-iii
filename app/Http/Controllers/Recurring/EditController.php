@@ -44,7 +44,6 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class EditController
@@ -90,30 +89,29 @@ class EditController extends Controller
     public function edit(Request $request, Recurrence $recurrence)
     {
         // TODO this should be in the repository.
-        $count                            = $recurrence->recurrenceTransactions()->count();
+        $count                              = $recurrence->recurrenceTransactions()->count();
         if (0 === $count) {
             throw new FireflyException('This recurring transaction has no meta-data. You will have to delete it and recreate it. Sorry!');
         }
 
         // enrich
         /** @var User $admin */
-        $admin                            = auth()->user();
-        $enrichment                       = new RecurringEnrichment();
+        $admin                              = auth()->user();
+        $enrichment                         = new RecurringEnrichment();
         $enrichment->setUser($admin);
 
         /** @var Recurrence $recurrence */
-        $recurrence                       = $enrichment->enrichSingle($recurrence);
+        $recurrence                         = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
-        $transformer                      = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag());
-        $array                            = $transformer->transform($recurrence);
-        $budgets                          = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
-        $bills                            = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());
+        $transformer                        = app(RecurrenceTransformer::class);
+        $array                              = $transformer->transform($recurrence);
+        $budgets                            = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
+        $bills                              = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());
 
         /** @var RecurrenceRepetition $repetition */
-        $repetition                       = $recurrence->recurrenceRepetitions()->first();
-        $currentRepType                   = $repetition->repetition_type;
+        $repetition                         = $recurrence->recurrenceRepetitions()->first();
+        $currentRepType                     = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
             $currentRepType = sprintf('%s,%s', $currentRepType, $repetition->repetition_moment);
         }
@@ -124,8 +122,8 @@ class EditController extends Controller
         }
         $request->session()->forget('recurrences.edit.fromUpdate');
 
-        $repetitionEnd                    = 'forever';
-        $repetitionEnds                   = [
+        $repetitionEnd                      = 'forever';
+        $repetitionEnds                     = [
             'forever'    => (string) trans('firefly.repeat_forever'),
             'until_date' => (string) trans('firefly.repeat_until_date'),
             'times'      => (string) trans('firefly.repeat_times'),
@@ -137,24 +135,28 @@ class EditController extends Controller
             $repetitionEnd = 'times';
         }
 
-        $weekendResponses                 = [
+        $weekendResponses                   = [
             RecurrenceRepetitionWeekend::WEEKEND_DO_NOTHING->value    => (string) trans('firefly.do_nothing'),
             RecurrenceRepetitionWeekend::WEEKEND_SKIP_CREATION->value => (string) trans('firefly.skip_transaction'),
             RecurrenceRepetitionWeekend::WEEKEND_TO_FRIDAY->value     => (string) trans('firefly.jump_to_friday'),
             RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value     => (string) trans('firefly.jump_to_monday'),
         ];
 
-        $hasOldInput                      = null !== $request->old('_token');
-        $preFilled                        = [
+        $hasOldInput                        = null !== $request->old('_token');
+        $preFilled                          = [
             'transaction_type'          => strtolower((string) $recurrence->transactionType->type),
             'active'                    => $hasOldInput ? (bool) $request->old('active') : $recurrence->active,
             'apply_rules'               => $hasOldInput ? (bool) $request->old('apply_rules') : $recurrence->apply_rules,
             'deposit_source_id'         => $array['transactions'][0]['source_id'],
             'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
         ];
-        $array['first_date']              = substr((string) $array['first_date'], 0, 10);
-        $array['repeat_until']            = substr((string) $array['repeat_until'], 0, 10);
-        $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
+        $array['first_date']                = substr((string) $array['first_date'], 0, 10);
+        $array['repeat_until']              = substr((string) $array['repeat_until'], 0, 10);
+        $array['transactions'][0]['tags']   = implode(',', $array['transactions'][0]['tags'] ?? []);
+        $array['transactions'][0]['amount'] = round((float) $array['transactions'][0]['amount'], $array['transactions'][0]['currency_decimal_places']);
+        if (null !== $array['transactions'][0]['foreign_amount']) {
+            $array['transactions'][0]['foreign_amount'] = round((float) $array['transactions'][0]['foreign_amount'], $array['transactions'][0]['foreign_currency_decimal_places']);
+        }
 
         return view(
             'recurring.edit',

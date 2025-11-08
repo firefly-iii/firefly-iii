@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Models\Attachment;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Middleware\ApiDemoUser;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -120,8 +121,14 @@ class ShowController extends Controller
      *
      * Display a listing of the resource.
      */
-    public function index(): JsonResponse
+    public function index(PaginationRequest $request): JsonResponse
     {
+        [
+            'limit'  => $limit,
+            'offset' => $offset,
+            'page'   => $page,
+        ]            = $request->attributes->all();
+
         if (true === auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
 
@@ -130,21 +137,17 @@ class ShowController extends Controller
 
         $manager     = $this->getManager();
 
-        // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
-
         // get list of attachments. Count it and split it.
         $collection  = $this->repository->get();
         $count       = $collection->count();
-        $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $attachments = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator   = new LengthAwarePaginator($attachments, $count, $limit, $page);
         $paginator->setPath(route('api.v1.attachments.index').$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
@@ -169,7 +172,6 @@ class ShowController extends Controller
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($attachment, $transformer, 'attachments');
 

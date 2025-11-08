@@ -33,6 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AutomationHandler
@@ -46,7 +47,7 @@ class AutomationHandler
      */
     public function reportJournals(RequestedReportOnJournals $event): void
     {
-        app('log')->debug('In reportJournals.');
+        Log::debug('In reportJournals.');
 
         /** @var UserRepositoryInterface $repository */
         $repository  = app(UserRepositoryInterface::class);
@@ -56,17 +57,17 @@ class AutomationHandler
         $sendReport  = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
-            app('log')->debug('Not sending report, because config says so.');
+            Log::debug('Not sending report, because config says so.');
 
             return;
         }
 
         if (null === $user || 0 === $event->groups->count()) {
-            app('log')->debug('No transaction groups in event, nothing to email about.');
+            Log::debug('No transaction groups in event, nothing to email about.');
 
             return;
         }
-        app('log')->debug('Continue with message!');
+        Log::debug('Continue with message!');
 
         // transform groups into array:
         /** @var TransactionGroupTransformer $transformer */
@@ -83,18 +84,18 @@ class AutomationHandler
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
-                app('log')->warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
 
                 return;
             }
             if (str_contains($message, 'RFC 2822')) {
-                app('log')->warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
 
                 return;
             }
-            app('log')->error($e->getMessage());
-            app('log')->error($e->getTraceAsString());
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
-        app('log')->debug('If there is no error above this line, message was sent.');
+        Log::debug('If there is no error above this line, message was sent.');
     }
 }

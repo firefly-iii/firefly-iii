@@ -47,7 +47,7 @@ class RuleHandler
         if (false === $preference) {
             return;
         }
-        app('log')->debug('Now in ruleActionFailedOnArray');
+        Log::debug('Now in ruleActionFailedOnArray');
         $journal     = $event->journal;
         $error       = $event->error;
         $user        = $ruleAction->rule->user;
@@ -76,7 +76,7 @@ class RuleHandler
         if (false === $preference) {
             return;
         }
-        app('log')->debug('Now in ruleActionFailedOnObject');
+        Log::debug('Now in ruleActionFailedOnObject');
         $journal     = $event->journal;
         $error       = $event->error;
         $user        = $ruleAction->rule->user;

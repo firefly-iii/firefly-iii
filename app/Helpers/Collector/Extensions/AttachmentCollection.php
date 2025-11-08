@@ -29,6 +29,7 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait AttachmentCollection
@@ -72,7 +73,7 @@ trait AttachmentCollection
      */
     public function hasAttachments(): GroupCollectorInterface
     {
-        app('log')->debug('Add filter on attachment ID.');
+        Log::debug('Add filter on attachment ID.');
         $this->joinAttachmentTables();
         $this->query->whereNotNull('attachments.attachable_id');
         $this->query->whereNull('attachments.deleted_at');
@@ -510,7 +511,7 @@ trait AttachmentCollection
      */
     public function hasNoAttachments(): GroupCollectorInterface
     {
-        app('log')->debug('Add filter on no attachments.');
+        Log::debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
 
         $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line

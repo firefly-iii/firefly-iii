@@ -64,12 +64,12 @@ use FireflyIII\TransactionRules\Actions\UpdatePiggyBank;
 
 return [
     // default values for certain things:
-    'configuration'                => [
+    'configuration'                        => [
         'single_user_mode' => true,
         'is_demo_site'     => false,
     ],
     // some feature flags:
-    'feature_flags'                => [
+    'feature_flags'                        => [
         'export'                 => true,
         'telemetry'              => false,
         'webhooks'               => true,
@@ -78,47 +78,48 @@ return [
         'running_balance_column' => env('USE_RUNNING_BALANCE', false),
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                      => '6.4.4',
-    'build_time'                   => 1762026349,
-    'api_version'                  => '2.1.0', // field is no longer used.
-    'db_version'                   => 28, // field is no longer used.
+    'version'                              => '6.4.5',
+    'build_time'                           => 1762597345,
+    'api_version'                          => '2.1.0', // field is no longer used.
+    'db_version'                           => 28, // field is no longer used.
 
     // generic settings
-    'maxUploadSize'                => 1073741824, // 1 GB
-    'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
-    'site_owner'                   => env('SITE_OWNER', ''),
+    'maxUploadSize'                        => 1073741824, // 1 GB
+    'send_error_message'                   => env('SEND_ERROR_MESSAGE', true),
+    'site_owner'                           => env('SITE_OWNER', ''),
 
     // tokens and keys
-    'fixer_api_key'                => env('FIXER_API_KEY', ''),
-    'ipinfo_token'                 => env('IPINFO_TOKEN', ''),
-    'static_cron_token'            => envNonEmpty('STATIC_CRON_TOKEN'),
+    'fixer_api_key'                        => env('FIXER_API_KEY', ''),
+    'ipinfo_token'                         => env('IPINFO_TOKEN', ''),
+    'static_cron_token'                    => envNonEmpty('STATIC_CRON_TOKEN'),
 
     // flags
-    'enable_external_map'          => env('ENABLE_EXTERNAL_MAP', false),
-    'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
-    'disable_csp_header'           => env('DISABLE_CSP_HEADER', false),
-    'allow_webhooks'               => env('ALLOW_WEBHOOKS', false),
+    'enable_external_map'                  => env('ENABLE_EXTERNAL_MAP', false),
+    'disable_frame_header'                 => env('DISABLE_FRAME_HEADER', false),
+    'disable_csp_header'                   => env('DISABLE_CSP_HEADER', false),
+    'allow_webhooks'                       => env('ALLOW_WEBHOOKS', false),
 
     // flags
-    'send_report_journals'         => envNonEmpty('SEND_REPORT_JOURNALS', true),
+    'send_report_journals'                 => envNonEmpty('SEND_REPORT_JOURNALS', true),
 
     // info for demo site
-    'demo_username'                => env('DEMO_USERNAME', ''),
-    'demo_password'                => env('DEMO_PASSWORD', ''),
-    'tracker_site_id'              => env('TRACKER_SITE_ID', ''),
-    'tracker_url'                  => env('TRACKER_URL', ''),
+    'demo_username'                        => env('DEMO_USERNAME', ''),
+    'demo_password'                        => env('DEMO_PASSWORD', ''),
+    'tracker_site_id'                      => env('TRACKER_SITE_ID', ''),
+    'tracker_url'                          => env('TRACKER_URL', ''),
+    'report_errors_online'                 => env('REPORT_ERRORS_ONLINE', false),
 
     // authentication settings
-    'authentication_guard'         => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
-    'custom_logout_url'            => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
+    'authentication_guard'                 => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'custom_logout_url'                    => envNonEmpty('CUSTOM_LOGOUT_URL', ''),
 
     // static config (cannot be changed by user)
-    'update_endpoint'              => 'https://version.firefly-iii.org/index.json',
-    'update_minimum_age'           => 7,
+    'update_endpoint'                      => 'https://version.firefly-iii.org/index.json',
+    'update_minimum_age'                   => 7,
 
 
     // enabled languages
-    'languages'                    => [
+    'languages'                            => [
         // currently enabled languages
         // 'af_ZA' => ['name_locale' => 'Afrikaans', 'name_english' => 'Afrikaans'],
         'ar_SA' => ['name_locale' => 'العربية', 'name_english' => 'Arabic'],
@@ -166,22 +167,22 @@ return [
     ],
 
     // web configuration:
-    'trusted_proxies'              => env('TRUSTED_PROXIES', ''),
+    'trusted_proxies'                      => env('TRUSTED_PROXIES', ''),
 
     // map configuration
-    'default_location'             => [
+    'default_location'                     => [
         'longitude'  => env('MAP_DEFAULT_LONG', '5.916667'),
         'latitude'   => env('MAP_DEFAULT_LAT', '51.983333'),
         'zoom_level' => env('MAP_DEFAULT_ZOOM', '6'),
     ],
 
     // administration specific preferences
-    'admin_specific_prefs'         => [],
+    'admin_specific_prefs'                 => [],
 
     // default user-related values
-    'darkMode'                     => 'browser',
-    'list_length'                  => 10, // to be removed if v1 is cancelled.
-    'default_preferences'          => [
+    'darkMode'                             => 'browser',
+    'list_length'                          => 10, // to be removed if v1 is cancelled.
+    'default_preferences'                  => [
         'anonymous'          => false,
         'frontpageAccounts'  => [],
         'listPageSize'       => 50,
@@ -190,12 +191,12 @@ return [
         'locale'             => 'equal',
         'convertToPrimary'   => false,
     ],
-    'default_currency'             => 'EUR',
-    'default_language'             => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
-    'default_locale'               => envNonEmpty('DEFAULT_LOCALE', 'equal'),
+    'default_currency'                     => 'EUR',
+    'default_language'                     => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'default_locale'                       => envNonEmpty('DEFAULT_LOCALE', 'equal'),
 
     // account types that may have or set a currency
-    'valid_currency_account_types' => [
+    'valid_currency_account_types'         => [
         AccountTypeEnum::ASSET->value,
         AccountTypeEnum::LOAN->value,
         AccountTypeEnum::DEBT->value,
@@ -207,7 +208,7 @@ return [
     ],
 
     // "value must be in this list" values
-    'valid_attachment_models'      => [
+    'valid_attachment_models'              => [
         Account::class,
         Bill::class,
         Budget::class,
@@ -218,11 +219,11 @@ return [
         TransactionJournal::class,
         Recurrence::class,
     ],
-    'available_dark_modes'         => ['light', 'dark', 'browser'],
-    'bill_reminder_periods'        => [90, 30, 14, 7, 0],
-    'valid_view_ranges'            => ['1D', '1W', '1M', '3M', '6M', '1Y'],
-    'valid_url_protocols'          => envNonEmpty('VALID_URL_PROTOCOLS', 'http,https,ftp,ftps,mailto'),
-    'allowedMimes'                 => [
+    'available_dark_modes'                 => ['light', 'dark', 'browser'],
+    'bill_reminder_periods'                => [90, 30, 14, 7, 0],
+    'valid_view_ranges'                    => ['1D', '1W', '1M', '3M', '6M', '1Y'],
+    'valid_url_protocols'                  => envNonEmpty('VALID_URL_PROTOCOLS', 'http,https,ftp,ftps,mailto'),
+    'allowedMimes'                         => [
         // plain files
         'text/plain',
         'text/html',
@@ -302,17 +303,17 @@ return [
         // JSON
         'application/json',
     ],
-    'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
-    'valid_liabilities'            => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
-    'ccTypes'                      => ['monthlyFull' => 'Full payment every month'],
-    'credit_card_types'            => ['monthlyFull'],
+    'accountRoles'                         => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
+    'valid_liabilities'                    => [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+    'ccTypes'                              => ['monthlyFull' => 'Full payment every month'],
+    'credit_card_types'                    => ['monthlyFull'],
 
     // "period must be in this list" values
-    'bill_periods'                 => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
-    'interest_periods'             => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'bill_periods'                         => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
+    'interest_periods'                     => ['daily', 'weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
 
     // settings to translate X to Y
-    'range_to_repeat_freq'         => [
+    'range_to_repeat_freq'                 => [
         '1D'     => 'weekly',
         '1W'     => 'weekly',
         '1M'     => 'monthly',
@@ -321,7 +322,7 @@ return [
         '1Y'     => 'yearly',
         'custom' => 'custom',
     ],
-    'subTitlesByIdentifier'        => [
+    'subTitlesByIdentifier'                => [
         'asset'       => 'Asset accounts',
         'expense'     => 'Expense accounts',
         'revenue'     => 'Revenue accounts',
@@ -329,7 +330,7 @@ return [
         'liabilities' => 'Liabilities',
         'liability'   => 'Liabilities',
     ],
-    'subIconsByIdentifier'         => [
+    'subIconsByIdentifier'                 => [
         'asset'                             => 'fa-money',
         AccountTypeEnum::ASSET->value       => 'fa-money',
         AccountTypeEnum::DEFAULT->value     => 'fa-money',
@@ -343,14 +344,14 @@ return [
         AccountTypeEnum::IMPORT->value      => 'fa-download',
         'liabilities'                       => 'fa-ticket',
     ],
-    'accountTypesByIdentifier'     => [
+    'accountTypesByIdentifier'             => [
         'asset'       => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
         'expense'     => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::BENEFICIARY->value],
         'revenue'     => [AccountTypeEnum::REVENUE->value],
         'import'      => [AccountTypeEnum::IMPORT->value],
         'liabilities' => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::MORTGAGE->value],
     ],
-    'accountTypeByIdentifier'      => [
+    'accountTypeByIdentifier'              => [
         'asset'       => [AccountTypeEnum::ASSET->value],
         'expense'     => [AccountTypeEnum::EXPENSE->value],
         'revenue'     => [AccountTypeEnum::REVENUE->value],
@@ -364,7 +365,7 @@ return [
         'liabilities' => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
         'liability'   => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value],
     ],
-    'shortNamesByFullName'         => [
+    'shortNamesByFullName'                 => [
         AccountTypeEnum::DEFAULT->value         => 'asset',
         AccountTypeEnum::ASSET->value           => 'asset',
         AccountTypeEnum::IMPORT->value          => 'import',
@@ -379,13 +380,13 @@ return [
         AccountTypeEnum::DEBT->value            => 'liabilities',
         AccountTypeEnum::MORTGAGE->value        => 'liabilities',
     ],
-    'shortLiabilityNameByFullName' => [
+    'shortLiabilityNameByFullName'         => [
         AccountTypeEnum::CREDITCARD->value => 'creditcard',
         AccountTypeEnum::LOAN->value       => AccountTypeEnum::LOAN->value,
         AccountTypeEnum::DEBT->value       => AccountTypeEnum::DEBT->value,
         AccountTypeEnum::MORTGAGE->value   => AccountTypeEnum::MORTGAGE->value,
     ],
-    'transactionTypesByType'       => [
+    'transactionTypesByType'               => [
         'expenses'   => ['Withdrawal'],
         'withdrawal' => ['Withdrawal'],
         'revenue'    => ['Deposit'],
@@ -393,14 +394,14 @@ return [
         'transfer'   => ['Transfer'],
         'transfers'  => ['Transfer'],
     ],
-    'transactionTypesToShort'      => [
+    'transactionTypesToShort'              => [
         'Withdrawal'      => 'withdrawal',
         'Deposit'         => 'deposit',
         'Transfer'        => 'transfer',
         'Opening balance' => 'opening-balance',
         'Reconciliation'  => 'reconciliation',
     ],
-    'transactionIconsByType'       => [
+    'transactionIconsByType'               => [
         'expenses'   => 'fa-long-arrow-left',
         'withdrawal' => 'fa-long-arrow-left',
         'revenue'    => 'fa-long-arrow-right',
@@ -410,7 +411,7 @@ return [
     ],
 
 
-    'rule-actions'                 => [
+    'rule-actions'                         => [
         'set_category'            => SetCategory::class,
         'clear_category'          => ClearCategory::class,
         'set_budget'              => SetBudget::class,
@@ -444,7 +445,7 @@ return [
         // 'set_foreign_amount' => SetForeignAmount::class,
         // 'set_foreign_currency' => SetForeignCurrency::class,
     ],
-    'context-rule-actions'         => [
+    'context-rule-actions'                 => [
         'set_category',
         'set_budget',
         'add_tag',
@@ -463,13 +464,13 @@ return [
         'convert_transfer',
     ],
 
-    'test-triggers'                => [
+    'test-triggers'                        => [
         'limit' => 10,
         'range' => 200,
     ],
 
     // expected source types for each transaction type, in order of preference.
-    'expected_source_types'        => [
+    'expected_source_types'                => [
         'source'      => [
             TransactionTypeEnum::WITHDRAWAL->value       => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
             TransactionTypeEnum::DEPOSIT->value          => [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::CASH->value],
@@ -514,7 +515,7 @@ return [
             TransactionTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
         ],
     ],
-    'allowed_opposing_types'       => [
+    'allowed_opposing_types'               => [
         'source'      => [
             AccountTypeEnum::ASSET->value            => [
                 AccountTypeEnum::ASSET->value,
@@ -604,7 +605,7 @@ return [
         ],
     ],
     // depending on the account type, return the allowed transaction types:
-    'allowed_transaction_types'    => [
+    'allowed_transaction_types'            => [
         'source'      => [
             AccountTypeEnum::ASSET->value            => [
                 TransactionTypeEnum::WITHDRAWAL->value,
@@ -673,7 +674,7 @@ return [
     ],
 
     // having the source + dest will tell you the transaction type.
-    'account_to_transaction'       => [
+    'account_to_transaction'               => [
         AccountTypeEnum::ASSET->value            => [
             AccountTypeEnum::ASSET->value           => TransactionTypeEnum::TRANSFER->value,
             AccountTypeEnum::CASH->value            => TransactionTypeEnum::WITHDRAWAL->value,
@@ -738,7 +739,7 @@ return [
     ],
 
     // allowed source -> destination accounts.
-    'source_dests'                 => [
+    'source_dests'                         => [
         TransactionTypeEnum::WITHDRAWAL->value       => [
             AccountTypeEnum::ASSET->value    => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CASH->value],
             AccountTypeEnum::LOAN->value     => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value],
@@ -777,7 +778,7 @@ return [
         ],
     ],
     // if you add fields to this array, don't forget to update the export routine (ExportDataGenerator).
-    'journal_meta_fields'          => [
+    'journal_meta_fields'                  => [
         // sepa
         'sepa_cc',
         'sepa_ct_op',
@@ -811,26 +812,26 @@ return [
         'recurrence_count',
         'recurrence_date',
     ],
-    'webhooks'                     => [
+    'webhooks'                             => [
         'max_attempts' => env('WEBHOOK_MAX_ATTEMPTS', 3),
     ],
-    'can_have_virtual_amounts'     => [AccountTypeEnum::ASSET->value],
-    'can_have_opening_balance'     => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
-    'dynamic_creation_allowed'     => [
+    'can_have_virtual_amounts'             => [AccountTypeEnum::ASSET->value],
+    'can_have_opening_balance'             => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+    'dynamic_creation_allowed'             => [
         AccountTypeEnum::EXPENSE->value,
         AccountTypeEnum::REVENUE->value,
         AccountTypeEnum::INITIAL_BALANCE->value,
         AccountTypeEnum::RECONCILIATION->value,
         AccountTypeEnum::LIABILITY_CREDIT->value,
     ],
-    'valid_asset_fields'           => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_cc_fields'              => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
-    'valid_account_fields'         => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
+    'valid_asset_fields'                   => ['account_role', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_cc_fields'                      => ['account_role', 'cc_monthly_payment_date', 'cc_type', 'account_number', 'currency_id', 'BIC', 'include_net_worth'],
+    'valid_account_fields'                 => ['account_number', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth', 'liability_direction'],
 
     // dynamic date ranges are as follows:
-    'dynamic_date_ranges'          => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
+    'dynamic_date_ranges'                  => ['last7', 'last30', 'last90', 'last365', 'MTD', 'QTD', 'YTD'],
 
-    'allowed_sort_parameters'      => [
+    'allowed_sort_parameters'              => [
         'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id',
             'current_balance',
             'pc_current_balance',
@@ -844,14 +845,14 @@ return [
             'pc_balance_difference',
         ],
     ],
-    'allowed_db_sort_parameters'   => [
+    'allowed_db_sort_parameters'           => [
         'Account' => ['id', 'order', 'name', 'iban', 'active', 'account_type_id'],
     ],
 
 
     // preselected account lists possibilities:
-    'preselected_accounts'         => ['all', 'assets', 'liabilities'],
+    'preselected_accounts'                 => ['all', 'assets', 'liabilities'],
 
     // allowed to store a piggy bank in:
-    'piggy_bank_account_types'     => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+    'piggy_bank_account_types'             => [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
 ];

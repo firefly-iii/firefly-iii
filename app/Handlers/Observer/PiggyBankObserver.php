@@ -66,7 +66,7 @@ class PiggyBankObserver
      */
     public function deleting(PiggyBank $piggyBank): void
     {
-        app('log')->debug('Observe "deleting" of a piggy bank.');
+        Log::debug('Observe "deleting" of a piggy bank.');
 
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($piggyBank->accounts()->first()->user);

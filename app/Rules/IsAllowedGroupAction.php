@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 
 use Closure;
 use FireflyIII\Enums\UserRoleEnum;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\User;
@@ -68,11 +69,18 @@ class IsAllowedGroupAction implements ValidationRule
                     break;
             }
         }
-        $this->validateUserGroup((int) $value, $fail);
+        $this->validateUserGroup((int)$value, $fail);
     }
 
     private function validateUserGroup(int $userGroupId, Closure $fail): void
     {
+        try {
+            throw new FireflyException('Here we are');
+        } catch (FireflyException $e) {
+            Log::error($e->getTraceAsString());
+        }
+
+        exit('here we are');
         Log::debug(sprintf('validateUserGroup: %s', static::class));
         if (!auth()->check()) {
             Log::debug('validateUserGroup: user is not logged in, return NULL.');

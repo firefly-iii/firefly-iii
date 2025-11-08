@@ -77,7 +77,7 @@ class TransactionObserver
 
     public function deleting(?Transaction $transaction): void
     {
-        app('log')->debug('Observe "deleting" of a transaction.');
+        Log::debug('Observe "deleting" of a transaction.');
         $transaction?->transactionJournal?->delete();
     }
 

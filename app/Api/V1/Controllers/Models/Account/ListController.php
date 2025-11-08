@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Generic\PaginationDateRangeRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -37,7 +38,6 @@ use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
@@ -110,7 +110,7 @@ class ListController extends Controller
         // get list of piggy banks. Count it and split it.
         $collection  = $this->repository->getPiggyBanks($account);
         $count       = $collection->count();
-        $piggyBanks  = $collection->slice(($page - 1) * $limit, $limit);
+        $piggyBanks  = $collection->slice($offset, $limit);
 
         // enrich
         /** @var User $admin */
@@ -136,12 +136,15 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      */
-    public function transactions(Request $request, Account $account): JsonResponse
+    public function transactions(PaginationDateRangeRequest $request, Account $account): JsonResponse
     {
-        $pageSize     = $this->parameters->get('limit');
-        $type         = $request->get('type') ?? 'default';
-        $this->parameters->set('type', $type);
-        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
+        [
+            'limit'  => $limit,
+            'page'   => $page,
+            'start'  => $start,
+            'end'    => $end,
+            'types'  => $types,
+        ]             = $request->attributes->all();
         $manager      = $this->getManager();
 
         /** @var User $admin */
@@ -150,15 +153,12 @@ class ListController extends Controller
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
-        $collector->setUser($admin)->setAccounts(new Collection()->push($account))
-            ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types)
-        ;
-
-        if (null !== $this->parameters->get('start')) {
-            $collector->setStart($this->parameters->get('start'));
+        $collector->setUser($admin)->setAccounts(new Collection()->push($account))->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types);
+        if (null !== $start) {
+            $collector->setStart($start);
         }
-        if (null !== $this->parameters->get('end')) {
-            $collector->setEnd($this->parameters->get('end'));
+        if (null !== $end) {
+            $collector->setEnd($end);
         }
 
         $paginator    = $collector->getPaginatedGroups();
@@ -171,7 +171,6 @@ class ListController extends Controller
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer  = app(TransactionGroupTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));

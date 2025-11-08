@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property TransactionCurrency $transactionCurrency
  * @property Carbon              $start_date
- * @property Carbon              $end_date
+ * @property null|Carbon         $end_date
  */
 #[ObservedBy([BudgetLimitObserver::class])]
 class BudgetLimit extends Model

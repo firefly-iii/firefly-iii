@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Webhook;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class WebhookObserver
@@ -32,7 +33,7 @@ class WebhookObserver
 {
     public function deleting(Webhook $webhook): void
     {
-        app('log')->debug('Observe "deleting" of a webhook.');
+        Log::debug('Observe "deleting" of a webhook.');
         foreach ($webhook->webhookMessages()->get() as $message) {
             $message->delete();
         }

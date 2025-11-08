@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 /*
- * QueryRequest.php
+ * AutocompleteApiRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -21,35 +21,27 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Api\V1\Requests\Generic;
+namespace FireflyIII\Api\V1\Requests\Autocomplete;
 
-use FireflyIII\Api\V1\Requests\ApiRequest;
-use FireflyIII\Support\Request\ChecksLogin;
-use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Validation\Validator;
+use FireflyIII\Api\V1\Requests\AggregateFormRequest;
+use FireflyIII\Api\V1\Requests\DateRequest;
+use FireflyIII\Api\V1\Requests\Generic\ObjectTypeApiRequest;
+use FireflyIII\Api\V1\Requests\Generic\QueryRequest;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Transaction;
+use Override;
 
-class QueryRequest extends ApiRequest
+class AutocompleteTransactionApiRequest extends AggregateFormRequest
 {
-    use ChecksLogin;
-    use ConvertsDataTypes;
-
-    public function rules(): array
+    #[Override]
+    protected function getRequests(): array
     {
         return [
-            'query' => sprintf('min:0|max:50|%s', $this->required),
+            DateRequest::class,
+            [PaginationRequest::class, 'sort_class' => Account::class],
+            [ObjectTypeApiRequest::class, 'object_type' => Transaction::class],
+            QueryRequest::class,
         ];
-    }
-
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $query = $this->convertString('query');
-                $this->attributes->set('query', $query);
-            }
-        );
     }
 }

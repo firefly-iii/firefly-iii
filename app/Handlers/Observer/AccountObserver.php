@@ -75,7 +75,7 @@ class AccountObserver
      */
     public function deleting(Account $account): void
     {
-        app('log')->debug('Observe "deleting" of an account.');
+        Log::debug('Observe "deleting" of an account.');
 
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($account->user);

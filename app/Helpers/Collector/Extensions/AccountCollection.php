@@ -130,7 +130,7 @@ trait AccountCollection
             $this->query->whereNotIn('source.account_id', $accountIds);
             $this->query->whereNotIn('destination.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: excludeAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: excludeAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -145,7 +145,7 @@ trait AccountCollection
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereNotIn('destination.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: excludeDestinationAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -160,7 +160,7 @@ trait AccountCollection
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereNotIn('source.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: excludeSourceAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -179,7 +179,7 @@ trait AccountCollection
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
             );
-            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // Log::debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -198,7 +198,7 @@ trait AccountCollection
                     $query->whereIn('destination.account_id', $accountIds);
                 }
             );
-            app('log')->debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -213,7 +213,7 @@ trait AccountCollection
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('destination.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: setDestinationAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: setDestinationAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -232,7 +232,7 @@ trait AccountCollection
                     $query->whereNotIn('destination.account_id', $accountIds);
                 }
             );
-            // app('log')->debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
+            // Log::debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -247,7 +247,7 @@ trait AccountCollection
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->whereIn('source.account_id', $accountIds);
 
-            app('log')->debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: setSourceAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;
@@ -280,7 +280,7 @@ trait AccountCollection
                 }
             );
 
-            app('log')->debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
+            Log::debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
         }
 
         return $this;

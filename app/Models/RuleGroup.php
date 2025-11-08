@@ -33,10 +33,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property User $user
+ * @property User       $user
+ * @property Collection $rules
  */
 #[ObservedBy([RuleGroupObserver::class])]
 class RuleGroup extends Model

@@ -103,6 +103,7 @@
         "psr/log": "<4",
         "ramsey/uuid": "^4.7",
         "rcrowe/twigbridge": "^0.14",
+        "sentry/sentry-laravel": "^4.18",
         "spatie/laravel-html": "^3.2",
         "spatie/laravel-ignition": "^2",
         "spatie/period": "^2.4",

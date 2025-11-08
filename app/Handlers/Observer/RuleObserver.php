@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Rule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleObserver
@@ -32,7 +33,7 @@ class RuleObserver
 {
     public function deleting(Rule $rule): void
     {
-        app('log')->debug('Observe "deleting" of a rule.');
+        Log::debug('Observe "deleting" of a rule.');
         $rule->ruleActions()->delete();
         $rule->ruleTriggers()->delete();
     }

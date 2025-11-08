@@ -65,7 +65,7 @@ class BillObserver
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($bill->user);
 
-        //        app('log')->debug('Observe "deleting" of a bill.');
+        //        Log::debug('Observe "deleting" of a bill.');
         /** @var Attachment $attachment */
         foreach ($bill->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
