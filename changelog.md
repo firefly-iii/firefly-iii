@@ -10,7 +10,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11157](https://github.com/firefly-iii/firefly-iii/issues/11157) (Redacted amounts misbehave with Reports) reported by @barreeeiroo
 - [Issue 11166](https://github.com/firefly-iii/firefly-iii/issues/11166) (Optional transaction information field not saved when updating a recuring transaction) reported by @Old-Veeh
 - [Issue 11185](https://github.com/firefly-iii/firefly-iii/issues/11185) (Internal server error after apply rule) reported by @Citroene
-- #11196
+- [Issue 11196](https://github.com/firefly-iii/firefly-iii/issues/11196) (Exception when editing recurring transaction) reported by @Insprill
 
 ## 6.4.5 - 2025-11-09
 
