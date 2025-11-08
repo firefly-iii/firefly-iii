@@ -106,7 +106,6 @@ class EditController extends Controller
 
         /** @var RecurrenceTransformer $transformer */
         $transformer                      = app(RecurrenceTransformer::class);
-        $transformer->setParameters(new ParameterBag());
         $array                            = $transformer->transform($recurrence);
         $budgets                          = ExpandedForm::makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills                            = ExpandedForm::makeSelectListWithEmpty($this->billRepository->getActiveBills());
@@ -155,6 +154,10 @@ class EditController extends Controller
         $array['first_date']              = substr((string) $array['first_date'], 0, 10);
         $array['repeat_until']            = substr((string) $array['repeat_until'], 0, 10);
         $array['transactions'][0]['tags'] = implode(',', $array['transactions'][0]['tags'] ?? []);
+        $array['transactions'][0]['amount'] = round((float) $array['transactions'][0]['amount'], $array['transactions'][0]['currency_decimal_places']);
+        if(null !== $array['transactions'][0]['foreign_amount']) {
+            $array['transactions'][0]['foreign_amount'] = round((float) $array['transactions'][0]['foreign_amount'], $array['transactions'][0]['foreign_currency_decimal_places']);
+        }
 
         return view(
             'recurring.edit',

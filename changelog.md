@@ -8,7 +8,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Issue 11157](https://github.com/firefly-iii/firefly-iii/issues/11157) (Redacted amounts misbehave with Reports) reported by @barreeeiroo
+- #11166
 - #11185
+
+
 
 ## 6.4.4 - 2025-11-02
 

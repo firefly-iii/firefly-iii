@@ -376,15 +376,14 @@ class SearchRuleEngine implements RuleEngineInterface
         $collection = $this->findStrictRule($rule);
 
         $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: done processing strict rule #%d', $rule->id));
 
         $result     = $collection->count() > 0;
         if (true === $result) {
-            Log::debug(sprintf('SearchRuleEngine:: rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+            Log::debug(sprintf('SearchRuleEngine:: Done. Rule #%d was triggered (on %d transaction(s)).', $rule->id, $collection->count()));
 
             return true;
         }
-        Log::debug(sprintf('SearchRuleEngine:: rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
+        Log::debug(sprintf('SearchRuleEngine:: Done. Rule #%d was not triggered (on %d transaction(s)).', $rule->id, $collection->count()));
 
         return false;
     }
@@ -496,7 +495,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $collection = $this->findNonStrictRule($rule);
 
         $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: done processing non-strict rule #%d', $rule->id));
+        Log::debug(sprintf('SearchRuleEngine:: Done processing non-strict rule #%d', $rule->id));
 
         return $collection->count() > 0;
     }
@@ -534,6 +533,7 @@ class SearchRuleEngine implements RuleEngineInterface
                 return;
             }
         }
+        Log::debug(sprintf('Done with rule group #%d.', $group->id));
     }
 
     /**
