@@ -160,8 +160,8 @@ class General extends AbstractExtension
 
                 // get the date from the current session. If it's in the future, keep `now()`.
                 /** @var Carbon $session */
-                $session = clone session('end', today(config('app.timezone'))->endOfMonth());
-                if($session->lt($date)) {
+                $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
+                if ($session->lt($date)) {
                     $date = $session->copy();
                     $date->endOfDay();
                 }
