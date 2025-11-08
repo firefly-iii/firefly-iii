@@ -57,26 +57,26 @@ return RectorConfig::configure()
     // uncomment to reach your current PHP version
     ->withPhpSets()
     ->withPreparedSets(
+        deadCode: true,
+        codeQuality: true,
         codingStyle: false, // leave false
+        typeDeclarations: true,
+        typeDeclarationDocblocks: false,
         privatization: false, // leave false.
         naming: false, // leave false
         instanceOf: true,
         earlyReturn: true,
-        strictBooleans: true,
+        // strictBooleans: true, // has a new thingie.
         carbon: true,
         rectorPreset: true,
         phpunitCodeQuality: true,
         doctrineCodeQuality: true,
         symfonyCodeQuality: true,
-        symfonyConfigs: true
-
+        symfonyConfigs: true,
     )
     ->withComposerBased(
         twig: true,
         doctrine: true,
         phpunit: true,
         symfony: true)
-    ->withTypeCoverageLevel(0)
-    ->withDeadCodeLevel(0)
-    ->withCodeQualityLevel(0)
     ->withImportNames(removeUnusedImports: true);// import statements instead of full classes.

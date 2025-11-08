@@ -3,7 +3,16 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.5 - 2025-11-xx
+## 6.4.6 - 2025-11-09
+
+### Fixed
+
+- [Issue 11157](https://github.com/firefly-iii/firefly-iii/issues/11157) (Redacted amounts misbehave with Reports) reported by @barreeeiroo
+- [Issue 11166](https://github.com/firefly-iii/firefly-iii/issues/11166) (Optional transaction information field not saved when updating a recuring transaction) reported by @Old-Veeh
+- [Issue 11185](https://github.com/firefly-iii/firefly-iii/issues/11185) (Internal server error after apply rule) reported by @Citroene
+- #11196
+
+## 6.4.5 - 2025-11-09
 
 ### Fixed
 
