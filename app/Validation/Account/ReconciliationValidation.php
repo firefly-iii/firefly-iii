@@ -33,7 +33,7 @@ use FireflyIII\Models\Account;
 trait ReconciliationValidation
 {
     public ?Account $destination = null;
-    public ?Account $source = null;
+    public ?Account $source      = null;
 
     protected function validateReconciliationDestination(array $array): bool
     {
