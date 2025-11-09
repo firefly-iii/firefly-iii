@@ -39,10 +39,10 @@ class YearReportGenerator implements ReportGeneratorInterface
     private ?Collection $accounts = null;
 
     /** @var Carbon The end date. */
-    private ?Carbon $end = null;
+    private ?Carbon $end          = null;
 
     /** @var Carbon The start date. */
-    private ?Carbon $start = null;
+    private ?Carbon $start        = null;
 
     /**
      * Generates the report.

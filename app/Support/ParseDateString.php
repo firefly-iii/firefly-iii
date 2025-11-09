@@ -64,6 +64,7 @@ class ParseDateString
         if ('xxxx-xx-xx' === strtolower($date)) {
             return false;
         }
+
         // no x'es
         return !(!str_contains($date, 'xx') && !str_contains($date, 'xxxx'));
     }

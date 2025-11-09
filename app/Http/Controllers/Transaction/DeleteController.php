@@ -68,7 +68,7 @@ class DeleteController extends Controller
     /**
      * Shows the form that allows a user to delete a transaction journal.
      */
-    public function delete(TransactionGroup $group): Redirector|RedirectResponse|Factory|View
+    public function delete(TransactionGroup $group): Factory|Redirector|RedirectResponse|View
     {
         if (!$this->isEditableGroup($group)) {
             return $this->redirectGroupToAccount($group);

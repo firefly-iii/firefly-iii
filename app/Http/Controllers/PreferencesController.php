@@ -188,7 +188,6 @@ class PreferencesController extends Controller
     /**
      * Store new preferences.
      *
-     *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")

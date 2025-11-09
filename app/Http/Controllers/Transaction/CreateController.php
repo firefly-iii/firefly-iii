@@ -100,7 +100,6 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws UrlException

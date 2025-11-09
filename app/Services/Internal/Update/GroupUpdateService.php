@@ -105,6 +105,7 @@ class GroupUpdateService
 
         $result       = array_diff($existing, $updated);
         Log::debug('Result of DIFF: ', $result);
+
         /** @var string $deletedId */
         foreach ($result as $deletedId) {
             /** @var TransactionJournal $journal */

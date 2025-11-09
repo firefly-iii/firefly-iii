@@ -228,7 +228,6 @@ class MfaController extends Controller
     /**
      * Submit 2FA for the first time.
      *
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */

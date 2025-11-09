@@ -83,12 +83,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user      = $user;
+        $this->user = $user;
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void
     {

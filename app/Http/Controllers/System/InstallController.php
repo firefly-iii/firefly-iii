@@ -51,9 +51,9 @@ class InstallController extends Controller
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
-    private string $lastError = '';
+    private string $lastError           = '';
     // empty on purpose.
-    private array  $upgradeCommands = [
+    private array  $upgradeCommands     = [
         // there are 5 initial commands
         // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
         'migrate'                            => ['--seed' => true, '--force' => true],

@@ -67,7 +67,7 @@ class EditController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, TransactionCurrency $currency): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function edit(Request $request, TransactionCurrency $currency): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
         $user             = auth()->user();
@@ -106,7 +106,6 @@ class EditController extends Controller
 
     /**
      * Updates a currency.
-     *
      *
      * @throws FireflyException
      */

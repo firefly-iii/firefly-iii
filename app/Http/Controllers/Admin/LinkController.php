@@ -86,7 +86,7 @@ class LinkController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function delete(Request $request, LinkType $linkType): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function delete(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
@@ -135,7 +135,7 @@ class LinkController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, LinkType $linkType): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function edit(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));

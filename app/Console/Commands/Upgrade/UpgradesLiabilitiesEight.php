@@ -136,6 +136,7 @@ class UpgradesLiabilitiesEight extends Command
         if (null === $liabilityJournal) {
             return false;
         }
+
         return (bool) $openingJournal->date->isSameDay($liabilityJournal->date);
     }
 

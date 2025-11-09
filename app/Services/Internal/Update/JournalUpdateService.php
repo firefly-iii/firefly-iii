@@ -63,11 +63,11 @@ class JournalUpdateService
     private CurrencyRepositoryInterface $currencyRepository;
     private TransactionGroupRepositoryInterface $transactionGroupRepository;
     private array $data;
-    private ?Account $destinationAccount = null;
-    private ?Transaction $destinationTransaction = null;
-    private array $metaDate = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
+    private ?Account $destinationAccount            = null;
+    private ?Transaction $destinationTransaction    = null;
+    private array $metaDate                         = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
         'invoice_date', ];
-    private array $metaString = [
+    private array $metaString                       = [
         'sepa_cc',
         'sepa_ct_op',
         'sepa_ct_id',
@@ -82,11 +82,11 @@ class JournalUpdateService
         'external_id',
         'external_url',
     ];
-    private ?Account $sourceAccount = null;
-    private ?Transaction $sourceTransaction = null;
-    private ?TransactionGroup $transactionGroup = null;
+    private ?Account $sourceAccount                 = null;
+    private ?Transaction $sourceTransaction         = null;
+    private ?TransactionGroup $transactionGroup     = null;
     private ?TransactionJournal $transactionJournal = null;
-    private string $startCompareHash = '';
+    private string $startCompareHash                = '';
 
     /**
      * JournalUpdateService constructor.

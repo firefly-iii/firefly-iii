@@ -42,9 +42,7 @@ class ReportHelper implements ReportHelperInterface
     public function __construct(
         /** @var BudgetRepositoryInterface The budget repository */
         protected BudgetRepositoryInterface $budgetRepository
-    )
-    {
-    }
+    ) {}
 
     /**
      * This method generates a full report for the given period on all

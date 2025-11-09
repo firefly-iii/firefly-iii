@@ -96,7 +96,6 @@ class DebugController extends Controller
     /**
      * Clear log and session.
      *
-     *
      * @throws FireflyException
      */
     public function flush(Request $request): Redirector|RedirectResponse
@@ -514,30 +513,40 @@ class DebugController extends Controller
 
             case 'userGroup':
                 return '1';
+
             case 'start_date':
 
             case 'date':
                 return '20241201';
+
             case 'end_date':
                 return '20241231';
+
             case 'fromCurrencyCode':
                 return 'EUR';
+
             case 'toCurrencyCode':
                 return 'USD';
+
             case 'accountList':
                 return '1,6';
+
             case 'budgetList':
             case 'categoryList':
             case 'doubleList':
             case 'tagList':
             case 'journalList':
                 return '1,2';
+
             case 'route':
                 return 'accounts';
+
             case 'specificPage':
                 return 'show';
+
             case 'reportType':
                 return 'default';
+
             case 'transactionType':
                 return 'withdrawal';
 

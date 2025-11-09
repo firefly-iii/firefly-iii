@@ -132,6 +132,7 @@ trait RequestInformation
         if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
             return true;
         }
+
         // start and end in the past? use $end
         return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
     }

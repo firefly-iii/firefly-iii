@@ -90,9 +90,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $this->setUserGroup($user->userGroup);
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void
     {

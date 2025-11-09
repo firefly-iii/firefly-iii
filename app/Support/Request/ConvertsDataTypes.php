@@ -274,6 +274,7 @@ trait ConvertsDataTypes
         if ('y' === $value) {
             return true;
         }
+
         return '1' === $value;
     }
 

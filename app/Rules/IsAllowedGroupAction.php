@@ -38,9 +38,7 @@ class IsAllowedGroupAction implements ValidationRule
     // you need these roles to do anything with any endpoint.
     private array                                 $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
-    public function __construct(private readonly string $className, private readonly string $methodName)
-    {
-    }
+    public function __construct(private readonly string $className, private readonly string $methodName) {}
 
     /**
      * @throws AuthorizationException
@@ -74,6 +72,7 @@ class IsAllowedGroupAction implements ValidationRule
         } catch (FireflyException $e) {
             Log::error($e->getTraceAsString());
         }
+
         exit('here we are');
     }
 }

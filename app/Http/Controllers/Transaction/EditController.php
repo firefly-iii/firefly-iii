@@ -74,7 +74,7 @@ class EditController extends Controller
      * @throws NotFoundExceptionInterface
      * @throws UrlException
      */
-    public function edit(TransactionGroup $transactionGroup): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function edit(TransactionGroup $transactionGroup): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         app('preferences')->mark();
 

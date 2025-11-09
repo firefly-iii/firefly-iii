@@ -42,7 +42,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
     private Collection $categories;
     private Carbon     $end;
     private array      $expenses = [];
-    private array      $income = [];
+    private array      $income   = [];
     private Carbon     $start;
 
     /**

@@ -59,7 +59,7 @@ class Translation extends AbstractExtension
     {
         return new TwigFunction(
             'journalLinkTranslation',
-            static function (string $direction, string $original): string|Translator|array {
+            static function (string $direction, string $original): array|string|Translator {
                 $key         = sprintf('firefly.%s_%s', $original, $direction);
                 $translation = trans($key);
                 if ($key === $translation) {
@@ -76,7 +76,7 @@ class Translation extends AbstractExtension
     {
         return new TwigFunction(
             '__',
-            static function (string $key): string|Translator|array {
+            static function (string $key): array|string|Translator {
                 $translation = trans($key);
                 if ($key === $translation) {
                     return $key;

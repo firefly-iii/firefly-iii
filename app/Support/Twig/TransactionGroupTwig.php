@@ -81,7 +81,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction(
             'journalGetMetaDate',
-            static function (int $journalId, string $metaField): CarbonInterface|Carbon {
+            static function (int $journalId, string $metaField): Carbon|CarbonInterface {
                 /** @var null|TransactionJournalMeta $entry */
                 $entry = DB::table('journal_meta')
                     ->where('name', $metaField)

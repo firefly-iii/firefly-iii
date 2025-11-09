@@ -73,7 +73,7 @@ class UserController extends Controller
     /**
      * @return Application|Factory|Redirector|RedirectResponse|View
      */
-    public function delete(User $user): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function delete(User $user): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if ($this->externalIdentity) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

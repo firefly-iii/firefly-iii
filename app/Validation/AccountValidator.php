@@ -50,10 +50,10 @@ class AccountValidator
     use TransferValidation;
     use WithdrawalValidation;
 
-    public bool                        $createMode = false;
-    public string                      $destError = 'No error yet.';
+    public bool                        $createMode  = false;
+    public string                      $destError   = 'No error yet.';
     public ?Account                    $destination = null;
-    public ?Account                    $source = null;
+    public ?Account                    $source      = null;
     public string                      $sourceError = 'No error yet.';
     private AccountRepositoryInterface $accountRepository;
     private array                      $combinations;
@@ -230,6 +230,7 @@ class AccountValidator
     protected function canCreateType(string $accountType): bool
     {
         $canCreate = [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value];
+
         return in_array($accountType, $canCreate, true);
     }
 

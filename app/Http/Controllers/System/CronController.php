@@ -37,7 +37,7 @@ class CronController
     /**
      * @return Application|Response|ResponseFactory
      */
-    public function cron(): ResponseFactory|Response
+    public function cron(): Response|ResponseFactory
     {
         Log::error('The cron endpoint has moved to GET /api/v1/cron/[token]');
 

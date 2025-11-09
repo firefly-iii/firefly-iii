@@ -73,13 +73,9 @@ class WebhookEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    public function setUser(User $user): void
-    {
-    }
+    public function setUser(User $user): void {}
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedInfo(): void
     {

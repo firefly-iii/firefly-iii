@@ -31,20 +31,20 @@ use Carbon\Carbon;
  */
 abstract class AbstractCronjob
 {
-    public bool      $jobErrored = false;
-    public bool      $jobFired = false;
-    public bool      $jobSucceeded = false;
-    public ?string   $message = null;
+    public bool      $jobErrored      = false;
+    public bool      $jobFired        = false;
+    public bool      $jobSucceeded    = false;
+    public ?string   $message         = null;
     public int       $timeBetweenRuns = 43200;
     protected Carbon $date;
-    protected bool   $force = false;
+    protected bool   $force           = false;
 
     /**
      * AbstractCronjob constructor.
      */
     public function __construct()
     {
-        $this->date         = today(config('app.timezone'));
+        $this->date = today(config('app.timezone'));
     }
 
     abstract public function fire(): void;

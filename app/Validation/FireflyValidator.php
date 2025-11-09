@@ -123,6 +123,7 @@ class FireflyValidator extends Validator
         }
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
+
         return 0 !== $result;
     }
 

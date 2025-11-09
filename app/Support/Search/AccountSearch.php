@@ -47,7 +47,7 @@ class AccountSearch implements GenericSearchInterface
     public const string SEARCH_NUMBER = 'number';
     private string $field;
     private string $query;
-    private array  $types = [];
+    private array  $types             = [];
     private User   $user;
 
     public function search(): Collection

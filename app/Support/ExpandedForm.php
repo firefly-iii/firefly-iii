@@ -225,6 +225,8 @@ class ExpandedForm
     }
 
     /**
+     * @param null|mixed $value
+     *
      * @throws FireflyException
      */
     public function objectGroup($value = null, ?array $options = null): string

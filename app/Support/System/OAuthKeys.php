@@ -74,6 +74,7 @@ class OAuthKeys
                 Log::error($e->getTraceAsString());
             }
         }
+
         return '' !== $privateKey && '' !== $publicKey;
     }
 

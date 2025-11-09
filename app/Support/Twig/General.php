@@ -292,6 +292,7 @@ class General extends AbstractExtension
             'hasRole',
             static function (string $role): bool {
                 $repository = app(UserRepositoryInterface::class);
+
                 return $repository->hasRole(auth()->user(), $role);
             }
         );
