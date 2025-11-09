@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use Illuminate\Support\Facades\Log;
 use Deprecated;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
@@ -198,11 +199,9 @@ class User extends Authenticatable
 
     /**
      * Get the database column name of the domain.
-     *
-     * @return string
      */
     #[Deprecated]
-    public function getLdapDomainColumn()
+    public function getLdapDomainColumn(): string
     {
         return 'domain';
     }
@@ -220,11 +219,9 @@ class User extends Authenticatable
 
     /**
      * Get the models LDAP GUID database column name.
-     *
-     * @return string
      */
     #[Deprecated]
-    public function getLdapGuidColumn()
+    public function getLdapGuidColumn(): string
     {
         return 'objectguid';
     }
@@ -247,12 +244,12 @@ class User extends Authenticatable
      */
     private function hasAnyRoleInGroup(UserGroup $userGroup, array $roles): bool
     {
-        app('log')->debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
+        Log::debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
 
         /** @var Collection $dbRoles */
         $dbRoles          = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
-            app('log')->error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
+            Log::error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
 
             return false;
         }
@@ -261,7 +258,7 @@ class User extends Authenticatable
 
         $groupMemberships = $this->groupMemberships()->whereIn('user_role_id', $dbRolesIds)->where('user_group_id', $userGroup->id)->get();
         if (0 === $groupMemberships->count()) {
-            app('log')->error(sprintf(
+            Log::error(sprintf(
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',
                 $this->id,
                 $this->email,
@@ -273,7 +270,7 @@ class User extends Authenticatable
             return false;
         }
         foreach ($groupMemberships as $membership) {
-            app('log')->debug(sprintf(
+            Log::debug(sprintf(
                 'User #%d "%s" has role "%s" in user group #%d "%s"',
                 $this->id,
                 $this->email,
@@ -282,12 +279,12 @@ class User extends Authenticatable
                 $userGroup->title
             ));
             if (in_array($membership->userRole->title, $dbRolesTitles, true)) {
-                app('log')->debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
+                Log::debug(sprintf('Return true, found role "%s"', $membership->userRole->title));
 
                 return true;
             }
         }
-        app('log')->error(sprintf(
+        Log::error(sprintf(
             'User #%d "%s" does not have roles %s in user group #%d "%s"',
             $this->id,
             $this->email,

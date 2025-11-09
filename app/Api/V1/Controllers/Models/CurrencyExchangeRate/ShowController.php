@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
@@ -51,7 +52,7 @@ class ShowController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->repository = app(ExchangeRateRepositoryInterface::class);
                 $this->repository->setUserGroup($this->validateUserGroup($request));
 

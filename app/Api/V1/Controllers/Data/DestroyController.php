@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -63,7 +64,7 @@ class DestroyController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
 
                 return $next($request);
@@ -185,7 +186,7 @@ class DestroyController extends Controller
         /** @var Account $account */
         foreach ($collection as $account) {
             $count = $account->transactions()->count();
-            if (true === $this->unused && 0 === $count) {
+            if ($this->unused && 0 === $count) {
                 Log::info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 Log::channel('audit')->info(sprintf('Deleted unused account #%d "%s"', $account->id, $account->name));
                 $service->destroy($account, null);

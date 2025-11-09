@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Bulk;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Bulk\TransactionRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -51,7 +52,7 @@ class TransactionController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUserGroup($this->userGroup);
