@@ -1,0 +1,51 @@
+name: 'Issues - Respond to old versions'
+
+# the workflow to execute on is comments that are newly created
+on:
+  issues:
+    types: [ opened ]
+
+# permissions needed for reacting to IssueOps commands on issues and PRs
+permissions:
+  contents: read
+  pull-requests: write
+  issues: write
+  checks: read
+
+jobs:
+  respond:
+    runs-on: ubuntu-latest
+    steps:
+      - id: ff3version
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: firefly-iii
+          repo: firefly-iii
+          excludes: prerelease, draft
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - id: importerversion
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          owner: firefly-iii
+          repo: data-importer
+          excludes: prerelease, draft
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - run: |
+          ISSUE_BODY=$(gh issue view $NUMBER --json body)
+          if [[ $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
+
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
+
+          Please be so kind as to include the output from the \`/debug\`-page, if you have not done so already. If you already included the debug information, plase make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
+
+          If you are running the latest version, and this message is wrong, my apologies for the intrusion."
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.issue.number }}
