@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Validator;
 
 class StoreByDateRequest extends FormRequest
 {

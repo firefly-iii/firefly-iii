@@ -133,7 +133,7 @@ class UserEventHandler
         $group               = null;
 
         // create a new group.
-        while (true === $groupExists) { // @phpstan-ignore-line
+        while ($groupExists) { // @phpstan-ignore-line
             $groupExists = UserGroup::where('title', $groupTitle)->count() > 0;
             if (false === $groupExists) {
                 $group = UserGroup::create(['title' => $groupTitle]);

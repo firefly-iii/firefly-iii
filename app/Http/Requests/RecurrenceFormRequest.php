@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
@@ -36,7 +37,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class RecurrenceFormRequest
@@ -126,7 +126,7 @@ class RecurrenceFormRequest extends FormRequest
             $return['transactions'][0]['source_id']      = $this->convertInteger('source_id');
             $return['transactions'][0]['destination_id'] = $this->convertInteger('destination_id');
         }
-        if (true === $throwError) {
+        if ($throwError) {
             throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
         }
 
@@ -292,7 +292,7 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function validateAccountInformation(Validator $validator): void
     {
-        app('log')->debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
+        Log::debug('Now in validateAccountInformation (RecurrenceFormRequest)()');
 
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
@@ -324,7 +324,7 @@ class RecurrenceFormRequest extends FormRequest
             $sourceId      = (int) $data['source_id'];
             $destinationId = (int) ($data['destination_id'] ?? 0);
         }
-        if (true === $throwError) {
+        if ($throwError) {
             throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->convertString('transaction_type')));
         }
 

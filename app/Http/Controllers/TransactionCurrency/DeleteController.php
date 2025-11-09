@@ -71,7 +71,7 @@ class DeleteController extends Controller
      *
      * @throws FireflyException
      */
-    public function delete(Request $request, TransactionCurrency $currency)
+    public function delete(Request $request, TransactionCurrency $currency): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         /** @var User $user */
         $user     = auth()->user();
@@ -96,17 +96,16 @@ class DeleteController extends Controller
         $subTitle = (string) trans('form.delete_currency', ['name' => $currency->name]);
         Log::channel('audit')->info(sprintf('Visit page to delete currency %s.', $currency->code));
 
-        return view('currencies.delete', compact('currency', 'subTitle'));
+        return view('currencies.delete', ['currency' => $currency, 'subTitle' => $subTitle]);
     }
 
     /**
      * Destroys a currency.
      *
-     * @return Redirector|RedirectResponse
      *
      * @throws FireflyException
      */
-    public function destroy(Request $request, TransactionCurrency $currency)
+    public function destroy(Request $request, TransactionCurrency $currency): Redirector|RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();

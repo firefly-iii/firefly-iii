@@ -75,7 +75,7 @@ class IndexController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request, string $objectType, ?Carbon $start = null, ?Carbon $end = null)
+    public function index(Request $request, string $objectType, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         if ('transfers' === $objectType) {
             $objectType = 'transfer';
@@ -121,7 +121,7 @@ class IndexController extends Controller
         $groups        = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
+        return view('transactions.index', ['subTitle' => $subTitle, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'periods' => $periods, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -132,7 +132,7 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function indexAll(Request $request, string $objectType)
+    public function indexAll(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
         $types        = config('firefly.transactionTypesByType.'.$objectType);
@@ -160,6 +160,6 @@ class IndexController extends Controller
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'start', 'end'));
+        return view('transactions.index', ['subTitle' => $subTitle, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'start' => $start, 'end' => $end]);
     }
 }

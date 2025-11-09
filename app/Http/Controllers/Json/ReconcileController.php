@@ -118,7 +118,7 @@ class ReconcileController extends Controller
         foreach ($journals as $journal) {
             $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
         }
-        app('log')->debug(sprintf('Final amount is %s', $amount));
+        Log::debug(sprintf('Final amount is %s', $amount));
 
         /** @var array $journal */
         foreach ($clearedJournals as $journal) {
@@ -136,10 +136,10 @@ class ReconcileController extends Controller
         $reconSum        = bcadd(bcadd($startBalance ?? '0', $amount), $clearedAmount);
 
         try {
-            $view = view('accounts.reconcile.overview', compact('account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount', 'startBalance', 'endBalance', 'amount', 'route', 'countCleared', 'reconSum', 'selectedIds'))->render();
+            $view = view('accounts.reconcile.overview', ['account' => $account, 'start' => $start, 'diffCompare' => $diffCompare, 'difference' => $difference, 'end' => $end, 'clearedAmount' => $clearedAmount, 'startBalance' => $startBalance, 'endBalance' => $endBalance, 'amount' => $amount, 'route' => $route, 'countCleared' => $countCleared, 'reconSum' => $reconSum, 'selectedIds' => $selectedIds])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('View error: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::debug(sprintf('View error: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
 
             throw new FireflyException($view, 0, $e);
@@ -153,7 +153,7 @@ class ReconcileController extends Controller
     private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
     {
         $toAdd  = '0';
-        app('log')->debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+        Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
 
         // not much magic below we need to cover using tests.
 
@@ -174,9 +174,9 @@ class ReconcileController extends Controller
             }
         }
 
-        app('log')->debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
         $amount = bcadd($amount, (string) $toAdd);
-        app('log')->debug(sprintf('Result is %s', $amount));
+        Log::debug(sprintf('Result is %s', $amount));
 
         return $amount;
     }
@@ -239,11 +239,11 @@ class ReconcileController extends Controller
         try {
             $html = view(
                 'accounts.reconcile.transactions',
-                compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+                ['account' => $account, 'journals' => $journals, 'currency' => $currency, 'start' => $start, 'end' => $end, 'selectionStart' => $selectionStart, 'selectionEnd' => $selectionEnd]
             )->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
 
             throw new FireflyException($html, 0, $e);
@@ -277,7 +277,7 @@ class ReconcileController extends Controller
                 $inverse = true;
             }
 
-            if (true === $inverse) {
+            if ($inverse) {
                 $journal['amount'] = app('steam')->positive($journal['amount']);
                 if (null !== $journal['foreign_amount']) {
                     $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);

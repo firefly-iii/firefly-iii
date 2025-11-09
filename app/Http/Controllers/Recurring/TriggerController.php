@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\TriggerRecurrenceRequest;
 use FireflyIII\Jobs\CreateRecurringTransactions;
@@ -70,7 +71,7 @@ class TriggerController extends Controller
         $backupDate                 = $recurrence->latest_date;
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
-        app('log')->info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
+        Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
 
         /** @var CreateRecurringTransactions $job */
         $job                        = app(CreateRecurringTransactions::class);
@@ -78,7 +79,7 @@ class TriggerController extends Controller
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
-        app('log')->debug('Done with recurrence.');
+        Log::debug('Done with recurrence.');
 
         $groups                     = $job->getGroups();
         $this->repository->markGroupsAsNow($groups);

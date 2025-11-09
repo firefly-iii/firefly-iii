@@ -130,7 +130,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         /** @var WebhookResponseModel $response */
         $response      = $webhook->webhookResponses()->first();
-        $triggers      = $this->getTriggerTitles($webhook->webhookTriggers()->get());
+        $this->getTriggerTitles($webhook->webhookTriggers()->get());
         $basicMessage  = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
@@ -171,7 +171,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
                 break;
         }
-        $responseTitle = $this->getRelevantResponse($triggers, $response, $class);
+        $responseTitle = $this->getRelevantResponse($response, $class);
 
         switch ($responseTitle) {
             default:
@@ -298,7 +298,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         $this->webhooks = $webhooks;
     }
 
-    private function getRelevantResponse(array $triggers, WebhookResponseModel $response, string $class): string
+    private function getRelevantResponse(WebhookResponseModel $response, string $class): string
     {
         // return none if none.
         if (WebhookResponse::NONE->name === $response->title) {

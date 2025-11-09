@@ -123,7 +123,7 @@ class PiggyBank extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
@@ -146,7 +146,7 @@ class PiggyBank extends Model
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
@@ -156,7 +156,7 @@ class PiggyBank extends Model
     protected function targetAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value): string => (string)$value,
         );
     }
 }

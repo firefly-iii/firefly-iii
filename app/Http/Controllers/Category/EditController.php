@@ -68,7 +68,7 @@ class EditController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(Request $request, Category $category)
+    public function edit(Request $request, Category $category): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle  = (string) trans('firefly.edit_category', ['name' => $category->name]);
 
@@ -82,15 +82,13 @@ class EditController extends Controller
             'notes' => $request->old('notes') ?? $this->repository->getNoteText($category),
         ];
 
-        return view('categories.edit', compact('category', 'subTitle', 'preFilled'));
+        return view('categories.edit', ['category' => $category, 'subTitle' => $subTitle, 'preFilled' => $preFilled]);
     }
 
     /**
      * Update category.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function update(CategoryFormRequest $request, Category $category)
+    public function update(CategoryFormRequest $request, Category $category): Redirector|RedirectResponse
     {
         $data     = $request->getCategoryData();
         $this->repository->update($category, $data);

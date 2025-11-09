@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
@@ -58,17 +59,14 @@ class IndexController extends Controller
         );
     }
 
-    /**
-     * @return Factory|View
-     */
-    public function index()
+    public function index(): Factory|View
     {
         $this->repository->deleteEmpty();
         $this->repository->resetOrder();
         $subTitle     = (string) trans('firefly.object_groups_index');
         $objectGroups = $this->repository->get();
 
-        return view('object-groups.index', compact('subTitle', 'objectGroups'));
+        return view('object-groups.index', ['subTitle' => $subTitle, 'objectGroups' => $objectGroups]);
     }
 
     /**
@@ -76,7 +74,7 @@ class IndexController extends Controller
      */
     public function setOrder(Request $request, ObjectGroup $objectGroup)
     {
-        app('log')->debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
+        Log::debug(sprintf('Found object group #%d "%s"', $objectGroup->id, $objectGroup->title));
         $newOrder = (int) $request->get('order');
         $this->repository->setOrder($objectGroup, $newOrder);
 

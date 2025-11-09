@@ -36,13 +36,13 @@ use Illuminate\Support\Facades\Log;
 class YearReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts involved. */
-    private $accounts;
+    private ?Collection $accounts = null;
 
     /** @var Carbon The end date. */
-    private $end;
+    private ?Carbon $end = null;
 
     /** @var Carbon The start date. */
-    private $start;
+    private ?Carbon $start = null;
 
     /**
      * Generates the report.
@@ -58,7 +58,7 @@ class YearReportGenerator implements ReportGeneratorInterface
         try {
             $result = view(
                 'reports.default.year',
-                compact('accountIds', 'reportType')
+                ['accountIds' => $accountIds, 'reportType' => $reportType]
             )->with('start', $this->start)->with('end', $this->end)->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));

@@ -41,20 +41,11 @@ use Illuminate\Support\Facades\Log;
 class TransactionFactory
 {
     private Account              $account;
-    private array                $accountInformation;
+    private array                $accountInformation = [];
     private TransactionCurrency  $currency;
     private ?TransactionCurrency $foreignCurrency = null;
     private TransactionJournal   $journal;
-    private bool                 $reconciled;
-
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        $this->reconciled         = false;
-        $this->accountInformation = [];
-    }
+    private bool                 $reconciled = false;
 
     /**
      * Create transaction with negative amount (for source accounts).

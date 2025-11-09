@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Generic;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
-use Illuminate\Validation\Validator;
 
 class QueryRequest extends ApiRequest
 {

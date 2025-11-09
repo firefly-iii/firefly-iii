@@ -51,8 +51,17 @@ class InstallController extends Controller
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
-    private string $lastError;
-    private array  $upgradeCommands;
+    private string $lastError = '';
+    // empty on purpose.
+    private array  $upgradeCommands = [
+        // there are 5 initial commands
+        // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
+        'migrate'                            => ['--seed' => true, '--force' => true],
+        'generate-keys'                      => [], // an exception :(
+        'firefly-iii:upgrade-database'       => [],
+        'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
+        'firefly-iii:verify-security-alerts' => [],
+    ];
 
     /**
      * InstallController constructor.
@@ -60,18 +69,6 @@ class InstallController extends Controller
     public function __construct()
     {
         parent::__construct();
-        // empty on purpose.
-        $this->upgradeCommands = [
-            // there are 5 initial commands
-            // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
-            'migrate'                            => ['--seed' => true, '--force' => true],
-            'generate-keys'                      => [], // an exception :(
-            'firefly-iii:upgrade-database'       => [],
-            'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
-            'firefly-iii:verify-security-alerts' => [],
-        ];
-
-        $this->lastError       = '';
     }
 
     /**
@@ -79,7 +76,7 @@ class InstallController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         app('view')->share('FF_VERSION', config('firefly.version'));
 

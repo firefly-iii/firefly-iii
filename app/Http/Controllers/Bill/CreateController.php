@@ -64,10 +64,8 @@ class CreateController extends Controller
 
     /**
      * Create a new bill.
-     *
-     * @return Factory|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|View
     {
         $periods     = [];
 
@@ -84,7 +82,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', compact('periods', 'subTitle'));
+        return view('bills.create', ['periods' => $periods, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -99,7 +97,7 @@ class CreateController extends Controller
         try {
             $bill = $this->repository->store($billData);
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             $request->session()->flash('error', (string) trans('firefly.bill_store_error'));
 
             return redirect(route('bills.create'))->withInput();

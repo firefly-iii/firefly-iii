@@ -79,7 +79,7 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request)
+    public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
         $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
@@ -134,6 +134,6 @@ class IndexController extends Controller
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', compact('paginator', 'today', 'page', 'pageSize', 'total'));
+        return view('recurring.index', ['paginator' => $paginator, 'today' => $today, 'page' => $page, 'pageSize' => $pageSize, 'total' => $total]);
     }
 }

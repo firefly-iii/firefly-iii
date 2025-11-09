@@ -84,7 +84,7 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
+    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
@@ -175,23 +175,7 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact(
-                'account',
-                'showAll',
-                'objectType',
-                'currency',
-                'today',
-                'periods',
-                'subTitleIcon',
-                'groups',
-                'attachments',
-                'subTitle',
-                'start',
-                'end',
-                'chartUrl',
-                'location',
-                'balances'
-            )
+            ['account' => $account, 'showAll' => $showAll, 'objectType' => $objectType, 'currency' => $currency, 'today' => $today, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'attachments' => $attachments, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'chartUrl' => $chartUrl, 'location' => $location, 'balances' => $balances]
         );
     }
 
@@ -203,7 +187,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showAll(Request $request, Account $account)
+    public function showAll(Request $request, Account $account): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -214,7 +198,7 @@ class ShowController extends Controller
         $objectType      = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
         $end             = today(config('app.timezone'));
         $today           = today(config('app.timezone'));
-        $accountCurrency = $this->repository->getAccountCurrency($account);
+        $this->repository->getAccountCurrency($account);
         $start           = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
         $page            = (int) $request->get('page');
@@ -247,24 +231,7 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact(
-                'account',
-                'showAll',
-                'location',
-                'objectType',
-                'isLiability',
-                'attachments',
-                'currency',
-                'today',
-                'chartUrl',
-                'periods',
-                'subTitleIcon',
-                'groups',
-                'subTitle',
-                'start',
-                'end',
-                'balances'
-            )
+            ['account' => $account, 'showAll' => $showAll, 'location' => $location, 'objectType' => $objectType, 'isLiability' => $isLiability, 'attachments' => $attachments, 'currency' => $currency, 'today' => $today, 'chartUrl' => $chartUrl, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'balances' => $balances]
         );
     }
 }

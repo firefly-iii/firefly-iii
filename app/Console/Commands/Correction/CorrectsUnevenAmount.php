@@ -251,27 +251,19 @@ class CorrectsUnevenAmount extends Command
 
         /** @var Transaction $source */
         $source      = $journal->transactions()->where('amount', '<', 0)->first();
-
         // safety catch on NULL should not be necessary, we just had that catch.
         // source amount = dest foreign amount
         // source currency = dest foreign currency
         // dest amount = source foreign currency
         // dest currency = source foreign currency
-
         //        Log::debug(sprintf('[a] %s', bccomp(app('steam')->positive($source->amount), app('steam')->positive($destination->foreign_amount))));
         //        Log::debug(sprintf('[b] %s', bccomp(app('steam')->positive($destination->amount), app('steam')->positive($source->foreign_amount))));
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
-
-        if (0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
+        return 0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
             && $source->transaction_currency_id === $destination->foreign_currency_id
             && 0 === bccomp(Steam::positive($destination->amount), Steam::positive($source->foreign_amount))
-            && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id
-        ) {
-            return true;
-        }
-
-        return false;
+            && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id;
     }
 
     private function matchCurrencies(): void

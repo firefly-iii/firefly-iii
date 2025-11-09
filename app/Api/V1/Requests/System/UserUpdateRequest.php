@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\System;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class UserUpdateRequest

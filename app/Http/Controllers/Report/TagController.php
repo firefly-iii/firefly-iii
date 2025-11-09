@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -62,7 +63,7 @@ class TagController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function accountPerTag(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function accountPerTag(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
@@ -148,7 +149,7 @@ class TagController extends Controller
             }
         }
 
-        return view('reports.tag.partials.account-per-tag', compact('report', 'tags'));
+        return view('reports.tag.partials.account-per-tag', ['report' => $report, 'tags' => $tags]);
     }
 
     /**
@@ -156,7 +157,7 @@ class TagController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function accounts(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function accounts(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
@@ -250,7 +251,7 @@ class TagController extends Controller
             }
         }
 
-        return view('reports.tag.partials.accounts', compact('sums', 'report'));
+        return view('reports.tag.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -292,9 +293,9 @@ class TagController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.tag.partials.avg-expenses', compact('result'))->render();
+            $result = view('reports.tag.partials.avg-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -342,9 +343,9 @@ class TagController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.tag.partials.avg-income', compact('result'))->render();
+            $result = view('reports.tag.partials.avg-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -358,7 +359,7 @@ class TagController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function tags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
+    public function tags(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $tags);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $tags);
@@ -450,7 +451,7 @@ class TagController extends Controller
             }
         }
 
-        return view('reports.tag.partials.tags', compact('sums', 'report'));
+        return view('reports.tag.partials.tags', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -490,9 +491,9 @@ class TagController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.tag.partials.top-expenses', compact('result'))->render();
+            $result = view('reports.tag.partials.top-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -538,9 +539,9 @@ class TagController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.tag.partials.top-income', compact('result'))->render();
+            $result = view('reports.tag.partials.top-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);

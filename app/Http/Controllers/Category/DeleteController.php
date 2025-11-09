@@ -64,22 +64,20 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(Category $category)
+    public function delete(Category $category): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('categories.delete.url');
 
-        return view('categories.delete', compact('category', 'subTitle'));
+        return view('categories.delete', ['category' => $category, 'subTitle' => $subTitle]);
     }
 
     /**
      * Destroy a category.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(Request $request, Category $category)
+    public function destroy(Request $request, Category $category): Redirector|RedirectResponse
     {
         $name = $category->name;
         $this->repository->destroy($category);

@@ -122,7 +122,7 @@ class BillController extends Controller
         // sort the other way around:
         usort(
             $journals,
-            static function (array $left, array $right) {
+            static function (array $left, array $right): int {
                 if ($left['date']->gt($right['date'])) {
                     return 1;
                 }

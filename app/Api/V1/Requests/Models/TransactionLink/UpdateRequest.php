@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionLink;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
@@ -31,7 +32,6 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class UpdateRequest

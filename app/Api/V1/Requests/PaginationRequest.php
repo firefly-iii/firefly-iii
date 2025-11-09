@@ -23,16 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Override;
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
-use Illuminate\Validation\Validator;
 use RuntimeException;
 
 class PaginationRequest extends ApiRequest
 {
     private ?string $sortClass = null;
 
+    #[Override]
     public function handleConfig(array $config): void
     {
         parent::handleConfig($config);

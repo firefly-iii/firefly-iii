@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\UserGroup;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -41,8 +42,8 @@ class IndexController extends Controller
         $title         = (string) trans('firefly.administrations_page_title');
         $subTitle      = (string) trans('firefly.administrations_page_sub_title');
         $mainTitleIcon = 'fa-book';
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
-        return view('administrations.index')->with(compact('title', 'subTitle', 'mainTitleIcon'));
+        return view('administrations.index')->with(['title' => $title, 'subTitle' => $subTitle, 'mainTitleIcon' => $mainTitleIcon]);
     }
 }

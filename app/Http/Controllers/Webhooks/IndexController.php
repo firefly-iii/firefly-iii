@@ -53,7 +53,7 @@ class IndexController extends Controller
     /**
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->warning('User visits webhook index page, but webhooks are DISABLED.');

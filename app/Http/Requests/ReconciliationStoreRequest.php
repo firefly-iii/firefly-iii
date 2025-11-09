@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsValidAmount;
 use FireflyIII\Rules\ValidJournals;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class ReconciliationStoreRequest
@@ -58,7 +58,7 @@ class ReconciliationStoreRequest extends FormRequest
             'journals'      => $transactions,
             'reconcile'     => $this->convertString('reconcile'),
         ];
-        app('log')->debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
+        Log::debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
 
         return $data;
     }

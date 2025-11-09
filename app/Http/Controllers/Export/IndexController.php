@@ -118,7 +118,7 @@ class IndexController extends Controller
     /**
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         return view('export.index');
     }

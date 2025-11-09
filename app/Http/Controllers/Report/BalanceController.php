@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -140,10 +141,10 @@ class BalanceController extends Controller
         }
 
         try {
-            $result = view('reports.partials.balance', compact('report'))->render();
+            $result = view('reports.partials.balance', ['report' => $report])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
 
             throw new FireflyException($result, 0, $e);

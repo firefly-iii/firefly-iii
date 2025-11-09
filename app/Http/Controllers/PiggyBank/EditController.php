@@ -76,7 +76,7 @@ class EditController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(PiggyBank $piggyBank)
+    public function edit(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
@@ -109,15 +109,13 @@ class EditController extends Controller
         }
         session()->forget('piggy-banks.edit.fromUpdate');
 
-        return view('piggy-banks.edit', compact('subTitle', 'subTitleIcon', 'piggyBank', 'preFilled'));
+        return view('piggy-banks.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'piggyBank' => $piggyBank, 'preFilled' => $preFilled]);
     }
 
     /**
      * Update a piggy bank.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank)
+    public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank): Redirector|RedirectResponse
     {
         $data      = $request->getPiggyBankData();
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);

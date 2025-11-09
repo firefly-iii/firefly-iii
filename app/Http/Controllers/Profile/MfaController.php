@@ -78,7 +78,7 @@ class MfaController extends Controller
         );
         $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
-        app('log')->debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
+        Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
 
@@ -132,7 +132,7 @@ class MfaController extends Controller
         Log::channel('audit')->info(sprintf('User "%s" has generated new backup codes.', $user->email));
         event(new MFANewBackupCodes($user));
 
-        return view('profile.mfa.backup-codes-post')->with(compact('codes'));
+        return view('profile.mfa.backup-codes-post')->with(['codes' => $codes]);
 
     }
 
@@ -152,7 +152,7 @@ class MfaController extends Controller
         $subTitle     = (string) trans('firefly.mfa_index_title');
         $subTitleIcon = 'fa-calculator';
 
-        return view('profile.mfa.disable-mfa')->with(compact('subTitle', 'subTitleIcon', 'enabledMFA'));
+        return view('profile.mfa.disable-mfa')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
 
     /**
@@ -221,19 +221,18 @@ class MfaController extends Controller
         app('preferences')->set('temp-mfa-secret', $secret);
 
 
-        return view('profile.mfa.enable-mfa', compact('image', 'secret'));
+        return view('profile.mfa.enable-mfa', ['image' => $image, 'secret' => $secret]);
 
     }
 
     /**
      * Submit 2FA for the first time.
      *
-     * @return Redirector|RedirectResponse
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function enableMFAPost(TokenFormRequest $request)
+    public function enableMFAPost(TokenFormRequest $request): Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -340,6 +339,6 @@ class MfaController extends Controller
         $subTitleIcon = 'fa-calculator';
         $enabledMFA   = null !== auth()->user()->mfa_secret;
 
-        return view('profile.mfa.index')->with(compact('subTitle', 'subTitleIcon', 'enabledMFA'));
+        return view('profile.mfa.index')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
 }

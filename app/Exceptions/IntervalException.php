@@ -33,8 +33,8 @@ use Throwable;
  */
 final class IntervalException extends Exception
 {
-    public array       $availableIntervals;
-    public Periodicity $periodicity;
+    public array       $availableIntervals = [];
+    public Periodicity $periodicity = Periodicity::Monthly;
 
     /** @var mixed */
     protected $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
@@ -42,8 +42,6 @@ final class IntervalException extends Exception
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
-        $this->availableIntervals = [];
-        $this->periodicity        = Periodicity::Monthly;
     }
 
     public static function unavailable(

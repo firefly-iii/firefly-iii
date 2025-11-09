@@ -74,7 +74,7 @@ class EditController extends Controller
      * @throws NotFoundExceptionInterface
      * @throws UrlException
      */
-    public function edit(TransactionGroup $transactionGroup)
+    public function edit(TransactionGroup $transactionGroup): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         app('preferences')->mark();
 
@@ -120,7 +120,7 @@ class EditController extends Controller
         $latitude                   = config('firefly.default_location.latitude');
         $zoomLevel                  = config('firefly.default_location.zoom_level');
 
-        return view('transactions.edit', compact('cash', 'allowedSourceDests', 'expectedSourceTypes', 'optionalDateFields', 'longitude', 'latitude', 'zoomLevel', 'optionalFields', 'subTitle', 'subTitleIcon', 'transactionGroup', 'allowedOpposingTypes', 'accountToTypes', 'previousUrl'));
+        return view('transactions.edit', ['cash' => $cash, 'allowedSourceDests' => $allowedSourceDests, 'expectedSourceTypes' => $expectedSourceTypes, 'optionalDateFields' => $optionalDateFields, 'longitude' => $longitude, 'latitude' => $latitude, 'zoomLevel' => $zoomLevel, 'optionalFields' => $optionalFields, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'transactionGroup' => $transactionGroup, 'allowedOpposingTypes' => $allowedOpposingTypes, 'accountToTypes' => $accountToTypes, 'previousUrl' => $previousUrl]);
     }
 
     public function unreconcile(TransactionJournal $journal): JsonResponse

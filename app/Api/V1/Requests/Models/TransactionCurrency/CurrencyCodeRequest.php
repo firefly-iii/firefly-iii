@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
-use Illuminate\Validation\Validator;
 
 class CurrencyCodeRequest extends ApiRequest
 {

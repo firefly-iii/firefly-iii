@@ -69,7 +69,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(PiggyBank $piggyBank)
+    public function show(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $end */
         $end         = session('end', today(config('app.timezone'))->endOfMonth());
@@ -95,6 +95,6 @@ class ShowController extends Controller
         $attachments = $this->piggyRepos->getAttachments($piggyBank);
 
 
-        return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy', 'attachments'));
+        return view('piggy-banks.show', ['piggyBank' => $piggyBank, 'events' => $events, 'subTitle' => $subTitle, 'piggy' => $piggy, 'attachments' => $attachments]);
     }
 }

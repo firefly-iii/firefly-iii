@@ -104,10 +104,10 @@ class ExecutionController extends Controller
      *
      * @return Factory|View
      */
-    public function selectTransactions(RuleGroup $ruleGroup)
+    public function selectTransactions(RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', compact('ruleGroup', 'subTitle'));
+        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 }

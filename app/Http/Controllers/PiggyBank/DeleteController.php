@@ -62,14 +62,14 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(PiggyBank $piggyBank)
+    public function delete(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.delete_piggy_bank', ['name' => $piggyBank->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('piggy-banks.delete.url');
 
-        return view('piggy-banks.delete', compact('piggyBank', 'subTitle'));
+        return view('piggy-banks.delete', ['piggyBank' => $piggyBank, 'subTitle' => $subTitle]);
     }
 
     /**

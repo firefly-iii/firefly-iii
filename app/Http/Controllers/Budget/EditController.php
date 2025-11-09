@@ -69,7 +69,7 @@ class EditController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(Request $request, Budget $budget)
+    public function edit(Request $request, Budget $budget): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle          = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
         $autoBudget        = $this->repository->getAutoBudget($budget);
@@ -113,7 +113,7 @@ class EditController extends Controller
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('budgets.edit', compact('budget', 'subTitle', 'autoBudgetTypes', 'autoBudgetPeriods', 'autoBudget'));
+        return view('budgets.edit', ['budget' => $budget, 'subTitle' => $subTitle, 'autoBudgetTypes' => $autoBudgetTypes, 'autoBudgetPeriods' => $autoBudgetPeriods, 'autoBudget' => $autoBudget]);
     }
 
     /**

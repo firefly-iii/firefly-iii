@@ -156,7 +156,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private function filterRecurrences(Collection $recurrences): Collection
     {
         return $recurrences->filter(
-            fn (Recurrence $recurrence) => $this->validRecurrence($recurrence)
+            fn (Recurrence $recurrence): bool => $this->validRecurrence($recurrence)
         );
     }
 
@@ -355,7 +355,7 @@ class CreateRecurringTransactions implements ShouldQueue
             return null;
         }
 
-        if ($journalCount > 0 && true === $this->force) {
+        if ($journalCount > 0 && $this->force) {
             Log::warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
         }
 
@@ -411,8 +411,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $count        = $this->repository->getJournalCount($recurrence) + 1;
         $transactions = $recurrence->recurrenceTransactions()->get();
 
-        /** @var RecurrenceTransaction $first */
-        $first        = $transactions->first();
+        $transactions->first();
         $return       = [];
 
         /** @var RecurrenceTransaction $transaction */

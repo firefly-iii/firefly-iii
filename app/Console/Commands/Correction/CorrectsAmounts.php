@@ -220,7 +220,7 @@ class CorrectsAmounts extends Command
         /** @var RuleTrigger $item */
         foreach ($set as $item) {
             $result = $this->fixRuleTrigger($item);
-            if (true === $result) {
+            if ($result) {
                 ++$fixed;
             }
         }

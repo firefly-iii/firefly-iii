@@ -64,7 +64,7 @@ class NewUserController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function index()
+    public function index(): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         app('view')->share('title', (string) trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
@@ -78,15 +78,13 @@ class NewUserController extends Controller
             return redirect(route('index'));
         }
 
-        return view('new-user.index', compact('languages'));
+        return view('new-user.index', ['languages' => $languages]);
     }
 
     /**
      * Store his new settings.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository)
+    public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository): Redirector|RedirectResponse
     {
         $language      = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {

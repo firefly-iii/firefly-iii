@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -114,7 +115,7 @@ class SelectController extends Controller
         // does the user have shared accounts?
         $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', compact('rule', 'subTitle'));
+        return view('rules.rule.select-transactions', ['rule' => $rule, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -179,8 +180,8 @@ class SelectController extends Controller
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
-            app('log')->error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
-            app('log')->error($exception->getTraceAsString());
+            Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
+            Log::error($exception->getTraceAsString());
             $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
 
             throw new FireflyException($view, 0, $exception);
@@ -222,8 +223,8 @@ class SelectController extends Controller
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
         } catch (Throwable $exception) {
             $message = sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage());
-            app('log')->error($message);
-            app('log')->error($exception->getTraceAsString());
+            Log::error($message);
+            Log::error($exception->getTraceAsString());
 
             throw new FireflyException($message, 0, $exception);
         }

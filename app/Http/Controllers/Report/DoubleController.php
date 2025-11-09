@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -102,9 +103,9 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.double.partials.avg-expenses', compact('result'))->render();
+            $result = view('reports.double.partials.avg-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -152,9 +153,9 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.double.partials.avg-income', compact('result'))->render();
+            $result = view('reports.double.partials.avg-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -168,7 +169,7 @@ class DoubleController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
+    public function operations(Collection $accounts, Collection $double, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $withCounterpart = $this->accountRepository->expandWithDoubles($double);
         $together        = $accounts->merge($withCounterpart);
@@ -276,7 +277,7 @@ class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts', compact('sums', 'report'));
+        return view('reports.double.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -300,7 +301,7 @@ class DoubleController extends Controller
     /**
      * @return Factory|View
      */
-    public function operationsPerAsset(Collection $accounts, Collection $double, Carbon $start, Carbon $end)
+    public function operationsPerAsset(Collection $accounts, Collection $double, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $withCounterpart = $this->accountRepository->expandWithDoubles($double);
         $together        = $accounts->merge($withCounterpart);
@@ -389,7 +390,7 @@ class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts-per-asset', compact('sums', 'report'));
+        return view('reports.double.partials.accounts-per-asset', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -429,9 +430,9 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.double.partials.top-expenses', compact('result'))->render();
+            $result = view('reports.double.partials.top-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -477,9 +478,9 @@ class DoubleController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.double.partials.top-income', compact('result'))->render();
+            $result = view('reports.double.partials.top-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);

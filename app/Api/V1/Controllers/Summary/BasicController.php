@@ -591,7 +591,7 @@ class BasicController extends Controller
 
         // filter list on preference of being included.
         $filtered       = $allAccounts->filter(
-            function (Account $account) {
+            function (Account $account): bool {
                 $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
 
                 return null === $includeNetWorth || '1' === $includeNetWorth;
@@ -652,10 +652,6 @@ class BasicController extends Controller
             return true;
         }
         // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            return true;
-        }
-
-        return false;
+        return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
     }
 }

@@ -75,7 +75,7 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request, string $objectType)
+    public function create(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon        = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $subTitle            = (string) trans(sprintf('firefly.make_new_%s_account', $objectType));
@@ -124,7 +124,7 @@ class CreateController extends Controller
 
         return view(
             'accounts.create',
-            compact('subTitleIcon', 'liabilityDirections', 'showNetWorth', 'locations', 'objectType', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes')
+            ['subTitleIcon' => $subTitleIcon, 'liabilityDirections' => $liabilityDirections, 'showNetWorth' => $showNetWorth, 'locations' => $locations, 'objectType' => $objectType, 'interestPeriods' => $interestPeriods, 'subTitle' => $subTitle, 'roles' => $roles, 'liabilityTypes' => $liabilityTypes]
         );
     }
 

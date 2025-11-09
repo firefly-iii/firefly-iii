@@ -76,7 +76,7 @@ class EditController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -163,7 +163,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('accounts.edit', compact('account', 'currency', 'canEditCurrency', 'showNetWorth', 'subTitle', 'subTitleIcon', 'locations', 'liabilityDirections', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods'));
+        return view('accounts.edit', ['account' => $account, 'currency' => $currency, 'canEditCurrency' => $canEditCurrency, 'showNetWorth' => $showNetWorth, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'locations' => $locations, 'liabilityDirections' => $liabilityDirections, 'objectType' => $objectType, 'roles' => $roles, 'preFilled' => $preFilled, 'liabilityTypes' => $liabilityTypes, 'interestPeriods' => $interestPeriods]);
     }
 
     /**

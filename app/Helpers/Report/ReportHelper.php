@@ -36,15 +36,14 @@ use Illuminate\Support\Collection;
  */
 class ReportHelper implements ReportHelperInterface
 {
-    /** @var BudgetRepositoryInterface The budget repository */
-    protected $budgetRepository;
-
     /**
      * ReportHelper constructor.
      */
-    public function __construct(BudgetRepositoryInterface $budgetRepository)
+    public function __construct(
+        /** @var BudgetRepositoryInterface The budget repository */
+        protected BudgetRepositoryInterface $budgetRepository
+    )
     {
-        $this->budgetRepository = $budgetRepository;
     }
 
     /**

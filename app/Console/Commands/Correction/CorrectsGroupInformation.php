@@ -55,10 +55,8 @@ class CorrectsGroupInformation extends Command
 
     /**
      * Execute the console command.
-     *
-     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         // objects: accounts, attachments, available budgets, bills, budgets, categories, currency_exchange_rates
         // recurrences, rule groups, rules, tags, transaction groups, transaction journals, webhooks

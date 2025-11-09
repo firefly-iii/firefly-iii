@@ -78,7 +78,7 @@ class MassController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('transactions.mass-delete.url');
 
-        return view('transactions.mass.delete', compact('journals', 'subTitle'));
+        return view('transactions.mass.delete', ['journals' => $journals, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -86,28 +86,28 @@ class MassController extends Controller
      *
      * @return Application|Redirector|RedirectResponse
      */
-    public function destroy(MassDeleteJournalRequest $request)
+    public function destroy(MassDeleteJournalRequest $request): Redirector|RedirectResponse
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $ids   = $request->get('confirm_mass_delete');
         $count = 0;
         if (is_array($ids)) {
-            app('log')->debug('Array of IDs', $ids);
+            Log::debug('Array of IDs', $ids);
 
             /** @var string $journalId */
             foreach ($ids as $journalId) {
-                app('log')->debug(sprintf('Searching for ID #%d', $journalId));
+                Log::debug(sprintf('Searching for ID #%d', $journalId));
 
                 /** @var null|TransactionJournal $journal */
                 $journal = $this->repository->find((int) $journalId);
                 if (null !== $journal && (int) $journalId === $journal->id) {
                     $this->repository->destroyJournal($journal);
                     ++$count;
-                    app('log')->debug(sprintf('Deleted transaction journal #%d', $journalId));
+                    Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
 
                     continue;
                 }
-                app('log')->debug(sprintf('Could not find transaction journal #%d', $journalId));
+                Log::debug(sprintf('Could not find transaction journal #%d', $journalId));
             }
         }
         app('preferences')->mark();
@@ -148,17 +148,16 @@ class MassController extends Controller
 
         $this->rememberPreviousUrl('transactions.mass-edit.url');
 
-        return view('transactions.mass.edit', compact('journals', 'subTitle', 'withdrawalSources', 'depositDestinations', 'budgets'));
+        return view('transactions.mass.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'withdrawalSources' => $withdrawalSources, 'depositDestinations' => $depositDestinations, 'budgets' => $budgets]);
     }
 
     /**
      * Mass update of journals.
      *
-     * @return Redirector|RedirectResponse
      *
      * @throws FireflyException
      */
-    public function update(MassEditJournalRequest $request)
+    public function update(MassEditJournalRequest $request): Redirector|RedirectResponse
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
@@ -211,7 +210,7 @@ class MassController extends Controller
             'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
             'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
         ];
-        app('log')->debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
+        Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
 
         // call service to update.
         $service->setData($data);

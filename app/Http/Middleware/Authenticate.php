@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\Handler;
@@ -126,22 +127,20 @@ class Authenticate
     private function validateBlockedUser(?User $user, array $guards): void
     {
         if (!$user instanceof User) {
-            app('log')->warning('User is null, throw exception?');
+            Log::warning('User is null, throw exception?');
         }
-        if ($user instanceof User) {
-            // app('log')->debug(get_class($user));
-            if (1 === (int) $user->blocked) {
-                $message = (string) trans('firefly.block_account_logout');
-                if ('email_changed' === $user->blocked_code) {
-                    $message = (string) trans('firefly.email_changed_logout');
-                }
-                app('log')->warning('User is blocked, cannot use authentication method.');
-                app('session')->flash('logoutMessage', $message);
-                // @noinspection PhpUndefinedMethodInspection
-                $this->auth->logout(); // @phpstan-ignore-line (thinks function is undefined)
-
-                throw new AuthenticationException('Blocked account.', $guards);
+        // \Illuminate\Support\Facades\Log::debug(get_class($user));
+        if ($user instanceof User && 1 === (int) $user->blocked) {
+            $message = (string) trans('firefly.block_account_logout');
+            if ('email_changed' === $user->blocked_code) {
+                $message = (string) trans('firefly.email_changed_logout');
             }
+            Log::warning('User is blocked, cannot use authentication method.');
+            app('session')->flash('logoutMessage', $message);
+            // @noinspection PhpUndefinedMethodInspection
+            $this->auth->logout();
+            // @phpstan-ignore-line (thinks function is undefined)
+            throw new AuthenticationException('Blocked account.', $guards);
         }
     }
 }

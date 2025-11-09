@@ -87,7 +87,7 @@ class ConvertController extends Controller
      *
      * @throws Exception
      */
-    public function index(TransactionType $destinationType, TransactionGroup $group)
+    public function index(TransactionType $destinationType, TransactionGroup $group): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
     {
         if (!$this->isEditableGroup($group)) {
             return $this->redirectGroupToAccount($group);
@@ -117,7 +117,7 @@ class ConvertController extends Controller
         ];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
-            app('log')->debug('This is already a transaction of the expected type..');
+            Log::debug('This is already a transaction of the expected type..');
             session()->flash('info', (string) trans('firefly.convert_is_already_type_'.$destinationType->type));
 
             return redirect(route('transactions.show', [$group->id]));
@@ -125,20 +125,7 @@ class ConvertController extends Controller
 
         return view(
             'transactions.convert',
-            compact(
-                'sourceType',
-                'destinationType',
-                'group',
-                'groupTitle',
-                'groupArray',
-                'assets',
-                'validDepositSources',
-                'liabilities',
-                'validWithdrawalDests',
-                'preFilled',
-                'subTitle',
-                'subTitleIcon'
-            )
+            ['sourceType' => $sourceType, 'destinationType' => $destinationType, 'group' => $group, 'groupTitle' => $groupTitle, 'groupArray' => $groupArray, 'assets' => $assets, 'validDepositSources' => $validDepositSources, 'liabilities' => $liabilities, 'validWithdrawalDests' => $validWithdrawalDests, 'preFilled' => $preFilled, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]
         );
     }
 

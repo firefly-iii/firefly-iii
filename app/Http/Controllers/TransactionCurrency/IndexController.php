@@ -68,7 +68,7 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request)
+    public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         /** @var User $user */
         $user       = auth()->user();
@@ -78,7 +78,7 @@ class IndexController extends Controller
 
         // order so default and enabled are on top:
         $collection = $collection->sortBy(
-            static function (TransactionCurrency $currency) {
+            static function (TransactionCurrency $currency): string {
                 $primary = true === $currency->userGroupNative ? 0 : 1;
                 $enabled = true === $currency->userGroupEnabled ? 0 : 1;
 
@@ -96,6 +96,6 @@ class IndexController extends Controller
             $isOwner = false;
         }
 
-        return view('currencies.index', compact('currencies', 'isOwner'));
+        return view('currencies.index', ['currencies' => $currencies, 'isOwner' => $isOwner]);
     }
 }

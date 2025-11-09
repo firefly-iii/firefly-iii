@@ -90,7 +90,7 @@ class ListController extends Controller
 
         // filter list on currency preference:
         $collection        = $unfiltered->filter(
-            static function (Account $account) use ($currency, $accountRepository) {
+            static function (Account $account) use ($currency, $accountRepository): bool {
                 $currencyId = (int) $accountRepository->getMetaValue($account, 'currency_id');
 
                 return $currencyId === $currency->id;
@@ -178,7 +178,7 @@ class ListController extends Controller
 
         // filter and paginate list:
         $collection  = $unfiltered->filter(
-            static fn (Bill $bill) => $bill->transaction_currency_id === $currency->id
+            static fn (Bill $bill): bool => $bill->transaction_currency_id === $currency->id
         );
         $count       = $collection->count();
         $bills       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -261,8 +261,8 @@ class ListController extends Controller
 
         // filter selection
         $collection     = $unfiltered->filter(
-            static function (Recurrence $recurrence) use ($currency) {  // @phpstan-ignore-line
-                if (array_any($recurrence->recurrenceTransactions, fn ($transaction) => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id)) {
+            static function (Recurrence $recurrence) use ($currency): ?Recurrence {  // @phpstan-ignore-line
+                if (array_any($recurrence->recurrenceTransactions, fn ($transaction): bool => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id)) {
                     return $recurrence;
                 }
 
@@ -310,8 +310,8 @@ class ListController extends Controller
         $unfiltered  = $ruleRepos->getAll();
 
         $collection  = $unfiltered->filter(
-            static function (Rule $rule) use ($currency) { // @phpstan-ignore-line
-                if (array_any($rule->ruleTriggers, fn ($trigger) => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value)) {
+            static function (Rule $rule) use ($currency): ?Rule { // @phpstan-ignore-line
+                if (array_any($rule->ruleTriggers, fn ($trigger): bool => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value)) {
                     return $rule;
                 }
 

@@ -100,13 +100,12 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @return Factory|View
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      * @throws UrlException
      */
-    public function create(?string $objectType)
+    public function create(?string $objectType): Factory|View
     {
         Preferences::mark();
 
@@ -151,6 +150,6 @@ class CreateController extends Controller
 
         session()->put('preFilled', $preFilled);
 
-        return view('transactions.create', compact('subTitleIcon', 'cash', 'longitude', 'latitude', 'zoomLevel', 'objectType', 'optionalDateFields', 'subTitle', 'previousUrl', 'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes', 'sourceId', 'destinationId'));
+        return view('transactions.create', ['subTitleIcon' => $subTitleIcon, 'cash' => $cash, 'longitude' => $longitude, 'latitude' => $latitude, 'zoomLevel' => $zoomLevel, 'objectType' => $objectType, 'optionalDateFields' => $optionalDateFields, 'subTitle' => $subTitle, 'previousUrl' => $previousUrl, 'optionalFields' => $optionalFields, 'preFilled' => $preFilled, 'allowedOpposingTypes' => $allowedOpposingTypes, 'accountToTypes' => $accountToTypes, 'sourceId' => $sourceId, 'destinationId' => $destinationId]);
     }
 }

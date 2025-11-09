@@ -84,7 +84,7 @@ class UpgradesWebhooks extends Command
         $delivery          = WebhookDelivery::tryFrom((int)$webhook->delivery);
         $response          = WebhookResponse::tryFrom((int)$webhook->response);
         $trigger           = WebhookTrigger::tryFrom((int)$webhook->trigger);
-        if (null === $delivery || null === $response || null === $trigger) {
+        if (in_array(null, [$delivery, $response, $trigger], true)) {
             $this->friendlyError(sprintf('[a] Webhook #%d has an invalid delivery, response or trigger value. Will not upgrade.', $webhook->id));
 
             return;
@@ -92,7 +92,7 @@ class UpgradesWebhooks extends Command
         $deliveryModel     = WebhookDeliveryModel::where('key', $delivery->value)->first();
         $responseModel     = WebhookResponseModel::where('key', $response->value)->first();
         $triggerModel      = WebhookTriggerModel::where('key', $trigger->value)->first();
-        if (null === $deliveryModel || null === $responseModel || null === $triggerModel) {
+        if (in_array(null, [$deliveryModel, $responseModel, $triggerModel], true)) {
             $this->friendlyError(sprintf('[b] Webhook #%d has an invalid delivery, response or trigger model. Will not upgrade.', $webhook->id));
 
             return;

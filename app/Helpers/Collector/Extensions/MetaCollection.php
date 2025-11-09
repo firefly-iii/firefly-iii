@@ -31,7 +31,6 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
@@ -170,7 +169,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', '!=', sprintf('%s', json_encode($externalId)));
+        $this->query->where('journal_meta.data', '!=', json_encode($externalId));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -214,7 +213,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'recurrence_id');
-        $this->query->where('journal_meta.data', '!=', sprintf('%s', json_encode($recurringId)));
+        $this->query->where('journal_meta.data', '!=', json_encode($recurringId));
 
         return $this;
     }
@@ -511,7 +510,7 @@ trait MetaCollection
     public function notesDoNotContain(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhereNotLike('notes.text', sprintf('%%%s%%', $value));
         });
@@ -522,7 +521,7 @@ trait MetaCollection
     public function notesDontEndWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhereNotLike('notes.text', sprintf('%%%s', $value));
         });
@@ -533,7 +532,7 @@ trait MetaCollection
     public function notesDontStartWith(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhereNotLike('notes.text', sprintf('%s%%', $value));
         });
@@ -552,7 +551,7 @@ trait MetaCollection
     public function notesExactly(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where('notes.text', '=', sprintf('%s', $value));
+        $this->query->where('notes.text', '=', $value);
 
         return $this;
     }
@@ -560,9 +559,9 @@ trait MetaCollection
     public function notesExactlyNot(string $value): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q) use ($value): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
-            $q->orWhere('notes.text', '!=', sprintf('%s', $value));
+            $q->orWhere('notes.text', '!=', $value);
         });
 
         return $this;
@@ -587,7 +586,7 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $list                = array_map('strtolower', $list);
+        $list                = array_map(strtolower(...), $list);
         $filter              = static function (array $object) use ($list): bool|array {
             $includedJournals       = [];
             $return                 = $object;
@@ -622,7 +621,7 @@ trait MetaCollection
 
             // found at least the expected tags.
             $result                 = $foundTagCount >= $expectedTagCount;
-            if (true === $result) {
+            if ($result) {
                 return $return;
             }
 
@@ -707,7 +706,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'external_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($externalId)));
+        $this->query->where('journal_meta.data', '=', json_encode($externalId));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -730,7 +729,7 @@ trait MetaCollection
 
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'internal_reference');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($internalReference)));
+        $this->query->where('journal_meta.data', '=', json_encode($internalReference));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -740,7 +739,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'recurrence_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($recurringId)));
+        $this->query->where('journal_meta.data', '=', json_encode($recurringId));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -750,7 +749,7 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         $this->query->where('journal_meta.name', '=', 'sepa_ct_id');
-        $this->query->where('journal_meta.data', '=', sprintf('%s', json_encode($sepaCT)));
+        $this->query->where('journal_meta.data', '=', json_encode($sepaCT));
         $this->query->whereNull('journal_meta.deleted_at');
 
         return $this;
@@ -781,7 +780,7 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $list                = array_map('strtolower', $list);
+        $list                = array_map(strtolower(...), $list);
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
@@ -812,7 +811,7 @@ trait MetaCollection
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
-        $list                = array_map('strtolower', $list);
+        $list                = array_map(strtolower(...), $list);
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
@@ -933,15 +932,15 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
-            $q1->where(static function (Builder $q2): void {
+        $this->query->where(static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (EloquentBuilder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_id');
                 $q2->whereNull('journal_meta.data');
                 $q2->whereNull('journal_meta.deleted_at');
-            })->orWhere(static function (Builder $q3): void {
+            })->orWhere(static function (EloquentBuilder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_id');
                 $q3->whereNull('journal_meta.deleted_at');
-            })->orWhere(static function (Builder $q4): void {
+            })->orWhere(static function (EloquentBuilder $q4): void {
                 $q4->whereNull('journal_meta.name');
                 $q4->whereNull('journal_meta.deleted_at');
             });
@@ -954,15 +953,15 @@ trait MetaCollection
     {
         $this->joinMetaDataTables();
         // TODO not sure if this will work properly.
-        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
-            $q1->where(static function (Builder $q2): void {
+        $this->query->where(static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
+            $q1->where(static function (EloquentBuilder $q2): void {
                 $q2->where('journal_meta.name', '=', 'external_url');
                 $q2->whereNull('journal_meta.data');
                 $q2->whereNull('journal_meta.deleted_at');
-            })->orWhere(static function (Builder $q3): void {
+            })->orWhere(static function (EloquentBuilder $q3): void {
                 $q3->where('journal_meta.name', '!=', 'external_url');
                 $q3->whereNull('journal_meta.deleted_at');
-            })->orWhere(static function (Builder $q4): void {
+            })->orWhere(static function (EloquentBuilder $q4): void {
                 $q4->whereNull('journal_meta.name');
                 $q4->whereNull('journal_meta.deleted_at');
             });
@@ -974,7 +973,7 @@ trait MetaCollection
     public function withoutNotes(): GroupCollectorInterface
     {
         $this->withNotes();
-        $this->query->where(static function (Builder $q): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q): void { // @phpstan-ignore-line
             $q->whereNull('notes.text');
             $q->orWhere('notes.text', '');
         });

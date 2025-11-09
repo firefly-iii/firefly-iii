@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -144,7 +145,7 @@ class IndexController extends Controller
         $totals      = $this->getTotals($sums);
         $today       = now()->startOfDay();
 
-        return view('bills.index', compact('bills', 'sums', 'total', 'totals', 'today'));
+        return view('bills.index', ['bills' => $bills, 'sums' => $sums, 'total' => $total, 'totals' => $totals, 'today' => $today]);
     }
 
     private function getSums(array $bills): array
@@ -202,8 +203,8 @@ class IndexController extends Controller
     {
         $avg        = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
 
-        app('log')->debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
-        app('log')->debug(sprintf('Average is %s', $avg));
+        Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
+        Log::debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
         $multiplies = [
             'yearly'    => '1',
@@ -214,7 +215,7 @@ class IndexController extends Controller
             'daily'     => '365.24',
         ];
         $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-        app('log')->debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
 
         // per period:
         $division   = [
@@ -234,7 +235,7 @@ class IndexController extends Controller
         ];
         $perPeriod  = bcdiv($yearAmount, $division[$range]);
 
-        app('log')->debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
+        Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
 
         return $perPeriod;
     }
