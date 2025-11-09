@@ -45,7 +45,7 @@ class FrontpageChartGenerator
     public bool                           $convertToPrimary = false;
     public TransactionCurrency            $primaryCurrency;
     private AccountRepositoryInterface    $accountRepos;
-    private array                         $currencies = [];
+    private array                         $currencies       = [];
     private NoCategoryRepositoryInterface $noCatRepos;
     private OperationsRepositoryInterface $opsRepos;
     private CategoryRepositoryInterface   $repository;

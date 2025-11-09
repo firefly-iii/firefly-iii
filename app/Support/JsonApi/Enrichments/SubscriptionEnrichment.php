@@ -163,12 +163,10 @@ class SubscriptionEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user      = $user;
+        $this->user = $user;
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     /**
      * Returns the latest date in the set, or start when set is empty.

@@ -45,17 +45,17 @@ use Illuminate\Support\Facades\Log;
 class SearchRuleEngine implements RuleEngineInterface
 {
     private readonly Collection $groups;
-    private array               $operators = [];
+    private array               $operators       = [];
     // always collect the triggers from the database, unless indicated otherwise.
     private bool                $refreshTriggers = true;
-    private array               $resultCount = [];
+    private array               $resultCount     = [];
     private readonly Collection $rules;
     private User                $user;
 
     public function __construct()
     {
-        $this->rules           = new Collection();
-        $this->groups          = new Collection();
+        $this->rules  = new Collection();
+        $this->groups = new Collection();
     }
 
     public function addOperator(array $operator): void

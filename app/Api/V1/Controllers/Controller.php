@@ -102,9 +102,9 @@ abstract class Controller extends BaseController
     }
 
     #[Deprecated(message: <<<'TXT'
-    use Request classes
-     Method to grab all parameters from the URL
-    TXT)]
+        use Request classes
+         Method to grab all parameters from the URL
+        TXT)]
     private function getParameters(): ParameterBag
     {
         $bag      = new ParameterBag();

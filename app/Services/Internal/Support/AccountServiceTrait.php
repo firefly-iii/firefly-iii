@@ -78,6 +78,7 @@ trait AccountServiceTrait
             // not set, so false.
             return false;
         }
+
         // if is set, but is empty:
         return (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
         || (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date']);

@@ -302,6 +302,7 @@ trait TransactionValidation
     private function isLiability(Account $account): bool
     {
         $type = $account->accountType->type;
+
         return in_array($type, config('firefly.valid_liabilities'), true);
     }
 
@@ -323,6 +324,7 @@ trait TransactionValidation
         if ('' === $transaction['foreign_amount']) {
             return false;
         }
+
         return 0 !== bccomp('0', (string) $transaction['foreign_amount']);
     }
 
@@ -750,6 +752,7 @@ trait TransactionValidation
             // source ID's are equal, return void.
             return true;
         }
+
         // source names are equal, return void.
         return (bool) $this->arrayEqual($comparison['source_name']);
     }
@@ -765,6 +768,7 @@ trait TransactionValidation
             // destination ID's are equal, return void.
             return true;
         }
+
         // destination names are equal, return void.
         return (bool) $this->arrayEqual($comparison['destination_name']);
     }
@@ -783,6 +787,7 @@ trait TransactionValidation
             // destination ID's are equal, return void.
             return true;
         }
+
         // destination names are equal, return void.
         return (bool) $this->arrayEqual($comparison['destination_name']);
     }

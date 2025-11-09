@@ -251,6 +251,7 @@ class CorrectsUnevenAmount extends Command
 
         /** @var Transaction $source */
         $source      = $journal->transactions()->where('amount', '<', 0)->first();
+
         // safety catch on NULL should not be necessary, we just had that catch.
         // source amount = dest foreign amount
         // source currency = dest foreign currency

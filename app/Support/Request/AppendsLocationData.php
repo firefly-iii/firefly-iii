@@ -51,9 +51,11 @@ trait AppendsLocationData
     /**
      * Abstract method stolen from "InteractsWithInput".
      *
-     * @param bool $default
+     * @param bool       $default
+     * @param null|mixed $key
      *
      * @return mixed
+     *
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      */
     abstract public function boolean($key = null, $default = false);

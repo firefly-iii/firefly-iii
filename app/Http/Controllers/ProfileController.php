@@ -288,7 +288,7 @@ class ProfileController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function changePassword(Request $request): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function changePassword(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -361,7 +361,6 @@ class ProfileController extends Controller
     /**
      * Regenerate access token.
      *
-     *
      * @throws Exception
      */
     public function regenerate(Request $request): Redirector|RedirectResponse
@@ -383,7 +382,6 @@ class ProfileController extends Controller
 
     /**
      * Undo change of user email address.
-     *
      *
      * @throws FireflyException
      */

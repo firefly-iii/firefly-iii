@@ -66,7 +66,7 @@ class DeleteController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function delete(Account $account): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function delete(Account $account): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

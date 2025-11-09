@@ -59,7 +59,6 @@ class TwoFactorController extends Controller
     }
 
     /**
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
@@ -211,6 +210,7 @@ class TwoFactorController extends Controller
         if (!is_array($list)) {
             $list = [];
         }
+
         return in_array($mfaCode, $list, true);
     }
 

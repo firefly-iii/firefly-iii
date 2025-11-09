@@ -64,7 +64,7 @@ class NewUserController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function index(): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         app('view')->share('title', (string) trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');

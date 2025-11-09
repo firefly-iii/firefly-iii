@@ -193,7 +193,6 @@ class ReportController extends Controller
     /**
      * Show account report.
      *
-     *
      * @throws FireflyException
      */
     public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string

@@ -76,7 +76,7 @@ class EditController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function edit(Request $request, Account $account, AccountRepositoryInterface $repository): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

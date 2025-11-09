@@ -139,6 +139,7 @@ class Authenticate
             app('session')->flash('logoutMessage', $message);
             // @noinspection PhpUndefinedMethodInspection
             $this->auth->logout();
+
             // @phpstan-ignore-line (thinks function is undefined)
             throw new AuthenticationException('Blocked account.', $guards);
         }

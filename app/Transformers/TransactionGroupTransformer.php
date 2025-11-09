@@ -259,6 +259,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             return (string) $array[$key];
         }
+
         return $default;
     }
 

@@ -154,7 +154,6 @@ class MassController extends Controller
     /**
      * Mass update of journals.
      *
-     *
      * @throws FireflyException
      */
     public function update(MassEditJournalRequest $request): Redirector|RedirectResponse

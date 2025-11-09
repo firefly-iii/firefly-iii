@@ -70,7 +70,7 @@ class CreateController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function create(Request $request): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
         $user         = auth()->user();

@@ -52,7 +52,7 @@ class AccountBalanceGrouped
 
     public function __construct()
     {
-        $this->converter  = app(ExchangeRateConverter::class);
+        $this->converter = app(ExchangeRateConverter::class);
     }
 
     /**

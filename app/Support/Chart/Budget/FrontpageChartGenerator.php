@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
  */
 class FrontpageChartGenerator
 {
-    public bool                                     $convertToPrimary = false;
+    public bool                                     $convertToPrimary  = false;
     public TransactionCurrency                      $default;
     protected OperationsRepositoryInterface         $opsRepository;
     private readonly BudgetLimitRepositoryInterface $blRepository;
@@ -53,9 +53,9 @@ class FrontpageChartGenerator
      */
     public function __construct()
     {
-        $this->budgetRepository  = app(BudgetRepositoryInterface::class);
-        $this->blRepository      = app(BudgetLimitRepositoryInterface::class);
-        $this->opsRepository     = app(OperationsRepositoryInterface::class);
+        $this->budgetRepository = app(BudgetRepositoryInterface::class);
+        $this->blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $this->opsRepository    = app(OperationsRepositoryInterface::class);
     }
 
     /**

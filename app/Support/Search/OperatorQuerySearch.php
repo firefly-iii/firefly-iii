@@ -66,19 +66,19 @@ class OperatorQuerySearch implements SearchInterface
     private readonly CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface              $collector;
     private readonly CurrencyRepositoryInterface $currencyRepository;
-    private array                                $excludeTags = [];
+    private array                                $excludeTags    = [];
     private array                                $includeAnyTags = [];
     // added to fix #8632
-    private array                           $includeTags = [];
-    private array                           $invalidOperators = [];
-    private int                             $limit = 25;
+    private array                           $includeTags         = [];
+    private array                           $invalidOperators    = [];
+    private int                             $limit               = 25;
     private readonly Collection             $operators;
-    private int                             $page = 1;
-    private array                           $prohibitedWords = [];
+    private int                             $page                = 1;
+    private array                           $prohibitedWords     = [];
     private readonly float                  $startTime;
     private readonly TagRepositoryInterface $tagRepository;
     private readonly array                  $validOperators;
-    private array                           $words = [];
+    private array                           $words               = [];
 
     /**
      * OperatorQuerySearch constructor.

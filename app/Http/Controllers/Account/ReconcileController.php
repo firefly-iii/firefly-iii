@@ -78,7 +78,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -145,7 +145,6 @@ class ReconcileController extends Controller
 
     /**
      * Submit a new reconciliation.
-     *
      *
      * @throws DuplicateTransactionException
      */

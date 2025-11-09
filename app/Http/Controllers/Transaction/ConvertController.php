@@ -87,7 +87,7 @@ class ConvertController extends Controller
      *
      * @throws Exception
      */
-    public function index(TransactionType $destinationType, TransactionGroup $group): Redirector|RedirectResponse|Factory|\Illuminate\Contracts\View\View
+    public function index(TransactionType $destinationType, TransactionGroup $group): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableGroup($group)) {
             return $this->redirectGroupToAccount($group);

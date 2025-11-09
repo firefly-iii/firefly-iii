@@ -41,9 +41,9 @@ use Illuminate\Support\Facades\Log;
 class CreditRecalculateService
 {
     private ?Account                   $account = null;
-    private ?TransactionGroup          $group = null;
+    private ?TransactionGroup          $group   = null;
     private AccountRepositoryInterface $repository;
-    private array                      $work = [];
+    private array                      $work    = [];
 
     public function recalculate(): void
     {

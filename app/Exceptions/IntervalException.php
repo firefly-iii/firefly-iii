@@ -34,10 +34,10 @@ use Throwable;
 final class IntervalException extends Exception
 {
     public array       $availableIntervals = [];
-    public Periodicity $periodicity = Periodicity::Monthly;
+    public Periodicity $periodicity        = Periodicity::Monthly;
 
     /** @var mixed */
-    protected $message = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
+    protected $message                     = 'The periodicity %s is unknown. Choose one of available periodicity: %s';
 
     public function __construct(string $message = '', int $code = 0, ?Throwable $previous = null)
     {

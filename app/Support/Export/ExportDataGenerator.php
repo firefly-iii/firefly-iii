@@ -72,18 +72,18 @@ class ExportDataGenerator
 {
     use ConvertsDataTypes;
 
-    private const string ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const string EXPORT_ERR     = 'Could not export to string: %s';
+    private const string ADD_RECORD_ERR    = 'Could not add record to set: %s';
+    private const string EXPORT_ERR        = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
-    private bool       $exportAccounts = false;
-    private bool       $exportBills = false;
-    private bool       $exportBudgets = false;
-    private bool       $exportCategories = false;
-    private bool       $exportPiggies = false;
-    private bool       $exportRecurring = false;
-    private bool       $exportRules = false;
-    private bool       $exportTags = false;
+    private bool       $exportAccounts     = false;
+    private bool       $exportBills        = false;
+    private bool       $exportBudgets      = false;
+    private bool       $exportCategories   = false;
+    private bool       $exportPiggies      = false;
+    private bool       $exportRecurring    = false;
+    private bool       $exportRules        = false;
+    private bool       $exportTags         = false;
     private bool       $exportTransactions = false;
     private Carbon     $start;
     private User       $user;
@@ -91,10 +91,10 @@ class ExportDataGenerator
 
     public function __construct()
     {
-        $this->accounts           = new Collection();
-        $this->start              = today(config('app.timezone'));
+        $this->accounts = new Collection();
+        $this->start    = today(config('app.timezone'));
         $this->start->subYear();
-        $this->end                = today(config('app.timezone'));
+        $this->end      = today(config('app.timezone'));
     }
 
     /**

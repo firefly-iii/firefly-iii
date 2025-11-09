@@ -68,7 +68,7 @@ class LoginController extends Controller
     protected string                $redirectTo = RouteServiceProvider::HOME;
     private UserRepositoryInterface $repository;
 
-    private string $username = 'email';
+    private string $username                    = 'email';
 
     /**
      * Create a new controller instance.
@@ -222,7 +222,7 @@ class LoginController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showLoginForm(Request $request): Redirector|RedirectResponse|Factory|View
+    public function showLoginForm(Request $request): Factory|Redirector|RedirectResponse|View
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
