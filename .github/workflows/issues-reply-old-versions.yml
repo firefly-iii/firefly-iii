@@ -32,7 +32,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           ISSUE_BODY=$(gh issue view $NUMBER --json body)
-          if [[ $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
 
             MESSAGE="Hi there!
 

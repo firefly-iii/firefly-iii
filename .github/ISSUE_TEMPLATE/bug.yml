@@ -6,7 +6,7 @@ body:
       label: Support guidelines
       description: Please read the support guidelines before proceeding.
       options:
-        - label: I've read the [support guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/support.md)
+        - label: I've read the <!-- MZ2udTpin6FL --> [support guidelines](https://github.com/firefly-iii/firefly-iii/blob/main/.github/support.md)
           required: true
 
   - type: checkboxes
