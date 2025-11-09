@@ -61,7 +61,7 @@ jobs:
               'cleanup.yml',
               'close-duplicates.yml',
               'closed-issues.yml',
-              'debug-info-actions.yml',
+              'issues-reply-old-versions.yml',
               'depsreview.yml',
               'label-actions.yml',
               'lock.yml',
