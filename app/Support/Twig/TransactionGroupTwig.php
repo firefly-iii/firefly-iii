@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
+use Carbon\CarbonInterface;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -80,7 +81,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction(
             'journalGetMetaDate',
-            static function (int $journalId, string $metaField) {
+            static function (int $journalId, string $metaField): CarbonInterface|Carbon {
                 /** @var null|TransactionJournalMeta $entry */
                 $entry = DB::table('journal_meta')
                     ->where('name', $metaField)
@@ -122,7 +123,7 @@ class TransactionGroupTwig extends AbstractExtension
     {
         return new TwigFunction(
             'journalHasMeta',
-            static function (int $journalId, string $metaField) {
+            static function (int $journalId, string $metaField): bool {
                 $count = DB::table('journal_meta')
                     ->where('name', $metaField)
                     ->where('transaction_journal_id', $journalId)

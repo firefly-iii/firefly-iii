@@ -51,10 +51,8 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     /**
      * Include Budget
-     *
-     * @return Item
      */
-    public function includeBudget(BudgetLimit $limit)
+    public function includeBudget(BudgetLimit $limit): Item
     {
         // enrich budget
         $budget     = $limit->budget;

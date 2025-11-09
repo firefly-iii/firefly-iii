@@ -36,16 +36,9 @@ use Illuminate\Support\Collection;
  */
 class UserGroupTransformer extends AbstractTransformer
 {
-    private array $inUse;
-    private array $memberships;
-    private array $membershipsVisible;
-
-    public function __construct()
-    {
-        $this->memberships        = [];
-        $this->membershipsVisible = [];
-        $this->inUse              = [];
-    }
+    private array $inUse = [];
+    private array $memberships = [];
+    private array $membershipsVisible = [];
 
     public function collectMetaData(Collection $objects): Collection
     {

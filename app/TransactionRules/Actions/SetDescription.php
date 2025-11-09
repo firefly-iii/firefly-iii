@@ -64,7 +64,7 @@ class SetDescription implements ActionInterface
             ->update(['description' => $after])
         ;
 
-        app('log')->debug(
+        Log::debug(
             sprintf(
                 'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],

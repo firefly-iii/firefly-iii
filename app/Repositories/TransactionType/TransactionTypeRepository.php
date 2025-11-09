@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionType;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
@@ -35,9 +36,9 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
     public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
     {
-        app('log')->debug('Now looking for a transaction type.');
+        Log::debug('Now looking for a transaction type.');
         if ($type instanceof TransactionType) {
-            app('log')->debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
+            Log::debug(sprintf('Found $type in parameters, its %s. Will return it.', $type->type));
 
             return $type;
         }
@@ -46,7 +47,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         if (!$search instanceof TransactionType) {
             $search = $this->findByType(TransactionTypeEnum::WITHDRAWAL->value);
         }
-        app('log')->debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
+        Log::debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 
         return $search;
     }

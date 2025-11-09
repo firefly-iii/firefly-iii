@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -54,14 +55,14 @@ class SetDestinationToCashAccount implements ActionInterface
         $repository  = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
-            app('log')->error('Could not find journal.');
+            Log::error('Could not find journal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
 
             return false;
         }
         $type        = $object->transactionType->type;
         if (TransactionTypeEnum::WITHDRAWAL->value !== $type) {
-            app('log')->error('Transaction must be withdrawal.');
+            Log::error('Transaction must be withdrawal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_withdrawal')));
 
             return false;
@@ -75,20 +76,20 @@ class SetDestinationToCashAccount implements ActionInterface
         /** @var null|Transaction $source */
         $source      = $object->transactions()->where('amount', '<', 0)->first();
         if (null === $source) {
-            app('log')->error('Could not find source transaction.');
+            Log::error('Could not find source transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction')));
 
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $source->account) {
-            app('log')->error('Could not find source transaction account.');
+            Log::error('Could not find source transaction account.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_source_transaction_account')));
 
             return false;
         }
         if ($cashAccount->id === $source->account_id) {
-            app('log')->error(
+            Log::error(
                 sprintf(
                     'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
                     $cashAccount->id,
@@ -110,7 +111,7 @@ class SetDestinationToCashAccount implements ActionInterface
             ->update(['account_id' => $cashAccount->id])
         ;
 
-        app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
+        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new destination account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }

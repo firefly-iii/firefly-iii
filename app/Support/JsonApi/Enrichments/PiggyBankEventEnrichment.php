@@ -46,8 +46,6 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     private array      $ids               = [];
     private array      $journalIds        = [];
     private array      $piggyBankIds      = [];
-    private User       $user;
-    private UserGroup  $userGroup;
     // private bool       $convertToPrimary  = false;
     // private TransactionCurrency $primaryCurrency;
 
@@ -77,18 +75,16 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
     }
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (PiggyBankEvent $item) {
+        $this->collection = $this->collection->map(function (PiggyBankEvent $item): PiggyBankEvent {
             $id         = (int)$item->id;
             $piggyId    = (int)$item->piggy_bank_id;
             $journalId  = (int)$item->transaction_journal_id;

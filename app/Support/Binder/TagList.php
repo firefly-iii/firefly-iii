@@ -47,11 +47,11 @@ class TagList implements BinderInterface
                     ->get()
                 ;
             }
-            $list       = array_unique(array_map('\strtolower', explode(',', $value)));
-            app('log')->debug('List of tags is', $list);
+            $list       = array_unique(array_map(\strtolower(...), explode(',', $value)));
+            Log::debug('List of tags is', $list);
 
             if (0 === count($list)) { // @phpstan-ignore-line
-                app('log')->error('Tag list is empty.');
+                Log::error('Tag list is empty.');
 
                 throw new NotFoundHttpException();
             }
@@ -62,7 +62,7 @@ class TagList implements BinderInterface
             $allTags    = $repository->get();
 
             $collection = $allTags->filter(
-                static function (Tag $tag) use ($list) {
+                static function (Tag $tag) use ($list): bool {
                     if (in_array(strtolower($tag->tag), $list, true)) {
                         Log::debug(sprintf('TagList: (string) found tag #%d ("%s") in list.', $tag->id, $tag->tag));
 
@@ -82,7 +82,7 @@ class TagList implements BinderInterface
                 return $collection;
             }
         }
-        app('log')->error('TagList: user is not logged in.');
+        Log::error('TagList: user is not logged in.');
 
         throw new NotFoundHttpException();
     }

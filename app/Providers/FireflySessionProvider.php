@@ -53,7 +53,7 @@ class FireflySessionProvider extends ServiceProvider
     {
         $this->app->singleton(
             'session',
-            static fn ($app) => new SessionManager($app)
+            static fn ($app): SessionManager => new SessionManager($app)
         );
     }
 

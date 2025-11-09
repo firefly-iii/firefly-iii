@@ -36,29 +36,19 @@ use function Safe\json_encode;
  */
 class AccountSearch implements GenericSearchInterface
 {
-    /** @var string */
     public const string SEARCH_ALL    = 'all';
 
-    /** @var string */
     public const string SEARCH_IBAN   = 'iban';
 
-    /** @var string */
     public const string SEARCH_ID     = 'id';
 
-    /** @var string */
     public const string SEARCH_NAME   = 'name';
 
-    /** @var string */
     public const string SEARCH_NUMBER = 'number';
     private string $field;
     private string $query;
-    private array  $types;
+    private array  $types = [];
     private User   $user;
-
-    public function __construct()
-    {
-        $this->types = [];
-    }
 
     public function search(): Collection
     {

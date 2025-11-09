@@ -55,8 +55,6 @@ class PiggyBankEnrichment implements EnrichmentInterface
     private array                        $notes         = [];
     private array                        $objectGroups  = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private User                         $user;
-    private UserGroup                    $userGroup;
     private ?Carbon $date;
 
     public function __construct()
@@ -89,18 +87,16 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
     }
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (PiggyBank $item) {
+        $this->collection = $this->collection->map(function (PiggyBank $item): PiggyBank {
             $id                        = (int)$item->id;
             $currencyId                = (int)$item->transaction_currency_id;
             $currency                  = $this->currencies[$currencyId] ?? $this->primaryCurrency;

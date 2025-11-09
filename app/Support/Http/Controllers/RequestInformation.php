@@ -133,11 +133,7 @@ trait RequestInformation
             return true;
         }
         // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            return true;
-        }
-
-        return false;
+        return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
     }
 
     /**

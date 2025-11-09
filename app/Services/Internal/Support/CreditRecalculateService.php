@@ -40,20 +40,10 @@ use Illuminate\Support\Facades\Log;
  */
 class CreditRecalculateService
 {
-    private ?Account                   $account;
-    private ?TransactionGroup          $group;
+    private ?Account                   $account = null;
+    private ?TransactionGroup          $group = null;
     private AccountRepositoryInterface $repository;
-    private array                      $work;
-
-    /**
-     * CreditRecalculateService constructor.
-     */
-    public function __construct()
-    {
-        $this->group   = null;
-        $this->account = null;
-        $this->work    = [];
-    }
+    private array                      $work = [];
 
     public function recalculate(): void
     {
@@ -163,12 +153,10 @@ class CreditRecalculateService
         $this->repository->setUser($account->user);
         $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
         $openingBalance = $this->repository->getOpeningBalance($account);
-        if ($openingBalance instanceof TransactionJournal) {
-            //            Log::debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
-            // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
-            if ('debit' === $direction) {
-                $this->validateOpeningBalance($account, $openingBalance);
-            }
+        //            Log::debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
+        // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
+        if ($openingBalance instanceof TransactionJournal && 'debit' === $direction) {
+            $this->validateOpeningBalance($account, $openingBalance);
         }
         $startOfDebt    = $this->repository->getOpeningBalanceAmount($account, false) ?? '0';
         $leftOfDebt     = app('steam')->positive($startOfDebt);
@@ -188,7 +176,7 @@ class CreditRecalculateService
             ->orderBy('transaction_journals.date', 'ASC')
             ->get(['transactions.*'])
         ;
-        $total          = $transactions->count();
+        $transactions->count();
         //        Log::debug(sprintf('Found %d transaction(s) to process.', $total));
 
         /** @var Transaction $transaction */

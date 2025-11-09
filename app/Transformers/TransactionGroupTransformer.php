@@ -259,12 +259,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
             return (string) $array[$key];
         }
-
-        if (null !== $default) {
-            return $default;
-        }
-
-        return null;
+        return $default;
     }
 
     /**
@@ -429,7 +424,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
         $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
+            static function (Transaction $transaction): bool {
                 return (float) $transaction->amount < 0; // lame but it works.
             }
         );
@@ -446,7 +441,7 @@ class TransactionGroupTransformer extends AbstractTransformer
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
         $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
+            static function (Transaction $transaction): bool {
                 return (float) $transaction->amount > 0; // lame but it works
             }
         );

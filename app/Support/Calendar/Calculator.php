@@ -37,12 +37,12 @@ class Calculator
     private static ?SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
     private static array             $intervals   = [];
 
-    private static function containsInterval(Periodicity $periodicity): bool
+    private function containsInterval(Periodicity $periodicity): bool
     {
-        return self::loadIntervalMap()->contains($periodicity);
+        return $this->loadIntervalMap()->contains($periodicity);
     }
 
-    private static function loadIntervalMap(): SplObjectStorage
+    private function loadIntervalMap(): SplObjectStorage
     {
         if (self::$intervalMap instanceof SplObjectStorage) {
             return self::$intervalMap;
@@ -59,7 +59,7 @@ class Calculator
 
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
     {
-        return self::containsInterval($periodicity);
+        return $this->containsInterval($periodicity);
     }
 
     /**

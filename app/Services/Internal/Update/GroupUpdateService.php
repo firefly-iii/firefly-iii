@@ -105,16 +105,14 @@ class GroupUpdateService
 
         $result       = array_diff($existing, $updated);
         Log::debug('Result of DIFF: ', $result);
-        if (count($result) > 0) {
-            /** @var string $deletedId */
-            foreach ($result as $deletedId) {
-                /** @var TransactionJournal $journal */
-                $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
+        /** @var string $deletedId */
+        foreach ($result as $deletedId) {
+            /** @var TransactionJournal $journal */
+            $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
 
-                /** @var JournalDestroyService $service */
-                $service = app(JournalDestroyService::class);
-                $service->destroy($journal);
-            }
+            /** @var JournalDestroyService $service */
+            $service = app(JournalDestroyService::class);
+            $service->destroy($journal);
         }
 
         app('preferences')->mark();

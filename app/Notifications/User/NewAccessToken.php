@@ -42,8 +42,6 @@ class NewAccessToken extends Notification
 {
     use Queueable;
 
-    public function __construct() {}
-
     public function toArray(User $notifiable): array
     {
         return [

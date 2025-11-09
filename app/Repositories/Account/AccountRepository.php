@@ -224,7 +224,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
+            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null !== $notes ? $notes->text : '';
@@ -414,7 +414,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     public function getMetaValue(Account $account, string $field): ?string
     {
         $result = $account->accountMeta->filter(
-            static fn (AccountMeta $meta) => strtolower($meta->name) === strtolower($field)
+            static fn (AccountMeta $meta): bool => strtolower($meta->name) === strtolower($field)
         );
         if (0 === $result->count()) {
             return null;

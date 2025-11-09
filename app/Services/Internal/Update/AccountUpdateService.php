@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Exceptions\FireflyException;
@@ -68,7 +69,7 @@ class AccountUpdateService
      */
     public function update(Account $account, array $data): Account
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
         $account    = $this->updateAccount($account, $data);
@@ -166,21 +167,21 @@ class AccountUpdateService
     {
         // skip if no order info
         if (!array_key_exists('order', $data) || $data['order'] === $account->order) {
-            app('log')->debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
+            Log::debug(sprintf('Account order will not be touched because its not set or already at %d.', $account->order));
 
             return $account;
         }
         // skip if not of orderable type.
         $type           = $account->accountType->type;
         if (!in_array($type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], true)) {
-            app('log')->debug('Will not change order of this account.');
+            Log::debug('Will not change order of this account.');
 
             return $account;
         }
         // get account type ID's because a join and an update is hard:
         $oldOrder       = $account->order;
         $newOrder       = $data['order'];
-        app('log')->debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
+        Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
         $list           = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
         if (AccountTypeEnum::ASSET->value === $type) {
             $list = $this->getTypeIds([AccountTypeEnum::ASSET->value]);
@@ -193,7 +194,7 @@ class AccountUpdateService
                 ->decrement('order')
             ;
             $account->order = $newOrder;
-            app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+            Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
             $account->save();
 
             return $account;
@@ -205,7 +206,7 @@ class AccountUpdateService
             ->increment('order')
         ;
         $account->order = $newOrder;
-        app('log')->debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
+        Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
         $account->save();
 
         return $account;
@@ -298,17 +299,17 @@ class AccountUpdateService
         if (!is_array($array)) {
             $array = [$array];
         }
-        app('log')->debug('Old array is: ', $array);
-        app('log')->debug(sprintf('Must remove : %d', $account->id));
+        Log::debug('Old array is: ', $array);
+        Log::debug(sprintf('Must remove : %d', $account->id));
         $removeAccountId = $account->id;
         $new             = [];
         foreach ($array as $value) {
             if ((int) $value !== $removeAccountId) {
-                app('log')->debug(sprintf('Will include: %d', $value));
+                Log::debug(sprintf('Will include: %d', $value));
                 $new[] = (int) $value;
             }
         }
-        app('log')->debug('Final new array is', $new);
+        Log::debug('Final new array is', $new);
         app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
     }
 }

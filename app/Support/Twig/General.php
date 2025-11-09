@@ -104,7 +104,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'activeRoutePartialObjectType',
-            static function ($context): string {
+            static function (array $context): string {
                 [, $route, $objectType] = func_get_args();
                 $activeObjectType       = $context['objectType'] ?? false;
 
@@ -292,11 +292,7 @@ class General extends AbstractExtension
             'hasRole',
             static function (string $role): bool {
                 $repository = app(UserRepositoryInterface::class);
-                if ($repository->hasRole(auth()->user(), $role)) {
-                    return true;
-                }
-
-                return false;
+                return $repository->hasRole(auth()->user(), $role);
             }
         );
     }

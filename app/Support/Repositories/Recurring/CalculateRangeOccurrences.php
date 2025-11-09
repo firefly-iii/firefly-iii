@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Repositories\Recurring;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 /**
@@ -110,30 +111,30 @@ trait CalculateRangeOccurrences
     {
         $return        = [];
         $attempts      = 0;
-        app('log')->debug('Rep is weekly.');
+        Log::debug('Rep is weekly.');
         // monday = 1
         // sunday = 7
         $dayOfWeek     = (int)$moment;
-        app('log')->debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
+        Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
         if ($start->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $start->addWeek();
-            app('log')->debug(sprintf('Jump to next week, so mutator is now: %s', $start->format('Y-m-d')));
+            Log::debug(sprintf('Jump to next week, so mutator is now: %s', $start->format('Y-m-d')));
         }
         // today is wednesday (3), expected is friday (5): add two days.
         // today is friday (5), expected is monday (1), subtract four days.
-        app('log')->debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         $dayDifference = $dayOfWeek - $start->dayOfWeekIso;
         $start->addDays($dayDifference);
-        app('log')->debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         while ($start <= $end) {
             if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
-                app('log')->debug('Date is in range of start+end, add to set.');
+                Log::debug('Date is in range of start+end, add to set.');
                 $return[] = clone $start;
             }
             ++$attempts;
             $start->addWeek();
-            app('log')->debug(sprintf('Mutator is now (end of loop): %s', $start->format('Y-m-d')));
+            Log::debug(sprintf('Mutator is now (end of loop): %s', $start->format('Y-m-d')));
         }
 
         return $return;

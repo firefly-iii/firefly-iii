@@ -28,8 +28,6 @@ use Closure;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
@@ -37,14 +35,11 @@ use Override;
 
 class IsAllowedGroupAction implements ValidationRule
 {
-    private array                                 $acceptedRoles;
-    private readonly UserGroupRepositoryInterface $repository;
+    // you need these roles to do anything with any endpoint.
+    private array                                 $acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
 
     public function __construct(private readonly string $className, private readonly string $methodName)
     {
-        // you need these roles to do anything with any endpoint.
-        $this->acceptedRoles = [UserRoleEnum::OWNER, UserRoleEnum::FULL];
-        $this->repository    = app(UserGroupRepositoryInterface::class);
     }
 
     /**
@@ -69,68 +64,16 @@ class IsAllowedGroupAction implements ValidationRule
                     break;
             }
         }
-        $this->validateUserGroup((int)$value, $fail);
+        $this->validateUserGroup();
     }
 
-    private function validateUserGroup(int $userGroupId, Closure $fail): void
+    private function validateUserGroup(): void
     {
         try {
             throw new FireflyException('Here we are');
         } catch (FireflyException $e) {
             Log::error($e->getTraceAsString());
         }
-
         exit('here we are');
-        Log::debug(sprintf('validateUserGroup: %s', static::class));
-        if (!auth()->check()) {
-            Log::debug('validateUserGroup: user is not logged in, return NULL.');
-            $fail('validation.no_auth_user_group')->translate();
-
-            return;
-        }
-
-        /** @var User $user */
-        $user        = auth()->user();
-        if (0 !== $userGroupId) {
-            Log::debug(sprintf('validateUserGroup: user group submitted, search for memberships in group #%d.', $userGroupId));
-        }
-        if (0 === $userGroupId) {
-            $userGroupId = $user->user_group_id;
-            Log::debug(sprintf('validateUserGroup: no user group submitted, use default group #%d.', $userGroupId));
-        }
-
-        $this->repository->setUser($user);
-        $memberships = $this->repository->getMembershipsFromGroupId($userGroupId);
-
-        if (0 === $memberships->count()) {
-            Log::debug(sprintf('validateUserGroup: user has no access to group #%d.', $userGroupId));
-            $fail('validation.no_access_user_group')->translate();
-
-            return;
-        }
-
-        // need to get the group from the membership:
-        $userGroup   = $this->repository->getById($userGroupId);
-        if (null === $userGroup) {
-            Log::debug(sprintf('validateUserGroup: group #%d does not exist.', $userGroupId));
-            $fail('validation.belongs_user_or_user_group')->translate();
-
-            return;
-        }
-        Log::debug(sprintf('validateUserGroup: validate access of user to group #%d ("%s").', $userGroupId, $userGroup->title));
-        Log::debug(sprintf('validateUserGroup: have %d roles to check.', count($this->acceptedRoles)), $this->acceptedRoles);
-
-        /** @var UserRoleEnum $role */
-        foreach ($this->acceptedRoles as $role) {
-            if ($user->hasRoleInGroupOrOwner($userGroup, $role)) {
-                Log::debug(sprintf('validateUserGroup: User has role "%s" in group #%d, return.', $role->value, $userGroupId));
-
-                return;
-            }
-            Log::debug(sprintf('validateUserGroup: User does NOT have role "%s" in group #%d, continue searching.', $role->value, $userGroupId));
-        }
-
-        Log::debug('validateUserGroup: User does NOT have enough rights to access endpoint.');
-        $fail('validation.belongs_user_or_user_group')->translate();
     }
 }

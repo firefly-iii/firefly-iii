@@ -57,7 +57,7 @@ class TransactionJournalMeta extends Model
 
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn ($value) => json_decode((string)$value, false), set: function ($value) {
+        return Attribute::make(get: fn ($value): mixed => json_decode((string)$value, false), set: function ($value): array {
             $data = json_encode($value);
 
             return ['data' => $data, 'hash' => hash('sha256', $data)];
@@ -67,7 +67,7 @@ class TransactionJournalMeta extends Model
     protected function transactionJournalId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 }

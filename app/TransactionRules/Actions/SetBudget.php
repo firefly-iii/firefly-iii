@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -49,7 +50,7 @@ class SetBudget implements ActionInterface
 
         $budget        = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
-            app('log')->debug(
+            Log::debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
                     $journal['transaction_journal_id'],
@@ -62,7 +63,7 @@ class SetBudget implements ActionInterface
         }
 
         if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
-            app('log')->debug(
+            Log::debug(
                 sprintf(
                     'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
                     $journal['transaction_journal_id'],
@@ -86,7 +87,7 @@ class SetBudget implements ActionInterface
             return false;
         }
 
-        app('log')->debug(
+        Log::debug(
             sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
         );
 

@@ -156,7 +156,7 @@ return [
         'RuleForm'      => RuleForm::class,
     ],
 
-    'asset_url'       => env('ASSET_URL', null),
+    'asset_url'       => env('ASSET_URL'),
 
     /*
     |--------------------------------------------------------------------------

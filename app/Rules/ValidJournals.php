@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -38,7 +39,7 @@ class ValidJournals implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        app('log')->debug('In ValidJournals::passes');
+        Log::debug('In ValidJournals::passes');
         if (!is_array($value)) {
             return;
         }
@@ -46,13 +47,13 @@ class ValidJournals implements ValidationRule
         foreach ($value as $journalId) {
             $count = TransactionJournal::where('id', $journalId)->where('user_id', $userId)->count();
             if (0 === $count) {
-                app('log')->debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
+                Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 
                 $fail('validation.invalid_selection')->translate();
 
                 return;
             }
         }
-        app('log')->debug('Return true!');
+        Log::debug('Return true!');
     }
 }

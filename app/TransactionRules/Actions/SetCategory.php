@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
@@ -47,7 +48,7 @@ class SetCategory implements ActionInterface
         $user            = User::find($journal['user_id']);
         $search          = $this->action->getValue($journal);
         if (null === $user) {
-            app('log')->error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
+            Log::error(sprintf('Journal has no valid user ID so action SetCategory("%s") cannot be applied', $search), $journal);
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
 
             return false;
@@ -58,7 +59,7 @@ class SetCategory implements ActionInterface
         $factory->setUser($user);
         $category        = $factory->findOrCreate(null, $search);
         if (null === $category) {
-            app('log')->debug(
+            Log::debug(
                 sprintf(
                     'RuleAction SetCategory could not set category of journal #%d to "%s" because no such category exists.',
                     $journal['transaction_journal_id'],
@@ -70,7 +71,7 @@ class SetCategory implements ActionInterface
             return false;
         }
 
-        app('log')->debug(
+        Log::debug(
             sprintf(
                 'RuleAction SetCategory set the category of journal #%d to category #%d ("%s").',
                 $journal['transaction_journal_id'],

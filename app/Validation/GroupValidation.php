@@ -24,10 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
-use Illuminate\Validation\Validator;
 
 /**
  * Trait GroupValidation.
@@ -89,7 +90,7 @@ trait GroupValidation
 
     protected function preventUpdateReconciled(Validator $validator, TransactionGroup $transactionGroup): void
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
 
         $count     = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
@@ -97,7 +98,7 @@ trait GroupValidation
             ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id')
         ;
         if (0 === $count) {
-            app('log')->debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
+            Log::debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
 
             return;
         }
@@ -123,7 +124,7 @@ trait GroupValidation
             }
         }
 
-        app('log')->debug(sprintf('Done with %s', __METHOD__));
+        Log::debug(sprintf('Done with %s', __METHOD__));
     }
 
     /**
@@ -135,7 +136,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        app('log')->debug('Now in GroupValidation::validateDescriptions()');
+        Log::debug('Now in GroupValidation::validateDescriptions()');
         $transactions      = $this->getTransactionsArray($validator);
         $validDescriptions = 0;
         foreach ($transactions as $transaction) {
@@ -158,7 +159,7 @@ trait GroupValidation
         if ($validator->errors()->count() > 0) {
             return;
         }
-        app('log')->debug('Now in validateGroupDescription()');
+        Log::debug('Now in validateGroupDescription()');
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
@@ -175,12 +176,12 @@ trait GroupValidation
      */
     protected function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
     {
-        app('log')->debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
+        Log::debug(sprintf('Now in GroupValidation::validateJournalIds(%d)', $transactionGroup->id));
         $transactions = $this->getTransactionsArray($validator);
 
         if (count($transactions) < 2) {
             // no need for validation.
-            app('log')->debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
+            Log::debug(sprintf('%d transaction(s) in submission, can skip this check.', count($transactions)));
 
             return;
         }
@@ -204,17 +205,17 @@ trait GroupValidation
         if (array_key_exists('transaction_journal_id', $transaction)) {
             $journalId = $transaction['transaction_journal_id'];
         }
-        app('log')->debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
+        Log::debug(sprintf('Now in validateJournalId(%d, %d)', $index, $journalId));
         if (0 === $journalId || '' === $journalId || '0' === $journalId) {
-            app('log')->debug('Submitted 0, will accept to be used in a new transaction.');
+            Log::debug('Submitted 0, will accept to be used in a new transaction.');
 
             return;
         }
         $journalId = (int) $journalId;
         $count     = $transactionGroup->transactionJournals()->where('transaction_journals.id', $journalId)->count();
         if (0 === $journalId || 0 === $count) {
-            app('log')->warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
-            app('log')->warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
+            Log::warning(sprintf('Transaction group #%d has %d journals with ID %d', $transactionGroup->id, $count, $journalId));
+            Log::warning('Invalid submission: Each split must have transaction_journal_id (either valid ID or 0).');
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string) trans('validation.need_id_in_edit'));
         }
     }

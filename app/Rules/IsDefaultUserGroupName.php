@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -42,7 +43,7 @@ class IsDefaultUserGroupName implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
+        Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));
 
         // are you owner of this group and the name is the same? fail.
         /** @var User $user */

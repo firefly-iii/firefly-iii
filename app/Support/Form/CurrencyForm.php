@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -135,13 +136,13 @@ class CurrencyForm
         $key             = 'amount_currency_id_'.$name;
         $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
 
-        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
         // find this currency in set of currencies:
         foreach ($currencies as $currency) {
             if ($currency->id === $sentCurrencyId) {
                 $primaryCurrency = $currency;
-                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
+                Log::debug(sprintf('default currency is now %s', $primaryCurrency->code));
 
                 break;
             }
@@ -153,9 +154,9 @@ class CurrencyForm
         }
 
         try {
-            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+            $html = view('form.'.$view, ['primaryCurrency' => $primaryCurrency, 'currencies' => $currencies, 'classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
 
             throw new FireflyException($html, 0, $e);
@@ -187,13 +188,13 @@ class CurrencyForm
         $key             = 'amount_currency_id_'.$name;
         $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
 
-        app('log')->debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
         // find this currency in set of currencies:
         foreach ($currencies as $currency) {
             if ($currency->id === $sentCurrencyId) {
                 $primaryCurrency = $currency;
-                app('log')->debug(sprintf('default currency is now %s', $primaryCurrency->code));
+                Log::debug(sprintf('default currency is now %s', $primaryCurrency->code));
 
                 break;
             }
@@ -205,9 +206,9 @@ class CurrencyForm
         }
 
         try {
-            $html = view('form.'.$view, compact('primaryCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+            $html = view('form.'.$view, ['primaryCurrency' => $primaryCurrency, 'currencies' => $currencies, 'classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
 
             throw new FireflyException($html, 0, $e);

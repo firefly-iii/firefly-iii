@@ -120,7 +120,7 @@ class TransactionSummarizer
             }
 
             // then process foreign amount, if it exists.
-            if (0 !== $foreignCurrencyId && true === $includeForeign) {
+            if (0 !== $foreignCurrencyId && $includeForeign) {
                 $amount = (string)($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',

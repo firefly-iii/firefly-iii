@@ -307,7 +307,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $autoBudget     = $this->getAutoBudget($budget);
 
         // first things first: delete when no longer required:
-        $autoBudgetType = array_key_exists('auto_budget_type', $data) ? $data['auto_budget_type'] : null;
+        $autoBudgetType = $data['auto_budget_type'] ?? null;
 
         if (0 === $autoBudgetType && $autoBudget instanceof AutoBudget) {
             // delete!
@@ -534,7 +534,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
+            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null !== $notes ? $notes->text : '';

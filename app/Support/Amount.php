@@ -174,7 +174,7 @@ class Amount
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
         $result  = (string)$fmt->format((float)$rounded); // intentional float
 
-        if (true === $coloured) {
+        if ($coloured) {
             if (1 === bccomp($rounded, '0')) {
                 return sprintf('<span class="text-success money-positive">%s</span>', $result);
             }
@@ -355,7 +355,7 @@ class Amount
 
     private function getLocaleField(array $info, string $field): bool
     {
-        return (is_bool($info[$field]) && true === $info[$field])
+        return (is_bool($info[$field]) && $info[$field])
                || (is_int($info[$field]) && 1 === $info[$field]);
     }
 

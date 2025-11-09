@@ -65,11 +65,7 @@ class ParseDateString
             return false;
         }
         // no x'es
-        if (!str_contains($date, 'xx') && !str_contains($date, 'xxxx')) {
-            return false;
-        }
-
-        return true;
+        return !(!str_contains($date, 'xx') && !str_contains($date, 'xxxx'));
     }
 
     /**

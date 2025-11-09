@@ -60,7 +60,7 @@ class RecurringEnrichment implements EnrichmentInterface
     private Collection $collection;
     //    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
-    private bool  $convertToPrimary;
+    private readonly bool  $convertToPrimary;
     private array $currencies                                   = [];
     private array                        $currencyIds           = [];
     private array                        $destinationAccountIds = [];
@@ -171,7 +171,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (Recurrence $item) {
+        $this->collection = $this->collection->map(function (Recurrence $item): Recurrence {
             $id         = (int)$item->id;
             $meta       = [
                 'notes'        => $this->notes[$id] ?? null,
@@ -341,7 +341,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                     = $this->collection->filter(fn (Recurrence $item) => (int)$item->id === (int)$repetition->recurrence_id)->first();
+            $recurrence                     = $this->collection->filter(fn (Recurrence $item): bool => (int)$item->id === (int)$repetition->recurrence_id)->first();
             $fromDate                       = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $id                             = (int)$repetition->recurrence_id;
             $repId                          = (int)$repetition->id;
@@ -549,11 +549,11 @@ class RecurringEnrichment implements EnrichmentInterface
             $pcAmount                                       = null;
             $pcForeignAmount                                = null;
             // set the same amount in the primary currency, if both are the same anyway.
-            if (true === $this->convertToPrimary && $currencyId === (int)$this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $currencyId === (int)$this->primaryCurrency->id) {
                 $pcAmount = $transaction['amount'];
             }
             // convert the amount to the primary currency, if it is not the same.
-            if (true === $this->convertToPrimary && $currencyId !== (int)$this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $currencyId !== (int)$this->primaryCurrency->id) {
                 $pcAmount = $converter->convert($this->currencies[$currencyId], $this->primaryCurrency, today(), $transaction['amount']);
             }
             if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {

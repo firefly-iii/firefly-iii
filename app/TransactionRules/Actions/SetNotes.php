@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
@@ -54,7 +55,7 @@ class SetNotes implements ActionInterface
         $dbNote->text = $newNotes;
         $dbNote->save();
 
-        app('log')->debug(
+        Log::debug(
             sprintf(
                 'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
                 $journal['transaction_journal_id'],

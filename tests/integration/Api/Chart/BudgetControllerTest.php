@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Chart;
 
+use FireflyIII\User;
 use Override;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
@@ -37,14 +38,14 @@ use Tests\integration\TestCase;
 final class BudgetControllerTest extends TestCase
 {
     use RefreshDatabase;
-    private $user;
+    private ?User $user = null;
 
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        if (!isset($this->user)) {
+        if (!$this->user instanceof User) {
             $this->user = $this->createAuthenticatedUser();
         }
         $this->actingAs($this->user);

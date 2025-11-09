@@ -54,8 +54,6 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     private array                        $notes           = [];
     private readonly TransactionCurrency $primaryCurrency;
     private array                        $tags            = []; // @phpstan-ignore-line
-    private User                         $user;
-    private UserGroup                    $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -98,13 +96,10 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user      = $user;
-        $this->userGroup = $user->userGroup;
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
     }
 
     private function appendCollectedData(): void
@@ -116,12 +111,12 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $attachmentCount  = $this->attachmentCount;
         $primaryCurrency  = $this->primaryCurrency;
 
-        $this->collection = $this->collection->map(function (array $item) use ($primaryCurrency, $notes, $tags, $metaData, $locations, $attachmentCount) {
+        $this->collection = $this->collection->map(function (array $item) use ($primaryCurrency, $notes, $tags, $metaData, $locations, $attachmentCount): array {
             foreach ($item['transactions'] as $index => $transaction) {
                 $journalId                                        = (int)$transaction['transaction_journal_id'];
 
                 // attach notes if they exist:
-                $item['transactions'][$index]['notes']            = array_key_exists($journalId, $notes) ? $notes[$journalId] : null;
+                $item['transactions'][$index]['notes']            = $notes[$journalId] ?? null;
 
                 // attach tags if they exist:
                 $item['transactions'][$index]['tags']             = array_key_exists($journalId, $tags) ? $tags[$journalId] : [];

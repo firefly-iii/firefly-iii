@@ -66,19 +66,19 @@ class OperatorQuerySearch implements SearchInterface
     private readonly CategoryRepositoryInterface $categoryRepository;
     private GroupCollectorInterface              $collector;
     private readonly CurrencyRepositoryInterface $currencyRepository;
-    private array                                $excludeTags;
-    private array                                $includeAnyTags;
+    private array                                $excludeTags = [];
+    private array                                $includeAnyTags = [];
     // added to fix #8632
-    private array                           $includeTags;
-    private array                           $invalidOperators;
-    private int                             $limit;
+    private array                           $includeTags = [];
+    private array                           $invalidOperators = [];
+    private int                             $limit = 25;
     private readonly Collection             $operators;
-    private int                             $page;
-    private array                           $prohibitedWords;
+    private int                             $page = 1;
+    private array                           $prohibitedWords = [];
     private readonly float                  $startTime;
     private readonly TagRepositoryInterface $tagRepository;
     private readonly array                  $validOperators;
-    private array                           $words;
+    private array                           $words = [];
 
     /**
      * OperatorQuerySearch constructor.
@@ -87,14 +87,6 @@ class OperatorQuerySearch implements SearchInterface
     {
         Log::debug('Constructed OperatorQuerySearch');
         $this->operators          = new Collection();
-        $this->page               = 1;
-        $this->words              = [];
-        $this->excludeTags        = [];
-        $this->includeAnyTags     = [];
-        $this->includeTags        = [];
-        $this->prohibitedWords    = [];
-        $this->invalidOperators   = [];
-        $this->limit              = 25;
         $this->validOperators     = array_keys(config('search.operators'));
         $this->startTime          = microtime(true);
         $this->accountRepository  = app(AccountRepositoryInterface::class);
@@ -293,15 +285,13 @@ class OperatorQuerySearch implements SearchInterface
 
         // must be valid operator:
         $inArray    = in_array($operator, $this->validOperators, true);
-        if ($inArray) {
-            if ($this->updateCollector($operator, $value, $prohibited)) {
-                $this->operators->push([
-                    'type'       => self::getRootOperator($operator),
-                    'value'      => $value,
-                    'prohibited' => $prohibited,
-                ]);
-                Log::debug(sprintf('Added operator type "%s"', $operator));
-            }
+        if ($inArray && $this->updateCollector($operator, $value, $prohibited)) {
+            $this->operators->push([
+                'type'       => self::getRootOperator($operator),
+                'value'      => $value,
+                'prohibited' => $prohibited,
+            ]);
+            Log::debug(sprintf('Added operator type "%s"', $operator));
         }
         if (!$inArray) {
             Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
@@ -495,14 +485,14 @@ class OperatorQuerySearch implements SearchInterface
 
             return;
         }
-        if (0 === $accounts->count() && true === $prohibited) {
+        if (0 === $accounts->count() && $prohibited) {
             Log::debug('Found zero accounts, but the search is negated, so effectively we ignore the search parameter.');
 
             return;
         }
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered        = $accounts->filter(
-            static fn (Account $account) => $stringMethod(strtolower($account->name), strtolower($value))
+            static fn (Account $account): bool => $stringMethod(strtolower($account->name), strtolower($value))
         );
 
         if (0 === $filtered->count()) {
@@ -530,7 +520,7 @@ class OperatorQuerySearch implements SearchInterface
         // search direction (default): for source accounts
         $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::REVENUE->value];
         $collectorMethod = 'setSourceAccounts';
-        if (true === $prohibited) {
+        if ($prohibited) {
             $collectorMethod = 'excludeSourceAccounts';
         }
 
@@ -539,7 +529,7 @@ class OperatorQuerySearch implements SearchInterface
             // destination can be
             $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value];
             $collectorMethod = 'setDestinationAccounts';
-            if (true === $prohibited) {
+            if ($prohibited) {
                 $collectorMethod = 'excludeDestinationAccounts';
             }
         }
@@ -548,7 +538,7 @@ class OperatorQuerySearch implements SearchInterface
         if (SearchDirection::BOTH === $searchDirection) {
             $searchTypes     = [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value];
             $collectorMethod = 'setAccounts';
-            if (true === $prohibited) {
+            if ($prohibited) {
                 $collectorMethod = 'excludeAccounts';
             }
         }
@@ -580,7 +570,7 @@ class OperatorQuerySearch implements SearchInterface
         // if found, do filter
         Log::debug(sprintf('Found %d accounts, will filter.', $accounts->count()));
         $filtered        = $accounts->filter(
-            static function (Account $account) use ($value, $stringMethod) {
+            static function (Account $account) use ($value, $stringMethod): bool {
                 // either IBAN or account number
                 $ibanMatch      = $stringMethod(strtolower((string)$account->iban), strtolower($value));
                 $accountNrMatch = false;

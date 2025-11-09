@@ -42,8 +42,6 @@ bcscale(12);
 
 if (!function_exists('envNonEmpty')) {
     /**
-     * @param string               $key
-     * @param string|int|bool|null $default
      *
      * @return mixed|null
      */
@@ -59,12 +57,6 @@ if (!function_exists('envNonEmpty')) {
 }
 
 if (!function_exists('stringIsEqual')) {
-    /**
-     * @param string $left
-     * @param string $right
-     *
-     * @return bool
-     */
     function stringIsEqual(string $left, string $right): bool
     {
         return $left === $right;

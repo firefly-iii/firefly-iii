@@ -31,12 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
  */
 class ChartData
 {
-    private array $series;
-
-    public function __construct()
-    {
-        $this->series = [];
-    }
+    private array $series = [];
 
     /**
      * @throws FireflyException

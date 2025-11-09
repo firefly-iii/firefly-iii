@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
@@ -47,7 +48,7 @@ class SetAmount implements ActionInterface
         // not on slpit transactions
         $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
 
             return false;
@@ -56,7 +57,7 @@ class SetAmount implements ActionInterface
         $value      = $this->action->getValue($journal);
 
         if (!is_numeric($value) || 0 === bccomp($value, '0')) {
-            app('log')->debug(sprintf('RuleAction SetAmount, amount "%s" is not a number or is zero, will not continue.', $value));
+            Log::debug(sprintf('RuleAction SetAmount, amount "%s" is not a number or is zero, will not continue.', $value));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_invalid_amount', ['amount' => $value])));
 
             return false;

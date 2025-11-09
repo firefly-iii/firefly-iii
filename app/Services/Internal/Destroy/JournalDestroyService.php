@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -38,18 +39,18 @@ class JournalDestroyService
 {
     public function destroy(TransactionJournal $journal): void
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
 
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
-            app('log')->debug(sprintf('Will now delete transaction #%d', $transaction->id));
+            Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
             $transaction->delete();
         }
 
         // also delete journal_meta entries.
         /** @var TransactionJournalMeta $meta */
         foreach ($journal->transactionJournalMeta()->get() as $meta) {
-            app('log')->debug(sprintf('Will now delete meta-entry #%d', $meta->id));
+            Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
             $meta->delete();
         }
 

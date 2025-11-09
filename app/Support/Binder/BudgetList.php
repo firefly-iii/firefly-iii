@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Budget;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -47,10 +48,10 @@ class BudgetList implements BinderInterface
                 ;
             }
 
-            $list       = array_unique(array_map('\intval', explode(',', $value)));
+            $list       = array_unique(array_map(\intval(...), explode(',', $value)));
 
             if (0 === count($list)) { // @phpstan-ignore-line
-                app('log')->warning('Budget list count is zero, return 404.');
+                Log::warning('Budget list count is zero, return 404.');
 
                 throw new NotFoundHttpException();
             }
@@ -71,7 +72,7 @@ class BudgetList implements BinderInterface
                 return $collection;
             }
         }
-        app('log')->warning('BudgetList fallback to 404.');
+        Log::warning('BudgetList fallback to 404.');
 
         throw new NotFoundHttpException();
     }

@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountBalanceGrouped
 {
-    private array                          $accountIds;
+    private array                          $accountIds = [];
     private string                         $carbonFormat;
     private readonly ExchangeRateConverter $converter;
     private array                          $currencies = [];
@@ -52,7 +52,6 @@ class AccountBalanceGrouped
 
     public function __construct()
     {
-        $this->accountIds = [];
         $this->converter  = app(ExchangeRateConverter::class);
     }
 
@@ -258,7 +257,7 @@ class AccountBalanceGrouped
         try {
             $rate = $this->converter->getCurrencyRate($currency, $this->primary, $date);
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             $rate = '1';
         }
 

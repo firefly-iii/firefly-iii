@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // blade extension
-        Blade::directive('activeXRoutePartial', function (string $route) {
+        Blade::directive('activeXRoutePartial', function (string $route): string {
             $name = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
 
             return '';
         });
-        Blade::if('partialroute', function (string $route, string $firstParam = '') {
+        Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
             $name       = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
@@ -79,11 +79,7 @@ class AppServiceProvider extends ServiceProvider
             $params     = Route::getCurrentRoute()->parameters();
             $params ??= [];
             $objectType = $params['objectType'] ?? '';
-            if ($objectType === $firstParam && str_contains($name, $route)) {
-                return true;
-            }
-
-            return false;
+            return $objectType === $firstParam && str_contains($name, $route);
         });
     }
 

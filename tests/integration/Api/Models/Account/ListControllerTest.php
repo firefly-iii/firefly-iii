@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Models\Account;
 
+use Override;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Factory\AttachmentFactory;
 use FireflyIII\Models\Account;
@@ -43,6 +44,7 @@ final class ListControllerTest extends TestCase
     private User $user;
     private Account $account;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

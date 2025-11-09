@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -50,7 +51,7 @@ class AccountList implements BinderInterface
                 ;
             }
             if ('allAssetAccounts' !== $value) {
-                $incoming   = array_map('\intval', explode(',', $value));
+                $incoming   = array_map(\intval(...), explode(',', $value));
                 $list       = array_merge(array_unique($incoming), [0]);
 
                 /** @var Collection $collection */
@@ -66,7 +67,7 @@ class AccountList implements BinderInterface
                 return $collection;
             }
         }
-        app('log')->error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
+        Log::error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
 
         throw new NotFoundHttpException();
     }

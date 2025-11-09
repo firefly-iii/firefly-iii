@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
@@ -54,13 +55,13 @@ class IsValidDateRange implements ValidationRule
             $left  = Carbon::parse($value);
             $right = Carbon::parse($otherValue);
         } catch (InvalidDateException $e) { // @phpstan-ignore-line
-            app('log')->error(sprintf('"%s" or "%s" is not a valid date or time: %s', $value, $otherValue, $e->getMessage()));
+            Log::error(sprintf('"%s" or "%s" is not a valid date or time: %s', $value, $otherValue, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();
 
             return;
         } catch (InvalidFormatException $e) {
-            app('log')->error(sprintf('"%s" or "%s" is of an invalid format: %s', $value, $otherValue, $e->getMessage()));
+            Log::error(sprintf('"%s" or "%s" is of an invalid format: %s', $value, $otherValue, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();
 

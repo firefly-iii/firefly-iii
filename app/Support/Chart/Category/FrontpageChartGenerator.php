@@ -45,7 +45,7 @@ class FrontpageChartGenerator
     public bool                           $convertToPrimary = false;
     public TransactionCurrency            $primaryCurrency;
     private AccountRepositoryInterface    $accountRepos;
-    private array                         $currencies;
+    private array                         $currencies = [];
     private NoCategoryRepositoryInterface $noCatRepos;
     private OperationsRepositoryInterface $opsRepos;
     private CategoryRepositoryInterface   $repository;
@@ -55,7 +55,6 @@ class FrontpageChartGenerator
      */
     public function __construct(private Carbon $start, private Carbon $end)
     {
-        $this->currencies   = [];
         $this->repository   = app(CategoryRepositoryInterface::class);
         $this->accountRepos = app(AccountRepositoryInterface::class);
         $this->opsRepos     = app(OperationsRepositoryInterface::class);

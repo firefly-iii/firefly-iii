@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
@@ -38,14 +39,14 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
-        app('log')->debug(sprintf('Now in %s', __METHOD__));
+        Log::debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged-in users
         $check     = auth()->check();
         if (!$check) {
             return false;
         }
         if (!property_exists($this, 'acceptedRoles')) { // @phpstan-ignore-line
-            app('log')->debug('Request class has no acceptedRoles array');
+            Log::debug('Request class has no acceptedRoles array');
 
             return true; // check for false already took place.
         }
@@ -54,7 +55,7 @@ trait ChecksLogin
         $user      = auth()->user();
         $userGroup = $this->getUserGroup();
         if (null === $userGroup) {
-            app('log')->error('User has no valid user group submitted or otherwise.');
+            Log::error('User has no valid user group submitted or otherwise.');
 
             return false;
         }
@@ -80,24 +81,24 @@ trait ChecksLogin
     {
         /** @var User $user */
         $user      = auth()->user();
-        app('log')->debug('Now in getUserGroup()');
+        Log::debug('Now in getUserGroup()');
 
         /** @var null|UserGroup $userGroup */
         $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
-            app('log')->debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
+            Log::debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
             $userGroupId = (int)$this->get('user_group_id');
             if (0 === $userGroupId) {
-                app('log')->debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
+                Log::debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
                 $userGroupId = (int)$user->user_group_id;
             }
             $userGroup   = UserGroup::find($userGroupId);
             if (null === $userGroup) {
-                app('log')->error(sprintf('Request class has user_group_id (#%d), but group does not exist.', $userGroupId));
+                Log::error(sprintf('Request class has user_group_id (#%d), but group does not exist.', $userGroupId));
 
                 return null;
             }
-            app('log')->debug('Request class has valid user_group_id.');
+            Log::debug('Request class has valid user_group_id.');
         }
 
         return $userGroup;

@@ -54,7 +54,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      */
     public function budgetedPerDay(Budget $budget): string
     {
-        app('log')->debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
+        Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
@@ -64,13 +64,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $perDay = bcdiv((string) $amount, (string) $diff);
             $total  = bcadd($total, $perDay);
             ++$count;
-            app('log')->debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
+            Log::debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg   = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string) $count);
         }
-        app('log')->debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
+        Log::debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
         return $avg;
     }

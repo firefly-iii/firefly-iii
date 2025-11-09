@@ -23,13 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Facade;
 
 class Preferences extends Facade
 {
     public function __construct()
     {
-        app('log')->warning('Hi there');
+        Log::warning('Hi there');
     }
 
     /**
