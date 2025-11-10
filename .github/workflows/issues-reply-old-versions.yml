@@ -31,6 +31,15 @@ jobs:
           excludes: prerelease, draft
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
+          # sure this can be done in a single step but still.
+          FFNOV="${{ steps.ff3version.outputs.release }}"
+          FFNOV="${FFNOV:1}"
+
+          DDNOV="${{ steps.importerversion.outputs.release }}"
+          DDNOV="${DDNOV:1}"
+
+          echo "Version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
+          
           ISSUE_BODY=$(gh issue view $NUMBER --json body)
           if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
 
