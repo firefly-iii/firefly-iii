@@ -41,7 +41,7 @@ jobs:
           echo "Version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
           
           ISSUE_BODY=$(gh issue view $NUMBER --json body)
-          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
 
             MESSAGE="Hi there!
 
