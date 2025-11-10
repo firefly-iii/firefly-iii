@@ -1,0 +1,21 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-line-chart"></i> Yearly Asset Growth</h3>
+                </div>
+                <div class="box-body">
+                    <p>Net worth trends and asset growth from {{ start.format('d M Y') }} to {{ end.format('d M Y') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

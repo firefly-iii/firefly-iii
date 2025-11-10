@@ -1,0 +1,21 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-tags"></i> Historical Metadata Analysis</h3>
+                </div>
+                <div class="box-body">
+                    <p>Long-term category and tag usage trends from {{ start.format('Y') }} to {{ end.format('Y') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

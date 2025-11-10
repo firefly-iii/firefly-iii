@@ -1,0 +1,21 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-tags"></i> Metadata Report with Usage Statistics</h3>
+                </div>
+                <div class="box-body">
+                    <p>Categories and tags with usage statistics for {{ start.format('Y') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

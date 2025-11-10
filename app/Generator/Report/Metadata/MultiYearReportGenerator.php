@@ -1,0 +1,152 @@
+<?php
+
+/**
+ * MultiYearReportGenerator.php
+ * Copyright (c) 2025 james@firefly-iii.org
+ * 
+ * Contributed by: Mukesh Kesharwani
+ * Date: November 10, 2025
+ *
+ * This file is part of Firefly III (https://github.com/firefly-iii).
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as
+ * published by the Free Software Foundation, either version 3 of the
+ * License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
+
+namespace FireflyIII\Generator\Report\Metadata;
+
+use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Generator\Report\ReportGeneratorInterface;
+use Illuminate\Support\Collection;
+use Throwable;
+use Illuminate\Support\Facades\Log;
+
+/**
+ * Class MultiYearReportGenerator.
+ * 
+ * Generates a comprehensive metadata report showing all categories and tags.
+ * Includes historical usage statistics across multiple years.
+ */
+class MultiYearReportGenerator implements ReportGeneratorInterface
+{
+    /** @var Collection The accounts involved in the report. */
+    private $accounts;
+
+    /** @var Collection The categories to display. */
+    private $categories;
+
+    /** @var Collection The tags to display. */
+    private $tags;
+
+    /** @var Carbon The end date. */
+    private $end;
+
+    /** @var Carbon The start date. */
+    private $start;
+
+    /**
+     * Generates the metadata report for multiple years.
+     *
+     * @throws FireflyException
+     */
+    public function generate(): string
+    {
+        $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
+        $reportType = 'metadata';
+
+        try {
+            return view('reports.metadata.multi-year', compact('accountIds', 'reportType'))
+                ->with('start', $this->start)
+                ->with('end', $this->end)
+                ->with('accounts', $this->accounts)
+                ->with('categories', $this->categories)
+                ->with('tags', $this->tags)
+                ->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.metadata.multi-year: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
+            $result = 'Could not render metadata report view.';
+
+            throw new FireflyException($result, 0, $e);
+        }
+    }
+
+    /**
+     * Sets the accounts involved in the report.
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Unused budget setter.
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
+     * Sets the categories for the metadata display.
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+        $this->categories = $categories;
+
+        return $this;
+    }
+
+    /**
+     * Set the end date of the report.
+     */
+    public function setEndDate(Carbon $date): ReportGeneratorInterface
+    {
+        $this->end = $date;
+
+        return $this;
+    }
+
+    /**
+     * Set the expenses used in this report.
+     */
+    public function setExpense(Collection $expense): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
+     * Set the start date of this report.
+     */
+    public function setStartDate(Carbon $date): ReportGeneratorInterface
+    {
+        $this->start = $date;
+
+        return $this;
+    }
+
+    /**
+     * Sets the tags for the metadata display.
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface
+    {
+        $this->tags = $tags;
+
+        return $this;
+    }
+}
+

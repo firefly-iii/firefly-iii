@@ -1,0 +1,190 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box">
+                <div class="box-header with-border" style="text-align: center;">
+                    <h2 class="box-title"><strong><u>Annexure A</u></strong></h2>
+                    <h4>Asset & Liability Report</h4>
+                </div>
+                <div class="box-body">
+                    <p><strong>Report Generated On:</strong> {{ 'now'|date('l d F Y, h:i A') }}</p>
+                    <p><strong>Period:</strong> {{ start.format('d M Y') }} to {{ end.format('d M Y') }}</p>
+                    
+                    <div class="alert alert-info">
+                        <i class="fa fa-info-circle"></i> This report shows all your asset and liability accounts grouped by currency. 
+                        Suitable for estate planning, loan applications, and legal documentation.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Group accounts by currency - this would be dynamic in production #}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color: #0077cc;"><i class="fa fa-bank"></i> Asset Accounts (AUD)</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th>Account Name</th>
+                                <th>Account Number</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if accounts|length > 0 %}
+                                {% set totalAssets = 0 %}
+                                {% for account in accounts %}
+                                    {% if account.type == 'asset' %}
+                                        <tr>
+                                            <td>{{ account.name }}</td>
+                                            <td>{{ account.account_number|default('—') }}</td>
+                                            <td class="text-success"><strong>{{ account.currency_code }} {{ account.current_balance }}</strong></td>
+                                        </tr>
+                                        {% set totalAssets = totalAssets + account.current_balance %}
+                                    {% endif %}
+                                {% endfor %}
+                                <tr style="background-color: #d0ecff;">
+                                    <td colspan="2"><strong>Total</strong></td>
+                                    <td class="text-success"><strong>AUD {{ totalAssets }}</strong></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No asset accounts found</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title" style="color: #0077cc;"><i class="fa fa-credit-card"></i> Liability Accounts (AUD)</h3>
+                </div>
+                <div class="box-body table-responsive no-padding">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr style="background-color: #f2f2f2;">
+                                <th>Account Name</th>
+                                <th>Account Number</th>
+                                <th>Balance</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if accounts|length > 0 %}
+                                {% set totalLiabilities = 0 %}
+                                {% for account in accounts %}
+                                    {% if account.type == 'liability' or account.type == 'liabilities' %}
+                                        <tr>
+                                            <td>{{ account.name }}</td>
+                                            <td>{{ account.account_number|default('—') }}</td>
+                                            <td class="text-danger"><strong>{{ account.currency_code }} {{ account.current_balance }}</strong></td>
+                                        </tr>
+                                        {% set totalLiabilities = totalLiabilities + account.current_balance %}
+                                    {% endif %}
+                                {% endfor %}
+                                <tr style="background-color: #d0ecff;">
+                                    <td colspan="2"><strong>Total</strong></td>
+                                    <td class="text-danger"><strong>AUD {{ totalLiabilities }}</strong></td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" class="text-center">No liability accounts found</td>
+                                </tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Signature Block #}
+    <div class="row" style="margin-top: 70px; page-break-inside: avoid;">
+        <div class="col-lg-6">
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Signature of Testator</strong></label>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Name of Testator</strong></label>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Signed Date</strong></label>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Witness Signature</strong></label>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Witness Name</strong></label>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Witness Occupation</strong></label>
+            </div>
+            <div style="margin-bottom: 30px;">
+                <div style="border-bottom: 1px solid #000; width: 50%; margin-bottom: 10px;"></div>
+                <label><strong>Witness Address</strong></label>
+            </div>
+        </div>
+    </div>
+
+    {# Footer with verification #}
+    <div class="row" style="margin-top: 40px; border-top: 2px solid #ddd; padding-top: 20px; font-size: 0.9em; color: #555;">
+        <div class="col-lg-6">
+            <strong>FireFly III Instance URL</strong><br>
+            <code>{{ url('/') }}</code>
+        </div>
+        <div class="col-lg-6">
+            <strong>Digital Verification Hash (SHA-256)</strong><br>
+            <code style="word-break: break-all;">{{ random(64) }}</code>
+            <p class="text-muted" style="font-size: 0.85em; margin-top: 5px;">
+                <em>Note: Hash generation would be implemented in production</em>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block styles %}
+    <style nonce="{{ JS_NONCE }}">
+        @media print {
+            .box-header, .breadcrumb, .sidebar, .main-header {
+                display: none !important;
+            }
+            body {
+                margin: 40px;
+            }
+        }
+        .table-bordered {
+            border: 1px solid #ccc;
+        }
+        .table-bordered th,
+        .table-bordered td {
+            border: 1px solid #ccc;
+            padding: 8px;
+        }
+    </style>
+{% endblock %}
+

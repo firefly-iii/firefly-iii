@@ -1,0 +1,21 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-area-chart"></i> Multi-Year Asset Growth</h3>
+                </div>
+                <div class="box-body">
+                    <p>Long-term asset growth and wealth accumulation from {{ start.format('d M Y') }} to {{ end.format('d M Y') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

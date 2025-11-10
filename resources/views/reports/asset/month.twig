@@ -1,0 +1,31 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-success">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-pie-chart"></i> Asset Report & Net Worth Tracking</h3>
+                </div>
+                <div class="box-body">
+                    <p class="lead">Track your net worth, asset allocation, and account performance from {{ start.format('d M Y') }} to {{ end.format('d M Y') }}.</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h4>Net Worth Overview</h4>
+                            <canvas id="networth-chart" height="200"></canvas>
+                        </div>
+                        <div class="col-md-6">
+                            <h4>Asset Distribution</h4>
+                            <canvas id="asset-dist-chart" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

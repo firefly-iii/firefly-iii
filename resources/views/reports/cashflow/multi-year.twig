@@ -1,0 +1,21 @@
+{% extends './layout/default' %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, accountIds, start, end) }}
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-exchange"></i> Multi-Year Cash Flow Analysis</h3>
+                </div>
+                <div class="box-body">
+                    <p>Long-term cash flow trends from {{ start.format('d M Y') }} to {{ end.format('d M Y') }}.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
