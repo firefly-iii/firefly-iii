@@ -331,7 +331,7 @@ trait PeriodOverview
         }
 
         return $this->statistics->filter(
-            fn (PeriodStatistic $statistic) => $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type
+            fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type
         );
     }
 
@@ -344,7 +344,7 @@ trait PeriodOverview
         }
 
         return $this->statistics->filter(
-            fn (PeriodStatistic $statistic) => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
+            fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
         );
     }
 
@@ -571,10 +571,6 @@ trait PeriodOverview
     {
         $result = [];
 
-        /**
-         * @var int   $index
-         * @var array $item
-         */
         foreach ($this->transactions as $item) {
             $date = Carbon::parse($item['date']);
             $fits = $item['type'] === $type->value && $date >= $start && $date <= $end;
@@ -595,10 +591,6 @@ trait PeriodOverview
     {
         $result = [];
 
-        /**
-         * @var int   $index
-         * @var array $item
-         */
         foreach ($this->transactions as $item) {
             $date = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {

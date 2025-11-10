@@ -68,7 +68,7 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         if (true !== session('categories.create.fromStore')) {
             $this->rememberPreviousUrl('categories.create.url');
@@ -76,7 +76,7 @@ class CreateController extends Controller
         $request->session()->forget('categories.create.fromStore');
         $subTitle = (string) trans('firefly.create_new_category');
 
-        return view('categories.create', compact('subTitle'));
+        return view('categories.create', ['subTitle' => $subTitle]);
     }
 
     /**

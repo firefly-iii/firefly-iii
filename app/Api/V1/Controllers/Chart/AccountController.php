@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -59,7 +60,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->validateUserGroup($request);
                 $this->repository->setUserGroup($this->userGroup);

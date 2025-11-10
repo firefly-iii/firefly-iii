@@ -89,7 +89,7 @@ class TagFactory
 
         /** @var null|Tag $tag */
         $tag       = Tag::create($array);
-        if (null !== $tag && null !== $latitude && null !== $longitude) {
+        if (!in_array(null, [$tag, $latitude, $longitude], true)) {
             // create location object.
             $location             = new Location();
             $location->latitude   = $latitude;

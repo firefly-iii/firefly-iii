@@ -90,11 +90,11 @@ class ActionExpression
     {
         $this->expressionLanguage = app(ExpressionLanguage::class);
 
-        $this->isExpression       = self::isExpression($this->expr);
+        $this->isExpression       = $this->isExpression($this->expr);
         $this->validationError    = $this->validate();
     }
 
-    private static function isExpression(string $expr): bool
+    private function isExpression(string $expr): bool
     {
         return str_starts_with($expr, '=') && strlen($expr) > 1;
     }

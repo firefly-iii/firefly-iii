@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Search\OperatorQuerySearch;
@@ -56,8 +57,8 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    app('log')->error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
-                    app('log')->error($e->getTraceAsString());
+                    Log::error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
+                    Log::error($e->getTraceAsString());
 
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }
@@ -101,8 +102,8 @@ trait RuleManagement
                         ]
                     )->render();
                 } catch (Throwable $e) {
-                    app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
-                    app('log')->error($e->getTraceAsString());
+                    Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                    Log::error($e->getTraceAsString());
 
                     throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
                 }
@@ -147,8 +148,8 @@ trait RuleManagement
                     ]
                 )->render();
             } catch (Throwable $e) {
-                app('log')->debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
-                app('log')->error($e->getTraceAsString());
+                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
 
                 throw new FireflyException(sprintf('Could not render: %s', $e->getMessage()), 0, $e);
             }

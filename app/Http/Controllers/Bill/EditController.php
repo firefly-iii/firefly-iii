@@ -64,10 +64,8 @@ class EditController extends Controller
 
     /**
      * Edit a bill.
-     *
-     * @return Factory|View
      */
-    public function edit(Request $request, Bill $bill)
+    public function edit(Request $request, Bill $bill): Factory|View
     {
         $periods          = [];
 
@@ -104,7 +102,7 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', compact('subTitle', 'periods', 'rules', 'bill', 'preFilled'));
+        return view('bills.edit', ['subTitle' => $subTitle, 'periods' => $periods, 'rules' => $rules, 'bill' => $bill, 'preFilled' => $preFilled]);
     }
 
     /**

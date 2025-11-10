@@ -37,8 +37,8 @@ trait OBValidation
     protected function validateOBDestination(array $array): bool
     {
         $result      = null;
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountId   = $array['id'] ?? null;
+        $accountName = $array['name'] ?? null;
         Log::debug('Now in validateOBDestination', $array);
 
         // source can be any of the following types.
@@ -83,8 +83,8 @@ trait OBValidation
      */
     protected function validateOBSource(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
+        $accountId   = $array['id'] ?? null;
+        $accountName = $array['name'] ?? null;
         Log::debug('Now in validateOBSource', $array);
         $result      = null;
         // source can be any of the following types.

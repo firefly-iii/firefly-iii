@@ -65,22 +65,20 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(RuleGroup $ruleGroup)
+    public function delete(RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session
         $this->rememberPreviousUrl('rule-groups.delete.url');
 
-        return view('rules.rule-group.delete', compact('ruleGroup', 'subTitle'));
+        return view('rules.rule-group.delete', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 
     /**
      * Actually destroy the rule group.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(Request $request, RuleGroup $ruleGroup)
+    public function destroy(Request $request, RuleGroup $ruleGroup): Redirector|RedirectResponse
     {
         $title  = $ruleGroup->title;
 

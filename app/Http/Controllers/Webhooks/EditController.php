@@ -61,7 +61,7 @@ class EditController extends Controller
      *
      * @return Application|Factory|View
      */
-    public function index(Webhook $webhook)
+    public function index(Webhook $webhook): Factory|View
     {
         if (false === config('firefly.allow_webhooks')) {
             Log::channel('audit')->warning('User visits webhook edit page, but webhooks are DISABLED.');
@@ -72,6 +72,6 @@ class EditController extends Controller
         $subTitle = (string) trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.edit.url');
 
-        return view('webhooks.edit', compact('webhook', 'subTitle'));
+        return view('webhooks.edit', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

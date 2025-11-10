@@ -78,7 +78,7 @@ class CreateController extends Controller
      *
      * @throws FireflyException
      */
-    public function create(Request $request, ?RuleGroup $ruleGroup = null)
+    public function create(Request $request, ?RuleGroup $ruleGroup = null): Factory|\Illuminate\Contracts\View\View
     {
         $this->createDefaultRuleGroup();
         $preFilled    = [
@@ -144,7 +144,7 @@ class CreateController extends Controller
 
         return view(
             'rules.rule.create',
-            compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+            ['subTitleIcon' => $subTitleIcon, 'oldTriggers' => $oldTriggers, 'preFilled' => $preFilled, 'oldActions' => $oldActions, 'triggerCount' => $triggerCount, 'actionCount' => $actionCount, 'ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]
         );
     }
 
@@ -155,7 +155,7 @@ class CreateController extends Controller
      *
      * @throws FireflyException
      */
-    public function createFromBill(Request $request, Bill $bill)
+    public function createFromBill(Request $request, Bill $bill): Factory|\Illuminate\Contracts\View\View
     {
         $request->session()->flash('info', (string) trans('firefly.instructions_rule_from_bill', ['name' => e($bill->name)]));
 
@@ -196,16 +196,14 @@ class CreateController extends Controller
 
         return view(
             'rules.rule.create',
-            compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
+            ['subTitleIcon' => $subTitleIcon, 'oldTriggers' => $oldTriggers, 'preFilled' => $preFilled, 'oldActions' => $oldActions, 'triggerCount' => $triggerCount, 'actionCount' => $actionCount, 'subTitle' => $subTitle]
         );
     }
 
     /**
-     * @return Factory|\Illuminate\Contracts\View\View
-     *
      * @throws FireflyException
      */
-    public function createFromJournal(Request $request, TransactionJournal $journal)
+    public function createFromJournal(Request $request, TransactionJournal $journal): Factory|\Illuminate\Contracts\View\View
     {
         $request->session()->flash('info', (string) trans('firefly.instructions_rule_from_journal', ['name' => e($journal->description)]));
 
@@ -245,7 +243,7 @@ class CreateController extends Controller
 
         return view(
             'rules.rule.create',
-            compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
+            ['subTitleIcon' => $subTitleIcon, 'oldTriggers' => $oldTriggers, 'preFilled' => $preFilled, 'oldActions' => $oldActions, 'triggerCount' => $triggerCount, 'actionCount' => $actionCount, 'subTitle' => $subTitle]
         );
     }
 

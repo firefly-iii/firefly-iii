@@ -258,7 +258,7 @@ trait JournalServiceTrait
 
         /** @var string $type */
         foreach ($types as $type) {
-            if (true === in_array($type, $list, true)) {
+            if (in_array($type, $list, true)) {
                 $result = $type;
 
                 break;

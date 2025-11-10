@@ -37,9 +37,9 @@ trait DepositValidation
     protected function validateDepositDestination(array $array): bool
     {
         $result      = null;
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
+        $accountId   = $array['id'] ?? null;
+        $accountName = $array['name'] ?? null;
+        $accountIban = $array['iban'] ?? null;
 
         Log::debug('Now in validateDepositDestination', $array);
 
@@ -89,10 +89,10 @@ trait DepositValidation
      */
     protected function validateDepositSource(array $array): bool
     {
-        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
-        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
+        $accountId     = $array['id'] ?? null;
+        $accountName   = $array['name'] ?? null;
+        $accountIban   = $array['iban'] ?? null;
+        $accountNumber = $array['number'] ?? null;
         Log::debug('Now in validateDepositSource', $array);
 
         // null = we found nothing at all or didn't even search

@@ -170,7 +170,7 @@ class BoxController extends Controller
 
         // filter list on preference of being included.
         $filtered          = $allAccounts->filter(
-            static function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository): bool {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth || '1' === $includeNetWorth;
                 if (false === $result) {

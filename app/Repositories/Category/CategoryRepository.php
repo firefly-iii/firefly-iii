@@ -108,11 +108,11 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
-        app('log')->debug('Now in findCategory()');
-        app('log')->debug(sprintf('Searching for category with ID #%d...', $categoryId));
+        Log::debug('Now in findCategory()');
+        Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
         $result = $this->find((int) $categoryId);
         if (!$result instanceof Category) {
-            app('log')->debug(sprintf('Searching for category with name %s...', $categoryName));
+            Log::debug(sprintf('Searching for category with name %s...', $categoryName));
             $result = $this->findByName((string) $categoryName);
             if (!$result instanceof Category && '' !== (string) $categoryName) {
                 // create it!
@@ -120,9 +120,9 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
             }
         }
         if ($result instanceof Category) {
-            app('log')->debug(sprintf('Found category #%d: %s', $result->id, $result->name));
+            Log::debug(sprintf('Found category #%d: %s', $result->id, $result->name));
         }
-        app('log')->debug(sprintf('Found category result is null? %s', var_export(!$result instanceof Category, true)));
+        Log::debug(sprintf('Found category result is null? %s', var_export(!$result instanceof Category, true)));
 
         return $result;
     }
@@ -240,7 +240,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) { // @phpstan-ignore-line
+            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null !== $notes ? $notes->text : '';

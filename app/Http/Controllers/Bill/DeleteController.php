@@ -65,21 +65,19 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(Bill $bill)
+    public function delete(Bill $bill): Factory|\Illuminate\Contracts\View\View
     {
         // put previous url in session
         $this->rememberPreviousUrl('bills.delete.url');
         $subTitle = (string) trans('firefly.delete_bill', ['name' => $bill->name]);
 
-        return view('bills.delete', compact('bill', 'subTitle'));
+        return view('bills.delete', ['bill' => $bill, 'subTitle' => $subTitle]);
     }
 
     /**
      * Destroy a bill.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(Request $request, Bill $bill)
+    public function destroy(Request $request, Bill $bill): Redirector|RedirectResponse
     {
         $name = $bill->name;
         $this->repository->destroy($bill);

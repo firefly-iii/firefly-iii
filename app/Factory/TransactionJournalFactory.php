@@ -71,7 +71,7 @@ class TransactionJournalFactory
     private AccountValidator                   $accountValidator;
     private BillRepositoryInterface            $billRepository;
     private CurrencyRepositoryInterface        $currencyRepository;
-    private bool                               $errorOnHash;
+    private bool                               $errorOnHash = false;
     private array                              $fields;
     private PiggyBankEventFactory              $piggyEventFactory;
     private PiggyBankRepositoryInterface       $piggyRepository;
@@ -86,7 +86,6 @@ class TransactionJournalFactory
      */
     public function __construct()
     {
-        $this->errorOnHash        = false;
         $this->fields             = config('firefly.journal_meta_fields');
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
@@ -237,7 +236,7 @@ class TransactionJournalFactory
         Log::debug('Done with getAccount(2x)');
 
         // there is a safety catch here. If either account is NULL, they will be replaced with the cash account.
-        if (null === $destinationAccount) {
+        if (!$destinationAccount instanceof Account) {
             Log::warning('Destination account is NULL, will replace with cash account.');
             $destinationAccount = $this->accountRepository->getCashAccount();
         }
@@ -615,7 +614,7 @@ class TransactionJournalFactory
 
     private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
     {
-        if (null !== $data['longitude'] && null !== $data['latitude'] && null !== $data['zoom_level']) {
+        if (!in_array(null, [$data['longitude'], $data['latitude'], $data['zoom_level']], true)) {
             $location             = new Location();
             $location->longitude  = $data['longitude'];
             $location->latitude   = $data['latitude'];
@@ -628,7 +627,7 @@ class TransactionJournalFactory
     public function setErrorOnHash(bool $errorOnHash): void
     {
         $this->errorOnHash = $errorOnHash;
-        if (true === $errorOnHash) {
+        if ($errorOnHash) {
             Log::info('Will trigger duplication alert for this journal.');
         }
     }

@@ -27,7 +27,6 @@ namespace FireflyIII\Helpers\Collector\Extensions;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Support\Facades\Log;
 
@@ -55,7 +54,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -135,7 +134,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -169,7 +168,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -203,7 +202,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -229,7 +228,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -252,7 +251,7 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = $attachment['filename'] === $name || $attachment['title'] === $name;
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -275,7 +274,7 @@ trait AttachmentCollection
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
                     $result = $attachment['filename'] !== $name && $attachment['title'] !== $name;
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -301,7 +300,7 @@ trait AttachmentCollection
                         strtolower((string) $attachment['title']),
                         strtolower($name)
                     );
-                    if (true === $result) {
+                    if ($result) {
                         return true;
                     }
                 }
@@ -514,10 +513,10 @@ trait AttachmentCollection
         Log::debug('Add filter on no attachments.');
         $this->joinAttachmentTables();
 
-        $this->query->where(static function (Builder $q1): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q1): void { // @phpstan-ignore-line
             $q1
                 ->whereNull('attachments.attachable_id')
-                ->orWhere(static function (Builder $q2): void {
+                ->orWhere(static function (EloquentBuilder $q2): void {
                     $q2
                         ->whereNotNull('attachments.attachable_id')
                         ->whereNotNull('attachments.deleted_at')

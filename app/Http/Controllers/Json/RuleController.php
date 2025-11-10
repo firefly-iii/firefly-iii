@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -50,10 +51,10 @@ class RuleController extends Controller
         }
 
         try {
-            $view = view('rules.partials.action', compact('actions', 'count'))->render();
+            $view = view('rules.partials.action', ['actions' => $actions, 'count' => $count])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = 'Could not render view.';
 
             throw new FireflyException($view, 0, $e);
@@ -80,10 +81,10 @@ class RuleController extends Controller
         asort($triggers);
 
         try {
-            $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
+            $view = view('rules.partials.trigger', ['triggers' => $triggers, 'count' => $count])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $view = 'Could not render view.';
 
             throw new FireflyException($view, 0, $e);

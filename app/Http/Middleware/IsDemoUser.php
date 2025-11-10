@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
@@ -49,7 +50,7 @@ class IsDemoUser
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
         if ($repository->hasRole($user, 'demo')) {
-            app('log')->info('User is a demo user.');
+            Log::info('User is a demo user.');
             $request->session()->flash('info', (string) trans('firefly.not_available_demo_user'));
             $current  = $request->url();
             $previous = $request->session()->previousUrl();

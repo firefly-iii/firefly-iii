@@ -63,27 +63,36 @@ class JournalUpdateService
     private CurrencyRepositoryInterface $currencyRepository;
     private TransactionGroupRepositoryInterface $transactionGroupRepository;
     private array $data;
-    private ?Account $destinationAccount;
-    private ?Transaction $destinationTransaction;
-    private array $metaDate;
-    private array $metaString;
-    private ?Account $sourceAccount;
-    private ?Transaction $sourceTransaction;
-    private ?TransactionGroup $transactionGroup;
-    private ?TransactionJournal $transactionJournal;
-    private string $startCompareHash = '';
+    private ?Account $destinationAccount            = null;
+    private ?Transaction $destinationTransaction    = null;
+    private array $metaDate                         = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
+        'invoice_date', ];
+    private array $metaString                       = [
+        'sepa_cc',
+        'sepa_ct_op',
+        'sepa_ct_id',
+        'sepa_db',
+        'sepa_country',
+        'sepa_ep',
+        'sepa_ci',
+        'sepa_batch_id',
+        'recurrence_id',
+        'internal_reference',
+        'bunq_payment_id',
+        'external_id',
+        'external_url',
+    ];
+    private ?Account $sourceAccount                 = null;
+    private ?Transaction $sourceTransaction         = null;
+    private ?TransactionGroup $transactionGroup     = null;
+    private ?TransactionJournal $transactionJournal = null;
+    private string $startCompareHash                = '';
 
     /**
      * JournalUpdateService constructor.
      */
     public function __construct()
     {
-        $this->destinationAccount         = null;
-        $this->destinationTransaction     = null;
-        $this->sourceAccount              = null;
-        $this->sourceTransaction          = null;
-        $this->transactionGroup           = null;
-        $this->transactionJournal         = null;
         $this->billRepository             = app(BillRepositoryInterface::class);
         $this->categoryRepository         = app(CategoryRepositoryInterface::class);
         $this->budgetRepository           = app(BudgetRepositoryInterface::class);
@@ -91,23 +100,6 @@ class JournalUpdateService
         $this->accountRepository          = app(AccountRepositoryInterface::class);
         $this->currencyRepository         = app(CurrencyRepositoryInterface::class);
         $this->transactionGroupRepository = app(TransactionGroupRepositoryInterface::class);
-        $this->metaString                 = [
-            'sepa_cc',
-            'sepa_ct_op',
-            'sepa_ct_id',
-            'sepa_db',
-            'sepa_country',
-            'sepa_ep',
-            'sepa_ci',
-            'sepa_batch_id',
-            'recurrence_id',
-            'internal_reference',
-            'bunq_payment_id',
-            'external_id',
-            'external_url',
-        ];
-        $this->metaDate                   = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
-            'invoice_date', ];
     }
 
     public function setData(array $data): void
@@ -141,7 +133,7 @@ class JournalUpdateService
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
 
-        $this->data['reconciled'] = array_key_exists('reconciled', $this->data) ? $this->data['reconciled'] : null;
+        $this->data['reconciled'] ??= null;
 
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
@@ -221,7 +213,7 @@ class JournalUpdateService
 
     private function hasFields(array $fields): bool
     {
-        return array_any($fields, fn ($field) => array_key_exists($field, $this->data));
+        return array_any($fields, fn ($field): bool => array_key_exists($field, $this->data));
     }
 
     private function getOriginalSourceAccount(): Account

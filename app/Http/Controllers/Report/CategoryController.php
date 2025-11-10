@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -67,7 +68,7 @@ class CategoryController extends Controller
     /**
      * @return Factory|View
      */
-    public function accountPerCategory(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    public function accountPerCategory(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
@@ -151,7 +152,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.account-per-category', compact('report', 'categories'));
+        return view('reports.category.partials.account-per-category', ['report' => $report, 'categories' => $categories]);
     }
 
     /**
@@ -159,7 +160,7 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function accounts(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    public function accounts(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
@@ -253,7 +254,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.accounts', compact('sums', 'report'));
+        return view('reports.category.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -295,9 +296,9 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.category.partials.avg-expenses', compact('result'))->render();
+            $result = view('reports.category.partials.avg-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -345,9 +346,9 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.category.partials.avg-income', compact('result'))->render();
+            $result = view('reports.category.partials.avg-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -361,7 +362,7 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function categories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end)
+    public function categories(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $spent  = $this->opsRepository->listExpenses($start, $end, $accounts, $categories);
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
@@ -461,7 +462,7 @@ class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.categories', compact('sums', 'report'));
+        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -527,9 +528,9 @@ class CategoryController extends Controller
         $report  = $data;
 
         try {
-            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            $result = view('reports.partials.category-period', ['report' => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -599,9 +600,9 @@ class CategoryController extends Controller
         $report  = $data;
 
         try {
-            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            $result = view('reports.partials.category-period', ['report' => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -638,10 +639,10 @@ class CategoryController extends Controller
         $report    = $generator->getReport();
 
         try {
-            $result = view('reports.partials.categories', compact('report'))->render();
+            $result = view('reports.partials.categories', ['report' => $report])->render();
             $cache->store($result);
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
 
             throw new FireflyException($result, 0, $e);
@@ -687,9 +688,9 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
-            $result = view('reports.category.partials.top-expenses', compact('result'))->render();
+            $result = view('reports.category.partials.top-expenses', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);
@@ -735,9 +736,9 @@ class CategoryController extends Controller
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
-            $result = view('reports.category.partials.top-income', compact('result'))->render();
+            $result = view('reports.category.partials.top-income', ['result' => $result])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = sprintf('Could not render view: %s', $e->getMessage());
 
             throw new FireflyException($e->getMessage(), 0, $e);

@@ -81,7 +81,7 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null)
+    public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $start ??= session('start');
         $end   ??= session('end');
@@ -108,7 +108,7 @@ class ShowController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return view('budgets.no-budget', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -119,7 +119,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function noBudgetAll(Request $request)
+    public function noBudgetAll(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle  = (string) trans('firefly.all_journals_without_budget');
         $first     = $this->journalRepos->firstNull();
@@ -136,7 +136,7 @@ class ShowController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget-all'));
 
-        return view('budgets.no-budget', compact('groups', 'subTitle', 'start', 'end'));
+        return view('budgets.no-budget', ['groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -147,7 +147,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Budget $budget)
+    public function show(Request $request, Budget $budget): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $allStart */
         $allStart    = session('first', today(config('app.timezone'))->startOfYear());
@@ -170,7 +170,7 @@ class ShowController extends Controller
 
         $subTitle    = (string) trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
-        return view('budgets.show', compact('limits', 'attachments', 'budget', 'repetition', 'groups', 'subTitle'));
+        return view('budgets.show', ['limits' => $limits, 'attachments' => $attachments, 'budget' => $budget, 'repetition' => $repetition, 'groups' => $groups, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -182,7 +182,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
+    public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit): Factory|\Illuminate\Contracts\View\View
     {
         if ($budgetLimit->budget->id !== $budget->id) {
             throw new FireflyException('This budget limit is not part of this budget.');
@@ -220,6 +220,6 @@ class ShowController extends Controller
         $attachments    = $this->repository->getAttachments($budget);
         $limits         = $this->getLimits($budget, $start, $end);
 
-        return view('budgets.show', compact('limits', 'attachments', 'budget', 'budgetLimit', 'groups', 'subTitle', 'currencySymbol'));
+        return view('budgets.show', ['limits' => $limits, 'attachments' => $attachments, 'budget' => $budget, 'budgetLimit' => $budgetLimit, 'groups' => $groups, 'subTitle' => $subTitle, 'currencySymbol' => $currencySymbol]);
     }
 }

@@ -37,7 +37,7 @@ class Rule extends AbstractExtension
     {
         return new TwigFunction(
             'allRuleActions',
-            static function () {
+            static function (): array {
                 // array of valid values for actions
                 $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
                 $possibleActions = [];
@@ -56,7 +56,7 @@ class Rule extends AbstractExtension
     {
         return new TwigFunction(
             'allJournalTriggers',
-            static fn () => [
+            static fn (): array => [
                 'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
                 'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
                 'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
@@ -68,7 +68,7 @@ class Rule extends AbstractExtension
     {
         return new TwigFunction(
             'allRuleTriggers',
-            static function () {
+            static function (): array {
                 $ruleTriggers     = array_keys(config('search.operators'));
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {

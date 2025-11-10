@@ -136,11 +136,8 @@ class UpgradesLiabilitiesEight extends Command
         if (null === $liabilityJournal) {
             return false;
         }
-        if (!$openingJournal->date->isSameDay($liabilityJournal->date)) {
-            return false;
-        }
 
-        return true;
+        return (bool) $openingJournal->date->isSameDay($liabilityJournal->date);
     }
 
     private function deleteCreditTransaction(Account $account): void

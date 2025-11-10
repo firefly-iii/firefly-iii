@@ -113,20 +113,20 @@ class Rule extends Model
 
     protected function description(): Attribute
     {
-        return Attribute::make(set: fn ($value) => ['description' => e($value)]);
+        return Attribute::make(set: fn ($value): array => ['description' => e($value)]);
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
     protected function ruleGroupId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 }

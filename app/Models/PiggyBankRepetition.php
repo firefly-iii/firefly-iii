@@ -68,7 +68,7 @@ class PiggyBankRepetition extends Model
     protected function currentAmount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value): string => (string)$value,
         );
     }
 
@@ -81,7 +81,7 @@ class PiggyBankRepetition extends Model
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 

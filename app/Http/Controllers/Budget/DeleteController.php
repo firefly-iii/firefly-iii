@@ -64,22 +64,20 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(Budget $budget)
+    public function delete(Budget $budget): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.delete_budget', ['name' => $budget->name]);
 
         // put previous url in session
         $this->rememberPreviousUrl('budgets.delete.url');
 
-        return view('budgets.delete', compact('budget', 'subTitle'));
+        return view('budgets.delete', ['budget' => $budget, 'subTitle' => $subTitle]);
     }
 
     /**
      * Destroys a budget.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(Request $request, Budget $budget)
+    public function destroy(Request $request, Budget $budget): Redirector|RedirectResponse
     {
         $name = $budget->name;
         $this->repository->destroy($budget);

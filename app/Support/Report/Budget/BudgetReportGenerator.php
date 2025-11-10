@@ -49,7 +49,7 @@ class BudgetReportGenerator
     private Carbon                                  $end;
     private readonly NoBudgetRepositoryInterface    $nbRepository;
     private readonly OperationsRepositoryInterface  $opsRepository;
-    private array                                   $report;
+    private array                                   $report = [];
     private readonly BudgetRepositoryInterface      $repository;
     private Carbon                                  $start;
 
@@ -62,7 +62,6 @@ class BudgetReportGenerator
         $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
         $this->opsRepository = app(OperationsRepositoryInterface::class);
         $this->nbRepository  = app(NoBudgetRepositoryInterface::class);
-        $this->report        = [];
     }
 
     /**

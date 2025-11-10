@@ -229,7 +229,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
-        if (false !== $validation) {
+        if ($validation) {
             $user                 = $model->user;
             // ignore lines about polymorphic calls.
             if ($model instanceof PiggyBank) {
@@ -289,11 +289,11 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
 
         // can't seem to reach this point.
-        if (true === $result && !$this->validSize($file)) {
+        if ($result && !$this->validSize($file)) {
             $result = false;
         }
 
-        if (true === $result && $this->hasFile($file, $model)) {
+        if ($result && $this->hasFile($file, $model)) {
             return false;
         }
 

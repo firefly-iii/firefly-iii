@@ -68,13 +68,13 @@ class IndexController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $this->createDefaultRuleGroup();
         $this->ruleGroupRepos->resetOrder();
         $ruleGroups = $this->ruleGroupRepos->getAllRuleGroupsWithRules(null);
 
-        return view('rules.index', compact('ruleGroups'));
+        return view('rules.index', ['ruleGroups' => $ruleGroups]);
     }
 
     public function moveRule(Request $request, Rule $rule, RuleGroup $ruleGroup): JsonResponse

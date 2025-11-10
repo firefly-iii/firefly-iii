@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
@@ -35,14 +36,13 @@ use Illuminate\Contracts\Validation\ValidationRule;
  */
 class UniqueIban implements ValidationRule
 {
-    private array $expectedTypes;
+    private array $expectedTypes = [];
 
     /**
      * Create a new rule instance.
      */
     public function __construct(private readonly ?Account $account, ?string $expectedType)
     {
-        $this->expectedTypes = [];
         if (null === $expectedType) {
             return;
         }
@@ -104,9 +104,9 @@ class UniqueIban implements ValidationRule
             $value = Steam::filterSpaces($value);
 
             $count = $this->countHits($type, $value);
-            app('log')->debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
+            Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                app('log')->debug(
+                Log::debug(
                     sprintf(
                         'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
                         $value,

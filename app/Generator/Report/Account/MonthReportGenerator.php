@@ -53,7 +53,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $preferredPeriod = $this->preferredPeriod();
 
         try {
-            $result = view('reports.double.report', compact('accountIds', 'reportType', 'doubleIds', 'preferredPeriod'))
+            $result = view('reports.double.report', ['accountIds' => $accountIds, 'reportType' => $reportType, 'doubleIds' => $doubleIds, 'preferredPeriod' => $preferredPeriod])
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('doubles', $this->expense)
                 ->render()

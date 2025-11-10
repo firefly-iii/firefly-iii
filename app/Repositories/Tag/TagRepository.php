@@ -110,7 +110,6 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
     public function firstUseDate(Tag $tag): ?Carbon
     {
-        /** @var null|Carbon */
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
 
@@ -137,13 +136,13 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         // add date range (or not):
         if (null === $year) {
-            app('log')->debug('Get tags without a date.');
+            Log::debug('Get tags without a date.');
             $tagQuery->whereNull('tags.date');
         }
 
         if (null !== $year) {
             $year = min(2038, max(1970, $year));
-            app('log')->debug(sprintf('Get tags with year %s.', $year));
+            Log::debug(sprintf('Get tags with year %s.', $year));
             $tagQuery->where('tags.date', '>=', sprintf('%d-01-01 00:00:00', $year))->where('tags.date', '<=', sprintf('%d-12-31 23:59:59', $year));
         }
         $collection = $tagQuery->get();
@@ -177,7 +176,6 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
     public function lastUseDate(Tag $tag): ?Carbon
     {
-        /** @var null|Carbon */
         return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
     }
 

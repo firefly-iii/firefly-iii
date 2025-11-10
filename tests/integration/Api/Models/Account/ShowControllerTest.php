@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Models\Account;
 
+use Override;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
@@ -41,6 +42,7 @@ final class ShowControllerTest extends TestCase
     use RefreshDatabase;
     private User $user;
 
+    #[Override]
     protected function setUp(): void
     {
         parent::setUp();

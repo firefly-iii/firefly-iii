@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
@@ -55,7 +56,7 @@ class UniqueAccountNumber implements ValidationRule
         if ('asset' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::ASSET->value;
         }
-        app('log')->debug(sprintf('Expected type is "%s"', $this->expectedType));
+        Log::debug(sprintf('Expected type is "%s"', $this->expectedType));
     }
 
     /**
@@ -87,9 +88,9 @@ class UniqueAccountNumber implements ValidationRule
 
         foreach ($maxCounts as $type => $max) {
             $count = $this->countHits($type, $value);
-            app('log')->debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
+            Log::debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                app('log')->debug(
+                Log::debug(
                     sprintf(
                         'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
                         $value,
@@ -104,7 +105,7 @@ class UniqueAccountNumber implements ValidationRule
                 return;
             }
         }
-        app('log')->debug('Account number is valid.');
+        Log::debug('Account number is valid.');
     }
 
     private function getMaxOccurrences(): array

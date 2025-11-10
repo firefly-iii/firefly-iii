@@ -41,12 +41,12 @@ if (false !== $databaseUrl) {
 }
 
 // Get SSL parameters from .env file.
-$mysql_ssl_ca_dir  = envNonEmpty('MYSQL_SSL_CAPATH', null);
-$mysql_ssl_ca_file = envNonEmpty('MYSQL_SSL_CA', null);
-$mysql_ssl_cert    = envNonEmpty('MYSQL_SSL_CERT', null);
-$mysql_ssl_key     = envNonEmpty('MYSQL_SSL_KEY', null);
-$mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER', null);
-$mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT', null);
+$mysql_ssl_ca_dir  = envNonEmpty('MYSQL_SSL_CAPATH');
+$mysql_ssl_ca_file = envNonEmpty('MYSQL_SSL_CA');
+$mysql_ssl_cert    = envNonEmpty('MYSQL_SSL_CERT');
+$mysql_ssl_key     = envNonEmpty('MYSQL_SSL_KEY');
+$mysql_ssl_ciphers = envNonEmpty('MYSQL_SSL_CIPHER');
+$mysql_ssl_verify  = envNonEmpty('MYSQL_SSL_VERIFY_SERVER_CERT');
 
 $mySqlSSLOptions   = [];
 $useSSL            = envNonEmpty('MYSQL_USE_SSL', false);
@@ -145,7 +145,7 @@ return [
             'host'     => envNonEmpty('REDIS_HOST', '127.0.0.1'),
             'port'     => envNonEmpty('REDIS_PORT', 6379),
             'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD', null),
+            'password' => env('REDIS_PASSWORD'),
             'database' => env('REDIS_DB', '0'),
         ],
         'cache'   => [
@@ -155,7 +155,7 @@ return [
             'host'     => envNonEmpty('REDIS_HOST', '127.0.0.1'),
             'port'     => envNonEmpty('REDIS_PORT', 6379),
             'username' => env('REDIS_USERNAME'),
-            'password' => env('REDIS_PASSWORD', null),
+            'password' => env('REDIS_PASSWORD'),
             'database' => env('REDIS_CACHE_DB', '1'),
         ],
     ],

@@ -41,16 +41,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
     private Collection $accounts;
     private Collection $budgets;
     private Carbon     $end;
-    private array      $expenses;
+    private array      $expenses = [];
     private Carbon     $start;
-
-    /**
-     * MonthReportGenerator constructor.
-     */
-    public function __construct()
-    {
-        $this->expenses = [];
-    }
 
     /**
      * Generates the report.
@@ -65,7 +57,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         try {
             $result = view(
                 'reports.budget.month',
-                compact('accountIds', 'budgetIds')
+                ['accountIds' => $accountIds, 'budgetIds' => $budgetIds]
             )
                 ->with('start', $this->start)->with('end', $this->end)
                 ->with('budgets', $this->budgets)

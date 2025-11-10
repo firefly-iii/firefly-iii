@@ -34,8 +34,8 @@ return [
     'lottery'         => [2, 100],
     'cookie'          => env('COOKIE_NAME', 'firefly_iii_session'),
     'path'            => env('COOKIE_PATH', '/'),
-    'domain'          => env('COOKIE_DOMAIN', null),
-    'secure'          => env('COOKIE_SECURE', null),
+    'domain'          => env('COOKIE_DOMAIN'),
+    'secure'          => env('COOKIE_SECURE'),
     'http_only'       => true,
     'same_site'       => env('COOKIE_SAMESITE', 'lax'),
 ];

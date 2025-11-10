@@ -93,7 +93,7 @@ class FireflyServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Validator::resolver(
-            static fn ($translator, $data, $rules, $messages) => new FireflyValidator($translator, $data, $rules, $messages)
+            static fn ($translator, $data, $rules, $messages): FireflyValidator => new FireflyValidator($translator, $data, $rules, $messages)
         );
     }
 
@@ -107,52 +107,52 @@ class FireflyServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             'preferences',
-            static fn () => new Preferences()
+            static fn (): Preferences => new Preferences()
         );
 
         $this->app->bind(
             'fireflyconfig',
-            static fn () => new FireflyConfig()
+            static fn (): FireflyConfig => new FireflyConfig()
         );
         $this->app->bind(
             'navigation',
-            static fn () => new Navigation()
+            static fn (): Navigation => new Navigation()
         );
         $this->app->bind(
             'amount',
-            static fn () => new Amount()
+            static fn (): Amount => new Amount()
         );
 
         $this->app->bind(
             'steam',
-            static fn () => new Steam()
+            static fn (): Steam => new Steam()
         );
         $this->app->bind(
             'balance',
-            static fn () => new Balance()
+            static fn (): Balance => new Balance()
         );
         $this->app->bind(
             'expandedform',
-            static fn () => new ExpandedForm()
+            static fn (): ExpandedForm => new ExpandedForm()
         );
 
         $this->app->bind(
             'accountform',
-            static fn () => new AccountForm()
+            static fn (): AccountForm => new AccountForm()
         );
         $this->app->bind(
             'currencyform',
-            static fn () => new CurrencyForm()
+            static fn (): CurrencyForm => new CurrencyForm()
         );
 
         $this->app->bind(
             'piggybankform',
-            static fn () => new PiggyBankForm()
+            static fn (): PiggyBankForm => new PiggyBankForm()
         );
 
         $this->app->bind(
             'ruleform',
-            static fn () => new RuleForm()
+            static fn (): RuleForm => new RuleForm()
         );
 
         // chart generator:

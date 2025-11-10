@@ -100,7 +100,7 @@ class Attachment extends Model
     protected function attachableId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 

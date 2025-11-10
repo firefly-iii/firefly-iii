@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\AutoBudget;
 
-use Illuminate\Validation\Validator;
+use Illuminate\Contracts\Validation\Validator;
 
 /**
  * Trait ValidatesAutoBudgetRequest
@@ -40,10 +40,10 @@ trait ValidatesAutoBudgetRequest
         $type         = $data['auto_budget_type'] ?? '';
 
         /** @var null|float|int|string $amount */
-        $amount       = array_key_exists('auto_budget_amount', $data) ? $data['auto_budget_amount'] : null;
-        $period       = array_key_exists('auto_budget_period', $data) ? $data['auto_budget_period'] : null;
+        $amount       = $data['auto_budget_amount'] ?? null;
+        $period       = $data['auto_budget_period'] ?? null;
         $currencyId   = array_key_exists('auto_budget_currency_id', $data) ? (int) $data['auto_budget_currency_id'] : null;
-        $currencyCode = array_key_exists('auto_budget_currency_code', $data) ? $data['auto_budget_currency_code'] : null;
+        $currencyCode = $data['auto_budget_currency_code'] ?? null;
         if (is_numeric($type)) {
             $type = (int) $type;
         }

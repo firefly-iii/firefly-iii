@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Account;
 
 /**
@@ -33,17 +34,17 @@ trait TransferValidation
 {
     protected function validateTransferDestination(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
-        app('log')->debug('Now in validateTransferDestination', $array);
+        $accountId   = $array['id'] ?? null;
+        $accountName = $array['name'] ?? null;
+        $accountIban = $array['iban'] ?? null;
+        Log::debug('Now in validateTransferDestination', $array);
         // source can be any of the following types.
         $validTypes  = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a transfer can't be created.
             $this->destError = (string) trans('validation.transfer_dest_need_data');
-            app('log')->error('Both values are NULL, cant create transfer destination.');
+            Log::error('Both values are NULL, cant create transfer destination.');
 
             return false;
         }
@@ -74,11 +75,11 @@ trait TransferValidation
 
     protected function validateTransferSource(array $array): bool
     {
-        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
-        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
-        app('log')->debug('Now in validateTransferSource', $array);
+        $accountId     = $array['id'] ?? null;
+        $accountName   = $array['name'] ?? null;
+        $accountIban   = $array['iban'] ?? null;
+        $accountNumber = $array['number'] ?? null;
+        Log::debug('Now in validateTransferSource', $array);
         // source can be any of the following types.
         $validTypes    = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName
@@ -87,7 +88,7 @@ trait TransferValidation
             // if both values are NULL we return false,
             // because the source of a withdrawal can't be created.
             $this->sourceError = (string) trans('validation.transfer_source_need_data');
-            app('log')->warning('Not a valid source, need more data.');
+            Log::warning('Not a valid source, need more data.');
 
             return false;
         }
@@ -96,12 +97,12 @@ trait TransferValidation
         $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.transfer_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
-            app('log')->warning('Not a valid source, cant find it.', $validTypes);
+            Log::warning('Not a valid source, cant find it.', $validTypes);
 
             return false;
         }
         $this->setSource($search);
-        app('log')->debug('Valid source!');
+        Log::debug('Valid source!');
 
         return true;
     }

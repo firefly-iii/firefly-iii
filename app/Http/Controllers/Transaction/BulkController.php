@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
@@ -70,7 +71,7 @@ class BulkController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(array $journals)
+    public function edit(array $journals): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle    = (string) trans('firefly.mass_bulk_journals');
 
@@ -83,7 +84,7 @@ class BulkController extends Controller
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetList  = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
-        return view('transactions.bulk.edit', compact('journals', 'subTitle', 'budgetList'));
+        return view('transactions.bulk.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'budgetList' => $budgetList]);
     }
 
     /**
@@ -91,7 +92,7 @@ class BulkController extends Controller
      *
      * @return Application|Redirector|RedirectResponse
      */
-    public function update(BulkEditJournalRequest $request)
+    public function update(BulkEditJournalRequest $request): Redirector|RedirectResponse
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
@@ -130,10 +131,10 @@ class BulkController extends Controller
 
     private function updateJournalBudget(TransactionJournal $journal, bool $ignoreUpdate, int $budgetId): bool
     {
-        if (true === $ignoreUpdate) {
+        if ($ignoreUpdate) {
             return false;
         }
-        app('log')->debug(sprintf('Set budget to %d', $budgetId));
+        Log::debug(sprintf('Set budget to %d', $budgetId));
         $this->repository->updateBudget($journal, $budgetId);
 
         return true;
@@ -142,7 +143,7 @@ class BulkController extends Controller
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
-            app('log')->debug(sprintf('Set tags to %s', implode(',', $tags)));
+            Log::debug(sprintf('Set tags to %s', implode(',', $tags)));
             $this->repository->updateTags($journal, $tags);
         }
         if ('do_append' === $action) {
@@ -156,10 +157,10 @@ class BulkController extends Controller
 
     private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
     {
-        if (true === $ignoreUpdate) {
+        if ($ignoreUpdate) {
             return false;
         }
-        app('log')->debug(sprintf('Set budget to %s', $category));
+        Log::debug(sprintf('Set budget to %s', $category));
         $this->repository->updateCategory($journal, $category);
 
         return true;

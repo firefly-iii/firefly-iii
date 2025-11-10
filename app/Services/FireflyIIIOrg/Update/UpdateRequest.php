@@ -149,7 +149,7 @@ class UpdateRequest implements UpdateRequestInterface
             $latest = substr($latest, 1);
         }
         if (str_starts_with($current, 'develop')) {
-            return $this->parseResultDevelop($current, $latest, $information);
+            return $this->parseResultDevelop($current, $latest);
         }
 
         $compare  = version_compare($latest, $current);
@@ -183,7 +183,7 @@ class UpdateRequest implements UpdateRequestInterface
         return $this->releasedNewVersion($current, $latest, $released);
     }
 
-    private function parseResultDevelop(string $current, string $latest, array $information): array
+    private function parseResultDevelop(string $current, string $latest): array
     {
         Log::debug(sprintf('User is running develop version "%s"', $current));
         $compare           = $this->compareDevelopVersions($current, $latest);

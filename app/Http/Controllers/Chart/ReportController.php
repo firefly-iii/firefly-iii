@@ -86,7 +86,7 @@ class ReportController extends Controller
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
         $filtered          = $accounts->filter(
-            static function (Account $account) use ($accountRepository) {
+            static function (Account $account) use ($accountRepository): bool {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
                 if (false === $result) {

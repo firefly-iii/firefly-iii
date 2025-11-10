@@ -77,7 +77,7 @@ class UpgradesTagLocations extends Command
 
     private function hasLocationDetails(Tag $tag): bool
     {
-        return null !== $tag->latitude && null !== $tag->longitude && null !== $tag->zoomLevel;
+        return !in_array(null, [$tag->latitude, $tag->longitude, $tag->zoomLevel], true);
     }
 
     private function migrateLocationDetails(Tag $tag): void

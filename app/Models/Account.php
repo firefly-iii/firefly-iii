@@ -146,7 +146,7 @@ class Account extends Model
     protected function accountId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
@@ -177,7 +177,7 @@ class Account extends Model
     protected function accountTypeId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
@@ -221,14 +221,14 @@ class Account extends Model
     protected function iban(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
+            get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
         );
     }
 
     protected function order(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 
@@ -238,7 +238,7 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value): string => (string)$value,
         );
     }
 

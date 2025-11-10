@@ -56,7 +56,7 @@ class RestoresOAuthKeys extends Command
         }
         if ($this->keysInDatabase() && !$this->keysOnDrive()) {
             $result = $this->restoreKeysFromDB();
-            if (true === $result) {
+            if ($result) {
                 $this->friendlyInfo('Restored OAuth keys from database.');
 
                 return;

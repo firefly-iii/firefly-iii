@@ -77,7 +77,7 @@ class PreferencesController extends Controller
      * @throws FireflyException
      * @throws FilesystemException
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(AccountRepositoryInterface $repository): Factory|\Illuminate\Contracts\View\View
     {
         $accounts                       = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
         $isDocker                       = env('IS_DOCKER', false); // @phpstan-ignore-line
@@ -159,7 +159,7 @@ class PreferencesController extends Controller
         try {
             $locales = json_decode(file_get_contents(resource_path(sprintf('locales/%s/locales.json', $language))), true, 512, JSON_THROW_ON_ERROR);
         } catch (JsonException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             $locales = [];
         }
         $locales                        = ['equal' => (string) trans('firefly.equal_to_language')] + $locales;
@@ -182,47 +182,18 @@ class PreferencesController extends Controller
             $ntfyPass          = '';
         }
 
-        return view('preferences.index', compact(
-            'language',
-            'pushoverAppToken',
-            'pushoverUserToken',
-            'ntfyServer',
-            'ntfyTopic',
-            'ntfyAuth',
-            'channels',
-            'ntfyUser',
-            'forcedAvailability',
-            'ntfyPass',
-            'groupedAccounts',
-            'isDocker',
-            'frontpageAccounts',
-            'languages',
-            'darkMode',
-            'availableDarkModes',
-            'notifications',
-            'convertToPrimary',
-            'slackUrl',
-            'locales',
-            'locale',
-            'tjOptionalFields',
-            'viewRange',
-            'customFiscalYear',
-            'listPageSize',
-            'fiscalYearStart'
-        ));
+        return view('preferences.index', ['language' => $language, 'pushoverAppToken' => $pushoverAppToken, 'pushoverUserToken' => $pushoverUserToken, 'ntfyServer' => $ntfyServer, 'ntfyTopic' => $ntfyTopic, 'ntfyAuth' => $ntfyAuth, 'channels' => $channels, 'ntfyUser' => $ntfyUser, 'forcedAvailability' => $forcedAvailability, 'ntfyPass' => $ntfyPass, 'groupedAccounts' => $groupedAccounts, 'isDocker' => $isDocker, 'frontpageAccounts' => $frontpageAccounts, 'languages' => $languages, 'darkMode' => $darkMode, 'availableDarkModes' => $availableDarkModes, 'notifications' => $notifications, 'convertToPrimary' => $convertToPrimary, 'slackUrl' => $slackUrl, 'locales' => $locales, 'locale' => $locale, 'tjOptionalFields' => $tjOptionalFields, 'viewRange' => $viewRange, 'customFiscalYear' => $customFiscalYear, 'listPageSize' => $listPageSize, 'fiscalYearStart' => $fiscalYearStart]);
     }
 
     /**
      * Store new preferences.
-     *
-     * @return Redirector|RedirectResponse
      *
      * @throws FireflyException
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    public function postIndex(PreferencesRequest $request)
+    public function postIndex(PreferencesRequest $request): Redirector|RedirectResponse
     {
         // front page accounts
         $frontpageAccounts = [];
@@ -362,7 +333,7 @@ class PreferencesController extends Controller
             case 'ntfy':
                 /** @var User $user */
                 $user = auth()->user();
-                app('log')->debug(sprintf('Now in testNotification("%s") controller.', $channel));
+                Log::debug(sprintf('Now in testNotification("%s") controller.', $channel));
                 event(new UserTestNotificationChannel($channel, $user));
                 session()->flash('success', (string) trans('firefly.notification_test_executed', ['channel' => $channel]));
         }

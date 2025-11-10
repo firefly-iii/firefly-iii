@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\TagFactory;
@@ -68,7 +69,7 @@ class AddTag implements ActionInterface
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);
-            app('log')->debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
+            Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
 
             /** @var TransactionJournal $object */
             $object = TransactionJournal::find($journal['transaction_journal_id']);
@@ -78,7 +79,7 @@ class AddTag implements ActionInterface
 
             return true;
         }
-        app('log')->debug(
+        Log::debug(
             sprintf('RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id'])
         );
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $tagName])));

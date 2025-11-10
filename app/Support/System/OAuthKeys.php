@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\System;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -69,15 +70,12 @@ class OAuthKeys
                 $privateKey = (string)FireflyConfig::get(self::PRIVATE_KEY)?->data;
                 $publicKey  = (string)FireflyConfig::get(self::PUBLIC_KEY)?->data;
             } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
-                app('log')->error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
-                app('log')->error($e->getTraceAsString());
+                Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
             }
         }
-        if ('' !== $privateKey && '' !== $publicKey) {
-            return true;
-        }
 
-        return false;
+        return '' !== $privateKey && '' !== $publicKey;
     }
 
     /**
@@ -95,8 +93,8 @@ class OAuthKeys
             $privateContent = Crypt::decrypt($privateKey);
             $publicContent  = Crypt::decrypt($publicKey);
         } catch (DecryptException $e) {
-            app('log')->error('Could not decrypt pub/private keypair.');
-            app('log')->error($e->getMessage());
+            Log::error('Could not decrypt pub/private keypair.');
+            Log::error($e->getMessage());
 
             // delete config vars from DB:
             FireflyConfig::delete(self::PRIVATE_KEY);

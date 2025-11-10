@@ -41,7 +41,7 @@ class IsValidZeroOrMoreAmount implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        if (true === $this->nullable && null === $value) {
+        if ($this->nullable && null === $value) {
             return;
         }
         $value = (string) $value;

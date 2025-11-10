@@ -80,7 +80,7 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
@@ -115,16 +115,14 @@ class CreateController extends Controller
 
         return view(
             'recurring.create',
-            compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'budgets')
+            ['tomorrow' => $tomorrow, 'oldRepetitionType' => $oldRepetitionType, 'bills' => $bills, 'weekendResponses' => $weekendResponses, 'preFilled' => $preFilled, 'repetitionEnds' => $repetitionEnds, 'budgets' => $budgets]
         );
     }
 
     /**
-     * @return Factory|\Illuminate\Contracts\View\View
-     *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    public function createFromJournal(Request $request, TransactionJournal $journal)
+    public function createFromJournal(Request $request, TransactionJournal $journal): Factory|\Illuminate\Contracts\View\View
     {
         $budgets           = app('expandedform')->makeSelectListWithEmpty($this->budgetRepos->getActiveBudgets());
         $bills             = app('expandedform')->makeSelectListWithEmpty($this->billRepository->getActiveBills());
@@ -162,7 +160,7 @@ class CreateController extends Controller
         $bill              = null !== $journal->bill ? $journal->bill->id : 0;
         $hasOldInput       = null !== $request->old('_token'); // flash some data
         $preFilled         = [];
-        if (true === $hasOldInput) {
+        if ($hasOldInput) {
             $preFilled = [
                 'title'                     => $request->old('title'),
                 'transaction_description'   => $request->old('description'),
@@ -206,7 +204,7 @@ class CreateController extends Controller
         }
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('recurring.create', compact('tomorrow', 'oldRepetitionType', 'bills', 'weekendResponses', 'preFilled', 'repetitionEnds', 'budgets'));
+        return view('recurring.create', ['tomorrow' => $tomorrow, 'oldRepetitionType' => $oldRepetitionType, 'bills' => $bills, 'weekendResponses' => $weekendResponses, 'preFilled' => $preFilled, 'repetitionEnds' => $repetitionEnds, 'budgets' => $budgets]);
     }
 
     /**

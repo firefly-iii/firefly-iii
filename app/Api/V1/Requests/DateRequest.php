@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
-use Illuminate\Validation\Validator;
 
 class DateRequest extends ApiRequest
 {

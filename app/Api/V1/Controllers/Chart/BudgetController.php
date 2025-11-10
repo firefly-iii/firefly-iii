@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
@@ -61,7 +62,7 @@ class BudgetController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->repository    = app(BudgetRepositoryInterface::class);
                 $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
@@ -140,14 +141,14 @@ class BudgetController extends Controller
             }
 
             // convert data if necessary.
-            if (true === $this->convertToPrimary && $currencyId !== $this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id) {
                 $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
                 $row['pc_budgeted']  = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['budgeted']);
                 $row['pc_spent']     = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['spent']);
                 $row['pc_left']      = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['left']);
                 $row['pc_overspent'] = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['overspent']);
             }
-            if (true === $this->convertToPrimary && $currencyId === $this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $currencyId === $this->primaryCurrency->id) {
                 $row['pc_budgeted']  = $row['budgeted'];
                 $row['pc_spent']     = $row['spent'];
                 $row['pc_left']      = $row['left'];
@@ -265,7 +266,7 @@ class BudgetController extends Controller
 
         /** @var BudgetLimit $current */
         foreach ($limits as $current) {
-            if (true === $this->convertToPrimary) {
+            if ($this->convertToPrimary) {
                 if ($current->transaction_currency_id === $this->primaryCurrency->id) {
                     // simply add it.
                     $amount = bcadd($amount, (string)$current->amount);
@@ -283,7 +284,7 @@ class BudgetController extends Controller
                 $limit = $current;
             }
         }
-        if (null !== $limit && true === $this->convertToPrimary) {
+        if (null !== $limit && $this->convertToPrimary) {
             // convert and add all amounts.
             $limit->amount = app('steam')->positive($amount);
             Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));

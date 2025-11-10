@@ -94,7 +94,7 @@ class CategoryEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (Category $item) {
+        $this->collection = $this->collection->map(function (Category $item): Category {
             $id         = (int)$item->id;
             $meta       = [
                 'notes'        => $this->notes[$id] ?? null,

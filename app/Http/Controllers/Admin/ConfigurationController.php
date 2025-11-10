@@ -60,7 +60,7 @@ class ConfigurationController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle       = (string) trans('firefly.instance_configuration');
         $subTitleIcon   = 'fa-wrench';
@@ -75,7 +75,7 @@ class ConfigurationController extends Controller
 
         return view(
             'settings.configuration.index',
-            compact('subTitle', 'subTitleIcon', 'singleUserMode', 'isDemoSite', 'siteOwner')
+            ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'singleUserMode' => $singleUserMode, 'isDemoSite' => $isDemoSite, 'siteOwner' => $siteOwner]
         );
     }
 

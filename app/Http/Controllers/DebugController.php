@@ -96,11 +96,9 @@ class DebugController extends Controller
     /**
      * Clear log and session.
      *
-     * @return Redirector|RedirectResponse
-     *
      * @throws FireflyException
      */
-    public function flush(Request $request)
+    public function flush(Request $request): Redirector|RedirectResponse
     {
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
@@ -134,7 +132,7 @@ class DebugController extends Controller
      *
      * @throws FilesystemException
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $table      = $this->generateTable();
         $table      = str_replace(["\n", "\t", '  '], '', $table);
@@ -158,7 +156,7 @@ class DebugController extends Controller
             $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
         }
 
-        return view('debug', compact('table', 'now', 'logContent'));
+        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
     }
 
     public function apiTest(): View
@@ -174,7 +172,7 @@ class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', compact('system', 'docker', 'app', 'user'));
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
     }
 
     private function getSystemInformation(): array
@@ -474,31 +472,55 @@ class DebugController extends Controller
                 return 'asset';
 
             case 'account':
+
+            case 'attachment':
+
+            case 'bill':
+
+            case 'budget':
+
+            case 'budgetLimit':
+
+            case 'category':
+
+            case 'currency':
+
+            case 'tag':
+
+            case 'piggyBank':
+
+            case 'objectGroup':
+
+            case 'recurrence':
+
+            case 'tj':
+
+            case 'ruleGroup':
+
+            case 'rule':
+
+            case 'tagOrId':
+
+            case 'transactionGroup':
+
+            case 'journalLink':
+
+            case 'webhook':
+
+            case 'user':
+
+            case 'linkType':
+
+            case 'userGroup':
                 return '1';
 
             case 'start_date':
+
+            case 'date':
                 return '20241201';
 
             case 'end_date':
                 return '20241231';
-
-            case 'attachment':
-                return '1';
-
-            case 'bill':
-                return '1';
-
-            case 'budget':
-                return '1';
-
-            case 'budgetLimit':
-                return '1';
-
-            case 'category':
-                return '1';
-
-            case 'currency':
-                return '1';
 
             case 'fromCurrencyCode':
                 return 'EUR';
@@ -510,25 +532,11 @@ class DebugController extends Controller
                 return '1,6';
 
             case 'budgetList':
-                return '1,2';
-
             case 'categoryList':
-                return '1,2';
-
             case 'doubleList':
-                return '1,2';
-
             case 'tagList':
+            case 'journalList':
                 return '1,2';
-
-            case 'tag':
-                return '1';
-
-            case 'piggyBank':
-                return '1';
-
-            case 'objectGroup':
-                return '1';
 
             case 'route':
                 return 'accounts';
@@ -536,60 +544,19 @@ class DebugController extends Controller
             case 'specificPage':
                 return 'show';
 
-            case 'recurrence':
-                return '1';
-
-            case 'tj':
-                return '1';
-
             case 'reportType':
                 return 'default';
 
-            case 'ruleGroup':
-                return '1';
-
-            case 'rule':
-                return '1';
-
-            case 'tagOrId':
-                return '1';
-
-            case 'transactionGroup':
-                return '1';
-
-            case 'journalList':
-                return '1,2';
-
             case 'transactionType':
                 return 'withdrawal';
-
-            case 'journalLink':
-                return '1';
-
-            case 'webhook':
-                return '1';
-
-            case 'user':
-                return '1';
-
-            case 'linkType':
-                return '1';
-
-            case 'userGroup':
-                return '1';
-
-            case 'date':
-                return '20241201';
 
         }
     }
 
     /**
      * Flash all types of messages.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function testFlash(Request $request)
+    public function testFlash(Request $request): Redirector|RedirectResponse
     {
         $request->session()->flash('success', 'This is a success message.');
         $request->session()->flash('info', 'This is an info message.');

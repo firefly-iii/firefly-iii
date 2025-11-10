@@ -211,7 +211,6 @@ class UpgradesVariousCurrencyInformation extends Command
                 break;
         }
 
-        /** @var null|Transaction */
         return $lead;
     }
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
@@ -56,36 +57,36 @@ class ConvertToDeposit implements ActionInterface
         /** @var null|TransactionJournal $object */
         $object      = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
-            app('log')->error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
+            Log::error(sprintf('Cannot find journal #%d, cannot convert to deposit.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
         $groupCount  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
-            app('log')->error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
+            Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to deposit.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
 
             return false;
         }
 
-        app('log')->debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
+        Log::debug(sprintf('Convert journal #%d to deposit.', $journal['transaction_journal_id']));
         $type        = $object->transactionType->type;
         if (TransactionTypeEnum::DEPOSIT->value === $type) {
-            app('log')->error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
+            Log::error(sprintf('Journal #%d is already a deposit (rule #%d).', $journal['transaction_journal_id'], $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_deposit')));
 
             return false;
         }
 
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            app('log')->debug('Going to transform a withdrawal to a deposit.');
+            Log::debug('Going to transform a withdrawal to a deposit.');
 
             try {
                 $res = $this->convertWithdrawalArray($object, $actionValue);
             } catch (FireflyException $e) {
-                app('log')->debug('Could not convert withdrawal to deposit.');
-                app('log')->error($e->getMessage());
+                Log::debug('Could not convert withdrawal to deposit.');
+                Log::error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
 
                 return false;
@@ -96,13 +97,13 @@ class ConvertToDeposit implements ActionInterface
             return $res;
         }
         if (TransactionTypeEnum::TRANSFER->value === $type) {
-            app('log')->debug('Going to transform a transfer to a deposit.');
+            Log::debug('Going to transform a transfer to a deposit.');
 
             try {
                 $res = $this->convertTransferArray($object, $actionValue);
             } catch (FireflyException $e) {
-                app('log')->debug('Could not convert transfer to deposit.');
-                app('log')->error($e->getMessage());
+                Log::debug('Could not convert transfer to deposit.');
+                Log::error($e->getMessage());
                 event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.complex_error')));
 
                 return false;
@@ -147,7 +148,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::REVENUE->value);
         }
 
-        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
+        Log::debug(sprintf('ConvertToDeposit. Action value is "%s", new opposing name is "%s"', $actionValue, $opposingAccount->name));
 
         // update the source transaction and put in the new revenue ID.
         DB::table('transactions')
@@ -171,7 +172,7 @@ class ConvertToDeposit implements ActionInterface
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;
 
-        app('log')->debug('Converted withdrawal to deposit.');
+        Log::debug('Converted withdrawal to deposit.');
 
         return true;
     }
@@ -235,7 +236,7 @@ class ConvertToDeposit implements ActionInterface
             $opposingAccount = $factory->findOrCreate($opposingName, AccountTypeEnum::REVENUE->value);
         }
 
-        app('log')->debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
+        Log::debug(sprintf('ConvertToDeposit. Action value is "%s", revenue name is "%s"', $actionValue, $opposingAccount->name));
 
         // update source transaction(s) to be revenue account
         DB::table('transactions')
@@ -252,7 +253,7 @@ class ConvertToDeposit implements ActionInterface
             ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
         ;
 
-        app('log')->debug('Converted transfer to deposit.');
+        Log::debug('Converted transfer to deposit.');
 
         return true;
     }

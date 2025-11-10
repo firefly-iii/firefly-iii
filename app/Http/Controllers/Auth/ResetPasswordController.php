@@ -80,7 +80,7 @@ class ResetPasswordController extends Controller
         if ('web' !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
 
-            return view('errors.error', compact('message'));
+            return view('errors.error', ['message' => $message]);
         }
 
         $rules    = [
@@ -114,7 +114,7 @@ class ResetPasswordController extends Controller
      *
      * If no token is present, display the link request form.
      *
-     * @param null $token
+     * @param null|mixed $token
      *
      * @return Factory|View
      *
@@ -127,7 +127,7 @@ class ResetPasswordController extends Controller
         if ('web' !== config('firefly.authentication_guard')) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', config('firefly.authentication_guard'));
 
-            return view('errors.error', compact('message'));
+            return view('errors.error', ['message' => $message]);
         }
 
         // is allowed to register?

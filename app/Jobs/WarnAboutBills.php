@@ -127,11 +127,8 @@ class WarnAboutBills implements ShouldQueue
         $diff = $this->getDiff($bill, $field);
         $list = config('firefly.bill_reminder_periods');
         Log::debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
-        if (in_array($diff, $list, true)) {
-            return true;
-        }
 
-        return false;
+        return in_array($diff, $list, true);
     }
 
     private function getDiff(Bill $bill, string $field): int
@@ -193,11 +190,8 @@ class WarnAboutBills implements ShouldQueue
         Log::debug(sprintf('Earliest expected pay date is %s', $earliest->toAtomString()));
         $diff     = $earliest->diffInDays($this->date);
         Log::debug(sprintf('Difference in days is %s', $diff));
-        if ($diff < 2) {
-            return false;
-        }
 
-        return true;
+        return $diff >= 2;
     }
 
     private function sendOverdueAlerts(User $user, array $overdue): void

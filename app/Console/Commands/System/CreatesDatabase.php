@@ -86,7 +86,7 @@ class CreatesDatabase extends Command
             $pdo->exec(sprintf('CREATE DATABASE `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;', env('DB_DATABASE')));
             $this->friendlyInfo(sprintf('Created database "%s"', env('DB_DATABASE')));
         }
-        if (true === $exists) {
+        if ($exists) {
             $this->friendlyInfo(sprintf('Database "%s" exists.', env('DB_DATABASE')));
         }
 

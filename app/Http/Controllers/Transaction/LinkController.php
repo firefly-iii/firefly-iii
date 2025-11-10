@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -68,21 +69,19 @@ class LinkController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(TransactionJournalLink $link)
+    public function delete(TransactionJournalLink $link): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon = 'fa-link';
         $subTitle     = (string) trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUrl('journal_links.delete.url');
 
-        return view('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
+        return view('transactions.links.delete', ['link' => $link, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
      * Actually destroy it.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(TransactionJournalLink $link)
+    public function destroy(TransactionJournalLink $link): Redirector|RedirectResponse
     {
         $this->repository->destroyLink($link);
 
@@ -95,23 +94,21 @@ class LinkController extends Controller
     /**
      * @return Factory|View
      */
-    public function modal(TransactionJournal $journal)
+    public function modal(TransactionJournal $journal): Factory|\Illuminate\Contracts\View\View
     {
         $linkTypes = $this->repository->get();
 
-        return view('transactions.links.modal', compact('journal', 'linkTypes'));
+        return view('transactions.links.modal', ['journal' => $journal, 'linkTypes' => $linkTypes]);
     }
 
     /**
      * Store a new link.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function store(JournalLinkRequest $request, TransactionJournal $journal)
+    public function store(JournalLinkRequest $request, TransactionJournal $journal): Redirector|RedirectResponse
     {
         $linkInfo      = $request->getLinkInfo();
 
-        app('log')->debug('We are here (store)');
+        Log::debug('We are here (store)');
         $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         if (!$other instanceof TransactionJournal) {
             session()->flash('error', (string) trans('firefly.invalid_link_selection'));
@@ -132,7 +129,7 @@ class LinkController extends Controller
 
             return redirect(route('transactions.show', [$journal->transaction_group_id]));
         }
-        app('log')->debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
+        Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
         $this->repository->storeLink($linkInfo, $other, $journal);
         session()->flash('success', (string) trans('firefly.journals_linked'));
 
@@ -141,10 +138,8 @@ class LinkController extends Controller
 
     /**
      * Switch link from A <> B to B <> A.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function switchLink(Request $request)
+    public function switchLink(Request $request): Redirector|RedirectResponse
     {
         $linkId = (int) $request->get('id');
         $this->repository->switchLinkById($linkId);

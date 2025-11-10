@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\System;
 
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\integration\TestCase;
@@ -39,14 +40,14 @@ use Override;
 final class AboutControllerTest extends TestCase
 {
     use RefreshDatabase;
-    private $user;
+    private ?User $user = null;
 
     #[Override]
     protected function setUp(): void
     {
         parent::setUp();
 
-        if (!isset($this->user)) {
+        if (!$this->user instanceof User) {
             $this->user = $this->createAuthenticatedUser();
         }
         $this->actingAs($this->user);
@@ -74,7 +75,7 @@ final class AboutControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJson(
-            fn (AssertableJson $json) => $json
+            fn (AssertableJson $json): AssertableJson => $json
                 ->where('data.attributes.email', $this->user->email)
                 ->where('data.attributes.role', $this->user->role)
         );

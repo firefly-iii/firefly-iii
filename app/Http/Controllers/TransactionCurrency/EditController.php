@@ -67,7 +67,7 @@ class EditController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, TransactionCurrency $currency)
+    public function edit(Request $request, TransactionCurrency $currency): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
         $user             = auth()->user();
@@ -101,17 +101,15 @@ class EditController extends Controller
         }
         $request->session()->forget('currencies.edit.fromUpdate');
 
-        return view('currencies.edit', compact('currency', 'subTitle', 'subTitleIcon'));
+        return view('currencies.edit', ['currency' => $currency, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
      * Updates a currency.
      *
-     * @return Redirector|RedirectResponse
-     *
      * @throws FireflyException
      */
-    public function update(CurrencyFormRequest $request, TransactionCurrency $currency)
+    public function update(CurrencyFormRequest $request, TransactionCurrency $currency): Redirector|RedirectResponse
     {
         /** @var User $user */
         $user     = auth()->user();

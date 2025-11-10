@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -105,7 +106,7 @@ class ValidRecurrenceRepetitionValue implements ValidationRule
         try {
             Carbon::createFromFormat('Y-m-d', $dateString);
         } catch (InvalidArgumentException $e) {
-            app('log')->debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
+            Log::debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
 
             return false;
         }

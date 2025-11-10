@@ -53,7 +53,7 @@ class UpdateRequest extends FormRequest
         $responses            = $this->get('responses', []);
         $deliveries           = $this->get('deliveries', []);
 
-        if (0 === count($triggers) || 0 === count($responses) || 0 === count($deliveries)) {
+        if (in_array(0, [count($triggers), count($responses), count($deliveries)], true)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
         }
 

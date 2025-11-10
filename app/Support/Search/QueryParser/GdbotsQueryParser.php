@@ -54,15 +54,15 @@ class GdbotsQueryParser implements QueryParserInterface
         try {
             $result = $this->parser->parse($query);
             $nodes  = array_map(
-                fn (GdbotsNode\Node $node) => $this->convertNode($node),
+                $this->convertNode(...),
                 $result->getNodes()
             );
 
             return new NodeGroup($nodes);
         } catch (LogicException|TypeError $e) {
             fwrite(STDERR, "Setting up GdbotsQueryParserTest\n");
-            app('log')->error($e->getMessage());
-            app('log')->error(sprintf('Could not parse search: "%s".', $query));
+            Log::error($e->getMessage());
+            Log::error(sprintf('Could not parse search: "%s".', $query));
 
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
@@ -87,7 +87,7 @@ class GdbotsQueryParser implements QueryParserInterface
 
                 return new NodeGroup(
                     array_map(
-                        fn (GdbotsNode\Node $subNode) => $this->convertNode($subNode),
+                        $this->convertNode(...),
                         $node->getNodes()
                     )
                 );

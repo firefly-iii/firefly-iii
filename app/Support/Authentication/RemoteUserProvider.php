@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Console\Commands\Correction\CreatesGroupMemberships;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Role;
@@ -41,7 +42,7 @@ class RemoteUserProvider implements UserProvider
     #[Override]
     public function rehashPasswordIfRequired(Authenticatable $user, array $credentials, bool $force = false): void
     {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
@@ -53,7 +54,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('Did not implement %s', __METHOD__));
     }
@@ -65,10 +66,10 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveById($identifier): User
     {
-        app('log')->debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
+        Log::debug(sprintf('Now at %s(%s)', __METHOD__, $identifier));
         $user = User::where('email', $identifier)->first();
         if (null === $user) {
-            app('log')->debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
+            Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
             $user = User::create(
                 [
                     'blocked'      => false,
@@ -86,7 +87,7 @@ class RemoteUserProvider implements UserProvider
         // make sure the user gets an administration as well.
         CreatesGroupMemberships::createGroupMembership($user);
 
-        app('log')->debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
+        Log::debug(sprintf('Going to return user #%d (%s)', $user->id, $user->email));
 
         return $user;
     }
@@ -101,7 +102,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function retrieveByToken($identifier, $token): ?Authenticatable
     {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('A) Did not implement %s', __METHOD__));
     }
@@ -115,7 +116,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function updateRememberToken(Authenticatable $user, $token): void
     {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('B) Did not implement %s', __METHOD__));
     }
@@ -127,7 +128,7 @@ class RemoteUserProvider implements UserProvider
      */
     public function validateCredentials(Authenticatable $user, array $credentials): bool
     {
-        app('log')->debug(sprintf('Now at %s', __METHOD__));
+        Log::debug(sprintf('Now at %s', __METHOD__));
 
         throw new FireflyException(sprintf('C) Did not implement %s', __METHOD__));
     }

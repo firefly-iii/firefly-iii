@@ -180,7 +180,7 @@ class UpgradesToGroups extends Command
     private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
         return $journal->transactions->filter(
-            static fn (Transaction $transaction) => $transaction->amount > 0
+            static fn (Transaction $transaction): bool => $transaction->amount > 0
         );
     }
 
@@ -278,7 +278,7 @@ class UpgradesToGroups extends Command
     private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
         $set = $journal->transactions->filter(
-            static function (Transaction $subject) use ($transaction) {
+            static function (Transaction $subject) use ($transaction): bool {
                 $amount     = (float) $transaction->amount * -1 === (float) $subject->amount;  // intentional float
                 $identifier = $transaction->identifier === $subject->identifier;
                 Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));

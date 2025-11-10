@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Deprecated;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\BadHttpHeaderException;
@@ -100,10 +101,10 @@ abstract class Controller extends BaseController
         );
     }
 
-    /**
-     * @deprecated use Request classes
-     * Method to grab all parameters from the URL
-     */
+    #[Deprecated(message: <<<'TXT'
+        use Request classes
+         Method to grab all parameters from the URL
+        TXT)]
     private function getParameters(): ParameterBag
     {
         $bag      = new ParameterBag();

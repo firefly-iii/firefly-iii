@@ -77,10 +77,8 @@ class ShowController extends Controller
 
     /**
      * Rescan bills for transactions.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function rescan(Request $request, Bill $bill)
+    public function rescan(Request $request, Bill $bill): Redirector|RedirectResponse
     {
         $total      = 0;
         if (false === $bill->active) {
@@ -120,7 +118,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Bill $bill)
+    public function show(Request $request, Bill $bill): Factory|\Illuminate\Contracts\View\View
     {
         // add info about rules:
         $rules                      = $this->repository->getRulesForBill($bill);
@@ -188,6 +186,6 @@ class ShowController extends Controller
             );
         }
 
-        return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return view('bills.show', ['attachments' => $attachments, 'groups' => $groups, 'rules' => $rules, 'yearAverage' => $yearAverage, 'overallAverage' => $overallAverage, 'year' => $year, 'object' => $object, 'bill' => $bill, 'subTitle' => $subTitle]);
     }
 }

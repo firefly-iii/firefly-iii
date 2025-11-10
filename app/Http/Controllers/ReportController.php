@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -192,11 +193,9 @@ class ReportController extends Controller
     /**
      * Show account report.
      *
-     * @return string
-     *
      * @throws FireflyException
      */
-    public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
+    public function doubleReport(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
         if ($end < $start) {
             [$start, $end] = [$end, $start];
@@ -223,7 +222,7 @@ class ReportController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index(AccountRepositoryInterface $repository)
+    public function index(AccountRepositoryInterface $repository): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $start */
         $start            = clone session('first', today(config('app.timezone')));
@@ -255,7 +254,7 @@ class ReportController extends Controller
         $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
-        return view('reports.index', compact('months', 'accounts', 'start', 'accountList', 'groupedAccounts', 'customFiscalYear'));
+        return view('reports.index', ['months' => $months, 'accounts' => $accounts, 'start' => $start, 'accountList' => $accountList, 'groupedAccounts' => $groupedAccounts, 'customFiscalYear' => $customFiscalYear]);
     }
 
     /**
@@ -296,7 +295,7 @@ class ReportController extends Controller
         $double     = implode(',', $request->getDoubleList()->pluck('id')->toArray());
 
         if (0 === $request->getAccountList()->count()) {
-            app('log')->debug('Account count is zero');
+            Log::debug('Account count is zero');
             session()->flash('error', (string) trans('firefly.select_at_least_one_account'));
 
             return redirect(route('reports.index'));

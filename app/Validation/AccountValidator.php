@@ -50,11 +50,11 @@ class AccountValidator
     use TransferValidation;
     use WithdrawalValidation;
 
-    public bool                        $createMode;
-    public string                      $destError;
-    public ?Account                    $destination;
-    public ?Account                    $source;
-    public string                      $sourceError;
+    public bool                        $createMode  = false;
+    public string                      $destError   = 'No error yet.';
+    public ?Account                    $destination = null;
+    public ?Account                    $source      = null;
+    public string                      $sourceError = 'No error yet.';
     private AccountRepositoryInterface $accountRepository;
     private array                      $combinations;
     private string                     $transactionType;
@@ -64,12 +64,7 @@ class AccountValidator
      */
     public function __construct()
     {
-        $this->createMode        = false;
-        $this->destError         = 'No error yet.';
-        $this->sourceError       = 'No error yet.';
         $this->combinations      = config('firefly.source_dests');
-        $this->source            = null;
-        $this->destination       = null;
         $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
@@ -235,11 +230,8 @@ class AccountValidator
     protected function canCreateType(string $accountType): bool
     {
         $canCreate = [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value];
-        if (in_array($accountType, $canCreate, true)) {
-            return true;
-        }
 
-        return false;
+        return in_array($accountType, $canCreate, true);
     }
 
     /**
@@ -253,10 +245,10 @@ class AccountValidator
     {
         Log::debug('Now in findExistingAccount', [$validTypes, $data]);
         Log::debug('The search will be reversed!');
-        $accountId     = array_key_exists('id', $data) ? $data['id'] : null;
-        $accountIban   = array_key_exists('iban', $data) ? $data['iban'] : null;
-        $accountNumber = array_key_exists('number', $data) ? $data['number'] : null;
-        $accountName   = array_key_exists('name', $data) ? $data['name'] : null;
+        $accountId     = $data['id'] ?? null;
+        $accountIban   = $data['iban'] ?? null;
+        $accountNumber = $data['number'] ?? null;
+        $accountName   = $data['name'] ?? null;
 
         // find by ID
         if (null !== $accountId && $accountId > 0) {

@@ -54,7 +54,7 @@ class DownloadExchangeRates implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private array                       $active;
+    private array                       $active = [];
     private Carbon                      $date;
     private CurrencyRepositoryInterface $repository;
     private Collection                  $users;
@@ -64,7 +64,6 @@ class DownloadExchangeRates implements ShouldQueue
      */
     public function __construct(?Carbon $date)
     {
-        $this->active     = [];
         $this->repository = app(CurrencyRepositoryInterface::class);
 
         // get all users:

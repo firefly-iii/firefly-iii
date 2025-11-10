@@ -35,9 +35,9 @@ trait WithdrawalValidation
 {
     protected function validateGenericSource(array $array): bool
     {
-        $accountId   = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban = array_key_exists('iban', $array) ? $array['iban'] : null;
+        $accountId   = $array['id'] ?? null;
+        $accountName = $array['name'] ?? null;
+        $accountIban = $array['iban'] ?? null;
         Log::debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
         $validTypes  = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
@@ -70,10 +70,10 @@ trait WithdrawalValidation
 
     protected function validateWithdrawalDestination(array $array): bool
     {
-        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
-        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
+        $accountId     = $array['id'] ?? null;
+        $accountName   = $array['name'] ?? null;
+        $accountIban   = $array['iban'] ?? null;
+        $accountNumber = $array['number'] ?? null;
         Log::debug('Now in validateWithdrawalDestination()', $array);
         // source can be any of the following types.
         $validTypes    = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
@@ -121,10 +121,10 @@ trait WithdrawalValidation
 
     protected function validateWithdrawalSource(array $array): bool
     {
-        $accountId     = array_key_exists('id', $array) ? $array['id'] : null;
-        $accountName   = array_key_exists('name', $array) ? $array['name'] : null;
-        $accountIban   = array_key_exists('iban', $array) ? $array['iban'] : null;
-        $accountNumber = array_key_exists('number', $array) ? $array['number'] : null;
+        $accountId     = $array['id'] ?? null;
+        $accountName   = $array['name'] ?? null;
+        $accountIban   = $array['iban'] ?? null;
+        $accountNumber = $array['number'] ?? null;
 
         Log::debug('Now in validateWithdrawalSource', $array);
         // source can be any of the following types.

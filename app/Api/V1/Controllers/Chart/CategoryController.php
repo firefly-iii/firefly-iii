@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
+use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
@@ -58,7 +59,7 @@ class CategoryController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->accountRepos  = app(AccountRepositoryInterface::class);
                 $this->currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -181,7 +182,7 @@ class CategoryController extends Controller
         $return     = array_values($return);
 
         // order by amount
-        usort($return, static fn (array $a, array $b) => ((float)$a['entries']['spent'] + (float)$a['entries']['earned']) < ((float)$b['entries']['spent'] + (float)$b['entries']['earned']) ? 1 : -1);
+        usort($return, static fn (array $a, array $b): int => ((float)$a['entries']['spent'] + (float)$a['entries']['earned']) < ((float)$b['entries']['spent'] + (float)$b['entries']['earned']) ? 1 : -1);
 
         return response()->json($this->clean($return));
     }

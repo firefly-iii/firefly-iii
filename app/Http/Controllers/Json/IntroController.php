@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
@@ -39,12 +40,12 @@ class IntroController extends Controller
      */
     public function getIntroSteps(string $route, ?string $specificPage = null): JsonResponse
     {
-        app('log')->debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
+        Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
         $specificPage ??= '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {
-            app('log')->debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
+            Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
             return response()->json($steps);
         }
@@ -70,7 +71,7 @@ class IntroController extends Controller
     public function hasOutroStep(string $route): bool
     {
         $routeKey = str_replace('.', '_', $route);
-        app('log')->debug(sprintf('Has outro step for route %s', $routeKey));
+        Log::debug(sprintf('Has outro step for route %s', $routeKey));
         $elements = config(sprintf('intro.%s', $routeKey));
         if (!is_array($elements)) {
             return false;
@@ -78,9 +79,9 @@ class IntroController extends Controller
 
         $hasStep  = array_key_exists('outro', $elements);
 
-        app('log')->debug('Elements is array', $elements);
-        app('log')->debug('Keys is', array_keys($elements));
-        app('log')->debug(sprintf('Keys has "outro": %s', var_export($hasStep, true)));
+        Log::debug('Elements is array', $elements);
+        Log::debug('Keys is', array_keys($elements));
+        Log::debug(sprintf('Keys has "outro": %s', var_export($hasStep, true)));
 
         return $hasStep;
     }
@@ -96,7 +97,7 @@ class IntroController extends Controller
         if ('' !== $specialPage) {
             $key = sprintf('%s_%s', $key, $specialPage);
         }
-        app('log')->debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
+        Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, false);
         app('preferences')->mark();
 
@@ -113,7 +114,7 @@ class IntroController extends Controller
         if ('' !== $specialPage) {
             $key = sprintf('%s_%s', $key, $specialPage);
         }
-        app('log')->debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
+        Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, true);
 
         return response()->json(['result' => sprintf('Reported demo watched for route "%s" (%s): %s.', $route, $specialPage, $key)]);

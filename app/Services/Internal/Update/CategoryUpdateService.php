@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
@@ -54,7 +55,7 @@ class CategoryUpdateService
     /**
      * @param mixed $user
      */
-    public function setUser($user): void
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -88,13 +89,13 @@ class CategoryUpdateService
             ->where('rule_triggers.trigger_value', $oldName)
             ->get(['rule_triggers.*'])
         ;
-        app('log')->debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
 
         /** @var RuleTrigger $trigger */
         foreach ($triggers as $trigger) {
             $trigger->trigger_value = $newName;
             $trigger->save();
-            app('log')->debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
     }
 
@@ -107,13 +108,13 @@ class CategoryUpdateService
             ->where('rule_actions.action_value', $oldName)
             ->get(['rule_actions.*'])
         ;
-        app('log')->debug(sprintf('Found %d actions to update.', $actions->count()));
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
 
         /** @var RuleAction $action */
         foreach ($actions as $action) {
             $action->action_value = $newName;
             $action->save();
-            app('log')->debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
         }
     }
 
@@ -133,7 +134,7 @@ class CategoryUpdateService
      */
     private function updateNotes(Category $category, array $data): void
     {
-        $note         = array_key_exists('notes', $data) ? $data['notes'] : null;
+        $note         = $data['notes'] ?? null;
         if (null === $note) {
             return;
         }

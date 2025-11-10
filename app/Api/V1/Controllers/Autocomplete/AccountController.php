@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -60,7 +61,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($this->user);
@@ -138,7 +139,7 @@ class AccountController extends Controller
         // custom order.
         usort(
             $return,
-            static function (array $left, array $right) {
+            static function (array $left, array $right): int {
                 $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
                 $posA  = (int)array_search($left['type'], $order, true);
                 $posB  = (int)array_search($right['type'], $order, true);

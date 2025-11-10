@@ -65,7 +65,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
         $disk = Storage::disk('upload');
 
         return $set->each(
-            static function (Attachment $attachment) use ($disk) {
+            static function (Attachment $attachment) use ($disk): Attachment {
                 $notes                   = $attachment->notes()->first();
                 $attachment->file_exists = $disk->exists($attachment->fileName());
                 $attachment->notes_text  = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.

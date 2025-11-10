@@ -63,7 +63,7 @@ class UpdateController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle        = (string) trans('firefly.update_check_title');
         $subTitleIcon    = 'fa-star';
@@ -83,15 +83,13 @@ class UpdateController extends Controller
             'alpha'  => (string) trans('firefly.update_channel_alpha'),
         ];
 
-        return view('settings.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options', 'channelSelected', 'channelOptions'));
+        return view('settings.update.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'selected' => $selected, 'options' => $options, 'channelSelected' => $channelSelected, 'channelOptions' => $channelOptions]);
     }
 
     /**
      * Post new settings.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function post(Request $request)
+    public function post(Request $request): Redirector|RedirectResponse
     {
         $checkForUpdates = (int) $request->get('check_for_updates');
         $channel         = $request->get('update_channel');

@@ -58,7 +58,7 @@ class RecurrenceTransactionMeta extends Model
     protected function rtId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 }

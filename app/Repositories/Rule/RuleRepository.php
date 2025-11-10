@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Rule;
 
+use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
@@ -261,9 +262,9 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 
         // reset order:
         $this->resetRuleOrder($ruleGroup);
-        app('log')->debug('Done with resetting.');
+        Log::debug('Done with resetting.');
         if (array_key_exists('order', $data)) {
-            app('log')->debug(sprintf('User has submitted order %d', $data['order']));
+            Log::debug(sprintf('User has submitted order %d', $data['order']));
             $this->setOrder($rule, $data['order']);
         }
 
@@ -318,7 +319,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         $groupId     = $rule->rule_group_id;
         $maxOrder    = $this->maxOrder($rule->ruleGroup);
         $newOrder    = $newOrder > $maxOrder ? $maxOrder + 1 : $newOrder;
-        app('log')->debug(sprintf('New order will be %d', $newOrder));
+        Log::debug(sprintf('New order will be %d', $newOrder));
 
         if ($newOrder > $oldOrder) {
             $this->user->rules()
@@ -329,7 +330,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
                 ->decrement('rules.order')
             ;
             $rule->order = $newOrder;
-            app('log')->debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+            Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
             $rule->save();
 
             return;
@@ -343,7 +344,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
             ->increment('rules.order')
         ;
         $rule->order = $newOrder;
-        app('log')->debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
+        Log::debug(sprintf('Order of rule #%d ("%s") is now %d', $rule->id, $rule->title, $newOrder));
         $rule->save();
     }
 

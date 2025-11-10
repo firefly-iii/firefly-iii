@@ -371,7 +371,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         if (0 !== count($journalIds)) {
             // make all integers.
-            $integerIDs = array_map('intval', $journalIds);
+            $integerIDs = array_map(intval(...), $journalIds);
 
             $this->query->whereNotIn('transaction_journals.id', $integerIDs);
         }
@@ -779,7 +779,6 @@ class GroupCollector implements GroupCollectorInterface
     {
         $currentCollection = $collection;
         $countFilters      = count($this->postFilters);
-        $countCollection   = count($currentCollection);
         if (0 === $countFilters) {
             return $currentCollection;
         }
@@ -947,7 +946,7 @@ class GroupCollector implements GroupCollectorInterface
     {
         if (0 !== count($journalIds)) {
             // make all integers.
-            $integerIDs = array_map('intval', $journalIds);
+            $integerIDs = array_map(intval(...), $journalIds);
             Log::debug(sprintf('GroupCollector: setJournalIds: %s', implode(', ', $integerIDs)));
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
