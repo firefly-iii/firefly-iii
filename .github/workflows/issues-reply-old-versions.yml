@@ -32,7 +32,34 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           ISSUE_BODY=$(gh issue view $NUMBER --json body)
-          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* ]]; then
+
+          # sure this can be done in a single step but still.
+          FFNOV="${{ steps.ff3version.outputs.release }}"
+          FFNOV="${FFNOV:1}"
+
+          DDNOV="${{ steps.importerversion.outputs.release }}"
+          DDNOV="${DDNOV:1}"
+
+          echo "Firefly III version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
+          echo "Data importer version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
+
+          # first test: no debug info OR old version for issue type BUG
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* ]]; then
+            MESSAGE="Hi there!
+          
+          This is an automated reply. \`Share and enjoy\`
+
+          You triggered an automated reply, because it looks like you didn't include the output from the `/debug` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
+
+          If you did include debug information, and this message is wrong, my apologies for the intrusion."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on first test"
+            exit 0
+          fi
+
+          # second test: no debug info + old version for issue type BUG
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
 
             MESSAGE="Hi there!
 
@@ -40,10 +67,31 @@ jobs:
 
           You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
 
-          Please be so kind as to include the output from the \`/debug\`-page, if you have not done so already. If you already included the debug information, plase make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
+          Please be so kind as to include the output from the \`/debug\`-page, if you have not done so already. If you already included the debug information, please make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
+
+          If you *are* running the latest version, and this message is wrong, my apologies for the intrusion."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on second test"
+            exit 0
+          fi
+
+          # third test: debug info but old version
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY == *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
+
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
+
+          Please make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
 
           If you are running the latest version, and this message is wrong, my apologies for the intrusion."
+
             gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on third test"
+            exit 0
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
