@@ -56,7 +56,7 @@ jobs:
 
           You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
 
-          If you did include debug information, and this message is wrong, my apologies for the intrusion."
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
 
             gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on first test"
@@ -71,7 +71,7 @@ jobs:
 
           Thank you for running the latest version of Firefly III (or the data importer). You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
 
-          If you did include debug information, and this message is wrong, my apologies for the intrusion."
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
 
             gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on second test"
