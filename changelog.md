@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11206
+- [Issue 11206](https://github.com/firefly-iii/firefly-iii/issues/11206) (New transition shows additional option in input) reported by @zhiiwg
 
 ## 6.4.6 - 2025-11-09
 
