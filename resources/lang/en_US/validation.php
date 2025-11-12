@@ -24,7 +24,7 @@
 declare(strict_types=1);
 
 return [
-    'invalid_account_list' => 'Invalid account type list',
+    'invalid_account_list' => 'Invalid account type list entry ":value"',
     'invalid_transaction_type_list' => 'Invalid transaction type list',
     'limit_exists'                   => 'There is already a budget limit (amount) for this budget and currency in the given period.',
     'invalid_sort_instruction'       => 'The sort instruction is invalid for an object of type ":object".',

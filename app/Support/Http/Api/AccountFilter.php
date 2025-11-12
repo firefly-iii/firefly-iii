@@ -76,6 +76,7 @@ trait AccountFilter
             AccountTypeEnum::MORTGAGE->value        => [AccountTypeEnum::MORTGAGE->value],
             AccountTypeEnum::DEBT->value            => [AccountTypeEnum::DEBT->value],
             AccountTypeEnum::CREDITCARD->value      => [AccountTypeEnum::CREDITCARD->value],
+            AccountTypeEnum::LIABILITY_CREDIT->value => [AccountTypeEnum::LIABILITY_CREDIT->value],
             'default account'                       => [AccountTypeEnum::DEFAULT->value],
             'cash account'                          => [AccountTypeEnum::CASH->value],
             'asset account'                         => [AccountTypeEnum::ASSET->value],
@@ -104,6 +105,7 @@ trait AccountFilter
                 $return = array_merge($return, $this->types[$part]);
             }
         }
+
         if (0 === count($return)) {
             $return = $this->types['normal'];
         }
