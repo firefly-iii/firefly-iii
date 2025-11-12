@@ -43,54 +43,70 @@ jobs:
           echo "Firefly III version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
           echo "Data importer version is ${{ steps.ff3version.outputs.release }}, without v is $FFNOV"
 
-          # first test: no debug info OR old version for issue type BUG
-          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* ]]; then
+          # user includes no debug info at all, and does not mention current version.
+          # user includes no debug info at all, but does mention current version
+          # user includes debug info, but not the current version.
+          # user includes debug info, and the current version.
+
+          # first test: user includes no debug info at all, and does not mention current version.
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
             MESSAGE="Hi there!
-          
+
           This is an automated reply. \`Share and enjoy\`
 
-          You triggered an automated reply, because it looks like you didn't include the output from the `/debug` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
+          You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
 
-          If you did include debug information, and this message is wrong, my apologies for the intrusion."
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
 
             gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on first test"
             exit 0
           fi
 
-          # second test: no debug info + old version for issue type BUG
-          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
-
+          # second test: user includes no debug info at all, but does mention current version
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY != *"Debug information generated at"* && ( $ISSUE_BODY == *${{ steps.ff3version.outputs.release }}* || $ISSUE_BODY == *${{ steps.importerversion.outputs.release }}* || $ISSUE_BODY == *$FFNOV* || $ISSUE_BODY == *$DDNOV* ) ]]; then
             MESSAGE="Hi there!
 
           This is an automated reply. \`Share and enjoy\`
 
-          You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
+          Thank you for running the latest version of Firefly III (or the data importer). You triggered an automated reply, because it looks like you didn't include the output from the \`/debug\` page. Would you be so kind as to do that? It helps the developers debug your issue more easily.
 
-          Please be so kind as to include the output from the \`/debug\`-page, if you have not done so already. If you already included the debug information, please make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
-
-          If you *are* running the latest version, and this message is wrong, my apologies for the intrusion."
+          If you *did* include debug information or of if the debug information isn't relevant (or even reachable), my apologies for the intrusion."
 
             gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on second test"
             exit 0
           fi
 
-          # third test: debug info but old version
+          # third test: user includes debug info, but not the current version.
           if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY == *"Debug information generated at"* && $ISSUE_BODY != *${{ steps.ff3version.outputs.release }}* && $ISSUE_BODY != *${{ steps.importerversion.outputs.release }}* && $ISSUE_BODY != *$FFNOV* && $ISSUE_BODY != *$DDNOV* ]]; then
 
             MESSAGE="Hi there!
 
           This is an automated reply. \`Share and enjoy\`
 
-          You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
+          Thank you for including debug information. You triggered an automated reply, because it looks like you're not running Firefly III version **${{ steps.ff3version.outputs.release }}** or version **${{ steps.importerversion.outputs.release }}** of the data importer.
 
           Please make sure to upgrade to the latest version of Firefly III (or the data importer) *first*. This may already solve your issue.
 
-          If you are running the latest version, and this message is wrong, my apologies for the intrusion."
+          If you *are* running the latest version, and this message is wrong, my apologies for the intrusion."
 
             gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on third test"
+            exit 0
+          fi
+
+          # fourth test: user includes debug info, and the current version.
+          if [[ $ISSUE_BODY == *"MZ2udTpin6FL"* && $ISSUE_BODY == *"Debug information generated at"* && ( $ISSUE_BODY == *${{ steps.ff3version.outputs.release }}* || $ISSUE_BODY == *${{ steps.importerversion.outputs.release }}* || $ISSUE_BODY == *$FFNOV* || $ISSUE_BODY == *$DDNOV* ) ]]; then
+
+            MESSAGE="Hi there!
+
+          This is an automated reply. \`Share and enjoy\`
+
+          Thank you for running the latest version of Firefly III (or the data importer)."
+
+            gh issue comment "$NUMBER" --body "$MESSAGE"
+            echo "Triggered on fourth test"
             exit 0
           fi
         env:
