@@ -56,7 +56,7 @@ class ObjectTypeApiRequest extends ApiRequest
 
     public function rules(): array
     {
-        $rule = null;
+        $rule  = null;
         if (Account::class === $this->objectType) {
             $rule = new IsValidAccountTypeList();
         }
@@ -87,7 +87,7 @@ class ObjectTypeApiRequest extends ApiRequest
                     default:
                         $this->attributes->set('types', []);
 
-                    // no break
+                        // no break
                     case Account::class:
                         $types = $this->mapAccountTypes($type);
 
