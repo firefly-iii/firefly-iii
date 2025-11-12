@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private Collection                   $collection;
-    private bool                         $convertToPrimary; // @phpstan-ignore-line
+    private readonly bool                         $convertToPrimary; // @phpstan-ignore-line
     private array                        $currencies  = [];
     private array                        $currencyIds = [];
     private Carbon                       $end;
@@ -52,7 +52,6 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private readonly TransactionCurrency $primaryCurrency;
     private Carbon                       $start;
     private User                         $user;
-    private UserGroup                    $userGroup;
 
     public function __construct()
     {
@@ -84,18 +83,14 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     public function setUser(User $user): void
     {
-        $this->user      = $user;
-        $this->userGroup = $user->userGroup;
+        $this->user = $user;
     }
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (BudgetLimit $item) {
+        $this->collection = $this->collection->map(function (BudgetLimit $item): BudgetLimit {
             $id         = (int)$item->id;
             $currencyId = (int)$item->transaction_currency_id;
             if (0 === $currencyId) {
@@ -130,11 +125,11 @@ class BudgetLimitEnrichment implements EnrichmentInterface
             $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency);
             $this->expenses[$id] = array_values($filteredExpenses);
 
-            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
                 $pcFilteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, true);
                 $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
             }
-            if (true === $this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
+            if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
                 $this->pcExpenses[$id] = $this->expenses[$id] ?? [];
             }
         }
@@ -184,7 +179,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        $result = array_filter($expenses, fn (array $item) => (int)$item['budget_id'] === $budget);
+        $result = array_filter($expenses, fn (array $item): bool => (int)$item['budget_id'] === $budget);
         Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
 
         return $result;
@@ -192,14 +187,14 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses   = array_map(fn ($first) => array_map(function ($second) {
+        $this->expenses   = array_map(fn ($first): array => array_map(function (array $second): array {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);
 
-        $this->pcExpenses = array_map(fn ($first) => array_map(function ($second) {
-            $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+        $this->pcExpenses = array_map(fn (array $first): array => array_map(function (array $second): array {
+            $second['currency_id'] ??= 0;
 
             return $second;
         }, $first), $this->expenses);

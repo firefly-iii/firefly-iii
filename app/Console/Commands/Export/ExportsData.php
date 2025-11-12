@@ -206,7 +206,7 @@ class ExportsData extends Command
             $error = true;
         }
 
-        if (true === $error && 'start' === $field) {
+        if ($error && 'start' === $field) {
             $journal = $this->journalRepository->firstNull();
             $date    = $journal instanceof TransactionJournal ? $journal->date : today(config('app.timezone'))->subYear();
             $date->startOfDay();
@@ -214,7 +214,7 @@ class ExportsData extends Command
             return $date;
         }
         // field can only be 'end' at this point, so no need to include it in the check.
-        if (true === $error) {
+        if ($error) {
             $date = today(config('app.timezone'));
             $date->endOfDay();
 

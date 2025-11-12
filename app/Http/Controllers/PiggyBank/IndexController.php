@@ -77,14 +77,13 @@ class IndexController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $this->cleanupObjectGroups();
         $this->piggyRepos->resetOrder();
         $collection = $this->piggyRepos->getPiggyBanks();
 
-        /** @var Carbon $end */
-        $end        = session('end', today(config('app.timezone'))->endOfMonth());
+        session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
         // $parameters         = new ParameterBag();
@@ -103,7 +102,7 @@ class IndexController extends Controller
 
         ksort($piggyBanks);
 
-        return view('piggy-banks.index', compact('piggyBanks', 'accounts'));
+        return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts' => $accounts]);
     }
 
     private function groupPiggyBanks(Collection $collection): array

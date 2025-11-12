@@ -314,7 +314,7 @@ class ApplyRules extends Command
             foreach ($rules as $rule) {
                 // if in rule selection, or group in selection or all rules, it's included.
                 $test = $this->includeRule($rule, $group);
-                if (true === $test) {
+                if ($test) {
                     Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $rulesToApply->push($rule);
                 }

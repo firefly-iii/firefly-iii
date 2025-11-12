@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -47,7 +48,7 @@ class BelongsUser implements ValidationRule
 
             return;
         }
-        app('log')->debug(sprintf('Going to validate %s', $attribute));
+        Log::debug(sprintf('Going to validate %s', $attribute));
 
         $result    = match ($attribute) {
             'piggy_bank_id'               => $this->validatePiggyBankId((int) $value),
@@ -126,7 +127,7 @@ class BelongsUser implements ValidationRule
     private function validateBillName(string $value): bool
     {
         $count = $this->countField(Bill::class, 'name', $value);
-        app('log')->debug(sprintf('Result of countField for bill name "%s" is %d', $value, $count));
+        Log::debug(sprintf('Result of countField for bill name "%s" is %d', $value, $count));
 
         return 1 === $count;
     }
@@ -147,10 +148,10 @@ class BelongsUser implements ValidationRule
         $count   = 0;
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field}); // @phpstan-ignore-line
-            app('log')->debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
+            Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 ++$count;
-                app('log')->debug(sprintf('Hit! Count is now %d', $count));
+                Log::debug(sprintf('Hit! Count is now %d', $count));
             }
         }
 

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Deprecated;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -78,7 +79,7 @@ class Steam
             $currency             = $currencies[$account->id];
 
             // second array
-            $accountSums          = array_filter($arrayOfSums, fn ($entry) => $entry['account_id'] === $account->id);
+            $accountSums          = array_filter($arrayOfSums, fn (array $entry): bool => $entry['account_id'] === $account->id);
             if (0 === count($accountSums)) {
                 $result[$account->id] = $return;
 
@@ -289,21 +290,21 @@ class Steam
         return str_replace($search, '', $string);
     }
 
-    /**
-     * @deprecated
-     * By default this method returns "smaller than or equal to", so be careful with END OF DAY.
-     * If you need end of day balance, use "inclusive = false".
-     *
-     * Returns the balance of an account at exact moment given. Array with at least one value.
-     * Always returns:
-     * "balance": balance in the account's currency OR user's primary currency if the account has no currency
-     * "EUR": balance in EUR (or whatever currencies the account has balance in)
-     *
-     * If the user has $convertToPrimary:
-     * "balance": balance in the account's currency OR user's primary currency if the account has no currency
-     * --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
-     * "EUR": balance in EUR (or whatever currencies the account has balance in)
-     */
+    #[Deprecated(message: <<<'TXT'
+
+        By default this method returns "smaller than or equal to", so be careful with END OF DAY.
+        If you need end of day balance, use "inclusive = false".
+
+        Returns the balance of an account at exact moment given. Array with at least one value.
+        Always returns:
+        "balance": balance in the account's currency OR user's primary currency if the account has no currency
+        "EUR": balance in EUR (or whatever currencies the account has balance in)
+
+        If the user has $convertToPrimary:
+        "balance": balance in the account's currency OR user's primary currency if the account has no currency
+        --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
+        "EUR": balance in EUR (or whatever currencies the account has balance in)
+        TXT)]
     public function finalAccountBalance(Account $account, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array
     {
 

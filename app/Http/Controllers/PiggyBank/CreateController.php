@@ -69,11 +69,11 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
-        $hasOldInput  = null !== $request->old('_token');
+        $request->old('_token');
         $preFilled    = $request->old();
 
         // put previous url in session if not redirect from store (not "create another").
@@ -82,7 +82,7 @@ class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', compact('subTitle', 'subTitleIcon', 'preFilled'));
+        return view('piggy-banks.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled' => $preFilled]);
     }
 
     /**

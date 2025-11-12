@@ -42,7 +42,7 @@ Route::group(
         Route::get('/authorize', ['uses' => 'AuthorizationController@authorize', 'as' => 'authorizations.authorize', 'middleware' => 'user-full-auth']);
 
         // the rest
-        $guard = config('passport.guard', null);
+        $guard = config('passport.guard');
         Route::middleware(['web', null !== $guard ? 'auth:'.$guard : 'auth'])->group(function (): void {
             Route::post('/token/refresh', ['uses' => 'TransientTokenController@refresh', 'as' => 'token.refresh']);
             Route::post('/authorize', ['uses' => 'ApproveAuthorizationController@approve', 'as' => 'authorizations.approve']);

@@ -93,25 +93,20 @@ class CorrectsIbans extends Command
             if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
                 $type = 'liabilities';
             }
-            if (array_key_exists($iban, $set[$userId])) {
-                // iban already in use! two exceptions exist:
-                if (
-                    !(AccountTypeEnum::EXPENSE->value === $set[$userId][$iban] && AccountTypeEnum::REVENUE->value === $type) // allowed combination
-                    && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type) // also allowed combination.
-                ) {
-                    $this->friendlyWarning(
-                        sprintf(
-                            'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
-                            $iban,
-                            $account->accountType->type,
-                            $account->id,
-                            $account->name
-                        )
-                    );
-                    $account->iban = null;
-                    $account->save();
-                    ++$this->count;
-                }
+            // iban already in use! two exceptions exist:
+            if (array_key_exists($iban, $set[$userId]) && (!AccountTypeEnum::EXPENSE->value === $set[$userId][$iban] && AccountTypeEnum::REVENUE->value === $type && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type))) {
+                $this->friendlyWarning(
+                    sprintf(
+                        'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
+                        $iban,
+                        $account->accountType->type,
+                        $account->id,
+                        $account->name
+                    )
+                );
+                $account->iban = null;
+                $account->save();
+                ++$this->count;
             }
 
             if (!array_key_exists($iban, $set[$userId])) {

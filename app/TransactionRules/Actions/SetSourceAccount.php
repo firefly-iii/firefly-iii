@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -57,7 +58,7 @@ class SetSourceAccount implements ActionInterface
         $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
-            app('log')->error('Could not find journal.');
+            Log::error('Could not find journal.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
 
             return false;
@@ -68,7 +69,7 @@ class SetSourceAccount implements ActionInterface
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
         if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && !$newAccount instanceof Account) {
-            app('log')->error(
+            Log::error(
                 sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
             );
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
@@ -80,20 +81,20 @@ class SetSourceAccount implements ActionInterface
         /** @var null|Transaction $destination */
         $destination      = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
-            app('log')->error('Could not find destination transaction.');
+            Log::error('Could not find destination transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));
 
             return false;
         }
         // account must not be deleted (in the meantime):
         if (null === $destination->account) {
-            app('log')->error('Could not find destination transaction account.');
+            Log::error('Could not find destination transaction account.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction_account')));
 
             return false;
         }
         if ($newAccount instanceof Account && $newAccount->id === $destination->account_id) {
-            app('log')->error(
+            Log::error(
                 sprintf(
                     'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
                     $newAccount->id,
@@ -111,7 +112,7 @@ class SetSourceAccount implements ActionInterface
             $newAccount = $this->findDepositSourceAccount($accountName);
         }
 
-        app('log')->debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
+        Log::debug(sprintf('New source account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
         // update source transaction with new source account:
         DB::table('transactions')
@@ -122,7 +123,7 @@ class SetSourceAccount implements ActionInterface
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
-        app('log')->debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
+        Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 
         return true;
     }
@@ -132,7 +133,7 @@ class SetSourceAccount implements ActionInterface
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
         $allowed = is_array($allowed) ? $allowed : [];
-        app('log')->debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
+        Log::debug(sprintf('Check config for expected_source_types.source.%s, result is', $type), $allowed);
 
         return $this->repository->findByName($accountName, $allowed);
     }
@@ -153,7 +154,7 @@ class SetSourceAccount implements ActionInterface
             ];
             $account = $this->repository->store($data);
         }
-        app('log')->debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
+        Log::debug(sprintf('Found or created revenue account #%d ("%s")', $account->id, $account->name));
 
         return $account;
     }

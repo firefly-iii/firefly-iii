@@ -46,8 +46,6 @@ use Illuminate\Support\Facades\Log;
 class NetWorth implements NetWorthInterface
 {
     private AccountRepositoryInterface  $accountRepository;
-    private User                        $user;             // @phpstan-ignore-line
-    private ?UserGroup                  $userGroup = null;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -117,13 +115,11 @@ class NetWorth implements NetWorthInterface
         if (!$user instanceof User) {
             return;
         }
-        $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup         = $userGroup;
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
 

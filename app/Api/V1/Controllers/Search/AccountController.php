@@ -45,18 +45,17 @@ class AccountController extends Controller
 {
     use AccountFilter;
 
-    private array $validFields;
+    private array $validFields = [
+        AccountSearch::SEARCH_ALL,
+        AccountSearch::SEARCH_ID,
+        AccountSearch::SEARCH_NAME,
+        AccountSearch::SEARCH_IBAN,
+        AccountSearch::SEARCH_NUMBER,
+    ];
 
     public function __construct()
     {
         parent::__construct();
-        $this->validFields = [
-            AccountSearch::SEARCH_ALL,
-            AccountSearch::SEARCH_ID,
-            AccountSearch::SEARCH_NAME,
-            AccountSearch::SEARCH_IBAN,
-            AccountSearch::SEARCH_NUMBER,
-        ];
     }
 
     /**

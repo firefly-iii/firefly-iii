@@ -64,7 +64,7 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create()
+    public function create(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon = 'fa-clone';
         $subTitle     = (string) trans('firefly.make_new_rule_group');
@@ -75,7 +75,7 @@ class CreateController extends Controller
         }
         session()->forget('rule-groups.create.fromStore');
 
-        return view('rules.rule-group.create', compact('subTitleIcon', 'subTitle'));
+        return view('rules.rule-group.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
     }
 
     /**

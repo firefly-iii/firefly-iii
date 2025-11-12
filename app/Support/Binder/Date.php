@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
@@ -61,7 +62,7 @@ class Date implements BinderInterface
         ];
         if (array_key_exists($value, $magicWords)) {
             $return = $magicWords[$value];
-            app('log')->debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
+            Log::debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
 
             return $return;
         }
@@ -70,7 +71,7 @@ class Date implements BinderInterface
             $result = new Carbon($value);
         } catch (InvalidDateException|InvalidFormatException $e) { // @phpstan-ignore-line
             $message = sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage());
-            app('log')->error($message);
+            Log::error($message);
 
             throw new NotFoundHttpException('Could not parse value', $e);
         }

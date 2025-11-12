@@ -72,38 +72,29 @@ class ExportDataGenerator
 {
     use ConvertsDataTypes;
 
-    private const string ADD_RECORD_ERR = 'Could not add record to set: %s';
-    private const string EXPORT_ERR     = 'Could not export to string: %s';
+    private const string ADD_RECORD_ERR    = 'Could not add record to set: %s';
+    private const string EXPORT_ERR        = 'Could not export to string: %s';
     private Collection $accounts;
     private Carbon     $end;
-    private bool       $exportAccounts;
-    private bool       $exportBills;
-    private bool       $exportBudgets;
-    private bool       $exportCategories;
-    private bool       $exportPiggies;
-    private bool       $exportRecurring;
-    private bool       $exportRules;
-    private bool       $exportTags;
-    private bool       $exportTransactions;
+    private bool       $exportAccounts     = false;
+    private bool       $exportBills        = false;
+    private bool       $exportBudgets      = false;
+    private bool       $exportCategories   = false;
+    private bool       $exportPiggies      = false;
+    private bool       $exportRecurring    = false;
+    private bool       $exportRules        = false;
+    private bool       $exportTags         = false;
+    private bool       $exportTransactions = false;
     private Carbon     $start;
     private User       $user;
     private UserGroup  $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
-        $this->accounts           = new Collection();
-        $this->start              = today(config('app.timezone'));
+        $this->accounts = new Collection();
+        $this->start    = today(config('app.timezone'));
         $this->start->subYear();
-        $this->end                = today(config('app.timezone'));
-        $this->exportTransactions = false;
-        $this->exportAccounts     = false;
-        $this->exportBudgets      = false;
-        $this->exportCategories   = false;
-        $this->exportTags         = false;
-        $this->exportRecurring    = false;
-        $this->exportRules        = false;
-        $this->exportBills        = false;
-        $this->exportPiggies      = false;
+        $this->end      = today(config('app.timezone'));
     }
 
     /**
@@ -306,7 +297,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -375,7 +366,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -444,7 +435,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -495,7 +486,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -575,7 +566,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -667,7 +658,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -744,7 +735,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -800,7 +791,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }
@@ -901,7 +892,7 @@ class ExportDataGenerator
         try {
             $string = $csv->toString();
         } catch (Exception $e) { // intentional generic exception
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
 
             throw new FireflyException(sprintf(self::EXPORT_ERR, $e->getMessage()), 0, $e);
         }

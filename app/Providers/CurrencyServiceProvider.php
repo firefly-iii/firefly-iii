@@ -51,7 +51,7 @@ class CurrencyServiceProvider extends ServiceProvider
         $this->app->bind(
             static function (Application $app): GroupCurrencyRepositoryInterface {
                 /** @var CurrencyRepository $repository */
-                $repository = app(CurrencyRepository::class);
+                $repository = app(GroupCurrencyRepository::class);
                 // phpstan does not get the reference to auth
                 if ($app->auth->check()) { // @phpstan-ignore-line
                     $repository->setUser(auth()->user());

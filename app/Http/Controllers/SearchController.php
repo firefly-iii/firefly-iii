@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
@@ -59,7 +60,7 @@ class SearchController extends Controller
      *
      * @return Factory|View
      */
-    public function index(Request $request, SearchInterface $searcher)
+    public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
         $fullQuery        = $request->get('search');
@@ -90,7 +91,7 @@ class SearchController extends Controller
         $invalidOperators = $searcher->getInvalidOperators();
         $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
-        return view('search.index', compact('words', 'excludedWords', 'operators', 'page', 'rule', 'fullQuery', 'subTitle', 'ruleId', 'ruleChanged', 'invalidOperators'));
+        return view('search.index', ['words' => $words, 'excludedWords' => $excludedWords, 'operators' => $operators, 'page' => $page, 'rule' => $rule, 'fullQuery' => $fullQuery, 'subTitle' => $subTitle, 'ruleId' => $ruleId, 'ruleChanged' => $ruleChanged, 'invalidOperators' => $invalidOperators]);
     }
 
     /**
@@ -118,10 +119,10 @@ class SearchController extends Controller
         $groups->setPath($url);
 
         try {
-            $html = view('search.search', compact('groups', 'hasPages', 'searchTime'))->render();
+            $html = view('search.search', ['groups' => $groups, 'hasPages' => $hasPages, 'searchTime' => $searchTime])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Cannot render search.search: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $html = 'Could not render view.';
 
             throw new FireflyException($html, 0, $e);

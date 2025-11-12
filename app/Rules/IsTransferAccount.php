@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
+use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Validation\AccountValidator;
@@ -39,7 +40,7 @@ class IsTransferAccount implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        app('log')->debug(sprintf('Now in %s(%s)', __METHOD__, $value));
+        Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));
 
         /** @var AccountValidator $validator */
         $validator    = app(AccountValidator::class);
@@ -48,13 +49,13 @@ class IsTransferAccount implements ValidationRule
 
         $validAccount = $validator->validateSource(['name' => (string) $value]);
         if (true === $validAccount) {
-            app('log')->debug('Found account based on name. Return true.');
+            Log::debug('Found account based on name. Return true.');
 
             // found by name, use repos to return.
             return;
         }
         $validAccount = $validator->validateSource(['id' => (int) $value]);
-        app('log')->debug(sprintf('Search by id (%d), result is %s.', (int) $value, var_export($validAccount, true)));
+        Log::debug(sprintf('Search by id (%d), result is %s.', (int) $value, var_export($validAccount, true)));
 
         if (false === $validAccount) {
             $fail('validation.not_transfer_account')->translate();

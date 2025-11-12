@@ -105,7 +105,7 @@ jobs:
 
           Thank you for running the latest version of Firefly III (or the data importer)."
 
-            gh issue comment "$NUMBER" --body "$MESSAGE"
+            # gh issue comment "$NUMBER" --body "$MESSAGE"
             echo "Triggered on fourth test"
             exit 0
           fi

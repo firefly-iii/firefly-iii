@@ -35,26 +35,19 @@ use Illuminate\Routing\Route;
 class Binder
 {
     /**
-     * The authentication factory instance.
-     *
-     * @var Auth
-     */
-    protected $auth;
-
-    /**
      * The binders.
-     *
-     * @var array
      */
-    protected $binders = [];
+    protected array $binders;
 
     /**
      * Binder constructor.
      */
-    public function __construct(Auth $auth)
-    {
+    public function __construct(/**
+     * The authentication factory instance.
+     */
+        protected Auth $auth
+    ) {
         $this->binders = Domain::getBindables();
-        $this->auth    = $auth;
     }
 
     /**

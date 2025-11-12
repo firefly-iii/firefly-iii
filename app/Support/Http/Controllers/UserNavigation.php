@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
@@ -48,9 +49,9 @@ trait UserNavigation
      */
     final protected function getPreviousUrl(string $identifier): string
     {
-        app('log')->debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
+        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         $url = (string)session($identifier);
-        app('log')->debug(sprintf('The URL is %s', $url));
+        Log::debug(sprintf('The URL is %s', $url));
 
         return app('steam')->getSafeUrl($url, route('index'));
     }
@@ -79,10 +80,7 @@ trait UserNavigation
         return in_array($type, $editable, true);
     }
 
-    /**
-     * @return Redirector|RedirectResponse
-     */
-    final protected function redirectAccountToAccount(Account $account)
+    final protected function redirectAccountToAccount(Account $account): Redirector|RedirectResponse
     {
         $type = $account->accountType->type;
         if (AccountTypeEnum::RECONCILIATION->value === $type || AccountTypeEnum::INITIAL_BALANCE->value === $type || AccountTypeEnum::LIABILITY_CREDIT->value === $type) {
@@ -91,7 +89,7 @@ trait UserNavigation
             /** @var null|Transaction $transaction */
             $transaction = $account->transactions()->first();
             if (null === $transaction) {
-                app('log')->error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
+                Log::error(sprintf('Account #%d has no transactions. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -101,7 +99,7 @@ trait UserNavigation
             /** @var null|Transaction $other */
             $other       = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
-                app('log')->error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
+                Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
 
                 return redirect(route('index'));
@@ -113,15 +111,12 @@ trait UserNavigation
         return redirect(route('index'));
     }
 
-    /**
-     * @return Redirector|RedirectResponse
-     */
-    final protected function redirectGroupToAccount(TransactionGroup $group)
+    final protected function redirectGroupToAccount(TransactionGroup $group): Redirector|RedirectResponse
     {
         /** @var null|TransactionJournal $journal */
         $journal      = $group->transactionJournals()->first();
         if (null === $journal) {
-            app('log')->error(sprintf('No journals in group #%d', $group->id));
+            Log::error(sprintf('No journals in group #%d', $group->id));
 
             return redirect(route('index'));
         }
@@ -145,7 +140,7 @@ trait UserNavigation
         $return = app('steam')->getSafePreviousUrl();
         session()->put($identifier, $return);
 
-        app('log')->debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
+        Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));
 
         return $return;
     }

@@ -27,15 +27,13 @@ use Carbon\Carbon;
 use FireflyIII\Support\Facades\Preferences;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class FiscalHelper.
  */
 class FiscalHelper implements FiscalHelperInterface
 {
-    /** @var bool */
-    protected $useCustomFiscalYear;
+    protected bool $useCustomFiscalYear;
 
     /**
      * FiscalHelper constructor.
@@ -52,7 +50,7 @@ class FiscalHelper implements FiscalHelperInterface
     {
         // Log::debug(sprintf('Now in endOfFiscalYear(%s).', $date->format('Y-m-d')));
         $endDate = $this->startOfFiscalYear($date);
-        if (true === $this->useCustomFiscalYear) {
+        if ($this->useCustomFiscalYear) {
             // add 1 year and sub 1 day
             $endDate->addYear();
             $endDate->subDay();
@@ -75,7 +73,7 @@ class FiscalHelper implements FiscalHelperInterface
     {
         // get start mm-dd. Then create a start date in the year passed.
         $startDate = clone $date;
-        if (true === $this->useCustomFiscalYear) {
+        if ($this->useCustomFiscalYear) {
             $prefStartStr = Preferences::get('fiscalYearStart', '01-01')->data;
             if (is_array($prefStartStr)) {
                 $prefStartStr = '01-01';

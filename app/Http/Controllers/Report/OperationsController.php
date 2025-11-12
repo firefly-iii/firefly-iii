@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -78,10 +79,10 @@ class OperationsController extends Controller
         $type   = 'expense-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
 
             throw new FireflyException($result, 0, $e);
@@ -112,10 +113,10 @@ class OperationsController extends Controller
         $type   = 'income-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', compact('report', 'type'))->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
 
             throw new FireflyException($result, 0, $e);
@@ -167,10 +168,10 @@ class OperationsController extends Controller
         }
 
         try {
-            $result = view('reports.partials.operations', compact('sums'))->render();
+            $result = view('reports.partials.operations', ['sums' => $sums])->render();
         } catch (Throwable $e) {
-            app('log')->error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
-            app('log')->error($e->getTraceAsString());
+            Log::error(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            Log::error($e->getTraceAsString());
             $result = 'Could not render view.';
 
             throw new FireflyException($result, 0, $e);

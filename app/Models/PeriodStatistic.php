@@ -33,7 +33,7 @@ class PeriodStatistic extends Model
     protected function count(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 

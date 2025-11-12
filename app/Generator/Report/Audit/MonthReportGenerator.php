@@ -100,7 +100,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ];
 
         try {
-            $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
+            $result = view('reports.audit.report', ['reportType' => $reportType, 'accountIds' => $accountIds, 'auditData' => $auditData, 'hideable' => $hideable, 'defaultShow' => $defaultShow])
                 ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
                 ->render()
             ;

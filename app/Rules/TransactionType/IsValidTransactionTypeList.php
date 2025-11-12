@@ -47,7 +47,6 @@ class IsValidTransactionTypeList implements ValidationRule
         }
         $keys   = array_keys($this->transactionTypes);
         foreach ($values as $entry) {
-            $entry = (string)$entry;
             if (!in_array($entry, $keys, true)) {
                 $fail('validation.invalid_transaction_type_list')->translate();
             }

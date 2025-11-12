@@ -387,7 +387,7 @@ class AccountController extends Controller
         $defaultSet     = $repository->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
         // Log::debug('Default set is ', $defaultSet);
         $frontpage      = Preferences::get('frontpageAccounts', $defaultSet);
-        $frontpageArray = !is_array($frontpage->data) ? [] : $frontpage->data;
+        $frontpageArray = is_array($frontpage->data) ? $frontpage->data : [];
         Log::debug('Frontpage preference set is ', $frontpageArray);
         if (0 === count($frontpageArray)) {
             Preferences::set('frontpageAccounts', $defaultSet);

@@ -80,7 +80,7 @@ class AvailableBudget extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value): string => (string)$value,
         );
     }
 
@@ -103,23 +103,23 @@ class AvailableBudget extends Model
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => Carbon::parse($value),
-            set: fn (Carbon $value) => $value->format('Y-m-d'),
+            get: fn (string $value): Carbon => Carbon::parse($value),
+            set: fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
 
     protected function startDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => Carbon::parse($value),
-            set: fn (Carbon $value) => $value->format('Y-m-d'),
+            get: fn (string $value): Carbon => Carbon::parse($value),
+            set: fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 }

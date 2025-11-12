@@ -123,11 +123,8 @@ class FireflyValidator extends Validator
         }
         $regex  = '/^[a-z]{6}[0-9a-z]{2}([0-9a-z]{3})?\z/i';
         $result = preg_match($regex, $value);
-        if (0 === $result) {
-            return false;
-        }
 
-        return true;
+        return 0 !== $result;
     }
 
     public function validateExistingMfaCode(mixed $attribute, mixed $value): bool
@@ -459,7 +456,7 @@ class FireflyValidator extends Validator
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateSecurePassword($attribute, $value): bool
+    public function validateSecurePassword($attribute, string $value): bool
     {
         $verify = false;
         if (array_key_exists('verify_password', $this->data)) {

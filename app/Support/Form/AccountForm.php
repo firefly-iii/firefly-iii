@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -93,9 +94,9 @@ class AccountForm
         unset($options['class']);
 
         try {
-            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+            $html = view('form.assetAccountCheckList', ['classes' => $classes, 'selected' => $selected, 'name' => $name, 'label' => $label, 'options' => $options, 'grouped' => $grouped])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
 
             throw new FireflyException($html, 0, $e);

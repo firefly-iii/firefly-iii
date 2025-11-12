@@ -194,7 +194,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $user    = auth()->user();
         $route   = $request->route();
         $param   = $route->parameter('transactionGroup');
-        $groupId = !is_object($param) ? (int) $param : 0;
+        $groupId = is_object($param) ? 0 : (int) $param;
 
         /** @var null|TransactionGroup $group */
         $group   = $user->transactionGroups()->withTrashed()->find($groupId);

@@ -37,5 +37,5 @@ use Illuminate\Support\Facades\Broadcast;
 
 Broadcast::channel(
     'App.User.{id}',
-    static fn ($user, $id) => (int)$user->id === (int)$id
+    static fn ($user, $id): bool => (int)$user->id === (int)$id
 );

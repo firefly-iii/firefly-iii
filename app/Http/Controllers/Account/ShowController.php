@@ -84,7 +84,7 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null)
+    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
@@ -175,23 +175,7 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact(
-                'account',
-                'showAll',
-                'objectType',
-                'currency',
-                'today',
-                'periods',
-                'subTitleIcon',
-                'groups',
-                'attachments',
-                'subTitle',
-                'start',
-                'end',
-                'chartUrl',
-                'location',
-                'balances'
-            )
+            ['account' => $account, 'showAll' => $showAll, 'objectType' => $objectType, 'currency' => $currency, 'today' => $today, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'attachments' => $attachments, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'chartUrl' => $chartUrl, 'location' => $location, 'balances' => $balances]
         );
     }
 
@@ -203,68 +187,51 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showAll(Request $request, Account $account)
+    public function showAll(Request $request, Account $account): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
-        $location        = $this->repository->getLocation($account);
-        $isLiability     = $this->repository->isLiability($account);
-        $attachments     = $this->repository->getAttachments($account);
-        $objectType      = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $end             = today(config('app.timezone'));
-        $today           = today(config('app.timezone'));
-        $accountCurrency = $this->repository->getAccountCurrency($account);
-        $start           = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $subTitleIcon    = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
-        $page            = (int) $request->get('page');
-        $pageSize        = (int) app('preferences')->get('listPageSize', 50)->data;
-        $currency        = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
-        $subTitle        = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
-        $periods         = new Collection();
+        $location     = $this->repository->getLocation($account);
+        $isLiability  = $this->repository->isLiability($account);
+        $attachments  = $this->repository->getAttachments($account);
+        $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $end          = today(config('app.timezone'));
+        $today        = today(config('app.timezone'));
+        $this->repository->getAccountCurrency($account);
+        $start        = $this->repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $subTitleIcon = config('firefly.subIconsByIdentifier.'.$account->accountType->type);
+        $page         = (int) $request->get('page');
+        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
+        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $periods      = new Collection();
 
         $end->endOfDay();
 
         /** @var GroupCollectorInterface $collector */
-        $collector       = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setAccounts(new Collection()->push($account))->setLimit($pageSize)->setPage($page)->withAccountInformation()->withCategoryInformation();
 
         // this search will not include transaction groups where this asset account (or liability)
         // is just part of ONE of the journals. To force this:
         $collector->setExpandGroupSearch(true);
 
-        $groups          = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show.all', [$account->id]));
-        $chartUrl        = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $showAll         = true;
+        $chartUrl     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $showAll      = true;
         // correct
         Log::debug(sprintf('showAll: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
 
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
         // $balances = Steam::finalAccountBalance($account, $end);
         // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
-        $balances        = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
+        $balances     = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
 
         return view(
             'accounts.show',
-            compact(
-                'account',
-                'showAll',
-                'location',
-                'objectType',
-                'isLiability',
-                'attachments',
-                'currency',
-                'today',
-                'chartUrl',
-                'periods',
-                'subTitleIcon',
-                'groups',
-                'subTitle',
-                'start',
-                'end',
-                'balances'
-            )
+            ['account' => $account, 'showAll' => $showAll, 'location' => $location, 'objectType' => $objectType, 'isLiability' => $isLiability, 'attachments' => $attachments, 'currency' => $currency, 'today' => $today, 'chartUrl' => $chartUrl, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'balances' => $balances]
         );
     }
 }

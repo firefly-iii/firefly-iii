@@ -33,11 +33,6 @@ use Illuminate\Support\Facades\Log;
 class RecurrenceTransformer extends AbstractTransformer
 {
     /**
-     * RecurrenceTransformer constructor.
-     */
-    public function __construct() {}
-
-    /**
      * Transform the recurring transaction.
      */
     public function transform(Recurrence $recurrence): array

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
@@ -193,18 +194,18 @@ class BillUpdateService
 
     private function updateBillTriggers(Bill $bill, array $oldData, array $newData): void
     {
-        app('log')->debug(sprintf('Now in updateBillTriggers(%d, "%s")', $bill->id, $bill->name));
+        Log::debug(sprintf('Now in updateBillTriggers(%d, "%s")', $bill->id, $bill->name));
 
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($bill->user);
         $rules      = $repository->getRulesForBill($bill);
         if (0 === $rules->count()) {
-            app('log')->debug('Found no rules.');
+            Log::debug('Found no rules.');
 
             return;
         }
-        app('log')->debug(sprintf('Found %d rules', $rules->count()));
+        Log::debug(sprintf('Found %d rules', $rules->count()));
         $fields     = [
             'name'                      => 'description_contains',
             'amount_min'                => 'amount_more',
@@ -216,7 +217,7 @@ class BillUpdateService
                 continue;
             }
             if ($oldData[$field] === $newData[$field]) {
-                app('log')->debug(sprintf('Field %s is unchanged ("%s"), continue.', $field, $oldData[$field]));
+                Log::debug(sprintf('Field %s is unchanged ("%s"), continue.', $field, $oldData[$field]));
 
                 continue;
             }
@@ -230,7 +231,7 @@ class BillUpdateService
         foreach ($rules as $rule) {
             $trigger = $this->getRuleTrigger($rule, $key);
             if ($trigger instanceof RuleTrigger && $trigger->trigger_value === $oldValue) {
-                app('log')->debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
+                Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
 
@@ -238,7 +239,7 @@ class BillUpdateService
             }
             if ($trigger instanceof RuleTrigger && $trigger->trigger_value !== $oldValue && in_array($key, ['amount_more', 'amount_less'], true)
                 && 0 === bccomp($trigger->trigger_value, $oldValue)) {
-                app('log')->debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
+                Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
             }

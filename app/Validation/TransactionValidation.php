@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -36,7 +37,6 @@ use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Trait TransactionValidation
@@ -302,11 +302,8 @@ trait TransactionValidation
     private function isLiability(Account $account): bool
     {
         $type = $account->accountType->type;
-        if (in_array($type, config('firefly.valid_liabilities'), true)) {
-            return true;
-        }
 
-        return false;
+        return in_array($type, config('firefly.valid_liabilities'), true);
     }
 
     private function isAsset(Account $account): bool
@@ -327,11 +324,8 @@ trait TransactionValidation
         if ('' === $transaction['foreign_amount']) {
             return false;
         }
-        if (0 === bccomp('0', (string) $transaction['foreign_amount'])) {
-            return false;
-        }
 
-        return true;
+        return 0 !== bccomp('0', (string) $transaction['foreign_amount']);
     }
 
     /**
@@ -758,12 +752,9 @@ trait TransactionValidation
             // source ID's are equal, return void.
             return true;
         }
-        if ($this->arrayEqual($comparison['source_name'])) {
-            // source names are equal, return void.
-            return true;
-        }
 
-        return false;
+        // source names are equal, return void.
+        return (bool) $this->arrayEqual($comparison['source_name']);
     }
 
     private function arrayEqual(array $array): bool
@@ -777,12 +768,9 @@ trait TransactionValidation
             // destination ID's are equal, return void.
             return true;
         }
-        if ($this->arrayEqual($comparison['destination_name'])) {
-            // destination names are equal, return void.
-            return true;
-        }
 
-        return false;
+        // destination names are equal, return void.
+        return (bool) $this->arrayEqual($comparison['destination_name']);
     }
 
     private function compareAccountDataTransfer(array $comparison): bool
@@ -799,11 +787,8 @@ trait TransactionValidation
             // destination ID's are equal, return void.
             return true;
         }
-        if ($this->arrayEqual($comparison['destination_name'])) {
-            // destination names are equal, return void.
-            return true;
-        }
 
-        return false;
+        // destination names are equal, return void.
+        return (bool) $this->arrayEqual($comparison['destination_name']);
     }
 }

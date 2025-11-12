@@ -70,7 +70,7 @@ trait GetConfigurationData
                 $steps[]              = $currentStep;
             }
         }
-        app('log')->debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
+        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
 
         return $steps;
     }
@@ -199,7 +199,7 @@ trait GetConfigurationData
                 }
             }
         }
-        app('log')->debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
+        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
 
         return $steps;
     }
@@ -209,7 +209,7 @@ trait GetConfigurationData
         $config   = FireflyConfig::get('last_rt_job', 0);
         $lastTime = (int)$config?->data;
         $now      = Carbon::now()->getTimestamp();
-        app('log')->debug(sprintf('verifyRecurringCronJob: last time is %d ("%s"), now is %d', $lastTime, $config?->data, $now));
+        Log::debug(sprintf('verifyRecurringCronJob: last time is %d ("%s"), now is %d', $lastTime, $config?->data, $now));
         if (0 === $lastTime) {
             request()->session()->flash('info', trans('firefly.recurring_never_cron'));
 

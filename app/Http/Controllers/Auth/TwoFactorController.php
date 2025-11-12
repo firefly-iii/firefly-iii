@@ -47,26 +47,22 @@ class TwoFactorController extends Controller
 {
     /**
      * What to do if 2FA lost?
-     *
-     * @return Factory|View
      */
-    public function lostTwoFactor()
+    public function lostTwoFactor(): Factory|View
     {
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
         $title     = (string) trans('firefly.two_factor_forgot_title');
 
-        return view('auth.lost-two-factor', compact('user', 'siteOwner', 'title'));
+        return view('auth.lost-two-factor', ['user' => $user, 'siteOwner' => $siteOwner, 'title' => $title]);
     }
 
     /**
-     * @return Redirector|RedirectResponse
-     *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function submitMFA(Request $request)
+    public function submitMFA(Request $request): Redirector|RedirectResponse
     {
         /** @var array $mfaHistory */
         $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
@@ -214,11 +210,8 @@ class TwoFactorController extends Controller
         if (!is_array($list)) {
             $list = [];
         }
-        if (in_array($mfaCode, $list, true)) {
-            return true;
-        }
 
-        return false;
+        return in_array($mfaCode, $list, true);
     }
 
     /**

@@ -66,7 +66,7 @@ class LinkController extends Controller
      *
      * @return Factory|View
      */
-    public function create()
+    public function create(): Factory|\Illuminate\Contracts\View\View
     {
         Log::channel('audit')->info('User visits link index.');
 
@@ -78,7 +78,7 @@ class LinkController extends Controller
             $this->rememberPreviousUrl('link-types.create.url');
         }
 
-        return view('settings.link.create', compact('subTitle', 'subTitleIcon'));
+        return view('settings.link.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -86,7 +86,7 @@ class LinkController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function delete(Request $request, LinkType $linkType)
+    public function delete(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
@@ -111,15 +111,13 @@ class LinkController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('link-types.delete.url');
 
-        return view('settings.link.delete', compact('linkType', 'subTitle', 'moveTo', 'count'));
+        return view('settings.link.delete', ['linkType' => $linkType, 'subTitle' => $subTitle, 'moveTo' => $moveTo, 'count' => $count]);
     }
 
     /**
      * Actually destroy the link.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(Request $request, LinkType $linkType)
+    public function destroy(Request $request, LinkType $linkType): Redirector|RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
@@ -137,7 +135,7 @@ class LinkController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function edit(Request $request, LinkType $linkType)
+    public function edit(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (false === $linkType->editable) {
             $request->session()->flash('error', (string) trans('firefly.cannot_edit_link_type', ['name' => e($linkType->name)]));
@@ -155,7 +153,7 @@ class LinkController extends Controller
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 
-        return view('settings.link.edit', compact('subTitle', 'subTitleIcon', 'linkType'));
+        return view('settings.link.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType' => $linkType]);
     }
 
     /**
@@ -163,7 +161,7 @@ class LinkController extends Controller
      *
      * @return Factory|View
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.journal_link_configuration');
         $subTitleIcon = 'fa-link';
@@ -176,7 +174,7 @@ class LinkController extends Controller
             }
         );
 
-        return view('settings.link.index', compact('subTitle', 'subTitleIcon', 'linkTypes'));
+        return view('settings.link.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkTypes' => $linkTypes]);
     }
 
     /**
@@ -184,7 +182,7 @@ class LinkController extends Controller
      *
      * @return Factory|View
      */
-    public function show(LinkType $linkType)
+    public function show(LinkType $linkType): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle     = (string) trans('firefly.overview_for_link', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
@@ -192,7 +190,7 @@ class LinkController extends Controller
 
         Log::channel('audit')->info(sprintf('User viewing link type #%d', $linkType->id));
 
-        return view('settings.link.show', compact('subTitle', 'subTitleIcon', 'linkType', 'links'));
+        return view('settings.link.show', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType' => $linkType, 'links' => $links]);
     }
 
     /**

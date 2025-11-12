@@ -53,7 +53,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             $end          = $availableBudget->end_date->format('Y-m-d');
             $key          = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
             if (array_key_exists($key, $exists)) {
-                app('log')->debug(sprintf('Found duplicate AB: %s %s, %s-%s. Has been deleted', $availableBudget->transaction_currency_id, $availableBudget->amount, $start, $end));
+                Log::debug(sprintf('Found duplicate AB: %s %s, %s-%s. Has been deleted', $availableBudget->transaction_currency_id, $availableBudget->amount, $start, $end));
                 $availableBudget->delete();
             }
             $exists[$key] = true;

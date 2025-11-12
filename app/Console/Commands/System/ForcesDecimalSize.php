@@ -132,11 +132,11 @@ class ForcesDecimalSize extends Command
     {
         // if sqlite, add function?
         if ('sqlite' === (string) config('database.default')) {
-            DB::connection()->getPdo()->sqliteCreateFunction('REGEXP', static function ($pattern, $value) {
+            DB::connection()->getPdo()->sqliteCreateFunction('REGEXP', static function ($pattern, $value): int {
                 mb_regex_encoding('UTF-8');
                 $pattern = trim($pattern, '"');
 
-                return (false !== mb_ereg($pattern, (string) $value)) ? 1 : 0;
+                return (mb_ereg($pattern, (string) $value)) ? 1 : 0;
             });
         }
 

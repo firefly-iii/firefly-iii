@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ObjectGroup;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -96,14 +97,14 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
     public function resetOrder(): void
     {
-        app('log')->debug('Now in resetOrder');
+        Log::debug('Now in resetOrder');
         $list  = $this->get();
         $index = 1;
 
         /** @var ObjectGroup $objectGroup */
         foreach ($list as $objectGroup) {
             if ($index !== $objectGroup->order) {
-                app('log')->debug(
+                Log::debug(
                     sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
                 );
                 $objectGroup->order = $index;
@@ -166,7 +167,7 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
             $objectGroup->save();
         }
 
-        app('log')->debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $newOrder));
+        Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $newOrder));
 
         return $objectGroup;
     }

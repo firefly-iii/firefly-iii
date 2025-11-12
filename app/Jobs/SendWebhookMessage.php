@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Services\Webhook\WebhookSenderInterface;
 use Illuminate\Bus\Queueable;
@@ -52,7 +53,8 @@ class SendWebhookMessage implements ShouldQueue
      */
     public function handle(): void
     {
-        app('log')->debug(sprintf('Now handling webhook message #%d', $this->message->id));
+
+        Log::debug(sprintf('Now handling webhook message #%d', $this->message->id));
         // send job!
         $sender = app(WebhookSenderInterface::class);
         $sender->setMessage($this->message);

@@ -114,7 +114,7 @@ class Range
 
         // send error to view, if it could not set money format
         if (false === $moneyResult) {
-            app('log')->error('Could not set locale. The following array doesnt work: ', $localeArray);
+            Log::error('Could not set locale. The following array doesnt work: ', $localeArray);
             app('view')->share('invalidMonetaryLocale', true);
         }
 

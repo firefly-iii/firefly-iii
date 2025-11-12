@@ -71,7 +71,7 @@ class ExchangeRateConverter
 
     public function enabled(): bool
     {
-        return false !== config('cer.enabled') || true === $this->ignoreSettings;
+        return false !== config('cer.enabled') || $this->ignoreSettings;
     }
 
     /**
@@ -147,24 +147,24 @@ class ExchangeRateConverter
         $rate   = $this->getFromDB($currency->id, $euroId, $date->format('Y-m-d'));
 
         if (null !== $rate) {
-            //            app('log')->debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
+            //            \Illuminate\Support\Facades\Log::debug(sprintf('Rate for %s to EUR is %s.', $currency->code, $rate));
             return $rate;
         }
         $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
-            //            app('log')->debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
+            //            \Illuminate\Support\Facades\Log::debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
             // return $rate;
         }
         // grab backup values from config file:
         $backup = config(sprintf('cer.rates.%s', $currency->code));
         if (null !== $backup) {
             return bcdiv('1', (string)$backup);
-            // app('log')->debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
+            // \Illuminate\Support\Facades\Log::debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
             // return $backup;
         }
 
-        //        app('log')->debug(sprintf('No rate for %s to EUR.', $currency->code));
+        //        \Illuminate\Support\Facades\Log::debug(sprintf('No rate for %s to EUR.', $currency->code));
         return '0';
     }
 
@@ -209,16 +209,16 @@ class ExchangeRateConverter
         $rate         = (string)$result?->rate;
 
         if ('' === $rate) {
-            app('log')->debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
+            Log::debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
 
             return null;
         }
         if (0 === bccomp('0', $rate)) {
-            app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB, but it\'s zero.', $from, $to, $date));
+            Log::debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB, but it\'s zero.', $from, $to, $date));
 
             return null;
         }
-        app('log')->debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB: %s.', $from, $to, $date, $rate));
+        Log::debug(sprintf('ExchangeRateConverter: Found rate for #%d->#%d (%s) in the DB: %s.', $from, $to, $date, $rate));
         $cache->store($rate);
 
         // if the rate has not been cached during this particular run, save it

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
@@ -76,7 +77,7 @@ class EditController extends Controller
      *
      * @throws FireflyException
      */
-    public function edit(Request $request, Rule $rule)
+    public function edit(Request $request, Rule $rule): Factory|\Illuminate\Contracts\View\View
     {
         $triggerCount   = 0;
         $actionCount    = 0;
@@ -146,7 +147,7 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule.edit', compact('rule', 'subTitle', 'primaryTrigger', 'oldTriggers', 'oldActions', 'triggerCount', 'actionCount'));
+        return view('rules.rule.edit', ['rule' => $rule, 'subTitle' => $subTitle, 'primaryTrigger' => $primaryTrigger, 'oldTriggers' => $oldTriggers, 'oldActions' => $oldActions, 'triggerCount' => $triggerCount, 'actionCount' => $actionCount]);
     }
 
     /**
@@ -180,8 +181,8 @@ class EditController extends Controller
                 )->render();
             } catch (Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
-                app('log')->debug($message);
-                app('log')->error($e->getTraceAsString());
+                Log::debug($message);
+                Log::error($e->getTraceAsString());
 
                 throw new FireflyException($message, 0, $e);
             }

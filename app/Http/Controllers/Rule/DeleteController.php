@@ -63,14 +63,14 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(Rule $rule)
+    public function delete(Rule $rule): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string) trans('firefly.delete_rule', ['title' => $rule->title]);
 
         // put previous url in session
         $this->rememberPreviousUrl('rules.delete.url');
 
-        return view('rules.rule.delete', compact('rule', 'subTitle'));
+        return view('rules.rule.delete', ['rule' => $rule, 'subTitle' => $subTitle]);
     }
 
     /**

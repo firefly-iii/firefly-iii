@@ -36,7 +36,7 @@ use FireflyIII\Support\Facades\Steam;
 class PiggyBankEventTransformer extends AbstractTransformer
 {
     private readonly TransactionCurrency $primaryCurrency;
-    private bool                         $convertToPrimary;
+    private readonly bool                         $convertToPrimary;
 
     /**
      * PiggyBankEventTransformer constructor.

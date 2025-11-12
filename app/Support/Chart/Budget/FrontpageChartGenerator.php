@@ -39,13 +39,13 @@ use Illuminate\Support\Facades\Log;
  */
 class FrontpageChartGenerator
 {
-    public bool                                     $convertToPrimary = false;
+    public bool                                     $convertToPrimary  = false;
     public TransactionCurrency                      $default;
     protected OperationsRepositoryInterface         $opsRepository;
     private readonly BudgetLimitRepositoryInterface $blRepository;
     private readonly BudgetRepositoryInterface      $budgetRepository;
     private Carbon                                  $end;
-    private string                                  $monthAndDayFormat;
+    private string                                  $monthAndDayFormat = '';
     private Carbon                                  $start;
 
     /**
@@ -53,10 +53,9 @@ class FrontpageChartGenerator
      */
     public function __construct()
     {
-        $this->budgetRepository  = app(BudgetRepositoryInterface::class);
-        $this->blRepository      = app(BudgetLimitRepositoryInterface::class);
-        $this->opsRepository     = app(OperationsRepositoryInterface::class);
-        $this->monthAndDayFormat = '';
+        $this->budgetRepository = app(BudgetRepositoryInterface::class);
+        $this->blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $this->opsRepository    = app(OperationsRepositoryInterface::class);
     }
 
     /**
@@ -192,7 +191,7 @@ class FrontpageChartGenerator
                 Log::debug(sprintf('Process spent row (%s)', $entry['currency_code']));
                 $data = $this->processRow($data, $budget, $limit, $entry);
             }
-            if (!($entry['currency_id'] === $limit->transaction_currency_id || $usePrimary)) {
+            if ($entry['currency_id'] !== $limit->transaction_currency_id && !$usePrimary) {
                 Log::debug(sprintf('Skipping spent row (%s).', $entry['currency_code']));
             }
         }

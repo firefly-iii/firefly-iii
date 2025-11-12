@@ -82,7 +82,7 @@ class RegisterController extends Controller
      * @throws FireflyException
      * @throws ValidationException
      */
-    public function register(Request $request)
+    public function register(Request $request): Redirector|RedirectResponse
     {
         $allowRegistration = $this->allowedToRegister();
         $inviteCode        = (string) $request->get('invite_code');
@@ -146,7 +146,7 @@ class RegisterController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function showInviteForm(Request $request, string $code)
+    public function showInviteForm(Request $request, string $code): Factory|\Illuminate\Contracts\View\View
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
@@ -155,20 +155,20 @@ class RegisterController extends Controller
         $inviteCode        = $code;
         $validCode         = $repository->validateInviteCode($inviteCode);
 
-        if (true === $allowRegistration) {
+        if ($allowRegistration) {
             $message = 'You do not need an invite code on this installation.';
 
-            return view('errors.error', compact('message'));
+            return view('errors.error', ['message' => $message]);
         }
         if (false === $validCode) {
             $message = 'Invalid code.';
 
-            return view('errors.error', compact('message'));
+            return view('errors.error', ['message' => $message]);
         }
 
         $email             = $request->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle', 'inviteCode'));
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle, 'inviteCode' => $inviteCode]);
     }
 
     /**
@@ -180,7 +180,7 @@ class RegisterController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function showRegistrationForm(?Request $request = null)
+    public function showRegistrationForm(?Request $request = null): Factory|\Illuminate\Contracts\View\View
     {
         $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
@@ -189,11 +189,11 @@ class RegisterController extends Controller
         if (false === $allowRegistration) {
             $message = 'Registration is currently not available. If you are the administrator, you can enable this in the administration.';
 
-            return view('errors.error', compact('message'));
+            return view('errors.error', ['message' => $message]);
         }
 
         $email             = $request?->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle]);
     }
 }

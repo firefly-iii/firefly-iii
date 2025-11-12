@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -78,14 +79,14 @@ class BudgetLimitController extends Controller
     /**
      * @return Factory|View
      */
-    public function create(Budget $budget, Carbon $start, Carbon $end)
+    public function create(Budget $budget, Carbon $start, Carbon $end): Factory|\Illuminate\Contracts\View\View
     {
         $collection   = $this->currencyRepos->get();
         $budgetLimits = $this->blRepository->getBudgetLimits($budget, $start, $end);
 
         // remove already budgeted currencies with the same date range
         $currencies   = $collection->filter(
-            static function (TransactionCurrency $currency) use ($budgetLimits, $start, $end) {
+            static function (TransactionCurrency $currency) use ($budgetLimits, $start, $end): bool {
                 /** @var BudgetLimit $limit */
                 foreach ($budgetLimits as $limit) {
                     if ($limit->transaction_currency_id === $currency->id && $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end)
@@ -98,13 +99,10 @@ class BudgetLimitController extends Controller
             }
         );
 
-        return view('budgets.budget-limits.create', compact('start', 'end', 'currencies', 'budget'));
+        return view('budgets.budget-limits.create', ['start' => $start, 'end' => $end, 'currencies' => $currencies, 'budget' => $budget]);
     }
 
-    /**
-     * @return Redirector|RedirectResponse
-     */
-    public function delete(BudgetLimit $budgetLimit)
+    public function delete(BudgetLimit $budgetLimit): Redirector|RedirectResponse
     {
         $this->blRepository->destroyBudgetLimit($budgetLimit);
         session()->flash('success', trans('firefly.deleted_bl'));
@@ -115,21 +113,21 @@ class BudgetLimitController extends Controller
     /**
      * @return Factory|View
      */
-    public function edit(BudgetLimit $budgetLimit)
+    public function edit(BudgetLimit $budgetLimit): Factory|\Illuminate\Contracts\View\View
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.edit', compact('budgetLimit', 'notes'));
+        return view('budgets.budget-limits.edit', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
      * @return Factory|View
      */
-    public function show(BudgetLimit $budgetLimit)
+    public function show(BudgetLimit $budgetLimit): Factory|\Illuminate\Contracts\View\View
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.show', compact('budgetLimit', 'notes'));
+        return view('budgets.budget-limits.show', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
@@ -139,7 +137,7 @@ class BudgetLimitController extends Controller
      */
     public function store(Request $request): JsonResponse|RedirectResponse
     {
-        app('log')->debug('Going to store new budget-limit.', $request->all());
+        Log::debug('Going to store new budget-limit.', $request->all());
         // first search for existing one and update it if necessary.
         $currency = $this->currencyRepos->find((int) $request->get('transaction_currency_id'));
         $budget   = $this->repository->find((int) $request->get('budget_id'));
@@ -161,7 +159,7 @@ class BudgetLimitController extends Controller
             return response()->json();
         }
 
-        app('log')->debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+        Log::debug(sprintf('Start: %s, end: %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         $limit    = $this->blRepository->find($budget, $currency, $start, $end);
 

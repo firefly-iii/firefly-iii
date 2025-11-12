@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -31,7 +32,6 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 /**
  * Class StoreRequest
@@ -202,7 +202,7 @@ class StoreRequest extends FormRequest
                 $inactiveIndex = $index;
             }
         }
-        if (true === $allInactive) {
+        if ($allInactive) {
             $validator->errors()->add(sprintf('triggers.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_trigger'));
         }
     }
@@ -231,7 +231,7 @@ class StoreRequest extends FormRequest
                 $inactiveIndex = $index;
             }
         }
-        if (true === $allInactive) {
+        if ($allInactive) {
             $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
         }
     }

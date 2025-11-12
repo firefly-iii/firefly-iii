@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -46,7 +47,7 @@ class BillController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->repository = app(BillRepositoryInterface::class);
                 $this->repository->setUser($this->user);
@@ -65,7 +66,7 @@ class BillController extends Controller
     {
         $result   = $this->repository->searchBill($request->attributes->get('query'), $request->attributes->get('limit'));
         $filtered = $result->map(
-            static fn (Bill $item) => [
+            static fn (Bill $item): array => [
                 'id'     => (string) $item->id,
                 'name'   => $item->name,
                 'active' => $item->active,

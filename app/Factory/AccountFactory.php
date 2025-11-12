@@ -130,7 +130,7 @@ class AccountFactory
     protected function getAccountType(array $data): ?AccountType
     {
         $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
-        $accountTypeName = array_key_exists('account_type_name', $data) ? $data['account_type_name'] : null;
+        $accountTypeName = $data['account_type_name'] ?? null;
         $result          = null;
         // find by name or ID
         if ($accountTypeId > 0) {
@@ -174,7 +174,7 @@ class AccountFactory
         $this->accountRepository->resetAccountOrder();
 
         // create it:
-        $virtualBalance = array_key_exists('virtual_balance', $data) ? $data['virtual_balance'] : null;
+        $virtualBalance = $data['virtual_balance'] ?? null;
         $active         = array_key_exists('active', $data) ? $data['active'] : true;
         $databaseData   = [
             'user_id'         => $this->user->id,

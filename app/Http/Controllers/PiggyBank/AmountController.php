@@ -66,7 +66,7 @@ class AmountController extends Controller
      *
      * @return Factory|View
      */
-    public function add(PiggyBank $piggyBank)
+    public function add(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $date */
         $date       = session('end', today(config('app.timezone')));
@@ -98,7 +98,7 @@ class AmountController extends Controller
         }
         $total      = (float) $total; // intentional float.
 
-        return view('piggy-banks.add', compact('piggyBank', 'accounts', 'total'));
+        return view('piggy-banks.add', ['piggyBank' => $piggyBank, 'accounts' => $accounts, 'total' => $total]);
     }
 
     /**
@@ -106,7 +106,7 @@ class AmountController extends Controller
      *
      * @return Factory|View
      */
-    public function addMobile(PiggyBank $piggyBank)
+    public function addMobile(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $date */
         $date       = session('end', today(config('app.timezone')));
@@ -127,7 +127,7 @@ class AmountController extends Controller
             $total         = bcadd($total, $leftOnAccount);
         }
 
-        return view('piggy-banks.add-mobile', compact('piggyBank', 'total', 'accounts'));
+        return view('piggy-banks.add-mobile', ['piggyBank' => $piggyBank, 'total' => $total, 'accounts' => $accounts]);
     }
 
     /**
@@ -171,7 +171,7 @@ class AmountController extends Controller
 
             return redirect(route('piggy-banks.index'));
         }
-        app('log')->error(sprintf('Cannot add %s because canAddAmount returned false.', $total));
+        Log::error(sprintf('Cannot add %s because canAddAmount returned false.', $total));
         session()->flash(
             'error',
             (string) trans(
@@ -237,7 +237,7 @@ class AmountController extends Controller
      *
      * @return Factory|View
      */
-    public function remove(PiggyBank $piggyBank)
+    public function remove(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
@@ -247,7 +247,7 @@ class AmountController extends Controller
             ];
         }
 
-        return view('piggy-banks.remove', compact('piggyBank', 'accounts'));
+        return view('piggy-banks.remove', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
     }
 
     /**
@@ -255,7 +255,7 @@ class AmountController extends Controller
      *
      * @return Factory|View
      */
-    public function removeMobile(PiggyBank $piggyBank)
+    public function removeMobile(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
@@ -265,6 +265,6 @@ class AmountController extends Controller
             ];
         }
 
-        return view('piggy-banks.remove-mobile', compact('piggyBank', 'accounts'));
+        return view('piggy-banks.remove-mobile', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
     }
 }

@@ -47,8 +47,6 @@ class WebhookEnrichment implements EnrichmentInterface
     private array      $ids               = [];      // @phpstan-ignore-line
     private array      $responses         = [];
     private array      $triggers          = [];
-    private User       $user;
-    private UserGroup  $userGroup;
     private array      $webhookDeliveries = [];
     private array      $webhookResponses  = [];
     private array      $webhookTriggers   = [];
@@ -75,19 +73,13 @@ class WebhookEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
+    public function setUser(User $user): void {}
 
-    public function setUserGroup(UserGroup $userGroup): void
-    {
-        $this->userGroup = $userGroup;
-    }
+    public function setUserGroup(UserGroup $userGroup): void {}
 
     private function appendCollectedInfo(): void
     {
-        $this->collection = $this->collection->map(function (Webhook $item) {
+        $this->collection = $this->collection->map(function (Webhook $item): Webhook {
             $meta       = [
                 'deliveries' => $this->webhookDeliveries[$item->id] ?? [],
                 'responses'  => $this->webhookResponses[$item->id] ?? [],

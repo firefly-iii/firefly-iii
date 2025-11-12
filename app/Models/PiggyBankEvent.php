@@ -64,7 +64,7 @@ class PiggyBankEvent extends Model
     protected function amount(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (string)$value,
+            get: static fn ($value): string => (string)$value,
         );
     }
 
@@ -82,7 +82,7 @@ class PiggyBankEvent extends Model
     protected function piggyBankId(): Attribute
     {
         return Attribute::make(
-            get: static fn ($value) => (int)$value,
+            get: static fn ($value): int => (int)$value,
         );
     }
 }

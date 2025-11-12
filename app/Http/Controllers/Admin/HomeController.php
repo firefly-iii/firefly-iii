@@ -53,7 +53,7 @@ class HomeController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function index()
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
         Log::channel('audit')->info('User visits admin index.');
         $title         = (string) trans('firefly.system_settings');
@@ -64,6 +64,6 @@ class HomeController extends Controller
             $email = $pref->data;
         }
 
-        return view('settings.index', compact('title', 'mainTitleIcon', 'email'));
+        return view('settings.index', ['title' => $title, 'mainTitleIcon' => $mainTitleIcon, 'email' => $email]);
     }
 }

@@ -70,7 +70,7 @@ class CreateController extends Controller
      *
      * @return Factory|Redirector|RedirectResponse|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
         $user         = auth()->user();
@@ -91,7 +91,7 @@ class CreateController extends Controller
 
         Log::channel('audit')->info('Create new currency.');
 
-        return view('currencies.create', compact('subTitleIcon', 'subTitle'));
+        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -105,7 +105,7 @@ class CreateController extends Controller
         $user            = auth()->user();
         $data            = $request->getCurrencyData();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            app('log')->error('User '.auth()->user()->id.' is not admin, but tried to store a currency.');
+            Log::error('User '.auth()->user()->id.' is not admin, but tried to store a currency.');
             Log::channel('audit')->warning('Tried to create (POST) currency without admin rights.', $data);
 
             return redirect($this->getPreviousUrl('currencies.create.url'))->withInput();
@@ -116,7 +116,7 @@ class CreateController extends Controller
         try {
             $currency = $this->repository->store($data);
         } catch (FireflyException $e) {
-            app('log')->error($e->getMessage());
+            Log::error($e->getMessage());
             Log::channel('audit')->warning('Could not store (POST) currency without admin rights.', $data);
             $request->session()->flash('error', (string) trans('firefly.could_not_store_currency'));
             $currency = null;

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -40,7 +41,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -78,7 +78,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null)
+    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -139,44 +139,29 @@ class ReconcileController extends Controller
 
         return view(
             'accounts.reconcile.index',
-            compact(
-                'account',
-                'currency',
-                'objectType',
-                'subTitleIcon',
-                'start',
-                'end',
-                'subTitle',
-                'startBalance',
-                'endBalance',
-                'transactionsUrl',
-                'overviewUrl',
-                'indexUrl'
-            )
+            ['account' => $account, 'currency' => $currency, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'start' => $start, 'end' => $end, 'subTitle' => $subTitle, 'startBalance' => $startBalance, 'endBalance' => $endBalance, 'transactionsUrl' => $transactionsUrl, 'overviewUrl' => $overviewUrl, 'indexUrl' => $indexUrl]
         );
     }
 
     /**
      * Submit a new reconciliation.
      *
-     * @return Redirector|RedirectResponse
-     *
      * @throws DuplicateTransactionException
      */
-    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end)
+    public function submit(ReconciliationStoreRequest $request, Account $account, Carbon $start, Carbon $end): Redirector|RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
 
-        app('log')->debug('In ReconcileController::submit()');
+        Log::debug('In ReconcileController::submit()');
         $data   = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
             $this->repository->reconcileById((int) $journalId);
         }
-        app('log')->debug('Reconciled all transactions.');
+        Log::debug('Reconciled all transactions.');
 
         // switch dates if necessary
         if ($end->lt($start)) {
@@ -188,7 +173,7 @@ class ReconcileController extends Controller
         if ('create' === $data['reconcile']) {
             $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
-        app('log')->debug('End of routine.');
+        Log::debug('End of routine.');
         app('preferences')->mark();
         if ('' === $result) {
             session()->flash('success', (string) trans('firefly.reconciliation_stored'));

@@ -183,9 +183,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $all   = TransactionCurrency::orderBy('code', 'ASC')->get();
         $local = $this->get();
 
-        return $all->map(static function (TransactionCurrency $current) use ($local) {
-            $hasId                     = $local->contains(static fn (TransactionCurrency $entry) => $entry->id === $current->id);
-            $isPrimary                 = $local->contains(static fn (TransactionCurrency $entry) => 1 === (int)$entry->pivot->group_default && $entry->id === $current->id);
+        return $all->map(static function (TransactionCurrency $current) use ($local): TransactionCurrency {
+            $hasId                     = $local->contains(static fn (TransactionCurrency $entry): bool => $entry->id === $current->id);
+            $isPrimary                 = $local->contains(static fn (TransactionCurrency $entry): bool => 1 === (int)$entry->pivot->group_default && $entry->id === $current->id);
             $current->userGroupEnabled = $hasId;
             $current->userGroupNative  = $isPrimary;
 
@@ -196,14 +196,13 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     public function get(): Collection
     {
         $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
-        $all->map(static function (TransactionCurrency $current) { // @phpstan-ignore-line
+        $all->map(static function (TransactionCurrency $current): TransactionCurrency { // @phpstan-ignore-line
             $current->userGroupEnabled = true;
             $current->userGroupNative  = 1 === (int)$current->pivot->group_default;
 
             return $current;
         });
 
-        /** @var Collection */
         return $all;
     }
 
@@ -402,7 +401,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     {
         Log::debug('Now in update()');
         // can be true, false, null
-        $enabled = array_key_exists('enabled', $data) ? $data['enabled'] : null;
+        $enabled = $data['enabled'] ?? null;
         // can be true, false, but method only responds to "true".
         $default = array_key_exists('default', $data) ? $data['default'] : false;
 

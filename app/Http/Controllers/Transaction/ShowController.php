@@ -82,7 +82,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    public function show(TransactionGroup $transactionGroup)
+    public function show(TransactionGroup $transactionGroup): Factory|\Illuminate\Contracts\View\View
     {
         /** @var User $admin */
         $admin           = auth()->user();
@@ -146,7 +146,7 @@ class ShowController extends Controller
         $attachments     = $this->repository->getAttachments($transactionGroup);
         $links           = $this->repository->getLinks($transactionGroup);
 
-        return view('transactions.show', compact('transactionGroup', 'amounts', 'first', 'type', 'logEntries', 'groupLogEntries', 'subTitle', 'splits', 'selectedGroup', 'groupArray', 'events', 'attachments', 'links', 'accounts'));
+        return view('transactions.show', ['transactionGroup' => $transactionGroup, 'amounts' => $amounts, 'first' => $first, 'type' => $type, 'logEntries' => $logEntries, 'groupLogEntries' => $groupLogEntries, 'subTitle' => $subTitle, 'splits' => $splits, 'selectedGroup' => $selectedGroup, 'groupArray' => $groupArray, 'events' => $events, 'attachments' => $attachments, 'links' => $links, 'accounts' => $accounts]);
     }
 
     private function getAmounts(array $group): array

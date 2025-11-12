@@ -77,7 +77,7 @@ class NoCategoryController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null)
+    public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         Log::debug('Start of noCategory()');
         $start ??= session('start');
@@ -104,7 +104,7 @@ class NoCategoryController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
-        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -115,7 +115,7 @@ class NoCategoryController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showAll(Request $request)
+    public function showAll(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
         $start     = null;
@@ -140,6 +140,6 @@ class NoCategoryController extends Controller
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
-        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
     }
 }

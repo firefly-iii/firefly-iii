@@ -274,7 +274,7 @@ class Handler extends ExceptionHandler
     {
         return null !== Arr::first(
             $this->dontReport,
-            static fn ($type) => $e instanceof $type
+            static fn ($type): bool => $e instanceof $type
         );
     }
 

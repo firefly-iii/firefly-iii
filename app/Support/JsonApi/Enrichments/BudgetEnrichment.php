@@ -54,8 +54,6 @@ class BudgetEnrichment implements EnrichmentInterface
     private User       $user;
     private UserGroup  $userGroup;
 
-    public function __construct() {}
-
     public function enrich(Collection $collection): Collection
     {
         $this->collection = $collection;
@@ -102,7 +100,7 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (Budget $item) {
+        $this->collection = $this->collection->map(function (Budget $item): Budget {
             $id         = (int)$item->id;
             $meta       = [
                 'object_group_id'    => null,

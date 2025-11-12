@@ -65,7 +65,7 @@ class DeleteController extends Controller
      *
      * @return Factory|View
      */
-    public function delete(Recurrence $recurrence)
+    public function delete(Recurrence $recurrence): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle        = (string) trans('firefly.delete_recurring', ['title' => $recurrence->title]);
         // put previous url in session
@@ -73,15 +73,13 @@ class DeleteController extends Controller
 
         $journalsCreated = $this->repository->getTransactions($recurrence)->count();
 
-        return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
+        return view('recurring.delete', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'journalsCreated' => $journalsCreated]);
     }
 
     /**
      * Destroy the recurring transaction.
-     *
-     * @return Redirector|RedirectResponse
      */
-    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence)
+    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence): Redirector|RedirectResponse
     {
         $repository->destroy($recurrence);
         $request->session()->flash('success', (string) trans('firefly.recurrence_deleted', ['title' => $recurrence->title]));

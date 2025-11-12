@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
@@ -80,7 +81,7 @@ class FrontpageController extends Controller
         // sort by current percentage (lowest at the top)
         uasort(
             $info,
-            static fn (array $a, array $b) => $a['percentage'] <=> $b['percentage']
+            static fn (array $a, array $b): int => $a['percentage'] <=> $b['percentage']
         );
 
         $html = '';
@@ -88,10 +89,10 @@ class FrontpageController extends Controller
             try {
                 $convertToPrimary = $this->convertToPrimary;
                 $primary          = $this->primaryCurrency;
-                $html             = view('json.piggy-banks', compact('info', 'convertToPrimary', 'primary'))->render();
+                $html             = view('json.piggy-banks', ['info' => $info, 'convertToPrimary' => $convertToPrimary, 'primary' => $primary])->render();
             } catch (Throwable $e) {
-                app('log')->error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
-                app('log')->error($e->getTraceAsString());
+                Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
                 $html = 'Could not render view.';
 
                 throw new FireflyException($html, 0, $e);

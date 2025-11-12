@@ -32,11 +32,6 @@ use FireflyIII\Models\Webhook;
 class WebhookTransformer extends AbstractTransformer
 {
     /**
-     * WebhookTransformer constructor.
-     */
-    public function __construct() {}
-
-    /**
      * Transform webhook.
      */
     public function transform(Webhook $webhook): array

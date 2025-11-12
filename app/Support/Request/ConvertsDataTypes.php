@@ -274,11 +274,8 @@ trait ConvertsDataTypes
         if ('y' === $value) {
             return true;
         }
-        if ('1' === $value) {
-            return true;
-        }
 
-        return false;
+        return '1' === $value;
     }
 
     protected function convertDateTime(?string $string): ?Carbon

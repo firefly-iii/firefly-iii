@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Export;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -49,7 +50,7 @@ class ExportController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 $this->validateUserGroup($request);
                 $this->exporter = app(ExportDataGenerator::class);
                 $this->exporter->setUserGroup($this->userGroup);

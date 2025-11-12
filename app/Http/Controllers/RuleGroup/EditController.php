@@ -66,7 +66,7 @@ class EditController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(Request $request, RuleGroup $ruleGroup)
+    public function edit(Request $request, RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle    = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
@@ -81,7 +81,7 @@ class EditController extends Controller
         session()->forget('rule-groups.edit.fromUpdate');
         session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule-group.edit', compact('ruleGroup', 'subTitle'));
+        return view('rules.rule-group.edit', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 
     /**

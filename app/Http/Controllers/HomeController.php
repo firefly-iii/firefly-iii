@@ -179,7 +179,7 @@ class HomeController extends Controller
         $user           = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today', 'pageTitle'));
+        return view('index', ['count' => $count, 'subTitle' => $subTitle, 'transactions' => $transactions, 'billCount' => $billCount, 'start' => $start, 'end' => $end, 'today' => $today, 'pageTitle' => $pageTitle]);
     }
 
     private function indexV2(): mixed
@@ -194,6 +194,6 @@ class HomeController extends Controller
         $user      = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', compact('subTitle', 'start', 'end', 'pageTitle'));
+        return view('index', ['subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'pageTitle' => $pageTitle]);
     }
 }

@@ -67,7 +67,7 @@ class CreateController extends Controller
      *
      * @return Factory|View
      */
-    public function create(Request $request)
+    public function create(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $hasOldInput       = null !== $request->old('_token');
 
@@ -101,7 +101,7 @@ class CreateController extends Controller
         $request->session()->forget('budgets.create.fromStore');
         $subTitle          = (string) trans('firefly.create_new_budget');
 
-        return view('budgets.create', compact('subTitle', 'autoBudgetTypes', 'autoBudgetPeriods'));
+        return view('budgets.create', ['subTitle' => $subTitle, 'autoBudgetTypes' => $autoBudgetTypes, 'autoBudgetPeriods' => $autoBudgetPeriods]);
     }
 
     /**

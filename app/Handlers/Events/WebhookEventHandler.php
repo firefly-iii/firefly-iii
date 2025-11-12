@@ -49,7 +49,7 @@ class WebhookEventHandler
         $messages = WebhookMessage::where('webhook_messages.sent', false)
             ->get(['webhook_messages.*'])
             ->filter(
-                static fn (WebhookMessage $message) => $message->webhookAttempts()->count() <= 2
+                static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2
             )->splice(0, 5)
         ;
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));

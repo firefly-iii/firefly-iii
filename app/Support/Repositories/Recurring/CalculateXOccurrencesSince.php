@@ -74,7 +74,7 @@ trait CalculateXOccurrencesSince
             Log::debug(sprintf('%d is after %d, add a month. Mutator is now...', $mutator->day, $dayOfMonth));
             // day has passed already, add a month.
             $mutator->addMonth();
-            Log::debug(sprintf('%s', $mutator->toAtomString()));
+            Log::debug($mutator->toAtomString());
         }
 
         while ($total < $count) {

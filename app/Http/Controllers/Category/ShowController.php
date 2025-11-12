@@ -76,7 +76,7 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Category $category, ?Carbon $start = null, ?Carbon $end = null)
+    public function show(Request $request, Category $category, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());
         $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
@@ -109,7 +109,7 @@ class ShowController extends Controller
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', ['category' => $category, 'attachments' => $attachments, 'groups' => $groups, 'periods' => $periods, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'start' => $start, 'end' => $end]);
     }
 
     /**
@@ -120,7 +120,7 @@ class ShowController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showAll(Request $request, Category $category)
+    public function showAll(Request $request, Category $category): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
         $subTitleIcon = 'fa-bookmark';
@@ -149,6 +149,6 @@ class ShowController extends Controller
         $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('categories.show', compact('category', 'attachments', 'groups', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', ['category' => $category, 'attachments' => $attachments, 'groups' => $groups, 'periods' => $periods, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'start' => $start, 'end' => $end]);
     }
 }

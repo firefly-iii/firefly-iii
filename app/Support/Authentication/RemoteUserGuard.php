@@ -31,7 +31,6 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -40,18 +39,16 @@ use Illuminate\Support\Facades\Log;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
-    protected ?User       $user;
+    protected ?User       $user = null;
 
     /**
      * Create a new authentication guard.
      */
     public function __construct(protected UserProvider $provider, Application $app)
     {
-        /** @var null|Request $request */
-        $request           = $app->get('request');
+        $app->get('request');
         // Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
-        $this->user        = null;
     }
 
     public function authenticate(): void

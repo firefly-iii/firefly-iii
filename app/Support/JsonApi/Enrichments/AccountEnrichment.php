@@ -167,7 +167,7 @@ class AccountEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (Account $item) {
+        $this->collection = $this->collection->map(function (Account $item): Account {
             $id                           = (int)$item->id;
             $item->full_account_type      = $this->accountTypes[(int)$item->account_type_id] ?? null;
             $meta                         = [

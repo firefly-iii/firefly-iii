@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Api\Data\Bulk;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Validation\Validator;
 
 use function Safe\json_decode;
 

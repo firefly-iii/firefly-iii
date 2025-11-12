@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
+use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -61,7 +62,7 @@ class StoreController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            function (Request $request, $next) {
                 /** @var User $admin */
                 $admin                 = auth()->user();
                 $userGroup             = $this->validateUserGroup($request);

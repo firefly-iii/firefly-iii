@@ -25,10 +25,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Models\Webhook;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\Validator;
 
 trait ValidatesWebhooks
 {

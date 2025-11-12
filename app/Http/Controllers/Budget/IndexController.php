@@ -88,7 +88,7 @@ class IndexController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function index(?Carbon $start = null, ?Carbon $end = null)
+    public function index(?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $this->abRepository->cleanup();
         Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
@@ -138,23 +138,7 @@ class IndexController extends Controller
 
         return view(
             'budgets.index',
-            compact(
-                'availableBudgets',
-                'budgeted',
-                'spent',
-                'prevLoop',
-                'nextLoop',
-                'budgets',
-                'currencies',
-                'periodTitle',
-                'activeDaysPassed',
-                'activeDaysLeft',
-                'inactive',
-                'budgets',
-                'start',
-                'end',
-                'sums'
-            )
+            ['availableBudgets' => $availableBudgets, 'budgeted' => $budgeted, 'spent' => $spent, 'prevLoop' => $prevLoop, 'nextLoop' => $nextLoop, 'currencies' => $currencies, 'periodTitle' => $periodTitle, 'activeDaysPassed' => $activeDaysPassed, 'activeDaysLeft' => $activeDaysLeft, 'inactive' => $inactive, 'budgets' => $budgets, 'start' => $start, 'end' => $end, 'sums' => $sums]
         );
     }
 
@@ -319,7 +303,7 @@ class IndexController extends Controller
             $budgetId = (int) $budgetId;
             $budget   = $repository->find($budgetId);
             if ($budget instanceof Budget) {
-                app('log')->debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
                 $repository->setBudgetOrder($budget, $index + 1);
             }
         }

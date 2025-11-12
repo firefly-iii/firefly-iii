@@ -52,8 +52,6 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     private readonly BudgetRepositoryInterface     $repository;
     private array                                  $spentInBudgets        = [];
     private array                                  $spentOutsideBudgets   = [];
-    private User                                   $user;
-    private UserGroup                              $userGroup;
 
     public function __construct()
     {
@@ -91,14 +89,12 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     #[Override]
     public function setUser(User $user): void
     {
-        $this->user = $user;
         $this->setUserGroup($user->userGroup);
     }
 
     #[Override]
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
         $this->noBudgetRepository->setUserGroup($userGroup);
         $this->opsRepository->setUserGroup($userGroup);
         $this->repository->setUserGroup($userGroup);
@@ -106,7 +102,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
 
     private function appendCollectedData(): void
     {
-        $this->collection = $this->collection->map(function (AvailableBudget $item) {
+        $this->collection = $this->collection->map(function (AvailableBudget $item): AvailableBudget {
             $id         = (int)$item->id;
             $currencyId = $this->currencyIds[$id];
             $currency   = $this->currencies[$currencyId];
@@ -158,7 +154,7 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
             $this->spentInBudgets[$id]      = array_values($filteredSpentInBudgets);
             $this->spentOutsideBudgets[$id] = array_values($filteredSpentOutsideBudgets);
 
-            if (true === $this->convertToPrimary) {
+            if ($this->convertToPrimary) {
                 $pcFilteredSpentInBudgets         = $this->opsRepository->sumCollectedExpenses($spentInBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
                 $pcFilteredSpentOutsideBudgets    = $this->opsRepository->sumCollectedExpenses($spentOutsideBudgets, $availableBudget->start_date, $availableBudget->end_date, $currency, true);
                 $this->pcSpentInBudgets[$id]      = array_values($pcFilteredSpentInBudgets);

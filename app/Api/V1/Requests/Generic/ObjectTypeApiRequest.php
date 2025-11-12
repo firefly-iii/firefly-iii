@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Generic;
 
+use Override;
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -30,7 +32,6 @@ use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Rules\TransactionType\IsValidTransactionTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
-use Illuminate\Validation\Validator;
 use RuntimeException;
 
 class ObjectTypeApiRequest extends ApiRequest
@@ -40,6 +41,7 @@ class ObjectTypeApiRequest extends ApiRequest
 
     private ?string $objectType = null;
 
+    #[Override]
     public function handleConfig(array $config): void
     {
         parent::handleConfig($config);

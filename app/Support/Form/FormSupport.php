@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\MessageBag;
@@ -45,9 +46,9 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
 
         try {
-            $html = view('form.multi-select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+            $html = view('form.multi-select', ['classes' => $classes, 'name' => $name, 'label' => $label, 'selected' => $selected, 'options' => $options, 'list' => $list])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
             $html = 'Could not render multi-select.';
         }
 
@@ -67,9 +68,9 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
 
         try {
-            $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+            $html = view('form.select', ['classes' => $classes, 'name' => $name, 'label' => $label, 'selected' => $selected, 'options' => $options, 'list' => $list])->render();
         } catch (Throwable $e) {
-            app('log')->debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
         }
 

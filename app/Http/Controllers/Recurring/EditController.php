@@ -86,7 +86,7 @@ class EditController extends Controller
      *
      * @throws FireflyException
      */
-    public function edit(Request $request, Recurrence $recurrence)
+    public function edit(Request $request, Recurrence $recurrence): Factory|\Illuminate\Contracts\View\View
     {
         // TODO this should be in the repository.
         $count                              = $recurrence->recurrenceTransactions()->count();
@@ -160,17 +160,7 @@ class EditController extends Controller
 
         return view(
             'recurring.edit',
-            compact(
-                'recurrence',
-                'array',
-                'bills',
-                'weekendResponses',
-                'budgets',
-                'preFilled',
-                'currentRepType',
-                'repetitionEnd',
-                'repetitionEnds'
-            )
+            ['recurrence' => $recurrence, 'array' => $array, 'bills' => $bills, 'weekendResponses' => $weekendResponses, 'budgets' => $budgets, 'preFilled' => $preFilled, 'currentRepType' => $currentRepType, 'repetitionEnd' => $repetitionEnd, 'repetitionEnds' => $repetitionEnds]
         );
     }
 

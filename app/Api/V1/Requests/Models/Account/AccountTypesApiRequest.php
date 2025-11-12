@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
+use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
-use Illuminate\Validation\Validator;
 
 class AccountTypesApiRequest extends ApiRequest
 {
