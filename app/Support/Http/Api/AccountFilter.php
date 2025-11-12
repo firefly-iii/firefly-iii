@@ -47,6 +47,14 @@ trait AccountFilter
                 AccountTypeEnum::DEBT->value,
                 AccountTypeEnum::MORTGAGE->value,
             ],
+            'normal' => [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::EXPENSE->value,
+                AccountTypeEnum::REVENUE->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
+            ],
             'asset'                                 => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
             'cash'                                  => [AccountTypeEnum::CASH->value],
             'expense'                               => [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::BENEFICIARY->value],
@@ -89,6 +97,16 @@ trait AccountFilter
      */
     protected function mapAccountTypes(string $type): array
     {
-        return $this->types[$type] ?? $this->types['all'];
+        $return = [];
+        $parts  = explode(',', $type);
+        foreach ($parts as $part) {
+            if (array_key_exists($part, $this->types)) {
+                $return = array_merge($return, $this->types[$part]);
+            }
+        }
+        if(0 === count($return)) {
+            $return = $this->types['normal'];
+        }
+        return $return;
     }
 }

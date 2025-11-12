@@ -74,6 +74,9 @@ trait TransactionFilter
                 $return = array_merge($return, $this->transactionTypes[$part]);
             }
         }
+        if(0 === count($return)) {
+            $return = $this->transactionTypes['all'];
+        }
 
         return array_unique($return);
     }
