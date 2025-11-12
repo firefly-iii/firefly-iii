@@ -47,7 +47,7 @@ trait AccountFilter
                 AccountTypeEnum::DEBT->value,
                 AccountTypeEnum::MORTGAGE->value,
             ],
-            'normal' => [
+            'normal'                                => [
                 AccountTypeEnum::ASSET->value,
                 AccountTypeEnum::EXPENSE->value,
                 AccountTypeEnum::REVENUE->value,
@@ -104,9 +104,10 @@ trait AccountFilter
                 $return = array_merge($return, $this->types[$part]);
             }
         }
-        if(0 === count($return)) {
+        if (0 === count($return)) {
             $return = $this->types['normal'];
         }
+
         return $return;
     }
 }
