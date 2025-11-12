@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11172
+- #11206
 
 ## 6.4.6 - 2025-11-09
 
