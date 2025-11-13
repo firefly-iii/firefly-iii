@@ -3,13 +3,19 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.8 - 2025-11-14
+
+### Fixed
+
+- #11228
+
 ## 6.4.7
 
 ### Fixed
 
-- [Issue 11206](https://github.com/firefly-iii/firefly-iii/issues/11206) (New transition shows additional option in input) reported by @zhiiwg
+- #11206
 
-## 6.4.6 - 2025-11-09
+## 6.4.6 - 2025-11-13
 
 ### Fixed
 
