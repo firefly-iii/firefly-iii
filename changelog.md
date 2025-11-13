@@ -7,13 +7,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11228
+- [Issue 11228](https://github.com/firefly-iii/firefly-iii/issues/11228) (Autocomplete fails when the requested account type list includes hidden account types) reported by @jgmm81
 
 ## 6.4.7
 
 ### Fixed
 
-- #11206
+- [Issue 11206](https://github.com/firefly-iii/firefly-iii/issues/11206) (New transaction shows additional option in input) reported by @zhiiwg
 
 ## 6.4.6 - 2025-11-13
 
