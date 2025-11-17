@@ -173,7 +173,7 @@ class EditController extends Controller
      */
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
-        $data     = $request->getAll();
+        $data       = $request->getAll();
         $recurrence = $this->repository->update($recurrence, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
@@ -181,7 +181,7 @@ class EditController extends Controller
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files      = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }
@@ -194,7 +194,7 @@ class EditController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUrl('recurrences.edit.url'));
+        $redirect   = redirect($this->getPreviousUrl('recurrences.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('recurrences.edit.fromUpdate', true);
