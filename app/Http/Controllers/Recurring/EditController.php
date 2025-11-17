@@ -174,7 +174,7 @@ class EditController extends Controller
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
         $data     = $request->getAll();
-        $this->repository->update($recurrence, $data);
+        $recurrence = $this->repository->update($recurrence, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);
