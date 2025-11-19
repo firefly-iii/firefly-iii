@@ -167,12 +167,17 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
+        $now              = now();
+        if ($now->gt($end) || $now->lt($start)) {
+            $now = $end;
+        }
+
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $now, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 

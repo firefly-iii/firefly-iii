@@ -164,7 +164,7 @@ class ShowController extends Controller
         $timer->stop('collection');
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll          = false;
-        $now              = today()->endOfDay();
+        $now              = now();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }
@@ -173,10 +173,7 @@ class ShowController extends Controller
         $balances         = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
         // $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
-        return view(
-            'accounts.show',
-            ['account' => $account, 'showAll' => $showAll, 'objectType' => $objectType, 'currency' => $currency, 'today' => $today, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'attachments' => $attachments, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'chartUrl' => $chartUrl, 'location' => $location, 'balances' => $balances]
-        );
+        return view('accounts.show', ['account' => $account, 'showAll' => $showAll, 'objectType' => $objectType, 'currency' => $currency, 'today' => $today, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'attachments' => $attachments, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'chartUrl' => $chartUrl, 'location' => $location, 'balances' => $balances]);
     }
 
     /**
@@ -224,14 +221,16 @@ class ShowController extends Controller
         // correct
         Log::debug(sprintf('showAll: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
 
+        $now              = now();
+        if ($now->gt($end) || $now->lt($start)) {
+            $now = $end;
+        }
+
         // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
         // $balances = Steam::finalAccountBalance($account, $end);
         // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
-        $balances     = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
+        $balances     = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
 
-        return view(
-            'accounts.show',
-            ['account' => $account, 'showAll' => $showAll, 'location' => $location, 'objectType' => $objectType, 'isLiability' => $isLiability, 'attachments' => $attachments, 'currency' => $currency, 'today' => $today, 'chartUrl' => $chartUrl, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'balances' => $balances]
-        );
+        return view('accounts.show', ['account' => $account, 'showAll' => $showAll, 'location' => $location, 'objectType' => $objectType, 'isLiability' => $isLiability, 'attachments' => $attachments, 'currency' => $currency, 'today' => $today, 'chartUrl' => $chartUrl, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'balances' => $balances]);
     }
 }
