@@ -9,6 +9,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - [Discussion 11211](https://github.com/orgs/firefly-iii/discussions/11211) (question about Transaction journal ID) started by @zhiiwg
 
+### API
+
+- #11265
+
 ## 6.4.8 - 2025-11-14
 
 ### Fixed
