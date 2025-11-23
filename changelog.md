@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Discussion 11211](https://github.com/orgs/firefly-iii/discussions/11211) (question about Transaction journal ID) started by @zhiiwg
+- #11267
 
 ### API
 
