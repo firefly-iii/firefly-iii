@@ -29,7 +29,7 @@ jobs:
         env:
           version: ${{ github.event_name == 'schedule' && 'develop' || inputs.version }}
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Import GPG key
