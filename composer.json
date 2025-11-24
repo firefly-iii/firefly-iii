@@ -113,7 +113,7 @@
         "thecodingmachine/safe": "^3.1"
     },
     "require-dev": {
-        "barryvdh/laravel-debugbar": "^3.9",
+        "barryvdh/laravel-debugbar": "^3.16",
         "barryvdh/laravel-ide-helper": "^3",
         "driftingly/rector-laravel": "^2.0",
         "fakerphp/faker": "1.*",
