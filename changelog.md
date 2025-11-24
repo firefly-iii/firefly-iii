@@ -8,11 +8,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Discussion 11211](https://github.com/orgs/firefly-iii/discussions/11211) (question about Transaction journal ID) started by @zhiiwg
-- #11267
+- [Issue 11267](https://github.com/firefly-iii/firefly-iii/issues/11267) (Tags can be added to elements that can't be removed) reported by @Fmstrat
 
 ### API
 
-- #11265
+- [Issue 11265](https://github.com/firefly-iii/firefly-iii/issues/11265) (Inconsistent object type in exchange rates API) reported by @jfpedroza
 
 ## 6.4.8 - 2025-11-14
 
