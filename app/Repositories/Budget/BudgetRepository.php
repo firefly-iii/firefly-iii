@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -790,8 +791,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
         // create initial budget limit.
         $today                               = today(config('app.timezone'));
-        $start                               = app('navigation')->startOfPeriod($today, $autoBudget->period);
-        $end                                 = app('navigation')->endOfPeriod($start, $autoBudget->period);
+        $start                               = Navigation::startOfPeriod($today, $autoBudget->period);
+        $end                                 = Navigation::endOfPeriod($start, $autoBudget->period);
 
         $limitRepos                          = app(BudgetLimitRepositoryInterface::class);
         $limitRepos->setUser($this->user);

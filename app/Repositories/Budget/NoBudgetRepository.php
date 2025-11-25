@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -45,7 +46,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
     #[Deprecated]
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
 
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);

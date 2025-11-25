@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
@@ -151,7 +152,7 @@ class IndexController extends Controller
     private function getSums(array $bills): array
     {
         $sums  = [];
-        $range = app('navigation')->getViewRange(true);
+        $range = Navigation::getViewRange(true);
 
         /** @var array $group */
         foreach ($bills as $groupOrder => $group) {

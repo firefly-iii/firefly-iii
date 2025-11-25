@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -75,8 +76,8 @@ class Range
             }
 
             $today     = today(config('app.timezone'));
-            $start     = app('navigation')->updateStartDate((string) $viewRange, $today);
-            $end       = app('navigation')->updateEndDate((string) $viewRange, $start);
+            $start     = Navigation::updateStartDate((string) $viewRange, $today);
+            $end       = Navigation::updateEndDate((string) $viewRange, $start);
 
             app('session')->put('start', $start);
             app('session')->put('end', $end);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Deprecated;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -82,7 +83,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $carbonFormat = app('navigation')->preferredCarbonFormat($start, $end);
+        $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
         $data         = [];
 
         // get all transactions:

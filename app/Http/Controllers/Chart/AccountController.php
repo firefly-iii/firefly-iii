@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -514,7 +515,7 @@ class AccountController extends Controller
         // have to make sure this chart is always based on the balance at the END of the period.
         // This period depends on the size of the chart
         $current         = clone $start;
-        $current         = app('navigation')->endOfX($current, $step, null);
+        $current         = Navigation::endOfX($current, $step, null);
         $format          = (string)trans('config.month_and_day_js', [], $locale);
         $accountCurrency = $this->accountRepository->getAccountCurrency($account);
         Log::debug('Get and filter balance for entire range start');
@@ -574,9 +575,9 @@ class AccountController extends Controller
                 $label                           = $current->isoFormat($format);
                 $return[$key]['entries'][$label] = $amount;
             }
-            $current       = app('navigation')->addPeriod($current, $step);
+            $current       = Navigation::addPeriod($current, $step);
             // here too, to fix #8041, the data is corrected to the end of the period.
-            $current       = app('navigation')->endOfX($current, $step, null);
+            $current       = Navigation::endOfX($current, $step, null);
         }
         Log::debug('End of chart loop.');
         // second loop (yes) to create nice array with info! Yay!

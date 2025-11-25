@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -139,8 +140,8 @@ class ShowController extends Controller
         $manager->parseIncludes(['attachments', 'notes']);
 
         // add another period to end, could fix 8163
-        $range                      = app('navigation')->getViewRange(true);
-        $end                        = app('navigation')->addPeriod($end, $range);
+        $range                      = Navigation::getViewRange(true);
+        $end                        = Navigation::addPeriod($end, $range);
 
         // Make a resource out of the data and
         $parameters                 = new ParameterBag();

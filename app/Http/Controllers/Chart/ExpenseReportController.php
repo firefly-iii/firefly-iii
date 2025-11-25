@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -83,8 +84,8 @@ class ExpenseReportController extends Controller
             return response()->json($cache->get());
         }
 
-        $format       = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $function     = app('navigation')->preferredEndOfPeriod($start, $end);
+        $format       = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $function     = Navigation::preferredEndOfPeriod($start, $end);
         $chartData    = [];
         $currentStart = clone $start;
         $combined     = $this->combineAccounts($expense);

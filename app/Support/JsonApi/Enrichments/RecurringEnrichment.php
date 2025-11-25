@@ -69,7 +69,6 @@ class RecurringEnrichment implements EnrichmentInterface
     private string                       $language                = 'en_US';
     private array                        $notes                   = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private array                        $recurrenceIds           = [];
     private array                        $recurrenceByTransaction = [];
     private array                        $repetitions             = [];
     private array                        $sourceAccountIds        = [];
