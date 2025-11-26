@@ -75,7 +75,7 @@ class CreateController extends Controller
         $subTitleIcon = 'fa-plus';
         $request->old('_token');
         $preFilled    = $request->old();
-        if(!array_key_exists('transaction_currency_id', $preFilled)) {
+        if (!array_key_exists('transaction_currency_id', $preFilled)) {
             $preFilled['transaction_currency_id'] = $this->primaryCurrency->id;
         }
 

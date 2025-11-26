@@ -35,7 +35,6 @@ use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Spatie\Period\Boundaries;
-use Spatie\Period\Exceptions\InvalidPeriod;
 use Spatie\Period\Period;
 use Spatie\Period\Precision;
 
@@ -203,8 +202,8 @@ trait RecalculatesAvailableBudgetsTrait
             }
             if (null === $availableBudget && $currentEnd->gte($current)) {
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-                $daily  = $this->getDailyAmount($budgetLimit);
-                $amount = bcmul((string)$daily, (string)$currentPeriod->length(), 12);
+                $daily         = $this->getDailyAmount($budgetLimit);
+                $amount        = bcmul((string)$daily, (string)$currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {
