@@ -201,18 +201,8 @@ trait RecalculatesAvailableBudgetsTrait
                 Log::debug('Found 1 AB, will update.');
                 $this->calculateAmount($availableBudget);
             }
-            if (null === $availableBudget) {
-                Log::debug('No AB found, will create.');
-
-                // if not exists:
-                try {
-                    $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
-                } catch (InvalidPeriod $e) {
-                    Log::error('Tried to make invalid period.');
-                    Log::error($e->getMessage());
-
-                    continue;
-                }
+            if (null === $availableBudget && $currentEnd->gte($current)) {
+                $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
                 $daily  = $this->getDailyAmount($budgetLimit);
                 $amount = bcmul((string)$daily, (string)$currentPeriod->length(), 12);
 
