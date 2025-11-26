@@ -55,8 +55,8 @@ class AddTag implements ActionInterface
         $tagName = $this->action->getValue($journal);
         $tag     = $factory->findOrCreate($tagName);
 
-        $type = $journal['transaction_type_type'];
-        if(TransactionTypeEnum::OPENING_BALANCE->value === $type || TransactionTypeEnum::LIABILITY_CREDIT->value === $type || TransactionTypeEnum::INVALID->value === $type) {
+        $type    = $journal['transaction_type_type'];
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $type || TransactionTypeEnum::LIABILITY_CREDIT->value === $type || TransactionTypeEnum::INVALID->value === $type) {
             // fail silently on invalid transaction types.
 
             return false;

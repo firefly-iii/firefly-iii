@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * CorrectsInversedBudgetLimits.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -36,7 +38,7 @@ class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:corrects-inverted-budget-limits';
+    protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**
      * The console command description.
@@ -54,8 +56,10 @@ class CorrectsInvertedBudgetLimits extends Command
         $set = BudgetLimit::where('start_date', '>', DB::raw('end_date'))->get();
         if (0 === $set->count()) {
             Log::debug('No inverted budget limits found.');
+
             return Command::SUCCESS;
         }
+
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
             $start                   = $budgetLimit->start_date->copy();
@@ -66,9 +70,11 @@ class CorrectsInvertedBudgetLimits extends Command
         }
         if (1 === $set->count()) {
             $this->friendlyInfo('Corrected one budget limit to have the right start/end dates.');
+
             return Command::SUCCESS;
         }
         $this->friendlyInfo(sprintf('Corrected %d budget limits to have the right start/end dates.', count($set)));
+
         return Command::SUCCESS;
     }
 }
