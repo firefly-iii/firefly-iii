@@ -167,7 +167,7 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $now              = now();
+        $now           = now();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }

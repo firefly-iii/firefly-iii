@@ -121,8 +121,8 @@ class Navigation
         if ($workEnd->gt($start)) {
             while ($workEnd->gt($start) && $loopCount < 20) {
                 // make range:
-                $workStart = \FireflyIII\Support\Facades\Navigation::startOfPeriod($workStart, '1Y');
-                $workEnd   = \FireflyIII\Support\Facades\Navigation::endOfPeriod($workStart, '1Y');
+                $workStart = Facades\Navigation::startOfPeriod($workStart, '1Y');
+                $workEnd   = Facades\Navigation::endOfPeriod($workStart, '1Y');
 
                 // make sure we don't go overboard
                 if ($workEnd->gt($start)) {

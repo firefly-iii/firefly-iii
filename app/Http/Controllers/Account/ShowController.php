@@ -221,7 +221,7 @@ class ShowController extends Controller
         // correct
         Log::debug(sprintf('showAll: Call accountsBalancesOptimized with date/time "%s"', $end->toIso8601String()));
 
-        $now              = now();
+        $now          = now();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }
