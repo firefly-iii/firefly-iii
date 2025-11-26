@@ -206,7 +206,13 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
+
         // Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
+        if('MTD' === $repeatFreq) {
+            // fall back to a monthly schedule if the requested period is MTD.
+            Log::debug('endOfPeriod() requests "MTD", set it to "1M" instead.');
+            $repeatFreq = '1M';
+        }
 
         $functionMap = [
             '1D'        => 'endOfDay',
