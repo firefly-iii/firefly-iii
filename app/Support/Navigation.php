@@ -208,7 +208,7 @@ class Navigation
         $currentEnd  = clone $end;
 
         // Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
-        if('MTD' === $repeatFreq && $end->isFuture()) {
+        if ('MTD' === $repeatFreq && $end->isFuture()) {
             // fall back to a monthly schedule if the requested period is MTD.
             Log::debug('endOfPeriod() requests "MTD", set it to "1M" instead.');
             $repeatFreq = '1M';
