@@ -8,7 +8,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 
 - [Discussion 11211](https://github.com/orgs/firefly-iii/discussions/11211) (question about Transaction journal ID) started by @zhiiwg
+- #11247
 - [Issue 11267](https://github.com/firefly-iii/firefly-iii/issues/11267) (Tags can be added to elements that can't be removed) reported by @Fmstrat
+- #11281
+- #11284
+- #11288
+- #11191
 
 ### API
 
