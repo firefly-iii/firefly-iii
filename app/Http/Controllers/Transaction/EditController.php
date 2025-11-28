@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -76,7 +77,7 @@ class EditController extends Controller
      */
     public function edit(TransactionGroup $transactionGroup): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
-        app('preferences')->mark();
+        Preferences::mark();
 
         if (!$this->isEditableGroup($transactionGroup)) {
             return $this->redirectGroupToAccount($transactionGroup);
@@ -98,7 +99,7 @@ class EditController extends Controller
         $previousUrl                = str_replace($search, '', $previousUrl);
 
         // settings necessary for v2
-        $optionalFields             = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
         if (!is_array($optionalFields)) {
             $optionalFields = [];
         }

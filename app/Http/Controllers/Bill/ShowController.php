@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -105,7 +107,7 @@ class ShowController extends Controller
         $ruleEngine->fire();
 
         $request->session()->flash('success', trans_choice('firefly.rescanned_bill', $total));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect(route('bills.show', [$bill->id]));
     }
@@ -131,7 +133,7 @@ class ShowController extends Controller
         $end                        = session('end');
         $year                       = $start->year;
         $page                       = (int) $request->get('page');
-        $pageSize                   = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize                   = (int) Preferences::get('listPageSize', 50)->data;
         $yearAverage                = $this->repository->getYearAverage($bill, $start);
         $overallAverage             = $this->repository->getOverallAverage($bill);
         $manager                    = new Manager();
@@ -139,8 +141,8 @@ class ShowController extends Controller
         $manager->parseIncludes(['attachments', 'notes']);
 
         // add another period to end, could fix 8163
-        $range                      = app('navigation')->getViewRange(true);
-        $end                        = app('navigation')->addPeriod($end, $range);
+        $range                      = Navigation::getViewRange(true);
+        $end                        = Navigation::addPeriod($end, $range);
 
         // Make a resource out of the data and
         $parameters                 = new ParameterBag();

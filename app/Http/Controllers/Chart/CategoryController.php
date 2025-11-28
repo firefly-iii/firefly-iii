@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -81,8 +82,8 @@ class CategoryController extends Controller
         /** @var CategoryRepositoryInterface $repository */
         $repository                       = app(CategoryRepositoryInterface::class);
         $start                            = $repository->firstUseDate($category) ?? $this->getDate();
-        $range                            = app('navigation')->getViewRange(false);
-        $start                            = app('navigation')->startOfPeriod($start, $range);
+        $range                            = Navigation::getViewRange(false);
+        $start                            = Navigation::startOfPeriod($start, $range);
         $end                              = $this->getDate();
 
         /** @var WholePeriodChartGenerator $chartGenerator */
@@ -178,8 +179,8 @@ class CategoryController extends Controller
             $income        = $opsRepository->listIncome($start, $end, $accounts, $collection);
         }
         $currencies = array_unique(array_merge(array_keys($income), array_keys($expenses)));
-        $periods    = app('navigation')->listOfPeriods($start, $end);
-        $format     = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $periods    = Navigation::listOfPeriods($start, $end);
+        $format     = Navigation::preferredCarbonLocalizedFormat($start, $end);
         $chartData  = [];
         // make empty data array:
         // double foreach (bad) to make empty array:
@@ -260,8 +261,8 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range          = app('navigation')->getViewRange(false);
-        $start          = app('navigation')->startOfPeriod($date, $range);
+        $range          = Navigation::getViewRange(false);
+        $start          = Navigation::startOfPeriod($date, $range);
         $end            = session()->get('end');
         if ($end < $start) {
             [$end, $start] = [$start, $end];

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -98,7 +99,7 @@ class ShowController extends Controller
         $firstDate = $first instanceof TransactionJournal ? $first->date : $start;
         $periods   = $this->getNoModelPeriodOverview('budget', $firstDate, $end);
         $page      = (int) $request->get('page');
-        $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -126,7 +127,7 @@ class ShowController extends Controller
         $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $end       = today(config('app.timezone'));
         $page      = (int) $request->get('page');
-        $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -153,7 +154,7 @@ class ShowController extends Controller
         $allStart    = session('first', today(config('app.timezone'))->startOfYear());
         $allEnd      = today();
         $page        = (int) $request->get('page');
-        $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
         $limits      = $this->getLimits($budget, $allStart, $allEnd);
         $repetition  = null;
         $attachments = $this->repository->getAttachments($budget);
@@ -190,7 +191,7 @@ class ShowController extends Controller
 
         $currencySymbol = $budgetLimit->transactionCurrency->symbol;
         $page           = (int) $request->get('page');
-        $pageSize       = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize       = (int) Preferences::get('listPageSize', 50)->data;
         $subTitle       = trans(
             'firefly.budget_in_period',
             [

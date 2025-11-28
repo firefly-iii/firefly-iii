@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Http\Controllers\Controller;
@@ -129,7 +130,7 @@ class DeleteController extends Controller
             Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
             event(new UpdatedAccount($account));
         }
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('transactions.delete.url'));
     }

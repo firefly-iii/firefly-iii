@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
 use Illuminate\Support\Collection;
 
@@ -53,7 +54,7 @@ trait CollectsAccountsFromFilter
         // if no preselected, but no accounts:
         if ('empty' === $queryParameters['preselected'] && 0 === $collection->count()) {
             $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value])->pluck('id')->toArray();
-            $frontpage  = app('preferences')->get('frontpageAccounts', $defaultSet);
+            $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
             if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
                 $frontpage->data = $defaultSet;

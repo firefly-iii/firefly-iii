@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -83,7 +84,7 @@ class DeleteController extends Controller
         $this->repository->destroy($bill);
 
         $request->session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('bills.delete.url'));
     }

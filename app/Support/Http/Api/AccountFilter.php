@@ -107,7 +107,7 @@ trait AccountFilter
         }
 
         if (0 === count($return)) {
-            $return = $this->types['normal'];
+            return $this->types['normal'];
         }
 
         return $return;

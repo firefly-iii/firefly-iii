@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
@@ -154,9 +155,9 @@ class ReportController extends Controller
 
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         Log::debug(sprintf('Period: %s to %s', $start->toW3cString(), $end->toW3cString()));
-        $format         = app('navigation')->preferredCarbonFormat($start, $end);
-        $titleFormat    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $format         = Navigation::preferredCarbonFormat($start, $end);
+        $titleFormat    = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $ids            = $accounts->pluck('id')->toArray();
         $data           = [];
         $chartData      = [];
@@ -242,7 +243,7 @@ class ReportController extends Controller
 
             // #8374. Sloppy fix for yearly charts. Not really interested in a better fix with v2 layout and all.
             if ('1Y' === $preferredRange) {
-                $currentEnd = app('navigation')->endOfPeriod($currentEnd, $preferredRange);
+                $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
             }
             Log::debug('Start of sub-loop');
             while ($currentStart <= $currentEnd) {
@@ -260,7 +261,7 @@ class ReportController extends Controller
                     $expense['entries'][$title] = '0';
 
                 }
-                $currentStart = app('navigation')->addPeriod($currentStart, $preferredRange);
+                $currentStart = Navigation::addPeriod($currentStart, $preferredRange);
             }
             Log::debug('End of sub-loop');
 

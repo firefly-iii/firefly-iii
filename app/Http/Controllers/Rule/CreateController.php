@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
@@ -269,7 +270,7 @@ class CreateController extends Controller
         $rule     = $this->ruleRepos->store($data);
         session()->flash('success_url', route('rules.select-transactions', [$rule->id]));
         session()->flash('success', (string) trans('firefly.stored_new_rule', ['title' => $rule->title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // redirect to show bill.
         if ('true' === $request->get('return_to_bill') && (int) $request->get('bill_id') > 0) {

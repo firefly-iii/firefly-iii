@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
@@ -101,7 +102,7 @@ class PreferencesController extends Controller
 
         /** @var array<int, int> $accountIds */
         $accountIds                     = $accounts->pluck('id')->toArray();
-        $viewRange                      = app('navigation')->getViewRange(false);
+        $viewRange                      = Navigation::getViewRange(false);
         $frontpageAccountsPref          = Preferences::get('frontpageAccounts', $accountIds);
         $frontpageAccounts              = $frontpageAccountsPref->data;
         if (!is_array($frontpageAccounts)) {

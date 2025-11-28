@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Enums\TransactionTypeEnum;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -54,6 +55,13 @@ class AddTag implements ActionInterface
         $tagName = $this->action->getValue($journal);
         $tag     = $factory->findOrCreate($tagName);
 
+        $type    = $journal['transaction_type_type'];
+        if (TransactionTypeEnum::OPENING_BALANCE->value === $type || TransactionTypeEnum::LIABILITY_CREDIT->value === $type || TransactionTypeEnum::INVALID->value === $type) {
+            // fail silently on invalid transaction types.
+
+            return false;
+        }
+
         if (null === $tag) {
             // could not find, could not create tag.
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.find_or_create_tag_failed', ['tag' => $tagName])));
@@ -61,11 +69,7 @@ class AddTag implements ActionInterface
             return false;
         }
 
-        $count   = DB::table('tag_transaction_journal')
-            ->where('tag_id', $tag->id)
-            ->where('transaction_journal_id', $journal['transaction_journal_id'])
-            ->count()
-        ;
+        $count   = DB::table('tag_transaction_journal')->where('tag_id', $tag->id)->where('transaction_journal_id', $journal['transaction_journal_id'])->count();
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert(['tag_id' => $tag->id, 'transaction_journal_id' => $journal['transaction_journal_id']]);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -86,7 +87,7 @@ class ShowController extends Controller
         $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
         $attachments  = $this->repository->getAttachments($category);
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $oldest       = $this->repository->firstUseDate($category) ?? today(config('app.timezone'))->startOfYear();
         $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
@@ -125,7 +126,7 @@ class ShowController extends Controller
         // default values:
         $subTitleIcon = 'fa-bookmark';
         $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start        = null;
         $end          = null;
         $periods      = new Collection();

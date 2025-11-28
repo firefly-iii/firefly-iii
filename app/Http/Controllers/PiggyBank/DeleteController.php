@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
@@ -78,7 +79,7 @@ class DeleteController extends Controller
     public function destroy(PiggyBank $piggyBank): RedirectResponse
     {
         session()->flash('success', (string) trans('firefly.deleted_piggy_bank', ['name' => $piggyBank->name]));
-        app('preferences')->mark();
+        Preferences::mark();
         $this->piggyRepos->destroy($piggyBank);
 
         return redirect($this->getPreviousUrl('piggy-banks.delete.url'));

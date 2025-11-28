@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Chart\Category;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
@@ -59,10 +60,10 @@ class WholePeriodChartGenerator
 
         while ($current <= $end) {
             $key          = $current->format('Y-m-d');
-            $currentEnd   = app('navigation')->endOfPeriod($current, $step);
+            $currentEnd   = Navigation::endOfPeriod($current, $step);
             $spent[$key]  = $opsRepository->sumExpenses($current, $currentEnd, $accounts, $collection);
             $earned[$key] = $opsRepository->sumIncome($current, $currentEnd, $accounts, $collection);
-            $current      = app('navigation')->addPeriod($current, $step);
+            $current      = Navigation::addPeriod($current, $step);
         }
 
         $currencies        = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
@@ -91,7 +92,7 @@ class WholePeriodChartGenerator
 
         while ($current <= $end) {
             $key     = $current->format('Y-m-d');
-            $label   = app('navigation')->periodShow($current, $step);
+            $label   = Navigation::periodShow($current, $step);
 
             /** @var array $currency */
             foreach ($currencies as $currency) {
@@ -104,7 +105,7 @@ class WholePeriodChartGenerator
                 $chartData[$spentInfoKey]['entries'][$label]  = app('steam')->bcround($spentAmount, $currency['currency_decimal_places']);
                 $chartData[$earnedInfoKey]['entries'][$label] = app('steam')->bcround($earnedAmount, $currency['currency_decimal_places']);
             }
-            $current = app('navigation')->addPeriod($current, $step);
+            $current = Navigation::addPeriod($current, $step);
         }
 
         return $chartData;

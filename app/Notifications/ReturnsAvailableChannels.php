@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
@@ -94,7 +95,7 @@ class ReturnsAvailableChannels
         $channels = ['mail'];
 
         if (true === config('notifications.channels.slack.enabled', false)) {
-            $slackUrl = (string) app('preferences')->getEncryptedForUser($user, 'slack_webhook_url', '')->data;
+            $slackUrl = (string) Preferences::getEncryptedForUser($user, 'slack_webhook_url', '')->data;
             if (UrlValidator::isValidWebhookURL($slackUrl)) {
                 $channels[] = 'slack';
             }
@@ -102,20 +103,20 @@ class ReturnsAvailableChannels
 
         //        // validate presence of of Ntfy settings.
         //        if (true === config('notifications.channels.nfy.enabled', false)) {
-        //            $ntfyTopic = (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data;
+        //            $ntfyTopic = (string) \FireflyIII\Support\Facades\Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;
         //            if ('' !== $ntfyTopic) {
         //                Log::debug(sprintf('Enabled ntfy, "%s"', $ntfyTopic));
         //                $channels[] = NtfyChannel::class;
         //            }
-        //            if ('' === (string) app('preferences')->getEncryptedForUser($user, 'ntfy_topic', '')->data) {
+        //            if ('' === (string) \FireflyIII\Support\Facades\Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data) {
         //                Log::warning('No topic name for Ntfy, channel is disabled.');
         //            }
         //        }
 
         // pushover
         if (true === config('notifications.channels.slack.enabled', false)) {
-            $pushoverAppToken  = (string) app('preferences')->getEncryptedForUser($user, 'pushover_app_token', '')->data;
-            $pushoverUserToken = (string) app('preferences')->getEncryptedForUser($user, 'pushover_user_token', '')->data;
+            $pushoverAppToken  = (string) Preferences::getEncryptedForUser($user, 'pushover_app_token', '')->data;
+            $pushoverUserToken = (string) Preferences::getEncryptedForUser($user, 'pushover_user_token', '')->data;
             if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
                 Log::warning('[b] No Pushover token, channel is disabled.');
             }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use FireflyIII\Support\Facades\Preferences;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -54,27 +55,27 @@ class InterestingMessage
         }
 
         if ($this->groupMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleGroupMessage($request);
         }
         if ($this->userGroupMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleUserGroupMessage($request);
         }
         if ($this->accountMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleAccountMessage($request);
         }
         if ($this->billMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleBillMessage($request);
         }
         if ($this->webhookMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleWebhookMessage($request);
         }
         if ($this->currencyMessage($request)) {
-            app('preferences')->mark();
+            Preferences::mark();
             $this->handleCurrencyMessage($request);
         }
 

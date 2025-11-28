@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
@@ -81,7 +82,7 @@ class ReportHelper implements ReportHelperInterface
 
             /** @var Carbon $expectedStart */
             foreach ($expectedDates as $expectedStart) {
-                $expectedEnd               = app('navigation')->endOfX($expectedStart, $bill->repeat_freq, null);
+                $expectedEnd               = Navigation::endOfX($expectedStart, $bill->repeat_freq, null);
 
                 // is paid in this period maybe?
                 /** @var GroupCollectorInterface $collector */

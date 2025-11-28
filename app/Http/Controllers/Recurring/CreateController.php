@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -228,7 +229,7 @@ class CreateController extends Controller
         Log::channel('audit')->info('Stored new recurrence.', $data);
 
         $request->session()->flash('success', (string) trans('firefly.stored_new_recurrence', ['title' => $recurrence->title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store attachment(s):
         /** @var null|array $files */

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -92,7 +93,7 @@ class PiggyBankController extends Controller
             $currentSum        = $filtered->sum('amount');
             $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
-            $oldest            = app('navigation')->addPeriod($oldest, $step);
+            $oldest            = Navigation::addPeriod($oldest, $step);
         }
         $finalFiltered          = $set->filter(
             static fn (PiggyBankEvent $event) => $event->date->lte($today)

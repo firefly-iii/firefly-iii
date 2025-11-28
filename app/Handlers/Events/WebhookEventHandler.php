@@ -53,8 +53,13 @@ class WebhookEventHandler
             )->splice(0, 5)
         ;
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
+
+        /** @var WebhookMessage $message */
         foreach ($messages as $message) {
             if (false === $message->sent) {
+                // set it to "sent" right away!
+                $message->sent = true;
+                $message->save();
                 Log::debug(sprintf('Send message #%d', $message->id));
                 SendWebhookMessage::dispatch($message)->afterResponse();
             }

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -173,15 +174,15 @@ class EditController extends Controller
      */
     public function update(RecurrenceFormRequest $request, Recurrence $recurrence)
     {
-        $data     = $request->getAll();
-        $this->repository->update($recurrence, $data);
+        $data       = $request->getAll();
+        $recurrence = $this->repository->update($recurrence, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_recurrence', ['title' => $recurrence->title]));
         Log::channel('audit')->info(sprintf('Updated recurrence #%d.', $recurrence->id), $data);
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files      = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }
@@ -193,8 +194,8 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        app('preferences')->mark();
-        $redirect = redirect($this->getPreviousUrl('recurrences.edit.url'));
+        Preferences::mark();
+        $redirect   = redirect($this->getPreviousUrl('recurrences.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
             $request->session()->put('recurrences.edit.fromUpdate', true);

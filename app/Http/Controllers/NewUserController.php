@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\TransactionCurrency;
@@ -92,7 +93,7 @@ class NewUserController extends Controller
         }
 
         // set language preference:
-        app('preferences')->set('language', $language);
+        Preferences::set('language', $language);
         // Store currency preference from input:
         $currency      = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
@@ -111,10 +112,10 @@ class NewUserController extends Controller
 
         // store frontpage preferences:
         $accounts      = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
-        app('preferences')->set('frontpageAccounts', $accounts);
+        Preferences::set('frontpageAccounts', $accounts);
 
         // mark.
-        app('preferences')->mark();
+        Preferences::mark();
 
         // set default optional fields:
         $visibleFields = [
@@ -128,10 +129,10 @@ class NewUserController extends Controller
             'notes'              => true,
             'attachments'        => true,
         ];
-        app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
+        Preferences::set('transaction_journal_optional_fields', $visibleFields);
 
         session()->flash('success', (string) trans('firefly.stored_new_accounts_new_user'));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect(route('index'));
     }

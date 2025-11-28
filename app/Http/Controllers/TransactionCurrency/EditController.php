@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CurrencyFormRequest;
@@ -128,7 +129,7 @@ class EditController extends Controller
         $currency = $this->repository->update($currency, $data);
         Log::channel('audit')->info('Updated (POST) currency.', $data);
         $request->session()->flash('success', (string) trans('firefly.updated_currency', ['name' => $currency->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         if (1 === (int) $request->get('return_to_edit')) {
             $request->session()->put('currencies.edit.fromUpdate', true);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Exceptions\FireflyException;
@@ -242,7 +243,7 @@ class UserController extends Controller
         $this->repository->updateEmail($user, $data['email']);
 
         session()->flash('success', (string) trans('firefly.updated_user', ['email' => $user->email]));
-        app('preferences')->mark();
+        Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('users.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             session()->put('users.edit.fromUpdate', true);

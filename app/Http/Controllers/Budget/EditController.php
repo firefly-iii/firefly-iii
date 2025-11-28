@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -126,7 +127,7 @@ class EditController extends Controller
 
         $request->session()->flash('success', (string) trans('firefly.updated_budget', ['name' => $budget->name]));
         $this->repository->cleanupBudgets();
-        app('preferences')->mark();
+        Preferences::mark();
 
         Log::channel('audit')->info(sprintf('Updated budget #%d.', $budget->id), $data);
 

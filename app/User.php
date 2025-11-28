@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Deprecated;
 use Exception;
@@ -357,7 +358,7 @@ class User extends Authenticatable
         }
         $email  = $this->email;
         // see if user has alternative email address:
-        $pref   = app('preferences')->getForUser($this, 'remote_guard_alt_email');
+        $pref   = Preferences::getForUser($this, 'remote_guard_alt_email');
         if (null !== $pref) {
             $email = $pref->data;
         }
@@ -390,8 +391,8 @@ class User extends Authenticatable
 
     public function routeNotificationForPushover(): PushoverReceiver
     {
-        $appToken  = (string) app('preferences')->getEncrypted('pushover_app_token', '')->data;
-        $userToken = (string) app('preferences')->getEncrypted('pushover_user_token', '')->data;
+        $appToken  = (string) Preferences::getEncrypted('pushover_app_token', '')->data;
+        $userToken = (string) Preferences::getEncrypted('pushover_user_token', '')->data;
 
         return PushoverReceiver::withUserKey($userToken)->withApplicationToken($appToken);
     }
@@ -419,7 +420,7 @@ class User extends Authenticatable
         if ($notification instanceof VersionCheckResult) {
             return $res;
         }
-        $pref = app('preferences')->getEncryptedForUser($this, 'slack_webhook_url', '')->data;
+        $pref = Preferences::getEncryptedForUser($this, 'slack_webhook_url', '')->data;
         if (is_array($pref)) {
             return '';
         }

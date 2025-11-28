@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
@@ -94,7 +95,7 @@ class EditController extends Controller
         $this->repository->update($category, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_category', ['name' => $category->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store new attachment(s):
         /** @var null|array $files */

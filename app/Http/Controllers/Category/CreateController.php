@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -92,7 +93,7 @@ class CreateController extends Controller
         $category = $this->repository->store($data);
 
         $request->session()->flash('success', (string) trans('firefly.stored_category', ['name' => $category->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store attachment(s):
         /** @var null|array $files */

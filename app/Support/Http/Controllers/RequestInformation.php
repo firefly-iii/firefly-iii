@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Requests\RuleFormRequest;
@@ -110,7 +111,7 @@ trait RequestInformation
         $shownDemo    = true;
         // both must be array and either must be > 0
         if (count($intro) > 0 || count($specialIntro) > 0) {
-            $shownDemo = app('preferences')->get($key, false)->data;
+            $shownDemo = Preferences::get($key, false)->data;
         }
         if (!is_bool($shownDemo)) {
             return true;

@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -94,11 +96,11 @@ class IndexController extends Controller
         Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
-        $range            = app('navigation')->getViewRange(true);
+        $range            = Navigation::getViewRange(true);
         $isCustomRange    = session('is_custom_range', false);
         if (false === $isCustomRange) {
             $start ??= session('start', today(config('app.timezone'))->startOfMonth());
-            $end   ??= app('navigation')->endOfPeriod($start, $range);
+            $end   ??= Navigation::endOfPeriod($start, $range);
         }
 
         // overrule start and end if necessary:
@@ -112,7 +114,7 @@ class IndexController extends Controller
         $spent            = '0';
 
         // new period stuff:
-        $periodTitle      = app('navigation')->periodShow($start, $range);
+        $periodTitle      = Navigation::periodShow($start, $range);
         $prevLoop         = $this->getPreviousPeriods($start, $range);
         $nextLoop         = $this->getNextPeriods($start, $range);
 
@@ -307,7 +309,7 @@ class IndexController extends Controller
                 $repository->setBudgetOrder($budget, $index + 1);
             }
         }
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json(['OK']);
     }

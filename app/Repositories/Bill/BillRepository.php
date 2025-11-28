@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Bill;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\BillFactory;
@@ -463,11 +464,11 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
 
         while ($start < $date) {
             Log::debug(sprintf('$start (%s) < $date (%s)', $start->format('Y-m-d H:i:s'), $date->format('Y-m-d H:i:s')));
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
             Log::debug('Start is now '.$start->format('Y-m-d H:i:s'));
         }
 
-        $end          = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+        $end          = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
         $end->endOfDay();
 
         // see if the bill was paid in this period.
@@ -477,7 +478,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             // this period had in fact a bill. The new start is the current end, and we create a new end.
             Log::debug(sprintf('Journal count is %d, so start becomes %s', $journalCount, $end->format('Y-m-d')));
             $start = clone $end;
-            $end   = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $end   = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
         Log::debug('nextExpectedMatch: Final start is '.$start->format('Y-m-d'));
         Log::debug('nextExpectedMatch: Matching end is '.$end->format('Y-m-d'));
@@ -681,7 +682,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         $start = clone $bill->date;
 
         while ($start < $date) {
-            $start = app('navigation')->addPeriod($start, $bill->repeat_freq, $bill->skip);
+            $start = Navigation::addPeriod($start, $bill->repeat_freq, $bill->skip);
         }
         $cache->store($start);
 

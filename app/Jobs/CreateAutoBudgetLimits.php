@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Exceptions\FireflyException;
@@ -122,8 +123,8 @@ class CreateAutoBudgetLimits implements ShouldQueue
         );
 
         // get date range for budget limit, based on range in auto-budget
-        $start       = app('navigation')->startOfPeriod($this->date, $autoBudget->period);
-        $end         = app('navigation')->endOfPeriod($start, $autoBudget->period);
+        $start       = Navigation::startOfPeriod($this->date, $autoBudget->period);
+        $end         = Navigation::endOfPeriod($start, $autoBudget->period);
 
         // find budget limit:
         $budgetLimit = $this->findBudgetLimit($autoBudget->budget, $start, $end);
@@ -237,12 +238,12 @@ class CreateAutoBudgetLimits implements ShouldQueue
     {
         Log::debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
         // current period:
-        $start         = app('navigation')->startOfPeriod($this->date, $autoBudget->period);
-        $end           = app('navigation')->endOfPeriod($start, $autoBudget->period);
+        $start         = Navigation::startOfPeriod($this->date, $autoBudget->period);
+        $end           = Navigation::endOfPeriod($start, $autoBudget->period);
 
         // which means previous period:
-        $previousStart = app('navigation')->subtractPeriod($start, $autoBudget->period);
-        $previousEnd   = app('navigation')->endOfPeriod($previousStart, $autoBudget->period);
+        $previousStart = Navigation::subtractPeriod($start, $autoBudget->period);
+        $previousEnd   = Navigation::endOfPeriod($previousStart, $autoBudget->period);
 
         Log::debug(
             sprintf(
@@ -297,12 +298,12 @@ class CreateAutoBudgetLimits implements ShouldQueue
     {
         Log::debug(sprintf('Will now manage rollover for auto budget #%d', $autoBudget->id));
         // current period:
-        $start           = app('navigation')->startOfPeriod($this->date, $autoBudget->period);
-        $end             = app('navigation')->endOfPeriod($start, $autoBudget->period);
+        $start           = Navigation::startOfPeriod($this->date, $autoBudget->period);
+        $end             = Navigation::endOfPeriod($start, $autoBudget->period);
 
         // which means previous period:
-        $previousStart   = app('navigation')->subtractPeriod($start, $autoBudget->period);
-        $previousEnd     = app('navigation')->endOfPeriod($previousStart, $autoBudget->period);
+        $previousStart   = Navigation::subtractPeriod($start, $autoBudget->period);
+        $previousEnd     = Navigation::endOfPeriod($previousStart, $autoBudget->period);
 
         Log::debug(
             sprintf(

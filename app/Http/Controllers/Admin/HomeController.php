@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use Illuminate\Contracts\View\Factory;
@@ -59,7 +60,7 @@ class HomeController extends Controller
         $title         = (string) trans('firefly.system_settings');
         $mainTitleIcon = 'fa-hand-spock-o';
         $email         = auth()->user()->email;
-        $pref          = app('preferences')->get('remote_guard_alt_email');
+        $pref          = Preferences::get('remote_guard_alt_email');
         if (null !== $pref && is_string($pref->data)) {
             $email = $pref->data;
         }

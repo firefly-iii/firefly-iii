@@ -76,7 +76,6 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function firstNull(): ?TransactionJournal
     {
-        /** @var null|TransactionJournal $entry */
         return $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
     }
 
@@ -113,7 +112,6 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
 
     public function getLast(): ?TransactionJournal
     {
-        /** @var null|TransactionJournal $entry */
         return $this->user->transactionJournals()->orderBy('date', 'DESC')->first(['transaction_journals.*']);
     }
 

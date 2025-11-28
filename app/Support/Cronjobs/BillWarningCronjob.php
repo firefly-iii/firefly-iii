@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\WarnAboutBills;
@@ -74,7 +75,7 @@ class BillWarningCronjob extends AbstractCronjob
 
         $this->fireWarnings();
 
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function fireWarnings(): void

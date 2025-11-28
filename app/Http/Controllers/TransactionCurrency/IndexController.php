@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -73,7 +74,7 @@ class IndexController extends Controller
         /** @var User $user */
         $user       = auth()->user();
         $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize   = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
 
         // order so default and enabled are on top:

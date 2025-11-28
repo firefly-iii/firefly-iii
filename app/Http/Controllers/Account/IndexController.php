@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -81,7 +82,7 @@ class IndexController extends Controller
         $collection   = $this->repository->getInactiveAccountsByType($types);
         $total        = $collection->count();
         $page         = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
 
@@ -153,7 +154,7 @@ class IndexController extends Controller
         $collection    = $this->repository->getActiveAccountsByType($types);
         $total         = $collection->count();
         $page          = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize      = (int) Preferences::get('listPageSize', 50)->data;
         $accounts      = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $inactiveCount = $this->repository->getInactiveAccountsByType($types)->count();
 
@@ -167,12 +168,17 @@ class IndexController extends Controller
         /** @var Carbon $end */
         $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
 
+        $now           = now();
+        if ($now->gt($end) || $now->lt($start)) {
+            $now = $end;
+        }
+
         $ids           = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         [
             $startBalances,
             $endBalances,
-        ]              = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
+        ]              = Steam::accountsBalancesInRange($accounts, $start, $now, $this->primaryCurrency, $this->convertToPrimary);
         $activities    = Steam::getLastActivities($ids);
 
 

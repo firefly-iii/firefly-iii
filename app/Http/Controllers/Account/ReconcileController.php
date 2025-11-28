@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -91,20 +93,20 @@ class ReconcileController extends Controller
         $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
 
         // no start or end:
-        $range           = app('navigation')->getViewRange(false);
+        $range           = Navigation::getViewRange(false);
 
         // get start and end
 
         if (!$start instanceof Carbon && !$end instanceof Carbon) {
             /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon(), $range));
+            $start = clone session('start', Navigation::startOfPeriod(new Carbon(), $range));
 
             /** @var Carbon $end */
-            $end   = clone session('end', app('navigation')->endOfPeriod(new Carbon(), $range));
+            $end   = clone session('end', Navigation::endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
-            $end = app('navigation')->endOfPeriod($start, $range);
+            $end = Navigation::endOfPeriod($start, $range);
         }
 
         if ($end->lt($start)) {
@@ -174,7 +176,7 @@ class ReconcileController extends Controller
             $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
         Log::debug('End of routine.');
-        app('preferences')->mark();
+        Preferences::mark();
         if ('' === $result) {
             session()->flash('success', (string) trans('firefly.reconciliation_stored'));
         }

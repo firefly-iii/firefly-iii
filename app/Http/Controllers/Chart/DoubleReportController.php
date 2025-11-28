@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
+use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -154,7 +155,7 @@ class DoubleReportController extends Controller
         $accounts  = $accounts->merge($opposing);
         $spent     = $this->opsRepository->listExpenses($start, $end, $accounts);
         $earned    = $this->opsRepository->listIncome($start, $end, $accounts);
-        $format    = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
+        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
         foreach ($spent as $currency) {
@@ -238,11 +239,11 @@ class DoubleReportController extends Controller
     private function makeEntries(Carbon $start, Carbon $end): array
     {
         $return         = [];
-        $format         = app('navigation')->preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = app('navigation')->preferredRangeFormat($start, $end);
+        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
-            $currentEnd   = app('navigation')->endOfPeriod($currentStart, $preferredRange);
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
             $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;

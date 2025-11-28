@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.4.9 - 2025-11-xx
+
+### Fixed
+
+- [Discussion 11211](https://github.com/orgs/firefly-iii/discussions/11211) (question about Transaction journal ID) started by @zhiiwg
+- [Issue 11247](https://github.com/firefly-iii/firefly-iii/issues/11247) (Optional transaction information not saved when updating a recurring transaction.) reported by @Tommy78649
+- [Issue 11267](https://github.com/firefly-iii/firefly-iii/issues/11267) (Tags can be added to elements that can't be removed) reported by @Fmstrat
+- [Issue 11281](https://github.com/firefly-iii/firefly-iii/issues/11281) (Webhooks are triggered twice when recurring creates transaction on cronjob) reported by @MexerSam
+- [Issue 11284](https://github.com/firefly-iii/firefly-iii/issues/11284) (500 Internal Server Error when deleting budget) reported by @jschollenberger
+- [Issue 11288](https://github.com/firefly-iii/firefly-iii/issues/11288) (Piggy bank creation form doesn't respect primary currency) reported by @jschollenberger
+- [Issue 11191](https://github.com/firefly-iii/firefly-iii/issues/11191) (Going beyond 6.4.2 displays wrong balance) reported by @The24KFool
+
+### API
+
+- [Issue 11265](https://github.com/firefly-iii/firefly-iii/issues/11265) (Inconsistent object type in exchange rates API) reported by @jfpedroza
+
 ## 6.4.8 - 2025-11-14
 
 ### Fixed

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Support\Facades\Preferences;
 use Config;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -84,7 +85,7 @@ class FireflyValidator extends Validator
 
             return false;
         }
-        $secretPreference = app('preferences')->get('temp-mfa-secret');
+        $secretPreference = Preferences::get('temp-mfa-secret');
         $secret           = $secretPreference->data ?? '';
         if (is_array($secret)) {
             $secret = '';

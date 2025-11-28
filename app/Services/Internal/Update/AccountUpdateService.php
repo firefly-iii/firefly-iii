@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\UpdatedAccount;
@@ -291,7 +292,7 @@ class AccountUpdateService
         if (true === $account->active) {
             return;
         }
-        $preference      = app('preferences')->getForUser($account->user, 'frontpageAccounts');
+        $preference      = Preferences::getForUser($account->user, 'frontpageAccounts');
         if (null === $preference) {
             return;
         }
@@ -310,6 +311,6 @@ class AccountUpdateService
             }
         }
         Log::debug('Final new array is', $new);
-        app('preferences')->setForUser($account->user, 'frontpageAccounts', $new);
+        Preferences::setForUser($account->user, 'frontpageAccounts', $new);
     }
 }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
@@ -146,7 +147,7 @@ class HomeController extends Controller
         $count          = $repository->count($types);
         $subTitle       = (string) trans('firefly.welcome_back');
         $transactions   = [];
-        $frontpage      = app('preferences')->getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
+        $frontpage      = Preferences::getFresh('frontpageAccounts', $repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray());
         $frontpageArray = $frontpage->data;
         if (!is_array($frontpageArray)) {
             $frontpageArray = [];

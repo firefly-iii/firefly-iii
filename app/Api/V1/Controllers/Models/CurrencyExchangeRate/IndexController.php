@@ -40,7 +40,7 @@ class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY = 'currency_exchange_rates';
+    public const string RESOURCE_KEY = 'exchange-rates';
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 

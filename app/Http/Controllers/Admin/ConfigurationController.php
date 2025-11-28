@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ConfigurationRequest;
@@ -95,7 +96,7 @@ class ConfigurationController extends Controller
 
         // flash message
         session()->flash('success', (string) trans('firefly.configuration_updated'));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect()->route('settings.configuration.index');
     }

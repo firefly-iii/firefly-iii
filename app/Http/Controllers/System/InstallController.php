@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
+use FireflyIII\Support\Facades\Preferences;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -149,7 +150,7 @@ class InstallController extends Controller
         }
         // clear cache as well.
         Cache::clear();
-        app('preferences')->mark();
+        Preferences::mark();
 
         return true;
     }

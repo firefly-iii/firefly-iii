@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -83,7 +84,7 @@ class DeleteController extends Controller
     {
         $repository->destroy($recurrence);
         $request->session()->flash('success', (string) trans('firefly.recurrence_deleted', ['title' => $recurrence->title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('recurrences.delete.url'));
     }

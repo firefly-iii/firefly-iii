@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -116,7 +117,7 @@ class CreateController extends Controller
         $budget   = $this->repository->store($data);
         $this->repository->cleanupBudgets();
         $request->session()->flash('success', (string) trans('firefly.stored_new_budget', ['name' => $budget->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         Log::channel('audit')->info('Stored new budget.', $data);
 

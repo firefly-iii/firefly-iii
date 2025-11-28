@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -212,7 +213,7 @@ class TagController extends Controller
         $this->repository->destroy($tag);
 
         session()->flash('success', (string) trans('firefly.deleted_tag', ['tag' => $tagName]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('tags.delete.url'));
     }
@@ -231,7 +232,7 @@ class TagController extends Controller
         // default values:
         $subTitleIcon = 'fa-tag';
         $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $start       ??= session('start');
         $end         ??= session('end');
         $location     = $this->repository->getLocation($tag);
@@ -275,7 +276,7 @@ class TagController extends Controller
         // default values:
         $subTitleIcon = 'fa-tag';
         $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $periods      = [];
         $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? today(config('app.timezone'));
@@ -309,7 +310,7 @@ class TagController extends Controller
         Log::debug('Data after storage', $result->toArray());
 
         session()->flash('success', (string) trans('firefly.created_tag', ['tag' => $data['tag']]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store attachment(s):
         /** @var null|array $files */
@@ -347,7 +348,7 @@ class TagController extends Controller
         $tag      = $this->repository->update($tag, $data);
 
         session()->flash('success', (string) trans('firefly.updated_tag', ['tag' => $data['tag']]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store new attachment(s):
         /** @var null|array $files */

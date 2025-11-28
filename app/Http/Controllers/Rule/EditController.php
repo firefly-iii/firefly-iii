@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -204,7 +205,7 @@ class EditController extends Controller
         $this->ruleRepos->update($rule, $data);
 
         session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
-        app('preferences')->mark();
+        Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
 
         if (true === $data['run_after_form']) {

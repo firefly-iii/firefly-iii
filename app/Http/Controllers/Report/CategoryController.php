@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -485,7 +486,7 @@ class CategoryController extends Controller
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
-        $format  = app('navigation')->preferredCarbonFormat($start, $end);
+        $format  = Navigation::preferredCarbonFormat($start, $end);
 
         if ('Y' === $format) {
             $start->startOfYear();
@@ -494,7 +495,7 @@ class CategoryController extends Controller
             $start->startOfMonth();
         }
 
-        $periods = app('navigation')->listOfPeriods($start, $end);
+        $periods = Navigation::listOfPeriods($start, $end);
         $data    = [];
         $with    = $this->opsRepository->listExpenses($start, $end, $accounts);
         $without = $this->noCatRepository->listExpenses($start, $end, $accounts);
@@ -559,7 +560,7 @@ class CategoryController extends Controller
 
         // depending on the carbon format (a reliable way to determine the general date difference)
         // change the "listOfPeriods" call so the entire period gets included correctly.
-        $format  = app('navigation')->preferredCarbonFormat($start, $end);
+        $format  = Navigation::preferredCarbonFormat($start, $end);
 
         if ('Y' === $format) {
             $start->startOfYear();
@@ -568,7 +569,7 @@ class CategoryController extends Controller
             $start->startOfMonth();
         }
 
-        $periods = app('navigation')->listOfPeriods($start, $end);
+        $periods = Navigation::listOfPeriods($start, $end);
         $data    = [];
         $with    = $this->opsRepository->listIncome($start, $end, $accounts);
         $without = $this->noCatRepository->listIncome($start, $end, $accounts);

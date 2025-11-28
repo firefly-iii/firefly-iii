@@ -25,10 +25,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Observers;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
@@ -160,7 +162,7 @@ trait RecalculatesAvailableBudgetsTrait
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
         try {
-            $viewRange = app('preferences')->getForUser($user, 'viewRange', '1M')->data;
+            $viewRange = Preferences::getForUser($user, 'viewRange', '1M')->data;
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             Log::error($e->getMessage());
             $viewRange = '1M';
@@ -171,9 +173,16 @@ trait RecalculatesAvailableBudgetsTrait
         }
         $viewRange   = (string)$viewRange;
 
-        $start       = app('navigation')->startOfPeriod($budgetLimit->start_date, $viewRange);
-        $end         = app('navigation')->startOfPeriod($budgetLimit->end_date, $viewRange);
-        $end         = app('navigation')->endOfPeriod($end, $viewRange);
+        $start       = Navigation::startOfPeriod($budgetLimit->start_date, $viewRange);
+        $end         = Navigation::startOfPeriod($budgetLimit->end_date, $viewRange);
+        $end         = Navigation::endOfPeriod($end, $viewRange);
+        if ($end < $start) {
+            [$start, $end]           = [$end, $start];
+            $budgetLimit->start_date = $start;
+            $budgetLimit->end_date   = $end;
+            $budgetLimit->saveQuietly();
+        }
+
 
         // limit period in total is:
         $limitPeriod = Period::make($start, $end, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
@@ -182,7 +191,7 @@ trait RecalculatesAvailableBudgetsTrait
         // from the start until the end of the budget limit, need to loop!
         $current     = clone $start;
         while ($current <= $end) {
-            $currentEnd      = app('navigation')->endOfPeriod($current, $viewRange);
+            $currentEnd      = Navigation::endOfPeriod($current, $viewRange);
 
             // create or find AB for this particular period, and set the amount accordingly.
             /** @var null|AvailableBudget $availableBudget */
@@ -192,12 +201,10 @@ trait RecalculatesAvailableBudgetsTrait
                 Log::debug('Found 1 AB, will update.');
                 $this->calculateAmount($availableBudget);
             }
-            if (null === $availableBudget) {
-                Log::debug('No AB found, will create.');
-                // if not exists:
+            if (null === $availableBudget && $currentEnd->gte($current)) {
                 $currentPeriod = Period::make($current, $currentEnd, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
                 $daily         = $this->getDailyAmount($budgetLimit);
-                $amount        = bcmul((string) $daily, (string)$currentPeriod->length(), 12);
+                $amount        = bcmul((string)$daily, (string)$currentPeriod->length(), 12);
 
                 // no need to calculate if period is equal.
                 if ($currentPeriod->equals($limitPeriod)) {
@@ -227,7 +234,7 @@ trait RecalculatesAvailableBudgetsTrait
             }
 
             // prep for next loop
-            $current         = app('navigation')->addPeriod($current, $viewRange);
+            $current         = Navigation::addPeriod($current, $viewRange);
         }
     }
 }

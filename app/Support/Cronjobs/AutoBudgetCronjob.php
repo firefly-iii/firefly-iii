@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Jobs\CreateAutoBudgetLimits;
 use FireflyIII\Models\Configuration;
@@ -62,7 +63,7 @@ class AutoBudgetCronjob extends AbstractCronjob
         }
 
         $this->fireAutoBudget();
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function fireAutoBudget(): void

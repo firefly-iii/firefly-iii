@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -82,7 +83,7 @@ class IndexController extends Controller
     public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize    = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
         $collection  = $this->repository->get();
         $today       = today(config('app.timezone'));
         $year        = today(config('app.timezone'));
