@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
@@ -57,12 +58,12 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail           = $user->email;
 
         // save old email as pref
-        app('preferences')->setForUser($user, 'previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
+        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
-        app('preferences')->setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
-        app('preferences')->setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)));
+        Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
+        Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)));
         // update user
 
         $user->email        = $newEmail;
@@ -367,8 +368,8 @@ class UserRepository implements UserRepositoryInterface
         $oldEmail    = $user->email;
 
         // save old email as pref
-        app('preferences')->setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        app('preferences')->setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();

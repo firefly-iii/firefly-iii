@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -141,18 +142,18 @@ class CreateController extends Controller
         $data      = $request->getAccountData();
         $account   = $this->repository->store($data);
         $request->session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         Log::channel('audit')->info('Stored new account.', $data);
 
         // update preferences if necessary:
-        $frontpage = app('preferences')->get('frontpageAccounts', [])->data;
+        $frontpage = Preferences::get('frontpageAccounts', [])->data;
         if (!is_array($frontpage)) {
             $frontpage = [];
         }
         if (AccountTypeEnum::ASSET->value === $account->accountType->type) {
             $frontpage[] = $account->id;
-            app('preferences')->set('frontpageAccounts', $frontpage);
+            Preferences::set('frontpageAccounts', $frontpage);
         }
 
         // store attachment(s):

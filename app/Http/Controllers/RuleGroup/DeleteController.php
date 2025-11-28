@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -87,7 +88,7 @@ class DeleteController extends Controller
         $this->repository->destroy($ruleGroup, $moveTo);
 
         session()->flash('success', (string) trans('firefly.deleted_rule_group', ['title' => $title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('rule-groups.delete.url'));
     }

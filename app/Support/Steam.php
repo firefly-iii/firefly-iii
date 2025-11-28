@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use FireflyIII\Support\Facades\Preferences;
 use Deprecated;
 use Carbon\Carbon;
 use Exception;
@@ -573,7 +574,7 @@ class Steam
      */
     public function getLanguage(): string // get preference
     {
-        $preference = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+        $preference = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
         if (!is_string($preference)) {
             throw new FireflyException(sprintf('Preference "language" must be a string, but is unexpectedly a "%s".', gettype($preference)));
         }
@@ -611,7 +612,7 @@ class Steam
         if (null !== $cached) {
             return $cached;
         }
-        $locale    = app('preferences')->get('locale', config('firefly.default_locale', 'equal'))->data;
+        $locale    = Preferences::get('locale', config('firefly.default_locale', 'equal'))->data;
         if (is_array($locale)) {
             $locale = 'equal';
         }
@@ -636,7 +637,7 @@ class Steam
         if (null !== $cached) {
             return $cached;
         }
-        $anonymous = app('preferences')->get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
+        $anonymous = Preferences::get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
         $singleton->setPreference('anonymous', $anonymous);
 
         return $anonymous;

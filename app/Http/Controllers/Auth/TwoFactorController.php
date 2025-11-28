@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
@@ -65,7 +66,7 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request): Redirector|RedirectResponse
     {
         /** @var array $mfaHistory */
-        $mfaHistory    = app('preferences')->get('mfa_history', [])->data;
+        $mfaHistory    = Preferences::get('mfa_history', [])->data;
         $mfaCode       = (string) $request->get('one_time_password');
 
         // is in history? then refuse to use it.
@@ -149,7 +150,7 @@ class TwoFactorController extends Controller
     private function filterMFAHistory(): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = app('preferences')->get('mfa_history', [])->data;
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
         $newHistory = [];
         $now        = Carbon::now()->getTimestamp();
         foreach ($mfaHistory as $entry) {
@@ -162,20 +163,20 @@ class TwoFactorController extends Controller
                 ];
             }
         }
-        app('preferences')->set('mfa_history', $newHistory);
+        Preferences::set('mfa_history', $newHistory);
     }
 
     private function addToMFAFailureCounter(): void
     {
-        $preference = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
-        app('preferences')->set('mfa_failure_count', $preference);
+        Preferences::set('mfa_failure_count', $preference);
     }
 
     private function getMFAFailureCounter(): int
     {
-        $value = (int) app('preferences')->get('mfa_failure_count', 0)->data;
+        $value = (int) Preferences::get('mfa_failure_count', 0)->data;
         Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
 
         return $value;
@@ -184,20 +185,20 @@ class TwoFactorController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = app('preferences')->get('mfa_history', [])->data;
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
         $entry        = [
             'time' => Carbon::now()->getTimestamp(),
             'code' => $mfaCode,
         ];
         $mfaHistory[] = $entry;
 
-        app('preferences')->set('mfa_history', $mfaHistory);
+        Preferences::set('mfa_history', $mfaHistory);
         $this->filterMFAHistory();
     }
 
     private function resetMFAFailureCounter(): void
     {
-        app('preferences')->set('mfa_failure_count', 0);
+        Preferences::set('mfa_failure_count', 0);
         Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 
@@ -206,7 +207,7 @@ class TwoFactorController extends Controller
      */
     private function isBackupCode(string $mfaCode): bool
     {
-        $list = app('preferences')->get('mfa_recovery', [])->data;
+        $list = Preferences::get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -219,7 +220,7 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = app('preferences')->get('mfa_recovery', [])->data;
+        $list    = Preferences::get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
@@ -238,6 +239,6 @@ class TwoFactorController extends Controller
             event(new MFABackupNoLeft($user));
         }
 
-        app('preferences')->set('mfa_recovery', $newList);
+        Preferences::set('mfa_recovery', $newList);
     }
 }

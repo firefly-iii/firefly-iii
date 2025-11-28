@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
@@ -77,7 +78,7 @@ class DeleteController extends Controller
     public function destroy(ObjectGroup $objectGroup): RedirectResponse
     {
         session()->flash('success', (string) trans('firefly.deleted_object_group', ['title' => $objectGroup->title]));
-        app('preferences')->mark();
+        Preferences::mark();
         $this->repository->destroy($objectGroup);
 
         return redirect($this->getPreviousUrl('object-groups.delete.url'));

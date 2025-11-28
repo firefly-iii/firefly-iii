@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -105,7 +106,7 @@ class CreateController extends Controller
 
         Log::channel('audit')->info('Stored new bill.', $billData);
         $request->session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         /** @var null|array $files */
         $files              = $request->hasFile('attachments') ? $request->file('attachments') : null;

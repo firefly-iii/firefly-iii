@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -86,7 +87,7 @@ class NoCategoryController extends Controller
         /** @var Carbon $start */
         /** @var Carbon $end */
         $page      = (int) $request->get('page');
-        $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
         $subTitle  = trans('firefly.without_category_between', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]);
         $first     = $this->journalRepos->firstNull()->date ?? clone $start;
         $periods   = $this->getNoModelPeriodOverview('category', $first, $end);
@@ -122,7 +123,7 @@ class NoCategoryController extends Controller
         $end       = null;
         $periods   = new Collection();
         $page      = (int) $request->get('page');
-        $pageSize  = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
         $subTitle  = (string) trans('firefly.all_journals_without_category');
         $first     = $this->journalRepos->firstNull();

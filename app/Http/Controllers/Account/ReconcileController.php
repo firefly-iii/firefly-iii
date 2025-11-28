@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
@@ -175,7 +176,7 @@ class ReconcileController extends Controller
             $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
         Log::debug('End of routine.');
-        app('preferences')->mark();
+        Preferences::mark();
         if ('' === $result) {
             session()->flash('success', (string) trans('firefly.reconciliation_stored'));
         }

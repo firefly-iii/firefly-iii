@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -83,7 +84,7 @@ class DeleteController extends Controller
         $this->repository->destroy($category);
 
         $request->session()->flash('success', (string) trans('firefly.deleted_category', ['name' => $name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('categories.delete.url'));
     }

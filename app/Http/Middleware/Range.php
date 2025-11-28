@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Closure;
@@ -70,7 +71,7 @@ class Range
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
             Log::debug('setRange: Session has no start or end.');
-            $viewRange = app('preferences')->get('viewRange', '1M')->data;
+            $viewRange = Preferences::get('viewRange', '1M')->data;
             if (is_array($viewRange)) {
                 $viewRange = '1M';
             }
@@ -138,7 +139,7 @@ class Range
      */
     private function configureList(): void
     {
-        $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
+        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
         app('view')->share('listLength', $pref);
 
         // share security message:

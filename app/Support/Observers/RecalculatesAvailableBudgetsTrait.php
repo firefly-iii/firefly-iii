@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Observers;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -161,7 +162,7 @@ trait RecalculatesAvailableBudgetsTrait
         // either overlap multiple available budget periods or be contained in a single one.
         // all have to be created or updated.
         try {
-            $viewRange = app('preferences')->getForUser($user, 'viewRange', '1M')->data;
+            $viewRange = Preferences::getForUser($user, 'viewRange', '1M')->data;
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface $e) {
             Log::error($e->getMessage());
             $viewRange = '1M';

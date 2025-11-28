@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -193,7 +194,7 @@ class EditController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        app('preferences')->mark();
+        Preferences::mark();
         $redirect   = redirect($this->getPreviousUrl('recurrences.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:

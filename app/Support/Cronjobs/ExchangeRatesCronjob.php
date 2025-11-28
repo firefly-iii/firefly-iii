@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
@@ -63,7 +64,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
         }
 
         $this->fireExchangeRateJob();
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function fireExchangeRateJob(): void

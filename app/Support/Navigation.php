@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\IntervalException;
@@ -381,7 +382,7 @@ class Navigation
      */
     public function getViewRange(bool $correct): string
     {
-        $range = app('preferences')->get('viewRange', '1M')->data ?? '1M';
+        $range = Preferences::get('viewRange', '1M')->data ?? '1M';
         if (is_array($range)) {
             $range = '1M';
         }

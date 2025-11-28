@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -82,7 +83,7 @@ class DeleteController extends Controller
         $name = $budget->name;
         $this->repository->destroy($budget);
         $request->session()->flash('success', (string) trans('firefly.deleted_budget', ['name' => $name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('budgets.delete.url'));
     }

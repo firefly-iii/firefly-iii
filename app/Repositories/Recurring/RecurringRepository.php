@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Recurring;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
@@ -436,7 +437,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         Log::debug('Now in repetitionDescription()');
 
         /** @var Preference $pref */
-        $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
+        $pref     = Preferences::getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
         if (is_array($language)) {
             $language = 'en_US';

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -167,7 +168,7 @@ class AmountController extends Controller
         }
         if (0 !== bccomp($total, '0')) {
             session()->flash('success', (string) trans('firefly.added_amount_to_piggy', ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]));
-            app('preferences')->mark();
+            Preferences::mark();
 
             return redirect(route('piggy-banks.index'));
         }
@@ -216,7 +217,7 @@ class AmountController extends Controller
                     ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]
                 )
             );
-            app('preferences')->mark();
+            Preferences::mark();
 
             return redirect(route('piggy-banks.index'));
         }

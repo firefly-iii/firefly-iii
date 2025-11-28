@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Exceptions\FireflyException;
@@ -74,7 +75,7 @@ class WebhookCronjob extends AbstractCronjob
 
         $this->fireWebhookmessages();
 
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function fireWebhookmessages(): void

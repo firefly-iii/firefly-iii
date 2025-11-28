@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -89,7 +90,7 @@ class CreateController extends Controller
         $ruleGroup = $this->repository->store($data);
 
         session()->flash('success', (string) trans('firefly.created_new_rule_group', ['title' => $ruleGroup->title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         $redirect  = redirect($this->getPreviousUrl('rule-groups.create.url'));
         if (1 === (int) $request->get('create_another')) {

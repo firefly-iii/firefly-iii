@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -255,7 +256,7 @@ class BudgetLimitController extends Controller
 
 
         $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes' => $notes]);
-        app('preferences')->mark();
+        Preferences::mark();
         $array                           = $limit->toArray();
 
         $spentArr                        = $this->opsRepository->sumExpenses(

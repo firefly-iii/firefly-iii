@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
@@ -73,7 +74,7 @@ class RecurringCronjob extends AbstractCronjob
 
         $this->fireRecurring();
 
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function fireRecurring(): void

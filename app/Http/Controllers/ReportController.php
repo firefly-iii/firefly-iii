@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -227,7 +228,7 @@ class ReportController extends Controller
         /** @var Carbon $start */
         $start            = clone session('first', today(config('app.timezone')));
         $months           = $this->helper->listOfMonths($start);
-        $customFiscalYear = app('preferences')->get('customFiscalYear', 0)->data;
+        $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
         $accounts         = $repository->getAccountsByType(
             [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value]
         );

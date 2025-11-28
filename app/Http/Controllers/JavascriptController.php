@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -107,7 +108,7 @@ class JavascriptController extends Controller
         $locale                    = app('steam')->getLocale();
         $accounting                = app('amount')->getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
-        $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
+        $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;
         $dateRange                 = $this->getDateRangeConfig();
         $uid                       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);

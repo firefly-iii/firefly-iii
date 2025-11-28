@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillUpdateRequest;
@@ -116,7 +117,7 @@ class EditController extends Controller
         Log::channel('audit')->info(sprintf('Updated bill #%d.', $bill->id), $billData);
 
         $request->session()->flash('success', (string) trans('firefly.updated_bill', ['name' => $bill->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         /** @var null|array $files */
         $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;

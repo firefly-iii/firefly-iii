@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\SearchDirection;
@@ -238,7 +239,7 @@ class OperatorQuerySearch implements SearchInterface
         $this->collector->setUser($user);
         $this->collector->withAccountInformation()->withCategoryInformation()->withBudgetInformation();
 
-        $this->setLimit((int)app('preferences')->getForUser($user, 'listPageSize', 50)->data);
+        $this->setLimit((int)Preferences::getForUser($user, 'listPageSize', 50)->data);
     }
 
     private function findCurrency(string $value): ?TransactionCurrency

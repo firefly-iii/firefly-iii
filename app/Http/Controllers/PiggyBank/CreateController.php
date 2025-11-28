@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -106,7 +107,7 @@ class CreateController extends Controller
 
         session()->flash('success', (string) trans('firefly.stored_piggy_bank', ['name' => $piggyBank->name]));
         session()->flash('success_url', route('piggy-banks.show', [$piggyBank->id]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store attachment(s):
         /** @var null|array $files */

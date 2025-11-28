@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -110,7 +111,7 @@ class MassController extends Controller
                 Log::debug(sprintf('Could not find transaction journal #%d', $journalId));
             }
         }
-        app('preferences')->mark();
+        Preferences::mark();
         session()->flash('success', trans_choice('firefly.mass_deleted_transactions_success', $count));
 
         // redirect to previous URL:
@@ -177,7 +178,7 @@ class MassController extends Controller
             }
         }
 
-        app('preferences')->mark();
+        Preferences::mark();
         session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
         // redirect to previous URL:

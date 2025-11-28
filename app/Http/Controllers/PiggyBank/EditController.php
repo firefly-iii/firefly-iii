@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
@@ -121,7 +122,7 @@ class EditController extends Controller
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);
 
         session()->flash('success', (string) trans('firefly.updated_piggy_bank', ['name' => $piggyBank->name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         // store new attachment(s):
         /** @var null|array $files */

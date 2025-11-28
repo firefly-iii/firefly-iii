@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -82,7 +83,7 @@ class DeleteController extends Controller
         $this->ruleRepos->destroy($rule);
 
         session()->flash('success', (string) trans('firefly.deleted_rule', ['title' => $title]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('rules.delete.url'));
     }

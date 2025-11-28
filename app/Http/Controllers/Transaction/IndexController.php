@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -84,7 +85,7 @@ class IndexController extends Controller
         $subTitleIcon  = config('firefly.transactionIconsByType.'.$objectType);
         $types         = config('firefly.transactionTypesByType.'.$objectType);
         $page          = (int) $request->get('page');
-        $pageSize      = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize      = (int) Preferences::get('listPageSize', 50)->data;
 
         if (!$start instanceof Carbon) {
             $start = session('start');
@@ -137,7 +138,7 @@ class IndexController extends Controller
         $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
         $types        = config('firefly.transactionTypesByType.'.$objectType);
         $page         = (int) $request->get('page');
-        $pageSize     = (int) app('preferences')->get('listPageSize', 50)->data;
+        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
         $start        = $first instanceof TransactionJournal ? $first->date : new Carbon();

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
@@ -165,7 +166,7 @@ class JournalUpdateService
         $this->updateAmount();
         $this->updateForeignAmount();
 
-        app('preferences')->mark();
+        Preferences::mark();
 
         $this->transactionJournal->refresh();
         Log::debug('Done with update journal routine');

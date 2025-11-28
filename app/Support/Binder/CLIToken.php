@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Routing\Route;
@@ -46,7 +47,7 @@ class CLIToken implements BinderInterface
         }
 
         foreach ($users as $user) {
-            $accessToken = app('preferences')->getForUser($user, 'access_token');
+            $accessToken = Preferences::getForUser($user, 'access_token');
             if (null !== $accessToken && $accessToken->data === $value) {
                 Log::info(sprintf('Recognized user #%d (%s) from his access token.', $user->id, $user->email));
 

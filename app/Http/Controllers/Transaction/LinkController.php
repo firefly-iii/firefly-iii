@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
@@ -86,7 +87,7 @@ class LinkController extends Controller
         $this->repository->destroyLink($link);
 
         session()->flash('success', (string) trans('firefly.deleted_link'));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect((string) session('journal_links.delete.url'));
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
@@ -85,7 +86,7 @@ class AttachmentController extends Controller
         $this->repository->destroy($attachment);
 
         $request->session()->flash('success', (string) trans('firefly.attachment_deleted', ['name' => $name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('attachments.delete.url'));
     }
@@ -175,7 +176,7 @@ class AttachmentController extends Controller
         $this->repository->update($attachment, $data);
 
         $request->session()->flash('success', (string) trans('firefly.attachment_updated', ['name' => $attachment->filename]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         $redirect = redirect($this->getPreviousUrl('attachments.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {

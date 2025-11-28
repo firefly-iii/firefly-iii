@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Deprecated;
@@ -193,7 +194,7 @@ trait AccountServiceTrait
     protected function createOBGroup(Account $account, array $data): TransactionGroup
     {
         Log::debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        $language   = Preferences::getForUser($account->user, 'language', 'en_US')->data;
         if (is_array($language)) {
             $language = 'en_US';
         }
@@ -425,7 +426,7 @@ trait AccountServiceTrait
             throw new FireflyException('Amount for new liability credit was unexpectedly 0.');
         }
 
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        $language   = Preferences::getForUser($account->user, 'language', 'en_US')->data;
         if (is_array($language)) {
             $language = 'en_US';
         }
@@ -615,7 +616,7 @@ trait AccountServiceTrait
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
     {
         Log::debug('Now going to create an OB group.');
-        $language   = app('preferences')->getForUser($account->user, 'language', 'en_US')->data;
+        $language   = Preferences::getForUser($account->user, 'language', 'en_US')->data;
         if (is_array($language)) {
             $language = 'en_US';
         }

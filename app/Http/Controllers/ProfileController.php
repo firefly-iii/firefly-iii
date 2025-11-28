@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Events\UserChangedEmail;
@@ -98,7 +99,7 @@ class ProfileController extends Controller
 
         // find preference with this token value.
         /** @var Collection $set */
-        $set  = app('preferences')->findByName('email_change_confirm_token');
+        $set  = Preferences::findByName('email_change_confirm_token');
         $user = null;
 
         /** @var Preference $preference */
@@ -151,7 +152,7 @@ class ProfileController extends Controller
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
-        $recoveryData   = app('preferences')->get('mfa_recovery', [])->data;
+        $recoveryData   = Preferences::get('mfa_recovery', [])->data;
         if (!is_array($recoveryData)) {
             $recoveryData = [];
         }
@@ -165,10 +166,10 @@ class ProfileController extends Controller
             $repository->createPersonalAccessClient(null, $name, 'http://localhost');
         }
 
-        $accessToken    = app('preferences')->get('access_token');
+        $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
-            $accessToken = app('preferences')->set('access_token', $token);
+            $accessToken = Preferences::set('access_token', $token);
         }
 
         return view(
@@ -374,7 +375,7 @@ class ProfileController extends Controller
         /** @var User $user */
         $user  = auth()->user();
         $token = $user->generateAccessToken();
-        app('preferences')->set('access_token', $token);
+        Preferences::set('access_token', $token);
         session()->flash('success', (string) trans('firefly.token_regenerated'));
 
         return redirect(route('profile.index'));
@@ -392,7 +393,7 @@ class ProfileController extends Controller
         }
 
         // find preference with this token value.
-        $set   = app('preferences')->findByName('email_change_undo_token');
+        $set   = Preferences::findByName('email_change_undo_token');
         $user  = null;
 
         /** @var Preference $preference */
@@ -406,7 +407,7 @@ class ProfileController extends Controller
         }
 
         // found user.which email address to return to?
-        $set   = app('preferences')->beginsWith($user, 'previous_email_');
+        $set   = Preferences::beginsWith($user, 'previous_email_');
 
         /** @var null|string $match */
         $match = null;

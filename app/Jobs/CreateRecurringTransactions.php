@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
+use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionGroup;
@@ -132,7 +133,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $this->groupRepository->setUser($recurrence->user);
 
             // clear cache for user
-            app('preferences')->setForUser($recurrence->user, 'lastActivity', microtime());
+            Preferences::setForUser($recurrence->user, 'lastActivity', microtime());
 
             Log::debug(sprintf('Now at recurrence #%d of user #%d', $recurrence->id, $recurrence->user_id));
             $createdReps                  = $this->handleRepetitions($recurrence);
@@ -150,7 +151,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Done with handle()');
 
         // clear cache:
-        app('preferences')->mark();
+        Preferences::mark();
     }
 
     private function filterRecurrences(Collection $recurrences): Collection
@@ -413,6 +414,9 @@ class CreateRecurringTransactions implements ShouldQueue
 
         $transactions->first();
         $return       = [];
+
+
+
 
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {

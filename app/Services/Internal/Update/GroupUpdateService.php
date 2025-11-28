@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -83,7 +84,7 @@ class GroupUpdateService
             $this->updateTransactionJournal($transactionGroup, $first, reset($transactions));
             $transactionGroup->touch();
             $transactionGroup->refresh();
-            app('preferences')->mark();
+            Preferences::mark();
 
             return $transactionGroup;
         }
@@ -98,7 +99,7 @@ class GroupUpdateService
             Log::error('There were no transactions updated or created. Will not delete anything.');
             $transactionGroup->touch();
             $transactionGroup->refresh();
-            app('preferences')->mark();
+            Preferences::mark();
 
             return $transactionGroup;
         }
@@ -116,7 +117,7 @@ class GroupUpdateService
             $service->destroy($journal);
         }
 
-        app('preferences')->mark();
+        Preferences::mark();
         $transactionGroup->touch();
         $transactionGroup->refresh();
 

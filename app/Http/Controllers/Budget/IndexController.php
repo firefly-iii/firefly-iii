@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
@@ -308,7 +309,7 @@ class IndexController extends Controller
                 $repository->setBudgetOrder($budget, $index + 1);
             }
         }
-        app('preferences')->mark();
+        Preferences::mark();
 
         return response()->json(['OK']);
     }

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\LinkTypeFormRequest;
@@ -125,7 +126,7 @@ class LinkController extends Controller
         $this->repository->destroy($linkType, $moveTo);
 
         $request->session()->flash('success', (string) trans('firefly.deleted_link_type', ['name' => $name]));
-        app('preferences')->mark();
+        Preferences::mark();
 
         return redirect($this->getPreviousUrl('link-types.delete.url'));
     }
@@ -245,7 +246,7 @@ class LinkController extends Controller
         Log::channel('audit')->info(sprintf('User update link type #%d.', $linkType->id), $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_link_type', ['name' => $linkType->name]));
-        app('preferences')->mark();
+        Preferences::mark();
         $redirect = redirect($this->getPreviousUrl('link-types.edit.url'));
         if (1 === (int) $request->get('return_to_edit')) {
             // set value so edit routine will not overwrite URL:
