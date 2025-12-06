@@ -40,7 +40,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:remove-links-to-deleted-objects';
+    protected $signature   = 'correction:remove-links-to-deleted-objects';
 
     /**
      * The console command description.
@@ -86,8 +86,8 @@ class RemovesLinksToDeletedObjects extends Command
 
     private function cleanupJournals(array $journals): void
     {
-        $countTags = 0;
-        $countBudgets= 0;
+        $countTags       = 0;
+        $countBudgets    = 0;
         $countCategories = 0;
         // #11333
         foreach (array_chunk($journals, 1337) as $set) {
