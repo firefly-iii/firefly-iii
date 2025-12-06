@@ -56,18 +56,18 @@ class ConvertToTransfer implements ActionInterface
      */
     public function actOnArray(array $journal): bool
     {
-        $accountName = $this->action->getValue($journal);
+        $accountName  = $this->action->getValue($journal);
 
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot convert to transfer.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_not_found')));
 
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount   = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot convert to transfer.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -75,9 +75,9 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
 
-        $type      = $object->transactionType->type;
-        $user      = $object->user;
-        $journalId = $object->id;
+        $type         = $object->transactionType->type;
+        $user         = $object->user;
+        $journalId    = $object->id;
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             Log::error(sprintf('Journal #%d is already a transfer so cannot be converted (rule #%d).', $object->id, $this->action->rule_id));
             // event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.is_already_transfer')));
@@ -92,7 +92,7 @@ class ConvertToTransfer implements ActionInterface
 
         // find the asset account in the action value.
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository   = app(AccountRepositoryInterface::class);
         $repository->setUser($user);
         $expectedType = null;
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
@@ -103,7 +103,7 @@ class ConvertToTransfer implements ActionInterface
             $expectedType = $this->getDestinationType($journalId);
             // Deposit? Replace source with account with same type as destination.
         }
-        $opposing = $repository->findByName($accountName, [$expectedType]);
+        $opposing     = $repository->findByName($accountName, [$expectedType]);
 
         if (null === $opposing) {
             Log::error(sprintf('Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).', $expectedType, $journalId, $accountName, $this->action->rule_id));
@@ -184,8 +184,8 @@ class ConvertToTransfer implements ActionInterface
      */
     private function convertWithdrawalArray(TransactionJournal $journal, Account $opposing): bool
     {
-        $repository    = app(AccountRepositoryInterface::class);
-        $sourceAccount = $this->getSourceAccount($journal);
+        $repository                  = app(AccountRepositoryInterface::class);
+        $sourceAccount               = $this->getSourceAccount($journal);
         $repository->setUser($sourceAccount->user);
         if ($sourceAccount->id === $opposing->id) {
             Log::error(vsprintf('Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).', [$journal->id, $opposing->name, $this->action->rule_id]));
@@ -193,29 +193,32 @@ class ConvertToTransfer implements ActionInterface
 
             return false;
         }
+
         /** @var Transaction $sourceTransaction */
-        $sourceTransaction = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->first();
+        $sourceTransaction           = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '<', 0)->first();
+
         /** @var Transaction $destTransaction */
-        $destTransaction = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->first();
+        $destTransaction             = Transaction::where('transaction_journal_id', '=', $journal->id)->where('amount', '>', 0)->first();
         // update destination transaction:
         $destTransaction->account_id = $opposing->id;
         $destTransaction->save();
 
         // check if the currencies are a match.
         /** @var TransactionCurrency $sourceCurrency */
-        $sourceCurrency = $repository->getAccountCurrency($sourceAccount);
+        $sourceCurrency              = $repository->getAccountCurrency($sourceAccount);
+
         /** @var TransactionCurrency $destCurrency */
-        $destCurrency = $repository->getAccountCurrency($opposing);
+        $destCurrency                = $repository->getAccountCurrency($opposing);
 
         // if the currencies do not match, need to be smart about the involved amounts:
         if ($sourceCurrency->id !== $destCurrency->id) {
             Log::debug(sprintf('Accounts have different currencies. Source has %s, dest has %s', $sourceCurrency->code, $destCurrency->code));
-            $foreignAmount = '' === (string)$sourceTransaction->foreign_amount ? $sourceTransaction->amount : $sourceTransaction->foreign_amount;
+            $foreignAmount                            = '' === (string)$sourceTransaction->foreign_amount ? $sourceTransaction->amount : $sourceTransaction->foreign_amount;
             Log::debug(sprintf('Foreign amount: %s', $foreignAmount));
 
             // source transaction: set the foreign currency ID and leave as is.
-            $sourceTransaction->foreign_currency_id = $destCurrency->id;
-            $sourceTransaction->foreign_amount      = Steam::negative($foreignAmount);
+            $sourceTransaction->foreign_currency_id   = $destCurrency->id;
+            $sourceTransaction->foreign_amount        = Steam::negative($foreignAmount);
             $sourceTransaction->save();
             Log::debug(sprintf('Set source transaction #%d foreign currency ID to #%d (amount: %s)', $sourceTransaction->id, $destCurrency->id, $foreignAmount));
 
@@ -229,7 +232,7 @@ class ConvertToTransfer implements ActionInterface
         }
 
         // change transaction type of journal:
-        $newType = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
+        $newType                     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
         DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
@@ -275,16 +278,18 @@ class ConvertToTransfer implements ActionInterface
 
         // update source transaction:
         DB::table('transactions')
-          ->where('transaction_journal_id', '=', $journal->id)
-          ->where('amount', '<', 0)
-          ->update(['account_id' => $opposing->id]);
+            ->where('transaction_journal_id', '=', $journal->id)
+            ->where('amount', '<', 0)
+            ->update(['account_id' => $opposing->id])
+        ;
 
         // change transaction type of journal:
-        $newType = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
+        $newType     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
         DB::table('transaction_journals')
-          ->where('id', '=', $journal->id)
-          ->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+            ->where('id', '=', $journal->id)
+            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
+        ;
 
         Log::debug('Converted deposit to transfer.');
 
