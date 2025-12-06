@@ -48,6 +48,7 @@ class ReportsIntegrity extends Command
         $commands = [
             'integrity:empty-objects',
             'integrity:total-sums',
+            'integrity:file-permissions',
         ];
         foreach ($commands as $command) {
             $this->friendlyLine(sprintf('Now executing %s', $command));
