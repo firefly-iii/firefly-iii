@@ -40,7 +40,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    protected $signature   = 'correction:remove-links-to-deleted-objects';
+    protected $signature = 'correction:remove-links-to-deleted-objects';
 
     /**
      * The console command description.
@@ -86,17 +86,27 @@ class RemovesLinksToDeletedObjects extends Command
 
     private function cleanupJournals(array $journals): void
     {
-        $count = DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between tags and transactions.', $count));
+        $countTags = 0;
+        $countBudgets= 0;
+        $countCategories = 0;
+        // #11333
+        foreach (array_chunk($journals, 1337) as $set) {
+            $countTags += DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
+            $countBudgets += DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
+            $countCategories += DB::table('category_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
         }
-        $count = DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+
+
+
+        if ($countTags > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between tags and transactions.', $countTags));
         }
-        $count = DB::table('category_transaction_journal')->whereIn('transaction_journal_id', $journals)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories and transactions.', $count));
+
+        if ($countBudgets > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $countBudgets));
+        }
+        if ($countCategories > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories and transactions.', $countCategories));
         }
     }
 
