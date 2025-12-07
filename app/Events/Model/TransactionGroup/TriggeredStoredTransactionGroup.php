@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * TriggeredStoredTransactionGroup.php
  * Copyright (c) 2025 james@firefly-iii.org

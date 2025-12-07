@@ -71,8 +71,9 @@ class ExecutionController extends Controller
     public function execute(SelectTransactionsRequest $request, RuleGroup $ruleGroup): RedirectResponse
     {
         // Get parameters specified by the user
-        $accounts = $request->get('accounts');
-        $set      = $this->repository->getAccountsById($accounts);
+        $accounts  = $request->get('accounts');
+        $set       = $this->repository->getAccountsById($accounts);
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setAccounts($set);
@@ -85,12 +86,13 @@ class ExecutionController extends Controller
             $endDate = new Carbon($request->get('end'));
             $collector->setEnd($endDate);
         }
-        $final = $collector->getGroups();
-        $ids   = $final->pluck('id')->toArray();
+        $final     = $collector->getGroups();
+        $ids       = $final->pluck('id')->toArray();
         Log::debug(sprintf('Found %d groups collected from %d account(s)', $final->count(), $set->count()));
         foreach (array_chunk($ids, 1337) as $setOfIds) {
             Log::debug(sprintf('Now processing %d groups', count($setOfIds)));
             $groups = TransactionGroup::whereIn('id', $setOfIds)->get();
+
             /** @var TransactionGroup $group */
             foreach ($groups as $group) {
                 Log::debug(sprintf('Processing group #%d.', $group->id));
@@ -109,7 +111,7 @@ class ExecutionController extends Controller
      *
      * @return Factory|View
      */
-    public function selectTransactions(RuleGroup $ruleGroup): Factory | \Illuminate\Contracts\View\View
+    public function selectTransactions(RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
         $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
