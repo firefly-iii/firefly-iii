@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * ValidatesFilePermissions.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -33,7 +35,7 @@ class ValidatesFilePermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'integrity:file-permissions';
+    protected $signature   = 'integrity:file-permissions';
 
     /**
      * The console command description.
@@ -48,12 +50,14 @@ class ValidatesFilePermissions extends Command
     public function handle(): int
     {
         $directories = [storage_path('upload')];
-        $errors = false;
+        $errors      = false;
+
         /** @var string $directory */
         foreach ($directories as $directory) {
             if (!is_dir($directory)) {
                 $this->friendlyError(sprintf('Directory "%s" cannot found. It is necessary to allow files to be uploaded.', $uploadDir));
                 $errors = true;
+
                 continue;
             }
             if (!is_writable($directory)) {
@@ -61,7 +65,7 @@ class ValidatesFilePermissions extends Command
                 $errors = true;
             }
         }
-        if(false === $errors) {
+        if (false === $errors) {
             $this->friendlyInfo('All necessary file paths seem to exist, and are writeable.');
         }
 
