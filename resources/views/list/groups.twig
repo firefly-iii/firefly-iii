@@ -277,9 +277,17 @@
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
+
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
+
                                 {% if currency.id == transaction.currency_id %}
-                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                    {% if account.id == transaction.source_account_id %}
+                                        {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                    {% endif %}
+                                    {% if account.id == transaction.destination_account_id %}
+                                        {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                    {% endif %}
+
                                 {% endif %}
                                 {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
                                     {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}
