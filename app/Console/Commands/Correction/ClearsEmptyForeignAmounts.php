@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * ClearsEmptyForeignAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -28,12 +30,13 @@ use Illuminate\Console\Command;
 class ClearsEmptyForeignAmounts extends Command
 {
     use ShowsFriendlyMessages;
+
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'correction:clears-empty-foreign-amounts';
+    protected $signature   = 'correction:clears-empty-foreign-amounts';
 
     /**
      * The console command description.
@@ -45,20 +48,21 @@ class ClearsEmptyForeignAmounts extends Command
     /**
      * Execute the console command.
      */
-    public function handle():int
+    public function handle(): int
     {
         // transaction: has no amount, but reference to currency.
         $count = Transaction::whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->count();
-        if($count > 0) {
+        if ($count > 0) {
             Transaction::whereNull('foreign_amount')->whereNotNull('foreign_currency_id')->update(['foreign_currency_id' => null]);
             $this->friendlyInfo(sprintf('Corrected %d invalid foreign amount reference(s)', $count));
         }
         // transaction: has amount, but no currency.
         $count = Transaction::whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->count();
-        if($count > 0) {
+        if ($count > 0) {
             Transaction::whereNull('foreign_currency_id')->whereNotNull('foreign_amount')->update(['foreign_amount' => null]);
             $this->friendlyInfo(sprintf('Corrected %d invalid foreign amount reference(s)', $count));
         }
+
         return self::SUCCESS;
     }
 }
