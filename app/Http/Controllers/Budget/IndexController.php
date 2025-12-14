@@ -122,6 +122,9 @@ class IndexController extends Controller
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
         $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->primaryCurrency);
+
+        //        echo '<pre>';
+        //        var_dump($budgets[0]);exit;
         $sums             = $this->getSums($budgets);
 
         // get budgeted for default currency:

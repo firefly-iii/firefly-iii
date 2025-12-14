@@ -339,6 +339,9 @@ class UpdateRequest extends FormRequest
                 // if more than one, verify that there are journal ID's present.
                 $this->validateJournalIds($validator, $transactionGroup);
 
+                // if more than one split, needs group title
+                $this->validateGroupDescription($validator);
+
                 // all transaction types must be equal:
                 $this->validateTransactionTypesForUpdate($validator);
 

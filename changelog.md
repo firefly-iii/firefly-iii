@@ -3,7 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.9 - 2025-11-xx
+## v6.4.10 - 2025-12-15
+
+### Added
+
+- Added amount event audit log
+
+### Fixed
+
+- [Issue 11328](https://github.com/firefly-iii/firefly-iii/issues/11328) (Three budget / account display bugs in latest version (annual budget + account list balance)) reported by @qingxianaaa
+- [Issue 11329](https://github.com/firefly-iii/firefly-iii/issues/11329) (Imported and auto-converted transfer from different currency issue) reported by @bozho
+- [Issue 11333](https://github.com/firefly-iii/firefly-iii/issues/11333) (Prepared statement contains too many placeholders) reported by @wendyliga
+- [Issue 11313](https://github.com/firefly-iii/firefly-iii/issues/11313) (Stop Processing and Executing Rule Group on Existing Transaction) reported by @watertrainer
+- [Discussion 11323](https://github.com/orgs/firefly-iii/discussions/11323) (File ownership problem) started by @enboig
+- [Issue 11337](https://github.com/firefly-iii/firefly-iii/issues/11337) (email notifications are sent to old email address after changing it through the web UI) reported by @xsolinsx
+- [Issue 11346](https://github.com/firefly-iii/firefly-iii/issues/11346) (Running balance restart from zero for no reason) reported by @Arkarr
+- [Issue 11310](https://github.com/firefly-iii/firefly-iii/issues/11310) (Period parameter doesn't work in API) reported by @kvdb06
+
+## 6.4.9 - 2025-11-28
 
 ### Fixed
 

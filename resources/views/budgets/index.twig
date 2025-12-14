@@ -366,13 +366,21 @@
                                                     </span>
                                                     <br/>
                                                 {% endif %}
-                                                {% if spentInfo.currency_id == budgetLimit.currency_id and not budgetLimit.in_range %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id and not budgetLimit.in_range and 0.0 == budgetLimit.total_days %}
                                         <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
                                               data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
                                             {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
                                         </span>
                                                     <span class="text-muted">({{ 'unknown'|_ }})</span>
                                                 {% endif %}
+                                                {% if spentInfo.currency_id == budgetLimit.currency_id and not budgetLimit.in_range and 0.0 != budgetLimit.total_days %}
+                                                    <span class="left_span" data-currency="{{ spentInfo.currency_id }}" data-limit="{{ budgetLimit.id }}"
+                                                          data-value="{{ spentInfo.spent + budgetLimit.amount }}" class="amount_left">
+                                            {{ formatAmountBySymbol(spentInfo.spent + budgetLimit.amount, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+                                        </span>
+                                                    ({{ formatAmountBySymbol((spentInfo.spent + budgetLimit.amount) / budgetLimit.total_days, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+                                                {% endif %}
+
                                             {% endfor %}
 
                                             {% if countLimit == 0 %}

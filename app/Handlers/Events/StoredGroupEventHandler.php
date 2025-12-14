@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
@@ -49,6 +50,12 @@ class StoredGroupEventHandler
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
         $this->removePeriodStatistics($event);
+    }
+
+    public function triggerRulesManually(TriggeredStoredTransactionGroup $event): void
+    {
+        $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
+        $this->processRules($newEvent);
     }
 
     /**

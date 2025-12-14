@@ -151,13 +151,7 @@ class Navigation
 
     public function diffInPeriods(string $period, int $skip, Carbon $beginning, Carbon $end): int
     {
-        Log::debug(sprintf(
-            'diffInPeriods: %s (skip: %d), between %s and %s.',
-            $period,
-            $skip,
-            $beginning->format('Y-m-d'),
-            $end->format('Y-m-d')
-        ));
+        Log::debug(sprintf('diffInPeriods: %s (skip: %d), between %s and %s.', $period, $skip, $beginning->format('Y-m-d'), $end->format('Y-m-d')));
         $map       = [
             'daily'     => 'diffInDays',
             'weekly'    => 'diffInWeeks',
@@ -211,8 +205,13 @@ class Navigation
         // Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
         if ('MTD' === $repeatFreq && $end->isFuture()) {
             // fall back to a monthly schedule if the requested period is MTD.
-            Log::debug('endOfPeriod() requests "MTD", set it to "1M" instead.');
+            Log::debug('endOfPeriod() requests "MTD" + future, set it to "1M" instead.');
             $repeatFreq = '1M';
+        }
+        if ('YTD' === $repeatFreq && $end->isFuture()) {
+            // fall back to a yearly schedule if the requested period is YTD.
+            Log::debug('endOfPeriod() requests "YTD" + future, set it to "1Y" instead.');
+            $repeatFreq = '1Y';
         }
 
         $functionMap = [

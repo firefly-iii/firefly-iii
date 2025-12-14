@@ -33,6 +33,7 @@ use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
+use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Events\RegisteredUser;
@@ -130,6 +131,9 @@ class EventServiceProvider extends ServiceProvider
             // is a Transaction Journal related event.
             StoredTransactionGroup::class            => [
                 'FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers',
+            ],
+            TriggeredStoredTransactionGroup::class   => [
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually',
             ],
             // is a Transaction Journal related event.
             UpdatedTransactionGroup::class           => [

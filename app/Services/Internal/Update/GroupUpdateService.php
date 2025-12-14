@@ -78,9 +78,7 @@ class GroupUpdateService
         if (1 === count($transactions) && 1 === $transactionGroup->transactionJournals()->count()) {
             /** @var TransactionJournal $first */
             $first = $transactionGroup->transactionJournals()->first();
-            Log::debug(
-                sprintf('Will now update journal #%d (only journal in group #%d)', $first->id, $transactionGroup->id)
-            );
+            Log::debug(sprintf('Will now update journal #%d (only journal in group #%d)', $first->id, $transactionGroup->id));
             $this->updateTransactionJournal($transactionGroup, $first, reset($transactions));
             $transactionGroup->touch();
             $transactionGroup->refresh();

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
@@ -47,6 +46,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
@@ -60,34 +60,36 @@ class JournalUpdateService
 {
     use JournalServiceTrait;
 
-    private BillRepositoryInterface $billRepository;
-    private CurrencyRepositoryInterface $currencyRepository;
+    private BillRepositoryInterface             $billRepository;
+    private CurrencyRepositoryInterface         $currencyRepository;
     private TransactionGroupRepositoryInterface $transactionGroupRepository;
-    private array $data;
-    private ?Account $destinationAccount            = null;
-    private ?Transaction $destinationTransaction    = null;
-    private array $metaDate                         = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
-        'invoice_date', ];
-    private array $metaString                       = [
-        'sepa_cc',
-        'sepa_ct_op',
-        'sepa_ct_id',
-        'sepa_db',
-        'sepa_country',
-        'sepa_ep',
-        'sepa_ci',
-        'sepa_batch_id',
-        'recurrence_id',
-        'internal_reference',
-        'bunq_payment_id',
-        'external_id',
-        'external_url',
-    ];
-    private ?Account $sourceAccount                 = null;
-    private ?Transaction $sourceTransaction         = null;
-    private ?TransactionGroup $transactionGroup     = null;
-    private ?TransactionJournal $transactionJournal = null;
-    private string $startCompareHash                = '';
+    private array                               $data;
+    private ?Account                            $destinationAccount     = null;
+    private ?Transaction                        $destinationTransaction = null;
+    private array                               $metaDate
+                                                                        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
+            'invoice_date', ];
+    private array                               $metaString
+                                                                        = [
+            'sepa_cc',
+            'sepa_ct_op',
+            'sepa_ct_id',
+            'sepa_db',
+            'sepa_country',
+            'sepa_ep',
+            'sepa_ci',
+            'sepa_batch_id',
+            'recurrence_id',
+            'internal_reference',
+            'bunq_payment_id',
+            'external_id',
+            'external_url',
+        ];
+    private ?Account                            $sourceAccount          = null;
+    private ?Transaction                        $sourceTransaction      = null;
+    private ?TransactionGroup                   $transactionGroup       = null;
+    private ?TransactionJournal                 $transactionJournal     = null;
+    private string                              $startCompareHash       = '';
 
     /**
      * JournalUpdateService constructor.
@@ -492,15 +494,7 @@ class JournalUpdateService
                 Log::debug(sprintf('Create date value from string "%s".', $value));
                 $this->transactionJournal->date_tz = $value->format('e');
             }
-            event(
-                new TriggeredAuditLog(
-                    $this->transactionJournal->user,
-                    $this->transactionJournal,
-                    sprintf('update_%s', $fieldName),
-                    $this->transactionJournal->{$fieldName}, // @phpstan-ignore-line
-                    $value
-                )
-            );
+            event(new TriggeredAuditLog($this->transactionJournal->user, $this->transactionJournal, sprintf('update_%s', $fieldName), $this->transactionJournal->{$fieldName}, $value));
 
             $this->transactionJournal->{$fieldName} = $value; // @phpstan-ignore-line
             Log::debug(sprintf('Updated %s', $fieldName));
@@ -671,6 +665,7 @@ class JournalUpdateService
         $origSourceTransaction->balance_dirty = true;
         $origSourceTransaction->save();
         $destTransaction                      = $this->getDestinationTransaction();
+        $originalAmount                       = $destTransaction->amount;
         $destTransaction->amount              = app('steam')->positive($amount);
         $destTransaction->balance_dirty       = true;
         $destTransaction->save();
@@ -678,6 +673,23 @@ class JournalUpdateService
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
         Log::debug(sprintf('Updated amount to "%s"', $amount));
+
+        event(new TriggeredAuditLog(
+            $this->transactionGroup->user,
+            $this->transactionGroup,
+            'update_amount',
+            [
+                'currency_symbol' => $destTransaction->transactionCurrency->symbol,
+                'decimal_places'  => $destTransaction->transactionCurrency->decimal_places,
+                'amount'          => $originalAmount,
+            ],
+            [
+                'currency_symbol' => $destTransaction->transactionCurrency->symbol,
+                'decimal_places'  => $destTransaction->transactionCurrency->decimal_places,
+                'amount'          => $value,
+            ]
+        ));
+
     }
 
     private function updateForeignAmount(): void
@@ -697,7 +709,7 @@ class JournalUpdateService
         $newForeignId    = $this->data['foreign_currency_id'] ?? null;
         $newForeignCode  = $this->data['foreign_currency_code'] ?? null;
         $foreignCurrency = $this->currencyRepository->findCurrencyNull($newForeignId, $newForeignCode)
-            ?? $foreignCurrency;
+                           ?? $foreignCurrency;
 
         // not the same as normal currency
         if (null !== $foreignCurrency && $foreignCurrency->id === $this->transactionJournal->transaction_currency_id) {
