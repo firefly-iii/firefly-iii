@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -32,11 +31,13 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -48,9 +49,9 @@ class AccountController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
-    protected array $acceptedRoles            = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                  $chartData = [];
+    private array                      $chartData = [];
     private AccountRepositoryInterface $repository;
 
     /**
@@ -100,17 +101,17 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency          = $this->repository->getAccountCurrency($account);
-        $currentStart      = clone $params['start'];
-        $range             = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $currency     = $this->repository->getAccountCurrency($account);
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $period       = $params['period'] ?? '1D';
 
-
-        $previous          = array_values($range)[0]['balance'];
-        $pcPrevious        = null;
+        $previous   = array_values($range)[0]['balance'];
+        $pcPrevious = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->primaryCurrency;
         }
-        $currentSet        = [
+        $currentSet = [
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
@@ -129,7 +130,7 @@ class AccountController extends Controller
             'end_date'                => $params['end']->toAtomString(),
             'type'                    => 'line',
             'yAxisID'                 => 0,
-            'period'                  => '1D',
+            'period'                  => $period,
             'entries'                 => [],
             'pc_entries'              => [],
         ];
@@ -141,7 +142,7 @@ class AccountController extends Controller
             $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
             $pcPrevious                                    = array_values($range)[0]['pc_balance'];
         }
-
+        // create array of values to collect.
 
         while ($currentStart <= $params['end']) {
             $format                        = $currentStart->format('Y-m-d');
@@ -152,14 +153,14 @@ class AccountController extends Controller
 
 
             // do the same for the primary currency balance, if relevant:
-            $pcBalance                     = null;
+            $pcBalance = null;
             if ($this->convertToPrimary) {
                 $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
                 $pcPrevious                       = $pcBalance;
                 $currentSet['pc_entries'][$label] = $pcBalance;
             }
-
-            $currentStart->addDay();
+            $currentStart = Navigation::addPeriod($currentStart, $period);
+            // $currentStart->addDay();
         }
         $this->chartData[] = $currentSet;
     }

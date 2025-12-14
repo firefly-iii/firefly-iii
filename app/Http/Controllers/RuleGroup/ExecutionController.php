@@ -43,7 +43,7 @@ use Illuminate\View\View;
  */
 class ExecutionController extends Controller
 {
-    private AccountRepositoryInterface $repository;
+    private readonly AccountRepositoryInterface $repository;
 
     /**
      * ExecutionController constructor.
