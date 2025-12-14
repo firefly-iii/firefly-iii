@@ -8,5 +8,8 @@
     ],
     "devDependencies": {
         "postcss": "^8.4.47"
+    },
+    "dependencies": {
+        "patch-package": "^8.0.1"
     }
 }
