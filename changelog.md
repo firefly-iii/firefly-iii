@@ -3,7 +3,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.4.9 - 2025-11-xx
+## v6.4.10 - 2025-12-15
+
+### Added
+
+- Added amount event audit log
+
+### Fixed
+
+- #11328
+- #11329
+- #11333
+- #11313
+- #11323
+- #11337
+- #11346
+- #11310
+
+## 6.4.9 - 2025-11-28
 
 ### Fixed
 
