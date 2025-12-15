@@ -55,13 +55,13 @@ class ValidatesFilePermissions extends Command
         /** @var string $directory */
         foreach ($directories as $directory) {
             if (!is_dir($directory)) {
-                $this->friendlyError(sprintf('Directory "%s" cannot found. It is necessary to allow files to be uploaded.', $uploadDir));
+                $this->friendlyError(sprintf('Directory "%s" cannot found. It is necessary to allow files to be uploaded.', $directory));
                 $errors = true;
 
                 continue;
             }
             if (!is_writable($directory)) {
-                $this->friendlyError(sprintf('Directory "%s" is not writeable. Uploading attachments may fail silently.', $uploadDir));
+                $this->friendlyError(sprintf('Directory "%s" is not writeable. Uploading attachments may fail silently.', $directory));
                 $errors = true;
             }
         }
