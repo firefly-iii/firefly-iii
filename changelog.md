@@ -7,8 +7,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11356
-- #11357
+- [Issue 11356](https://github.com/firefly-iii/firefly-iii/issues/11356) (Dashboard - Budget - Left To Spend "Per day" shows total budget value) reported by @lucasarrudadev
+- [Issue 11357](https://github.com/firefly-iii/firefly-iii/issues/11357) (Firefly III v6.4.10 ran into an error: Undefined variable $uploadDir.) reported by @jgmm81
 
 ## v6.4.10 - 2025-12-15
 
