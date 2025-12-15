@@ -486,7 +486,7 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
                 'value_parsed'            => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
                 'local_icon'              => 'money',
-                'sub_title'               => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
+                'sub_title'               => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, bcdiv($availableBudget, (string)$days), false),
             ];
         }
         foreach ($spent as $row) {
