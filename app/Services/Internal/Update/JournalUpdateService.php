@@ -674,11 +674,11 @@ class JournalUpdateService
         $this->destinationTransaction->refresh();
         Log::debug(sprintf('Updated amount to "%s"', $amount));
 
-        $group = $this->transactionGroup;
-        if(null === $group) {
+        $group                                = $this->transactionGroup;
+        if (null === $group) {
             $group = $this->transactionJournal?->transactionGroup;
         }
-        if(null === $group) {
+        if (null === $group) {
             return;
         }
 
