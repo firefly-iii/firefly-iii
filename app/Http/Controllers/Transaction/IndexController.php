@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -58,7 +58,7 @@ class IndexController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-exchange');
-                app('view')->share('title', (string) trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
 
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -76,16 +76,16 @@ class IndexController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function index(Request $request, string $objectType, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
+    public function index(Request $request, string $objectType, ?Carbon $start = null, ?Carbon $end = null): Factory | \Illuminate\Contracts\View\View
     {
         if ('transfers' === $objectType) {
             $objectType = 'transfer';
         }
 
-        $subTitleIcon  = config('firefly.transactionIconsByType.'.$objectType);
-        $types         = config('firefly.transactionTypesByType.'.$objectType);
-        $page          = (int) $request->get('page');
-        $pageSize      = (int) Preferences::get('listPageSize', 50)->data;
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
 
         if (!$start instanceof Carbon) {
             $start = session('start');
@@ -98,28 +98,33 @@ class IndexController extends Controller
         }
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
-        $startStr      = $start->isoFormat($this->monthAndDayFormat);
-        $endStr        = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle      = (string) trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
-        $path          = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $firstJournal  = $this->repository->firstNull();
-        $startPeriod   = $firstJournal instanceof TransactionJournal ? $firstJournal->date : new Carbon();
-        $endPeriod     = clone $end;
-        $periods       = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
+        $startStr     = $start->isoFormat($this->monthAndDayFormat);
+        $endStr       = $end->isoFormat($this->monthAndDayFormat);
+        $subTitle     = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
+        $path         = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $firstJournal = $this->repository->firstNull();
+        $startPeriod  = $firstJournal instanceof TransactionJournal ? $firstJournal->date : new Carbon();
+        $endPeriod    = clone $end;
+
+        // limit to 3 years for the time being.
+        if (now()->diffInYears($startPeriod, true) > 3) {
+            $startPeriod = now()->subYears(3);
+        }
+
+        $periods = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
 
         /** @var GroupCollectorInterface $collector */
-        $collector     = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)
-            ->setTypes($types)
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->withBudgetInformation()
-            ->withCategoryInformation()
-            ->withAccountInformation()
-            ->withAttachmentInformation()
-        ;
-        $groups        = $collector->getPaginatedGroups();
+                  ->setTypes($types)
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->withAccountInformation()
+                  ->withAttachmentInformation();
+        $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('transactions.index', ['subTitle' => $subTitle, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'periods' => $periods, 'start' => $start, 'end' => $end]);
@@ -133,32 +138,31 @@ class IndexController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function indexAll(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
+    public function indexAll(Request $request, string $objectType): Factory | \Illuminate\Contracts\View\View
     {
-        $subTitleIcon = config('firefly.transactionIconsByType.'.$objectType);
-        $types        = config('firefly.transactionTypesByType.'.$objectType);
-        $page         = (int) $request->get('page');
-        $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
         $path         = route('transactions.index.all', [$objectType]);
         $first        = $this->repository->firstNull();
         $start        = $first instanceof TransactionJournal ? $first->date : new Carbon();
         $last         = $this->repository->getLast();
         $end          = $last instanceof TransactionJournal ? $last->date : today(config('app.timezone'));
-        $subTitle     = (string) trans('firefly.all_'.$objectType);
+        $subTitle     = (string)trans('firefly.all_' . $objectType);
 
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)
-            ->setTypes($types)
-            ->setLimit($pageSize)
-            ->setPage($page)
-            ->withAccountInformation()
-            ->withBudgetInformation()
-            ->withCategoryInformation()
-            ->withAttachmentInformation()
-        ;
-        $groups       = $collector->getPaginatedGroups();
+                  ->setTypes($types)
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->withAttachmentInformation();
+        $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('transactions.index', ['subTitle' => $subTitle, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'start' => $start, 'end' => $end]);
