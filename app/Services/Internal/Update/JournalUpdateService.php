@@ -683,8 +683,8 @@ class JournalUpdateService
         }
 
         event(new TriggeredAuditLog(
-            $this->transactionGroup->user,
-            $this->transactionGroup,
+            $group->user,
+            $group,
             'update_amount',
             [
                 'currency_symbol' => $destTransaction->transactionCurrency->symbol,
