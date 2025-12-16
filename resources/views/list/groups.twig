@@ -277,7 +277,6 @@
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
-
                             {# withdrawal into a liability #}
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
                                 {% if currency.id == transaction.currency_id %}
@@ -303,10 +302,12 @@
                                 {% endif %}
                             {% endif %}
                         {% elseif transaction.transaction_type_type == 'Opening balance' %}
-                            {% if transaction.source_account_type == 'Initial balance account' %}
+                            {% if account.id == transaction.source_account_id %}
                                 {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                            {% else %}
+                            {% elseif account.id == transaction.destination_account_id %}
                                 {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                {% else %}
+                                -
                             {% endif %}
                         {% elseif transaction.transaction_type_type == 'Transfer' %}
                             {% if account.id == transaction.source_account_id %}

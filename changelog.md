@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.12 - 2025-12-17
+
+### Fixed
+
+- [Issue 11368](https://github.com/firefly-iii/firefly-iii/issues/11368) (Attempt to read property "user" on null) reported by @simonwiles
+- [Issue 11367](https://github.com/firefly-iii/firefly-iii/issues/11367) (Expenses page has incorrect summary values) reported by @purplemeteorite
+
 ## v6.4.11 - 2025-12-16
 
 ### Fixed
