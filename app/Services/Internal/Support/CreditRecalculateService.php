@@ -159,8 +159,8 @@ class CreditRecalculateService
             $this->validateOpeningBalance($account, $openingBalance);
         }
         $startOfDebt    = $this->repository->getOpeningBalanceAmount($account, false) ?? '0';
-        $leftOfDebt     = app('steam')->positive($startOfDebt);
-        //        Log::debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', app('steam')->bcround($startOfDebt, 2), app('steam')->bcround($leftOfDebt, 2)));
+        $leftOfDebt     = \FireflyIII\Support\Facades\Steam::positive($startOfDebt);
+        //        Log::debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', \FireflyIII\Support\Facades\Steam::bcround($startOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2)));
 
         /** @var AccountMetaFactory $factory */
         $factory        = app(AccountMetaFactory::class);
@@ -200,17 +200,17 @@ class CreditRecalculateService
         $dest   = $openingBalance->transactions()->where('amount', '>', 0)->first();
         if ($source->account_id !== $account->id) {
             Log::info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
-            Log::debug(sprintf('Source amount "%s" is now "%s"', $source->amount, app('steam')->positive($source->amount)));
-            Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, app('steam')->negative($dest->amount)));
-            $source->amount = app('steam')->positive($source->amount);
-            $dest->amount   = app('steam')->negative($source->amount);
+            Log::debug(sprintf('Source amount "%s" is now "%s"', $source->amount, \FireflyIII\Support\Facades\Steam::positive($source->amount)));
+            Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, \FireflyIII\Support\Facades\Steam::negative($dest->amount)));
+            $source->amount = \FireflyIII\Support\Facades\Steam::positive($source->amount);
+            $dest->amount   = \FireflyIII\Support\Facades\Steam::negative($source->amount);
             if (null !== $source->foreign_amount && '' !== $source->foreign_amount) {
-                $source->foreign_amount = app('steam')->positive($source->foreign_amount);
-                Log::debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, app('steam')->positive($source->foreign_amount)));
+                $source->foreign_amount = \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount);
+                Log::debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount)));
             }
             if (null !== $dest->foreign_amount && '' !== $dest->foreign_amount) {
-                $dest->foreign_amount = app('steam')->negative($dest->foreign_amount);
-                Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->foreign_amount, app('steam')->negative($dest->foreign_amount)));
+                $dest->foreign_amount = \FireflyIII\Support\Facades\Steam::negative($dest->foreign_amount);
+                Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->foreign_amount, \FireflyIII\Support\Facades\Steam::negative($dest->foreign_amount)));
             }
             $source->save();
             $dest->save();
@@ -241,7 +241,7 @@ class CreditRecalculateService
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
         $type            = $journal->transactionType->type;
-        //        Log::debug(sprintf('Left of debt is: %s', app('steam')->bcround($leftOfDebt, 2)));
+        //        Log::debug(sprintf('Left of debt is: %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2)));
 
         if ('' === $direction) {
             //            Log::warning('Direction is empty, so do nothing.');
@@ -262,81 +262,81 @@ class CreditRecalculateService
         $isCredit        = 'credit' === $direction;
 
         if ($isSameAccount && $isCredit && $this->isWithdrawalIn($usedAmount, $type)) { // case 1
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isWithdrawalOut($usedAmount, $type)) { // case 2
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isDepositOut($usedAmount, $type)) { // case 3
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
         if ($isSameAccount && $isCredit && $this->isDepositIn($usedAmount, $type)) { // case 4
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isCredit && $this->isTransferIn($usedAmount, $type)) { // case 5
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalIn($usedAmount, $type)) { // case 6
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 6 (withdrawal into debit liability): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 6 (withdrawal into debit liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 7 (deposit away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 7 (deposit away from liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
         if ($isSameAccount && $isDebit && $this->isTransferIn($usedAmount, $type)) { // case 9
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
             // 2024-10-05, #9225 this used to say you would owe more, but a transfer INTO a debit from wherever means you owe LESS.
-            //            Log::debug(sprintf('Case 9 (transfer into debit liability, means you owe LESS): %s - %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 9 (transfer into debit liability, means you owe LESS): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isTransferOut($usedAmount, $type)) { // case 10
-            $usedAmount = app('steam')->positive($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
             // 2024-10-05, #9225 this used to say you would owe less, but a transfer OUT OF a debit from wherever means you owe MORE.
-            //            Log::debug(sprintf('Case 10 (transfer out of debit liability, means you owe MORE): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case 10 (transfer out of debit liability, means you owe MORE): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
         // in any other case, remove amount from left of debt.
         if (in_array($type, [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value], true)) {
-            $usedAmount = app('steam')->negative($usedAmount);
+            $usedAmount = \FireflyIII\Support\Facades\Steam::negative($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
-            //            Log::debug(sprintf('Case X (all other cases): %s + %s = %s', app('steam')->bcround($leftOfDebt, 2), app('steam')->bcround($usedAmount, 2), app('steam')->bcround($result, 2)));
+            //            Log::debug(sprintf('Case X (all other cases): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
-        Log::warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', app('steam')->bcround($leftOfDebt, 2)));
+        Log::warning(sprintf('[-1] Catch-all, should not happen. Left of debt = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2)));
 
         return $leftOfDebt;
     }
@@ -344,10 +344,10 @@ class CreditRecalculateService
     private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
     {
         $usedAmount = $transaction->amount;
-        //        Log::debug(sprintf('Amount of transaction is %s', app('steam')->bcround($usedAmount, 2)));
+        //        Log::debug(sprintf('Amount of transaction is %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
         if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $accountCurrency->id) {
             $usedAmount = $transaction->foreign_amount;
-            //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', app('steam')->bcround($usedAmount, 2)));
+            //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
         }
 
         return $usedAmount;

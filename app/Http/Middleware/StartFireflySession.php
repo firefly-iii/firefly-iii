@@ -42,7 +42,7 @@ class StartFireflySession extends StartSession
     protected function storeCurrentUrl(Request $request, $session): void
     {
         $url     = $request->fullUrl();
-        $safeUrl = app('steam')->getSafeUrl($url, route('index'));
+        $safeUrl = \FireflyIII\Support\Facades\Steam::getSafeUrl($url, route('index'));
 
         if ($url !== $safeUrl) {
             return;

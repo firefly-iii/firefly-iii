@@ -150,7 +150,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
+            $value = \FireflyIII\Support\Facades\Steam::bcround($value, $primaryCurrency->decimal_places);
         }
 
         try {
@@ -202,7 +202,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = app('steam')->bcround($value, $primaryCurrency->decimal_places);
+            $value = \FireflyIII\Support\Facades\Steam::bcround($value, $primaryCurrency->decimal_places);
         }
 
         try {

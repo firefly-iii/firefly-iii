@@ -87,7 +87,7 @@ class AccountFormRequest extends FormRequest
             $data['account_type_id']   = $this->convertInteger('liability_type_id');
             if ('' !== $data['opening_balance']) {
                 // opening balance is always positive for liabilities
-                $data['opening_balance'] = app('steam')->positive($data['opening_balance']);
+                $data['opening_balance'] = \FireflyIII\Support\Facades\Steam::positive($data['opening_balance']);
             }
         }
 

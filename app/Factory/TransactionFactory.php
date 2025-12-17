@@ -58,10 +58,10 @@ class TransactionFactory
             $foreignAmount = null;
         }
         if (null !== $foreignAmount) {
-            $foreignAmount = app('steam')->negative($foreignAmount);
+            $foreignAmount = \FireflyIII\Support\Facades\Steam::negative($foreignAmount);
         }
 
-        return $this->create(app('steam')->negative($amount), $foreignAmount);
+        return $this->create(\FireflyIII\Support\Facades\Steam::negative($amount), $foreignAmount);
     }
 
     /**
@@ -170,10 +170,10 @@ class TransactionFactory
             $foreignAmount = null;
         }
         if (null !== $foreignAmount) {
-            $foreignAmount = app('steam')->positive($foreignAmount);
+            $foreignAmount = \FireflyIII\Support\Facades\Steam::positive($foreignAmount);
         }
 
-        return $this->create(app('steam')->positive($amount), $foreignAmount);
+        return $this->create(\FireflyIII\Support\Facades\Steam::positive($amount), $foreignAmount);
     }
 
     public function setAccount(Account $account): void

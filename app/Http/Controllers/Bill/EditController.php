@@ -84,8 +84,8 @@ class EditController extends Controller
             $this->rememberPreviousUrl('bills.edit.url');
         }
 
-        $bill->amount_min = app('steam')->bcround($bill->amount_min, $bill->transactionCurrency->decimal_places);
-        $bill->amount_max = app('steam')->bcround($bill->amount_max, $bill->transactionCurrency->decimal_places);
+        $bill->amount_min = \FireflyIII\Support\Facades\Steam::bcround($bill->amount_min, $bill->transactionCurrency->decimal_places);
+        $bill->amount_max = \FireflyIII\Support\Facades\Steam::bcround($bill->amount_max, $bill->transactionCurrency->decimal_places);
         $rules            = $this->repository->getRulesForBill($bill);
 
         // code to handle active-checkboxes

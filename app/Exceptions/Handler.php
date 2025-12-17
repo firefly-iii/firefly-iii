@@ -281,7 +281,7 @@ class Handler extends ExceptionHandler
     protected function invalid($request, LaravelValidationException $exception): \Illuminate\Http\Response|JsonResponse|RedirectResponse
     {
         // protect against open redirect when submitting invalid forms.
-        $previous = app('steam')->getSafePreviousUrl();
+        $previous = \FireflyIII\Support\Facades\Steam::getSafePreviousUrl();
         $redirect = $this->getRedirectUrl($exception);
 
         return redirect($redirect ?? $previous)

@@ -56,7 +56,7 @@ class ChartJsGenerator implements GeneratorInterface
         $index     = 0;
         foreach ($data as $key => $valueArray) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][]            = app('steam')->positive((string) $valueArray['amount']);
+            $chartData['datasets'][0]['data'][]            = \FireflyIII\Support\Facades\Steam::positive((string) $valueArray['amount']);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['datasets'][0]['currency_symbol'][] = $valueArray['currency_symbol'];
             $chartData['labels'][]                         = $key;
@@ -163,7 +163,7 @@ class ChartJsGenerator implements GeneratorInterface
         $index     = 0;
         foreach ($data as $key => $value) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][]            = app('steam')->positive((string) $value);
+            $chartData['datasets'][0]['data'][]            = \FireflyIII\Support\Facades\Steam::positive((string) $value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
 
             $chartData['labels'][]                         = $key;

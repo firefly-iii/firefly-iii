@@ -102,7 +102,7 @@ class FrontpageChartGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
 
-        $locale                  = app('steam')->getLocale();
+        $locale                  = \FireflyIII\Support\Facades\Steam::getLocale();
         $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 

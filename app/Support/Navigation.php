@@ -404,7 +404,7 @@ class Navigation
      */
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
-        $locale        = app('steam')->getLocale();
+        $locale        = \FireflyIII\Support\Facades\Steam::getLocale();
         // define period to increment
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
@@ -536,7 +536,7 @@ class Navigation
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
-        $locale = app('steam')->getLocale();
+        $locale = \FireflyIII\Support\Facades\Steam::getLocale();
         $diff   = $start->diffInMonths($end, true);
         if ($diff >= 1.001 && $diff < 12.001) {
             return (string)trans('config.month_js', [], $locale);

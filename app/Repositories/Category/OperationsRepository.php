@@ -100,7 +100,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             // only a subset of the fields.
             $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->negative($journal['amount']),
+                'amount'                   => \FireflyIII\Support\Facades\Steam::negative($journal['amount']),
                 'date'                     => $journal['date'],
                 'source_account_id'        => (string) $journal['source_account_id'],
                 'budget_name'              => $journal['budget_name'],
@@ -178,7 +178,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             // only a subset of the fields.
             $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->positive($journal['amount']),
+                'amount'                   => \FireflyIII\Support\Facades\Steam::positive($journal['amount']),
                 'date'                     => $journal['date'],
                 'source_account_id'        => (string) $journal['source_account_id'],
                 'destination_account_id'   => (string) $journal['destination_account_id'],
@@ -240,7 +240,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             // only a subset of the fields.
             $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->positive($journal['amount']),
+                'amount'                   => \FireflyIII\Support\Facades\Steam::positive($journal['amount']),
                 'date'                     => $journal['date'],
                 'source_account_id'        => (string) $journal['source_account_id'],
                 'category_name'            => $journal['category_name'],
@@ -303,7 +303,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             // only a subset of the fields.
             $journalId                                                                         = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
-                'amount'                   => app('steam')->negative($journal['amount']),
+                'amount'                   => \FireflyIII\Support\Facades\Steam::negative($journal['amount']),
                 'date'                     => $journal['date'],
                 'source_account_id'        => (string) $journal['source_account_id'],
                 'category_name'            => $journal['category_name'],

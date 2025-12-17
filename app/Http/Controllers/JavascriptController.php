@@ -105,7 +105,7 @@ class JavascriptController extends Controller
         if ($account instanceof Account) {
             $currency = $repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         }
-        $locale                    = app('steam')->getLocale();
+        $locale                    = \FireflyIII\Support\Facades\Steam::getLocale();
         $accounting                = app('amount')->getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));

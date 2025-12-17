@@ -113,7 +113,7 @@ class BillController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale     = app('steam')->getLocale();
+        $locale     = \FireflyIII\Support\Facades\Steam::getLocale();
 
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);

@@ -104,7 +104,7 @@ class EditController extends Controller
                 $amount = '0';
             }
             $amount                          = (string) $amount;
-            $preFilled['auto_budget_amount'] = app('steam')->bcround($amount, $autoBudget->transactionCurrency->decimal_places);
+            $preFilled['auto_budget_amount'] = \FireflyIII\Support\Facades\Steam::bcround($amount, $autoBudget->transactionCurrency->decimal_places);
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").

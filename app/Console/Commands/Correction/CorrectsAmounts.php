@@ -244,7 +244,7 @@ class CorrectsAmounts extends Command
             return false;
         }
         if (-1 === $check) {
-            $item->trigger_value = app('steam')->positive($item->trigger_value);
+            $item->trigger_value = \FireflyIII\Support\Facades\Steam::positive($item->trigger_value);
             $item->save();
 
             return true;

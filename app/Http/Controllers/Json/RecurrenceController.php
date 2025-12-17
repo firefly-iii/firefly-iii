@@ -167,7 +167,7 @@ class RecurrenceController extends Controller
         }
         $date->startOfDay();
         $preSelected = (string) $request->get('pre_select');
-        $locale      = app('steam')->getLocale();
+        $locale      = \FireflyIII\Support\Facades\Steam::getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
         Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));

@@ -278,9 +278,9 @@ class ReconcileController extends Controller
             }
 
             if ($inverse) {
-                $journal['amount'] = app('steam')->positive($journal['amount']);
+                $journal['amount'] = \FireflyIII\Support\Facades\Steam::positive($journal['amount']);
                 if (null !== $journal['foreign_amount']) {
-                    $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
+                    $journal['foreign_amount'] = \FireflyIII\Support\Facades\Steam::positive($journal['foreign_amount']);
                 }
             }
 

@@ -123,7 +123,7 @@ class AccountUpdateService
             $account->active = $data['active'];
         }
         if (array_key_exists('iban', $data)) {
-            $account->iban = app('steam')->filterSpaces((string) $data['iban']);
+            $account->iban = \FireflyIII\Support\Facades\Steam::filterSpaces((string) $data['iban']);
         }
 
         // set liability, but account must already be a liability.
@@ -269,7 +269,7 @@ class AccountUpdateService
 
                 // if liability, make sure the amount is positive for a credit, and negative for a debit.
                 if ($this->isLiability($account)) {
-                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative(
+                    $openingBalance = 'credit' === $data['liability_direction'] ? \FireflyIII\Support\Facades\Steam::positive($openingBalance) : \FireflyIII\Support\Facades\Steam::negative(
                         $openingBalance
                     );
                 }

@@ -47,6 +47,7 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
@@ -661,12 +662,12 @@ class JournalUpdateService
             return;
         }
         $origSourceTransaction                = $this->getSourceTransaction();
-        $origSourceTransaction->amount        = app('steam')->negative($amount);
+        $origSourceTransaction->amount        = \FireflyIII\Support\Facades\Steam::negative($amount);
         $origSourceTransaction->balance_dirty = true;
         $origSourceTransaction->save();
         $destTransaction                      = $this->getDestinationTransaction();
         $originalAmount                       = $destTransaction->amount;
-        $destTransaction->amount              = app('steam')->positive($amount);
+        $destTransaction->amount              = \FireflyIII\Support\Facades\Steam::positive($amount);
         $destTransaction->balance_dirty       = true;
         $destTransaction->save();
         // refresh transactions.
@@ -682,6 +683,7 @@ class JournalUpdateService
             return;
         }
 
+        // should not return in NULL but seems to do.
         event(new TriggeredAuditLog(
             $group->user,
             $group,
@@ -729,7 +731,7 @@ class JournalUpdateService
         // add foreign currency info to source and destination if possible.
         if (null !== $foreignCurrency && null !== $foreignAmount) {
             $source->foreign_currency_id = $foreignCurrency->id;
-            $source->foreign_amount      = app('steam')->negative($foreignAmount);
+            $source->foreign_amount      = \FireflyIII\Support\Facades\Steam::negative($foreignAmount);
             $source->save();
 
             // if the transaction is a TRANSFER, and the foreign amount and currency are set (like they seem to be)
@@ -742,13 +744,13 @@ class JournalUpdateService
             if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;
-                $dest->amount                  = app('steam')->positive($foreignAmount);
-                $dest->foreign_amount          = app('steam')->positive($source->amount);
+                $dest->amount                  = \FireflyIII\Support\Facades\Steam::positive($foreignAmount);
+                $dest->foreign_amount          = \FireflyIII\Support\Facades\Steam::positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
             if (!$isTransfer && !$isBetween) {
                 $dest->foreign_currency_id = $foreignCurrency->id;
-                $dest->foreign_amount      = app('steam')->positive($foreignAmount);
+                $dest->foreign_amount      = \FireflyIII\Support\Facades\Steam::positive($foreignAmount);
             }
 
             $dest->save();

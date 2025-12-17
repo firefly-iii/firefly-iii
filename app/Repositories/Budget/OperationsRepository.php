@@ -157,7 +157,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ];
 
         foreach ($journals as $journal) {
-            $amount                                                                       = app('steam')->negative($journal['amount']);
+            $amount                                                                       = \FireflyIII\Support\Facades\Steam::negative($journal['amount']);
             $journalCurrencyId                                                            = (int) $journal['currency_id'];
             if (false === $convertToPrimary) {
                 $currencyId            = $journalCurrencyId;

@@ -145,6 +145,6 @@ class LinkController extends Controller
         $linkId = (int) $request->get('id');
         $this->repository->switchLinkById($linkId);
 
-        return redirect(app('steam')->getSafePreviousUrl());
+        return redirect(\FireflyIII\Support\Facades\Steam::getSafePreviousUrl());
     }
 }

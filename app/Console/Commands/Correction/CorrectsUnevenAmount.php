@@ -112,9 +112,9 @@ class CorrectsUnevenAmount extends Command
             if ($source->transaction_currency_id === $destination->transaction_currency_id) {
                 Log::debug('Ready to swap data between transactions.');
                 $destination->foreign_currency_id     = $source->transaction_currency_id;
-                $destination->foreign_amount          = app('steam')->positive($source->amount);
+                $destination->foreign_amount          = \FireflyIII\Support\Facades\Steam::positive($source->amount);
                 $destination->transaction_currency_id = $source->foreign_currency_id;
-                $destination->amount                  = app('steam')->positive($source->foreign_amount);
+                $destination->amount                  = \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount);
                 $destination->balance_dirty           = true;
                 $source->balance_dirty                = true;
                 $destination->save();
@@ -257,8 +257,8 @@ class CorrectsUnevenAmount extends Command
         // source currency = dest foreign currency
         // dest amount = source foreign currency
         // dest currency = source foreign currency
-        //        Log::debug(sprintf('[a] %s', bccomp(app('steam')->positive($source->amount), app('steam')->positive($destination->foreign_amount))));
-        //        Log::debug(sprintf('[b] %s', bccomp(app('steam')->positive($destination->amount), app('steam')->positive($source->foreign_amount))));
+        //        Log::debug(sprintf('[a] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($source->amount), \FireflyIII\Support\Facades\Steam::positive($destination->foreign_amount))));
+        //        Log::debug(sprintf('[b] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($destination->amount), \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount))));
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
         return 0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
@@ -428,9 +428,9 @@ class CorrectsUnevenAmount extends Command
 
             //            // only fix the destination transaction
             //            $destination->foreign_currency_id     = $source->transaction_currency_id;
-            //            $destination->foreign_amount          = app('steam')->positive($source->amount);
+            //            $destination->foreign_amount          = \FireflyIII\Support\Facades\Steam::positive($source->amount);
             //            $destination->transaction_currency_id = $source->foreign_currency_id;
-            //            $destination->amount                  = app('steam')->positive($source->foreign_amount);
+            //            $destination->amount                  = \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount);
             //            $destination->balance_dirty           = true;
             //            $source->balance_dirty                = true;
             //            $destination->save();

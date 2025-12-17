@@ -103,7 +103,7 @@ trait RecalculatesAvailableBudgetsTrait
             return;
         }
         Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
-        $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
+        $availableBudget->amount = \FireflyIII\Support\Facades\Steam::bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
         $availableBudget->save();
     }
 

@@ -166,7 +166,7 @@ class BudgetController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale                                 = app('steam')->getLocale();
+        $locale                                 = \FireflyIII\Support\Facades\Steam::getLocale();
         $entries                                = [];
         $amount                                 = $budgetLimit->amount ?? '0';
         $budgetCollection                       = new Collection()->push($budget);
@@ -531,13 +531,13 @@ class BudgetController extends Controller
             // get budget limit in this period for this currency.
             $limit                           = $this->blRepository->find($budget, $currency, $currentStart, $currentEnd);
             if ($limit instanceof BudgetLimit) {
-                $chartData[1]['entries'][$title] = app('steam')->bcround($limit->amount, $currency->decimal_places);
+                $chartData[1]['entries'][$title] = \FireflyIII\Support\Facades\Steam::bcround($limit->amount, $currency->decimal_places);
             }
 
             // get spent amount in this period for this currency.
             $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection()->push($budget), $currency);
-            $amount                          = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[0]['entries'][$title] = app('steam')->bcround($amount, $currency->decimal_places);
+            $amount                          = \FireflyIII\Support\Facades\Steam::positive($sum[$currency->id]['sum'] ?? '0');
+            $chartData[0]['entries'][$title] = \FireflyIII\Support\Facades\Steam::bcround($amount, $currency->decimal_places);
 
             $currentStart                    = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -574,8 +574,8 @@ class BudgetController extends Controller
             $currentEnd        = Navigation::endOfPeriod($currentStart, $preferredRange);
             $title             = $currentStart->isoFormat($titleFormat);
             $sum               = $this->nbRepository->sumExpenses($currentStart, $currentEnd, $accounts, $currency);
-            $amount            = app('steam')->positive($sum[$currency->id]['sum'] ?? '0');
-            $chartData[$title] = app('steam')->bcround($amount, $currency->decimal_places);
+            $amount            = \FireflyIII\Support\Facades\Steam::positive($sum[$currency->id]['sum'] ?? '0');
+            $chartData[$title] = \FireflyIII\Support\Facades\Steam::bcround($amount, $currency->decimal_places);
             $currentStart      = Navigation::addPeriod($currentStart, $preferredRange, 0);
         }
 

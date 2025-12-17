@@ -57,7 +57,7 @@ class NewIPAddressWarningMail extends Mailable
         $this->host = '';
 
         try {
-            $hostName = app('steam')->getHostName($this->ipAddress);
+            $hostName = \FireflyIII\Support\Facades\Steam::getHostName($this->ipAddress);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             $hostName = $this->ipAddress;

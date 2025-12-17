@@ -66,8 +66,8 @@ class SetAmount implements ActionInterface
         /** @var TransactionJournal $object */
         $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        $positive   = app('steam')->positive($value);
-        $negative   = app('steam')->negative($value);
+        $positive   = \FireflyIII\Support\Facades\Steam::positive($value);
+        $negative   = \FireflyIII\Support\Facades\Steam::negative($value);
 
         $this->updatePositive($object, $positive);
         $this->updateNegative($object, $negative);

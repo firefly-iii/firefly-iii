@@ -203,7 +203,7 @@ class IndexController extends Controller
             foreach ($budgetLimits as $limit) {
                 Log::debug(sprintf('Working on budget limit #%d', $limit->id));
                 $currency            = $limit->transactionCurrency ?? $primaryCurrency;
-                $amount              = app('steam')->bcround($limit->amount, $currency->decimal_places);
+                $amount              = \FireflyIII\Support\Facades\Steam::bcround($limit->amount, $currency->decimal_places);
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => $amount,

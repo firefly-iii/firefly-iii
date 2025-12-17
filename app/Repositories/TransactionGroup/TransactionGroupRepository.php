@@ -245,9 +245,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $transaction = $journal->transactions->first();
         $currency    = $transaction->transactionCurrency;
         $type        = $journal->transactionType->type;
-        $amount      = app('steam')->positive($transaction->amount);
+        $amount      = \FireflyIII\Support\Facades\Steam::positive($transaction->amount);
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            return Amount::formatAnything($currency, app('steam')->negative($amount));
+            return Amount::formatAnything($currency, \FireflyIII\Support\Facades\Steam::negative($amount));
         }
 
         return Amount::formatAnything($currency, $amount);
@@ -267,9 +267,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
         $currency    = $transaction->foreignCurrency;
         $type        = $journal->transactionType->type;
-        $amount      = app('steam')->positive($transaction->foreign_amount);
+        $amount      = \FireflyIII\Support\Facades\Steam::positive($transaction->foreign_amount);
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            return Amount::formatAnything($currency, app('steam')->negative($amount));
+            return Amount::formatAnything($currency, \FireflyIII\Support\Facades\Steam::negative($amount));
         }
 
         return Amount::formatAnything($currency, $amount);

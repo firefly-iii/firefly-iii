@@ -53,7 +53,7 @@ trait UserNavigation
         $url = (string)session($identifier);
         Log::debug(sprintf('The URL is %s', $url));
 
-        return app('steam')->getSafeUrl($url, route('index'));
+        return \FireflyIII\Support\Facades\Steam::getSafeUrl($url, route('index'));
     }
 
     /**
@@ -137,7 +137,7 @@ trait UserNavigation
 
     final protected function rememberPreviousUrl(string $identifier): ?string
     {
-        $return = app('steam')->getSafePreviousUrl();
+        $return = \FireflyIII\Support\Facades\Steam::getSafePreviousUrl();
         session()->put($identifier, $return);
 
         Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));

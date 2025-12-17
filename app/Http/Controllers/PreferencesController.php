@@ -108,7 +108,7 @@ class PreferencesController extends Controller
         if (!is_array($frontpageAccounts)) {
             $frontpageAccounts = $accountIds;
         }
-        $language                       = app('steam')->getLanguage();
+        $language                       = \FireflyIII\Support\Facades\Steam::getLanguage();
         $languages                      = config('firefly.languages');
         $locale                         = Preferences::get('locale', config('firefly.default_locale', 'equal'))->data;
         $listPageSize                   = Preferences::get('listPageSize', 50)->data;

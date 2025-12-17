@@ -55,7 +55,7 @@ class CorrectsIbans extends Command
         /** @var Account $account */
         foreach ($accounts as $account) {
             $iban          = (string) $account->iban;
-            $newIban       = app('steam')->filterSpaces($iban);
+            $newIban       = \FireflyIII\Support\Facades\Steam::filterSpaces($iban);
             if ('' !== $iban && $iban !== $newIban) {
                 $account->iban = $newIban;
                 $account->save();
@@ -66,7 +66,7 @@ class CorrectsIbans extends Command
             $accountNumber = $account->accountMeta->where('name', 'account_number')->first();
             if (null !== $accountNumber) {
                 $number    = (string) $accountNumber->value;
-                $newNumber = app('steam')->filterSpaces($number);
+                $newNumber = \FireflyIII\Support\Facades\Steam::filterSpaces($number);
                 if ('' !== $number && $number !== $newNumber) {
                     $accountNumber->value = $newNumber;
                     $accountNumber->save();

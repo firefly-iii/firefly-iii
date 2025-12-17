@@ -65,7 +65,7 @@ trait AccountServiceTrait
             return null;
         }
 
-        return app('steam')->filterSpaces($iban);
+        return \FireflyIII\Support\Facades\Steam::filterSpaces($iban);
     }
 
     /**
@@ -225,7 +225,7 @@ trait AccountServiceTrait
         }
 
         // make amount positive, regardless:
-        $amount     = app('steam')->positive($amount);
+        $amount     = \FireflyIII\Support\Facades\Steam::positive($amount);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
@@ -371,12 +371,12 @@ trait AccountServiceTrait
         }
         // if direction is "debit" (I owe this debt), amount is negative.
         // which means the liability will have a negative balance which the user must fill.
-        $openingBalance                              = app('steam')->negative($openingBalance);
+        $openingBalance                              = \FireflyIII\Support\Facades\Steam::negative($openingBalance);
 
         // if direction is "credit" (I am owed this debt), amount is positive.
         // which means the liability will have a positive balance which is drained when its paid back into any asset.
         if ('credit' === $direction) {
-            $openingBalance = app('steam')->positive($openingBalance);
+            $openingBalance = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
         }
 
         // create if not exists:
@@ -398,11 +398,11 @@ trait AccountServiceTrait
         $journal->transactionCurrency()->associate($currency);
 
         // account always gains money:
-        $accountTransaction->amount                  = app('steam')->positive($openingBalance);
+        $accountTransaction->amount                  = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
         $accountTransaction->transaction_currency_id = $currency->id;
 
         // CL account always loses money:
-        $clTransaction->amount                       = app('steam')->negative($openingBalance);
+        $clTransaction->amount                       = \FireflyIII\Support\Facades\Steam::negative($openingBalance);
         $clTransaction->transaction_currency_id      = $currency->id;
         // save both
         $accountTransaction->save();
@@ -448,7 +448,7 @@ trait AccountServiceTrait
         }
 
         // amount must be positive for the transaction to work.
-        $amount     = app('steam')->positive($openingBalance);
+        $amount     = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
@@ -584,21 +584,21 @@ trait AccountServiceTrait
         if (1 === bccomp('0', $openingBalance)) {
             Log::debug('Amount is negative.');
             // account transaction loses money:
-            $accountTransaction->amount                  = app('steam')->negative($openingBalance);
+            $accountTransaction->amount                  = \FireflyIII\Support\Facades\Steam::negative($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
 
             // OB account transaction gains money
-            $obTransaction->amount                       = app('steam')->positive($openingBalance);
+            $obTransaction->amount                       = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
             $obTransaction->transaction_currency_id      = $currency->id;
         }
         if (-1 === bccomp('0', $openingBalance)) {
             Log::debug('Amount is positive.');
             // account gains money:
-            $accountTransaction->amount                  = app('steam')->positive($openingBalance);
+            $accountTransaction->amount                  = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
 
             // OB account loses money:
-            $obTransaction->amount                       = app('steam')->negative($openingBalance);
+            $obTransaction->amount                       = \FireflyIII\Support\Facades\Steam::negative($openingBalance);
             $obTransaction->transaction_currency_id      = $currency->id;
         }
         // save both
@@ -646,7 +646,7 @@ trait AccountServiceTrait
         }
 
         // make amount positive, regardless:
-        $amount     = app('steam')->positive($openingBalance);
+        $amount     = \FireflyIII\Support\Facades\Steam::positive($openingBalance);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);

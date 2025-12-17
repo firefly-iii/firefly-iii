@@ -286,7 +286,7 @@ class BudgetController extends Controller
         }
         if (null !== $limit && $this->convertToPrimary) {
             // convert and add all amounts.
-            $limit->amount = app('steam')->positive($amount);
+            $limit->amount = \FireflyIII\Support\Facades\Steam::positive($amount);
             Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
         }
 

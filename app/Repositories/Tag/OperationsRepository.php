@@ -97,7 +97,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 ];
 
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
-                    'amount'                   => app('steam')->negative($journal['amount']),
+                    'amount'                   => \FireflyIII\Support\Facades\Steam::negative($journal['amount']),
                     'date'                     => $journal['date'],
                     'source_account_id'        => $journal['source_account_id'],
                     'budget_name'              => $journal['budget_name'],
@@ -182,7 +182,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 ];
                 $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
-                    'amount'                   => app('steam')->positive($journal['amount']),
+                    'amount'                   => \FireflyIII\Support\Facades\Steam::positive($journal['amount']),
                     'date'                     => $journal['date'],
                     'source_account_id'        => $journal['source_account_id'],
                     'budget_name'              => $journal['budget_name'],

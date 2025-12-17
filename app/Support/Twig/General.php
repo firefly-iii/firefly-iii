@@ -200,7 +200,7 @@ class General extends AbstractExtension
                 }
 
                 return implode(', ', $strings);
-                // return app('steam')->balance($account, $date);
+                // return \FireflyIII\Support\Facades\Steam::balance($account, $date);
             }
         );
     }

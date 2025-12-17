@@ -70,7 +70,7 @@ class PiggyBankController extends Controller
         }
         $set                    = $repository->getEvents($piggyBank);
         $set                    = $set->reverse();
-        $locale                 = app('steam')->getLocale();
+        $locale                 = \FireflyIII\Support\Facades\Steam::getLocale();
 
         // get first event or start date of piggy bank or today
         $startDate              = $piggyBank->start_date ?? today(config('app.timezone'));
