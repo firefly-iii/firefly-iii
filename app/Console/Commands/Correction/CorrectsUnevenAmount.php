@@ -112,9 +112,9 @@ class CorrectsUnevenAmount extends Command
             if ($source->transaction_currency_id === $destination->transaction_currency_id) {
                 Log::debug('Ready to swap data between transactions.');
                 $destination->foreign_currency_id     = $source->transaction_currency_id;
-                $destination->foreign_amount          = \FireflyIII\Support\Facades\Steam::positive($source->amount);
+                $destination->foreign_amount          = Steam::positive($source->amount);
                 $destination->transaction_currency_id = $source->foreign_currency_id;
-                $destination->amount                  = \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount);
+                $destination->amount                  = Steam::positive($source->foreign_amount);
                 $destination->balance_dirty           = true;
                 $source->balance_dirty                = true;
                 $destination->save();

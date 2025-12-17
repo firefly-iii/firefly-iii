@@ -32,6 +32,7 @@ use FireflyIII\Support\Calendar\Calculator;
 use FireflyIII\Support\Calendar\Periodicity;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class Navigation.
@@ -404,7 +405,7 @@ class Navigation
      */
     public function listOfPeriods(Carbon $start, Carbon $end): array
     {
-        $locale        = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale        = Steam::getLocale();
         // define period to increment
         $increment     = 'addDay';
         $format        = $this->preferredCarbonFormat($start, $end);
@@ -536,7 +537,7 @@ class Navigation
      */
     public function preferredCarbonLocalizedFormat(Carbon $start, Carbon $end): string
     {
-        $locale = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale = Steam::getLocale();
         $diff   = $start->diffInMonths($end, true);
         if ($diff >= 1.001 && $diff < 12.001) {
             return (string)trans('config.month_js', [], $locale);

@@ -37,6 +37,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
@@ -104,7 +105,7 @@ class EditController extends Controller
                 $amount = '0';
             }
             $amount                          = (string) $amount;
-            $preFilled['auto_budget_amount'] = \FireflyIII\Support\Facades\Steam::bcround($amount, $autoBudget->transactionCurrency->decimal_places);
+            $preFilled['auto_budget_amount'] = Steam::bcround($amount, $autoBudget->transactionCurrency->decimal_places);
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").

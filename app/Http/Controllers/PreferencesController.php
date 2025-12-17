@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use JsonException;
 use Safe\Exceptions\FilesystemException;
+use FireflyIII\Support\Facades\Steam;
 
 use function Safe\file_get_contents;
 use function Safe\json_decode;
@@ -108,7 +109,7 @@ class PreferencesController extends Controller
         if (!is_array($frontpageAccounts)) {
             $frontpageAccounts = $accountIds;
         }
-        $language                       = \FireflyIII\Support\Facades\Steam::getLanguage();
+        $language                       = Steam::getLanguage();
         $languages                      = config('firefly.languages');
         $locale                         = Preferences::get('locale', config('firefly.default_locale', 'equal'))->data;
         $listPageSize                   = Preferences::get('listPageSize', 50)->data;

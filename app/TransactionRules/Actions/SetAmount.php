@@ -31,6 +31,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use FireflyIII\Support\Facades\Steam;
 
 class SetAmount implements ActionInterface
 {
@@ -66,8 +67,8 @@ class SetAmount implements ActionInterface
         /** @var TransactionJournal $object */
         $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        $positive   = \FireflyIII\Support\Facades\Steam::positive($value);
-        $negative   = \FireflyIII\Support\Facades\Steam::negative($value);
+        $positive   = Steam::positive($value);
+        $negative   = Steam::negative($value);
 
         $this->updatePositive($object, $positive);
         $this->updateNegative($object, $negative);

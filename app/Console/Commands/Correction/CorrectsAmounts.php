@@ -43,6 +43,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use ValueError;
+use FireflyIII\Support\Facades\Steam;
 
 class CorrectsAmounts extends Command
 {
@@ -244,7 +245,7 @@ class CorrectsAmounts extends Command
             return false;
         }
         if (-1 === $check) {
-            $item->trigger_value = \FireflyIII\Support\Facades\Steam::positive($item->trigger_value);
+            $item->trigger_value = Steam::positive($item->trigger_value);
             $item->save();
 
             return true;

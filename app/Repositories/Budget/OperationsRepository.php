@@ -41,6 +41,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class OperationsRepository
@@ -157,7 +158,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ];
 
         foreach ($journals as $journal) {
-            $amount                                                                       = \FireflyIII\Support\Facades\Steam::negative($journal['amount']);
+            $amount                                                                       = Steam::negative($journal['amount']);
             $journalCurrencyId                                                            = (int) $journal['currency_id'];
             if (false === $convertToPrimary) {
                 $currencyId            = $journalCurrencyId;

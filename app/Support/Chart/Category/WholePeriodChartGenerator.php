@@ -31,6 +31,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class WholePeriodChartGenerator
@@ -102,8 +103,8 @@ class WholePeriodChartGenerator
                 $earnedInfoKey                                = sprintf('earned-in-%s', $code);
                 $spentAmount                                  = $spent[$key][$currencyId]['sum'] ?? '0';
                 $earnedAmount                                 = $earned[$key][$currencyId]['sum'] ?? '0';
-                $chartData[$spentInfoKey]['entries'][$label]  = \FireflyIII\Support\Facades\Steam::bcround($spentAmount, $currency['currency_decimal_places']);
-                $chartData[$earnedInfoKey]['entries'][$label] = \FireflyIII\Support\Facades\Steam::bcround($earnedAmount, $currency['currency_decimal_places']);
+                $chartData[$spentInfoKey]['entries'][$label]  = Steam::bcround($spentAmount, $currency['currency_decimal_places']);
+                $chartData[$earnedInfoKey]['entries'][$label] = Steam::bcround($earnedAmount, $currency['currency_decimal_places']);
             }
             $current = Navigation::addPeriod($current, $step);
         }

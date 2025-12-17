@@ -31,6 +31,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class BillController.
@@ -113,7 +114,7 @@ class BillController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale     = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale     = Steam::getLocale();
 
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);

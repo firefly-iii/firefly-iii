@@ -26,6 +26,7 @@ namespace FireflyIII\Helpers\Collector\Extensions;
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Trait AmountCollection
@@ -39,7 +40,7 @@ trait AmountCollection
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('source.amount', \FireflyIII\Support\Facades\Steam::negative($amount));
+                $q->where('source.amount', Steam::negative($amount));
             }
         );
 
@@ -50,7 +51,7 @@ trait AmountCollection
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('source.amount', '!=', \FireflyIII\Support\Facades\Steam::negative($amount));
+                $q->where('source.amount', '!=', Steam::negative($amount));
             }
         );
 
@@ -64,7 +65,7 @@ trait AmountCollection
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('destination.amount', '<=', \FireflyIII\Support\Facades\Steam::positive($amount));
+                $q->where('destination.amount', '<=', Steam::positive($amount));
             }
         );
 
@@ -78,7 +79,7 @@ trait AmountCollection
     {
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('destination.amount', '>=', \FireflyIII\Support\Facades\Steam::positive($amount));
+                $q->where('destination.amount', '>=', Steam::positive($amount));
             }
         );
 
@@ -93,7 +94,7 @@ trait AmountCollection
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('source.foreign_amount');
-                $q->where('source.foreign_amount', \FireflyIII\Support\Facades\Steam::negative($amount));
+                $q->where('source.foreign_amount', Steam::negative($amount));
             }
         );
 
@@ -108,7 +109,7 @@ trait AmountCollection
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNull('source.foreign_amount');
-                $q->orWhere('source.foreign_amount', '!=', \FireflyIII\Support\Facades\Steam::negative($amount));
+                $q->orWhere('source.foreign_amount', '!=', Steam::negative($amount));
             }
         );
 
@@ -123,7 +124,7 @@ trait AmountCollection
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('destination.foreign_amount');
-                $q->where('destination.foreign_amount', '<=', \FireflyIII\Support\Facades\Steam::positive($amount));
+                $q->where('destination.foreign_amount', '<=', Steam::positive($amount));
             }
         );
 
@@ -138,7 +139,7 @@ trait AmountCollection
         $this->query->where(
             static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
                 $q->whereNotNull('destination.foreign_amount');
-                $q->where('destination.foreign_amount', '>=', \FireflyIII\Support\Facades\Steam::positive($amount));
+                $q->where('destination.foreign_amount', '>=', Steam::positive($amount));
             }
         );
 

@@ -33,6 +33,7 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class RecurrenceController
@@ -167,7 +168,7 @@ class RecurrenceController extends Controller
         }
         $date->startOfDay();
         $preSelected = (string) $request->get('pre_select');
-        $locale      = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale      = Steam::getLocale();
 
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
         Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));

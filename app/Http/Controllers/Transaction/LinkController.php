@@ -36,6 +36,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class LinkController.
@@ -145,6 +146,6 @@ class LinkController extends Controller
         $linkId = (int) $request->get('id');
         $this->repository->switchLinkById($linkId);
 
-        return redirect(\FireflyIII\Support\Facades\Steam::getSafePreviousUrl());
+        return redirect(Steam::getSafePreviousUrl());
     }
 }

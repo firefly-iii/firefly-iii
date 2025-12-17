@@ -38,6 +38,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class DeleteController
@@ -83,7 +84,7 @@ class DeleteController extends Controller
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         $subTitle   = (string) trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
-        $previous   = \FireflyIII\Support\Facades\Steam::getSafePreviousUrl();
+        $previous   = Steam::getSafePreviousUrl();
         // put previous url in session
         Log::debug('Will try to remember previous URL');
         $this->rememberPreviousUrl('transactions.delete.url');

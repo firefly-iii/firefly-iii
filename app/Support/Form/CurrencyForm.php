@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Throwable;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class CurrencyForm
@@ -150,7 +151,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = \FireflyIII\Support\Facades\Steam::bcround($value, $primaryCurrency->decimal_places);
+            $value = Steam::bcround($value, $primaryCurrency->decimal_places);
         }
 
         try {
@@ -202,7 +203,7 @@ class CurrencyForm
 
         // make sure value is formatted nicely:
         if (null !== $value && '' !== $value) {
-            $value = \FireflyIII\Support\Facades\Steam::bcround($value, $primaryCurrency->decimal_places);
+            $value = Steam::bcround($value, $primaryCurrency->decimal_places);
         }
 
         try {
