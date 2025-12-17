@@ -44,6 +44,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\View\View;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class BudgetLimitController
@@ -274,7 +275,7 @@ class BudgetLimitController extends Controller
         $array['left_per_day']           = 0 === $daysLeft ? bcadd((string) $array['spent'], (string) $array['amount']) : bcdiv(bcadd((string) $array['spent'], (string) $array['amount']), $array['days_left']);
 
         // left per day formatted.
-        $array['amount']                 = \FireflyIII\Support\Facades\Steam::bcround($limit['amount'], $limit->transactionCurrency->decimal_places);
+        $array['amount']                 = Steam::bcround($limit['amount'], $limit->transactionCurrency->decimal_places);
         $array['left_per_day_formatted'] = app('amount')->formatAnything($limit->transactionCurrency, $array['left_per_day']);
         if ('true' === $request->get('redirect')) {
             return redirect(route('budgets.index'));

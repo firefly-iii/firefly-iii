@@ -59,7 +59,7 @@ trait ChartGeneration
             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale           = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale           = Steam::getLocale();
 
         /** @var GeneratorInterface $generator */
         $generator        = app(GeneratorInterface::class);

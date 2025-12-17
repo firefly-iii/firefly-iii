@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class NewIPAddressWarningMail
@@ -57,7 +58,7 @@ class NewIPAddressWarningMail extends Mailable
         $this->host = '';
 
         try {
-            $hostName = \FireflyIII\Support\Facades\Steam::getHostName($this->ipAddress);
+            $hostName = Steam::getHostName($this->ipAddress);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
             $hostName = $this->ipAddress;

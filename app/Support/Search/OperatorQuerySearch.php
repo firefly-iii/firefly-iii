@@ -52,6 +52,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use LogicException;
 use TypeError;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class OperatorQuerySearch
@@ -2287,7 +2288,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
                 $value                   = str_replace(',', '.', $value);
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIs($amount);
 
@@ -2297,7 +2298,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 Log::debug(sprintf('Original value "%s"', $value));
                 $value                   = str_replace(',', '.', $value);
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountIsNot($amount);
 
@@ -2307,7 +2308,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
 
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIs($amount);
 
@@ -2317,7 +2318,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
 
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountIsNot($amount);
 
@@ -2328,7 +2329,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
 
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountLess($amount);
 
@@ -2339,7 +2340,7 @@ class OperatorQuerySearch implements SearchInterface
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
 
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountLess($amount);
 
@@ -2350,7 +2351,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->amountMore($amount);
 
@@ -2361,7 +2362,7 @@ class OperatorQuerySearch implements SearchInterface
                 Log::debug(sprintf('Now handling operator "%s"', $operator));
                 // strip comma's, make dots.
                 $value                   = str_replace(',', '.', $value);
-                $amount                  = \FireflyIII\Support\Facades\Steam::positive($value);
+                $amount                  = Steam::positive($value);
                 Log::debug(sprintf('Set "%s" using collector with value "%s"', $operator, $amount));
                 $this->collector->foreignAmountMore($amount);
 

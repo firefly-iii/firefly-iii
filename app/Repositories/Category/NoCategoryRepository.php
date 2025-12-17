@@ -78,7 +78,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
             $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
                         = [
-                            'amount' => \FireflyIII\Support\Facades\Steam::negative($journal['amount']),
+                            'amount' => Steam::negative($journal['amount']),
                             'date'   => $journal['date'],
                         ];
         }
@@ -124,7 +124,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
             $journalId  = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
                         = [
-                            'amount' => \FireflyIII\Support\Facades\Steam::positive($journal['amount']),
+                            'amount' => Steam::positive($journal['amount']),
                             'date'   => $journal['date'],
                         ];
         }

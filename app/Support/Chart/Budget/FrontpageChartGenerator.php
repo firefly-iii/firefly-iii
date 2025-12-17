@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class FrontpageChartGenerator
@@ -102,7 +103,7 @@ class FrontpageChartGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
 
-        $locale                  = \FireflyIII\Support\Facades\Steam::getLocale();
+        $locale                  = Steam::getLocale();
         $this->monthAndDayFormat = (string)trans('config.month_and_day_js', [], $locale);
     }
 

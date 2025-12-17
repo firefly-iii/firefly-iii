@@ -50,6 +50,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use FireflyIII\Support\Facades\Steam;
 
 use function Safe\json_decode;
 
@@ -245,9 +246,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $transaction = $journal->transactions->first();
         $currency    = $transaction->transactionCurrency;
         $type        = $journal->transactionType->type;
-        $amount      = \FireflyIII\Support\Facades\Steam::positive($transaction->amount);
+        $amount      = Steam::positive($transaction->amount);
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            return Amount::formatAnything($currency, \FireflyIII\Support\Facades\Steam::negative($amount));
+            return Amount::formatAnything($currency, Steam::negative($amount));
         }
 
         return Amount::formatAnything($currency, $amount);
@@ -267,9 +268,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
         $currency    = $transaction->foreignCurrency;
         $type        = $journal->transactionType->type;
-        $amount      = \FireflyIII\Support\Facades\Steam::positive($transaction->foreign_amount);
+        $amount      = Steam::positive($transaction->foreign_amount);
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            return Amount::formatAnything($currency, \FireflyIII\Support\Facades\Steam::negative($amount));
+            return Amount::formatAnything($currency, Steam::negative($amount));
         }
 
         return Amount::formatAnything($currency, $amount);
