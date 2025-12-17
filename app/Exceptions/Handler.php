@@ -42,7 +42,6 @@ use Illuminate\Validation\ValidationException as LaravelValidationException;
 use Laravel\Passport\Exceptions\OAuthServerException as LaravelOAuthException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Override;
-use Sentry\Laravel\Integration;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -85,11 +84,6 @@ class Handler extends ExceptionHandler
     #[Override]
     public function register(): void
     {
-        if (true === config('firefly.report_errors_online')) {
-            $this->reportable(function (Throwable $e): void {
-                Integration::captureUnhandledException($e);
-            });
-        }
     }
 
     /**
