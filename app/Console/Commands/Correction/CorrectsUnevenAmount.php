@@ -132,11 +132,7 @@ class CorrectsUnevenAmount extends Command
     private function fixUnevenAmounts(): void
     {
         Log::debug('fixUnevenAmounts()');
-        $journals = DB::table('transactions')
-            ->groupBy('transaction_journal_id')
-            ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
-        ;
+        $journals = DB::table('transactions')->groupBy('transaction_journal_id')->whereNull('deleted_at')->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
 
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
@@ -146,11 +142,7 @@ class CorrectsUnevenAmount extends Command
                 || '' === $sum // @phpstan-ignore-line
                 || str_contains($sum, 'e')
                 || str_contains($sum, ',')) {
-                $message = sprintf(
-                    'Journal #%d has an invalid sum ("%s"). No sure what to do.',
-                    $entry->transaction_journal_id,
-                    $entry->the_sum
-                );
+                $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->friendlyWarning($message);
                 Log::warning($message);
                 ++$this->count;
@@ -184,13 +176,7 @@ class CorrectsUnevenAmount extends Command
         $source              = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
+            $this->friendlyError(sprintf('Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
             ++$this->count;
@@ -205,13 +191,7 @@ class CorrectsUnevenAmount extends Command
         $destination         = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
+            $this->friendlyError(sprintf('Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
 
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();

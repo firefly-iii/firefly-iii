@@ -34,7 +34,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
-
 use function Safe\json_decode;
 
 class RemovesDatabaseDecryption extends Command
@@ -120,8 +119,8 @@ class RemovesDatabaseDecryption extends Command
         if (null === $original) {
             return;
         }
-        $id       = (int) $row->id;
-        $value    = '';
+        $id    = (int)$row->id;
+        $value = '';
 
         try {
             $value = $this->tryDecrypt($original);
@@ -133,7 +132,7 @@ class RemovesDatabaseDecryption extends Command
         }
 
         // A separate routine for preferences table:
-        if ('preferences' === $table) {
+        if ('preferences' === $table && is_string($value)) {
             $this->decryptPreferencesRow($id, $value);
 
             return;

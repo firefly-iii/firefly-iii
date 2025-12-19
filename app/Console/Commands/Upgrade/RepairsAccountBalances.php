@@ -1,7 +1,7 @@
 <?php
 
 /*
- * CorrectAccountBalance.php
+ * RepairsAccountBalances.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).

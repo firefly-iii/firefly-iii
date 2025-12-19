@@ -167,11 +167,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-    #[Override]
-    public function getAccountBalances(Account $account): Collection
-    {
-        return $account->accountBalances;
-    }
 
     /**
      * Return account type or null if not found.

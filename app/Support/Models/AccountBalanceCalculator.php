@@ -161,7 +161,7 @@ class AccountBalanceCalculator
         // then update all transactions.
 
         // save all collected balances in their respective account objects.
-        $this->storeAccountBalances($balances);
+        // $this->storeAccountBalances($balances);
     }
 
     private function storeAccountBalances(array $balances): void

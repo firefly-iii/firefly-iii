@@ -100,6 +100,10 @@ class CorrectsAmounts extends Command
             if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
                 continue;
             }
+            if(null === $source->foreign_amount || null === $destination->foreign_amount) {
+                continue;
+            }
+
             $sourceAccount  = $source->account;
             $destAccount    = $destination->account;
             if (null === $sourceAccount || null === $destAccount) {
