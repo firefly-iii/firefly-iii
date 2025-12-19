@@ -34,6 +34,7 @@ class Balance
 {
     /**
      * Returns the accounts balances as an array, on the account ID.
+     *
      * @deprecated
      */
     public function getAccountBalances(Collection $accounts, Carbon $date): array

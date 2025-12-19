@@ -167,7 +167,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-
     /**
      * Return account type or null if not found.
      */
