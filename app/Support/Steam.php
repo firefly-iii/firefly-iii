@@ -663,6 +663,7 @@ class Steam
     {
         $res = $this->getSafeUrl(session()->previousUrl() ?? route('index'), route('index'));
         Log::debug(sprintf('getSafePreviousUrl: "%s"', $res));
+        return $res;
     }
 
     /**
