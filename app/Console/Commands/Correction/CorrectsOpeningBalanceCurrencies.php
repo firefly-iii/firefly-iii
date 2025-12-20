@@ -133,6 +133,6 @@ class CorrectsOpeningBalanceCurrencies extends Command
         $repos = app(AccountRepositoryInterface::class);
         $repos->setUser($account->user);
 
-        return $repos->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrencyByUserGroup($account->userGroup);
+        return $repos->getAccountCurrency($account) ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->userGroup);
     }
 }

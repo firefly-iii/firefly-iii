@@ -42,7 +42,7 @@ class AutoBudgetObserver
         if (!Amount::convertToPrimary($autoBudget->budget->user)) {
             return;
         }
-        $userCurrency              = app('amount')->getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
+        $userCurrency              = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                 = new ExchangeRateConverter();

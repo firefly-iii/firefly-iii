@@ -167,7 +167,7 @@ class AmountController extends Controller
             $piggyBank->refresh();
         }
         if (0 !== bccomp($total, '0')) {
-            session()->flash('success', (string) trans('firefly.added_amount_to_piggy', ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]));
+            session()->flash('success', (string) trans('firefly.added_amount_to_piggy', ['amount' => \FireflyIII\Support\Facades\Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]));
             Preferences::mark();
 
             return redirect(route('piggy-banks.index'));
@@ -177,7 +177,7 @@ class AmountController extends Controller
             'error',
             (string) trans(
                 'firefly.cannot_add_amount_piggy',
-                ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
+                ['amount' => \FireflyIII\Support\Facades\Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
             )
         );
 
@@ -214,7 +214,7 @@ class AmountController extends Controller
                 'success',
                 (string) trans(
                     'firefly.removed_amount_from_piggy',
-                    ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]
+                    ['amount' => \FireflyIII\Support\Facades\Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]
                 )
             );
             Preferences::mark();
@@ -226,7 +226,7 @@ class AmountController extends Controller
             'error',
             (string) trans(
                 'firefly.cannot_remove_from_piggy',
-                ['amount' => app('amount')->formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
+                ['amount' => \FireflyIII\Support\Facades\Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
             )
         );
 

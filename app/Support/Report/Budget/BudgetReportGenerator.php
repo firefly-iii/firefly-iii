@@ -136,7 +136,7 @@ class BudgetReportGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
         $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
     }
 
     /**

@@ -502,7 +502,7 @@ class TransactionJournalFactory
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && !$currency instanceof TransactionCurrency) {
             // return user's default:
-            return app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            return \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $result     = $preference ?? $currency;
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));

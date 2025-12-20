@@ -94,7 +94,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $limitRepository = app(BudgetLimitRepository::class);
         $limitRepository->setUser($this->user);
         $budgets         = $this->getActiveBudgets();
-        $primaryCurrency = app('amount')->getPrimaryCurrency();
+        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
         $converter       = new ExchangeRateConverter();
 
         /** @var Budget $budget */
@@ -393,7 +393,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $autoBudget = $this->getAutoBudget($budget);
 
         // grab default currency:
-        $currency   = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $currency   = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         if (!$autoBudget instanceof AutoBudget) {
             // at this point it's a blind assumption auto_budget_type is 1 or 2.
@@ -778,7 +778,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $currency = $repos->findByCode((string) $data['currency_code']);
         }
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
 
         $autoBudget                          = new AutoBudget();

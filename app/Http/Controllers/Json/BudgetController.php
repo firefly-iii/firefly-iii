@@ -84,9 +84,9 @@ class BudgetController extends Controller
         return response()->json(
             [
                 'budgeted'                => $budgeted,
-                'budgeted_formatted'      => app('amount')->formatAnything($currency, $budgeted, true),
+                'budgeted_formatted'      => \FireflyIII\Support\Facades\Amount::formatAnything($currency, $budgeted, true),
                 'available'               => $available,
-                'available_formatted'     => app('amount')->formatAnything($currency, $available, true),
+                'available_formatted'     => \FireflyIII\Support\Facades\Amount::formatAnything($currency, $available, true),
                 'percentage'              => $percentage,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,

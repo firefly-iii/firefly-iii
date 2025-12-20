@@ -105,7 +105,7 @@ class UpgradesAccountCurrencies extends Command
         $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
-        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
 
         /** @var Account $account */
         foreach ($accounts as $account) {

@@ -171,7 +171,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $accountRepos    = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         Log::debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
@@ -302,7 +302,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = sprintf('%s (%s)', $piggy->name, app('amount')->formatAnything($piggy->transactionCurrency, $currentAmount, false));
+            $piggy->name   = sprintf('%s (%s)', $piggy->name, \FireflyIII\Support\Facades\Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
         }
 
         return $set;

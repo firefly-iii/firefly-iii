@@ -107,7 +107,7 @@ trait RecurringTransactionTrait
             $currency        = $factory->find($array['currency_id'] ?? null, $array['currency_code'] ?? null);
             $foreignCurrency = $factory->find($array['foreign_currency_id'] ?? null, $array['foreign_currency_code'] ?? null);
             if (null === $currency) {
-                $currency = app('amount')->getPrimaryCurrencyByUserGroup($recurrence->user->userGroup);
+                $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($recurrence->user->userGroup);
             }
 
             Log::debug(

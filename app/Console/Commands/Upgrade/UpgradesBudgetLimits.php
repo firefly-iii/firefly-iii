@@ -67,7 +67,7 @@ class UpgradesBudgetLimits extends Command
                     /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+                        $currency                             = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->friendlyInfo(

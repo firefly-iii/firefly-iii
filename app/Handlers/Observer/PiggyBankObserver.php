@@ -49,7 +49,7 @@ class PiggyBankObserver
 
             return;
         }
-        $userCurrency                    = app('amount')->getPrimaryCurrencyByUserGroup($group);
+        $userCurrency                    = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($group);
         $piggyBank->native_target_amount = null;
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter                       = new ExchangeRateConverter();

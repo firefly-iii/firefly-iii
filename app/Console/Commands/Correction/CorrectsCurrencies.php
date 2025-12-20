@@ -63,7 +63,7 @@ class CorrectsCurrencies extends Command
         $repos           = app(CurrencyRepositoryInterface::class);
 
         // first check if the user has any default currency (not necessarily the case, so can be forced).
-        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($userGroup);
+        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($userGroup);
 
         Log::debug(sprintf('Now correcting currencies for user group #%d', $userGroup->id));
         $found           = [$primaryCurrency->id];

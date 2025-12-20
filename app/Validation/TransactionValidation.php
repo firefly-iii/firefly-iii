@@ -224,7 +224,7 @@ trait TransactionValidation
 
         /** @var AccountRepository $accountRepository */
         $accountRepository   = app(AccountRepositoryInterface::class);
-        $primaryCurrency     = app('amount')->getPrimaryCurrency();
+        $primaryCurrency     = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
         $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $primaryCurrency;
         $destinationCurrency = $accountRepository->getAccountCurrency($destination) ?? $primaryCurrency;
         // if both accounts have the same currency, continue.

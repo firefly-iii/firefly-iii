@@ -52,7 +52,7 @@ class TransactionObserver
         if (!Amount::convertToPrimary($transaction->transactionJournal->user)) {
             return;
         }
-        $userCurrency                       = app('amount')->getPrimaryCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
+        $userCurrency                       = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;
         // first normal amount

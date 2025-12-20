@@ -240,7 +240,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::debug('Grabbing default currency for this user...');
 
             /** @var null|TransactionCurrency $result */
-            $result = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            $result = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
@@ -440,7 +440,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function makePrimary(TransactionCurrency $currency): void
     {
-        $current = app('amount')->getPrimaryCurrencyByUserGroup($this->userGroup);
+        $current = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
         Log::debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
         $this->userGroup->currencies()->detach($currency->id);
         foreach ($this->userGroup->currencies()->get() as $item) {

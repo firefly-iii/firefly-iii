@@ -123,10 +123,10 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
+        $primaryCurrency = $options['currency'] ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = app('amount')->getAllCurrencies();
+        $currencies      = \FireflyIII\Support\Facades\Amount::getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
@@ -176,10 +176,10 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? app('amount')->getPrimaryCurrency();
+        $primaryCurrency = $options['currency'] ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = app('amount')->getCurrencies();
+        $currencies      = \FireflyIII\Support\Facades\Amount::getCurrencies();
         unset($options['currency'], $options['placeholder']);
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled       = session('preFilled');

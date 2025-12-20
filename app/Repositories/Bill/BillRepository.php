@@ -536,7 +536,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         $bills            = $this->getActiveBills();
         $return           = [];
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary          = app('amount')->getPrimaryCurrency();
+        $primary          = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -602,7 +602,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         $bills            = $this->getActiveBills();
         $return           = [];
         $convertToPrimary = Amount::convertToPrimary($this->user);
-        $primary          = app('amount')->getPrimaryCurrency();
+        $primary          = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
