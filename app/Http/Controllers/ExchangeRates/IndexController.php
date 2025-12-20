@@ -47,7 +47,7 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
-        if (false === config('cer.enabled')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
             throw new NotFoundHttpException();
         }
     }

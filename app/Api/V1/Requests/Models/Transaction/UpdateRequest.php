@@ -248,7 +248,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $validProtocols = config('firefly.valid_url_protocols');
+        $validProtocols = \FireflyIII\Support\Facades\FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             // basic fields for group:

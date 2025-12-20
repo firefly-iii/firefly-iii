@@ -140,7 +140,7 @@ class CreateController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location'] && true === config('firefly.enable_external_map');
+        $optionalFields['location'] = $optionalFields['location'] && true === \FireflyIII\Support\Facades\FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');

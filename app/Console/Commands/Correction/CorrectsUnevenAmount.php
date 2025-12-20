@@ -30,6 +30,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
@@ -60,7 +61,7 @@ class CorrectsUnevenAmount extends Command
 
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
-        if (true === config('firefly.feature_flags.running_balance_column')) {
+        if (true === \FireflyIII\Support\Facades\FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             $this->friendlyInfo('Will recalculate transaction running balance columns. This may take a LONG time. Please be patient.');
             AccountBalanceCalculator::recalculateAll(false);
             $this->friendlyInfo('Done recalculating transaction running balance columns.');

@@ -59,7 +59,7 @@ class CreateController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning('User visits webhook create page, but webhooks are DISABLED.');
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

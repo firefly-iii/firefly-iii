@@ -63,7 +63,7 @@ class DestroyController extends Controller
      */
     public function destroy(Webhook $webhook): JsonResponse
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d. but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -93,7 +93,7 @@ class DestroyController extends Controller
             throw new FireflyException('200041: Webhook message and webhook attempt are no match');
         }
 
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.', $webhook->id, $message->id, $attempt->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -121,7 +121,7 @@ class DestroyController extends Controller
             throw new FireflyException('200040: Webhook and webhook message are no match');
         }
 
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d, message #%d, but webhooks are DISABLED.', $webhook->id, $message->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

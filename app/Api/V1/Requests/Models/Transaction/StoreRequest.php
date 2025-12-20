@@ -176,7 +176,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         Log::debug('Collect rules of TransactionStoreRequest');
-        $validProtocols = config('firefly.valid_url_protocols');
+        $validProtocols = \FireflyIII\Support\Facades\FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $locationRules  = Location::requestRules([]);
 
         return [

@@ -101,7 +101,7 @@
                                     </div>
 
                                     {#  conversion back to primary currency #}
-                                    {% if config('cer.enabled') %}
+                                    {% if FireflyConfig.get('enable_exchange_rates', config('cer.enabled')) %}
                                     <div class="preferences-box">
                                         <h3>{{ 'pref_convert_to_primary'|_ }}</h3>
                                         <p class="text-info">

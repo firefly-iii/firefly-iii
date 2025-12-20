@@ -71,7 +71,7 @@ class ExchangeRateConverter
 
     public function enabled(): bool
     {
-        return false !== config('cer.enabled') || $this->ignoreSettings;
+        return false !== \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data || $this->ignoreSettings;
     }
 
     /**

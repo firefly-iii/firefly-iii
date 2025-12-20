@@ -72,7 +72,7 @@ class Cron extends Command
         $force = (bool) $this->option('force'); // @phpstan-ignore-line
 
         // Fire exchange rates cron job.
-        if (true === config('cer.download_enabled') && ($doAll || $this->option('download-cer'))) {
+        if (true === \FireflyIII\Support\Facades\FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data && ($doAll || $this->option('download-cer'))) {
             try {
                 $this->exchangeRatesCronJob($force, $date);
             } catch (FireflyException $e) {

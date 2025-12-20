@@ -39,7 +39,7 @@ class WebhookEventHandler
     public function sendWebhookMessages(): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        if (false === config('firefly.feature_flags.webhooks') || false === config('firefly.allow_webhooks')) {
+        if (false === config('firefly.feature_flags.webhooks') || false === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::debug('Webhook event handler is disabled, do not run sendWebhookMessages().');
 
             return;

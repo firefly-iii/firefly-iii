@@ -80,7 +80,7 @@ abstract class Controller extends BaseController
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
         // is webhooks enabled?
-        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === config('firefly.allow_webhooks'));
+        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
 
         // share custom auth guard info.
         $authGuard        = config('firefly.authentication_guard');

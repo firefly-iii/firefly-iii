@@ -73,7 +73,7 @@ class CreateRequest extends FormRequest
         $triggers       = implode(',', array_values(Webhook::getTriggers()));
         $responses      = implode(',', array_values(Webhook::getResponses()));
         $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
-        $validProtocols = config('firefly.valid_url_protocols');
+        $validProtocols = \FireflyIII\Support\Facades\FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             'title'        => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',

@@ -75,7 +75,7 @@ return [
         'webhooks'               => true,
         'handle_debts'           => true,
         'expression_engine'      => true,
-        'running_balance_column' => env('USE_RUNNING_BALANCE', false),
+        'running_balance_column' => env('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
     'version'                              => 'develop/2025-12-19',
@@ -94,10 +94,10 @@ return [
     'static_cron_token'                    => envNonEmpty('STATIC_CRON_TOKEN'),
 
     // flags
-    'enable_external_map'                  => env('ENABLE_EXTERNAL_MAP', false),
+    'enable_external_map'                  => env('ENABLE_EXTERNAL_MAP', false), // no longer used, only for default.
     'disable_frame_header'                 => env('DISABLE_FRAME_HEADER', false),
     'disable_csp_header'                   => env('DISABLE_CSP_HEADER', false),
-    'allow_webhooks'                       => env('ALLOW_WEBHOOKS', false),
+    'allow_webhooks'                       => env('ALLOW_WEBHOOKS', false), // no longer used, only for default.
 
     // info for demo site
     'demo_username'                        => env('DEMO_USERNAME', ''),
@@ -218,7 +218,7 @@ return [
     'available_dark_modes'                 => ['light', 'dark', 'browser'],
     'bill_reminder_periods'                => [90, 30, 14, 7, 0],
     'valid_view_ranges'                    => ['1D', '1W', '1M', '3M', '6M', '1Y'],
-    'valid_url_protocols'                  => envNonEmpty('VALID_URL_PROTOCOLS', 'http,https,ftp,ftps,mailto'),
+    'valid_url_protocols'                  => envNonEmpty('VALID_URL_PROTOCOLS', 'http,https,ftp,ftps,mailto'), // no longer used, only for default.
     'allowedMimes'                         => [
         // plain files
         'text/plain',

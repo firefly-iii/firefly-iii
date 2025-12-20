@@ -62,7 +62,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
      */
     public function handle(): int
     {
-        if (false === config('cer.enabled')) {
+        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
             $this->friendlyInfo('This command will not run because currency exchange rates are disabled.');
 
             return 0;
