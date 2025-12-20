@@ -33,6 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class VersionCheckEventHandler
@@ -54,7 +55,7 @@ class VersionCheckEventHandler
         Log::debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission    = \FireflyIII\Support\Facades\FireflyConfig::get('permission_update_check', -1);
+        $permission    = FireflyConfig::get('permission_update_check', -1);
         $value         = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
@@ -73,7 +74,7 @@ class VersionCheckEventHandler
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = \FireflyIII\Support\Facades\FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
+        $lastCheckTime = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
         $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
@@ -87,7 +88,7 @@ class VersionCheckEventHandler
         $release       = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
-        \FireflyIII\Support\Facades\FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
+        FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
     }
 
     /**
@@ -107,7 +108,7 @@ class VersionCheckEventHandler
         }
 
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = \FireflyIII\Support\Facades\FireflyConfig::get('last_update_warning', Carbon::now()->getTimestamp());
+        $lastCheckTime = FireflyConfig::get('last_update_warning', Carbon::now()->getTimestamp());
         $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
@@ -120,6 +121,6 @@ class VersionCheckEventHandler
         Log::debug('Have warned about a new version in four weeks!');
 
         session()->flash('info', (string) trans('firefly.disabled_but_check'));
-        \FireflyIII\Support\Facades\FireflyConfig::set('last_update_warning', Carbon::now()->getTimestamp());
+        FireflyConfig::set('last_update_warning', Carbon::now()->getTimestamp());
     }
 }

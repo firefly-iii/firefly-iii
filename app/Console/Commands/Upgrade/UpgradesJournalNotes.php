@@ -29,6 +29,7 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalMeta;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesJournalNotes extends Command
 {
@@ -86,7 +87,7 @@ class UpgradesJournalNotes extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -94,6 +95,6 @@ class UpgradesJournalNotes extends Command
 
     private function markAsExecuted(): void
     {
-        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

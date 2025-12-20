@@ -34,6 +34,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ExchangeRateConverter
@@ -71,7 +72,7 @@ class ExchangeRateConverter
 
     public function enabled(): bool
     {
-        return false !== \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data || $this->ignoreSettings;
+        return false !== FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data || $this->ignoreSettings;
     }
 
     /**

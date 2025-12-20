@@ -36,6 +36,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ResetPasswordController
@@ -131,7 +132,7 @@ class ResetPasswordController extends Controller
         }
 
         // is allowed to register?
-        $singleUserMode    = \FireflyIII\Support\Facades\FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $pageTitle         = (string) trans('firefly.reset_pw_page_title');

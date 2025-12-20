@@ -32,6 +32,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class AddsTransactionIdentifiers extends Command
 {
@@ -97,7 +98,7 @@ class AddsTransactionIdentifiers extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -157,6 +158,6 @@ class AddsTransactionIdentifiers extends Command
 
     private function markAsExecuted(): void
     {
-        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

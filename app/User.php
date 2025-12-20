@@ -404,7 +404,7 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $res  = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }

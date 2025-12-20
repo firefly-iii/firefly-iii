@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesMultiPiggyBanks extends Command
 {
@@ -64,7 +65,7 @@ class UpgradesMultiPiggyBanks extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -112,6 +113,6 @@ class UpgradesMultiPiggyBanks extends Command
 
     private function markAsExecuted(): void
     {
-        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

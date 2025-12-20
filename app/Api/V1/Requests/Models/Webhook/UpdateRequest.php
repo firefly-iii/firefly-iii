@@ -31,6 +31,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UpdateRequest
@@ -73,7 +74,7 @@ class UpdateRequest extends FormRequest
         $triggers       = implode(',', array_values(Webhook::getTriggers()));
         $responses      = implode(',', array_values(Webhook::getResponses()));
         $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
-        $validProtocols = \FireflyIII\Support\Facades\FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         /** @var Webhook $webhook */
         $webhook        = $this->route()->parameter('webhook');
