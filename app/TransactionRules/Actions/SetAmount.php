@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use Illuminate\Support\Facades\Log;
 
 class SetAmount implements ActionInterface
 {
@@ -55,7 +55,7 @@ class SetAmount implements ActionInterface
             return false;
         }
 
-        $value      = $this->action->getValue($journal);
+        $value = $this->action->getValue($journal);
 
         if (!is_numeric($value) || 0 === bccomp($value, '0')) {
             Log::debug(sprintf('RuleAction SetAmount, amount "%s" is not a number or is zero, will not continue.', $value));
@@ -65,31 +65,33 @@ class SetAmount implements ActionInterface
         }
 
         /** @var TransactionJournal $object */
-        $object     = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        $positive   = Steam::positive($value);
-        $negative   = Steam::negative($value);
+        $positive = Steam::positive($value);
+        $negative = Steam::negative($value);
 
         $this->updatePositive($object, $positive);
         $this->updateNegative($object, $negative);
         $object->transactionGroup->touch();
 
         // event for audit log entry
-        event(new TriggeredAuditLog(
-            $this->action->rule,
-            $object,
-            'update_amount',
-            [
-                'currency_symbol' => $object->transactionCurrency->symbol,
-                'decimal_places'  => $object->transactionCurrency->decimal_places,
-                'amount'          => $journal['amount'],
-            ],
-            [
-                'currency_symbol' => $object->transactionCurrency->symbol,
-                'decimal_places'  => $object->transactionCurrency->decimal_places,
-                'amount'          => $value,
-            ]
-        ));
+        if (0 !== bccomp($journal['amount'], $value)) {
+            event(new TriggeredAuditLog(
+                      $this->action->rule,
+                      $object,
+                      'update_amount',
+                      [
+                          'currency_symbol' => $object->transactionCurrency->symbol,
+                          'decimal_places'  => $object->transactionCurrency->decimal_places,
+                          'amount'          => $journal['amount'],
+                      ],
+                      [
+                          'currency_symbol' => $object->transactionCurrency->symbol,
+                          'decimal_places'  => $object->transactionCurrency->decimal_places,
+                          'amount'          => $value,
+                      ]
+                  ));
+        }
 
         return true;
     }
