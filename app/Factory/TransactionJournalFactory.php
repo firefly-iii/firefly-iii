@@ -251,7 +251,7 @@ class TransactionJournalFactory
         $foreignCurrency       = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
         $description           = $this->getDescription($description);
 
-        Log::debug(sprintf('Currency is #%d "%s", foreign currency is #%d "%s"', $currency->id, $currency->code, $foreignCurrency?->id, $foreignCurrency));
+        Log::debug(sprintf('Currency is #%d "%s", foreign currency is #%d "%s"', $currency->id, $currency->code, $foreignCurrency?->id, $foreignCurrency?->code));
         Log::debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */

@@ -254,7 +254,7 @@ trait TransactionValidation
             // wrong currency information is present
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int) ($transaction['foreign_currency_id'] ?? 0);
-            Log::debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
+            Log::debug(sprintf('[a] Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
             if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== $destinationCurrency->id) {
                 $validator->errors()->add(sprintf('transactions.%d.foreign_currency_code', $index), (string) trans('validation.require_foreign_src'));
 
@@ -281,7 +281,7 @@ trait TransactionValidation
             // wrong currency information is present
             $foreignCurrencyCode = $transaction['foreign_currency_code'] ?? false;
             $foreignCurrencyId   = (int) ($transaction['foreign_currency_id'] ?? 0);
-            Log::debug(sprintf('Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
+            Log::debug(sprintf('[b] Foreign currency code seems to be #%d "%s"', $foreignCurrencyId, $foreignCurrencyCode), $transaction);
             if ($foreignCurrencyCode !== $destinationCurrency->code && $foreignCurrencyId !== $destinationCurrency->id) {
                 Log::debug(sprintf('No match on code, "%s" vs "%s"', $foreignCurrencyCode, $destinationCurrency->code));
                 Log::debug(sprintf('No match on ID, #%d vs #%d', $foreignCurrencyId, $destinationCurrency->id));
