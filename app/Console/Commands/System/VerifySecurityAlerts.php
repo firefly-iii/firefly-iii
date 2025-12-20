@@ -31,6 +31,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 use Safe\Exceptions\JsonException;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\json_decode;
 
@@ -107,8 +108,8 @@ class VerifySecurityAlerts extends Command
     private function removeOldAdvisory(): void
     {
         try {
-            \FireflyIII\Support\Facades\FireflyConfig::delete('upgrade_security_message');
-            \FireflyIII\Support\Facades\FireflyConfig::delete('upgrade_security_level');
+            FireflyConfig::delete('upgrade_security_message');
+            FireflyConfig::delete('upgrade_security_level');
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
         }
@@ -117,8 +118,8 @@ class VerifySecurityAlerts extends Command
     private function saveSecurityAdvisory(array $array): void
     {
         try {
-            \FireflyIII\Support\Facades\FireflyConfig::set('upgrade_security_message', $array['message']);
-            \FireflyIII\Support\Facades\FireflyConfig::set('upgrade_security_level', $array['level']);
+            FireflyConfig::set('upgrade_security_message', $array['message']);
+            FireflyConfig::set('upgrade_security_level', $array['level']);
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
         }

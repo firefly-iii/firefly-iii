@@ -31,6 +31,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesCreditCardLiabilities extends Command
 {
@@ -80,13 +81,13 @@ class UpgradesCreditCardLiabilities extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

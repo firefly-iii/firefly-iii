@@ -35,6 +35,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use NumberFormatter;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class Amount.
@@ -117,7 +118,7 @@ class Amount
         if (!$user instanceof User) {
             $pref = $instance->getPreference('convert_to_primary_no_user');
             if (null === $pref) {
-                $res = true === Preferences::get('convert_to_primary', false)->data && true === \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                $res = true === Preferences::get('convert_to_primary', false)->data && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
                 $instance->setPreference('convert_to_primary_no_user', $res);
 
                 return $res;
@@ -128,7 +129,7 @@ class Amount
         $key      = sprintf('convert_to_primary_%d', $user->id);
         $pref     = $instance->getPreference($key);
         if (null === $pref) {
-            $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+            $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
             $instance->setPreference($key, $res);
 
             return $res;

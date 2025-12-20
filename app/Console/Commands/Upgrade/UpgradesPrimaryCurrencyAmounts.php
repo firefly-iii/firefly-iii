@@ -28,6 +28,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesPrimaryCurrencyAmounts extends Command
 {
@@ -60,7 +61,7 @@ class UpgradesPrimaryCurrencyAmounts extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -68,6 +69,6 @@ class UpgradesPrimaryCurrencyAmounts extends Command
 
     private function markAsExecuted(): void
     {
-        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

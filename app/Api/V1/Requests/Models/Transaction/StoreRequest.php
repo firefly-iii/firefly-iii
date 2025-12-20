@@ -40,6 +40,7 @@ use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class StoreRequest
@@ -176,7 +177,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         Log::debug('Collect rules of TransactionStoreRequest');
-        $validProtocols = \FireflyIII\Support\Facades\FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
         $locationRules  = Location::requestRules([]);
 
         return [

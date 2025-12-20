@@ -50,6 +50,7 @@ use Illuminate\Validation\ValidationException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class LoginController
@@ -236,7 +237,7 @@ class LoginController extends Controller
         }
 
         // is allowed to register, etc.
-        $singleUserMode    = \FireflyIII\Support\Facades\FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
         $allowReset        = true;
         if (true === $singleUserMode && $count > 0) {

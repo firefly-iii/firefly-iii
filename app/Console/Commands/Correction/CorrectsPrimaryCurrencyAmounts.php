@@ -48,6 +48,7 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as DatabaseBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class CorrectsPrimaryCurrencyAmounts extends Command
 {
@@ -62,7 +63,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
      */
     public function handle(): int
     {
-        if (false === \FireflyIII\Support\Facades\FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
+        if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
             $this->friendlyInfo('This command will not run because currency exchange rates are disabled.');
 
             return 0;
