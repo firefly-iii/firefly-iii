@@ -99,9 +99,6 @@ return [
     'disable_csp_header'                   => env('DISABLE_CSP_HEADER', false),
     'allow_webhooks'                       => env('ALLOW_WEBHOOKS', false),
 
-    // flags
-    'send_report_journals'                 => envNonEmpty('SEND_REPORT_JOURNALS', true),
-
     // info for demo site
     'demo_username'                        => env('DEMO_USERNAME', ''),
     'demo_password'                        => env('DEMO_PASSWORD', ''),

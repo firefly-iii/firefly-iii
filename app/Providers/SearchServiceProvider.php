@@ -50,12 +50,14 @@ class SearchServiceProvider extends ServiceProvider
     {
         $this->app->bind(
             static function (): QueryParserInterface {
-                $implementation = config('search.query_parser');
-
-                return match ($implementation) {
-                    'new'   => app(QueryParser::class),
-                    default => app(GdbotsQueryParser::class),
-                };
+                return app(QueryParser::class);
+                // 2025-12-20 ignore this setting.
+//                $implementation = config('search.query_parser');
+//
+//                return match ($implementation) {
+//                    'new'   => app(QueryParser::class),
+//                    default => app(GdbotsQueryParser::class),
+//                };
             }
         );
 
