@@ -241,7 +241,7 @@ class DebugController extends Controller
     {
         $userGuard      = config('auth.defaults.guard');
 
-        $config         = app('fireflyconfig')->get('last_rt_job', 0);
+        $config         = \FireflyIII\Support\Facades\FireflyConfig::get('last_rt_job', 0);
         $lastTime       = (int) $config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';

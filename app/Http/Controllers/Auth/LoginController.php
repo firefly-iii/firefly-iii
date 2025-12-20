@@ -236,7 +236,7 @@ class LoginController extends Controller
         }
 
         // is allowed to register, etc.
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = \FireflyIII\Support\Facades\FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
         $allowReset        = true;
         if (true === $singleUserMode && $count > 0) {

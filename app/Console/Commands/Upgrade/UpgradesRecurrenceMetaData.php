@@ -65,7 +65,7 @@ class UpgradesRecurrenceMetaData extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = \FireflyIII\Support\Facades\FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -117,6 +117,6 @@ class UpgradesRecurrenceMetaData extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        \FireflyIII\Support\Facades\FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

@@ -86,7 +86,7 @@ class RemovesDatabaseDecryption extends Command
         $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
         // mark as decrypted:
         $configName = sprintf('is_decrypted_%s', $table);
-        app('fireflyconfig')->set($configName, true);
+        \FireflyIII\Support\Facades\FireflyConfig::set($configName, true);
     }
 
     private function isDecrypted(string $table): bool
@@ -95,7 +95,7 @@ class RemovesDatabaseDecryption extends Command
         $configVar  = null;
 
         try {
-            $configVar = app('fireflyconfig')->get($configName, false);
+            $configVar = \FireflyIII\Support\Facades\FireflyConfig::get($configName, false);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }

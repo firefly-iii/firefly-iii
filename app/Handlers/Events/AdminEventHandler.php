@@ -45,7 +45,7 @@ class AdminEventHandler
 {
     public function sendInvitationNotification(InvitationCreated $event): void
     {
-        $sendMail = app('fireflyconfig')->get('notification_invite_created', true)->data;
+        $sendMail = \FireflyIII\Support\Facades\FireflyConfig::get('notification_invite_created', true)->data;
         if (false === $sendMail) {
             return;
         }
@@ -96,7 +96,7 @@ class AdminEventHandler
      */
     public function sendNewVersion(NewVersionAvailable $event): void
     {
-        $sendMail = app('fireflyconfig')->get('notification_new_version', true)->data;
+        $sendMail = \FireflyIII\Support\Facades\FireflyConfig::get('notification_new_version', true)->data;
         if (false === $sendMail) {
             return;
         }

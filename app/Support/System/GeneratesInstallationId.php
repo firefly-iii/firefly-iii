@@ -36,7 +36,7 @@ trait GeneratesInstallationId
     protected function generateInstallationId(): void
     {
         try {
-            $config = app('fireflyconfig')->get('installation_id');
+            $config = \FireflyIII\Support\Facades\FireflyConfig::get('installation_id');
         } catch (FireflyException) {
             Log::info('Could not create or generate installation ID. Do not continue.');
 
@@ -52,7 +52,7 @@ trait GeneratesInstallationId
             $uuid4    = Uuid::uuid4();
             $uniqueId = (string)$uuid4;
             Log::info(sprintf('Created Firefly III installation ID %s', $uniqueId));
-            app('fireflyconfig')->set('installation_id', $uniqueId);
+            \FireflyIII\Support\Facades\FireflyConfig::set('installation_id', $uniqueId);
         }
     }
 }

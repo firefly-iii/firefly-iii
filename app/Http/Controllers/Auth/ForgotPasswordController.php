@@ -142,7 +142,7 @@ class ForgotPasswordController extends Controller
         }
 
         // is allowed to?
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = \FireflyIII\Support\Facades\FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $pageTitle         = (string) trans('firefly.forgot_pw_page_title');

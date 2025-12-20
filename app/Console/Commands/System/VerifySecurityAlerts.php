@@ -107,8 +107,8 @@ class VerifySecurityAlerts extends Command
     private function removeOldAdvisory(): void
     {
         try {
-            app('fireflyconfig')->delete('upgrade_security_message');
-            app('fireflyconfig')->delete('upgrade_security_level');
+            \FireflyIII\Support\Facades\FireflyConfig::delete('upgrade_security_message');
+            \FireflyIII\Support\Facades\FireflyConfig::delete('upgrade_security_level');
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not delete old security advisory, but thats OK: %s', $e->getMessage()));
         }
@@ -117,8 +117,8 @@ class VerifySecurityAlerts extends Command
     private function saveSecurityAdvisory(array $array): void
     {
         try {
-            app('fireflyconfig')->set('upgrade_security_message', $array['message']);
-            app('fireflyconfig')->set('upgrade_security_level', $array['level']);
+            \FireflyIII\Support\Facades\FireflyConfig::set('upgrade_security_message', $array['message']);
+            \FireflyIII\Support\Facades\FireflyConfig::set('upgrade_security_level', $array['level']);
         } catch (QueryException $e) {
             Log::debug(sprintf('Could not save new security advisory, but thats OK: %s', $e->getMessage()));
         }

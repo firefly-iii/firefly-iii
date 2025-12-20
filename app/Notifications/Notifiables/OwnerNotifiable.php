@@ -58,8 +58,8 @@ class OwnerNotifiable
     public function routeNotificationForPushover(): PushoverReceiver
     {
         Log::debug('Return settings for routeNotificationForPushover');
-        $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+        $pushoverAppToken  = (string) \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken = (string) \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('pushover_user_token', '')->data;
 
         return PushoverReceiver::withUserKey($pushoverUserToken)
             ->withApplicationToken($pushoverAppToken)
@@ -68,7 +68,7 @@ class OwnerNotifiable
 
     public function routeNotificationForSlack(): string
     {
-        $res = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $res = \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }

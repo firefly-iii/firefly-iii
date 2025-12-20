@@ -224,7 +224,7 @@ class UserEventHandler
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool)\FireflyIII\Support\Facades\FireflyConfig::get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             $owner = $event->owner;
 
@@ -367,7 +367,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool)app('fireflyconfig')->get('notification_user_new_reg', true)->data;
+        $sendMail = (bool)\FireflyIII\Support\Facades\FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());
