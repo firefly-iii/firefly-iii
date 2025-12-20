@@ -61,25 +61,25 @@ class ConfigurationController extends Controller
      *
      * @return Factory|View
      */
-    public function index(): Factory | \Illuminate\Contracts\View\View
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string)trans('firefly.instance_configuration');
-        $subTitleIcon = 'fa-wrench';
+        $subTitle            = (string)trans('firefly.instance_configuration');
+        $subTitleIcon        = 'fa-wrench';
 
         Log::channel('audit')->info('User visits admin config index.');
 
         // all available configuration and their default value in case
         // they don't exist yet.
-        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $isDemoSite     = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $siteOwner      = config('firefly.site_owner');
+        $singleUserMode      = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $isDemoSite          = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $siteOwner           = config('firefly.site_owner');
 
         $enableExchangeRates = FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
         $useRunningBalance   = FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
         $enableExternalMap   = FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
         $enableExternalRates = FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data;
         $allowWebhooks       = FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
-        $validUrlProtocols   = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;;
+        $validUrlProtocols   = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return view(
             'settings.configuration.index',

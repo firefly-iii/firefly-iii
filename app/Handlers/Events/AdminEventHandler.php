@@ -37,6 +37,7 @@ use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
 use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class AdminEventHandler.
@@ -45,7 +46,7 @@ class AdminEventHandler
 {
     public function sendInvitationNotification(InvitationCreated $event): void
     {
-        $sendMail = \FireflyIII\Support\Facades\FireflyConfig::get('notification_invite_created', true)->data;
+        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
         if (false === $sendMail) {
             return;
         }
@@ -96,7 +97,7 @@ class AdminEventHandler
      */
     public function sendNewVersion(NewVersionAvailable $event): void
     {
-        $sendMail = \FireflyIII\Support\Facades\FireflyConfig::get('notification_new_version', true)->data;
+        $sendMail = FireflyConfig::get('notification_new_version', true)->data;
         if (false === $sendMail) {
             return;
         }

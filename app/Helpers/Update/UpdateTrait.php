@@ -26,6 +26,7 @@ namespace FireflyIII\Helpers\Update;
 
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Trait UpdateTrait
@@ -43,7 +44,7 @@ trait UpdateTrait
 
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
-        $channelConfig = \FireflyIII\Support\Facades\FireflyConfig::get('update_channel', 'stable');
+        $channelConfig = FireflyConfig::get('update_channel', 'stable');
         $channel       = (string) $channelConfig->data;
 
         return $checker->getUpdateInformation($channel);

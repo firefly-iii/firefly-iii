@@ -57,6 +57,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UserEventHandler.
@@ -224,7 +225,7 @@ class UserEventHandler
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
     {
-        $sendMail = (bool)\FireflyIII\Support\Facades\FireflyConfig::get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool)FireflyConfig::get('notification_admin_new_reg', true)->data;
         if ($sendMail) {
             $owner = $event->owner;
 
@@ -367,7 +368,7 @@ class UserEventHandler
      */
     public function sendRegistrationMail(RegisteredUser $event): void
     {
-        $sendMail = (bool)\FireflyIII\Support\Facades\FireflyConfig::get('notification_user_new_reg', true)->data;
+        $sendMail = (bool)FireflyConfig::get('notification_user_new_reg', true)->data;
         if ($sendMail) {
             try {
                 Notification::send($event->user, new UserRegistrationNotification());

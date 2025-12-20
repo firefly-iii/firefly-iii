@@ -38,6 +38,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\ini_get;
 use function Safe\realpath;
@@ -71,7 +72,7 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // is site a demo site?
-        $isDemoSiteConfig = \FireflyIII\Support\Facades\FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
+        $isDemoSiteConfig = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site', false));
         $isDemoSite       = (bool) $isDemoSiteConfig->data;
         View::share('IS_DEMO_SITE', $isDemoSite);
         View::share('DEMO_USERNAME', config('firefly.demo_username'));
@@ -80,7 +81,7 @@ abstract class Controller extends BaseController
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
         // is webhooks enabled?
-        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === \FireflyIII\Support\Facades\FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
+        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
 
         // share custom auth guard info.
         $authGuard        = config('firefly.authentication_guard');
