@@ -334,8 +334,9 @@ class Amount
 
     public function getTransactionCurrencyById(int $currencyId): TransactionCurrency
     {
-        if(0 === $currencyId) {
+        if (0 === $currencyId) {
             Log::debug('Could never find a currency with ID zero. Throw error.');
+
             throw new FireflyException('Could never find a currency with ID zero. Throw error.');
         }
         $instance = PreferencesSingleton::getInstance();

@@ -72,7 +72,7 @@ class BudgetLimitObserver
 
             return;
         }
-        $userCurrency               = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
+        $userCurrency               = Amount::getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
             $converter                  = new ExchangeRateConverter();
