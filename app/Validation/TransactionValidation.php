@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Trait TransactionValidation
@@ -224,7 +225,7 @@ trait TransactionValidation
 
         /** @var AccountRepository $accountRepository */
         $accountRepository   = app(AccountRepositoryInterface::class);
-        $primaryCurrency     = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
+        $primaryCurrency     = Amount::getPrimaryCurrency();
         $sourceCurrency      = $accountRepository->getAccountCurrency($source) ?? $primaryCurrency;
         $destinationCurrency = $accountRepository->getAccountCurrency($destination) ?? $primaryCurrency;
         // if both accounts have the same currency, continue.

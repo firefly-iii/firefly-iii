@@ -36,6 +36,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Amount;
 
 class UpgradesAccountCurrencies extends Command
 {
@@ -105,7 +106,7 @@ class UpgradesAccountCurrencies extends Command
         $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
 
         /** @var Account $account */
         foreach ($accounts as $account) {

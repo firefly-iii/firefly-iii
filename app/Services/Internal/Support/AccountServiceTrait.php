@@ -44,6 +44,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Illuminate\Support\Facades\Validator;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Trait AccountServiceTrait
@@ -231,7 +232,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -348,7 +349,7 @@ trait AccountServiceTrait
 
         if (null === $currency) {
             // use default currency:
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
@@ -388,7 +389,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency                                    = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -454,7 +455,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // submit to factory:
         $submission = [
@@ -571,7 +572,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency           = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -652,7 +653,7 @@ trait AccountServiceTrait
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:

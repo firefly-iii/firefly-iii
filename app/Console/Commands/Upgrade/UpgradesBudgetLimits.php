@@ -31,6 +31,7 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Amount;
 
 class UpgradesBudgetLimits extends Command
 {
@@ -67,7 +68,7 @@ class UpgradesBudgetLimits extends Command
                     /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+                        $currency                             = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->friendlyInfo(

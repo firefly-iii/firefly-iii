@@ -44,7 +44,7 @@ class AvailableBudgetObserver
 
             return;
         }
-        $userCurrency                   = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($availableBudget->user->userGroup);
+        $userCurrency                   = Amount::getPrimaryCurrencyByUserGroup($availableBudget->user->userGroup);
         $availableBudget->native_amount = null;
         if ($availableBudget->transactionCurrency->id !== $userCurrency->id) {
             $converter                      = new ExchangeRateConverter();

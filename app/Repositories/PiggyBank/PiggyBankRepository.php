@@ -44,6 +44,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Override;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankRepository.
@@ -171,7 +172,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $accountRepos    = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         Log::debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
@@ -302,7 +303,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = sprintf('%s (%s)', $piggy->name, \FireflyIII\Support\Facades\Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
+            $piggy->name   = sprintf('%s (%s)', $piggy->name, Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
         }
 
         return $set;

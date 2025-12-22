@@ -34,6 +34,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class AccountTasker.
@@ -59,7 +60,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
         /** @var AccountRepositoryInterface $repository */
         $repository      = app(AccountRepositoryInterface::class);
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         $return          = [
             'accounts' => [],
@@ -146,7 +147,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
     private function groupExpenseByDestination(array $array): array
     {
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
@@ -231,7 +232,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
     private function groupIncomeBySource(array $array): array
     {
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);

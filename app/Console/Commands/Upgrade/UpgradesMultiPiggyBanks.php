@@ -32,6 +32,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Amount;
 
 class UpgradesMultiPiggyBanks extends Command
 {
@@ -95,7 +96,7 @@ class UpgradesMultiPiggyBanks extends Command
         $this->repository->setUser($piggyBank->account->user);
         $this->accountRepository->setUser($piggyBank->account->user);
         $repetition                         = $this->repository->getRepetition($piggyBank, true);
-        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
+        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? Amount::getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
 
         // update piggy bank to have a currency.
         $piggyBank->transaction_currency_id = $currency->id;

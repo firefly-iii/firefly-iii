@@ -32,6 +32,7 @@ use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BillFactory
@@ -51,7 +52,7 @@ class BillFactory
         Log::debug(sprintf('Now in %s', __METHOD__), $data);
         $factory          = app(TransactionCurrencyFactory::class);
         $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null))
-                    ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+                    ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;

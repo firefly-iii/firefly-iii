@@ -46,7 +46,7 @@ class BillObserver
         if (!Amount::convertToPrimary($bill->user)) {
             return;
         }
-        $userCurrency            = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
+        $userCurrency            = Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {

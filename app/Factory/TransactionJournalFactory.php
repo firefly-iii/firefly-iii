@@ -55,6 +55,7 @@ use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use JsonException;
+use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_encode;
 
@@ -502,7 +503,7 @@ class TransactionJournalFactory
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && !$currency instanceof TransactionCurrency) {
             // return user's default:
-            return \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            return Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $result     = $preference ?? $currency;
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));
