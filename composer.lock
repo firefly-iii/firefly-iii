@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8fff223d32252d22c0e6028d19a76756",
+    "content-hash": "434b4c996dad2af3b38326bd81c57534",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3486,22 +3486,22 @@
         },
         {
             "name": "mailersend/laravel-driver",
-            "version": "v2.9.1",
+            "version": "v2.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-laravel-driver.git",
-                "reference": "87fd5ab76808bbaac9221be0d306baef13e98725"
+                "reference": "15e1ec41e29e65d3ca226929c65804190aaa93eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/87fd5ab76808bbaac9221be0d306baef13e98725",
-                "reference": "87fd5ab76808bbaac9221be0d306baef13e98725",
+                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/15e1ec41e29e65d3ca226929c65804190aaa93eb",
+                "reference": "15e1ec41e29e65d3ca226929c65804190aaa93eb",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "illuminate/support": "^9.0 || ^10.0  || ^11.0 || ^12.0",
-                "mailersend/mailersend": "^0.31.0",
+                "mailersend/mailersend": "^0.35.0",
                 "nyholm/psr7": "^1.5",
                 "php": ">=8.0",
                 "php-http/guzzle7-adapter": "^1.0",
@@ -3549,29 +3549,28 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-laravel-driver/issues",
-                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.9.1"
+                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.12.0"
             },
-            "time": "2025-04-09T09:33:07+00:00"
+            "time": "2025-10-28T14:59:16+00:00"
         },
         {
             "name": "mailersend/mailersend",
-            "version": "v0.31.0",
+            "version": "v0.35.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-php.git",
-                "reference": "513ff83ee768526055ad52987cde401ea7218c67"
+                "reference": "f1696cf9e727e9503fbc5882d2a111bd966ad276"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/513ff83ee768526055ad52987cde401ea7218c67",
-                "reference": "513ff83ee768526055ad52987cde401ea7218c67",
+                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/f1696cf9e727e9503fbc5882d2a111bd966ad276",
+                "reference": "f1696cf9e727e9503fbc5882d2a111bd966ad276",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.2",
                 "ext-json": "*",
-                "illuminate/collections": "^8.0 || ^9.0 || ^10.0 || ^11.0 || ^12.0",
-                "php": "^7.4|^8.0",
+                "php": "^7.4 || ^8.0 <8.5",
                 "php-http/client-common": "^2.2",
                 "php-http/discovery": "^1.9",
                 "php-http/httplug": "^2.1",
@@ -3616,9 +3615,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-php/issues",
-                "source": "https://github.com/mailersend/mailersend-php/tree/v0.31.0"
+                "source": "https://github.com/mailersend/mailersend-php/tree/v0.35.0"
             },
-            "time": "2025-04-03T12:16:11+00:00"
+            "time": "2025-10-28T13:11:43+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -13088,5 +13087,5 @@
         "ext-xmlwriter": "*"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
