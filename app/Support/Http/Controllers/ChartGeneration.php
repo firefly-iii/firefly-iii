@@ -67,7 +67,7 @@ trait ChartGeneration
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $primary          = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
+        $primary          = Amount::getPrimaryCurrency();
         $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));

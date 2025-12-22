@@ -52,7 +52,7 @@ class AccountObserver
         if (!Amount::convertToPrimary($account->user)) {
             return;
         }
-        $userCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $userCurrency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $repository   = app(AccountRepositoryInterface::class);
         $currency     = $repository->getAccountCurrency($account);
         if (null !== $currency && $currency->id !== $userCurrency->id && '' !== (string) $account->virtual_balance && 0 !== bccomp($account->virtual_balance, '0')) {

@@ -42,6 +42,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_encode;
 
@@ -107,7 +108,7 @@ trait RecurringTransactionTrait
             $currency        = $factory->find($array['currency_id'] ?? null, $array['currency_code'] ?? null);
             $foreignCurrency = $factory->find($array['foreign_currency_id'] ?? null, $array['foreign_currency_code'] ?? null);
             if (null === $currency) {
-                $currency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($recurrence->user->userGroup);
+                $currency = Amount::getPrimaryCurrencyByUserGroup($recurrence->user->userGroup);
             }
 
             Log::debug(

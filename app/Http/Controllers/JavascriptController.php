@@ -37,6 +37,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class JavascriptController.
@@ -106,7 +107,7 @@ class JavascriptController extends Controller
             $currency = $repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         }
         $locale                    = Steam::getLocale();
-        $accounting                = \FireflyIII\Support\Facades\Amount::getJsConfig();
+        $accounting                = Amount::getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
         $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
         $lang                      = $pref->data;

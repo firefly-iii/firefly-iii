@@ -180,7 +180,7 @@ class General extends AbstractExtension
                     if ('balance' === $key) {
                         // balance in account currency.
                         if (!$usePrimary) {
-                            $strings[] = \FireflyIII\Support\Facades\Amount::formatAnything($currency, $balance, false);
+                            $strings[] = Amount::formatAnything($currency, $balance, false);
                         }
 
                         continue;
@@ -188,14 +188,14 @@ class General extends AbstractExtension
                     if ('pc_balance' === $key) {
                         // balance in primary currency.
                         if ($usePrimary) {
-                            $strings[] = \FireflyIII\Support\Facades\Amount::formatAnything($primary, $balance, false);
+                            $strings[] = Amount::formatAnything($primary, $balance, false);
                         }
 
                         continue;
                     }
                     // for multi currency accounts.
                     if ($usePrimary && $key !== $primary->code) {
-                        $strings[] = \FireflyIII\Support\Facades\Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
+                        $strings[] = Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
                     }
                 }
 

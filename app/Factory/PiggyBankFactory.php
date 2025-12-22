@@ -36,6 +36,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_encode;
 
@@ -126,7 +127,7 @@ class PiggyBankFactory
     private function getCurrency(array $data): TransactionCurrency
     {
         // currency:
-        $primaryCurrency = \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
+        $primaryCurrency = Amount::getPrimaryCurrency();
         $currency        = null;
         if (array_key_exists('transaction_currency_code', $data)) {
             $currency = $this->currencyRepository->findByCode((string)($data['transaction_currency_code'] ?? ''));

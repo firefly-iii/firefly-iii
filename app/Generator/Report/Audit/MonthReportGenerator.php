@@ -35,6 +35,7 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class MonthReportGenerator.
@@ -144,7 +145,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $dayBeforeBalance  = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
 
         $startBalance      = $dayBeforeBalance['balance'];
-        $primaryCurrency   = \FireflyIII\Support\Facades\Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $primaryCurrency   = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $primaryCurrency;
 
         foreach ($journals as $index => $journal) {

@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Throwable;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class CurrencyForm
@@ -123,10 +124,10 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
+        $primaryCurrency = $options['currency'] ?? Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = \FireflyIII\Support\Facades\Amount::getAllCurrencies();
+        $currencies      = Amount::getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
@@ -176,10 +177,10 @@ class CurrencyForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
-        $primaryCurrency = $options['currency'] ?? \FireflyIII\Support\Facades\Amount::getPrimaryCurrency();
+        $primaryCurrency = $options['currency'] ?? Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = \FireflyIII\Support\Facades\Amount::getCurrencies();
+        $currencies      = Amount::getCurrencies();
         unset($options['currency'], $options['placeholder']);
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
         $preFilled       = session('preFilled');
