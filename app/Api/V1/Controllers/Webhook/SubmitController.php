@@ -28,10 +28,10 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class SubmitController
