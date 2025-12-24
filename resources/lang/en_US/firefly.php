@@ -2908,6 +2908,7 @@ return [
     'placeholder'                        => '[Placeholder]',
 
     // audit log entries
+    'incomplete_ale' => 'Not all events are recorded as audit log entries.',
     'audit_log_entries'                  => 'Audit log entries',
     'ale_action_log_add'                 => 'Added :amount to piggy bank ":name"',
     'ale_action_log_remove'              => 'Removed :amount from piggy bank ":name"',
