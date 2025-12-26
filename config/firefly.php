@@ -75,7 +75,7 @@ return [
         'webhooks'               => true,
         'handle_debts'           => true,
         'expression_engine'      => true,
-        'running_balance_column' => env('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
+        'running_balance_column' =>(bool)envNonEmpty('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
     'version'                              => 'develop/2025-12-22',

@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
@@ -72,6 +73,7 @@ class General extends AbstractExtension
             $this->hasRole(),
             $this->getRootSearchOperator(),
             $this->carbonize(),
+            $this->fireflyIIIConfig(),
         ];
     }
 
@@ -391,6 +393,15 @@ class General extends AbstractExtension
         return new TwigFunction(
             'phpdate',
             static fn (string $str): string => date($str)
+        );
+    }
+
+    private function fireflyIIIConfig() {
+        return new TwigFunction(
+            'fireflyiiiconfig',
+            static function (string $string, mixed $default): mixed {
+                return FireflyConfig::get($string, $default)->data;
+            }
         );
     }
 }
