@@ -75,11 +75,11 @@ return [
         'webhooks'               => true,
         'handle_debts'           => true,
         'expression_engine'      => true,
-        'running_balance_column' =>(bool)envNonEmpty('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
+        'running_balance_column' => (bool)envNonEmpty('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                              => 'develop/2025-12-22',
-    'build_time'                           => 1766374469,
+    'version'                              => 'develop/2025-12-26',
+    'build_time'                           => 1766775913,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
