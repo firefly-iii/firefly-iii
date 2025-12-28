@@ -78,6 +78,7 @@ class AccountBalanceCalculator
     private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
+            Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
             return '0';
         }
         Log::debug(sprintf('getLatestBalance: notBefore date is "%s", calculating', $notBefore->format('Y-m-d')));

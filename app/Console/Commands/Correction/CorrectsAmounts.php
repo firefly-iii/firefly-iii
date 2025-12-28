@@ -84,7 +84,8 @@ class CorrectsAmounts extends Command
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
-        $journals   = TransactionJournal::where('transaction_type_id', $type->id)->get();
+        $journals   = TransactionJournal::
+        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')->whereNotNull('transactions.foreign_amount')->where('transaction_journals.transaction_type_id', $type->id)->distinct()->get(['transaction_journals.*']);
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
@@ -93,7 +94,7 @@ class CorrectsAmounts extends Command
 
             $valid          = $this->validateJournal($journal);
             if (false === $valid) {
-                Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
+                // Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
 
                 continue;
             }
@@ -298,7 +299,7 @@ class CorrectsAmounts extends Command
             return false;
         }
         if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
-            Log::debug('No foreign currency information is present, can safely continue with other transactions.');
+            // Log::debug('No foreign currency information is present, can safely continue with other transactions.');
 
             return false;
         }
