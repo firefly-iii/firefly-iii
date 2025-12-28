@@ -84,8 +84,7 @@ class CorrectsAmounts extends Command
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
-        $journals   = TransactionJournal::
-        leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')->whereNotNull('transactions.foreign_amount')->where('transaction_journals.transaction_type_id', $type->id)->distinct()->get(['transaction_journals.*']);
+        $journals   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')->whereNotNull('transactions.foreign_amount')->where('transaction_journals.transaction_type_id', $type->id)->distinct()->get(['transaction_journals.*']);
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
