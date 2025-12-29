@@ -57,6 +57,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'ARS', 'name' => 'Argentinian Peso', 'symbol' => '$', 'decimal_places' => 2];
         $currencies[] = ['code' => 'COP', 'name' => 'Colombian Peso', 'symbol' => '$', 'decimal_places' => 2];
         $currencies[] = ['code' => 'CLP', 'name' => 'Chilean Peso', 'symbol' => '$', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'UYU', 'name' => 'Uruguayan Peso', 'symbol' => '$', 'decimal_places' => 2];
 
         // oceanian currencies
         $currencies[] = ['code' => 'IDR', 'name' => 'Indonesian rupiah', 'symbol' => 'Rp', 'decimal_places' => 2];
