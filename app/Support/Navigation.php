@@ -302,17 +302,17 @@ class Navigation
             if ($currentEnd->lt($end)) {
                 switch ($repeatFreq) {
                     case 'QTD':
-                        $currentEnd->endOfQuarter()->setMilli(0);
+                        $currentEnd = $end->clone()->endOfQuarter()->setMilli(0);
 
                         break;
 
                     case 'MTD':
-                        $currentEnd->endOfMonth()->setMilli(0);
+                        $currentEnd = $end->clone()->endOfMonth()->setMilli(0);
 
                         break;
 
                     case 'YTD':
-                        $currentEnd->endOfYear()->setMilli(0);
+                        $currentEnd = $end->clone()->endOfYear()->setMilli(0);
 
                         break;
                 }
