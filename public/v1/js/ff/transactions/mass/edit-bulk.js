@@ -34,12 +34,14 @@ $(document).ready(function () {
 
         $('input[name="ignore_budget"]').attr('checked', false);
     });
+    $('input[name="tags"]').on('itemAdded', function (event) {
+        var isChecked = $('#tags_action_do_nothing').is(':checked');
+        if (true === isChecked) {
+            $('#tags_action_do_nothing').attr('checked', false);
+            $('#tags_action_do_replace').attr('checked', true);
+        }
 
-    $('input[name="tags"]').on('itemAdded', function(event) {
-        $('#tags_action_do_nothing').attr('checked', false);
-        $('#tags_action_do_replace').attr('checked', true);
     });
-
 
 
 });
