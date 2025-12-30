@@ -110,6 +110,14 @@
                                         {{ ExpandedForm.checkbox('convertToPrimary','1',convertToPrimary,{ 'label' : 'pref_convert_primary_help'|_ }) }}
                                     </div>
                                     {% endif %}
+                                    {#  conversion back to primary currency #}
+                                        <div class="preferences-box">
+                                            <h3>{{ 'pref_anonymous'|_ }}</h3>
+                                            <p class="text-info">
+                                                {{ 'pref_anonymous_help'|_ }}
+                                            </p>
+                                            {{ ExpandedForm.checkbox('anonymous','1',anonymous,{ 'label' : 'pref_anonymous_label'|_ }) }}
+                                        </div>
                                 </div>
 
                                 {# general settings column B #}
