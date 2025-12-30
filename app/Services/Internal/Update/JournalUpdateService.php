@@ -484,20 +484,21 @@ class JournalUpdateService
                 // do some parsing.
                 Log::debug(sprintf('Create date value from string "%s".', $value));
                 $this->transactionJournal->date_tz = $value->format('e');
-                $res = $value->gt($this->transactionJournal->date);
+                $res                               = $value->gt($this->transactionJournal->date);
                 Log::debug(sprintf('Old date: %s, new date: %s', $this->transactionJournal->date->toW3cString(), $value->toW3cString()));
+
                 /** @var TransactionJournalMetaFactory $factory */
-                $factory = app(TransactionJournalMetaFactory::class);
-                $set   = [
+                $factory                           = app(TransactionJournalMetaFactory::class);
+                $set                               = [
                     'journal' => $this->transactionJournal,
                     'name'    => '_internal_previous_date',
                     'data'    => null,
                 ];
-                if($res) {
+                if ($res) {
                     Log::debug('Transaction is set to be AFTER its current date. Save also the "_internal_previous_date"-field.');
                     $set['data'] = clone $this->transactionJournal->date;
                 }
-                if(!$res) {
+                if (!$res) {
                     Log::debug('Transaction is NOT set to be AFTER its current date. Remove the "_internal_previous_date"-field.');
                 }
                 $factory->updateOrCreate($set);
