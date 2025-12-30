@@ -79,7 +79,7 @@ class UpdateRequest extends FormRequest
             'start_date'                => 'date|nullable',
             'target_date'               => 'date|nullable|after:start_date',
             'notes'                     => 'max:65000',
-            'accounts'                  => 'required',
+            'accounts'                  => 'array',
             'accounts.*'                => 'array',
             'accounts.*.account_id'     => ['required', 'numeric', 'belongsToUser:accounts,id'],
             'accounts.*.current_amount' => ['numeric', 'nullable', new IsValidZeroOrMoreAmount(true)],
