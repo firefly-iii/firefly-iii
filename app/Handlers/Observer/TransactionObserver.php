@@ -60,18 +60,18 @@ class TransactionObserver
         $transaction->native_amount         = null;
         $transaction->native_foreign_amount = null;
         // first normal amount
-        if ($transaction->transactionCurrency->id !== $userCurrency->id &&
-            (null === $transaction->foreign_currency_id ||
-             (null !== $transaction->foreign_currency_id &&
-              $transaction->foreign_currency_id !== $userCurrency->id))) {
-            $converter = new ExchangeRateConverter();
+        if ($transaction->transactionCurrency->id !== $userCurrency->id
+            && (null === $transaction->foreign_currency_id
+             || (null !== $transaction->foreign_currency_id
+              && $transaction->foreign_currency_id !== $userCurrency->id))) {
+            $converter                  = new ExchangeRateConverter();
             $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
             $converter->setIgnoreSettings(true);
             $transaction->native_amount = $converter->convert($transaction->transactionCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->amount);
         }
         // then foreign amount
         if ($transaction->foreignCurrency?->id !== $userCurrency->id && null !== $transaction->foreign_amount && null !== $transaction->foreignCurrency) {
-            $converter = new ExchangeRateConverter();
+            $converter                          = new ExchangeRateConverter();
             $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
             $converter->setIgnoreSettings(true);
             $transaction->native_foreign_amount = $converter->convert($transaction->foreignCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->foreign_amount);
