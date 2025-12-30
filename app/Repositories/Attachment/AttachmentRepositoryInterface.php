@@ -38,7 +38,6 @@ use Illuminate\Support\Collection;
  * @method getUserGroup()
  * @method getUser()
  * @method checkUserGroupAccess(UserRoleEnum $role)
- * @method setUser(null|Authenticatable|User $user)
  * @method setUserGroupById(int $userGroupId)
  */
 interface AttachmentRepositoryInterface

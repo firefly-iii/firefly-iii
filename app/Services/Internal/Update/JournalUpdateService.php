@@ -68,8 +68,7 @@ class JournalUpdateService
     private ?Account                            $destinationAccount     = null;
     private ?Transaction                        $destinationTransaction = null;
     private array                               $metaDate
-                                                                        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
-            'invoice_date', ];
+                                                                        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', '_internal_previous_date'];
     private array                               $metaString
                                                                         = [
             'sepa_cc',
@@ -205,11 +204,9 @@ class JournalUpdateService
         $validator->setUser($this->transactionJournal->user);
 
         $result       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
-        Log::debug(
-            sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true))
-        );
+        Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
-        // TODO typeoverrule the account validator may have a different opinion on the transaction type.
+        // TODO type overrule the account validator may have a different opinion on the transaction type.
 
         // validate submitted info:
         return $result;
@@ -283,14 +280,7 @@ class JournalUpdateService
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
         $result            = $validator->validateDestination(['id' => $destId, 'name' => $destName]);
-        Log::debug(
-            sprintf(
-                'hasValidDestinationAccount(%d, "%s") will return %s',
-                $destId,
-                $destName,
-                var_export($result, true)
-            )
-        );
+        Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
@@ -494,6 +484,23 @@ class JournalUpdateService
                 // do some parsing.
                 Log::debug(sprintf('Create date value from string "%s".', $value));
                 $this->transactionJournal->date_tz = $value->format('e');
+                $res = $value->gt($this->transactionJournal->date);
+                Log::debug(sprintf('Old date: %s, new date: %s', $this->transactionJournal->date->toW3cString(), $value->toW3cString()));
+                /** @var TransactionJournalMetaFactory $factory */
+                $factory = app(TransactionJournalMetaFactory::class);
+                $set   = [
+                    'journal' => $this->transactionJournal,
+                    'name'    => '_internal_previous_date',
+                    'data'    => null,
+                ];
+                if($res) {
+                    Log::debug('Transaction is set to be AFTER its current date. Save also the "_internal_previous_date"-field.');
+                    $set['data'] = clone $this->transactionJournal->date;
+                }
+                if(!$res) {
+                    Log::debug('Transaction is NOT set to be AFTER its current date. Remove the "_internal_previous_date"-field.');
+                }
+                $factory->updateOrCreate($set);
             }
             event(new TriggeredAuditLog($this->transactionJournal->user, $this->transactionJournal, sprintf('update_%s', $fieldName), $this->transactionJournal->{$fieldName}, $value));
 
