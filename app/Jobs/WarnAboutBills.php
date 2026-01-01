@@ -191,7 +191,7 @@ class WarnAboutBills implements ShouldQueue
         $diff     = $earliest->diffInDays($this->date);
         Log::debug(sprintf('Difference in days is %s', $diff));
 
-        return $diff >= 2;
+        return $diff >= 6; // FIXME hard coded value.
     }
 
     private function sendOverdueAlerts(User $user, array $overdue): void
