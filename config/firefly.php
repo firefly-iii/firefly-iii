@@ -78,8 +78,8 @@ return [
         'running_balance_column' => (bool)envNonEmpty('USE_RUNNING_BALANCE', true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                              => 'develop/2025-12-30',
-    'build_time'                           => 1767125279,
+    'version'                              => 'develop/2026-01-01',
+    'build_time'                           => 1767271288,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
