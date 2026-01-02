@@ -43,6 +43,7 @@ return [
     'last_180_days'                             => 'Last 180 days',
     'month_to_date'                             => 'Month to date',
     'year_to_date'                              => 'Year to date',
+    'previous_year' => 'Previous year (:year)',
     'YTD'                                       => 'YTD',
     'welcome_back'                              => 'What\'s playing?',
     'main_dashboard_page_title'                 => 'Home',
