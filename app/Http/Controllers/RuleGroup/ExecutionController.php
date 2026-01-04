@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -70,13 +71,20 @@ class ExecutionController extends Controller
      */
     public function execute(SelectTransactionsRequest $request, RuleGroup $ruleGroup): RedirectResponse
     {
+        Log::debug(sprintf('You have selected rule group #%d', $ruleGroup->id));
         // Get parameters specified by the user
         $accounts  = $request->get('accounts');
-        $set       = $this->repository->getAccountsById($accounts);
+        $set = new Collection();
+        if(is_array($accounts)) {
+            $set       = $this->repository->getAccountsById($accounts);
+        }
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($set);
+        if(count($set) > 0) {
+            $collector->setAccounts($set);
+        }
+
         // add date operators.
         if (null !== $request->get('start')) {
             $startDate = new Carbon($request->get('start'));
@@ -96,7 +104,7 @@ class ExecutionController extends Controller
             /** @var TransactionGroup $group */
             foreach ($groups as $group) {
                 Log::debug(sprintf('Processing group #%d.', $group->id));
-                event(new TriggeredStoredTransactionGroup($group));
+                event(new TriggeredStoredTransactionGroup($group, $ruleGroup));
             }
         }
 

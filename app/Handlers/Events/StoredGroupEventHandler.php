@@ -28,6 +28,7 @@ use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
@@ -46,7 +47,7 @@ class StoredGroupEventHandler
 {
     public function runAllHandlers(StoredTransactionGroup $event): void
     {
-        $this->processRules($event);
+        $this->processRules($event, null);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
         $this->removePeriodStatistics($event);
@@ -55,13 +56,13 @@ class StoredGroupEventHandler
     public function triggerRulesManually(TriggeredStoredTransactionGroup $event): void
     {
         $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
-        $this->processRules($newEvent);
+        $this->processRules($newEvent, $event->ruleGroup);
     }
 
     /**
      * This method grabs all the users rules and processes them.
      */
-    private function processRules(StoredTransactionGroup $storedGroupEvent): void
+    private function processRules(StoredTransactionGroup $storedGroupEvent, ?RuleGroup $ruleGroup): void
     {
         if (false === $storedGroupEvent->applyRules) {
             Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
@@ -70,14 +71,14 @@ class StoredGroupEventHandler
         }
         Log::debug('Now in StoredGroupEventHandler::processRules()');
 
-        $journals            = $storedGroupEvent->transactionGroup->transactionJournals;
-        $array               = [];
+        $journals = $storedGroupEvent->transactionGroup->transactionJournals;
+        $array    = [];
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $array[] = $journal->id;
         }
-        $journalIds          = implode(',', $array);
+        $journalIds = implode(',', $array);
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -86,10 +87,17 @@ class StoredGroupEventHandler
 
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        if (null === $ruleGroup) {
+            Log::debug('Fire processRules with ALL store-journal rule groups.');
+            $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        }
+        if (null !== $ruleGroup) {
+            Log::debug(sprintf('Fire processRules with rule group #%d.', $ruleGroup->id));
+            $groups = new Collection([$ruleGroup]);
+        }
 
         // create and fire rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($storedGroupEvent->transactionGroup->user);
         $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
@@ -98,7 +106,7 @@ class StoredGroupEventHandler
 
     private function recalculateCredit(StoredTransactionGroup $event): void
     {
-        $group  = $event->transactionGroup;
+        $group = $event->transactionGroup;
 
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
@@ -114,10 +122,10 @@ class StoredGroupEventHandler
         /** @var TransactionJournal $journal */
         foreach ($event->transactionGroup->transactionJournals as $journal) {
             /** @var null|Transaction $source */
-            $source     = $journal->transactions()->where('amount', '<', '0')->first();
+            $source = $journal->transactions()->where('amount', '<', '0')->first();
 
             /** @var null|Transaction $dest */
-            $dest       = $journal->transactions()->where('amount', '>', '0')->first();
+            $dest = $journal->transactions()->where('amount', '>', '0')->first();
 
             if (null !== $source) {
                 $repository->deleteStatisticsForModel($source->account, $journal->date);
@@ -152,14 +160,14 @@ class StoredGroupEventHandler
     private function triggerWebhooks(StoredTransactionGroup $storedGroupEvent): void
     {
         Log::debug(__METHOD__);
-        $group  = $storedGroupEvent->transactionGroup;
+        $group = $storedGroupEvent->transactionGroup;
         if (false === $storedGroupEvent->fireWebhooks) {
             Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
         }
 
-        $user   = $group->user;
+        $user = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);

@@ -34,6 +34,9 @@
         "transfers",
         "management"
     ],
+    "platform": {
+        "php": "8.4"
+    },
     "license": "AGPL-3.0-or-later",
     "homepage": "https://github.com/firefly-iii/firefly-iii",
     "type": "project",

@@ -24,15 +24,19 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
 
 class TriggeredStoredTransactionGroup extends Event
 {
     use SerializesModels;
+    public ?RuleGroup $ruleGroup = null;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup) {}
+    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null) {
+        $this->ruleGroup = $ruleGroup;
+    }
 }
