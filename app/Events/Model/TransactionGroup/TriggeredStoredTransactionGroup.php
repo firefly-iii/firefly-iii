@@ -36,7 +36,8 @@ class TriggeredStoredTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null) {
+    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null)
+    {
         $this->ruleGroup = $ruleGroup;
     }
 }
