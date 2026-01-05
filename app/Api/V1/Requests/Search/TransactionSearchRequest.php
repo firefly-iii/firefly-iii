@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * SearchRequest.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -24,11 +26,11 @@ namespace FireflyIII\Api\V1\Requests\Search;
 use FireflyIII\Api\V1\Requests\AggregateFormRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Models\TransactionJournal;
+use Override;
 
 class TransactionSearchRequest extends AggregateFormRequest
 {
-
-    #[\Override]
+    #[Override]
     protected function getRequests(): array
     {
         return [
