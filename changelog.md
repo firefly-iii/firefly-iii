@@ -3,6 +3,50 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.15 - 2026-01-07
+
+### Added
+
+- #11264
+- #11410
+- #11433
+
+### Changed
+
+- Moved some settings to your system settings
+
+### Removed
+
+- The following environment variables are removed and will no longer work. They are now in your settings.
+  - `ENABLE_EXTERNAL_MAP`
+  - `ENABLE_EXCHANGE_RATES`
+  - `ENABLE_EXTERNAL_RATES`
+  - `VALID_URL_PROTOCOLS`
+  - `ALLOW_WEBHOOKS`
+  - `USE_RUNNING_BALANCE`
+- Removed sentry.io code
+
+### Fixed
+
+- #11378
+- #11383
+- #11388
+- #11396
+- #11399
+- #11403
+- #11410
+- #11443
+- #11445
+- #11449
+
+### Security
+
+- Initial release.
+
+### API
+
+- Initial release.
+
 ## v6.4.14 - 2025-12-17
 
 ### Fixed
