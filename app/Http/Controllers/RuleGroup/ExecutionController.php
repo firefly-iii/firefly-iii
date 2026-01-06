@@ -74,14 +74,14 @@ class ExecutionController extends Controller
         Log::debug(sprintf('You have selected rule group #%d', $ruleGroup->id));
         // Get parameters specified by the user
         $accounts  = $request->get('accounts');
-        $set = new Collection();
-        if(is_array($accounts)) {
-            $set       = $this->repository->getAccountsById($accounts);
+        $set       = new Collection();
+        if (is_array($accounts)) {
+            $set = $this->repository->getAccountsById($accounts);
         }
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        if(count($set) > 0) {
+        if (count($set) > 0) {
             $collector->setAccounts($set);
         }
 

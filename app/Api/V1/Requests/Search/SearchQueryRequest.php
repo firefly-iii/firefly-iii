@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * SearchQueryRequest.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -33,7 +35,6 @@ class SearchQueryRequest extends ApiRequest
         ];
     }
 
-
     public function withValidator(Validator $validator): void
     {
         $validator->after(
@@ -46,5 +47,4 @@ class SearchQueryRequest extends ApiRequest
             }
         );
     }
-
 }
