@@ -226,7 +226,7 @@
                     <span>{{ 'currencies'|_ }}</span>
                 </a>
             </li>
-            {% if config('cer.enabled') %}
+            {% if (fireflyiiiconfig('enable_exchange_rates', true)) %}
             <li class="{{ activeRoutePartial('exchange-rates') }}">
                 <a class="{{ activeRoutePartial('exchange-rates') }}" href="{{ route('exchange-rates.index') }}">
                     <span class="fa fa-angle-right fa-fw"></span>

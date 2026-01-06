@@ -31,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -49,6 +50,7 @@ use Illuminate\Validation\ValidationException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class LoginController
@@ -132,7 +134,7 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
         Log::warning('Login attempt failed.');
-        $username = (string) $request->get($this->username());
+        $username = (string)$request->get($this->username());
         $user     = $this->repository->findByEmail($username);
         if (!$user instanceof User) {
             // send event to owner.
@@ -228,14 +230,14 @@ class LoginController extends Controller
 
         $count             = DB::table('users')->count();
         $guard             = config('auth.defaults.guard');
-        $title             = (string) trans('firefly.login_page_title');
+        $title             = (string)trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));
         }
 
         // is allowed to register, etc.
-        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowRegistration = true;
         $allowReset        = true;
         if (true === $singleUserMode && $count > 0) {
@@ -259,5 +261,24 @@ class LoginController extends Controller
         $usernameField     = $this->username();
 
         return view('auth.login', ['allowRegistration' => $allowRegistration, 'email' => $email, 'remember' => $remember, 'allowReset' => $allowReset, 'title' => $title, 'usernameField' => $usernameField]);
+    }
+
+    /**
+     * Send the response after the user was authenticated.
+     *
+     * @return JsonResponse|RedirectResponse
+     */
+    protected function sendLoginResponse(Request $request)
+    {
+        $request->session()->regenerate();
+        $this->clearLoginAttempts($request);
+
+        if ($response = $this->authenticated($request, $this->guard()->user())) {
+            return $response;
+        }
+        $path = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
+        Log::debug(sprintf('SafeURL is %s', $path));
+
+        return $request->wantsJson() ? new JsonResponse([], 204) : redirect()->to($path);
     }
 }

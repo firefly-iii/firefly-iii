@@ -35,6 +35,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
@@ -89,7 +90,7 @@ class EditController extends Controller
         $preFilled    = [
             'name'                    => $piggyBank->name,
             'transaction_currency_id' => (int) $piggyBank->transaction_currency_id,
-            'target_amount'           => app('steam')->bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
+            'target_amount'           => Steam::bcround($piggyBank->target_amount, $piggyBank->transactionCurrency->decimal_places),
             'target_date'             => $targetDate,
             'start_date'              => $startDate,
             'accounts'                => [],

@@ -72,7 +72,7 @@ class BudgetLimitObserver
 
             return;
         }
-        $userCurrency               = app('amount')->getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
+        $userCurrency               = Amount::getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
             $converter                  = new ExchangeRateConverter();

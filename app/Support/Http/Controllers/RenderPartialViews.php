@@ -245,7 +245,6 @@ trait RenderPartialViews
         if (null === $account) {
             return 'This is an unknown account. Apologies.';
         }
-
         $journals          = $popupHelper->byExpenses($account, $attributes);
 
         try {

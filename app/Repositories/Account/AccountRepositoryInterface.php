@@ -71,8 +71,6 @@ interface AccountRepositoryInterface
 
     public function findByName(string $name, array $types): ?Account;
 
-    public function getAccountBalances(Account $account): Collection;
-
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
     /**

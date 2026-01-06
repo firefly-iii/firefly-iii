@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Amount;
 
 class UpgradesMultiPiggyBanks extends Command
 {
@@ -64,7 +66,7 @@ class UpgradesMultiPiggyBanks extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -94,7 +96,7 @@ class UpgradesMultiPiggyBanks extends Command
         $this->repository->setUser($piggyBank->account->user);
         $this->accountRepository->setUser($piggyBank->account->user);
         $repetition                         = $this->repository->getRepetition($piggyBank, true);
-        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? app('amount')->getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
+        $currency                           = $this->accountRepository->getAccountCurrency($piggyBank->account) ?? Amount::getPrimaryCurrencyByUserGroup($piggyBank->account->user->userGroup);
 
         // update piggy bank to have a currency.
         $piggyBank->transaction_currency_id = $currency->id;
@@ -112,6 +114,6 @@ class UpgradesMultiPiggyBanks extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

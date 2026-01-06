@@ -212,6 +212,13 @@ class ReconcileController extends Controller
 
         $startBalance   = Steam::accountsBalancesOptimized(new Collection()->push($account), $startDate)[$account->id];
         $endBalance     = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
+        // round balances.
+        foreach ($startBalance as $key => $value) {
+            $startBalance[$key] = Steam::bcround($value, $currency->decimal_places);
+        }
+        foreach ($endBalance as $key => $value) {
+            $endBalance[$key] = Steam::bcround($value, $currency->decimal_places);
+        }
 
 
         // get the transactions
@@ -278,9 +285,9 @@ class ReconcileController extends Controller
             }
 
             if ($inverse) {
-                $journal['amount'] = app('steam')->positive($journal['amount']);
+                $journal['amount'] = Steam::positive($journal['amount']);
                 if (null !== $journal['foreign_amount']) {
-                    $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
+                    $journal['foreign_amount'] = Steam::positive($journal['foreign_amount']);
                 }
             }
 

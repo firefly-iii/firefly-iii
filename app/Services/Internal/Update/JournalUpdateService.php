@@ -47,6 +47,7 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
@@ -67,8 +68,7 @@ class JournalUpdateService
     private ?Account                            $destinationAccount     = null;
     private ?Transaction                        $destinationTransaction = null;
     private array                               $metaDate
-                                                                        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date',
-            'invoice_date', ];
+                                                                        = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', '_internal_previous_date'];
     private array                               $metaString
                                                                         = [
             'sepa_cc',
@@ -204,11 +204,9 @@ class JournalUpdateService
         $validator->setUser($this->transactionJournal->user);
 
         $result       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
-        Log::debug(
-            sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true))
-        );
+        Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
-        // TODO typeoverrule the account validator may have a different opinion on the transaction type.
+        // TODO type overrule the account validator may have a different opinion on the transaction type.
 
         // validate submitted info:
         return $result;
@@ -282,14 +280,7 @@ class JournalUpdateService
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
         $result            = $validator->validateDestination(['id' => $destId, 'name' => $destName]);
-        Log::debug(
-            sprintf(
-                'hasValidDestinationAccount(%d, "%s") will return %s',
-                $destId,
-                $destName,
-                var_export($result, true)
-            )
-        );
+        Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
 
@@ -493,6 +484,24 @@ class JournalUpdateService
                 // do some parsing.
                 Log::debug(sprintf('Create date value from string "%s".', $value));
                 $this->transactionJournal->date_tz = $value->format('e');
+                $res                               = $value->gt($this->transactionJournal->date);
+                Log::debug(sprintf('Old date: %s, new date: %s', $this->transactionJournal->date->toW3cString(), $value->toW3cString()));
+
+                /** @var TransactionJournalMetaFactory $factory */
+                $factory                           = app(TransactionJournalMetaFactory::class);
+                $set                               = [
+                    'journal' => $this->transactionJournal,
+                    'name'    => '_internal_previous_date',
+                    'data'    => null,
+                ];
+                if ($res) {
+                    Log::debug('Transaction is set to be AFTER its current date. Save also the "_internal_previous_date"-field.');
+                    $set['data'] = clone $this->transactionJournal->date;
+                }
+                if (!$res) {
+                    Log::debug('Transaction is NOT set to be AFTER its current date. Remove the "_internal_previous_date"-field.');
+                }
+                $factory->updateOrCreate($set);
             }
             event(new TriggeredAuditLog($this->transactionJournal->user, $this->transactionJournal, sprintf('update_%s', $fieldName), $this->transactionJournal->{$fieldName}, $value));
 
@@ -651,7 +660,7 @@ class JournalUpdateService
         }
 
         $value                                = $this->data['amount'] ?? '';
-        Log::debug(sprintf('Amount is now "%s"', $value));
+        Log::debug(sprintf('[a] Amount is now "%s"', $value));
 
         try {
             $amount = $this->getAmount($value);
@@ -660,15 +669,18 @@ class JournalUpdateService
 
             return;
         }
+        Log::debug(sprintf('[b] Amount is now "%s"', $value));
         $origSourceTransaction                = $this->getSourceTransaction();
-        $origSourceTransaction->amount        = app('steam')->negative($amount);
-        $origSourceTransaction->balance_dirty = true;
-        $origSourceTransaction->save();
         $destTransaction                      = $this->getDestinationTransaction();
-        $originalAmount                       = $destTransaction->amount;
-        $destTransaction->amount              = app('steam')->positive($amount);
+        $originalSourceAmount                 = $origSourceTransaction->amount;
+        $originalDestAmount                   = $destTransaction->amount;
+        $origSourceTransaction->amount        = Steam::negative($amount);
+        $origSourceTransaction->balance_dirty = true;
+        $destTransaction->amount              = Steam::positive($amount);
         $destTransaction->balance_dirty       = true;
         $destTransaction->save();
+        $origSourceTransaction->save();
+
         // refresh transactions.
         $this->sourceTransaction->refresh();
         $this->destinationTransaction->refresh();
@@ -678,26 +690,51 @@ class JournalUpdateService
         if (null === $group) {
             $group = $this->transactionJournal?->transactionGroup;
         }
-        if (null === $group) {
+        if (null === $group || null === $this->transactionJournal) {
             return;
         }
+        if (0 === bccomp($origSourceTransaction->amount, $originalSourceAmount)) {
+            Log::debug('Amount was not actually changed, return.');
 
+            return;
+        }
+        Log::debug('Amount was changed.');
+        $transfer                             = TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type;
+        $withdrawal                           = TransactionTypeEnum::WITHDRAWAL->value === $this->transactionJournal->transactionType->type;
+        $deposit                              = TransactionTypeEnum::DEPOSIT->value === $this->transactionJournal->transactionType->type;
+        $makePositive                         = $transfer || $deposit ? true : false;
+
+        // assume withdrawal, use the source for amount (negative), and destination for currency.
+        $originalAmount                       = $originalSourceAmount;
+        $recordCurrency                       = $destTransaction->transactionCurrency;
+        Log::debug(sprintf('Transaction is a %s, original amount is %s and currency is %s', $this->transactionJournal->transactionType->type, $originalAmount, $recordCurrency->code));
+        if ($withdrawal || $transfer) {
+            Log::debug('Use these values to record a changed withdrawal amount');
+        }
+        if (!$withdrawal && !$transfer) {
+            $originalAmount = $originalDestAmount;
+            $recordCurrency = $origSourceTransaction->transactionCurrency;
+            Log::debug('Use destination amount to record a changed withdrawal amount');
+            Log::debug(sprintf('Transaction is a %s, original amount now is %s and currency is now %s', $this->transactionJournal->transactionType->type, $originalAmount, $recordCurrency->code));
+        }
+        $originalAmount                       = $makePositive ? Steam::positive($originalAmount) : Steam::negative($originalAmount);
+        $value                                = $makePositive ? Steam::positive($value) : Steam::negative($value);
+        // should not return in NULL but seems to do.
         event(new TriggeredAuditLog(
             $group->user,
             $group,
             'update_amount',
             [
-                'currency_symbol' => $destTransaction->transactionCurrency->symbol,
-                'decimal_places'  => $destTransaction->transactionCurrency->decimal_places,
+                'currency_symbol' => $recordCurrency->symbol,
+                'decimal_places'  => $recordCurrency->decimal_places,
                 'amount'          => $originalAmount,
             ],
             [
-                'currency_symbol' => $destTransaction->transactionCurrency->symbol,
-                'decimal_places'  => $destTransaction->transactionCurrency->decimal_places,
+                'currency_symbol' => $recordCurrency->symbol,
+                'decimal_places'  => $recordCurrency->decimal_places,
                 'amount'          => $value,
             ]
         ));
-
     }
 
     private function updateForeignAmount(): void
@@ -729,7 +766,7 @@ class JournalUpdateService
         // add foreign currency info to source and destination if possible.
         if (null !== $foreignCurrency && null !== $foreignAmount) {
             $source->foreign_currency_id = $foreignCurrency->id;
-            $source->foreign_amount      = app('steam')->negative($foreignAmount);
+            $source->foreign_amount      = Steam::negative($foreignAmount);
             $source->save();
 
             // if the transaction is a TRANSFER, and the foreign amount and currency are set (like they seem to be)
@@ -742,13 +779,13 @@ class JournalUpdateService
             if ($isTransfer || $isBetween) {
                 Log::debug('Switch amounts, store in amount and not foreign_amount');
                 $dest->transaction_currency_id = $foreignCurrency->id;
-                $dest->amount                  = app('steam')->positive($foreignAmount);
-                $dest->foreign_amount          = app('steam')->positive($source->amount);
+                $dest->amount                  = Steam::positive($foreignAmount);
+                $dest->foreign_amount          = Steam::positive($source->amount);
                 $dest->foreign_currency_id     = $source->transaction_currency_id;
             }
             if (!$isTransfer && !$isBetween) {
                 $dest->foreign_currency_id = $foreignCurrency->id;
-                $dest->foreign_amount      = app('steam')->positive($foreignAmount);
+                $dest->foreign_amount      = Steam::positive($foreignAmount);
             }
 
             $dest->save();

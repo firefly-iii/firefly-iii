@@ -119,11 +119,11 @@
     </tr>
     <tr>
         <td>Exchange rates</td>
-        <td>{% if config('cer.enabled') %}Enabled{% else %}Disabled{% endif %}, downloads {% if config('cer.download_enabled') %}enabled{% else %}disabled{% endif %}</td>
+        <td>{% if fireflyiiiconfig('enable_exchange_rates', true) %}Enabled{% else %}Disabled{% endif %}, downloads {% if FireflyConfig.get('enable_external_rates', config('cer.download_enabled')) %}enabled{% else %}disabled{% endif %}</td>
     </tr>
     <tr>
         <td>RB-column</td>
-        <td>{% if config('firefly.feature_flags.running_balance_column') %}Enabled{% else %}Disabled{% endif %}</td>
+        <td>{% if fireflyiiiconfig('use_running_balance', true) %}Enabled{% else %}Disabled{% endif %}</td>
     </tr>
     </tbody>
 </table>

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 /*
- * TriggeredStoredTransactionGroup.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * SearchRequest.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,23 +21,22 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Events\Model\TransactionGroup;
+namespace FireflyIII\Api\V1\Requests\Search;
 
-use FireflyIII\Events\Event;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionGroup;
-use Illuminate\Queue\SerializesModels;
+use FireflyIII\Api\V1\Requests\AggregateFormRequest;
+use FireflyIII\Api\V1\Requests\PaginationRequest;
+use FireflyIII\Models\TransactionJournal;
+use Override;
 
-class TriggeredStoredTransactionGroup extends Event
+class TransactionSearchRequest extends AggregateFormRequest
 {
-    use SerializesModels;
-    public ?RuleGroup $ruleGroup = null;
-
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null)
+    #[Override]
+    protected function getRequests(): array
     {
-        $this->ruleGroup = $ruleGroup;
+        return [
+            [PaginationRequest::class, 'sort_class' => TransactionJournal::class],
+            SearchQueryRequest::class,
+            // [ObjectTypeApiRequest::class, 'object_type' => Account::class],
+        ];
     }
 }

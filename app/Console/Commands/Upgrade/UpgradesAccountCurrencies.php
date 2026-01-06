@@ -35,6 +35,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Amount;
 
 class UpgradesAccountCurrencies extends Command
 {
@@ -85,7 +87,7 @@ class UpgradesAccountCurrencies extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
@@ -104,7 +106,7 @@ class UpgradesAccountCurrencies extends Command
         $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
-        $primaryCurrency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -155,6 +157,6 @@ class UpgradesAccountCurrencies extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

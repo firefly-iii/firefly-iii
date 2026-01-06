@@ -38,6 +38,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use Spatie\Period\Boundaries;
 use Spatie\Period\Period;
 use Spatie\Period\Precision;
+use FireflyIII\Support\Facades\Steam;
 
 trait RecalculatesAvailableBudgetsTrait
 {
@@ -103,7 +104,7 @@ trait RecalculatesAvailableBudgetsTrait
             return;
         }
         Log::debug(sprintf('Concluded new amount for this AB must be %s', $newAmount));
-        $availableBudget->amount = app('steam')->bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
+        $availableBudget->amount = Steam::bcround($newAmount, $availableBudget->transactionCurrency->decimal_places);
         $availableBudget->save();
     }
 

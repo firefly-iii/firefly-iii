@@ -242,7 +242,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             Log::debug('Grabbing default currency for this user...');
 
             /** @var null|TransactionCurrency $result */
-            $result = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            $result = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
 
         Log::debug(sprintf('Final result: %s', $result->code));
@@ -260,22 +260,28 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         Log::debug(sprintf('Now in findCurrencyNull(%s, "%s")', var_export($currencyId, true), $currencyCode));
-        $result = $this->find((int)$currencyId);
-        if ($result instanceof TransactionCurrency) {
-            Log::debug(sprintf('Found currency by ID: %s', $result->code));
+        if (null !== $currencyId && 0 !== $currencyId) {
+            $result = $this->find((int)$currencyId);
+            if ($result instanceof TransactionCurrency) {
+                Log::debug(sprintf('Found currency by ID: %s', $result->code));
+
+                return $result;
+            }
+        }
+        if (null !== $currencyCode && '' !== $currencyCode) {
+            Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
+            $result = $this->findByCode($currencyCode);
+
+            if ($result instanceof TransactionCurrency && false === $result->enabled) {
+                Log::debug(sprintf('Also enabled currency %s', $result->code));
+                $this->enable($result);
+            }
 
             return $result;
         }
-        Log::debug(sprintf('Searching for currency with code "%s"...', $currencyCode));
-        $result = $this->findByCode((string)$currencyCode);
-
-        if ($result instanceof TransactionCurrency && false === $result->enabled) {
-            Log::debug(sprintf('Also enabled currency %s', $result->code));
-            $this->enable($result);
-        }
         Log::debug('Found no currency, returning NULL.');
 
-        return $result;
+        return null;
     }
 
     #[Override]
@@ -438,7 +444,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function makePrimary(TransactionCurrency $currency): void
     {
-        $current = app('amount')->getPrimaryCurrencyByUserGroup($this->userGroup);
+        $current = Amount::getPrimaryCurrencyByUserGroup($this->userGroup);
         Log::debug(sprintf('Enabled + made default currency %s for user #%d', $currency->code, $this->userGroup->id));
         $this->userGroup->currencies()->detach($currency->id);
         foreach ($this->userGroup->currencies()->get() as $item) {

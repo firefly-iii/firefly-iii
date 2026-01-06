@@ -51,6 +51,7 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\file_get_contents;
 use function Safe\ini_get;
@@ -241,7 +242,7 @@ class DebugController extends Controller
     {
         $userGuard      = config('auth.defaults.guard');
 
-        $config         = app('fireflyconfig')->get('last_rt_job', 0);
+        $config         = FireflyConfig::get('last_rt_job', 0);
         $lastTime       = (int) $config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';

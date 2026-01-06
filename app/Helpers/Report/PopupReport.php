@@ -66,7 +66,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int) $currencyId);
+            $currency = $repos->find((int)$currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -98,7 +98,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int) $currencyId);
+            $currency = $repos->find((int)$currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -135,7 +135,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int) $currencyId);
+            $currency = $repos->find((int)$currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -174,8 +174,9 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int) $currencyId);
+            $currency = $repos->find((int)$currencyId);
         }
+
 
         /** @var JournalRepositoryInterface $repository */
         $repository        = app(JournalRepositoryInterface::class);
@@ -187,11 +188,11 @@ class PopupReport implements PopupReportInterface
         /** @var GroupCollectorInterface $collector */
         $collector         = app(GroupCollectorInterface::class);
 
-        // set report accounts + the request accounts:
-        // $set = $attributes['accounts'] ?? new Collection;
-        // $set->push($account);
+        // the source account must be in the set.
+        $set               = $attributes['accounts'] ?? new Collection();
 
         $collector->setDestinationAccounts(new Collection()->push($account))
+            ->setSourceAccounts($set)
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withAccountInformation()
             ->withBudgetInformation()

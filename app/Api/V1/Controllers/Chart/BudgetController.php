@@ -42,6 +42,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class BudgetController
@@ -286,7 +287,7 @@ class BudgetController extends Controller
         }
         if (null !== $limit && $this->convertToPrimary) {
             // convert and add all amounts.
-            $limit->amount = app('steam')->positive($amount);
+            $limit->amount = Steam::positive($amount);
             Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
         }
 

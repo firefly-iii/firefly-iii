@@ -41,6 +41,7 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class RegisterController
@@ -121,7 +122,7 @@ class RegisterController extends Controller
         $allowRegistration = true;
 
         try {
-            $singleUserMode = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+            $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface) {
             $singleUserMode = true;
         }
@@ -148,7 +149,7 @@ class RegisterController extends Controller
      */
     public function showInviteForm(Request $request, string $code): Factory|\Illuminate\Contracts\View\View
     {
-        $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
         $repository        = app(UserRepositoryInterface::class);
         $allowRegistration = $this->allowedToRegister();
@@ -182,7 +183,7 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(?Request $request = null): Factory|\Illuminate\Contracts\View\View
     {
-        $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
         $allowRegistration = $this->allowedToRegister();
 

@@ -32,6 +32,7 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesJournalMetaData extends Command
 {
@@ -69,14 +70,14 @@ class UpgradesJournalMetaData extends Command
 
     private function isMigrated(): bool
     {
-        $configVar = app('fireflyconfig')->get(UpgradesToGroups::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(UpgradesToGroups::CONFIG_NAME, false);
 
         return (bool) $configVar->data;
     }
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar->data;
     }
@@ -218,6 +219,6 @@ class UpgradesJournalMetaData extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

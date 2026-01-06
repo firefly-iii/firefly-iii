@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 return [
     'url'              => 'https://ff3exchangerates.z6.web.core.windows.net',
-    'enabled'          => env('ENABLE_EXCHANGE_RATES', false),
-    'download_enabled' => env('ENABLE_EXTERNAL_RATES', false),
+    'enabled'          => env('ENABLE_EXCHANGE_RATES', false), // no longer used, is the default.
+    'download_enabled' => env('ENABLE_EXTERNAL_RATES', false), // no longer used, only for default.
 
     // if currencies are added, default rates must be added as well!
     // source: https://www.xe.com/currencyconverter/

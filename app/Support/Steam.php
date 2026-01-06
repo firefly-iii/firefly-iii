@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use FireflyIII\Support\Facades\Preferences;
-use Deprecated;
 use Carbon\Carbon;
+use Deprecated;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -33,6 +32,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
 use Illuminate\Support\Collection;
@@ -131,7 +131,8 @@ class Steam
     }
 
     /**
-     * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it properly gets the balance of a range.
+     * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it
+     * properly gets the balance of a range.
      */
     public function accountsBalancesInRange(Collection $accounts, Carbon $start, Carbon $end, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
     {
@@ -291,21 +292,23 @@ class Steam
         return str_replace($search, '', $string);
     }
 
-    #[Deprecated(message: <<<'TXT'
+    #[Deprecated(
+        message: <<<'TXT'
 
-        By default this method returns "smaller than or equal to", so be careful with END OF DAY.
-        If you need end of day balance, use "inclusive = false".
+            By default this method returns "smaller than or equal to", so be careful with END OF DAY.
+            If you need end of day balance, use "inclusive = false".
 
-        Returns the balance of an account at exact moment given. Array with at least one value.
-        Always returns:
-        "balance": balance in the account's currency OR user's primary currency if the account has no currency
-        "EUR": balance in EUR (or whatever currencies the account has balance in)
+            Returns the balance of an account at exact moment given. Array with at least one value.
+            Always returns:
+            "balance": balance in the account's currency OR user's primary currency if the account has no currency
+            "EUR": balance in EUR (or whatever currencies the account has balance in)
 
-        If the user has $convertToPrimary:
-        "balance": balance in the account's currency OR user's primary currency if the account has no currency
-        --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
-        "EUR": balance in EUR (or whatever currencies the account has balance in)
-        TXT)]
+            If the user has $convertToPrimary:
+            "balance": balance in the account's currency OR user's primary currency if the account has no currency
+            --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
+            "EUR": balance in EUR (or whatever currencies the account has balance in)
+            TXT
+    )]
     public function finalAccountBalance(Account $account, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array
     {
 
@@ -663,8 +666,10 @@ class Steam
      */
     public function getSafePreviousUrl(): string
     {
-        // Log::debug(sprintf('getSafePreviousUrl: "%s"', session()->previousUrl()));
-        return session()->previousUrl() ?? route('index');
+        $res = $this->getSafeUrl(session()->previousUrl() ?? route('index'), route('index'));
+        Log::debug(sprintf('getSafePreviousUrl: "%s"', $res));
+
+        return $res;
     }
 
     /**
@@ -675,6 +680,7 @@ class Steam
         // Log::debug(sprintf('getSafeUrl(%s, %s)', $unknownUrl, $safeUrl));
         $returnUrl      = $safeUrl;
 
+        //        die('in get safe url');
         try {
             $unknownHost = parse_url($unknownUrl, PHP_URL_HOST);
         } catch (UrlException $e) {

@@ -1,16 +1,21 @@
 <table class="table" aria-label="Table">
+    <thead>
+    <tr>
+        <td colspan="3"><em>{{ 'incomplete_ale'|_ }}</em></td>
+    </tr>
+    </thead>
+    <tbody>
     {% for logEntry in logEntries %}
         <tr>
             <th style="width:20%;" scope="row">
                 {# link to object: #}
                 {% if 'FireflyIII\\Models\\Rule' == logEntry.changer_type %}
-                <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
-                    {% endif %}
+                    <a href="{{ route('rules.edit', [logEntry.changer_id] ) }}">
+                {% endif %}
                     {% if 'FireflyIII\\User' == logEntry.changer_type %}
                     <a href="{{ route('profile.index') }}">
                         {% endif %}
-                        {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }}
-                        #{{ logEntry.changer_id }}
+                        {{ logEntry.changer_type|replace({"FireflyIII\\Models\\": ""})|replace({"FireflyIII\\": ""}) }} #{{ logEntry.changer_id }}
                     </a>
             </th>
             <td style="width:30%;" title="{{ logEntry.created_at.isoFormat(dateTimeFormat) }}">
@@ -103,4 +108,5 @@
 
         </tr>
     {% endfor %}
+    </tbody>
 </table>

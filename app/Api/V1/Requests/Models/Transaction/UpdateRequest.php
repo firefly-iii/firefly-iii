@@ -38,6 +38,7 @@ use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UpdateRequest
@@ -248,7 +249,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $validProtocols = config('firefly.valid_url_protocols');
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             // basic fields for group:

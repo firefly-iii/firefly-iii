@@ -28,6 +28,7 @@ use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -58,7 +59,7 @@ class SubmitController extends Controller
      */
     public function submit(Webhook $webhook): JsonResponse
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to submit webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

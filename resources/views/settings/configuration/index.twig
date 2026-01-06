@@ -4,66 +4,143 @@
     {{ Breadcrumbs.render }}
 {% endblock %}
 {% block content %}
+
+<!--
+
+Security
+- single user mode
+
+Features
+- enable exchange rates
+- use running balance
+
+External connections
+- enable external map
+- enable external exchange rates
+- allow webhooks
+
+Technical stuff
+- valid url protocols
+- is demo site
+
+-->
+
+
     <form action="{{ route('settings.configuration.index.post') }}" method="post" id="store" class="form-horizontal">
-
+        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+        {# security #}
         <div class="row">
-
-            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-
-            {# single user mode #}
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+            <div class="col-lg-8 col-lg-offset-2 col-xl-8 col-xl-offset-2 col-md-12 col-sm-12 col-xs-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'setting_single_user_mode'|_ }}</h3>
+                        <h3 class="box-title">{{ 'config_security'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <p class="text-info">
+                        <h4>
+                            {{ 'setting_single_user_mode'|_ }}
+                        </h4>
+                        <p>
                             {{ 'setting_single_user_mode_explain'|_ }}
                         </p>
                         {{ ExpandedForm.checkbox('single_user_mode','1', singleUserMode) }}
                     </div>
                 </div>
             </div>
+        </div>
 
-            {# installation is demo site #}
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-xl-8 col-xl-offset-2 col-md-12 col-sm-12 col-xs-12">
                 <div class="box box-default">
                     <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'setting_is_demo_site'|_ }}</h3>
+                        <h3 class="box-title">{{ 'config_features'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        <p class="text-info">
+                        <h4>
+                            {{ 'setting_enable_exchange_rates'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_enable_exchange_rates_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('enable_exchange_rates','1', enableExchangeRates) }}
+
+                        <h4>
+                            {{ 'setting_use_running_balance'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_use_running_balance_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('use_running_balance','1', useRunningBalance) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-xl-8 col-xl-offset-2 col-md-12 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'config_external_connections'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <h4>
+                            {{ 'setting_enable_external_map'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_enable_external_map_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('enable_external_map','1', enableExternalMap) }}
+
+                        <h4>
+                            {{ 'setting_enable_external_rates'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_enable_external_rates_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('enable_external_rates','1', enableExternalRates) }}
+
+                        <h4>
+                            {{ 'setting_allow_webhooks'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_allow_webhooks_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.checkbox('allow_webhooks','1', allowWebhooks) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-xl-8 col-xl-offset-2 col-md-12 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'config_tech'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <h4>
+                            {{ 'setting_valid_url_protocols'|_ }}
+                        </h4>
+                        <p>
+                            {{ 'setting_valid_url_protocols_explain'|_ }}
+                        </p>
+                        {{ ExpandedForm.text('valid_url_protocols', validUrlProtocols) }}
+
+                        <h4>
+                            {{ 'setting_is_demo_site'|_ }}
+                        </h4>
+                        <p>
                             {{ 'setting_is_demo_site_explain'|_ }}
                         </p>
                         {{ ExpandedForm.checkbox('is_demo_site','1', isDemoSite) }}
-                    </div>
-                </div>
-            </div>
-
-            {# block for config setting #}
-            {#
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <div class="box box-default">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">{{ 'setting_x'|_ }}</h3>
-                    </div>
-                    <div class="box-body">
-                        <p class="text-info">
-                            {{ 'setting_x_explain'|_ }}
+                        <p>
+                            <button type="submit" class="btn btn-success">
+                                {{ ('store_configuration')|_ }}
+                            </button>
                         </p>
                     </div>
                 </div>
             </div>
-            #}
         </div>
-        <div class="row">
-            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
-                <button type="submit" class="btn btn-success">
-                    {{ ('store_configuration')|_ }}
-                </button>
-            </div>
-        </div>
-
     </form>
 
 {% endblock %}

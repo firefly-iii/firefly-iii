@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -41,8 +41,17 @@ class ConfigurationRequest extends FormRequest
     public function getConfigurationData(): array
     {
         return [
-            'single_user_mode' => $this->boolean('single_user_mode'),
-            'is_demo_site'     => $this->boolean('is_demo_site'),
+            'single_user_mode'      => $this->boolean('single_user_mode'),
+
+            'enable_exchange_rates' => $this->boolean('enable_exchange_rates'),
+            'use_running_balance'   => $this->boolean('use_running_balance'),
+
+            'enable_external_map'   => $this->boolean('enable_external_map'),
+            'enable_external_rates' => $this->boolean('enable_external_rates'),
+            'allow_webhooks'        => $this->boolean('allow_webhooks'),
+
+            'valid_url_protocols'   => $this->string('valid_url_protocols'),
+            'is_demo_site'          => $this->boolean('is_demo_site'),
         ];
     }
 
@@ -53,8 +62,19 @@ class ConfigurationRequest extends FormRequest
     {
         // fixed
         return [
-            'single_user_mode' => 'min:0|max:1|numeric',
-            'is_demo_site'     => 'min:0|max:1|numeric',
+            'single_user_mode'      => 'min:0|max:1|numeric',
+
+            'enable_exchange_rates' => 'min:0|max:1|numeric',
+            'use_running_balance'   => 'min:0|max:1|numeric',
+
+            'enable_external_map'   => 'min:0|max:1|numeric',
+            'enable_external_rates' => 'min:0|max:1|numeric',
+            'allow_webhooks'        => 'min:0|max:1|numeric',
+
+            'valid_url_protocols'   => 'min:0|max:255',
+            'is_demo_site'          => 'min:0|max:1|numeric',
+
+
         ];
     }
 

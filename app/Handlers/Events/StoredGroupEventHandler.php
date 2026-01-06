@@ -28,6 +28,7 @@ use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
@@ -46,7 +47,7 @@ class StoredGroupEventHandler
 {
     public function runAllHandlers(StoredTransactionGroup $event): void
     {
-        $this->processRules($event);
+        $this->processRules($event, null);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
         $this->removePeriodStatistics($event);
@@ -55,13 +56,13 @@ class StoredGroupEventHandler
     public function triggerRulesManually(TriggeredStoredTransactionGroup $event): void
     {
         $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
-        $this->processRules($newEvent);
+        $this->processRules($newEvent, $event->ruleGroup);
     }
 
     /**
      * This method grabs all the users rules and processes them.
      */
-    private function processRules(StoredTransactionGroup $storedGroupEvent): void
+    private function processRules(StoredTransactionGroup $storedGroupEvent, ?RuleGroup $ruleGroup): void
     {
         if (false === $storedGroupEvent->applyRules) {
             Log::info(sprintf('Will not run rules on group #%d', $storedGroupEvent->transactionGroup->id));
@@ -86,7 +87,14 @@ class StoredGroupEventHandler
 
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        if (null === $ruleGroup) {
+            Log::debug('Fire processRules with ALL store-journal rule groups.');
+            $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        }
+        if (null !== $ruleGroup) {
+            Log::debug(sprintf('Fire processRules with rule group #%d.', $ruleGroup->id));
+            $groups = new Collection([$ruleGroup]);
+        }
 
         // create and fire rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);

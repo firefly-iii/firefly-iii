@@ -121,15 +121,15 @@ class BoxController extends Controller
         $keys      = array_keys($sums);
         foreach ($keys as $currencyId) {
             $currency              = $repository->find($currencyId);
-            $sums[$currencyId]     = app('amount')->formatAnything($currency, $sums[$currencyId], false);
-            $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
-            $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
+            $sums[$currencyId]     = Amount::formatAnything($currency, $sums[$currencyId], false);
+            $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
+            $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
         if (0 === count($sums)) {
             $currency                             = $this->primaryCurrency;
-            $sums[$this->primaryCurrency->id]     = app('amount')->formatAnything($this->primaryCurrency, '0', false);
-            $incomes[$this->primaryCurrency->id]  = app('amount')->formatAnything($this->primaryCurrency, '0', false);
-            $expenses[$this->primaryCurrency->id] = app('amount')->formatAnything($this->primaryCurrency, '0', false);
+            $sums[$this->primaryCurrency->id]     = Amount::formatAnything($this->primaryCurrency, '0', false);
+            $incomes[$this->primaryCurrency->id]  = Amount::formatAnything($this->primaryCurrency, '0', false);
+            $expenses[$this->primaryCurrency->id] = Amount::formatAnything($this->primaryCurrency, '0', false);
         }
 
         $response  = [
@@ -187,7 +187,7 @@ class BoxController extends Controller
             if ('primary' === $key) {
                 continue;
             }
-            $return[$data['currency_id']] = app('amount')->formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
+            $return[$data['currency_id']] = Amount::formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
         $return            = [
             'net_worths' => array_values($return),

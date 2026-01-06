@@ -34,10 +34,16 @@ class DynamicConfigKey
 {
     public static array $accepted
         = [
-            'configuration.is_demo_site',
-            'configuration.permission_update_check',
-            'configuration.single_user_mode',
-            'configuration.last_update_check',
+            'configuration.is_demo_site', // boolean
+            'configuration.permission_update_check', // -1, 0 or 1 (never asked, no permission, permission)
+            'configuration.single_user_mode', // boolean
+            'configuration.last_update_check', // timestamp
+            'configuration.enable_exchange_rates', // boolean
+            'configuration.use_running_balance', // boolean
+            'configuration.enable_external_map', // boolean
+            'configuration.enable_external_rates', // boolean
+            'configuration.allow_webhooks', // boolean
+            'configuration.valid_url_protocols', // string ("http,https")
         ];
 
     /**

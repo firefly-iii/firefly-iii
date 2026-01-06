@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Console\Command;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesAccountMetaData extends Command
 {
@@ -82,7 +83,7 @@ class UpgradesAccountMetaData extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -90,6 +91,6 @@ class UpgradesAccountMetaData extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

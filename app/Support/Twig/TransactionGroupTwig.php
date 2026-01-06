@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\DB;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_decode;
 
@@ -172,7 +173,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
+        $result     = Amount::formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -199,7 +200,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -230,7 +231,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result     = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
+        $result     = Amount::formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -257,7 +258,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = app('amount')->formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
+        $result     = Amount::formatFlat($currency->symbol, $currency->decimal_places, $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }

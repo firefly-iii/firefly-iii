@@ -42,6 +42,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ShowController
@@ -72,7 +73,7 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info('User tries to view all webhooks, but webhooks are DISABLED.');
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -114,7 +115,7 @@ class ShowController extends Controller
      */
     public function show(Webhook $webhook): JsonResponse
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to view webhook #%d, but webhooks are DISABLED.', $webhook->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
@@ -146,7 +147,7 @@ class ShowController extends Controller
      */
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
-        if (false === config('firefly.allow_webhooks')) {
+        if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to trigger webhook #%d on transaction group #%d, but webhooks are DISABLED.', $webhook->id, $group->id));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');

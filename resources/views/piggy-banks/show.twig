@@ -36,7 +36,7 @@
                             <td style="width:40%;">{{ 'saveOnAccounts'|_ }}</td>
                             <td>
                                 {% for account in piggy.accounts %}
-                                    <a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a><br>
+                                    <a href="{{ route('accounts.show', [account.account_id]) }}">{{ account.name }}</a><br>
                                 {% endfor %}
                             </td>
                         </tr>
@@ -58,7 +58,7 @@
                             <tr>
                                 <td>
                                     {{ 'saved_so_far'|_ }}
-                                    (<a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a>)
+                                    (<a href="{{ route('accounts.show', account.account_id) }}">{{ account.name }}</a>)
                                 </td>
                                 <td>
                                     {{ formatAmountBySymbol(account.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}

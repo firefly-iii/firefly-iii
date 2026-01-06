@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\parse_url;
 
@@ -140,7 +141,7 @@ class CreateController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location'] && true === config('firefly.enable_external_map');
+        $optionalFields['location'] = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');

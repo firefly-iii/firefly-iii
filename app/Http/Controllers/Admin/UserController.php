@@ -42,6 +42,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UserController.
@@ -164,7 +165,7 @@ class UserController extends Controller
         $subTitle       = (string) trans('firefly.user_administration');
         $subTitleIcon   = 'fa-users';
         $users          = $this->repository->all();
-        $singleUserMode = (bool) app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode = (bool) FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $allowInvites   = false;
         if (!$this->externalIdentity && $singleUserMode) {
             // also registration enabled.

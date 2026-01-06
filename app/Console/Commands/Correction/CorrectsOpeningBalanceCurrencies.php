@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 class CorrectsOpeningBalanceCurrencies extends Command
 {
@@ -133,6 +134,6 @@ class CorrectsOpeningBalanceCurrencies extends Command
         $repos = app(AccountRepositoryInterface::class);
         $repos->setUser($account->user);
 
-        return $repos->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrencyByUserGroup($account->userGroup);
+        return $repos->getAccountCurrency($account) ?? Amount::getPrimaryCurrencyByUserGroup($account->userGroup);
     }
 }

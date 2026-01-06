@@ -29,6 +29,7 @@ use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverChannel;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 // use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
@@ -54,7 +55,7 @@ class ReturnsAvailableChannels
 
         $channels = ['mail'];
         if (true === config('notifications.channels.slack.enabled', false)) {
-            $slackUrl = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+            $slackUrl = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
             if (UrlValidator::isValidWebhookURL($slackUrl)) {
                 $channels[] = 'slack';
             }
@@ -62,19 +63,19 @@ class ReturnsAvailableChannels
 
         //        if (true === config('notifications.channels.ntfy.enabled', false)) {
         //            // validate presence of of Ntfy settings.
-        //            if ('' !== (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+        //            if ('' !== (string) \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('ntfy_topic', '')->data) {
         //                Log::debug('Enabled ntfy.');
         //                $channels[] = NtfyChannel::class;
         //            }
-        //            if ('' === (string) app('fireflyconfig')->getEncrypted('ntfy_topic', '')->data) {
+        //            if ('' === (string) \FireflyIII\Support\Facades\FireflyConfig::getEncrypted('ntfy_topic', '')->data) {
         //                Log::warning('No topic name for Ntfy, channel is disabled.');
         //            }
         //        }
 
         // pushover
         if (true === config('notifications.channels.pushover.enabled', false)) {
-            $pushoverAppToken  = (string) app('fireflyconfig')->getEncrypted('pushover_app_token', '')->data;
-            $pushoverUserToken = (string) app('fireflyconfig')->getEncrypted('pushover_user_token', '')->data;
+            $pushoverAppToken  = (string) FireflyConfig::getEncrypted('pushover_app_token', '')->data;
+            $pushoverUserToken = (string) FireflyConfig::getEncrypted('pushover_user_token', '')->data;
             if ('' === $pushoverAppToken || '' === $pushoverUserToken) {
                 Log::warning('[b] No Pushover token, channel is disabled.');
             }

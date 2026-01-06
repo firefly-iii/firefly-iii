@@ -35,6 +35,7 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class MonthReportGenerator.
@@ -144,7 +145,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $dayBeforeBalance  = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
 
         $startBalance      = $dayBeforeBalance['balance'];
-        $primaryCurrency   = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $primaryCurrency   = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $currency          = $accountRepository->getAccountCurrency($account) ?? $primaryCurrency;
 
         foreach ($journals as $index => $journal) {
@@ -153,13 +154,13 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
             // make sure amount is in the right "direction".
             if ($account->id === $journal['destination_account_id']) {
-                $transactionAmount = app('steam')->positive($journal['amount']);
+                $transactionAmount = Steam::positive($journal['amount']);
             }
 
             if ($currency->id === $journal['foreign_currency_id']) {
                 $transactionAmount = $journal['foreign_amount'];
                 if ($account->id === $journal['destination_account_id']) {
-                    $transactionAmount = app('steam')->positive($journal['foreign_amount']);
+                    $transactionAmount = Steam::positive($journal['foreign_amount']);
                 }
             }
 
@@ -175,7 +176,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
             $journals[$index]['payment_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
             $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
         }
-        $locale            = app('steam')->getLocale();
+        $locale            = Steam::getLocale();
         // call is correct.
         Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
 

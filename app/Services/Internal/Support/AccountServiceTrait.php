@@ -43,6 +43,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Illuminate\Support\Facades\Validator;
+use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Trait AccountServiceTrait
@@ -65,7 +67,7 @@ trait AccountServiceTrait
             return null;
         }
 
-        return app('steam')->filterSpaces($iban);
+        return Steam::filterSpaces($iban);
     }
 
     /**
@@ -225,12 +227,12 @@ trait AccountServiceTrait
         }
 
         // make amount positive, regardless:
-        $amount     = app('steam')->positive($amount);
+        $amount     = Steam::positive($amount);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:
@@ -347,7 +349,7 @@ trait AccountServiceTrait
 
         if (null === $currency) {
             // use default currency:
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $currency->enabled = true;
         $currency->save();
@@ -371,12 +373,12 @@ trait AccountServiceTrait
         }
         // if direction is "debit" (I owe this debt), amount is negative.
         // which means the liability will have a negative balance which the user must fill.
-        $openingBalance                              = app('steam')->negative($openingBalance);
+        $openingBalance                              = Steam::negative($openingBalance);
 
         // if direction is "credit" (I am owed this debt), amount is positive.
         // which means the liability will have a positive balance which is drained when its paid back into any asset.
         if ('credit' === $direction) {
-            $openingBalance = app('steam')->positive($openingBalance);
+            $openingBalance = Steam::positive($openingBalance);
         }
 
         // create if not exists:
@@ -387,7 +389,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency                                    = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -398,11 +400,11 @@ trait AccountServiceTrait
         $journal->transactionCurrency()->associate($currency);
 
         // account always gains money:
-        $accountTransaction->amount                  = app('steam')->positive($openingBalance);
+        $accountTransaction->amount                  = Steam::positive($openingBalance);
         $accountTransaction->transaction_currency_id = $currency->id;
 
         // CL account always loses money:
-        $clTransaction->amount                       = app('steam')->negative($openingBalance);
+        $clTransaction->amount                       = Steam::negative($openingBalance);
         $clTransaction->transaction_currency_id      = $currency->id;
         // save both
         $accountTransaction->save();
@@ -448,12 +450,12 @@ trait AccountServiceTrait
         }
 
         // amount must be positive for the transaction to work.
-        $amount     = app('steam')->positive($openingBalance);
+        $amount     = Steam::positive($openingBalance);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // submit to factory:
         $submission = [
@@ -570,7 +572,7 @@ trait AccountServiceTrait
         // if exists, update:
         $currency           = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // simply grab the first journal and change it:
@@ -584,21 +586,21 @@ trait AccountServiceTrait
         if (1 === bccomp('0', $openingBalance)) {
             Log::debug('Amount is negative.');
             // account transaction loses money:
-            $accountTransaction->amount                  = app('steam')->negative($openingBalance);
+            $accountTransaction->amount                  = Steam::negative($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
 
             // OB account transaction gains money
-            $obTransaction->amount                       = app('steam')->positive($openingBalance);
+            $obTransaction->amount                       = Steam::positive($openingBalance);
             $obTransaction->transaction_currency_id      = $currency->id;
         }
         if (-1 === bccomp('0', $openingBalance)) {
             Log::debug('Amount is positive.');
             // account gains money:
-            $accountTransaction->amount                  = app('steam')->positive($openingBalance);
+            $accountTransaction->amount                  = Steam::positive($openingBalance);
             $accountTransaction->transaction_currency_id = $currency->id;
 
             // OB account loses money:
-            $obTransaction->amount                       = app('steam')->negative($openingBalance);
+            $obTransaction->amount                       = Steam::negative($openingBalance);
             $obTransaction->transaction_currency_id      = $currency->id;
         }
         // save both
@@ -646,12 +648,12 @@ trait AccountServiceTrait
         }
 
         // make amount positive, regardless:
-        $amount     = app('steam')->positive($openingBalance);
+        $amount     = Steam::positive($openingBalance);
 
         // get or grab currency:
         $currency   = $this->accountRepository->getAccountCurrency($account);
         if (null === $currency) {
-            $currency = app('amount')->getPrimaryCurrencyByUserGroup($account->user->userGroup);
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
 
         // submit to factory:

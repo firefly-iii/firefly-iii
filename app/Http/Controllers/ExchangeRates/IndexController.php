@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class IndexController extends Controller
 {
@@ -47,7 +48,7 @@ class IndexController extends Controller
                 return $next($request);
             }
         );
-        if (false === config('cer.enabled')) {
+        if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
             throw new NotFoundHttpException();
         }
     }

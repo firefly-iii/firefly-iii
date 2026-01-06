@@ -43,6 +43,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class MassController.
@@ -142,9 +143,9 @@ class MassController extends Controller
 
         // reverse amounts
         foreach ($journals as $index => $journal) {
-            $journals[$index]['amount']         = app('steam')->bcround(app('steam')->positive($journal['amount']), $journal['currency_decimal_places']);
+            $journals[$index]['amount']         = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
             $journals[$index]['foreign_amount'] = null === $journal['foreign_amount']
-                ? null : app('steam')->positive($journal['foreign_amount']);
+                ? null : Steam::positive($journal['foreign_amount']);
         }
 
         $this->rememberPreviousUrl('transactions.mass-edit.url');

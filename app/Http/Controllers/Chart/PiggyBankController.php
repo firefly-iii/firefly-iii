@@ -33,6 +33,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class PiggyBankController.
@@ -70,7 +71,7 @@ class PiggyBankController extends Controller
         }
         $set                    = $repository->getEvents($piggyBank);
         $set                    = $set->reverse();
-        $locale                 = app('steam')->getLocale();
+        $locale                 = Steam::getLocale();
 
         // get first event or start date of piggy bank or today
         $startDate              = $piggyBank->start_date ?? today(config('app.timezone'));

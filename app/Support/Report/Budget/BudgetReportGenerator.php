@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Budget\NoBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BudgetReportGenerator
@@ -136,7 +137,7 @@ class BudgetReportGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
         $this->nbRepository->setUser($user);
-        $this->currency = app('amount')->getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->currency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
     }
 
     /**

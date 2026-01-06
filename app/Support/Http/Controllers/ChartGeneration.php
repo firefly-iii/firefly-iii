@@ -59,7 +59,7 @@ trait ChartGeneration
             return $cache->get();
         }
         Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-        $locale           = app('steam')->getLocale();
+        $locale           = Steam::getLocale();
 
         /** @var GeneratorInterface $generator */
         $generator        = app(GeneratorInterface::class);
@@ -67,7 +67,7 @@ trait ChartGeneration
         /** @var AccountRepositoryInterface $accountRepos */
         $accountRepos     = app(AccountRepositoryInterface::class);
 
-        $primary          = app('amount')->getPrimaryCurrency();
+        $primary          = Amount::getPrimaryCurrency();
         $chartData        = [];
 
         Log::debug(sprintf('Start of accountBalanceChart(list, %s, %s)', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));

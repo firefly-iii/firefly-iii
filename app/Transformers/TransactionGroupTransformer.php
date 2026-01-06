@@ -75,7 +75,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'recurrence_count',
             'recurrence_total',
         ];
-        $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
+        $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date', '_internal_previous_date'];
     }
 
     public function transform(array $group): array

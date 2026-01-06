@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 /*
- * TriggeredStoredTransactionGroup.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * SearchQueryRequest.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -21,23 +21,30 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Events\Model\TransactionGroup;
+namespace FireflyIII\Api\V1\Requests\Search;
 
-use FireflyIII\Events\Event;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\TransactionGroup;
-use Illuminate\Queue\SerializesModels;
+use FireflyIII\Api\V1\Requests\ApiRequest;
+use Illuminate\Contracts\Validation\Validator;
 
-class TriggeredStoredTransactionGroup extends Event
+class SearchQueryRequest extends ApiRequest
 {
-    use SerializesModels;
-    public ?RuleGroup $ruleGroup = null;
-
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null)
+    public function rules(): array
     {
-        $this->ruleGroup = $ruleGroup;
+        return [
+            'query' => sprintf('min:0|max:500|%s', $this->required),
+        ];
+    }
+
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator): void {
+                if ($validator->failed()) {
+                    return;
+                }
+                $query = $this->convertString('query');
+                $this->attributes->set('query', $query);
+            }
+        );
     }
 }

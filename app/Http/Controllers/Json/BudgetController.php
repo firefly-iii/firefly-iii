@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BudgetController
@@ -84,9 +85,9 @@ class BudgetController extends Controller
         return response()->json(
             [
                 'budgeted'                => $budgeted,
-                'budgeted_formatted'      => app('amount')->formatAnything($currency, $budgeted, true),
+                'budgeted_formatted'      => Amount::formatAnything($currency, $budgeted, true),
                 'available'               => $available,
-                'available_formatted'     => app('amount')->formatAnything($currency, $available, true),
+                'available_formatted'     => Amount::formatAnything($currency, $available, true),
                 'percentage'              => $percentage,
                 'currency_id'             => $currency->id,
                 'currency_code'           => $currency->code,

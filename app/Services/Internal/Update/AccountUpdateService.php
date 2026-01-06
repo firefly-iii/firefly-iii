@@ -35,6 +35,7 @@ use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class AccountUpdateService
@@ -123,7 +124,7 @@ class AccountUpdateService
             $account->active = $data['active'];
         }
         if (array_key_exists('iban', $data)) {
-            $account->iban = app('steam')->filterSpaces((string) $data['iban']);
+            $account->iban = Steam::filterSpaces((string) $data['iban']);
         }
 
         // set liability, but account must already be a liability.
@@ -269,7 +270,7 @@ class AccountUpdateService
 
                 // if liability, make sure the amount is positive for a credit, and negative for a debit.
                 if ($this->isLiability($account)) {
-                    $openingBalance = 'credit' === $data['liability_direction'] ? app('steam')->positive($openingBalance) : app('steam')->negative(
+                    $openingBalance = 'credit' === $data['liability_direction'] ? Steam::positive($openingBalance) : Steam::negative(
                         $openingBalance
                     );
                 }

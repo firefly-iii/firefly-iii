@@ -31,6 +31,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class CreateRequest
@@ -73,7 +74,7 @@ class CreateRequest extends FormRequest
         $triggers       = implode(',', array_values(Webhook::getTriggers()));
         $responses      = implode(',', array_values(Webhook::getResponses()));
         $deliveries     = implode(',', array_values(Webhook::getDeliveries()));
-        $validProtocols = config('firefly.valid_url_protocols');
+        $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return [
             'title'        => 'required|min:1|max:255|uniqueObjectForUser:webhooks,title',

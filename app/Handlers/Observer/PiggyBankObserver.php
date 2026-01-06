@@ -29,6 +29,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankObserver
@@ -49,7 +50,7 @@ class PiggyBankObserver
 
             return;
         }
-        $userCurrency                    = app('amount')->getPrimaryCurrencyByUserGroup($group);
+        $userCurrency                    = Amount::getPrimaryCurrencyByUserGroup($group);
         $piggyBank->native_target_amount = null;
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
             $converter                       = new ExchangeRateConverter();

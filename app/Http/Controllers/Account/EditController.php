@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
@@ -148,9 +149,9 @@ class EditController extends Controller
             'BIC'                     => $repository->getMetaValue($account, 'BIC'),
             'opening_balance_date'    => substr((string) $openingBalanceDate, 0, 10),
             'liability_type_id'       => $account->account_type_id,
-            'opening_balance'         => app('steam')->bcround($openingBalanceAmount, $currency->decimal_places),
+            'opening_balance'         => Steam::bcround($openingBalanceAmount, $currency->decimal_places),
             'liability_direction'     => $this->repository->getMetaValue($account, 'liability_direction'),
-            'virtual_balance'         => app('steam')->bcround($virtualBalance, $currency->decimal_places),
+            'virtual_balance'         => Steam::bcround($virtualBalance, $currency->decimal_places),
             'currency_id'             => $currency->id,
             'include_net_worth'       => $hasOldInput ? (bool) $request->old('include_net_worth') : $includeNetWorth,
             'interest'                => $repository->getMetaValue($account, 'interest'),

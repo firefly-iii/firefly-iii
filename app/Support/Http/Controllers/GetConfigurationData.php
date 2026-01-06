@@ -157,6 +157,11 @@ trait GetConfigurationData
         $index          = (string)trans('firefly.year_to_date');
         $ranges[$index] = [$yearBegin, new Carbon()];
 
+        // previous year:
+        $yearBegin      = today(config('app.timezone'))->subYear()->startOfYear();
+        $index          = (string)trans('firefly.previous_year', ['year' => $yearBegin->year]);
+        $ranges[$index] = [$yearBegin, $yearBegin->clone()->endOfYear()];
+
         // everything
         $index          = (string)trans('firefly.everything');
         $ranges[$index] = [$first, new Carbon()];

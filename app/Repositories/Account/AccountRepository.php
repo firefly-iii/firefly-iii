@@ -167,12 +167,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-    #[Override]
-    public function getAccountBalances(Account $account): Collection
-    {
-        return $account->accountBalances;
-    }
-
     /**
      * Return account type or null if not found.
      */
@@ -359,7 +353,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-        $currency = $this->getAccountCurrency($account) ?? app('amount')->getPrimaryCurrency();
+        $currency = $this->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
         $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */

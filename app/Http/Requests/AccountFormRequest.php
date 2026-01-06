@@ -34,6 +34,7 @@ use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class AccountFormRequest.
@@ -87,7 +88,7 @@ class AccountFormRequest extends FormRequest
             $data['account_type_id']   = $this->convertInteger('liability_type_id');
             if ('' !== $data['opening_balance']) {
                 // opening balance is always positive for liabilities
-                $data['opening_balance'] = app('steam')->positive($data['opening_balance']);
+                $data['opening_balance'] = Steam::positive($data['opening_balance']);
             }
         }
 

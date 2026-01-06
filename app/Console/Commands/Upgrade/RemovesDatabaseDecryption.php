@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\json_decode;
 
@@ -86,7 +87,7 @@ class RemovesDatabaseDecryption extends Command
         $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
         // mark as decrypted:
         $configName = sprintf('is_decrypted_%s', $table);
-        app('fireflyconfig')->set($configName, true);
+        FireflyConfig::set($configName, true);
     }
 
     private function isDecrypted(string $table): bool
@@ -95,7 +96,7 @@ class RemovesDatabaseDecryption extends Command
         $configVar  = null;
 
         try {
-            $configVar = app('fireflyconfig')->get($configName, false);
+            $configVar = FireflyConfig::get($configName, false);
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
         }
@@ -120,7 +121,7 @@ class RemovesDatabaseDecryption extends Command
         if (null === $original) {
             return;
         }
-        $id       = (int) $row->id;
+        $id       = (int)$row->id;
         $value    = '';
 
         try {
@@ -133,7 +134,7 @@ class RemovesDatabaseDecryption extends Command
         }
 
         // A separate routine for preferences table:
-        if ('preferences' === $table) {
+        if ('preferences' === $table && is_string($value)) {
             $this->decryptPreferencesRow($id, $value);
 
             return;

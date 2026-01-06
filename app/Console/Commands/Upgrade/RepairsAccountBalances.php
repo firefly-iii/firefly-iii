@@ -1,7 +1,7 @@
 <?php
 
 /*
- * CorrectAccountBalance.php
+ * RepairsAccountBalances.php
  * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class RepairsAccountBalances extends Command
 {
@@ -43,7 +44,7 @@ class RepairsAccountBalances extends Command
 
             return 0;
         }
-        if (true === config('firefly.feature_flags.running_balance_column')) {
+        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             $this->friendlyInfo('Will recalculate account balances. This may take a LONG time. Please be patient.');
             $this->markAsExecuted();
             $this->correctBalanceAmounts();
@@ -58,14 +59,14 @@ class RepairsAccountBalances extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function correctBalanceAmounts(): void

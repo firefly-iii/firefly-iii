@@ -55,6 +55,7 @@ use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use JsonException;
+use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_encode;
 
@@ -251,7 +252,7 @@ class TransactionJournalFactory
         $foreignCurrency       = $this->getForeignByAccount($type->type, $foreignCurrency, $destinationAccount);
         $description           = $this->getDescription($description);
 
-        Log::debug(sprintf('Currency is #%d "%s", foreign currency is #%d "%s"', $currency->id, $currency->code, $foreignCurrency?->id, $foreignCurrency));
+        Log::debug(sprintf('Currency is #%d "%s", foreign currency is #%d "%s"', $currency->id, $currency->code, $foreignCurrency?->id, $foreignCurrency?->code));
         Log::debug(sprintf('Date: %s (%s)', $carbon->toW3cString(), $carbon->getTimezone()->getName()));
 
         /** Create a basic journal. */
@@ -502,7 +503,7 @@ class TransactionJournalFactory
         $preference = $this->accountRepository->getAccountCurrency($account);
         if (null === $preference && !$currency instanceof TransactionCurrency) {
             // return user's default:
-            return app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+            return Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         }
         $result     = $preference ?? $currency;
         Log::debug(sprintf('Currency is now #%d (%s) because of account #%d (%s)', $result->id, $result->code, $account->id, $account->name));

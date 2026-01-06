@@ -39,6 +39,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -78,34 +79,33 @@ class CorrectsAmounts extends Command
 
     private function correctTransfers(): void
     {
+        Log::debug('Will now correct transfers.');
+
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $type       = TransactionType::where('type', TransactionTypeEnum::TRANSFER->value)->first();
-        $journals   = TransactionJournal::where('transaction_type_id', $type->id)->get();
+        $journals   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')->whereNotNull('transactions.foreign_amount')->where('transaction_journals.transaction_type_id', $type->id)->distinct()->get(['transaction_journals.*']);
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $repository->setUser($journal->user);
             $primary        = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
 
-            /** @var null|Transaction $source */
-            $source         = $journal->transactions()->where('amount', '<', 0)->first();
+            $valid          = $this->validateJournal($journal);
+            if (false === $valid) {
+                // Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
 
-            /** @var null|Transaction $destination */
-            $destination    = $journal->transactions()->where('amount', '>', 0)->first();
-            if (null === $source || null === $destination) {
                 continue;
             }
-            if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
-                continue;
-            }
+            Log::debug(sprintf('Journal #%d is ready to be corrected (if necessary).', $journal->id));
+            $source         = $journal->transactions()->where('amount', '<', '0')->first();
+            $destination    = $journal->transactions()->where('amount', '>', '0')->first();
             $sourceAccount  = $source->account;
             $destAccount    = $destination->account;
-            if (null === $sourceAccount || null === $destAccount) {
-                continue;
-            }
             $sourceCurrency = $repository->getAccountCurrency($sourceAccount) ?? $primary;
             $destCurrency   = $repository->getAccountCurrency($destAccount) ?? $primary;
+            Log::debug(sprintf('Currency of source account      #%d "%s" is %s', $sourceAccount->id, $sourceAccount->name, $sourceCurrency->code));
+            Log::debug(sprintf('Currency of destination account #%d "%s" is %s', $destAccount->id, $destAccount->name, $destCurrency->code));
 
             if ($sourceCurrency->id === $destCurrency->id) {
                 Log::debug('Both accounts have the same currency. Removing foreign currency info.');
@@ -119,20 +119,38 @@ class CorrectsAmounts extends Command
                 continue;
             }
 
-            // validate source
+            // validate source transaction
             if ($destCurrency->id !== $source->foreign_currency_id) {
-                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $source->id, $source->foreignCurrency->code, $destCurrency->code));
+                Log::debug(sprintf('[a] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".', $journal->id, $source->id, $source->foreignCurrency->code, $destCurrency->code));
                 $source->foreign_currency_id = $destCurrency->id;
+                $source->save();
+            }
+            if ($sourceCurrency->id !== $source->transaction_currency_id) {
+                Log::debug(sprintf('[b] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".', $journal->id, $source->id, $source->transactionCurrency->code, $sourceCurrency->code));
+                $source->transaction_currency_id = $sourceCurrency->id;
                 $source->save();
             }
 
             // validate destination:
             if ($sourceCurrency->id !== $destination->foreign_currency_id) {
-                Log::debug(sprintf('Journal #%d: Transaction #%d refers to "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->foreignCurrency->code, $sourceCurrency->code));
+                Log::debug(sprintf('[c] Journal #%d: transaction #%d refers to foreign currency "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->foreignCurrency->code, $sourceCurrency->code));
                 $destination->foreign_currency_id = $sourceCurrency->id;
                 $destination->save();
             }
+
+            if ($destCurrency->id !== $destination->transaction_currency_id) {
+                Log::debug(sprintf('[d] Journal #%d: transaction #%d refers to currency "%s" but should refer to "%s".', $journal->id, $destination->id, $destination->transactionCurrency->code, $destCurrency->code));
+                $destination->transaction_currency_id = $destCurrency->id;
+                $destination->save();
+            }
+            Log::debug(sprintf('Done with journal #%d.', $journal->id));
         }
+    }
+
+    private function deleteJournal(TransactionJournal $journal): void
+    {
+        $journal->transactionGroup?->delete();
+        $journal->delete();
     }
 
     private function fixAutoBudgets(): void
@@ -234,7 +252,7 @@ class CorrectsAmounts extends Command
     private function fixRuleTrigger(RuleTrigger $item): bool
     {
         try {
-            $check = bccomp((string) $item->trigger_value, '0');
+            $check = bccomp((string)$item->trigger_value, '0');
         } catch (ValueError) {
             $this->friendlyError(sprintf('Rule #%d contained invalid %s-trigger "%s". The trigger has been removed, and the rule is disabled.', $item->rule_id, $item->trigger_type, $item->trigger_value));
             $item->rule->active = false;
@@ -244,12 +262,65 @@ class CorrectsAmounts extends Command
             return false;
         }
         if (-1 === $check) {
-            $item->trigger_value = app('steam')->positive($item->trigger_value);
+            $item->trigger_value = Steam::positive($item->trigger_value);
             $item->save();
 
             return true;
         }
 
         return false;
+    }
+
+    private function validateJournal(TransactionJournal $journal): bool
+    {
+        $countSource   = $journal->transactions()->where('amount', '<', 0)->count();
+        $countDest     = $journal->transactions()->where('amount', '>', 0)->count();
+
+        if (1 !== $countSource || 1 !== $countDest) {
+            $this->friendlyError(sprintf('Transaction journal #%d has bad transaction information. Will delete.', $journal->id));
+            $this->deleteJournal($journal);
+            Log::error(sprintf('Transaction journal #%d has bad transaction information. Will delete.', $journal->id));
+
+            return false;
+        }
+
+        /** @var null|Transaction $source */
+        $source        = $journal->transactions()->where('amount', '<', 0)->first();
+
+        /** @var null|Transaction $destination */
+        $destination   = $journal->transactions()->where('amount', '>', 0)->first();
+
+        if (null === $source || null === $destination) {
+            $this->friendlyError(sprintf('Could not find source OR destination for journal #%d .', $journal->id));
+            Log::error(sprintf('Could not find source OR destination for journal #%d .', $journal->id));
+            $this->deleteJournal($journal);
+
+            return false;
+        }
+        if (null === $source->foreign_currency_id || null === $destination->foreign_currency_id) {
+            // Log::debug('No foreign currency information is present, can safely continue with other transactions.');
+
+            return false;
+        }
+        if (null === $source->foreign_amount || null === $destination->foreign_amount) {
+            $this->friendlyError(sprintf('Transactions of journal #%d have no foreign amount, but have foreign currency info. Will reset this.', $journal->id));
+            $source->foreign_currency_id      = null;
+            $source->save();
+            $destination->foreign_currency_id = null;
+            $source->save();
+
+            return false;
+        }
+
+        $sourceAccount = $source->account;
+        $destAccount   = $destination->account;
+        if (null === $sourceAccount || null === $destAccount) {
+            $this->friendlyError(sprintf('Could not find accounts for journal #%d,', $journal->id));
+            $this->deleteJournal($journal);
+
+            return false;
+        }
+
+        return true;
     }
 }

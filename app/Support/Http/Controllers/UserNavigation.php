@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Trait UserNavigation
@@ -53,7 +54,7 @@ trait UserNavigation
         $url = (string)session($identifier);
         Log::debug(sprintf('The URL is %s', $url));
 
-        return app('steam')->getSafeUrl($url, route('index'));
+        return Steam::getSafeUrl($url, route('index'));
     }
 
     /**
@@ -137,7 +138,7 @@ trait UserNavigation
 
     final protected function rememberPreviousUrl(string $identifier): ?string
     {
-        $return = app('steam')->getSafePreviousUrl();
+        $return = Steam::getSafePreviousUrl();
         session()->put($identifier, $return);
 
         Log::debug(sprintf('rememberPreviousUrl: %s: "%s"', $identifier, $return));

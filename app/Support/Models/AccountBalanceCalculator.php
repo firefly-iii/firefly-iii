@@ -72,12 +72,25 @@ class AccountBalanceCalculator
             $set[$transaction->account_id] = $transaction->account;
         }
         $accounts = new Collection()->push(...$set);
-        $object->optimizedCalculation($accounts, $transactionJournal->date);
+
+        // find meta value:
+        $date     = $transactionJournal->date;
+        $meta     = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
+        Log::debug(sprintf('Date used is "%s"', $date->toW3cString()));
+        if (null !== $meta) {
+            $date = Carbon::parse($meta->data);
+            Log::debug(sprintf('Date is overruled with "%s"', $date->toW3cString()));
+        }
+
+
+        $object->optimizedCalculation($accounts, $date);
     }
 
     private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
+            Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
+
             return '0';
         }
         Log::debug(sprintf('getLatestBalance: notBefore date is "%s", calculating', $notBefore->format('Y-m-d')));
@@ -161,7 +174,7 @@ class AccountBalanceCalculator
         // then update all transactions.
 
         // save all collected balances in their respective account objects.
-        $this->storeAccountBalances($balances);
+        // $this->storeAccountBalances($balances);
     }
 
     private function storeAccountBalances(array $balances): void

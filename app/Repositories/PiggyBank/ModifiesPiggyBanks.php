@@ -72,7 +72,7 @@ trait ModifiesPiggyBanks
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency                 = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency                 = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
             $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
@@ -95,7 +95,7 @@ trait ModifiesPiggyBanks
         $pivot->native_current_amount = null;
 
         // also update native_current_amount.
-        $userCurrency                 = app('amount')->getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $userCurrency                 = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
         if ($userCurrency->id !== $piggyBank->transaction_currency_id) {
             $converter                    = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);

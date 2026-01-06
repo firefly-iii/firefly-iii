@@ -67,9 +67,12 @@ return [
     'tag_mode'                      => 'Tag mode',
     'virtual_balance'              => 'Virtual balance',
     'run_after_form' => 'Run this rule',
-
-
-
+    'valid_url_protocols' => 'Valid URL protocols',
+    'allow_webhooks' => 'Allow webhooks',
+    'enable_external_rates' => 'Enable external exchange rates',
+    'enable_external_map' => 'Enable external map',
+    'use_running_balance' => 'Calculate running balances',
+    'enable_exchange_rates' => 'Enable exchange rates',
     'targetamount'                 => 'Target amount',
     'target_amount'                => 'Target amount',
     'account_role'                 => 'Account role',

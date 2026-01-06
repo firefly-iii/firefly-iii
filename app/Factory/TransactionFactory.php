@@ -34,6 +34,7 @@ use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class TransactionFactory
@@ -58,10 +59,10 @@ class TransactionFactory
             $foreignAmount = null;
         }
         if (null !== $foreignAmount) {
-            $foreignAmount = app('steam')->negative($foreignAmount);
+            $foreignAmount = Steam::negative($foreignAmount);
         }
 
-        return $this->create(app('steam')->negative($amount), $foreignAmount);
+        return $this->create(Steam::negative($amount), $foreignAmount);
     }
 
     /**
@@ -170,10 +171,10 @@ class TransactionFactory
             $foreignAmount = null;
         }
         if (null !== $foreignAmount) {
-            $foreignAmount = app('steam')->positive($foreignAmount);
+            $foreignAmount = Steam::positive($foreignAmount);
         }
 
-        return $this->create(app('steam')->positive($amount), $foreignAmount);
+        return $this->create(Steam::positive($amount), $foreignAmount);
     }
 
     public function setAccount(Account $account): void

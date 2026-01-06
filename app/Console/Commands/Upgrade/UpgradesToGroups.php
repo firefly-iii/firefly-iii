@@ -39,6 +39,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesToGroups extends Command
 {
@@ -97,7 +98,7 @@ class UpgradesToGroups extends Command
 
     private function isMigrated(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -379,6 +380,6 @@ class UpgradesToGroups extends Command
 
     private function markAsMigrated(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

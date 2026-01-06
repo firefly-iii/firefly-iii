@@ -34,6 +34,7 @@ use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class SessionFilter.
@@ -144,11 +145,11 @@ class Range
 
         // share security message:
         if (
-            app('fireflyconfig')->has('upgrade_security_message')
-            && app('fireflyconfig')->has('upgrade_security_level')
+            FireflyConfig::has('upgrade_security_message')
+            && FireflyConfig::has('upgrade_security_level')
         ) {
-            app('view')->share('upgrade_security_message', app('fireflyconfig')->get('upgrade_security_message')->data);
-            app('view')->share('upgrade_security_level', app('fireflyconfig')->get('upgrade_security_level')->data);
+            app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
+            app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
         }
     }
 }

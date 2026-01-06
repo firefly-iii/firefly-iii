@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII;
 
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Deprecated;
@@ -403,7 +404,7 @@ class User extends Authenticatable
     public function routeNotificationForSlack(Notification $notification): ?string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = app('fireflyconfig')->getEncrypted('slack_webhook_url', '')->data;
+        $res  = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }

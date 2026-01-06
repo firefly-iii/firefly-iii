@@ -36,6 +36,7 @@ use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
+use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesLiabilitiesEight extends Command
 {
@@ -63,7 +64,7 @@ class UpgradesLiabilitiesEight extends Command
 
     private function isExecuted(): bool
     {
-        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
         return (bool)$configVar?->data;
 
@@ -137,7 +138,7 @@ class UpgradesLiabilitiesEight extends Command
             return false;
         }
 
-        return (bool) $openingJournal->date->isSameDay($liabilityJournal->date);
+        return (bool)$openingJournal->date->isSameDay($liabilityJournal->date);
     }
 
     private function deleteCreditTransaction(Account $account): void
@@ -148,7 +149,7 @@ class UpgradesLiabilitiesEight extends Command
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
             ->first(['transaction_journals.*'])
         ;
-        if (null !== $liabilityJournal) {
+        if (null !== $liabilityJournal && null !== $liabilityJournal->transactionGroup) {
             $group   = $liabilityJournal->transactionGroup;
             $service = new TransactionGroupDestroyService();
             $service->destroy($group);
@@ -192,11 +193,14 @@ class UpgradesLiabilitiesEight extends Command
             ->where('transactions.account_id', $account->id)->get(['transaction_journals.*'])
         ;
 
+        $service  = app(TransactionGroupDestroyService::class);
+
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($journal->transactionGroup);
-            ++$count;
+            if (null !== $journal->transactionGroup) {
+                $service->destroy($journal->transactionGroup);
+                ++$count;
+            }
         }
 
         return $count;
@@ -204,6 +208,6 @@ class UpgradesLiabilitiesEight extends Command
 
     private function markAsExecuted(): void
     {
-        app('fireflyconfig')->set(self::CONFIG_NAME, true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

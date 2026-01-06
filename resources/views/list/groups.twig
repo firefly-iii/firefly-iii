@@ -33,7 +33,7 @@
         <th class="hidden-xs">&nbsp;</th>
         <th>{{ trans('list.description') }}</th>
         <th>{{ trans('list.amount') }}</th>
-        {% if config('firefly.feature_flags.running_balance_column') %}
+        {% if fireflyiiiconfig('use_running_balance', true) %}
         <th>{{ trans('list.running_balance') }}</th>
         {% endif %}
         <th>{{ trans('list.date') }}</th>
@@ -266,14 +266,15 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                {% if config('firefly.feature_flags.running_balance_column') %}
+                {% if (fireflyiiiconfig('use_running_balance', true)) %}
                 <td>
+                    {# RUNNING BALANCE #}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
                             {% if transaction.source_account_id == account.id %}
-                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                <span title="Deposit, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
-                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                <span title="Deposit, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {%  endif %}
 
                         {% elseif transaction.transaction_type_type == 'Withdrawal' %}
@@ -281,39 +282,39 @@
                             {% if 'Loan' == transaction.destination_account_type or 'Mortgage' == transaction.destination_account_type or 'Debt' == transaction.destination_account_type %}
                                 {% if currency.id == transaction.currency_id %}
                                     {% if account.id == transaction.source_account_id %}
-                                        {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                        <span title="Withdrawal, liab, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                     {% elseif account.id == transaction.destination_account_id %}
-                                        {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                        <span title="Withdrawal, liab, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                     {% else %}
                                         -
                                     {% endif %}
                                 {% endif %}
                                 {% if currency.id == transaction.foreign_currency_id and null != transaction.destination_balance_after and null != transaction.destination_balance_after %}
-                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}
+                                    <span title="Withdrawal, liab, dest 2">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol ?? transaction.currency_symbol, transaction.foreign_currency_decimal_places ?? transaction.currency_decimal_places) }}</span>
                                 {% endif %}
                             {# withdrawal into an expense account #}
                             {% else %}
                                 {% if account.id == transaction.source_account_id %}
-                                    {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                    <span title="Withdrawal, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 {% elseif account.id == transaction.destination_account_id %}
-                                    {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                    <span title="Withdrawal, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                                 {% else %}
                                     -
                                 {% endif %}
                             {% endif %}
                         {% elseif transaction.transaction_type_type == 'Opening balance' %}
                             {% if account.id == transaction.source_account_id %}
-                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                <span title="Opening balance, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% elseif account.id == transaction.destination_account_id %}
-                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
-                                {% else %}
+                                <span title="Opening balance, src">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                            {% else %}
                                 -
                             {% endif %}
                         {% elseif transaction.transaction_type_type == 'Transfer' %}
                             {% if account.id == transaction.source_account_id %}
-                                {{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                <span title="Transfer, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
-                                {{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}
+                                <span title="Transfer, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% endif %}
                         {% else %}
                             &nbsp;

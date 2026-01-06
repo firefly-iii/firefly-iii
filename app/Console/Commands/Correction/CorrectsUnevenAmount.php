@@ -30,6 +30,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
@@ -60,7 +61,7 @@ class CorrectsUnevenAmount extends Command
 
         $this->fixUnevenAmounts();
         $this->matchCurrencies();
-        if (true === config('firefly.feature_flags.running_balance_column')) {
+        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             $this->friendlyInfo('Will recalculate transaction running balance columns. This may take a LONG time. Please be patient.');
             AccountBalanceCalculator::recalculateAll(false);
             $this->friendlyInfo('Done recalculating transaction running balance columns.');
@@ -112,9 +113,9 @@ class CorrectsUnevenAmount extends Command
             if ($source->transaction_currency_id === $destination->transaction_currency_id) {
                 Log::debug('Ready to swap data between transactions.');
                 $destination->foreign_currency_id     = $source->transaction_currency_id;
-                $destination->foreign_amount          = app('steam')->positive($source->amount);
+                $destination->foreign_amount          = Steam::positive($source->amount);
                 $destination->transaction_currency_id = $source->foreign_currency_id;
-                $destination->amount                  = app('steam')->positive($source->foreign_amount);
+                $destination->amount                  = Steam::positive($source->foreign_amount);
                 $destination->balance_dirty           = true;
                 $source->balance_dirty                = true;
                 $destination->save();
@@ -132,11 +133,7 @@ class CorrectsUnevenAmount extends Command
     private function fixUnevenAmounts(): void
     {
         Log::debug('fixUnevenAmounts()');
-        $journals = DB::table('transactions')
-            ->groupBy('transaction_journal_id')
-            ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
-        ;
+        $journals = DB::table('transactions')->groupBy('transaction_journal_id')->whereNull('deleted_at')->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
 
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
@@ -146,11 +143,7 @@ class CorrectsUnevenAmount extends Command
                 || '' === $sum // @phpstan-ignore-line
                 || str_contains($sum, 'e')
                 || str_contains($sum, ',')) {
-                $message = sprintf(
-                    'Journal #%d has an invalid sum ("%s"). No sure what to do.',
-                    $entry->transaction_journal_id,
-                    $entry->the_sum
-                );
+                $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->friendlyWarning($message);
                 Log::warning($message);
                 ++$this->count;
@@ -184,13 +177,7 @@ class CorrectsUnevenAmount extends Command
         $source              = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
+            $this->friendlyError(sprintf('Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
             ++$this->count;
@@ -205,13 +192,7 @@ class CorrectsUnevenAmount extends Command
         $destination         = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
-            $this->friendlyError(
-                sprintf(
-                    'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
-                    $journal->id ?? 0,
-                    $journal->description ?? ''
-                )
-            );
+            $this->friendlyError(sprintf('Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
 
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
@@ -257,8 +238,8 @@ class CorrectsUnevenAmount extends Command
         // source currency = dest foreign currency
         // dest amount = source foreign currency
         // dest currency = source foreign currency
-        //        Log::debug(sprintf('[a] %s', bccomp(app('steam')->positive($source->amount), app('steam')->positive($destination->foreign_amount))));
-        //        Log::debug(sprintf('[b] %s', bccomp(app('steam')->positive($destination->amount), app('steam')->positive($source->foreign_amount))));
+        //        Log::debug(sprintf('[a] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($source->amount), \FireflyIII\Support\Facades\Steam::positive($destination->foreign_amount))));
+        //        Log::debug(sprintf('[b] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($destination->amount), \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount))));
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
         return 0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
@@ -428,9 +409,9 @@ class CorrectsUnevenAmount extends Command
 
             //            // only fix the destination transaction
             //            $destination->foreign_currency_id     = $source->transaction_currency_id;
-            //            $destination->foreign_amount          = app('steam')->positive($source->amount);
+            //            $destination->foreign_amount          = \FireflyIII\Support\Facades\Steam::positive($source->amount);
             //            $destination->transaction_currency_id = $source->foreign_currency_id;
-            //            $destination->amount                  = app('steam')->positive($source->foreign_amount);
+            //            $destination->amount                  = \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount);
             //            $destination->balance_dirty           = true;
             //            $source->balance_dirty                = true;
             //            $destination->save();
