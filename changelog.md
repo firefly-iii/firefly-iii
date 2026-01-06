@@ -8,8 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - [Issue 11264](https://github.com/firefly-iii/firefly-iii/issues/11264) (Add GUI for some settings, replacing environment variables) reported by @jacobburrell
-- [Issue 11410](https://github.com/firefly-iii/firefly-iii/issues/11410) (nitpick: Bulk edit tags should keep the option chosen instead of always changing back to "replace") reported by @jxtxzzw
-- [Discussion 11433](https://github.com/orgs/firefly-iii/discussions/11433) ([Suggestion] Updates to Date Range selection) started by @fett327
+- [Discussion 11433](https://github.com/orgs/firefly-iii/discussions/11433) (Updates to Date Range selection) started by @fett327
 
 ### Changed
 
@@ -38,14 +37,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11443](https://github.com/firefly-iii/firefly-iii/issues/11443) (Exception thrown, when subscription is in foreign currency) reported by @ajgon
 - [Issue 11445](https://github.com/firefly-iii/firefly-iii/issues/11445) (“Reconcile” screen breaks when Preferences → Layout is set to “Year to date”) reported by @semonsir
 - [Issue 11449](https://github.com/firefly-iii/firefly-iii/issues/11449) (Non-strict rules break with "Apply rule" and "Apply rule group") reported by @Bytenka
-
-### Security
-
-- Initial release.
-
-### API
-
-- Initial release.
 
 ## v6.4.14 - 2025-12-17
 
