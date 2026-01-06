@@ -213,10 +213,10 @@ class ReconcileController extends Controller
         $startBalance   = Steam::accountsBalancesOptimized(new Collection()->push($account), $startDate)[$account->id];
         $endBalance     = Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id];
         // round balances.
-        foreach($startBalance as $key => $value) {
+        foreach ($startBalance as $key => $value) {
             $startBalance[$key] = Steam::bcround($value, $currency->decimal_places);
         }
-        foreach($endBalance as $key => $value) {
+        foreach ($endBalance as $key => $value) {
             $endBalance[$key] = Steam::bcround($value, $currency->decimal_places);
         }
 

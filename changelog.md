@@ -7,9 +7,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- #11264
-- #11410
-- #11433
+- [Issue 11264](https://github.com/firefly-iii/firefly-iii/issues/11264) (Add GUI for some settings, replacing environment variables) reported by @jacobburrell
+- [Issue 11410](https://github.com/firefly-iii/firefly-iii/issues/11410) (nitpick: Bulk edit tags should keep the option chosen instead of always changing back to "replace") reported by @jxtxzzw
+- [Discussion 11433](https://github.com/orgs/firefly-iii/discussions/11433) ([Suggestion] Updates to Date Range selection) started by @fett327
 
 ### Changed
 
@@ -28,16 +28,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11378
-- #11383
-- #11388
-- #11396
-- #11399
-- #11403
-- #11410
-- #11443
-- #11445
-- #11449
+- [Issue 11378](https://github.com/firefly-iii/firefly-iii/issues/11378) (Wrong account balance with initial transfer from different currency) reported by @bozho
+- [Issue 11383](https://github.com/firefly-iii/firefly-iii/issues/11383) (Login flow could redirect to javascript path) reported by @stefvonb
+- [Issue 11388](https://github.com/firefly-iii/firefly-iii/issues/11388) (TypeError bugs during upgrade to 6.4.14 + account_balances corruption) reported by @jaconde2
+- [Issue 11396](https://github.com/firefly-iii/firefly-iii/issues/11396) (Reconciliation adds extra digits) reported by @niklas2810
+- [Issue 11399](https://github.com/firefly-iii/firefly-iii/issues/11399) (Unusual behavior in audit logs (multi-currency)) reported by @jgmm81
+- [Issue 11403](https://github.com/firefly-iii/firefly-iii/issues/11403) (Error 404 when trying to view the details (Piggy banks section)) reported by @jgmm81
+- [Issue 11410](https://github.com/firefly-iii/firefly-iii/issues/11410) (nitpick: Bulk edit tags should keep the option chosen instead of always changing back to "replace") reported by @jxtxzzw
+- [Issue 11443](https://github.com/firefly-iii/firefly-iii/issues/11443) (Exception thrown, when subscription is in foreign currency) reported by @ajgon
+- [Issue 11445](https://github.com/firefly-iii/firefly-iii/issues/11445) (“Reconcile” screen breaks when Preferences → Layout is set to “Year to date”) reported by @semonsir
+- [Issue 11449](https://github.com/firefly-iii/firefly-iii/issues/11449) (Non-strict rules break with "Apply rule" and "Apply rule group") reported by @Bytenka
 
 ### Security
 
