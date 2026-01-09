@@ -457,8 +457,9 @@ class FireflyValidator extends Validator
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateSecurePassword($attribute, string $value): bool
+    public function validateSecurePassword($attribute, string|null $value): bool
     {
+        $value = (string)$value;
         $verify = false;
         if (array_key_exists('verify_password', $this->data)) {
             $verify = 1 === (int) $this->data['verify_password'];
@@ -467,7 +468,7 @@ class FireflyValidator extends Validator
             /** @var Verifier $service */
             $service = app(Verifier::class);
 
-            return $service->validPassword($value);
+            return $service->validPassword( $value);
         }
 
         return true;
