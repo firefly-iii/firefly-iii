@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Expressions;
 
+use FireflyIII\Exceptions\FireflyException;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\ExpressionLanguage\SyntaxError;
 
@@ -141,6 +143,10 @@ class ActionExpression
     private function evaluateExpression(string $expr, array $journal): string
     {
         $result = $this->expressionLanguage->evaluate($expr, $journal);
+        if(is_array($result)) {
+            Log::error('Result of evaluating the expression is an array, please investigate', $result);
+            throw new FireflyException('Result of evaluating the expression is an array, please open a GitHub issue about this and include the error logs.');
+        }
 
         return (string) $result;
     }
