@@ -58,6 +58,7 @@ class AcceptHeaders
         // some routes are exempt from this.
         $exempt       = [
             'api.v1.data.bulk.transactions',
+            'api.v1.attachments.upload'
         ];
 
         if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type') && !in_array($request->route()->getName(), $exempt, true)) {
