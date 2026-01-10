@@ -34,7 +34,7 @@ class RemovesBills extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description = 'Remove bills from transactions that shouldn\'t have one.';
+    protected $description = 'Remove subscriptions from transactions that shouldn\'t have one.';
     protected $signature   = 'correction:bills';
 
     /**

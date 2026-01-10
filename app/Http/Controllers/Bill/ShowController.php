@@ -122,6 +122,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Bill $bill): Factory|\Illuminate\Contracts\View\View
     {
+        $this->repository->correctTransfers();
         // add info about rules:
         $rules                      = $this->repository->getRulesForBill($bill);
         $subTitle                   = $bill->name;

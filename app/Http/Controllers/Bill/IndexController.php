@@ -74,6 +74,7 @@ class IndexController extends Controller
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
+        $this->repository->correctTransfers();
         $start       = session('start');
         $end         = session('end');
         $collection  = $this->repository->getBills();
