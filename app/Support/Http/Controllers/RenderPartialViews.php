@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Models\Tag;
 use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -416,8 +417,19 @@ trait RenderPartialViews
         $repository = app(TagRepositoryInterface::class);
         $tags       = $repository->get();
 
+        $grouped = [];
+        /** @var Tag $tag */
+        foreach($tags as $tag) {
+            $year = (int) $tag->date?->year;
+            $grouped[$year] ??= [
+                'tags' => [],
+                'year' => 0 === $year ? trans('firefly.no_date') : $year,
+            ];
+            $grouped[$year]['tags'][] = $tag;
+        }
+        ksort($grouped);
         try {
-            $result = view('reports.options.tag', ['tags' => $tags])->render();
+            $result = view('reports.options.tag', ['tags' => $grouped])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
             $result = 'Could not render view.';

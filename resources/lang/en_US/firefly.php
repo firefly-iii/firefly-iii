@@ -2480,6 +2480,7 @@ return [
     'balanceFor'                                => 'Balance for :name',
     'no_tags'                                   => '(no tags)',
     'nothing_found'                             => '(nothing found)',
+    'no_date' => '(no date)',
 
     // page settings and wizard dialogs
 
