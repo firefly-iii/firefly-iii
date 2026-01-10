@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
-use FireflyIII\Models\TransactionGroup;
 use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
@@ -45,7 +44,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class StoreController
@@ -133,10 +132,9 @@ class StoreController extends Controller
             ->withAPIInformation()
         ;
 
-        /** @var TransactionGroup $selectedGroup */
         $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException();
+            throw HttpException::fromStatusCode(410,'200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         // enrich
