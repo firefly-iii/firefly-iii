@@ -84,7 +84,7 @@ class StoreController extends Controller
      *
      * Store a new transaction.
      *
-     * @throws FireflyException|ValidationException|GoneHttpException
+     * @throws FireflyException|GoneHttpException|ValidationException
      */
     public function store(StoreRequest $request): JsonResponse
     {
