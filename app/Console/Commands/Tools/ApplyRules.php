@@ -253,7 +253,7 @@ class ApplyRules extends Command
                 $this->friendlyWarning(sprintf('Rule group with ID #%d is not active, so this ID will be ignored.', $ruleGroupId));
                 continue;
             }
-            $this->ruleGroupSelection[] = $ruleGroup->id;
+            $this->ruleGroupSelection[] = $ruleGroupId;
         }
 
         return true;
@@ -283,7 +283,7 @@ class ApplyRules extends Command
                 $this->friendlyWarning(sprintf('Rule with ID #%d is not active, so this ID will be ignored.', $ruleId));
                 continue;
             }
-            $this->ruleSelection[] = $rule->id;
+            $this->ruleSelection[] = $ruleId;
         }
 
         return true;
@@ -337,14 +337,17 @@ class ApplyRules extends Command
 
     private function getRulesToApply(): Collection
     {
+        Log::debug('getRulesToApply()');
         $rulesToApply = new Collection();
 
         /** @var RuleGroup $group */
         foreach ($this->groups as $group) {
+            Log::debug(sprintf('Found rule group #%d', $group->id));
             $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
 
             /** @var Rule $rule */
             foreach ($rules as $rule) {
+                Log::debug(sprintf('Found rule #%d', $rule->id));
                 // if in rule selection, or group in selection or all rules, it's included.
                 $test = $this->includeRule($rule, $group);
                 if ($test) {
@@ -353,14 +356,15 @@ class ApplyRules extends Command
                 }
             }
         }
+        Log::debug(sprintf('Found %d rules to apply.', $rulesToApply->count()));
 
         return $rulesToApply;
     }
 
     private function includeRule(Rule $rule, RuleGroup $group): bool
     {
-        return in_array($group->id, $this->ruleGroupSelection, true)
-               || in_array($rule->id, $this->ruleSelection, true)
+        return in_array((int)$group->id, $this->ruleGroupSelection, true)
+               || in_array((int)$rule->id, $this->ruleSelection, true)
                || $this->allRules;
     }
 }
