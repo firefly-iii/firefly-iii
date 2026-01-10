@@ -135,7 +135,7 @@ class StoreController extends Controller
 
         $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw HttpException::fromStatusCode(410,'200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
+            throw HttpException::fromStatusCode(410, '200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         // enrich
