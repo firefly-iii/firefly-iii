@@ -143,8 +143,9 @@ class ActionExpression
     private function evaluateExpression(string $expr, array $journal): string
     {
         $result = $this->expressionLanguage->evaluate($expr, $journal);
-        if(is_array($result)) {
+        if (is_array($result)) {
             Log::error('Result of evaluating the expression is an array, please investigate', $result);
+
             throw new FireflyException('Result of evaluating the expression is an array, please open a GitHub issue about this and include the error logs.');
         }
 

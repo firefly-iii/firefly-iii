@@ -53,6 +53,7 @@ interface BillRepositoryInterface
      * Add correct order to bills.
      */
     public function correctOrder(): void;
+
     public function correctTransfers(): void;
 
     public function destroy(Bill $bill): bool;

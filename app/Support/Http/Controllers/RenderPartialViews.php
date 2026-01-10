@@ -417,10 +417,11 @@ trait RenderPartialViews
         $repository = app(TagRepositoryInterface::class);
         $tags       = $repository->get();
 
-        $grouped = [];
+        $grouped    = [];
+
         /** @var Tag $tag */
-        foreach($tags as $tag) {
-            $year = (int) $tag->date?->year;
+        foreach ($tags as $tag) {
+            $year                     = (int) $tag->date?->year;
             $grouped[$year] ??= [
                 'tags' => [],
                 'year' => 0 === $year ? trans('firefly.no_date') : $year,
@@ -428,6 +429,7 @@ trait RenderPartialViews
             $grouped[$year]['tags'][] = $tag;
         }
         ksort($grouped);
+
         try {
             $result = view('reports.options.tag', ['tags' => $grouped])->render();
         } catch (Throwable $e) {
