@@ -44,6 +44,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
@@ -83,7 +84,7 @@ class StoreController extends Controller
      *
      * Store a new transaction.
      *
-     * @throws FireflyException|ValidationException
+     * @throws FireflyException|ValidationException|GoneHttpException
      */
     public function store(StoreRequest $request): JsonResponse
     {
