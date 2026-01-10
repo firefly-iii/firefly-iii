@@ -70,10 +70,10 @@ class UpdatedGroupEventHandler
         foreach ($event->transactionGroup->transactionJournals as $journal) {
             $source     = $journal->transactions()->where('amount', '<', '0')->first();
             $dest       = $journal->transactions()->where('amount', '>', '0')->first();
-            if(null !== $source) {
+            if (null !== $source) {
                 $repository->deleteStatisticsForModel($source->account, $journal->date);
             }
-            if(null !== $dest) {
+            if (null !== $dest) {
                 $repository->deleteStatisticsForModel($dest->account, $journal->date);
             }
 
