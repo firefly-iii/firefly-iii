@@ -720,6 +720,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             ->transactionJournals()
             ->whereNotNull('bill_id')
             ->where('transaction_type_id', '!=', $withdrawal->id)
-            ->update(['bill_id' => null]);
+            ->update(['bill_id' => null])
+        ;
     }
 }

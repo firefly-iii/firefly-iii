@@ -47,8 +47,8 @@ class ApplyRules extends Command
 
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
-    protected                            $signature
-        = 'firefly-iii:apply-rules
+    protected $signature
+                           = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
                             {--accounts= : A comma-separated list of asset accounts or liabilities to apply your rules to.}
@@ -75,7 +75,7 @@ class ApplyRules extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
+        $start             = microtime(true);
         $this->stupidLaravel();
         if (!$this->verifyAccessToken()) {
             $this->friendlyError('Invalid access token.');
@@ -87,19 +87,19 @@ class ApplyRules extends Command
         $this->ruleRepository->setUser($this->getUser());
         $this->ruleGroupRepository->setUser($this->getUser());
 
-        $result = $this->verifyInput();
+        $result            = $this->verifyInput();
         if (false === $result) {
             return 1;
         }
 
-        $this->allRules = $this->option('all_rules');
+        $this->allRules    = $this->option('all_rules');
 
         // always get all the rules of the user.
         $this->grabAllRules();
 
         // loop all groups and rules and indicate if they're included:
-        $rulesToApply = $this->getRulesToApply();
-        $count        = $rulesToApply->count();
+        $rulesToApply      = $this->getRulesToApply();
+        $count             = $rulesToApply->count();
         if (0 === $count) {
             $this->friendlyError('No rules or rule groups have been included.');
             $this->friendlyWarning('Make a selection using:');
@@ -112,7 +112,7 @@ class ApplyRules extends Command
 
         // create new rule engine:
         /** @var RuleEngineInterface $ruleEngine */
-        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine        = app(RuleEngineInterface::class);
         $ruleEngine->setRules($rulesToApply);
         $ruleEngine->setUser($this->getUser());
 
@@ -121,7 +121,7 @@ class ApplyRules extends Command
         foreach ($this->accounts as $account) {
             $filterAccountList[] = $account->id;
         }
-        $list = implode(',', $filterAccountList);
+        $list              = implode(',', $filterAccountList);
         $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
@@ -135,7 +135,7 @@ class ApplyRules extends Command
         $ruleEngine->fire();
 
         $this->friendlyLine('');
-        $end = round(microtime(true) - $start, 2);
+        $end               = round(microtime(true) - $start, 2);
         $this->friendlyPositive(sprintf('Done in %s seconds!', $end));
 
         return 0;
@@ -185,14 +185,14 @@ class ApplyRules extends Command
      */
     private function verifyInputAccounts(): bool
     {
-        $accountString = $this->option('accounts');
+        $accountString     = $this->option('accounts');
         if (null === $accountString || '' === $accountString) {
             $this->friendlyError('Please use the --accounts option to indicate the accounts to apply rules to.');
 
             return false;
         }
-        $finalList   = new Collection();
-        $accountList = explode(',', $accountString);
+        $finalList         = new Collection();
+        $accountList       = explode(',', $accountString);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -201,16 +201,19 @@ class ApplyRules extends Command
             $accountId = (int)$accountId;
             if (0 === $accountId) {
                 $this->friendlyWarning('You provided an account with ID 0 (zero). It will be ignored.');
+
                 continue;
             }
-            $account = $accountRepository->find($accountId);
+            $account   = $accountRepository->find($accountId);
             if (null === $account) {
                 $this->friendlyWarning(sprintf('There is no account with ID #%d, it cannot be added.', $accountId));
+
                 continue;
             }
-            $type = $account->accountType->type;
+            $type      = $account->accountType->type;
             if (!in_array($account->accountType->type, $this->acceptedAccounts, true)) {
                 $this->friendlyWarning(sprintf('Account "%s" with ID #%d is of type "%s" and cannot be added.', $account->name, $accountId, $type));
+
                 continue;
             }
             $finalList->push($account);
@@ -221,7 +224,7 @@ class ApplyRules extends Command
 
             return false;
         }
-        $this->accounts = $finalList;
+        $this->accounts    = $finalList;
 
         return true;
     }
@@ -233,24 +236,27 @@ class ApplyRules extends Command
             // can be empty.
             return true;
         }
-        $ruleGroupList = explode(',', $ruleGroupString);
+        $ruleGroupList   = explode(',', $ruleGroupString);
 
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroupId = (int)$ruleGroupId;
+            $ruleGroupId                = (int)$ruleGroupId;
 
             if (0 === $ruleGroupId) {
                 $this->friendlyWarning('You added a rule group with ID 0 (zero). It will be skipped.');
+
                 continue;
             }
 
-            $ruleGroup = $this->ruleGroupRepository->find($ruleGroupId);
+            $ruleGroup                  = $this->ruleGroupRepository->find($ruleGroupId);
 
             if (null === $ruleGroup) {
                 $this->friendlyWarning(sprintf('There is no rule group with ID #%d, this ID will be ignored.', $ruleGroupId));
+
                 continue;
             }
             if (false === $ruleGroup->active) {
                 $this->friendlyWarning(sprintf('Rule group with ID #%d is not active, so this ID will be ignored.', $ruleGroupId));
+
                 continue;
             }
             $this->ruleGroupSelection[] = $ruleGroupId;
@@ -266,21 +272,24 @@ class ApplyRules extends Command
             // can be empty.
             return true;
         }
-        $ruleList = explode(',', $ruleString);
+        $ruleList   = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
-            $ruleId = (int)$ruleId;
+            $ruleId                = (int)$ruleId;
             if (0 === $ruleId) {
                 $this->friendlyWarning('You added a rule with ID 0 (zero). It will be skipped.');
+
                 continue;
             }
-            $rule = $this->ruleRepository->find($ruleId);
+            $rule                  = $this->ruleRepository->find($ruleId);
             if (null === $rule) {
                 $this->friendlyWarning(sprintf('There is no rule with ID #%d, this ID will be ignored.', $ruleId));
+
                 continue;
             }
             if (false === $rule->active) {
                 $this->friendlyWarning(sprintf('Rule with ID #%d is not active, so this ID will be ignored.', $ruleId));
+
                 continue;
             }
             $this->ruleSelection[] = $ruleId;
@@ -295,13 +304,13 @@ class ApplyRules extends Command
     private function verifyInputDates(): void
     {
         // parse start date.
-        $inputStart  = today(config('app.timezone'))->startOfMonth();
-        $startString = $this->option('start_date');
+        $inputStart      = today(config('app.timezone'))->startOfMonth();
+        $startString     = $this->option('start_date');
         if (null === $startString) {
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $repository->setUser($this->getUser());
-            $first = $repository->firstNull();
+            $first      = $repository->firstNull();
             if (null !== $first) {
                 $inputStart = $first->date;
             }
@@ -311,8 +320,8 @@ class ApplyRules extends Command
         }
 
         // parse end date
-        $inputEnd  = today(config('app.timezone'));
-        $endString = $this->option('end_date');
+        $inputEnd        = today(config('app.timezone'));
+        $endString       = $this->option('end_date');
         if (null !== $endString && '' !== $endString) {
             $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
         }
@@ -353,7 +362,7 @@ class ApplyRules extends Command
                     Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $rulesToApply->push($rule);
                 }
-                if(!$test) {
+                if (!$test) {
                     Log::debug(sprintf('Will not include rule #%d', $rule->id));
                 }
             }
