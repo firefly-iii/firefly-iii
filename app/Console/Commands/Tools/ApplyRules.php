@@ -247,7 +247,19 @@ class ApplyRules extends Command
         $ruleList   = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
+            $ruleId = (int) $ruleId;
+            if(0 === $ruleId) {
+                $this->friendlyWarning('You added a rule with ID 0 (zero). It will be skipped.');
+                continue;
+            }
             $rule = $this->ruleRepository->find((int) $ruleId);
+            if(null === $rule) {
+                $this->friendlyWarning(sprintf('There is no rule with ID #%d, this ID will be ignored.', $ruleId));
+                continue;
+            }
+            if(false === $rule->active) {
+                $this->friendlyWarning(sprintf('Rule with ID #%d is not active, so this ID will be ignored.', $ruleId));
+            }
             if ($rule instanceof Rule && true === $rule->active) {
                 $this->ruleSelection[] = $rule->id;
             }
