@@ -342,17 +342,19 @@ class ApplyRules extends Command
 
         /** @var RuleGroup $group */
         foreach ($this->groups as $group) {
-            Log::debug(sprintf('Found rule group #%d', $group->id));
+            Log::debug(sprintf('Scanning rule group #%d', $group->id));
             $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
 
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                Log::debug(sprintf('Found rule #%d', $rule->id));
                 // if in rule selection, or group in selection or all rules, it's included.
                 $test = $this->includeRule($rule, $group);
                 if ($test) {
                     Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $rulesToApply->push($rule);
+                }
+                if(!$test) {
+                    Log::debug(sprintf('Will not include rule #%d', $rule->id));
                 }
             }
         }
