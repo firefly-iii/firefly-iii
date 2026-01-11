@@ -2,6 +2,8 @@
  * Skin: Firefly III dark
  * Built upon the code below with some extra things.
  * https://raw.githubusercontent.com/anvyst/adminlte-skin-midnight/master/build/less/skins/skin-midnight.less
+ *
+ * To minify, just throw it in cyber chef.
  * ------------
  */
 .force-background-tags-input {
@@ -163,10 +165,17 @@
 .skin-firefly-iii .ti-input {
   border: 1px solid #353c42 !important;
 }
-.skin-firefly-iii code {
-  background-color: #343941;
-  color: #c9d1d9;
+.skin-firefly-iii pre {
+    background-color: #1f2327;
+    border: 1px solid #3a4046;
 }
+
+.skin-firefly-iii code {
+    background-color:transparent;
+    color:#eee;
+}
+
+
 .skin-firefly-iii .modal-content {
   position: relative;
   background-color: #353c42;
