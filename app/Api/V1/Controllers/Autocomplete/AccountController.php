@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -37,6 +36,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -51,7 +51,7 @@ class AccountController extends Controller
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
     /** @var array<int, string> */
-    private array                      $balanceTypes;
+    private array $balanceTypes;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -60,16 +60,14 @@ class AccountController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $this->balanceTypes = [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
     }
 
@@ -83,24 +81,18 @@ class AccountController extends Controller
     public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
         Log::debug('Before All.');
-        [
-            'types' => $types,
-            'query' => $query,
-            'date'  => $date,
-            'limit' => $limit,
-        ]
-                     = $request->attributes->all();
+        ['types' => $types, 'query' => $query, 'date'  => $date, 'limit' => $limit] = $request->attributes->all();
 
         $date ??= today(config('app.timezone'));
 
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
-        $return      = [];
-        $timer       = Timer::getInstance();
+        $return                                                                     = [];
+        $timer                                                                      = Timer::getInstance();
         $timer->start(sprintf('AC accounts "%s"', $query));
-        $result      = $this->repository->searchAccount((string)$query, $types, $limit);
-        $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
+        $result                                                                     = $this->repository->searchAccount((string) $query, $types, $limit);
+        $allBalances                                                                = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */
         foreach ($result as $account) {
@@ -118,17 +110,17 @@ class AccountController extends Controller
             }
 
             $return[]        = [
-                'id'                              => (string)$account->id,
+                'id'                              => (string) $account->id,
                 'name'                            => $account->name,
                 'name_with_balance'               => $nameWithBalance,
                 'active'                          => $account->active,
                 'type'                            => $account->accountType->type,
-                'currency_id'                     => (string)$useCurrency->id,
+                'currency_id'                     => (string) $useCurrency->id,
                 'currency_name'                   => $useCurrency->name,
                 'currency_code'                   => $useCurrency->code,
                 'currency_symbol'                 => $useCurrency->symbol,
                 'currency_decimal_places'         => $useCurrency->decimal_places,
-                'account_currency_id'             => (string)$currency->id,
+                'account_currency_id'             => (string) $currency->id,
                 'account_currency_name'           => $currency->name,
                 'account_currency_code'           => $currency->code,
                 'account_currency_symbol'         => $currency->symbol,
@@ -137,16 +129,13 @@ class AccountController extends Controller
         }
 
         // custom order.
-        usort(
-            $return,
-            static function (array $left, array $right): int {
-                $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
-                $posA  = (int)array_search($left['type'], $order, true);
-                $posB  = (int)array_search($right['type'], $order, true);
+        usort($return, static function (array $left, array $right): int {
+            $order = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value];
+            $posA  = (int) array_search($left['type'], $order, true);
+            $posB  = (int) array_search($right['type'], $order, true);
 
-                return $posA - $posB;
-            }
-        );
+            return $posA - $posB;
+        });
         $timer->stop(sprintf('AC accounts "%s"', $query));
 
         return response()->api($return);
