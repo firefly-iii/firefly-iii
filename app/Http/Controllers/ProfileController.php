@@ -91,7 +91,7 @@ class ProfileController extends Controller
      *
      * @throws FireflyException
      */
-    public function confirmEmailChange(UserRepositoryInterface $repository, string $token): Redirector|RedirectResponse
+    public function confirmEmailChange(UserRepositoryInterface $repository, #[\SensitiveParameter] string $token): Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
@@ -388,7 +388,7 @@ class ProfileController extends Controller
      *
      * @throws FireflyException
      */
-    public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash): Redirector|RedirectResponse
+    public function undoEmailChange(UserRepositoryInterface $repository, #[\SensitiveParameter] string $token, string $hash): Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));

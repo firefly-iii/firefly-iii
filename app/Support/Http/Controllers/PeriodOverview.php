@@ -331,7 +331,7 @@ trait PeriodOverview
         }
 
         return $this->statistics->filter(
-            fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type
+            static fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && $statistic->type === $type
         );
     }
 
@@ -344,7 +344,7 @@ trait PeriodOverview
         }
 
         return $this->statistics->filter(
-            fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
+            static fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
         );
     }
 
