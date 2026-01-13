@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class ObjectGroupController
@@ -46,16 +46,14 @@ class ObjectGroupController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(ObjectGroupRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(ObjectGroupRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -69,11 +67,7 @@ class ObjectGroupController extends Controller
 
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
-            $return[] = [
-                'id'    => (string) $objectGroup->id,
-                'name'  => $objectGroup->title,
-                'title' => $objectGroup->title,
-            ];
+            $return[] = ['id'    => (string) $objectGroup->id, 'name'  => $objectGroup->title, 'title' => $objectGroup->title];
         }
 
         return response()->api($return);

@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search\QueryParser;
 
 use Illuminate\Support\Facades\Log;
+use SensitiveParameter;
 
 /**
  * Single-pass parser that processes query strings into structured nodes.
@@ -202,7 +203,7 @@ class QueryParser implements QueryParserInterface
         return new NodeGroup($nodes, $prohibited);
     }
 
-    private function createNode(#[\SensitiveParameter] string $token, string $fieldName, bool $prohibited): Node
+    private function createNode(#[SensitiveParameter] string $token, string $fieldName, bool $prohibited): Node
     {
         if ('' !== $fieldName) {
             // OK dus hoe trim je \" correct?

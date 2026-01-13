@@ -33,6 +33,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Support\Str;
 use Override;
+use SensitiveParameter;
 
 /**
  * Class RemoteUserProvider
@@ -100,7 +101,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function retrieveByToken($identifier, #[\SensitiveParameter] $token): ?Authenticatable
+    public function retrieveByToken($identifier, #[SensitiveParameter] $token): ?Authenticatable
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 
@@ -114,7 +115,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @throws FireflyException
      */
-    public function updateRememberToken(Authenticatable $user, #[\SensitiveParameter] $token): void
+    public function updateRememberToken(Authenticatable $user, #[SensitiveParameter] $token): void
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 

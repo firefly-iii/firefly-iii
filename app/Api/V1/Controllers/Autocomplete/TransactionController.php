@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteTransactionApiRequest;
@@ -34,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
@@ -43,7 +43,7 @@ class TransactionController extends Controller
 {
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
     private TransactionGroupRepositoryInterface $groupRepository;
-    private JournalRepositoryInterface          $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * TransactionController constructor.
@@ -51,19 +51,17 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository      = app(JournalRepositoryInterface::class);
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
-                $this->groupRepository->setUser($this->user);
-                $this->groupRepository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository      = app(JournalRepositoryInterface::class);
+            $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
+            $this->groupRepository->setUser($this->user);
+            $this->groupRepository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function transactions(AutocompleteTransactionApiRequest $request): JsonResponse

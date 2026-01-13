@@ -49,9 +49,9 @@ class AccountController extends Controller
     use CleansChartData;
     use CollectsAccountsFromFilter;
 
-    protected array $acceptedRoles                = [UserRoleEnum::READ_ONLY];
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array                      $chartData = [];
+    private array $chartData       = [];
     private AccountRepositoryInterface $repository;
 
     /**
@@ -60,16 +60,14 @@ class AccountController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
-                $this->validateUserGroup($request);
-                $this->repository->setUserGroup($this->userGroup);
-                $this->repository->setUser($this->user);
+        $this->middleware(function (Request $request, $next) {
+            $this->repository = app(AccountRepositoryInterface::class);
+            $this->validateUserGroup($request);
+            $this->repository->setUserGroup($this->userGroup);
+            $this->repository->setUser($this->user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -115,14 +113,14 @@ class AccountController extends Controller
             'label'                   => $account->name,
 
             // the currency that belongs to the account.
-            'currency_id'             => (string)$currency->id,
+            'currency_id'             => (string) $currency->id,
             'currency_name'           => $currency->name,
             'currency_code'           => $currency->code,
             'currency_symbol'         => $currency->symbol,
             'currency_decimal_places' => $currency->decimal_places,
 
             // the primary currency
-            'primary_currency_id'     => (string)$this->primaryCurrency->id,
+            'primary_currency_id'     => (string) $this->primaryCurrency->id,
 
             // the default currency of the user (could be the same!)
             'date'                    => $params['start']->toAtomString(),
@@ -136,7 +134,7 @@ class AccountController extends Controller
         ];
         if ($this->convertToPrimary) {
             $currentSet['pc_entries']                      = [];
-            $currentSet['primary_currency_id']             = (string)$this->primaryCurrency->id;
+            $currentSet['primary_currency_id']             = (string) $this->primaryCurrency->id;
             $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
             $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
             $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
@@ -151,7 +149,6 @@ class AccountController extends Controller
             $previous                      = $balance;
             $currentSet['entries'][$label] = $balance;
 
-
             // do the same for the primary currency balance, if relevant:
             $pcBalance                     = null;
             if ($this->convertToPrimary) {
@@ -160,6 +157,7 @@ class AccountController extends Controller
                 $currentSet['pc_entries'][$label] = $pcBalance;
             }
             $currentStart                  = Navigation::addPeriod($currentStart, $period);
+
             // $currentStart->addDay();
         }
         $this->chartData[] = $currentSet;

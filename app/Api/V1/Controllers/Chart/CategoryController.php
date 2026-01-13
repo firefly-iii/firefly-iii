@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
@@ -40,6 +39,7 @@ use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -52,25 +52,23 @@ class CategoryController extends Controller
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private AccountRepositoryInterface  $accountRepos;
+    private AccountRepositoryInterface $accountRepos;
     private CurrencyRepositoryInterface $currencyRepos;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->accountRepos  = app(AccountRepositoryInterface::class);
-                $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-                $this->accountRepos->setUserGroup($this->userGroup);
-                $this->currencyRepos->setUserGroup($this->userGroup);
-                $this->accountRepos->setUser($this->user);
-                $this->currencyRepos->setUser($this->user);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->accountRepos  = app(AccountRepositoryInterface::class);
+            $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+            $this->accountRepos->setUserGroup($this->userGroup);
+            $this->currencyRepos->setUserGroup($this->userGroup);
+            $this->accountRepos->setUser($this->user);
+            $this->currencyRepos->setUser($this->user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -88,7 +86,12 @@ class CategoryController extends Controller
 
         /** @var Carbon $end */
         $end        = $request->attributes->get('end');
-        $accounts   = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value]);
+        $accounts   = $this->accountRepos->getAccountsByType([
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::ASSET->value,
+        ]);
         $currencies = [];
         $return     = [];
         $converter  = new ExchangeRateConverter();
@@ -104,7 +107,7 @@ class CategoryController extends Controller
         /** @var array $journal */
         foreach ($journals as $journal) {
             // find journal:
-            $journalCurrencyId              = (int)$journal['currency_id'];
+            $journalCurrencyId              = (int) $journal['currency_id'];
             $type                           = $journal['transaction_type_type'];
             $currency                       = $currencies[$journalCurrencyId] ?? $this->currencyRepos->find($journalCurrencyId);
             $currencies[$journalCurrencyId] = $currency;
@@ -113,7 +116,7 @@ class CategoryController extends Controller
             $currencyCode                   = $currency->code;
             $currencySymbol                 = $currency->symbol;
             $currencyDecimalPlaces          = $currency->decimal_places;
-            $amount                         = Steam::positive((string)$journal['amount']);
+            $amount                         = Steam::positive((string) $journal['amount']);
             $pcAmount                       = null;
 
             // overrule if necessary:
@@ -130,18 +133,17 @@ class CategoryController extends Controller
                 Log::debug(sprintf('Converted %s %s to %s %s', $journal['currency_code'], $amount, $this->primaryCurrency->code, $pcAmount));
             }
 
-
-            $categoryName                   = $journal['category_name'] ?? (string)trans('firefly.no_category');
+            $categoryName                   = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $key                            = sprintf('%s-%s', $categoryName, $currencyCode);
             // create arrays
             $return[$key] ??= [
                 'label'                           => $categoryName,
-                'currency_id'                     => (string)$currencyId,
+                'currency_id'                     => (string) $currencyId,
                 'currency_name'                   => $currencyName,
                 'currency_code'                   => $currencyCode,
                 'currency_symbol'                 => $currencySymbol,
                 'currency_decimal_places'         => $currencyDecimalPlaces,
-                'primary_currency_id'             => (string)$this->primaryCurrency->id,
+                'primary_currency_id'             => (string) $this->primaryCurrency->id,
                 'primary_currency_name'           => $this->primaryCurrency->name,
                 'primary_currency_code'           => $this->primaryCurrency->code,
                 'primary_currency_symbol'         => $this->primaryCurrency->symbol,
@@ -151,14 +153,8 @@ class CategoryController extends Controller
                 'end_date'                        => $end->toAtomString(),
                 'yAxisID'                         => 0,
                 'type'                            => 'bar',
-                'entries'                         => [
-                    'spent'  => '0',
-                    'earned' => '0',
-                ],
-                'pc_entries'                      => [
-                    'spent'  => '0',
-                    'earned' => '0',
-                ],
+                'entries'                         => ['spent'  => '0', 'earned' => '0'],
+                'pc_entries'                      => ['spent'  => '0', 'earned' => '0'],
             ];
 
             // add monies
@@ -182,7 +178,10 @@ class CategoryController extends Controller
         $return     = array_values($return);
 
         // order by amount
-        usort($return, static fn (array $a, array $b): int => ((float)$a['entries']['spent'] + (float)$a['entries']['earned']) < ((float)$b['entries']['spent'] + (float)$b['entries']['earned']) ? 1 : -1);
+        usort($return, static fn (array $a, array $b): int => ((float) $a['entries']['spent'] + (float) $a['entries']['earned'])
+        < ((float) $b['entries']['spent'] + (float) $b['entries']['earned'])
+            ? 1
+            : -1);
 
         return response()->json($this->clean($return));
     }
