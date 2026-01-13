@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class CategoryController
@@ -46,16 +46,14 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(CategoryRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(CategoryRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -65,12 +63,7 @@ class CategoryController extends Controller
     public function categories(AutocompleteApiRequest $request): JsonResponse
     {
         $result   = $this->repository->searchCategory($request->attributes->get('query'), $request->attributes->get('limit'));
-        $filtered = $result->map(
-            static fn (Category $item): array => [
-                'id'   => (string) $item->id,
-                'name' => $item->name,
-            ]
-        );
+        $filtered = $result->map(static fn (Category $item): array => ['id'   => (string) $item->id, 'name' => $item->name]);
 
         return response()->api($filtered->toArray());
     }

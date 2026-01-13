@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\DestroyRequest;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -49,6 +48,7 @@ use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -63,13 +63,11 @@ class DestroyController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function destroy(DestroyRequest $request): JsonResponse
@@ -77,10 +75,40 @@ class DestroyController extends Controller
         $objects         = $request->getObjects();
         $this->unused    = $request->boolean('unused');
 
-        $allExceptAssets = [AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::REVENUE->value];
-        $all             = [AccountTypeEnum::ASSET->value, AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::CASH->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::IMPORT->value, AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::LIABILITY_CREDIT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::RECONCILIATION->value];
+        $allExceptAssets = [
+            AccountTypeEnum::BENEFICIARY->value,
+            AccountTypeEnum::CASH->value,
+            AccountTypeEnum::CREDITCARD->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::IMPORT->value,
+            AccountTypeEnum::INITIAL_BALANCE->value,
+            AccountTypeEnum::LIABILITY_CREDIT->value,
+            AccountTypeEnum::RECONCILIATION->value,
+            AccountTypeEnum::REVENUE->value,
+        ];
+        $all             = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::BENEFICIARY->value,
+            AccountTypeEnum::CASH->value,
+            AccountTypeEnum::CREDITCARD->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::IMPORT->value,
+            AccountTypeEnum::INITIAL_BALANCE->value,
+            AccountTypeEnum::LIABILITY_CREDIT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::RECONCILIATION->value,
+        ];
         $liabilities     = [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value];
-        $transactions    = [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::RECONCILIATION->value];
+        $transactions    = [
+            TransactionTypeEnum::WITHDRAWAL->value,
+            TransactionTypeEnum::DEPOSIT->value,
+            TransactionTypeEnum::TRANSFER->value,
+            TransactionTypeEnum::RECONCILIATION->value,
+        ];
 
         match ($objects) {
             'budgets'                => $this->destroyBudgets(),
@@ -101,7 +129,7 @@ class DestroyController extends Controller
             'withdrawals'            => $this->destroyTransactions([TransactionTypeEnum::WITHDRAWAL->value]),
             'deposits'               => $this->destroyTransactions([TransactionTypeEnum::DEPOSIT->value]),
             'transfers'              => $this->destroyTransactions([TransactionTypeEnum::TRANSFER->value]),
-            default                  => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects)),
+            default                  => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects))
         };
 
         Preferences::mark();

@@ -70,8 +70,8 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Str;
 use Laravel\Passport\HasApiTokens;
 use NotificationChannels\Pushover\PushoverReceiver;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use SensitiveParameter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class User extends Authenticatable
 {
