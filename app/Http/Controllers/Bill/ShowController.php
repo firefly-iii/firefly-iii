@@ -29,7 +29,6 @@ use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
