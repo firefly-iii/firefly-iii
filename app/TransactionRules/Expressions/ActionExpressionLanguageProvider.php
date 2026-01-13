@@ -34,7 +34,7 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
 {
     public function getFunctions(): array
     {
-        $function = function ($arguments, $str): string {
+        $function = static function ($arguments, $str): string {
             if (!is_string($str)) {
                 return (string) $str;
             }

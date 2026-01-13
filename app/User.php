@@ -452,7 +452,7 @@ class User extends Authenticatable
      *
      * @param string $token
      */
-    public function sendPasswordResetNotification($token): void
+    public function sendPasswordResetNotification(#[\SensitiveParameter] $token): void
     {
         $ipAddress = Request::ip();
 

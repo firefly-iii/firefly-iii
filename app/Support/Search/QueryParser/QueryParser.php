@@ -202,7 +202,7 @@ class QueryParser implements QueryParserInterface
         return new NodeGroup($nodes, $prohibited);
     }
 
-    private function createNode(string $token, string $fieldName, bool $prohibited): Node
+    private function createNode(#[\SensitiveParameter] string $token, string $fieldName, bool $prohibited): Node
     {
         if ('' !== $fieldName) {
             // OK dus hoe trim je \" correct?

@@ -105,7 +105,7 @@ class TransactionSummarizer
             $amount                       = (string)($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
-                'currency_id'             => $currencyId,
+                'currency_id'             => (string) $currencyId,
                 'currency_name'           => $currencyName,
                 'currency_symbol'         => $currencySymbol,
                 'currency_code'           => $currencyCode,
@@ -124,7 +124,7 @@ class TransactionSummarizer
                 $amount = (string)($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',
-                    'currency_id'             => $foreignCurrencyId,
+                    'currency_id'             => (string) $foreignCurrencyId,
                     'currency_name'           => $foreignCurrencyName,
                     'currency_symbol'         => $foreignCurrencySymbol,
                     'currency_code'           => $foreignCurrencyCode,

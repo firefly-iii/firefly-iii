@@ -31,5 +31,5 @@ interface Verifier
     /**
      * Verify the given password against (some) service.
      */
-    public function validPassword(string $password): bool;
+    public function validPassword(#[\SensitiveParameter] string $password): bool;
 }

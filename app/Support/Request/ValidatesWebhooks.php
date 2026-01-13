@@ -35,7 +35,7 @@ trait ValidatesWebhooks
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator): void {
+            static function (Validator $validator): void {
                 Log::debug('Validating webhook');
                 if (count($validator->failed()) > 0) {
                     return;

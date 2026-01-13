@@ -36,7 +36,7 @@ class PwndVerifierV2 implements Verifier
     /**
      * Verify the given password against (some) service.
      */
-    public function validPassword(string $password): bool
+    public function validPassword(#[\SensitiveParameter] string $password): bool
     {
         // Yes SHA1 is unsafe but in this context its fine.
         $hash   = sha1($password);

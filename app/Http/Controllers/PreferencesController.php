@@ -198,12 +198,14 @@ class PreferencesController extends Controller
      */
     public function postIndex(PreferencesRequest $request): Redirector|RedirectResponse
     {
+        Log::debug('postIndex for preferences.');
         // front page accounts
         $frontpageAccounts = [];
         if (is_array($request->get('frontpageAccounts')) && count($request->get('frontpageAccounts')) > 0) {
             foreach ($request->get('frontpageAccounts') as $id) {
                 $frontpageAccounts[] = (int)$id;
             }
+            Log::debug('Update frontpageAccounts', $frontpageAccounts);
             Preferences::set('frontpageAccounts', $frontpageAccounts);
         }
 
@@ -212,14 +214,17 @@ class PreferencesController extends Controller
         foreach (config('notifications.notifications.user') as $key => $info) {
             $key = sprintf('notification_%s', $key);
             if (array_key_exists($key, $all)) {
+                Log::debug(sprintf('update notification to true: %s', $key));
                 Preferences::set($key, true);
             }
             if (!array_key_exists($key, $all)) {
+                Log::debug(sprintf('update notification to false: %s', $key));
                 Preferences::set($key, false);
             }
         }
 
         // view range:
+        Log::debug(sprintf('Let viewRange to "%s"', $request->get('viewRange')));
         Preferences::set('viewRange', $request->get('viewRange'));
         // forget session values:
         session()->forget('start');
@@ -319,6 +324,7 @@ class PreferencesController extends Controller
         // save and continue
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         Preferences::mark();
+        Log::debug('Done saving settings.');
 
         return redirect(route('preferences.index'));
     }

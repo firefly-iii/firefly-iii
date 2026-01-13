@@ -52,6 +52,6 @@ class Configuration extends Model
      */
     protected function data(): Attribute
     {
-        return Attribute::make(get: fn ($value): mixed => json_decode((string)$value), set: fn ($value): array => ['data' => json_encode($value)]);
+        return Attribute::make(get: static fn ($value): mixed => json_decode((string)$value), set: static fn ($value): array => ['data' => json_encode($value)]);
     }
 }

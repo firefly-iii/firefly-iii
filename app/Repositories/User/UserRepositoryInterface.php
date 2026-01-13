@@ -64,7 +64,7 @@ interface UserRepositoryInterface
     /**
      * @return mixed
      */
-    public function changePassword(User $user, string $password);
+    public function changePassword(User $user, #[\SensitiveParameter] string $password);
 
     public function changeStatus(User $user, bool $isBlocked, string $code): bool;
 
