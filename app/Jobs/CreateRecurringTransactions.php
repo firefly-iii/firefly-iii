@@ -157,7 +157,7 @@ class CreateRecurringTransactions implements ShouldQueue
     private function filterRecurrences(Collection $recurrences): Collection
     {
         return $recurrences->filter(
-            fn (Recurrence $recurrence): bool => $this->validRecurrence($recurrence)
+            $this->validRecurrence(...)
         );
     }
 

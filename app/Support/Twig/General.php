@@ -392,7 +392,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'phpdate',
-            static fn (string $str): string => date($str)
+            date(...)
         );
     }
 
@@ -400,9 +400,7 @@ class General extends AbstractExtension
     {
         return new TwigFunction(
             'fireflyiiiconfig',
-            static function (string $string, mixed $default): mixed {
-                return FireflyConfig::get($string, $default)->data;
-            }
+            static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data
         );
     }
 }

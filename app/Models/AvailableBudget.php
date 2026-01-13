@@ -103,7 +103,7 @@ class AvailableBudget extends Model
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: static fn (string $value): Carbon => Carbon::parse($value),
+            get: Carbon::parse(...),
             set: static fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
@@ -111,7 +111,7 @@ class AvailableBudget extends Model
     protected function startDate(): Attribute
     {
         return Attribute::make(
-            get: static fn (string $value): Carbon => Carbon::parse($value),
+            get: Carbon::parse(...),
             set: static fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
