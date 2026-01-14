@@ -30,6 +30,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
+
 use function Safe\preg_match;
 
 /**
@@ -55,7 +56,8 @@ class AppServiceProvider extends ServiceProvider
 
             return response()
                 ->json($value)
-                ->withHeaders($headers);
+                ->withHeaders($headers)
+            ;
         });
 
         // blade extension
@@ -68,14 +70,14 @@ class AppServiceProvider extends ServiceProvider
             return '';
         });
         Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name = Route::getCurrentRoute()->getName() ?? '';
+            $name       = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 
             /** @var null|array $params */
             $params     = Route::getCurrentRoute()->parameters();
-            $params     ??= [];
+            $params ??= [];
             $objectType = $params['objectType'] ?? '';
 
             return $objectType === $firstParam && str_contains($name, $route);
