@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         // Passport::$clientUuids = false;
-        Response::macro('api', static function (array $value) {
+        Response::macro('api',  function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
             ];
@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         // blade extension
-        Blade::directive('activeXRoutePartial', static function (string $route): string {
+        Blade::directive('activeXRoutePartial',  function (string $route): string {
             $name = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
@@ -69,7 +69,7 @@ class AppServiceProvider extends ServiceProvider
 
             return '';
         });
-        Blade::if('partialroute', static function (string $route, string $firstParam = ''): bool {
+        Blade::if('partialroute',  function (string $route, string $firstParam = ''): bool {
             $name       = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
