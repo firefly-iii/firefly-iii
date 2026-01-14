@@ -20,6 +20,7 @@ null-type-hint = "null_pipe"
 
 [linter]
 integrations = ["symfony", "laravel", "phpunit"]
+excludes = ["app/Providers/AppServiceProvider.php"]  # Additionally excluded from linter only
 
 [linter.rules]
 ambiguous-function-call = { enabled = false }

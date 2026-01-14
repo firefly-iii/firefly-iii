@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
 use Override;
-
 use function Safe\preg_match;
 
 /**
@@ -45,23 +44,22 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         // Passport::$clientUuids = false;
-        Response::macro('api',  function (array $value) {
+        Response::macro('api', function (array $value) {
             $headers = [
                 'Cache-Control' => 'no-store',
             ];
-            $uuid    = (string) request()->header('X-Trace-Id');
+            $uuid    = (string)request()->header('X-Trace-Id');
             if ('' !== trim($uuid) && (1 === preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
                 $headers['X-Trace-Id'] = $uuid;
             }
 
             return response()
                 ->json($value)
-                ->withHeaders($headers)
-            ;
+                ->withHeaders($headers);
         });
 
         // blade extension
-        Blade::directive('activeXRoutePartial',  function (string $route): string {
+        Blade::directive('activeXRoutePartial', function (string $route): string {
             $name = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
@@ -69,15 +67,15 @@ class AppServiceProvider extends ServiceProvider
 
             return '';
         });
-        Blade::if('partialroute',  function (string $route, string $firstParam = ''): bool {
-            $name       = Route::getCurrentRoute()->getName() ?? '';
+        Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
+            $name = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 
             /** @var null|array $params */
             $params     = Route::getCurrentRoute()->parameters();
-            $params ??= [];
+            $params     ??= [];
             $objectType = $params['objectType'] ?? '';
 
             return $objectType === $firstParam && str_contains($name, $route);
