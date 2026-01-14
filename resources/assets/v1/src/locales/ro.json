@@ -30,8 +30,8 @@
         "submission_options": "Op\u0163iuni de depunere",
         "apply_rules_checkbox": "Aplic\u0103 regulile",
         "fire_webhooks_checkbox": "Webhook-uri de incendiu",
-        "no_budget_pointer": "Se pare c\u0103 nu ave\u021bi \u00eenc\u0103 bugete. Ar trebui s\u0103 crea\u021bi c\u00e2teva pe pagina <a href=\"\/budgets\">bugete<\/a>. Bugetele v\u0103 pot ajuta s\u0103 \u021bine\u021bi eviden\u021ba cheltuielilor.",
-        "no_bill_pointer": "You seem to have no subscription yet. You should create some on the <a href=\"subscriptions\">subscription<\/a>-page. Subscriptions can help you keep track of expenses.",
+        "no_budget_pointer": "Se pare c\u0103 nu ai \u00eenc\u0103 bugete. Creeaz\u0103-le pe pagina <a href=\"budgets\">bugete<\/a>. Bugetele te ajut\u0103 s\u0103 \u021bii eviden\u021ba cheltuielilor.",
+        "no_bill_pointer": "Se pare c\u0103 nu ai \u00eenc\u0103 abonamente. Creeaz\u0103-le pe pagina <a href=\"subscriptions\">abonamente<\/a>. Abonamentele te ajut\u0103 s\u0103 \u021bii eviden\u021ba cheltuielilor.",
         "source_account": "Contul surs\u0103",
         "hidden_fields_preferences": "Pute\u021bi activa mai multe op\u021biuni de tranzac\u021bie \u00een <a href=\"preferences\">preferin\u021bele<\/a> dvs.",
         "destination_account": "Contul de destina\u021bie",
@@ -189,6 +189,6 @@
     },
     "config": {
         "html_language": "ro",
-        "date_time_fns": "MMMM do yyy @ HH:mm:ss"
+        "date_time_fns": "MMMM do yyyy @ HH:mm:ss"
     }
 }
