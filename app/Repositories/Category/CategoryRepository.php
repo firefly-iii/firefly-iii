@@ -331,7 +331,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
     public function searchCategory(string $query, int $limit): Collection
     {
-        $search = $this->user->categories();
+        $search = $this->user->categories()->orderBy('name', 'ASC');
         if ('' !== $query) {
             $search->whereLike('name', sprintf('%%%s%%', $query));
         }
