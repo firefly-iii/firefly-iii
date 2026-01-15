@@ -182,6 +182,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     {
         $query = $this->user->transactionJournals()
             ->orderBy('date', 'DESC')
+            ->orderBy('description', 'ASC')
         ;
         if ('' !== $search) {
             $query->whereLike('description', sprintf('%%%s%%', $search));
