@@ -514,7 +514,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     {
         $query = sprintf('%%%s%%', $query);
 
-        return $this->user->bills()->whereLike('name', $query)->take($limit)->get();
+        return $this->user->bills()->orderBy('name','ASC')->whereLike('name', $query)->take($limit)->get();
     }
 
     public function setObjectGroup(Bill $bill, string $objectGroupTitle): Bill

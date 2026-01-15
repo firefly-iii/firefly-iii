@@ -431,7 +431,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
                     'objectGroups',
                 ]
             )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()
+            ->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC')->distinct()
         ;
         if ('' !== $query) {
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
