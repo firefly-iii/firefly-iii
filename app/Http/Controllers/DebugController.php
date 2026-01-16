@@ -113,7 +113,9 @@ class DebugController extends Controller
 
         // also do some recalculations.
         Artisan::call('correction:recalculates-liabilities');
-        AccountBalanceCalculator::recalculateAll(false);
+        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            AccountBalanceCalculator::recalculateAll(false);
+        }
 
         try {
             Artisan::call('twig:clean');
