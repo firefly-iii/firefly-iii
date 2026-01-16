@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Support\Collection;
@@ -217,6 +218,9 @@ class UpdatedGroupEventHandler
 
     private function updateRunningBalance(UpdatedTransactionGroup $event): void
     {
+        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            return;
+        }
         Log::debug(__METHOD__);
         $group = $event->transactionGroup;
         foreach ($group->transactionJournals as $journal) {
