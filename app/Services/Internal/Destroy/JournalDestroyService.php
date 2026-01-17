@@ -41,51 +41,6 @@ class JournalDestroyService
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
-            Log::debug(sprintf('Will now delete transaction #%d', $transaction->id));
-            $transaction->delete();
-        }
-
-        // also delete journal_meta entries.
-        /** @var TransactionJournalMeta $meta */
-        foreach ($journal->transactionJournalMeta()->get() as $meta) {
-            Log::debug(sprintf('Will now delete meta-entry #%d', $meta->id));
-            $meta->delete();
-        }
-
-        // also delete attachments.
-        /** @var Attachment $attachment */
-        foreach ($journal->attachments()->get() as $attachment) {
-            $attachment->delete();
-        }
-
-        // delete all from 'budget_transaction_journal'
-        DB::table('budget_transaction_journal')
-            ->where('transaction_journal_id', $journal->id)->delete()
-        ;
-
-        // delete all from 'category_transaction_journal'
-        DB::table('category_transaction_journal')
-            ->where('transaction_journal_id', $journal->id)->delete()
-        ;
-
-        // delete all from 'tag_transaction_journal'
-        DB::table('tag_transaction_journal')
-            ->where('transaction_journal_id', $journal->id)->delete()
-        ;
-
-        // delete all links:
-        TransactionJournalLink::where('source_id', $journal->id)->delete();
-        TransactionJournalLink::where('destination_id', $journal->id)->delete();
-
-        // delete all notes
-        $journal->notes()->delete();
-
-        // update events
-        // TODO move to repository
-        $journal->piggyBankEvents()->update(['transaction_journal_id' => null]);
-
         $journal->delete();
 
         // delete group, if group is empty:
