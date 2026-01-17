@@ -12,7 +12,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Discussion 11431](https://github.com/orgs/firefly-iii/discussions/11431) (Settings don't get saved) started by @PVTejas
 - [Issue 11473](https://github.com/firefly-iii/firefly-iii/issues/11473) (Searching transaction with two tags_contains returns results matching only one of those) reported by @F-DXI
 - [Issue 11474](https://github.com/firefly-iii/firefly-iii/issues/11474) (Potential error in sub total computation for group in subscription) reported by @ma-clog
-- [Discussion 11475](https://github.com/orgs/firefly-iii/discussions/11475) (Potential error in sub total computation for group in subscription) started by @ma-clog
 - [Issue 11479](https://github.com/firefly-iii/firefly-iii/issues/11479) (Editing a user profile as admin without setting a new password causes a 500 Internal server error) reported by @watertrainer
 - [Issue 11501](https://github.com/firefly-iii/firefly-iii/issues/11501) (Schema of /api/v1/available-budgets different from spec) reported by @RadCod3
 - [Issue 11502](https://github.com/firefly-iii/firefly-iii/issues/11502) (Visual bug - Transaction notes' markdown doesn't properly render code blocks in dark mode) reported by @AyluinReymaer
