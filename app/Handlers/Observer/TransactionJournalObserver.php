@@ -25,7 +25,9 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -48,13 +50,37 @@ class TransactionJournalObserver
             }
         });
 
+        // delete all links:
+        TransactionJournalLink::where('source_id', $transactionJournal->id)->delete();
+        TransactionJournalLink::where('destination_id', $transactionJournal->id)->delete();
+
+        // update events
+        // TODO move to repository
+        $transactionJournal->piggyBankEvents()->update(['transaction_journal_id' => null]);
+
+        // delete all from 'budget_transaction_journal'
+        DB::table('budget_transaction_journal')->where('transaction_journal_id', $transactionJournal->id)->delete();
+
+        // delete all from 'category_transaction_journal'
+        DB::table('category_transaction_journal')->where('transaction_journal_id', $transactionJournal->id)->delete();
+
+        // delete all from 'tag_transaction_journal'
+        DB::table('tag_transaction_journal')->where('transaction_journal_id', $transactionJournal->id)->delete();
+
         /** @var Attachment $attachment */
         foreach ($transactionJournal->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }
+        $transactionJournal->transactionJournalMeta()->delete();
         $transactionJournal->locations()->delete();
+        $transactionJournal->notes()->delete();
         $transactionJournal->sourceJournalLinks()->delete();
         $transactionJournal->destJournalLinks()->delete();
         $transactionJournal->auditLogEntries()->delete();
+
+        // set all transactions AFTER this one to balance_dirty for recalc.
+
+
+
     }
 }
