@@ -213,7 +213,7 @@ class FireflyValidator extends Validator
         // replace characters outside of ASCI range.
         try {
             $value = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $value);
-        } catch(ErrorException $e) {
+        } catch (ErrorException $e) {
             Log::error(sprintf('Could not convert IBAN "%s" to safe characters. Future steps may fail.', $value));
             Log::error($e->getMessage());
         }
