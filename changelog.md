@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.16 - 2026-01-18
+
+> [!WARNING]
+> This will be one of the last Firefly III data importer releases that supports PHP 8.4.
+
+### Fixed
+- #11431
+- #11473
+- #11474
+- #11475
+- #11479
+- #11501
+- #11502
+- #11508
+- #11509
+- #11524
+- #11531
+
+### Changed
+- Rules that delete a transaction will no longer throws a 500, but a 410.
+
 ## v6.4.15 - 2026-01-07
 
 ### Added
