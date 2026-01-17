@@ -34,6 +34,7 @@ use Laravel\Passport\Console\KeysCommand;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\FilesystemException;
+
 use function Safe\file_get_contents;
 use function Safe\file_put_contents;
 
@@ -64,8 +65,9 @@ class OAuthKeys
         Log::debug(sprintf('Private key file at "%s" exists? %s', $private, var_export($privateExists, true)));
         Log::debug(sprintf('Public key file at "%s" exists ? %s', $public, var_export($publicExists, true)));
 
-        $result = file_exists($private) && file_exists($public);
+        $result        = file_exists($private) && file_exists($public);
         Log::debug(sprintf('Method will return %s', var_export($result, true)));
+
         return $result;
     }
 
@@ -83,7 +85,7 @@ class OAuthKeys
             try {
                 $privateKey = trim((string)FireflyConfig::get(self::PRIVATE_KEY)?->data);
                 $publicKey  = trim((string)FireflyConfig::get(self::PUBLIC_KEY)?->data);
-            } catch (ContainerExceptionInterface | FireflyException | NotFoundExceptionInterface $e) {
+            } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
             }
@@ -100,7 +102,7 @@ class OAuthKeys
         if ('' !== $publicKey) {
             Log::debug(sprintf('SHA2 hash of public key in DB : %s', hash('sha256', $publicKey)));
         }
-        $return = '' !== $privateKey && '' !== $publicKey;
+        $return     = '' !== $privateKey && '' !== $publicKey;
         Log::debug(sprintf('keysInDatabase will return %s', var_export($return, true)));
 
         return $return;
@@ -136,10 +138,11 @@ class OAuthKeys
             FireflyConfig::delete(self::PRIVATE_KEY);
             FireflyConfig::delete(self::PUBLIC_KEY);
             Log::debug('Done with generateKeysFromDB(), return FALSE');
+
             return false;
         }
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
+        $private    = storage_path('oauth-private.key');
+        $public     = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 
