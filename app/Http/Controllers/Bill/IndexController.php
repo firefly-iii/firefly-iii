@@ -70,27 +70,27 @@ class IndexController extends Controller
     /**
      * Show all bills.
      */
-    public function index(): Application | Factory | \Illuminate\Contracts\Foundation\Application | View
+    public function index(): Application|Factory|\Illuminate\Contracts\Foundation\Application|View
     {
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
         $this->repository->correctTransfers();
-        $start      = session('start');
-        $end        = session('end');
-        $collection = $this->repository->getBills();
-        $total      = $collection->count();
+        $start       = session('start');
+        $end         = session('end');
+        $collection  = $this->repository->getBills();
+        $total       = $collection->count();
 
 
-        $parameters = new ParameterBag();
+        $parameters  = new ParameterBag();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new SubscriptionEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start->clone());
         $enrichment->setEnd($end);
-        $collection = $enrichment->enrich($collection);
+        $collection  = $enrichment->enrich($collection);
 
 
         $parameters->set('start', $start->clone());
@@ -103,21 +103,21 @@ class IndexController extends Controller
         $transformer->setParameters($parameters);
 
         // loop all bills, convert to array and add rules and stuff.
-        $rules = $this->repository->getRulesForBills($collection);
+        $rules       = $this->repository->getRulesForBills($collection);
 
         // make bill groups:
-        $bills = [
+        $bills       = [
             0 => [ // the index is the order, not the ID.
-                   'object_group_id'    => 0,
-                   'object_group_title' => (string)trans('firefly.default_group_title_name'),
-                   'bills'              => [],
+                'object_group_id'    => 0,
+                'object_group_title' => (string)trans('firefly.default_group_title_name'),
+                'bills'              => [],
             ],
         ];
 
         /** @var Bill $bill */
         foreach ($collection as $bill) {
-            $array      = $transformer->transform($bill);
-            $groupOrder = (int)$array['object_group_order'];
+            $array                            = $transformer->transform($bill);
+            $groupOrder                       = (int)$array['object_group_order'];
             // make group array if necessary:
             $bills[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'],
@@ -139,9 +139,9 @@ class IndexController extends Controller
         ksort($bills);
 
         // summarise per currency / per group.
-        $sums   = $this->getSums($bills);
-        $totals = $this->getTotals($sums);
-        $today  = now()->startOfDay();
+        $sums        = $this->getSums($bills);
+        $totals      = $this->getTotals($sums);
+        $today       = now()->startOfDay();
 
         return view('bills.index', ['bills' => $bills, 'sums' => $sums, 'total' => $total, 'totals' => $totals, 'today' => $today]);
     }
@@ -157,18 +157,21 @@ class IndexController extends Controller
             Log::debug(sprintf('Summing up group "%s"', $group['object_group_title']));
             if (0 === count($group['bills'])) {
                 Log::debug('Group has no subscriptions, continue');
+
                 continue;
             }
             Log::debug(sprintf('Group has %d subscription(s)', count($group['bills'])));
+
             /** @var array $bill */
             foreach ($group['bills'] as $bill) {
                 if (false === $bill['active']) {
                     Log::debug(sprintf('Skip subscription #%d, inactive.', $bill['id']));
+
                     continue;
                 }
                 Log::debug(sprintf('Now at subscription #%d.', $bill['id']));
 
-                $currencyId                     = $bill['currency_id'];
+                $currencyId                                   = $bill['currency_id'];
                 $sums[$groupOrder][$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $bill['currency_code'],
@@ -202,7 +205,7 @@ class IndexController extends Controller
                     }
                 }
 
-                $perPeriod = $this->amountPerPeriod($bill, $range);
+                $perPeriod                                    = $this->amountPerPeriod($bill, $range);
                 Log::debug(sprintf('Add amount %s to per_period', $perPeriod));
                 // fill in per period regardless:
                 $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $perPeriod);
@@ -214,7 +217,7 @@ class IndexController extends Controller
 
     private function amountPerPeriod(array $bill, string $range): string
     {
-        $avg = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+        $avg        = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
 
         Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
         Log::debug(sprintf('Average is %s', $avg));
@@ -231,7 +234,7 @@ class IndexController extends Controller
         Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
 
         // per period:
-        $division  = [
+        $division   = [
             '1Y'      => '1',
             '6M'      => '2',
             '3M'      => '4',
@@ -246,7 +249,7 @@ class IndexController extends Controller
             'last90'  => '4',
             'last365' => '1',
         ];
-        $perPeriod = bcdiv($yearAmount, $division[$range]);
+        $perPeriod  = bcdiv($yearAmount, $division[$range]);
 
         Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
 
@@ -269,7 +272,7 @@ class IndexController extends Controller
              * @var array $entry
              */
             foreach ($array as $currencyId => $entry) {
-                $totals[$currencyId]               ??= [
+                $totals[$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $entry['currency_code'],
                     'currency_name'           => $entry['currency_name'],
