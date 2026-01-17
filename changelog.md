@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.16 - 2026-01-18
+
+> [!WARNING]
+> This will be one of the last Firefly III data importer releases that supports PHP 8.4.
+
+### Fixed
+- [Discussion 11431](https://github.com/orgs/firefly-iii/discussions/11431) (Settings don't get saved) started by @PVTejas
+- [Issue 11473](https://github.com/firefly-iii/firefly-iii/issues/11473) (Searching transaction with two tags_contains returns results matching only one of those) reported by @F-DXI
+- [Issue 11474](https://github.com/firefly-iii/firefly-iii/issues/11474) (Potential error in sub total computation for group in subscription) reported by @ma-clog
+- [Issue 11479](https://github.com/firefly-iii/firefly-iii/issues/11479) (Editing a user profile as admin without setting a new password causes a 500 Internal server error) reported by @watertrainer
+- [Issue 11501](https://github.com/firefly-iii/firefly-iii/issues/11501) (Schema of /api/v1/available-budgets different from spec) reported by @RadCod3
+- [Issue 11502](https://github.com/firefly-iii/firefly-iii/issues/11502) (Visual bug - Transaction notes' markdown doesn't properly render code blocks in dark mode) reported by @AyluinReymaer
+- [Discussion 11508](https://github.com/orgs/firefly-iii/discussions/11508) (Grouped Piggy banks show as ungrouped when creating a transaction) started by @AyluinReymaer
+- [Discussion 11509](https://github.com/orgs/firefly-iii/discussions/11509) (IBAN - iconv(): Wrong encoding) started by @s0fax
+- [Discussion 11524](https://github.com/orgs/firefly-iii/discussions/11524) (Can items in dropdowns (specifically categories) be sorted alphabetically?) started by @mvpaderin
+- [Issue 11531](https://github.com/firefly-iii/firefly-iii/issues/11531) (Performance: updateRunningBalance executes even when use_running_balance is disabled, causing timeouts on Mass Edits) reported by @maxime-killinger
+
+### Changed
+- Rules that delete a transaction will no longer throws a 500, but a 410.
+
 ## v6.4.15 - 2026-01-07
 
 ### Added

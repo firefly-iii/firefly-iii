@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class RuleController
@@ -38,7 +38,7 @@ use Illuminate\Http\JsonResponse;
 class RuleController extends Controller
 {
     private RuleRepositoryInterface $repository;
-    protected array                 $acceptedRoles = [UserRoleEnum::READ_RULES];
+    protected array $acceptedRoles = [UserRoleEnum::READ_RULES];
 
     /**
      * RuleController constructor.
@@ -46,16 +46,14 @@ class RuleController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(RuleRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(RuleRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function rules(AutocompleteApiRequest $request): JsonResponse
@@ -66,7 +64,7 @@ class RuleController extends Controller
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $response[] = [
-                'id'          => (string)$rule->id,
+                'id'          => (string) $rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
                 'active'      => $rule->active,

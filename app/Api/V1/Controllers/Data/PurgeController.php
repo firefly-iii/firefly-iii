@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Account;
@@ -40,6 +39,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class PurgeController
@@ -51,13 +51,11 @@ class PurgeController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**

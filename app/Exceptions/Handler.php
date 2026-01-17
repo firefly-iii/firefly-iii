@@ -45,6 +45,7 @@ use Override;
 use Symfony\Component\HttpFoundation\Exception\SuspiciousOperationException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -71,6 +72,7 @@ class Handler extends ExceptionHandler
             AuthenticationException::class,
             LaravelValidationException::class,
             NotFoundHttpException::class,
+            GoneHttpException::class,
             OAuthServerException::class,
             LaravelOAuthException::class,
             TokenMismatchException::class,

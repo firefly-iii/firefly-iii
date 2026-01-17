@@ -44,6 +44,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use League\Fractal\Resource\Item;
+use Symfony\Component\HttpKernel\Exception\GoneHttpException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Class StoreController
@@ -82,7 +84,7 @@ class StoreController extends Controller
      *
      * Store a new transaction.
      *
-     * @throws FireflyException|ValidationException
+     * @throws FireflyException|GoneHttpException|ValidationException
      */
     public function store(StoreRequest $request): JsonResponse
     {
@@ -133,7 +135,7 @@ class StoreController extends Controller
 
         $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new FireflyException('200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
+            throw HttpException::fromStatusCode(410, '200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         // enrich

@@ -32,9 +32,9 @@ use Illuminate\Support\Facades\Log;
 
 class TransactionSummarizer
 {
-    private bool                $convertToPrimary = false;
+    private bool $convertToPrimary = false;
     private TransactionCurrency $default;
-    private User                $user;
+    private User $user;
 
     public function __construct(?User $user = null)
     {
@@ -51,7 +51,7 @@ class TransactionSummarizer
             $field                        = 'amount';
 
             // grab default currency information.
-            $currencyId                   = (int)$journal['currency_id'];
+            $currencyId                   = (int) $journal['currency_id'];
             $currencyName                 = $journal['currency_name'];
             $currencySymbol               = $journal['currency_symbol'];
             $currencyCode                 = $journal['currency_code'];
@@ -67,8 +67,8 @@ class TransactionSummarizer
             if ($this->convertToPrimary) {
                 //                Log::debug('convertToPrimary is true.');
                 // if convert to primary currency, use the primary currency amount yes or no?
-                $usePrimary = $this->default->id !== (int)$journal['currency_id'];
-                $useForeign = $this->default->id === (int)$journal['foreign_currency_id'];
+                $usePrimary = $this->default->id !== (int) $journal['currency_id'];
+                $useForeign = $this->default->id === (int) $journal['foreign_currency_id'];
                 if ($usePrimary) {
                     //                    Log::debug(sprintf('Journal #%d switches to primary currency amount (original is %s)', $journal['transaction_journal_id'], $journal['currency_code']));
                     $field                 = 'pc_amount';
@@ -81,7 +81,7 @@ class TransactionSummarizer
                 if ($useForeign) {
                     //                    Log::debug(sprintf('Journal #%d switches to foreign amount (foreign is %s)', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
                     $field                 = 'foreign_amount';
-                    $currencyId            = (int)$journal['foreign_currency_id'];
+                    $currencyId            = (int) $journal['foreign_currency_id'];
                     $currencyName          = $journal['foreign_currency_name'];
                     $currencySymbol        = $journal['foreign_currency_symbol'];
                     $currencyCode          = $journal['foreign_currency_code'];
@@ -91,9 +91,13 @@ class TransactionSummarizer
             if (!$this->convertToPrimary) {
                 //                Log::debug('convertToPrimary is false.');
                 // use foreign amount?
-                $foreignCurrencyId = (int)$journal['foreign_currency_id'];
+                $foreignCurrencyId = (int) $journal['foreign_currency_id'];
                 if (0 !== $foreignCurrencyId) {
-                    Log::debug(sprintf('Journal #%d also includes foreign amount (foreign is "%s")', $journal['transaction_journal_id'], $journal['foreign_currency_code']));
+                    Log::debug(sprintf(
+                        'Journal #%d also includes foreign amount (foreign is "%s")',
+                        $journal['transaction_journal_id'],
+                        $journal['foreign_currency_code']
+                    ));
                     $foreignCurrencyName          = $journal['foreign_currency_name'];
                     $foreignCurrencySymbol        = $journal['foreign_currency_symbol'];
                     $foreignCurrencyCode          = $journal['foreign_currency_code'];
@@ -102,7 +106,7 @@ class TransactionSummarizer
             }
 
             // first process normal amount
-            $amount                       = (string)($journal[$field] ?? '0');
+            $amount                       = (string) ($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
@@ -121,7 +125,7 @@ class TransactionSummarizer
 
             // then process foreign amount, if it exists.
             if (0 !== $foreignCurrencyId && $includeForeign) {
-                $amount = (string)($journal['foreign_amount'] ?? '0');
+                $amount = (string) ($journal['foreign_amount'] ?? '0');
                 $array[$foreignCurrencyId] ??= [
                     'sum'                     => '0',
                     'currency_id'             => $foreignCurrencyId,
@@ -149,13 +153,11 @@ class TransactionSummarizer
 
     public function groupByDirection(array $journals, string $method, string $direction): array
     {
-
         $array            = [];
         $idKey            = sprintf('%s_account_id', $direction);
         $nameKey          = sprintf('%s_account_name', $direction);
         $convertToPrimary = Amount::convertToPrimary($this->user);
         $primary          = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
-
 
         Log::debug(sprintf('groupByDirection(array, %s, %s).', $direction, $method));
         foreach ($journals as $journal) {
@@ -193,13 +195,25 @@ class TransactionSummarizer
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) Steam::{$method}((string)($journal[$field] ?? '0'))); // @phpstan-ignore-line
-            Log::debug(sprintf('Field for transaction #%d is "%s" (%s). Sum: %s', $journal['transaction_group_id'], $currencyCode, $field, $array[$key]['sum']));
+            $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) Steam::{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            Log::debug(sprintf(
+                'Field for transaction #%d is "%s" (%s). Sum: %s',
+                $journal['transaction_group_id'],
+                $currencyCode,
+                $field,
+                $array[$key]['sum']
+            ));
 
             // also do foreign amount, but only when convertToPrimary is false (otherwise we have it already)
             // or when convertToPrimary is true and the foreign currency is ALSO not the default currency.
-            if ((!$convertToPrimary || $journal['foreign_currency_id'] !== $primary->id) && 0 !== (int)$journal['foreign_currency_id']) {
-                Log::debug(sprintf('Use foreign amount from transaction #%d: %s %s. Sum: %s', $journal['transaction_group_id'], $currencyCode, $journal['foreign_amount'], $array[$key]['sum']));
+            if ((!$convertToPrimary || $journal['foreign_currency_id'] !== $primary->id) && 0 !== (int) $journal['foreign_currency_id']) {
+                Log::debug(sprintf(
+                    'Use foreign amount from transaction #%d: %s %s. Sum: %s',
+                    $journal['transaction_group_id'],
+                    $currencyCode,
+                    $journal['foreign_amount'],
+                    $array[$key]['sum']
+                ));
                 $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
                 $array[$key] ??= [
                     'id'                      => $journal[$idKey],
@@ -211,7 +225,7 @@ class TransactionSummarizer
                     'currency_code'           => $journal['foreign_currency_code'],
                     'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
                 ];
-                $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) Steam::{$method}((string)$journal['foreign_amount'])); // @phpstan-ignore-line
+                $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) Steam::{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
             }
         }
 

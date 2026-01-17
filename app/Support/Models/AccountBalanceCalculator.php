@@ -31,6 +31,7 @@ use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -64,6 +65,9 @@ class AccountBalanceCalculator
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
     {
+        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            return;
+        }
         Log::debug(__METHOD__);
         $object   = new self();
 

@@ -54,6 +54,8 @@ interface BillRepositoryInterface
      */
     public function correctOrder(): void;
 
+    public function correctTransfers(): void;
+
     public function destroy(Bill $bill): bool;
 
     public function destroyAll(): void;

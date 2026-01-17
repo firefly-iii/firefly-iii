@@ -54,7 +54,11 @@ class LinkToBill implements ActionInterface
         $billName   = $this->action->getValue($journal);
         $bill       = $repository->findByName($billName);
 
-        if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $journal['transaction_type_type']) {
+        /** @var TransactionJournal $object */
+        $object     = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
+        $type       = $object->transactionType->type;
+
+        if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $count  = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->where('bill_id', $bill->id)->count();
             if (0 !== $count) {
                 Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.', $journal['transaction_journal_id'], $billName));

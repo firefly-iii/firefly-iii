@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class TagController
@@ -46,16 +46,14 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($this->user);
-                $this->repository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($this->user);
+            $this->repository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function tags(AutocompleteApiRequest $request): JsonResponse
@@ -65,11 +63,7 @@ class TagController extends Controller
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
-            $array[] = [
-                'id'   => (string) $tag->id,
-                'name' => $tag->tag,
-                'tag'  => $tag->tag,
-            ];
+            $array[] = ['id'   => (string) $tag->id, 'name' => $tag->tag, 'tag'  => $tag->tag];
         }
 
         return response()->api($array);

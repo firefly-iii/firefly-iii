@@ -30,6 +30,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
+use SensitiveParameter;
 
 /**
  * Interface UserRepositoryInterface.
@@ -64,7 +65,7 @@ interface UserRepositoryInterface
     /**
      * @return mixed
      */
-    public function changePassword(User $user, string $password);
+    public function changePassword(User $user, #[SensitiveParameter] string $password);
 
     public function changeStatus(User $user, bool $isBlocked, string $code): bool;
 

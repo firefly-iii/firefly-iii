@@ -202,7 +202,6 @@ class Navigation
     public function endOfPeriod(Carbon $end, string $repeatFreq): Carbon
     {
         $currentEnd  = clone $end;
-
         // Log::debug(sprintf('Now in endOfPeriod("%s", "%s").', $currentEnd->toIso8601String(), $repeatFreq));
         if ('MTD' === $repeatFreq && $end->isFuture()) {
             // fall back to a monthly schedule if the requested period is MTD.
@@ -324,6 +323,7 @@ class Navigation
             return $result;
         }
         unset($result);
+
 
         if (!array_key_exists($repeatFreq, $functionMap)) {
             Log::error(sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $repeatFreq));

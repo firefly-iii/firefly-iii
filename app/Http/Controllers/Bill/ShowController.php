@@ -29,7 +29,6 @@ use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
@@ -122,6 +121,7 @@ class ShowController extends Controller
      */
     public function show(Request $request, Bill $bill): Factory|\Illuminate\Contracts\View\View
     {
+        $this->repository->correctTransfers();
         // add info about rules:
         $rules                      = $this->repository->getRulesForBill($bill);
         $subTitle                   = $bill->name;
@@ -184,7 +184,7 @@ class ShowController extends Controller
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
             $attachments = $collection->each(
-                static fn (Attachment $attachment) => $transformer->transform($attachment)
+                $transformer->transform(...)
             );
         }
 

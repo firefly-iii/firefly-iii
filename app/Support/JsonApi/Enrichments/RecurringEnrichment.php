@@ -339,7 +339,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                               = $this->collection->filter(fn (Recurrence $item): bool => (int)$item->id === (int)$repetition->recurrence_id)->first();
+            $recurrence                               = $this->collection->filter(static fn (Recurrence $item): bool => (int)$item->id === (int)$repetition->recurrence_id)->first();
             $fromDate                                 = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $recurrenceId                             = (int)$repetition->recurrence_id;
             $repId                                    = (int)$repetition->id;

@@ -179,7 +179,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        $result = array_filter($expenses, fn (array $item): bool => (int)$item['budget_id'] === $budget);
+        $result = array_filter($expenses, static fn (array $item): bool => (int)$item['budget_id'] === $budget);
         Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
 
         return $result;
@@ -187,13 +187,13 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function stringifyIds(): void
     {
-        $this->expenses   = array_map(fn ($first): array => array_map(function (array $second): array {
+        $this->expenses   = array_map(static fn ($first): array => array_map(static function (array $second): array {
             $second['currency_id'] = (string)($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);
 
-        $this->pcExpenses = array_map(fn (array $first): array => array_map(function (array $second): array {
+        $this->pcExpenses = array_map(static fn (array $first): array => array_map(static function (array $second): array {
             $second['currency_id'] ??= 0;
 
             return $second;

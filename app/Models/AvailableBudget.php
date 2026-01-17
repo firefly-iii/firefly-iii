@@ -103,16 +103,16 @@ class AvailableBudget extends Model
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value): Carbon => Carbon::parse($value),
-            set: fn (Carbon $value): string => $value->format('Y-m-d'),
+            get: static fn (string $value): Carbon => Carbon::parse($value),
+            set: static fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
 
     protected function startDate(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value): Carbon => Carbon::parse($value),
-            set: fn (Carbon $value): string => $value->format('Y-m-d'),
+            get: static fn (string $value): Carbon => Carbon::parse($value),
+            set: static fn (Carbon $value): string => $value->format('Y-m-d'),
         );
     }
 

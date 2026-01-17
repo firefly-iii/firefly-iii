@@ -41,7 +41,7 @@ class IndexController extends Controller
 
         // translations:
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-exchange');
                 app('view')->share('title', (string) trans('firefly.header_exchange_rates'));
 

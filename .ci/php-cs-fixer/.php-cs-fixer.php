@@ -40,7 +40,8 @@ return $config->setRules(
 
     [
         // rule sets
-        '@PHP83Migration'               => true,
+        '@PHP8x3Migration'               => true,
+        '@PHP8x4Migration'               => true,
         '@PhpCsFixer'                   => true,
         '@PhpCsFixer:risky'             => true,
         '@PSR12'                        => true,

@@ -784,13 +784,22 @@ trait MetaCollection
         $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
+                $total   = count($transaction['tags']);
+                $matched = 0;
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
-
-                        return true;
+                        ++$matched;
+                        if (1 === count($list)) {
+                            return true;
+                        }
                     }
+                }
+                if (count($list) > 1 && $total === $matched && $matched === count($list)) {
+                    Log::debug(sprintf('All %d searched tags are present.', $total));
+
+                    return true;
                 }
             }
             Log::debug('Transaction has no tags from the list, so return false.');

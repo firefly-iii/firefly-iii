@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class TransactionTypeController
@@ -46,14 +46,12 @@ class TransactionTypeController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(TransactionTypeRepositoryInterface::class);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(TransactionTypeRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function transactionTypes(AutocompleteApiRequest $request): JsonResponse
@@ -64,11 +62,7 @@ class TransactionTypeController extends Controller
         /** @var TransactionType $type */
         foreach ($types as $type) {
             // different key for consistency.
-            $array[] = [
-                'id'   => (string) $type->id,
-                'name' => $type->type,
-                'type' => $type->type,
-            ];
+            $array[] = ['id'   => (string) $type->id, 'name' => $type->type, 'type' => $type->type];
         }
 
         return response()->api($array);

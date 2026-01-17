@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Autocomplete;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Autocomplete\AutocompleteApiRequest;
 use FireflyIII\Enums\UserRoleEnum;
@@ -34,13 +33,14 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class PiggyBankController
  */
 class PiggyBankController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;
     protected array $acceptedRoles = [UserRoleEnum::READ_PIGGY_BANKS];
 
@@ -50,19 +50,17 @@ class PiggyBankController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->piggyRepository   = app(PiggyBankRepositoryInterface::class);
-                $this->accountRepository = app(AccountRepositoryInterface::class);
-                $this->piggyRepository->setUser($this->user);
-                $this->piggyRepository->setUserGroup($this->userGroup);
-                $this->accountRepository->setUser($this->user);
-                $this->accountRepository->setUserGroup($this->userGroup);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->piggyRepository   = app(PiggyBankRepositoryInterface::class);
+            $this->accountRepository = app(AccountRepositoryInterface::class);
+            $this->piggyRepository->setUser($this->user);
+            $this->piggyRepository->setUserGroup($this->userGroup);
+            $this->accountRepository->setUser($this->user);
+            $this->accountRepository->setUserGroup($this->userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function piggyBanks(AutocompleteApiRequest $request): JsonResponse
@@ -84,6 +82,7 @@ class PiggyBankController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
+                'object_group_order'      => $objectGroup?->order,
             ];
         }
 
@@ -108,7 +107,7 @@ class PiggyBankController extends Controller
                     '%s (%s / %s)',
                     $piggy->name,
                     Amount::formatAnything($currency, $currentAmount, false),
-                    Amount::formatAnything($currency, $piggy->target_amount, false),
+                    Amount::formatAnything($currency, $piggy->target_amount, false)
                 ),
                 'currency_id'             => (string) $currency->id,
                 'currency_name'           => $currency->name,

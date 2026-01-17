@@ -28,6 +28,7 @@ use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -61,6 +62,9 @@ class DestroyedGroupEventHandler
 
     private function updateRunningBalance(DestroyedTransactionGroup $event): void
     {
+        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            return;
+        }
         Log::debug(__METHOD__);
         $group = $event->transactionGroup;
         foreach ($group->transactionJournals as $journal) {

@@ -39,6 +39,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Override;
+use SensitiveParameter;
 
 /**
  * Class UserRepository.
@@ -74,7 +75,7 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
-    public function changePassword(User $user, string $password): bool
+    public function changePassword(User $user, #[SensitiveParameter] string $password): bool
     {
         $user->password = bcrypt($password);
         $user->save();

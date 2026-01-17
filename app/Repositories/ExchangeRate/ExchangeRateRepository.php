@@ -55,12 +55,12 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         // orderBy('date', 'DESC')->toRawSql();
         return
             $this->userGroup->currencyExchangeRates()
-                ->where(function (Builder $q1) use ($from, $to): void {
-                    $q1->where(function (Builder $q) use ($from, $to): void {
+                ->where(static function (Builder $q1) use ($from, $to): void {
+                    $q1->where(static function (Builder $q) use ($from, $to): void {
                         $q->where('from_currency_id', $from->id)
                             ->where('to_currency_id', $to->id)
                         ;
-                    })->orWhere(function (Builder $q) use ($from, $to): void {
+                    })->orWhere(static function (Builder $q) use ($from, $to): void {
                         $q->where('from_currency_id', $to->id)
                             ->where('to_currency_id', $from->id)
                         ;

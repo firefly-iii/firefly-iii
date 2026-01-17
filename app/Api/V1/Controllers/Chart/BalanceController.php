@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BalanceController.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -25,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Chart;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Chart\ChartRequest;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -37,6 +35,7 @@ use FireflyIII\Support\Http\Api\AccountBalanceGrouped;
 use FireflyIII\Support\Http\Api\CleansChartData;
 use FireflyIII\Support\Http\Api\CollectsAccountsFromFilter;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class BalanceController
@@ -45,10 +44,11 @@ class BalanceController extends Controller
 {
     use CleansChartData;
     use CollectsAccountsFromFilter;
-    protected array $acceptedRoles            = [UserRoleEnum::READ_ONLY];
 
-    private array                  $chartData = [];
-    private GroupCollectorInterface    $collector;
+    protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
+
+    private array $chartData       = [];
+    private GroupCollectorInterface $collector;
     private AccountRepositoryInterface $repository;
 
     // private TransactionCurrency        $default;
@@ -56,19 +56,17 @@ class BalanceController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(AccountRepositoryInterface::class);
-                $this->collector  = app(GroupCollectorInterface::class);
-                $this->repository->setUserGroup($this->userGroup);
-                $this->collector->setUserGroup($this->userGroup);
-                $this->repository->setUser($this->user);
-                $this->collector->setUser($this->user);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(AccountRepositoryInterface::class);
+            $this->collector  = app(GroupCollectorInterface::class);
+            $this->repository->setUserGroup($this->userGroup);
+            $this->collector->setUserGroup($this->userGroup);
+            $this->repository->setUser($this->user);
+            $this->collector->setUser($this->user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -89,10 +87,16 @@ class BalanceController extends Controller
 
         // get journals for entire period:
 
-        $this->collector->setRange($queryParameters['start'], $queryParameters['end'])
+        $this->collector
+            ->setRange($queryParameters['start'], $queryParameters['end'])
             ->withAccountInformation()
             ->setXorAccounts($accounts)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::RECONCILIATION->value, TransactionTypeEnum::TRANSFER->value])
+            ->setTypes([
+                TransactionTypeEnum::WITHDRAWAL->value,
+                TransactionTypeEnum::DEPOSIT->value,
+                TransactionTypeEnum::RECONCILIATION->value,
+                TransactionTypeEnum::TRANSFER->value,
+            ])
         ;
         $journals        = $this->collector->getExtractedJournals();
 

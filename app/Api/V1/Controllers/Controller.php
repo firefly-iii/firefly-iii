@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Deprecated;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
+use Deprecated;
 use FireflyIII\Exceptions\BadHttpHeaderException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
@@ -63,15 +63,16 @@ abstract class Controller extends BaseController
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
 
-    protected const string CONTENT_TYPE             = 'application/vnd.api+json';
-    protected const string JSON_CONTENT_TYPE        = 'application/json';
-    protected array $accepts                        = ['application/json', 'application/vnd.api+json'];
+    protected const string CONTENT_TYPE      = 'application/vnd.api+json';
+    protected const string JSON_CONTENT_TYPE = 'application/json';
 
-    protected bool                $convertToPrimary = false;
+    protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
+
+    protected bool $convertToPrimary         = false;
     protected TransactionCurrency $primaryCurrency;
 
     /** @deprecated use Request classes */
-    protected ParameterBag        $parameters;
+    protected ParameterBag $parameters;
 
     /**
      * Controller constructor.
@@ -79,26 +80,22 @@ abstract class Controller extends BaseController
     public function __construct()
     {
         // get global parameters
-        $this->middleware(
-            function ($request, $next) {
-                $this->parameters = $this->getParameters();
-                if (auth()->check()) {
-                    $language               = Steam::getLanguage();
-                    $this->convertToPrimary = Amount::convertToPrimary();
-                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
-                    app()->setLocale($language);
-                }
-
-
-                // filter down what this endpoint accepts.
-                if (!$request->accepts($this->accepts)) {
-                    throw new BadHttpHeaderException(sprintf('Sorry, Accept header "%s" is not something this endpoint can provide.', $request->header('Accept')));
-                }
-
-
-                return $next($request);
+        $this->middleware(function ($request, $next) {
+            $this->parameters = $this->getParameters();
+            if (auth()->check()) {
+                $language               = Steam::getLanguage();
+                $this->convertToPrimary = Amount::convertToPrimary();
+                $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                app()->setLocale($language);
             }
-        );
+
+            // filter down what this endpoint accepts.
+            if (!$request->accepts($this->accepts)) {
+                throw new BadHttpHeaderException(sprintf('Sorry, Accept header "%s" is not something this endpoint can provide.', $request->header('Accept')));
+            }
+
+            return $next($request);
+        });
     }
 
     #[Deprecated(message: <<<'TXT'
@@ -108,7 +105,7 @@ abstract class Controller extends BaseController
     private function getParameters(): ParameterBag
     {
         $bag      = new ParameterBag();
-        $page     = (int)request()->get('page');
+        $page     = (int) request()->get('page');
         $page     = min(max(1, $page), 2 ** 16);
         $bag->set('page', $page);
 
@@ -127,10 +124,10 @@ abstract class Controller extends BaseController
             $obj  = null;
             if (null !== $date) {
                 try {
-                    $obj = Carbon::parse((string)$date, config('app.timezone'));
+                    $obj = Carbon::parse((string) $date, config('app.timezone'));
                 } catch (InvalidFormatException $e) {
                     // don't care
-                    Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string)$date, 0, 20), $e->getMessage()));
+                    Log::warning(sprintf('Ignored invalid date "%s" in API controller parameter check: %s', substr((string) $date, 0, 20), $e->getMessage()));
                 }
             }
             if ($obj instanceof Carbon) {
@@ -150,24 +147,27 @@ abstract class Controller extends BaseController
                 $value = null;
             }
             if (null !== $value) {
-                $value = (int)$value;
+                $value = (int) $value;
                 $value = min(max(1, $value), 2 ** 16);
                 $bag->set($integer, $value);
             }
-            if (null === $value
+            if (
+                null === $value
                 && 'limit' === $integer // @phpstan-ignore-line
-                && auth()->check()) {
+                && auth()->check()
+            ) {
                 // set default for user:
                 /** @var User $user */
                 $user     = auth()->user();
 
-                $pageSize = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
+                $pageSize = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
             }
         }
 
         // sort fields:
         return $bag;
+
         // return $this->getSortParameters($bag);
     }
 

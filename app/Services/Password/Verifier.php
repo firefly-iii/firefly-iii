@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Password;
 
+use SensitiveParameter;
+
 /**
  * Interface Verifier.
  */
@@ -31,5 +33,5 @@ interface Verifier
     /**
      * Verify the given password against (some) service.
      */
-    public function validPassword(string $password): bool;
+    public function validPassword(#[SensitiveParameter] string $password): bool;
 }

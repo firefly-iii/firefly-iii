@@ -113,7 +113,7 @@ class Rule extends Model
 
     protected function description(): Attribute
     {
-        return Attribute::make(set: fn ($value): array => ['description' => e($value)]);
+        return Attribute::make(set: static fn ($value): array => ['description' => e($value)]);
     }
 
     protected function order(): Attribute

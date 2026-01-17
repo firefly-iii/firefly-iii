@@ -26,6 +26,7 @@ namespace FireflyIII\Events;
 
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
+use SensitiveParameter;
 
 /**
  * Class RequestedNewPassword.
@@ -46,7 +47,7 @@ class RequestedNewPassword extends Event
     /**
      * Create a new event instance. This event is triggered when a users tries to reset his or her password.
      */
-    public function __construct(User $user, string $token, string $ipAddress)
+    public function __construct(User $user, #[SensitiveParameter] string $token, string $ipAddress)
     {
         $this->user      = $user;
         $this->token     = $token;
