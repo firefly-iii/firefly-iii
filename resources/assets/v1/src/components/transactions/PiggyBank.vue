@@ -80,11 +80,11 @@ export default {
             // add to temp list
             let currentPiggy = res.data[key];
             if (currentPiggy.objectGroup) {
-              let groupOrder = currentPiggy.objectGroup.order;
+              let groupOrder = currentPiggy.object_group_order;
               if (!tempList[groupOrder]) {
                 tempList[groupOrder] = {
                   group: {
-                    title: currentPiggy.objectGroup.title
+                    title: currentPiggy.object_group_title
                   },
                   piggies: [],
                 };
@@ -94,7 +94,7 @@ export default {
                 id: currentPiggy.id
               });
             }
-            if (!currentPiggy.objectGroup) {
+            if (null === currentPiggy.object_group_id) {
               // add to empty one:
               tempList[0].piggies.push({name_with_balance: currentPiggy.name_with_balance, id: currentPiggy.id});
             }
