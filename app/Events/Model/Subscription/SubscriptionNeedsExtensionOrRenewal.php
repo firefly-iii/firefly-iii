@@ -1,8 +1,7 @@
 <?php
-
 /*
- * Updated.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * SubscriptionNeedsExtensionOrRenewal.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,19 +16,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events\Model\Account;
+namespace FireflyIII\Events\Model\Subscription;
 
-use FireflyIII\Models\Account;
+use FireflyIII\Events\Event;
+use FireflyIII\Models\Bill;
 use Illuminate\Queue\SerializesModels;
 
-class Updated
+class SubscriptionNeedsExtensionOrRenewal extends Event
 {
     use SerializesModels;
 
-    public function __construct(public Account $account) {}
+    public function __construct(public Bill $subscription, public string $field, public int $diff) {}
 }

@@ -27,6 +27,7 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
+use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
 use FireflyIII\Models\Bill;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
@@ -143,7 +144,7 @@ class WarnAboutBills implements ShouldQueue
     {
         $diff = $this->getDiff($bill, $field);
         Log::debug('Will now send warning!');
-        event(new WarnUserAboutBill($bill, $field, $diff));
+        event(new SubscriptionNeedsExtensionOrRenewal($bill, $field, $diff));
     }
 
     public function setDate(Carbon $date): void

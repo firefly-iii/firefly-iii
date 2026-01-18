@@ -27,7 +27,6 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
-use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
 use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
@@ -160,10 +159,10 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit',
             ],
 
-            // bill related events:
-            WarnUserAboutBill::class                 => [
-                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
-            ],
+            // subscription related events:
+            //            SubscriptionNeedsExtensionOrRenewal::class                 => [
+            //                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
+            //            ],
             WarnUserAboutOverdueSubscriptions::class => [
                 'FireflyIII\Handlers\Events\BillEventHandler@warnAboutOverdueSubscriptions',
             ],

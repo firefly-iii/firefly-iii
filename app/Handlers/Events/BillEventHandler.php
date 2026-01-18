@@ -27,6 +27,7 @@ namespace FireflyIII\Handlers\Events;
 use Exception;
 use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
 use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
+use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
 use FireflyIII\Models\Bill;
 use FireflyIII\Notifications\User\BillReminder;
 use FireflyIII\Notifications\User\SubscriptionsOverdueReminder;
@@ -104,40 +105,5 @@ class BillEventHandler
         }
 
 
-    }
-
-    public function warnAboutBill(WarnUserAboutBill $event): void
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-
-        $bill       = $event->bill;
-
-        /** @var bool $preference */
-        $preference = Preferences::getForUser($bill->user, 'notification_bill_reminder', true)->data;
-
-        if (true === $preference) {
-            Log::debug('Bill reminder is true!');
-
-            try {
-                Notification::send($bill->user, new BillReminder($bill, $event->field, $event->diff));
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-
-            return;
-        }
-        Log::debug('User has disabled bill reminders.');
     }
 }
