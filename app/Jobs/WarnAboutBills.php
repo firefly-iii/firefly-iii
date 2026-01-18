@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
 use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
+use FireflyIII\Events\Model\Subscription\SubscriptionsAreOverdueForPayment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
@@ -197,8 +197,8 @@ class WarnAboutBills implements ShouldQueue
     private function sendOverdueAlerts(User $user, array $overdue): void
     {
         if (count($overdue) > 0) {
-            Log::debug(sprintf('Will now send warning about overdue bill for user #%d.', $user->id));
-            event(new WarnUserAboutOverdueSubscriptions($user, $overdue));
+            Log::debug(sprintf('Will now send warning about overdue subscription(s) for user #%d.', $user->id));
+            event(new SubscriptionsAreOverdueForPayment($user, $overdue));
         }
     }
 }
