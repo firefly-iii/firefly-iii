@@ -173,9 +173,9 @@ class EventServiceProvider extends ServiceProvider
             //            PiggyBankAmountIsChanged::class => [
             //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
             //            ],
-            ChangedName::class                     => [
-                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
-            ],
+//            ChangedName::class                     => [
+//                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
+//            ],
 
             // rule actions
             RuleActionFailedOnArray::class         => [

@@ -1,8 +1,7 @@
 <?php
-
 /*
- * PiggyBankEventHandler.php
- * Copyright (c) 2023 james@firefly-iii.org
+ * UpdatesRulesForChangedPiggyBankName.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,25 +19,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Listeners\Model\PiggyBank;
 
-namespace FireflyIII\Handlers\Events\Model;
-
-use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
-use FireflyIII\Events\Model\PiggyBank\ChangedName;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankNameIsChanged;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\TransactionGroup;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-/**
- * Class PiggyBankEventHandler
- */
-class PiggyBankEventHandler
+class UpdatesRulesForChangedPiggyBankName implements ShouldQueue
 {
-    public function changedPiggyBankName(ChangedName $event): void
+    public function handle(PiggyBankNameIsChanged $event): void
     {
         // loop all accounts, collect all user's rules.
         /** @var Account $account */
@@ -55,6 +46,5 @@ class PiggyBankEventHandler
             }
         }
     }
-
 
 }
