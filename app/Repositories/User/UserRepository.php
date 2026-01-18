@@ -255,7 +255,7 @@ class UserRepository implements UserRepositoryInterface
         if (!$user instanceof User) {
             throw new FireflyException('User is not a User object.');
         }
-        $now                  = today(config('app.timezone'));
+        $now                  = now(config('app.timezone'));
         $now->addDays(2);
         $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
