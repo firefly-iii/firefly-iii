@@ -108,19 +108,21 @@ class AccountBalanceCalculator
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('transactions.amount', 'DESC')
-            ->where('transactions.account_id', $accountId);
+            ->where('transactions.account_id', $accountId)
+        ;
         $query->where('transaction_journals.date', '<', $notBefore);
 
         $first   = $query->first(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount', 'transactions.balance_after']);
 
-        if(null === $first) {
+        if (null === $first) {
             Log::debug(sprintf('Found no transactions for currency #%d and account #%d, return 0.', $currencyId, $accountId));
+
             return '0';
         }
 
 
         $balance = (string)($first->balance_after ?? '0');
-        Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d on moment %s', Steam::bcround($balance,2), $first->id ?? 0, $notBefore->format('Y-m-d H:i:s')));
+        Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d on moment %s', Steam::bcround($balance, 2), $first->id ?? 0, $notBefore->format('Y-m-d H:i:s')));
 
         return $balance;
     }
@@ -133,7 +135,7 @@ class AccountBalanceCalculator
 
         Log::debug(sprintf('start of optimizedCalculation with date "%s"', $notBefore?->format('Y-m-d H:i:s')));
         if ($accounts->count() > 0) {
-            Log::debug(sprintf('Limited to %d account(s): %s', $accounts->count(), join(', ', $accounts->pluck('id')->toArray())));
+            Log::debug(sprintf('Limited to %d account(s): %s', $accounts->count(), implode(', ', $accounts->pluck('id')->toArray())));
         }
         // collect all transactions and the change they make.
         $balances = [];
@@ -146,7 +148,8 @@ class AccountBalanceCalculator
             ->orderBy('transaction_journals.order', 'desc')
             ->orderBy('transaction_journals.id', 'asc')
             ->orderBy('transaction_journals.description', 'asc')
-            ->orderBy('transactions.amount', 'asc');
+            ->orderBy('transactions.amount', 'asc')
+        ;
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
@@ -171,7 +174,7 @@ class AccountBalanceCalculator
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
             $after                                                         = bcadd($before, (string)$entry->amount);
 
-            Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before,2), Steam::bcround($after, 2)));
+            Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
 
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
