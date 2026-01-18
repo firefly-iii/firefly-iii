@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Exception;
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
@@ -82,7 +82,7 @@ trait ModifiesPiggyBanks
         $pivot->save();
 
         Log::debug('ChangedAmount: removeAmount [a]: Trigger change for negative amount.');
-        event(new ChangedAmount($piggyBank, bcmul($amount, '-1'), $journal, null));
+        event(new PiggyBankAmountIsChanged($piggyBank, bcmul($amount, '-1'), $journal, null));
 
         return true;
     }
@@ -105,7 +105,7 @@ trait ModifiesPiggyBanks
         $pivot->save();
 
         Log::debug('ChangedAmount: addAmount [b]: Trigger change for positive amount.');
-        event(new ChangedAmount($piggyBank, $amount, $journal, null));
+        event(new PiggyBankAmountIsChanged($piggyBank, $amount, $journal, null));
 
         return true;
     }
@@ -178,11 +178,11 @@ trait ModifiesPiggyBanks
 
         if (-1 === bccomp($difference, '0')) {
             Log::debug('ChangedAmount: addAmount [c]: Trigger change for negative amount.');
-            event(new ChangedAmount($piggyBank, $difference, null, null));
+            event(new PiggyBankAmountIsChanged($piggyBank, $difference, null, null));
         }
         if (1 === bccomp($difference, '0')) {
             Log::debug('ChangedAmount: addAmount [d]: Trigger change for positive amount.');
-            event(new ChangedAmount($piggyBank, $difference, null, null));
+            event(new PiggyBankAmountIsChanged($piggyBank, $difference, null, null));
         }
 
         return $piggyBank;

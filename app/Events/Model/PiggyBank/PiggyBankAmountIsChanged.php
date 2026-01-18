@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ChangedAmount
  */
-class ChangedAmount extends Event
+class PiggyBankAmountIsChanged extends Event
 {
     use SerializesModels;
 

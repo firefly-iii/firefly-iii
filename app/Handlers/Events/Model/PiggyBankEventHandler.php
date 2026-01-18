@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events\Model;
 
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBankEvent;
@@ -56,7 +56,7 @@ class PiggyBankEventHandler
         }
     }
 
-    public function changePiggyAmount(ChangedAmount $event): void
+    public function changePiggyAmount(PiggyBankAmountIsChanged $event): void
     {
         // find journal if group is present.
         $journal = $event->transactionJournal;

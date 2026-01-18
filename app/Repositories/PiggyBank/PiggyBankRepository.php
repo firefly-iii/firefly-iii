@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Account;
@@ -448,7 +448,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $piggyBank->piggyBankEvents()->delete();
         foreach ($piggyBank->accounts as $account) {
             if (0 !== bccomp('0', (string) $account->pivot->current_amount)) {
-                event(new ChangedAmount($piggyBank, $account->pivot->current_amount, null, null));
+                event(new PiggyBankAmountIsChanged($piggyBank, $account->pivot->current_amount, null, null));
             }
         }
     }
