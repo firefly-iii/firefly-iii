@@ -1,8 +1,7 @@
 <?php
-
 /*
- * PiggyBankEventHandler.php
- * Copyright (c) 2023 james@firefly-iii.org
+ * CreatesPiggyBankEventForChangedAmount.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,56 +19,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Listeners\Model\PiggyBank;
 
-namespace FireflyIII\Handlers\Events\Model;
-
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
-use FireflyIII\Events\Model\PiggyBank\ChangedName;
-use FireflyIII\Models\Account;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class PiggyBankEventHandler
- */
-class PiggyBankEventHandler
+class CreatesPiggyBankEventForChangedAmount implements ShouldQueue
 {
-    public function changedPiggyBankName(ChangedName $event): void
-    {
-        // loop all accounts, collect all user's rules.
-        /** @var Account $account */
-        foreach ($event->piggyBank->accounts as $account) {
-            /** @var Rule $rule */
-            foreach ($account->user->rules as $rule) {
-                /** @var RuleAction $ruleAction */
-                foreach ($rule->ruleActions()->where('action_type', 'update_piggy')->get() as $ruleAction) {
-                    if ($event->oldName === $ruleAction->action_value) {
-                        $ruleAction->action_value = $event->newName;
-                        $ruleAction->save();
-                    }
-                }
-            }
-        }
-    }
-
-    public function changePiggyAmount(ChangedAmount $event): void
+    public function handle(PiggyBankAmountIsChanged $event): void
     {
         // find journal if group is present.
         $journal = $event->transactionJournal;
         if ($event->transactionGroup instanceof TransactionGroup) {
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
-        $date    = $journal->date ?? today(config('app.timezone'));
+        $date = $journal->date ?? today(config('app.timezone'));
         // sanity check: event must not already exist for this journal and piggy bank.
         if (null !== $journal) {
             $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
-                ->where('transaction_journal_id', $journal->id)
-                ->exists()
-            ;
+                                    ->where('transaction_journal_id', $journal->id)
+                                    ->exists();
             if ($exists) {
                 Log::warning('Already have event for this journal and piggy, will not create another.');
 

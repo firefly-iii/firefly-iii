@@ -1,8 +1,7 @@
 <?php
-
 /*
- * ChangedPiggyBankAmount.php
- * Copyright (c) 2023 james@firefly-iii.org
+ * PiggyBankNameIsChanged.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,34 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
 namespace FireflyIII\Events\Model\PiggyBank;
 
 use FireflyIII\Events\Event;
 use FireflyIII\Models\PiggyBank;
-use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 /**
- * Class ChangedAmount
+ * Needs to be an event because system needs old value as well as the new value.
  */
-class ChangedAmount extends Event
+class PiggyBankNameIsChanged  extends Event
 {
     use SerializesModels;
 
-    public string    $amount;
-    public PiggyBank $piggyBank;
-
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(PiggyBank $piggyBank, string $amount, public ?TransactionJournal $transactionJournal, public ?TransactionGroup $transactionGroup)
-    {
-        Log::debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
-        $this->piggyBank = $piggyBank;
-        $this->amount    = $amount;
-    }
+    public function __construct(public PiggyBank $piggyBank, public string $oldName, public string $newName) {}
 }

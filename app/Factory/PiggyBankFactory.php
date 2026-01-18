@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\ObjectGroup;
@@ -305,7 +305,7 @@ class PiggyBankFactory
             if (0 !== bccomp($oldSavedAmount, $newSavedAmount)) {
                 Log::debug('Amount changed, will create event for it.');
                 // create event for difference.
-                event(new ChangedAmount($piggyBank, bcsub($newSavedAmount, $oldSavedAmount), null, null));
+                event(new PiggyBankAmountIsChanged($piggyBank, bcsub($newSavedAmount, $oldSavedAmount), null, null));
             }
         }
         if (0 === count($toBeLinked)) {

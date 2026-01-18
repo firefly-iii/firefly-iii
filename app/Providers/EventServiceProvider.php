@@ -27,10 +27,6 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
-use FireflyIII\Events\Model\PiggyBank\ChangedName;
-use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
@@ -171,20 +167,20 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent',
             ],
             // piggy bank related events:
-            ChangedAmount::class                   => [
-                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
-            ],
-            ChangedName::class                     => [
-                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
-            ],
+            //            PiggyBankAmountIsChanged::class => [
+            //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
+            //            ],
+            //            ChangedName::class                     => [
+            //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
+            //            ],
 
             // rule actions
-            RuleActionFailedOnArray::class         => [
-                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
-            ],
-            RuleActionFailedOnObject::class        => [
-                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
-            ],
+            //            RuleActionFailedOnArray::class         => [
+            //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
+            //            ],
+            //            RuleActionFailedOnObject::class        => [
+            //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
+            //            ],
 
             // security related
             EnabledMFA::class                      => [

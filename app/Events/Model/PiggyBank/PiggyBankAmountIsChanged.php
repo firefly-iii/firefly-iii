@@ -1,9 +1,8 @@
 <?php
 
-
 /*
- * ChangedName.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * ChangedPiggyBankAmount.php
+ * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -27,11 +26,28 @@ namespace FireflyIII\Events\Model\PiggyBank;
 
 use FireflyIII\Events\Event;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-class ChangedName extends Event
+/**
+ * Class ChangedAmount
+ */
+class PiggyBankAmountIsChanged extends Event
 {
     use SerializesModels;
 
-    public function __construct(public PiggyBank $piggyBank, public string $oldName, public string $newName) {}
+    public string    $amount;
+    public PiggyBank $piggyBank;
+
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(PiggyBank $piggyBank, string $amount, public ?TransactionJournal $transactionJournal, public ?TransactionGroup $transactionGroup)
+    {
+        Log::debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
+        $this->piggyBank = $piggyBank;
+        $this->amount    = $amount;
+    }
 }
