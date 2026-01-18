@@ -27,8 +27,6 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
-use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
@@ -177,12 +175,12 @@ class EventServiceProvider extends ServiceProvider
             //            ],
 
             // rule actions
-            RuleActionFailedOnArray::class         => [
-                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
-            ],
-            RuleActionFailedOnObject::class        => [
-                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
-            ],
+            //            RuleActionFailedOnArray::class         => [
+            //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
+            //            ],
+            //            RuleActionFailedOnObject::class        => [
+            //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
+            //            ],
 
             // security related
             EnabledMFA::class                      => [
