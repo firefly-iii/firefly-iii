@@ -27,7 +27,6 @@ use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\DetectedNewIPAddress;
-use FireflyIII\Events\Model\PiggyBank\ChangedName;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
@@ -173,9 +172,9 @@ class EventServiceProvider extends ServiceProvider
             //            PiggyBankAmountIsChanged::class => [
             //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
             //            ],
-//            ChangedName::class                     => [
-//                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
-//            ],
+            //            ChangedName::class                     => [
+            //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
+            //            ],
 
             // rule actions
             RuleActionFailedOnArray::class         => [
