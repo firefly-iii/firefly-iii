@@ -1,8 +1,7 @@
 <?php
-
 /*
- * BillEventHandler.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * NotifiesAboutOverdueSubscription.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,41 +19,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Model\Subscription;
 
 use Exception;
-use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
-use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
-use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
+use FireflyIII\Events\Model\Subscription\SubscriptionsAreOverdueForPayment;
 use FireflyIII\Models\Bill;
-use FireflyIII\Notifications\User\BillReminder;
 use FireflyIII\Notifications\User\SubscriptionsOverdueReminder;
 use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-use function Safe\json_encode;
-
-/**
- * Class BillEventHandler
- */
-class BillEventHandler
+class NotifiesAboutOverdueSubscriptions implements ShouldQueue
 {
-    public function warnAboutOverdueSubscriptions(WarnUserAboutOverdueSubscriptions $event): void
+    public function handle(SubscriptionsAreOverdueForPayment $event): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // make sure user does not get the warning twice.
-        $overdue          = $event->overdue;
-        $user             = $event->user;
-        $toBeWarned       = [];
-        Log::debug(sprintf('%d bills to warn about.', count($overdue)));
+        $overdue    = $event->overdue;
+        $user       = $event->user;
+        $toBeWarned = [];
+        Log::debug(sprintf('%d subscriptions to warn about.', count($overdue)));
         foreach ($overdue as $item) {
             /** @var Bill $bill */
-            $bill         = $item['bill'];
-            $key          = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
-            $pref         = Preferences::getForUser($bill->user, $key, false);
+            $bill = $item['bill'];
+            $key  = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
+            $pref = Preferences::getForUser($bill->user, $key, false);
             if (true === $pref->data) {
                 Log::debug(sprintf('User #%d has already been warned about overdue subscription #%d.', $bill->user->id, $bill->id));
 
@@ -63,12 +53,12 @@ class BillEventHandler
             $toBeWarned[] = $item;
         }
         unset($bill);
-        Log::debug(sprintf('Now %d bills to warn about.', count($toBeWarned)));
+        Log::debug(sprintf('Now %d subscription(s) to warn about.', count($toBeWarned)));
 
         /** @var bool $sendNotification */
         $sendNotification = Preferences::getForUser($user, 'notification_bill_reminder', true)->data;
         if (false === $sendNotification) {
-            Log::debug('User has disabled bill reminders.');
+            Log::debug('User has disabled subscription reminders.');
 
             return;
         }
@@ -106,4 +96,5 @@ class BillEventHandler
 
 
     }
+
 }
