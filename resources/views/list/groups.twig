@@ -314,7 +314,12 @@
                             {% if account.id == transaction.source_account_id %}
                                 <span title="Transfer, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
-                                <span title="Transfer, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% if null == transaction.foreign_currency_id %}
+                                    <span title="Transfer, dest, normal currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% endif %}
+                                {% if null != transaction.foreign_currency_id %}
+                                    <span title="Transfer, dest, foreign currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             &nbsp;
