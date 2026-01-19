@@ -32,7 +32,6 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
-use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
@@ -43,7 +42,6 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
-use FireflyIII\Notifications\Security\UserFailedLoginAttempt;
 use FireflyIII\Notifications\Test\UserTestNotificationEmail;
 use FireflyIII\Notifications\Test\UserTestNotificationPushover;
 use FireflyIII\Notifications\Test\UserTestNotificationSlack;
@@ -51,13 +49,13 @@ use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UserEventHandler.
@@ -92,8 +90,8 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
-        $count      = $repository->count();
+        $user  = $event->user;
+        $count = $repository->count();
 
         // only act when there is 1 user in the system and he has no admin rights.
         if (1 === $count && !$repository->hasRole($user, 'owner')) {
@@ -125,13 +123,13 @@ class UserEventHandler
      */
     public function createGroupMembership(RegisteredUser $event): void
     {
-        $user                = $event->user;
-        $groupExists         = true;
-        $groupTitle          = $user->email;
-        $index               = 1;
+        $user        = $event->user;
+        $groupExists = true;
+        $groupTitle  = $user->email;
+        $index       = 1;
 
         /** @var null|UserGroup $group */
-        $group               = null;
+        $group = null;
 
         // create a new group.
         while ($groupExists) { // @phpstan-ignore-line
@@ -141,7 +139,7 @@ class UserEventHandler
 
                 break;
             }
-            $groupTitle  = sprintf('%s-%d', $user->email, $index);
+            $groupTitle = sprintf('%s-%d', $user->email, $index);
             ++$index;
             if ($index > 99) {
                 throw new FireflyException('Email address can no longer be used for registrations.');
@@ -149,7 +147,7 @@ class UserEventHandler
         }
 
         /** @var null|UserRole $role */
-        $role                = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
@@ -173,7 +171,7 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
+        $user = $event->user;
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
             Preferences::setForUser($user, 'language', 'en_US');
@@ -298,26 +296,6 @@ class UserEventHandler
         }
     }
 
-    public function sendLoginAttemptNotification(UserAttemptedLogin $event): void
-    {
-        try {
-            Notification::send($event->user, new UserFailedLoginAttempt($event->user));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
-    }
 
     /**
      * Send a new password to the user.
@@ -408,10 +386,10 @@ class UserEventHandler
 
                 break;
 
-                //            case 'ntfy':
-                //                $class = UserTestNotificationNtfy::class;
-                //
-                //                break;
+            //            case 'ntfy':
+            //                $class = UserTestNotificationNtfy::class;
+            //
+            //                break;
 
             case 'pushover':
                 $class = UserTestNotificationPushover::class;
@@ -448,7 +426,7 @@ class UserEventHandler
     public function storeUserIPAddress(ActuallyLoggedIn $event): void
     {
         Log::debug('Now in storeUserIPAddress');
-        $user       = $event->user;
+        $user = $event->user;
 
         if ($user->hasRole('demo')) {
             Log::debug('Do not log demo user logins');
@@ -465,8 +443,8 @@ class UserEventHandler
 
             return;
         }
-        $inArray    = false;
-        $ip         = request()->ip();
+        $inArray = false;
+        $ip      = request()->ip();
         Log::debug(sprintf('User logging in from IP address %s', $ip));
 
         // update array if in array
@@ -494,7 +472,7 @@ class UserEventHandler
         $preference = array_values($preference);
 
         /** @var bool $send */
-        $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
+        $send = Preferences::getForUser($user, 'notification_user_login', true)->data;
         Preferences::setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {
