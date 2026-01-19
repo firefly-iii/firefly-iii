@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutFailedRuleAction.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,23 +34,23 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutFailedRuleAction implements ShouldQueue
 {
-    public function handle(RuleActionFailedOnArray | RuleActionFailedOnObject $event): void
+    public function handle(RuleActionFailedOnArray|RuleActionFailedOnObject $event): void
     {
-        $ruleAction = $event->ruleAction;
-        $rule       = $ruleAction->rule;
+        $ruleAction  = $event->ruleAction;
+        $rule        = $ruleAction->rule;
 
         /** @var bool $preference */
-        $preference = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
+        $preference  = Preferences::getForUser($rule->user, 'notification_rule_action_failures', true)->data;
         if (false === $preference) {
             return;
         }
         Log::debug('Now in ruleActionFailedOnArray');
-        $journal = $event->journal;
-        $error   = $event->error;
-        $user    = $ruleAction->rule->user;
+        $journal     = $event->journal;
+        $error       = $event->error;
+        $user        = $ruleAction->rule->user;
 
-        $groupId    = is_array($journal) ? $journal['transaction_group_id'] : $journal->transaction_group_id;
-        $groupTitle = is_array($journal) ? ($journal['description'] ?? '') : ($journal->description ?? '');
+        $groupId     = is_array($journal) ? $journal['transaction_group_id'] : $journal->transaction_group_id;
+        $groupTitle  = is_array($journal) ? ($journal['description'] ?? '') : ($journal->description ?? '');
 
 
         $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $groupId, 'error' => $error]);
@@ -63,5 +65,4 @@ class NotifiesUserAboutFailedRuleAction implements ShouldQueue
             Log::error(sprintf('[a] Error sending notification that the rule action failed: %s', $e->getMessage()));
         }
     }
-
 }
