@@ -25,22 +25,20 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events\Security;
 
 use Exception;
-use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
 use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
-use FireflyIII\Notifications\Security\DisabledMFANotification;
 use FireflyIII\Notifications\Security\EnabledMFANotification;
 use FireflyIII\Notifications\Security\MFABackupFewLeftNotification;
 use FireflyIII\Notifications\Security\MFABackupNoLeftNotification;
 use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
 use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
-use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 
 class MFAHandler
 {
@@ -78,31 +76,6 @@ class MFAHandler
 
         try {
             Notification::send($user, new MFABackupNoLeftNotification($user));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
-    }
-
-    public function sendMFADisabledMail(DisabledMFA $event): void
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-
-        $user = $event->user;
-
-        try {
-            Notification::send($user, new DisabledMFANotification($user));
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
