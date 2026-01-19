@@ -35,7 +35,6 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\Security\DisabledMFA;
 use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFABackupFewLeft;
 use FireflyIII\Events\Security\MFABackupNoLeft;
@@ -186,9 +185,9 @@ class EventServiceProvider extends ServiceProvider
             EnabledMFA::class                      => [
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAEnabledMail',
             ],
-            DisabledMFA::class                     => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFADisabledMail',
-            ],
+            //            DisabledMFA::class                     => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFADisabledMail',
+            //            ],
             MFANewBackupCodes::class               => [
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendNewMFABackupCodesMail',
             ],
