@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UpdatesRulesForChangedPiggyBankName.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -46,5 +48,4 @@ class UpdatesRulesForChangedPiggyBankName implements ShouldQueue
             }
         }
     }
-
 }
