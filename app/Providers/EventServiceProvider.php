@@ -197,9 +197,9 @@ class EventServiceProvider extends ServiceProvider
             //            MFABackupNoLeft::class                 => [
             //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
             //            ],
-            MFAManyFailedAttempts::class           => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
-            ],
+//            MFAManyFailedAttempts::class           => [
+//                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
+//            ],
             // preferences
             UserGroupChangedPrimaryCurrency::class => [
                 'FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts',
