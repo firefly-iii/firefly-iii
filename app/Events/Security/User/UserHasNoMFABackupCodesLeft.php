@@ -1,8 +1,7 @@
 <?php
-
 /*
- * EnabledMFA.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * UserHasNoMFABackupCodesLeft.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,19 +16,18 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Events\Security;
+namespace FireflyIII\Events\Security\User;
 
 use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
+use InvalidArgumentException;
 
-class MFABackupNoLeft extends Event
+class UserHasNoMFABackupCodesLeft extends Event
 {
     use SerializesModels;
 
@@ -39,6 +37,8 @@ class MFABackupNoLeft extends Event
     {
         if ($user instanceof User) {
             $this->user = $user;
+            return;
         }
+        throw new InvalidArgumentException('User must be an instance of User.');
     }
 }
