@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Profile;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Security\EnabledMFA;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\User\UserHasDisabledMFA;
+use FireflyIII\Events\Security\User\UserHasEnabledMFA;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExistingTokenFormRequest;
@@ -279,7 +279,7 @@ class MfaController extends Controller
 
         // send user notification.
         Log::channel('audit')->info(sprintf('User "%s" has enabled MFA', $user->email));
-        event(new EnabledMFA($user));
+        event(new UserHasEnabledMFA($user));
 
         return redirect(route('profile.mfa.backup-codes'));
     }
