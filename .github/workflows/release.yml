@@ -42,7 +42,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ github.event.inputs.phpversion }}
+          php-version: ${{ github.event.inputs.phpversion || '8.4' }}
           extensions: mbstring, intl, zip, bcmath
       - name: Switch and pull
         run: |
