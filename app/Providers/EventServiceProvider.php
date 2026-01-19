@@ -37,7 +37,6 @@ use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
-use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
 use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Events\StoredAccount;
@@ -185,21 +184,21 @@ class EventServiceProvider extends ServiceProvider
             //            DisabledMFA::class                     => [
             //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFADisabledMail',
             //            ],
-            MFANewBackupCodes::class               => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendNewMFABackupCodesMail',
-            ],
-            MFAUsedBackupCode::class               => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendUsedBackupCodeMail',
-            ],
+            //            MFANewBackupCodes::class               => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendNewMFABackupCodesMail',
+            //            ],
+            //            MFAUsedBackupCode::class               => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendUsedBackupCodeMail',
+            //            ],
             //            MFABackupFewLeft::class                => [
             //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupFewLeftMail',
             //            ],
             //            MFABackupNoLeft::class                 => [
             //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
             //            ],
-//            MFAManyFailedAttempts::class           => [
-//                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
-//            ],
+            //            MFAManyFailedAttempts::class           => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
+            //            ],
             // preferences
             UserGroupChangedPrimaryCurrency::class => [
                 'FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts',

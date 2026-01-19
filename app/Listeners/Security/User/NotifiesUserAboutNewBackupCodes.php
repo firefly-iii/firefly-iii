@@ -1,8 +1,7 @@
 <?php
-
 /*
- * MFAHandler.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * NotifiesUserAboutNewBackupCodes.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,26 +16,20 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Handlers\Events\Security;
+namespace FireflyIII\Listeners\Security\User;
 
 use Exception;
-use FireflyIII\Events\Security\MFANewBackupCodes;
-use FireflyIII\Events\Security\MFAUsedBackupCode;
-use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
+use FireflyIII\Events\Security\User\UserHasGeneratedNewBackupCodes;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class MFAHandler
+class NotifiesUserAboutNewBackupCodes
 {
-
-    public function sendNewMFABackupCodesMail(MFANewBackupCodes $event): void
-    {
+    public function handle(UserHasGeneratedNewBackupCodes $event): void {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;
@@ -60,28 +53,4 @@ class MFAHandler
         }
     }
 
-    public function sendUsedBackupCodeMail(MFAUsedBackupCode $event): void
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-
-        $user = $event->user;
-
-        try {
-            Notification::send($user, new MFAUsedBackupCodeNotification($user));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
-    }
 }
