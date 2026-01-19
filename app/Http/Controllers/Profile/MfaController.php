@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\User\UserHasDisabledMFA;
 use FireflyIII\Events\Security\User\UserHasEnabledMFA;
+use FireflyIII\Events\Security\User\UserHasGeneratedNewBackupCodes;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExistingTokenFormRequest;
@@ -130,7 +131,7 @@ class MfaController extends Controller
         // send user notification.
         $user = auth()->user();
         Log::channel('audit')->info(sprintf('User "%s" has generated new backup codes.', $user->email));
-        event(new MFANewBackupCodes($user));
+        event(new UserHasGeneratedNewBackupCodes($user));
 
         return view('profile.mfa.backup-codes-post')->with(['codes' => $codes]);
 
