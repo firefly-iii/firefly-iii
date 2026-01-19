@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutEnabledMFA.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,7 +31,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutEnabledMFA
 {
-    public function handle(UserHasEnabledMFA $event): void {
+    public function handle(UserHasEnabledMFA $event): void
+    {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;

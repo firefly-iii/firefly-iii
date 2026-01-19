@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutUsedBackupCode.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,27 +31,28 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutUsedBackupCode
 {
-public function handle(UserHasUsedBackupCode $event): void {
-    Log::debug(sprintf('Now in %s', __METHOD__));
+    public function handle(UserHasUsedBackupCode $event): void
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
 
-    $user = $event->user;
+        $user = $event->user;
 
-    try {
-        Notification::send($user, new MFAUsedBackupCodeNotification($user));
-    } catch (Exception $e) {
-        $message = $e->getMessage();
-        if (str_contains($message, 'Bcc')) {
-            Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+        try {
+            Notification::send($user, new MFAUsedBackupCodeNotification($user));
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            if (str_contains($message, 'Bcc')) {
+                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
 
-            return;
+                return;
+            }
+            if (str_contains($message, 'RFC 2822')) {
+                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                return;
+            }
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
         }
-        if (str_contains($message, 'RFC 2822')) {
-            Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-            return;
-        }
-        Log::error($e->getMessage());
-        Log::error($e->getTraceAsString());
     }
-}
 }

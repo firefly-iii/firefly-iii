@@ -68,7 +68,6 @@ class AdminEventHandler
         }
     }
 
-
     /**
      * Send new version message to admin.
      */
@@ -117,10 +116,10 @@ class AdminEventHandler
 
                 break;
 
-            //            case 'ntfy':
-            //                $class = OwnerTestNotificationNtfy::class;
-            //
-            //                break;
+                //            case 'ntfy':
+                //                $class = OwnerTestNotificationNtfy::class;
+                //
+                //                break;
 
             case 'pushover':
                 $class = OwnerTestNotificationPushover::class;

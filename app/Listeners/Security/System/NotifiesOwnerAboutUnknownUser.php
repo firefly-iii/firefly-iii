@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesOwnerAboutUnknownUser.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -30,7 +32,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesOwnerAboutUnknownUser
 {
-    public function handle(UnknownUserTriedLogin $event): void {
+    public function handle(UnknownUserTriedLogin $event): void
+    {
         try {
             $owner = new OwnerNotifiable();
             Notification::send($owner, new UnknownUserLoginAttempt($event->address));
@@ -50,5 +53,4 @@ class NotifiesOwnerAboutUnknownUser
             Log::error($e->getTraceAsString());
         }
     }
-
 }

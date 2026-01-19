@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Profile;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\User\UserHasDisabledMFA;
 use FireflyIII\Events\Security\User\UserHasEnabledMFA;
 use FireflyIII\Events\Security\User\UserHasGeneratedNewBackupCodes;
@@ -86,7 +85,7 @@ class MfaController extends Controller
 
     }
 
-    public function backupCodes(Request $request): Factory | RedirectResponse | View
+    public function backupCodes(Request $request): Factory|RedirectResponse|View
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -103,14 +102,14 @@ class MfaController extends Controller
         return view('profile.mfa.backup-codes-intro');
     }
 
-    public function backupCodesPost(ExistingTokenFormRequest $request): Redirector | RedirectResponse | View
+    public function backupCodesPost(ExistingTokenFormRequest $request): Redirector|RedirectResponse|View
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
         }
-        $enabledMFA = null !== auth()->user()->mfa_secret;
+        $enabledMFA    = null !== auth()->user()->mfa_secret;
         if (false === $enabledMFA) {
             request()->session()->flash('info', trans('firefly.mfa_not_enabled'));
 
@@ -119,17 +118,18 @@ class MfaController extends Controller
         // generate recovery codes:
         $recovery      = app(Recovery::class);
         $recoveryCodes = $recovery->lowercase()
-                                  ->setCount(8)     // Generate 8 codes
-                                  ->setBlocks(2)    // Every code must have 2 blocks
-                                  ->setChars(6)     // Each block must have 6 chars
-                                  ->toArray();
+            ->setCount(8)     // Generate 8 codes
+            ->setBlocks(2)    // Every code must have 2 blocks
+            ->setChars(6)     // Each block must have 6 chars
+            ->toArray()
+        ;
         $codes         = implode("\r\n", $recoveryCodes);
 
         Preferences::set('mfa_recovery', $recoveryCodes);
         Preferences::mark();
 
         // send user notification.
-        $user = auth()->user();
+        $user          = auth()->user();
         Log::channel('audit')->info(sprintf('User "%s" has generated new backup codes.', $user->email));
         event(new UserHasGeneratedNewBackupCodes($user));
 
@@ -137,14 +137,14 @@ class MfaController extends Controller
 
     }
 
-    public function disableMFA(Request $request): Factory | RedirectResponse | View
+    public function disableMFA(Request $request): Factory|RedirectResponse|View
     {
         if (!$this->internalAuth) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
 
             return redirect(route('profile.index'));
         }
-        $enabledMFA = null !== auth()->user()->mfa_secret;
+        $enabledMFA   = null !== auth()->user()->mfa_secret;
         if (false === $enabledMFA) {
             request()->session()->flash('info', trans('firefly.mfa_already_disabled'));
 
@@ -159,7 +159,7 @@ class MfaController extends Controller
     /**
      * Delete 2FA routine.
      */
-    public function disableMFAPost(ExistingTokenFormRequest $request): Redirector | RedirectResponse
+    public function disableMFAPost(ExistingTokenFormRequest $request): Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -171,7 +171,7 @@ class MfaController extends Controller
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         Preferences::delete('temp-mfa-secret');
         Preferences::delete('temp-mfa-codes');
@@ -195,7 +195,7 @@ class MfaController extends Controller
     /**
      * Enable 2FA screen.
      */
-    public function enableMFA(Request $request): Redirector | RedirectResponse | View
+    public function enableMFA(Request $request): Redirector|RedirectResponse|View
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -215,9 +215,9 @@ class MfaController extends Controller
             return redirect(route('profile.index'));
         }
 
-        $domain = $this->getDomain();
-        $secret = Google2FA::generateSecretKey();
-        $image  = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
+        $domain     = $this->getDomain();
+        $secret     = Google2FA::generateSecretKey();
+        $image      = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
         Preferences::set('temp-mfa-secret', $secret);
 
@@ -232,7 +232,7 @@ class MfaController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function enableMFAPost(TokenFormRequest $request): Redirector | RedirectResponse
+    public function enableMFAPost(TokenFormRequest $request): Redirector|RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -241,10 +241,10 @@ class MfaController extends Controller
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         // verify password.
-        $password = $request->get('password');
+        $password   = $request->get('password');
         if (!auth()->validate(['email' => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
@@ -257,7 +257,7 @@ class MfaController extends Controller
         if (is_array($secret)) {
             $secret = null;
         }
-        $secret = (string)$secret;
+        $secret     = (string)$secret;
 
         $repository->setMFACode($user, $secret);
 
@@ -267,7 +267,7 @@ class MfaController extends Controller
         Preferences::mark();
 
         // also save the code so replay attack is prevented.
-        $mfaCode = $request->get('code');
+        $mfaCode    = $request->get('code');
         $this->addToMFAHistory($mfaCode);
 
         // make sure MFA is logged out.
@@ -327,7 +327,7 @@ class MfaController extends Controller
         Preferences::set('mfa_history', $newHistory);
     }
 
-    public function index(): Factory | RedirectResponse | View
+    public function index(): Factory|RedirectResponse|View
     {
         if (!$this->internalAuth) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

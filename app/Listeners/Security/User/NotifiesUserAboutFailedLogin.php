@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutFailedLogin.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,7 +30,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutFailedLogin
 {
-    public function handle(UserFailedLoginAttempt $event): void {
+    public function handle(UserFailedLoginAttempt $event): void
+    {
         try {
             Notification::send($event->user, new \FireflyIII\Notifications\Security\UserFailedLoginAttempt($event->user));
         } catch (Exception $e) {
@@ -47,5 +50,4 @@ class NotifiesUserAboutFailedLogin
             Log::error($e->getTraceAsString());
         }
     }
-
 }

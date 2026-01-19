@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Security\MFAManyFailedAttempts;
-use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
 use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
 use FireflyIII\Events\Security\User\UserHasUsedBackupCode;
@@ -51,7 +49,7 @@ class TwoFactorController extends Controller
     /**
      * What to do if 2FA lost?
      */
-    public function lostTwoFactor(): Factory | View
+    public function lostTwoFactor(): Factory|View
     {
         /** @var User $user */
         $user      = auth()->user();
@@ -65,11 +63,11 @@ class TwoFactorController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function submitMFA(Request $request): Redirector | RedirectResponse
+    public function submitMFA(Request $request): Redirector|RedirectResponse
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $mfaCode    = (string)$request->get('one_time_password');
+        $mfaHistory    = Preferences::get('mfa_history', [])->data;
+        $mfaCode       = (string)$request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -84,7 +82,7 @@ class TwoFactorController extends Controller
 
         // if not OK, save error.
         if (!$authenticator->isAuthenticated()) {
-            $user = auth()->user();
+            $user    = auth()->user();
             $this->addToMFAFailureCounter();
             $counter = $this->getMFAFailureCounter();
             if (3 === $counter || 10 === $counter) {
@@ -222,7 +220,7 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list = Preferences::get('mfa_recovery', [])->data;
+        $list    = Preferences::get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }
