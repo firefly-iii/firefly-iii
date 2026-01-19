@@ -35,10 +35,6 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\Security\MFAManyFailedAttempts;
-use FireflyIII\Events\Security\MFANewBackupCodes;
-use FireflyIII\Events\Security\UnknownUserAttemptedLogin;
-use FireflyIII\Events\Security\UserAttemptedLogin;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\Test\OwnerTestNotificationChannel;
@@ -69,9 +65,9 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@createGroupMembership',
                 'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
             ],
-            UserAttemptedLogin::class              => [
-                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
-            ],
+            //            UserAttemptedLogin::class              => [
+            //                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
+            //            ],
             // is a User related event.
             Login::class                           => [
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
@@ -113,9 +109,9 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
             ],
-            UnknownUserAttemptedLogin::class       => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendLoginAttemptNotification',
-            ],
+            //            UnknownUserAttemptedLogin::class       => [
+            //                'FireflyIII\Handlers\Events\AdminEventHandler@sendLoginAttemptNotification',
+            //            ],
 
             // is a Transaction Journal related event.
             StoredTransactionGroup::class          => [
