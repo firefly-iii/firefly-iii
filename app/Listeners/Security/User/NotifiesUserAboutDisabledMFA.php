@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutDisabledMFA.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -30,7 +32,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutDisabledMFA implements ShouldQueue
 {
-    public function handle(UserHasDisabledMFA $event): void {
+    public function handle(UserHasDisabledMFA $event): void
+    {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;
@@ -53,5 +56,4 @@ class NotifiesUserAboutDisabledMFA implements ShouldQueue
             Log::error($e->getTraceAsString());
         }
     }
-
 }

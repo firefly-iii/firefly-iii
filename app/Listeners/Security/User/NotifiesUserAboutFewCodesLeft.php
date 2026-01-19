@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * NotifiesUserAboutFewCodesLeft.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,8 +31,8 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutFewCodesLeft
 {
-
-    public function handle(UserHasFewMFABackupCodesLeft $event): void {
+    public function handle(UserHasFewMFABackupCodesLeft $event): void
+    {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user  = $event->user;
@@ -54,5 +56,4 @@ class NotifiesUserAboutFewCodesLeft
             Log::error($e->getTraceAsString());
         }
     }
-
 }
