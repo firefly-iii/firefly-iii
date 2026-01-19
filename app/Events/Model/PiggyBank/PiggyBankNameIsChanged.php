@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * PiggyBankNameIsChanged.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,7 +30,7 @@ use Illuminate\Queue\SerializesModels;
 /**
  * Needs to be an event because system needs old value as well as the new value.
  */
-class PiggyBankNameIsChanged  extends Event
+class PiggyBankNameIsChanged extends Event
 {
     use SerializesModels;
 
