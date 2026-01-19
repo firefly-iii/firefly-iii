@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UserFailedLoginAttempt.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -21,7 +23,6 @@
 
 namespace FireflyIII\Events\Security\User;
 
-use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -38,9 +39,10 @@ class UserFailedLoginAttempt extends Event
     {
         if ($user instanceof User) {
             $this->user = $user;
+
             return;
         }
+
         throw new InvalidArgumentException('User must be an instance of User.');
     }
 }
-

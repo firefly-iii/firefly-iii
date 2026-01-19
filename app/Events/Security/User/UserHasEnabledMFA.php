@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /*
  * UserHasEnabledMFA.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -37,9 +39,10 @@ class UserHasEnabledMFA extends Event
     {
         if ($user instanceof User) {
             $this->user = $user;
+
             return;
         }
+
         throw new InvalidArgumentException('User must be an instance of User.');
     }
 }
-
