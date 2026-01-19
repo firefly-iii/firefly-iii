@@ -35,8 +35,6 @@ use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\Security\MFABackupFewLeft;
-use FireflyIII\Events\Security\MFABackupNoLeft;
 use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFANewBackupCodes;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
@@ -193,12 +191,12 @@ class EventServiceProvider extends ServiceProvider
             MFAUsedBackupCode::class               => [
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendUsedBackupCodeMail',
             ],
-            MFABackupFewLeft::class                => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupFewLeftMail',
-            ],
-            MFABackupNoLeft::class                 => [
-                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
-            ],
+            //            MFABackupFewLeft::class                => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupFewLeftMail',
+            //            ],
+            //            MFABackupNoLeft::class                 => [
+            //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
+            //            ],
             MFAManyFailedAttempts::class           => [
                 'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
             ],
