@@ -38,28 +38,7 @@ class MFAHandler
 {
     public function sendMFAFailedAttemptsMail(MFAManyFailedAttempts $event): void
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
 
-        $user  = $event->user;
-        $count = $event->count;
-
-        try {
-            Notification::send($user, new MFAManyFailedAttemptsNotification($user, $count));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
     }
 
     public function sendNewMFABackupCodesMail(MFANewBackupCodes $event): void

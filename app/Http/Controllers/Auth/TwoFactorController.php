@@ -28,6 +28,7 @@ use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
 use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
+use FireflyIII\Events\Security\User\UserKeepsFailingMFA;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
@@ -88,7 +89,7 @@ class TwoFactorController extends Controller
             if (3 === $counter || 10 === $counter) {
                 // do not reset MFA failure counter, but DO send a warning to the user.
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
-                event(new MFAManyFailedAttempts($user, $counter));
+                event(new UserKeepsFailingMFA($user, $counter));
             }
             unset($user);
         }
