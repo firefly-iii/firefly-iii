@@ -1,8 +1,7 @@
 <?php
-
 /*
- * UnknownUserAttemptedLogin.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * UnknownUserTriedLogin.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,16 +16,14 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Events\Security;
+namespace FireflyIII\Events\Security\System;
 
 use Illuminate\Queue\SerializesModels;
 
-class UnknownUserAttemptedLogin
+class UnknownUserTriedLogin
 {
     use SerializesModels;
 
