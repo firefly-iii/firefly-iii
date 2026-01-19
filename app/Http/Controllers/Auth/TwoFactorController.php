@@ -28,6 +28,7 @@ use FireflyIII\Events\Security\MFAManyFailedAttempts;
 use FireflyIII\Events\Security\MFAUsedBackupCode;
 use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
 use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
+use FireflyIII\Events\Security\User\UserHasUsedBackupCode;
 use FireflyIII\Events\Security\User\UserKeepsFailingMFA;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\Preferences;
@@ -117,7 +118,7 @@ class TwoFactorController extends Controller
             // send user notification.
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used a backup code.', $user->email));
-            event(new MFAUsedBackupCode($user));
+            event(new UserHasUsedBackupCode($user));
 
             return redirect(route('home'));
         }
