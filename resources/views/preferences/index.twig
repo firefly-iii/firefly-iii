@@ -24,6 +24,18 @@
                                         aria-expanded="false">{{ 'preferences_notifications'|_ }}</a></li>
                     </ul>
                     <div class="tab-content">
+                        {% if errors.any %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for bag in errors.getBags %}
+                                    {% for error in bag.all %}
+                                    <li>{{  error }}</li>
+                                {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
                         <div class="tab-pane active" id="general">
                             {# general settings here #}
                             <div class="row">
