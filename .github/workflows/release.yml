@@ -170,10 +170,15 @@ jobs:
           npm run prod  --workspace=v1
           npm run build --workspace=v2
           npm update
+      - name: Setup Mago
+        uses: nhedger/setup-mago@v1
       - name: Run CI
         run: |
           rm -rf vendor composer.lock
-          composer update --no-dev --no-scripts --no-plugins -q
+          composer update --no-scripts --no-plugins -q
+          mago format --dry-run || true
+          mago lint --reporting-format=github || true
+          mago analyze --reporting-format=github || true
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
       - name: Calculate variables
