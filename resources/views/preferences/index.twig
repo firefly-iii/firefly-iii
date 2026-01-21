@@ -386,7 +386,7 @@
                                         {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
                                         {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
                                         {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
-                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
+                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {autocomplete: 'off'}) }}
                                         <p>
                                         {{ 'pref_notifications_settings_help'|_ }}
                                         </p>
