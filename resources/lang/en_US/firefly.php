@@ -2938,6 +2938,7 @@ return [
     'ale_action_remove_from_piggy'       => 'Piggy bank',
     'ale_action_add_tag'                 => 'Added tag',
     'ale_action_update_amount'           => 'Updated amount',
+    'ale_action_update_foreign_amount' => 'Updated foreign amount',
 
     // dashboard
     'enable_auto_convert'                => 'Enable currency conversion',
