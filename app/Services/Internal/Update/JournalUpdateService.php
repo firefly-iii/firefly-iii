@@ -841,8 +841,6 @@ class JournalUpdateService
             $dest->save();
             Log::debug(sprintf('Foreign amount is "%s" so remove foreign amount info.', $amount));
 
-            exit('remove foreign amount audit entry.');
-
             return;
         }
         Log::info('Not enough info to update foreign currency info.');

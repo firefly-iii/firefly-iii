@@ -165,7 +165,7 @@ class AccountBalanceCalculator
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount)));
+            // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
             // start with empty array:
             $balances[$entry->account_id]                                  ??= [];
             $balances[$entry->account_id][$entry->transaction_currency_id] ??= [$this->getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore), null];
@@ -174,7 +174,7 @@ class AccountBalanceCalculator
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
             $after                                                         = bcadd($before, (string)$entry->amount);
 
-            Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
+            // Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
 
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
