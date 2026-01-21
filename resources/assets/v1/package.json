@@ -20,7 +20,7 @@
         "bootstrap-sass": "^3",
         "cross-env": "^10.0",
         "font-awesome": "^4.7.0",
-        "jquery": "^4",
+        "jquery": "^3",
         "laravel-mix": "^6.0",
         "postcss": "^8.4.47",
         "uiv": "^1.4",
