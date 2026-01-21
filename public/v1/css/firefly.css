@@ -263,6 +263,10 @@ span.twitter-typeahead {
     background-color: #f5f5f5;
 }
 
+.box-body, .box, .content-header {
+    overflow-x: auto;
+}
+
 /*
 .twitter-typeahead {
     width:100%;
