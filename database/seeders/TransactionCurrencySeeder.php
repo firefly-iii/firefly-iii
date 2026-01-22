@@ -82,8 +82,6 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
         $currencies[] = ['code' => 'HRK', 'name' => 'Croatian kuna', 'symbol' => 'kn', 'decimal_places' => 2];
         $currencies[] = ['code' => 'HKD', 'name' => 'Hong Kong dollar', 'symbol' => 'HK$', 'decimal_places' => 2];
-        $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
-        $currencies[] = ['code' => 'NOK', 'name' => 'Norwegian krone', 'symbol' => 'kr.', 'decimal_places' => 2];
         $currencies[] = ['code' => 'CZK', 'name' => 'Czech koruna', 'symbol' => 'Kč', 'decimal_places' => 2];
         $currencies[] = ['code' => 'KZT', 'name' => 'Kazakhstani tenge', 'symbol' => '₸', 'decimal_places' => 2];
         $currencies[] = ['code' => 'SAR', 'name' => 'Saudi Riyal', 'symbol' => 'SAR', 'decimal_places' => 2];
