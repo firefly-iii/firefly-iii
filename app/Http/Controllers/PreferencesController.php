@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\Test\UserTestNotificationChannel;
+use FireflyIII\Events\Test\UserTestsNotificationChannel;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\PreferencesRequest;
 use FireflyIII\Models\Account;
@@ -348,7 +348,7 @@ class PreferencesController extends Controller
                 /** @var User $user */
                 $user = auth()->user();
                 Log::debug(sprintf('Now in testNotification("%s") controller.', $channel));
-                event(new UserTestNotificationChannel($channel, $user));
+                event(new UserTestsNotificationChannel($channel, $user));
                 session()->flash('success', (string)trans('firefly.notification_test_executed', ['channel' => $channel]));
         }
 

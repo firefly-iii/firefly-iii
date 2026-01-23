@@ -23,10 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
-use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
@@ -37,8 +35,6 @@ use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
-use FireflyIII\Events\Test\OwnerTestNotificationChannel;
-use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
@@ -73,12 +69,9 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
             ],
-            ActuallyLoggedIn::class                => [
-                'FireflyIII\Handlers\Events\UserEventHandler@storeUserIPAddress',
-            ],
-            DetectedNewIPAddress::class            => [
-                'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
-            ],
+            //            DetectedNewIPAddress::class            => [
+            //                'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
+            //            ],
             RequestedVersionCheckStatus::class     => [
                 'FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates',
             ],
@@ -90,18 +83,18 @@ class EventServiceProvider extends ServiceProvider
             RequestedNewPassword::class            => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
             ],
-            UserTestNotificationChannel::class     => [
-                'FireflyIII\Handlers\Events\UserEventHandler@sendTestNotification',
-            ],
+            //            UserTestsNotificationChannel::class => [
+            //                'FireflyIII\Handlers\Events\UserEventHandler@sendTestNotification',
+            //            ],
             // is a User related event.
             UserChangedEmail::class                => [
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
             // admin related
-            OwnerTestNotificationChannel::class    => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
-            ],
+            //            OwnerTestsNotificationChannel::class => [
+            //                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
+            //            ],
             NewVersionAvailable::class             => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',
             ],

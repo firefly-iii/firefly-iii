@@ -1,8 +1,7 @@
 <?php
-
 /*
- * TestEmailChannel.php
- * Copyright (c) 2024 james@firefly-iii.org.
+ * UserHasNewIpAddress.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,29 +16,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see https://www.gnu.org/licenses/.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\User;
 
-namespace FireflyIII\Events\Test;
-
-use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Events\Event;
+use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-class OwnerTestNotificationChannel
+class UserLoggedInFromNewIpAddress extends Event
 {
     use SerializesModels;
 
-    public string $channel;
-
     /**
-     * Create a new event instance.
+     * Create a new event instance. This event is triggered when a new user registers.
      */
-    public function __construct(string $channel, public OwnerNotifiable $owner)
-    {
-        Log::debug(sprintf('Triggered OwnerTestNotificationChannel("%s")', $channel));
-        $this->channel = $channel;
-    }
+    public function __construct(public User $user) {}
 }

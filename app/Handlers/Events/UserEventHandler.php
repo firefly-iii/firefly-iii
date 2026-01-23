@@ -23,16 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Carbon\Carbon;
 use Database\Seeders\ExchangeRateSeeder;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Events\ActuallyLoggedIn;
 use FireflyIII\Events\Admin\InvitationCreated;
-use FireflyIII\Events\DetectedNewIPAddress;
 use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
-use FireflyIII\Events\Test\UserTestNotificationChannel;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
@@ -42,10 +38,6 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Models\UserRole;
 use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
-use FireflyIII\Notifications\Test\UserTestNotificationEmail;
-use FireflyIII\Notifications\Test\UserTestNotificationPushover;
-use FireflyIII\Notifications\Test\UserTestNotificationSlack;
-use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -90,8 +82,8 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
-        $count      = $repository->count();
+        $user  = $event->user;
+        $count = $repository->count();
 
         // only act when there is 1 user in the system and he has no admin rights.
         if (1 === $count && !$repository->hasRole($user, 'owner')) {
@@ -123,13 +115,13 @@ class UserEventHandler
      */
     public function createGroupMembership(RegisteredUser $event): void
     {
-        $user                = $event->user;
-        $groupExists         = true;
-        $groupTitle          = $user->email;
-        $index               = 1;
+        $user        = $event->user;
+        $groupExists = true;
+        $groupTitle  = $user->email;
+        $index       = 1;
 
         /** @var null|UserGroup $group */
-        $group               = null;
+        $group = null;
 
         // create a new group.
         while ($groupExists) { // @phpstan-ignore-line
@@ -139,7 +131,7 @@ class UserEventHandler
 
                 break;
             }
-            $groupTitle  = sprintf('%s-%d', $user->email, $index);
+            $groupTitle = sprintf('%s-%d', $user->email, $index);
             ++$index;
             if ($index > 99) {
                 throw new FireflyException('Email address can no longer be used for registrations.');
@@ -147,7 +139,7 @@ class UserEventHandler
         }
 
         /** @var null|UserRole $role */
-        $role                = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
@@ -171,7 +163,7 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user       = $event->user;
+        $user = $event->user;
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
             Preferences::setForUser($user, 'language', 'en_US');
@@ -179,46 +171,6 @@ class UserEventHandler
             Preferences::setForUser($user, 'anonymous', false);
             Preferences::mark();
         }
-    }
-
-    public function notifyNewIPAddress(DetectedNewIPAddress $event): void
-    {
-        $user = $event->user;
-
-        if ($user->hasRole('demo')) {
-            return; // do not email demo user.
-        }
-
-        $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
-        if (!is_array($list)) {
-            $list = [];
-        }
-
-        /** @var array $entry */
-        foreach ($list as $index => $entry) {
-            if (false === $entry['notified']) {
-                try {
-                    Notification::send($user, new UserLogin());
-                } catch (Exception $e) {
-                    $message = $e->getMessage();
-                    if (str_contains($message, 'Bcc')) {
-                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                        return;
-                    }
-                    if (str_contains($message, 'RFC 2822')) {
-                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                        return;
-                    }
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
-                }
-            }
-            $list[$index]['notified'] = true;
-        }
-
-        Preferences::setForUser($user, 'login_ip_history', $list);
     }
 
     public function sendAdminRegistrationNotification(RegisteredUser $event): void
@@ -364,118 +316,6 @@ class UserEventHandler
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-        }
-    }
-
-    /**
-     * Sends a test message to an administrator.
-     */
-    public function sendTestNotification(UserTestNotificationChannel $event): void
-    {
-        Log::debug(sprintf('Now in (user) sendTestNotification("%s")', $event->channel));
-
-        switch ($event->channel) {
-            case 'email':
-                $class = UserTestNotificationEmail::class;
-
-                break;
-
-            case 'slack':
-                $class = UserTestNotificationSlack::class;
-
-                break;
-
-                //            case 'ntfy':
-                //                $class = UserTestNotificationNtfy::class;
-                //
-                //                break;
-
-            case 'pushover':
-                $class = UserTestNotificationPushover::class;
-
-                break;
-
-            default:
-                Log::error(sprintf('Unknown channel "%s" in (user) sendTestNotification method.', $event->channel));
-
-                return;
-        }
-        Log::debug(sprintf('Will send %s as a notification.', $class));
-
-        try {
-            Notification::send($event->user, new $class());
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
-        Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
-    }
-
-    public function storeUserIPAddress(ActuallyLoggedIn $event): void
-    {
-        Log::debug('Now in storeUserIPAddress');
-        $user       = $event->user;
-
-        if ($user->hasRole('demo')) {
-            Log::debug('Do not log demo user logins');
-
-            return;
-        }
-
-        try {
-            /** @var array $preference */
-            $preference = Preferences::getForUser($user, 'login_ip_history', [])->data;
-        } catch (FireflyException $e) {
-            // don't care.
-            Log::error($e->getMessage());
-
-            return;
-        }
-        $inArray    = false;
-        $ip         = request()->ip();
-        Log::debug(sprintf('User logging in from IP address %s', $ip));
-
-        // update array if in array
-        foreach ($preference as $index => $row) {
-            if ($row['ip'] === $ip) {
-                Log::debug('Found IP in array, refresh time.');
-                $preference[$index]['time'] = now(config('app.timezone'))->format('Y-m-d H:i:s');
-                $inArray                    = true;
-            }
-            // clean up old entries (6 months)
-            $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
-            if ($carbon instanceof Carbon && $carbon->diffInMonths(today(), true) > 6) {
-                Log::debug(sprintf('Entry for %s is very old, remove it.', $row['ip']));
-                unset($preference[$index]);
-            }
-        }
-        // add to array if not the case:
-        if (false === $inArray) {
-            $preference[] = [
-                'ip'       => $ip,
-                'time'     => now(config('app.timezone'))->format('Y-m-d H:i:s'),
-                'notified' => false,
-            ];
-        }
-        $preference = array_values($preference);
-
-        /** @var bool $send */
-        $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
-        Preferences::setForUser($user, 'login_ip_history', $preference);
-
-        if (false === $inArray && true === $send) {
-            event(new DetectedNewIPAddress($user));
         }
     }
 }

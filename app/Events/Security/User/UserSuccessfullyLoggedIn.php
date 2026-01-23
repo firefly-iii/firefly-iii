@@ -1,8 +1,7 @@
 <?php
-
 /*
- * DetectedNewIPAddress.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * UserSuccessfullyLoggedIn.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,22 +19,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\User;
 
-namespace FireflyIII\Events;
-
+use FireflyIII\Events\Event;
 use FireflyIII\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
+use InvalidArgumentException;
 
-/**
- * Class DetectedNewIPAddress
- */
-class DetectedNewIPAddress extends Event
+class UserSuccessfullyLoggedIn extends Event
 {
     use SerializesModels;
 
-    /**
-     * Create a new event instance. This event is triggered when a new user registers.
-     */
-    public function __construct(public User $user) {}
+    public User $user;
+
+    public function __construct(Authenticatable|User|null $user)
+    {
+        if ($user instanceof User) {
+            $this->user = $user;
+        }
+        throw new InvalidArgumentException('User must be an instance of User.');
+    }
 }

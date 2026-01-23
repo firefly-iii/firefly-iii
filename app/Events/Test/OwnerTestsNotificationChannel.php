@@ -1,8 +1,8 @@
 <?php
 
 /*
- * ActuallyLoggedIn.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * TestEmailChannel.php
+ * Copyright (c) 2024 james@firefly-iii.org.
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -17,30 +17,29 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ * along with this program.  If not, see https://www.gnu.org/licenses/.
  */
 
 declare(strict_types=1);
 
-namespace FireflyIII\Events;
+namespace FireflyIII\Events\Test;
 
-use FireflyIII\User;
-use Illuminate\Contracts\Auth\Authenticatable;
+use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
-/**
- * Class ActuallyLoggedIn
- */
-class ActuallyLoggedIn extends Event
+class OwnerTestsNotificationChannel
 {
     use SerializesModels;
 
-    public User $user;
+    public string $channel;
 
-    public function __construct(Authenticatable|User|null $user)
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(string $channel, public OwnerNotifiable $owner)
     {
-        if ($user instanceof User) {
-            $this->user = $user;
-        }
+        Log::debug(sprintf('Triggered OwnerTestsNotificationChannels("%s")', $channel));
+        $this->channel = $channel;
     }
 }
