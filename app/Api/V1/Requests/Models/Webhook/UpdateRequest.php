@@ -75,8 +75,19 @@ class UpdateRequest extends FormRequest
         /** @var Webhook $webhook */
         $webhook        = $this->route()->parameter('webhook');
 
-        return ['title'    => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id), 'active' => [new IsBoolean()],
-            'trigger'      => 'prohibited', 'triggers'     => 'required|array|min:1|max:10', 'triggers.*'   => sprintf('required|in:%s', $triggers), 'response'     => 'prohibited', 'responses'    => 'required|array|min:1|max:1', 'responses.*'  => sprintf('required|in:%s', $responses), 'delivery'     => 'prohibited', 'deliveries'   => 'required|array|min:1|max:1', 'deliveries.*' => sprintf('required|in:%s', $deliveries),
-            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)]];
+        return [
+            'title'        => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
+            'active'       => [new IsBoolean()],
+            'trigger'      => 'prohibited',
+            'triggers'     => 'required|array|min:1|max:10',
+            'triggers.*'   => sprintf('required|in:%s', $triggers),
+            'response'     => 'prohibited',
+            'responses'    => 'required|array|min:1|max:1',
+            'responses.*'  => sprintf('required|in:%s', $responses),
+            'delivery'     => 'prohibited',
+            'deliveries'   => 'required|array|min:1|max:1',
+            'deliveries.*' => sprintf('required|in:%s', $deliveries),
+            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+        ];
     }
 }

@@ -40,6 +40,7 @@ class UserSuccessfullyLoggedIn extends Event
     {
         if ($user instanceof User) {
             $this->user = $user;
+
             return;
         }
 
