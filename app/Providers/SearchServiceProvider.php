@@ -39,9 +39,7 @@ class SearchServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void
-    {
-    }
+    public function boot(): void {}
 
     /**
      * Register the application services.
@@ -49,7 +47,7 @@ class SearchServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(static fn(): QueryParserInterface => app(QueryParser::class));
+        $this->app->bind(static fn (): QueryParserInterface => app(QueryParser::class));
 
         $this->app->bind(static function (Application $app): SearchInterface {
             /** @var OperatorQuerySearch $search */

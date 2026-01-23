@@ -91,23 +91,23 @@ trait DateCalculation
     protected function getNextPeriods(Carbon $date, string $range): array
     {
         // select thing for next 12 periods:
-        $loop = [];
+        $loop    = [];
 
         /** @var Carbon $current */
         $current = Navigation::startOfPeriod($date, $range);
         $current = Navigation::endOfPeriod($current, $range);
         $current->addDay();
-        $count = 0;
+        $count   = 0;
 
         while ($count < 12) {
             $current      = Navigation::endOfPeriod($current, $range);
             $currentStart = Navigation::startOfPeriod($current, $range);
 
-            $loop[] = [
+            $loop[]       = [
                 'label' => $current->format('Y-m-d'),
                 'title' => Navigation::periodShow($current, $range),
                 'start' => clone $currentStart,
-                'end'   => clone $current
+                'end'   => clone $current,
             ];
             ++$count;
             $current->addDay();
@@ -123,7 +123,7 @@ trait DateCalculation
     protected function getPreviousPeriods(Carbon $date, string $range): array
     {
         // select thing for last 12 periods:
-        $loop = [];
+        $loop    = [];
 
         /** @var Carbon $current */
         $current = Navigation::startOfPeriod($date, $range);
@@ -132,11 +132,11 @@ trait DateCalculation
             $current->subDay();
             $current    = Navigation::startOfPeriod($current, $range);
             $currentEnd = Navigation::endOfPeriod($current, $range);
-            $loop[] = [
+            $loop[]     = [
                 'label' => $current->format('Y-m-d'),
                 'title' => Navigation::periodShow($current, $range),
                 'start' => clone $current,
-                'end'   => clone $currentEnd
+                'end'   => clone $currentEnd,
             ];
             ++$count;
         }

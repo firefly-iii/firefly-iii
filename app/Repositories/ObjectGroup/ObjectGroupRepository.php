@@ -58,7 +58,8 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
             ->with(['piggyBanks', 'bills'])
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'ASC')
-            ->get();
+            ->get()
+        ;
     }
 
     public function deleteEmpty(): void
@@ -124,7 +125,8 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         $dbQuery = $this->user
             ->objectGroups()
             ->orderBy('order', 'ASC')
-            ->orderBy('title', 'ASC');
+            ->orderBy('title', 'ASC')
+        ;
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -162,7 +164,8 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
                 ->where('object_groups.order', '<=', $newOrder)
                 ->where('object_groups.order', '>', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)
-                ->decrement('object_groups.order');
+                ->decrement('object_groups.order')
+            ;
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();
@@ -173,7 +176,8 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
                 ->where('object_groups.order', '>=', $newOrder)
                 ->where('object_groups.order', '<', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)
-                ->increment('object_groups.order');
+                ->increment('object_groups.order')
+            ;
 
             $objectGroup->order = $newOrder;
             $objectGroup->save();

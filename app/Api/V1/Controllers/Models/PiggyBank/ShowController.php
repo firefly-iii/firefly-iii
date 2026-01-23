@@ -65,31 +65,31 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
         // types to get, page size:
-        $pageSize = $this->parameters->get('limit');
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of piggy banks. Count it and split it.
-        $collection = $this->repository->getPiggyBanks();
-        $count      = $collection->count();
-        $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->getPiggyBanks();
+        $count       = $collection->count();
+        $piggyBanks  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new PiggyBankEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBanks = $enrichment->enrich($piggyBanks);
+        $piggyBanks  = $enrichment->enrich($piggyBanks);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy-banks.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.piggy-banks.index').$this->buildParams());
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($piggyBanks, $transformer, 'piggy-banks');
+        $resource    = new FractalCollection($piggyBanks, $transformer, 'piggy-banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -103,20 +103,20 @@ class ShowController extends Controller
      */
     public function show(PiggyBank $piggyBank): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new PiggyBankEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBank = $enrichment->enrichSingle($piggyBank);
+        $piggyBank   = $enrichment->enrichSingle($piggyBank);
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($piggyBank, $transformer, 'piggy-banks');
+        $resource    = new Item($piggyBank, $transformer, 'piggy-banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

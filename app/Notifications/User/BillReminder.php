@@ -61,7 +61,8 @@ class BillReminder extends Notification
     {
         return new MailMessage()
             ->markdown('emails.bill-warning', ['field' => $this->field, 'diff'  => $this->diff, 'bill'  => $this->bill])
-            ->subject($this->getSubject());
+            ->subject($this->getSubject())
+        ;
     }
 
     private function getSubject(): string
@@ -105,7 +106,8 @@ class BillReminder extends Notification
             ->attachment(static function ($attachment) use ($bill, $url): void {
                 $attachment->title((string) trans('firefly.visit_bill', ['name' => $bill->name]), $url);
             })
-            ->content($this->getSubject());
+            ->content($this->getSubject())
+        ;
     }
 
     /**

@@ -41,7 +41,7 @@ trait ChecksLogin
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged-in users
-        $check = auth()->check();
+        $check     = auth()->check();
         if (!$check) {
             return false;
         }
@@ -77,10 +77,10 @@ trait ChecksLogin
      * Will throw exception if invalid.
      * TODO duplicated in JSONAPI code.
      */
-    public function getUserGroup(): null|UserGroup
+    public function getUserGroup(): ?UserGroup
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
         Log::debug('Now in getUserGroup()');
 
         /** @var null|UserGroup $userGroup */
@@ -92,7 +92,7 @@ trait ChecksLogin
                 Log::debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
                 $userGroupId = (int) $user->user_group_id;
             }
-            $userGroup = UserGroup::find($userGroupId);
+            $userGroup   = UserGroup::find($userGroupId);
             if (null === $userGroup) {
                 Log::error(sprintf('Request class has user_group_id (#%d), but group does not exist.', $userGroupId));
 

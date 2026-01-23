@@ -107,25 +107,25 @@ class IndexController extends Controller
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters(new ParameterBag());
-        $piggyBanks = [];
+        $piggyBanks  = [];
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new PiggyBankEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $collection = $enrichment->enrich($collection);
+        $collection  = $enrichment->enrich($collection);
 
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
-            $array      = $transformer->transform($piggy);
-            $groupOrder = (int) $array['object_group_order'];
+            $array                                    = $transformer->transform($piggy);
+            $groupOrder                               = (int) $array['object_group_order'];
             $piggyBanks[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'] ?? 0,
                 'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
-                'piggy_banks'        => []
+                'piggy_banks'        => [],
             ];
-            $array['attachments'] = $this->piggyRepos->getAttachments($piggy);
+            $array['attachments']                     = $this->piggyRepos->getAttachments($piggy);
 
             // sum the total amount for the index.
             $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
@@ -137,10 +137,10 @@ class IndexController extends Controller
     private function collectAccounts(Collection $collection): array
     {
         /** @var Carbon $end */
-        $end = session('end', today(config('app.timezone'))->endOfMonth());
+        $end                = session('end', today(config('app.timezone'))->endOfMonth());
 
         // transform piggies using the transformer:
-        $parameters = new ParameterBag();
+        $parameters         = new ParameterBag();
         $parameters->set('end', $end);
 
         /** @var AccountTransformer $accountTransformer */
@@ -148,10 +148,10 @@ class IndexController extends Controller
         $accountTransformer->setParameters($parameters);
 
         // enrich each account.
-        $enrichment = new AccountEnrichment();
+        $enrichment         = new AccountEnrichment();
         $enrichment->setUser(auth()->user());
         $enrichment->setDate($end);
-        $return = [];
+        $return             = [];
 
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
@@ -164,12 +164,12 @@ class IndexController extends Controller
                 $array     = $accountTransformer->transform($account);
                 $accountId = (int) $array['id'];
                 if (!array_key_exists($accountId, $return)) {
-                    $return[$accountId] = $array;
+                    $return[$accountId]            = $array;
 
                     // add some interesting details:
-                    $return[$accountId]['left'] = $return[$accountId]['current_balance'];
-                    $return[$accountId]['saved'] = '0';
-                    $return[$accountId]['target'] = '0';
+                    $return[$accountId]['left']    = $return[$accountId]['current_balance'];
+                    $return[$accountId]['saved']   = '0';
+                    $return[$accountId]['target']  = '0';
                     $return[$accountId]['to_save'] = '0';
                 }
             }
@@ -189,9 +189,9 @@ class IndexController extends Controller
                 foreach ($piggyBank['accounts'] as $piggyAccount) {
                     $accountId = $piggyAccount['account_id'];
                     if (array_key_exists($accountId, $accounts)) {
-                        $accounts[$accountId]['left'] = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
-                        $accounts[$accountId]['saved'] = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
-                        $accounts[$accountId]['target'] = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
+                        $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['target']  = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
                         $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub(
                             (string) $piggyBank['target_amount'],
                             (string) $piggyAccount['current_amount']
@@ -210,7 +210,7 @@ class IndexController extends Controller
         foreach ($piggyBanks as $groupOrder => $group) {
             $groupId = $group['object_group_id'];
             foreach ($group['piggy_banks'] as $piggy) {
-                $currencyId = $piggy['currency_id'];
+                $currencyId                                    = $piggy['currency_id'];
                 $sums[$groupId][$currencyId] ??= [
                     'target'                  => '0',
                     'saved'                   => '0',
@@ -219,20 +219,20 @@ class IndexController extends Controller
                     'currency_id'             => $currencyId,
                     'currency_code'           => $piggy['currency_code'],
                     'currency_symbol'         => $piggy['currency_symbol'],
-                    'currency_decimal_places' => $piggy['currency_decimal_places']
+                    'currency_decimal_places' => $piggy['currency_decimal_places'],
                 ];
                 // target_amount
                 // current_amount
                 // left_to_save
                 // save_per_month
-                $sums[$groupId][$currencyId]['target'] = bcadd($sums[$groupId][$currencyId]['target'], (string) $piggy['target_amount']);
-                $sums[$groupId][$currencyId]['saved'] = bcadd($sums[$groupId][$currencyId]['saved'], (string) $piggy['current_amount']);
-                $sums[$groupId][$currencyId]['left_to_save'] = bcadd($sums[$groupId][$currencyId]['left_to_save'], (string) $piggy['left_to_save']);
+                $sums[$groupId][$currencyId]['target']         = bcadd($sums[$groupId][$currencyId]['target'], (string) $piggy['target_amount']);
+                $sums[$groupId][$currencyId]['saved']          = bcadd($sums[$groupId][$currencyId]['saved'], (string) $piggy['current_amount']);
+                $sums[$groupId][$currencyId]['left_to_save']   = bcadd($sums[$groupId][$currencyId]['left_to_save'], (string) $piggy['left_to_save']);
                 $sums[$groupId][$currencyId]['save_per_month'] = bcadd($sums[$groupId][$currencyId]['save_per_month'], (string) $piggy['save_per_month']);
             }
         }
         foreach ($piggyBanks as $groupOrder => $group) {
-            $groupId = $group['object_group_id'];
+            $groupId                         = $group['object_group_id'];
             $piggyBanks[$groupOrder]['sums'] = $sums[$groupId] ?? [];
         }
 

@@ -39,7 +39,7 @@ class CorrectsRecurringTransactions extends Command
 
     protected $description = 'Fixes recurring transactions with the wrong transaction type.';
     protected $signature   = 'correction:recurring-transactions';
-    private int $count = 0;
+    private int $count     = 0;
     private RecurringRepositoryInterface $recurringRepos;
     private UserRepositoryInterface $userRepos;
 
@@ -62,7 +62,7 @@ class CorrectsRecurringTransactions extends Command
     private function stupidLaravel(): void
     {
         $this->recurringRepos = app(RecurringRepositoryInterface::class);
-        $this->userRepos = app(UserRepositoryInterface::class);
+        $this->userRepos      = app(UserRepositoryInterface::class);
     }
 
     private function correctTransactions(): void

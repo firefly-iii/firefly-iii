@@ -47,8 +47,8 @@ class UpgradesToGroups extends Command
 
     public const string CONFIG_NAME = '480_migrated_to_groups';
 
-    protected $description = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
-    protected $signature   = 'upgrade:480-migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    protected $description          = 'Migrates a pre-4.7.8 transaction structure to the 4.7.8+ transaction structure.';
+    protected $signature            = 'upgrade:480-migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;
     private TransactionGroupFactory $groupFactory;
@@ -90,11 +90,11 @@ class UpgradesToGroups extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->count = 0;
+        $this->count             = 0;
         $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->service = app(JournalDestroyService::class);
-        $this->groupFactory = app(TransactionGroupFactory::class);
-        $this->cliRepository = app(JournalCLIRepositoryInterface::class);
+        $this->service           = app(JournalDestroyService::class);
+        $this->groupFactory      = app(TransactionGroupFactory::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 
     private function isMigrated(): bool
@@ -140,7 +140,7 @@ class UpgradesToGroups extends Command
         $data             = [
             // mandatory fields.
             'group_title'  => $journal->description,
-            'transactions' => []
+            'transactions' => [],
         ];
         $destTransactions = $this->getDestinationTransactions($journal);
 
@@ -151,7 +151,7 @@ class UpgradesToGroups extends Command
             $data['transactions'][] = $this->generateTransaction($journal, $transaction);
         }
         Log::debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
-        $group = $this->groupFactory->create($data);
+        $group            = $this->groupFactory->create($data);
         Log::debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
@@ -176,7 +176,7 @@ class UpgradesToGroups extends Command
 
     private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
-        return $journal->transactions->filter(static fn(Transaction $transaction): bool => $transaction->amount > 0);
+        return $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount > 0);
     }
 
     /**
@@ -185,7 +185,7 @@ class UpgradesToGroups extends Command
     private function generateTransaction(TransactionJournal $journal, Transaction $transaction): array
     {
         Log::debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
-        $opposingTr = $this->findOpposingTransaction($journal, $transaction);
+        $opposingTr     = $this->findOpposingTransaction($journal, $transaction);
 
         if (!$opposingTr instanceof Transaction) {
             $this->friendlyError(sprintf(
@@ -224,8 +224,8 @@ class UpgradesToGroups extends Command
         $invoiceDate    = $this->cliRepository->getMetaDate($journal, 'invoice_date');
 
         // overrule journal category with transaction category.
-        $budgetId   = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
-        $categoryId = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
+        $budgetId       = $this->getTransactionBudget($transaction, $opposingTr) ?? $budgetId;
+        $categoryId     = $this->getTransactionCategory($transaction, $opposingTr) ?? $categoryId;
 
         return [
             'type'                => strtolower((string) $journal->transactionType->type),
@@ -264,14 +264,14 @@ class UpgradesToGroups extends Command
             'process_date'        => $processDate,
             'due_date'            => $dueDate,
             'payment_date'        => $paymentDate,
-            'invoice_date'        => $invoiceDate
+            'invoice_date'        => $invoiceDate,
         ];
     }
 
-    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): null|Transaction
+    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
         $set = $journal->transactions->filter(static function (Transaction $subject) use ($transaction): bool {
-            $amount = ((float) $transaction->amount * -1) === (float) $subject->amount; // intentional float
+            $amount     = ((float) $transaction->amount * -1) === (float) $subject->amount; // intentional float
             $identifier = $transaction->identifier === $subject->identifier;
             Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
             Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
@@ -282,7 +282,7 @@ class UpgradesToGroups extends Command
         return $set->first();
     }
 
-    private function getTransactionBudget(Transaction $left, Transaction $right): null|int
+    private function getTransactionBudget(Transaction $left, Transaction $right): ?int
     {
         Log::debug('Now in getTransactionBudget()');
 
@@ -309,7 +309,7 @@ class UpgradesToGroups extends Command
         return null;
     }
 
-    private function getTransactionCategory(Transaction $left, Transaction $right): null|int
+    private function getTransactionCategory(Transaction $left, Transaction $right): ?int
     {
         Log::debug('Now in getTransactionCategory()');
 
@@ -360,7 +360,7 @@ class UpgradesToGroups extends Command
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'title'      => null,
-            'user_id'    => $array['user_id']
+            'user_id'    => $array['user_id'],
         ]);
         DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
         ++$this->count;

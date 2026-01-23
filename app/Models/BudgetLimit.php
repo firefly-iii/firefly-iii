@@ -60,7 +60,8 @@ class BudgetLimit extends Model
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('budgets.user_id', auth()->user()->id)
-                ->first(['budget_limits.*']);
+                ->first(['budget_limits.*'])
+            ;
             if (null !== $budgetLimit) {
                 return $budgetLimit;
             }
@@ -92,12 +93,12 @@ class BudgetLimit extends Model
      */
     protected function amount(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string) $value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function budgetId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -109,12 +110,12 @@ class BudgetLimit extends Model
             'end_date'      => SeparateTimezoneCaster::class,
             'auto_budget'   => 'boolean',
             'amount'        => 'string',
-            'native_amount' => 'string'
+            'native_amount' => 'string',
         ];
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

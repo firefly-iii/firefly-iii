@@ -72,15 +72,15 @@ class ExchangeRatesCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var DownloadExchangeRates $job */
-        $job = app(DownloadExchangeRates::class);
+        $job                = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
         $job->handle();
 
         // get stuff from job:
-        $this->jobFired = true;
-        $this->jobErrored = false;
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message = 'Exchange rates cron job fired successfully.';
+        $this->message      = 'Exchange rates cron job fired successfully.';
 
         FireflyConfig::set('last_cer_job', (int) $this->date->format('U'));
         Log::info('Done with exchange rates job task.');

@@ -47,7 +47,7 @@ class BalanceController extends Controller
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array $chartData = [];
+    private array $chartData       = [];
     private GroupCollectorInterface $collector;
     private AccountRepositoryInterface $repository;
 
@@ -59,7 +59,7 @@ class BalanceController extends Controller
         $this->middleware(function (Request $request, $next) {
             $this->validateUserGroup($request);
             $this->repository = app(AccountRepositoryInterface::class);
-            $this->collector = app(GroupCollectorInterface::class);
+            $this->collector  = app(GroupCollectorInterface::class);
             $this->repository->setUserGroup($this->userGroup);
             $this->collector->setUserGroup($this->userGroup);
             $this->repository->setUser($this->user);
@@ -95,11 +95,12 @@ class BalanceController extends Controller
                 TransactionTypeEnum::WITHDRAWAL->value,
                 TransactionTypeEnum::DEPOSIT->value,
                 TransactionTypeEnum::RECONCILIATION->value,
-                TransactionTypeEnum::TRANSFER->value
-            ]);
-        $journals = $this->collector->getExtractedJournals();
+                TransactionTypeEnum::TRANSFER->value,
+            ])
+        ;
+        $journals        = $this->collector->getExtractedJournals();
 
-        $object = new AccountBalanceGrouped();
+        $object          = new AccountBalanceGrouped();
         $object->setPreferredRange($queryParameters['period']);
         $object->setPrimary($this->primaryCurrency);
         $object->setAccounts($accounts);
@@ -107,7 +108,7 @@ class BalanceController extends Controller
         $object->setStart($queryParameters['start']);
         $object->setEnd($queryParameters['end']);
         $object->groupByCurrencyAndPeriod();
-        $data = $object->convertToChartData();
+        $data            = $object->convertToChartData();
         foreach ($data as $entry) {
             $this->chartData[] = $entry;
         }

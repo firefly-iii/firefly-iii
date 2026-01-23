@@ -64,10 +64,10 @@ class Bill extends Model
         'end_date_tz',
         'extension_date_tz',
         'native_amount_min',
-        'native_amount_max'
+        'native_amount_max',
     ];
 
-    protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
+    protected $hidden   = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -80,10 +80,10 @@ class Bill extends Model
             $billId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Bill $bill */
-            $bill = $user->bills()->find($billId);
+            $bill   = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
             }
@@ -149,7 +149,7 @@ class Bill extends Model
      */
     protected function amountMax(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string) $value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     /**
@@ -157,7 +157,7 @@ class Bill extends Model
      */
     protected function amountMin(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string) $value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function casts(): array
@@ -177,13 +177,13 @@ class Bill extends Model
             'amount_min'        => 'string',
             'amount_max'        => 'string',
             'native_amount_min' => 'string',
-            'native_amount_max' => 'string'
+            'native_amount_max' => 'string',
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -191,11 +191,11 @@ class Bill extends Model
      */
     protected function skip(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

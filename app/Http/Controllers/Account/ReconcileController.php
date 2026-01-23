@@ -64,7 +64,7 @@ class ReconcileController extends Controller
         $this->middleware(function ($request, $next) {
             app('view')->share('mainTitleIcon', 'fa-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
-            $this->repository = app(JournalRepositoryInterface::class);
+            $this->repository   = app(JournalRepositoryInterface::class);
             $this->accountRepos = app(AccountRepositoryInterface::class);
 
             return $next($request);
@@ -80,8 +80,8 @@ class ReconcileController extends Controller
      *                                              */
     public function reconcile(
         Account $account,
-        null|Carbon $start = null,
-        null|Carbon $end = null
+        ?Carbon $start = null,
+        ?Carbon $end = null
     ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
@@ -91,10 +91,10 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
         }
-        $currency = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
+        $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
 
         // no start or end:
-        $range = Navigation::getViewRange(false);
+        $range           = Navigation::getViewRange(false);
 
         // get start and end
 
@@ -103,7 +103,7 @@ class ReconcileController extends Controller
             $start = clone session('start', Navigation::startOfPeriod(new Carbon(), $range));
 
             /** @var Carbon $end */
-            $end = clone session('end', Navigation::endOfPeriod(new Carbon(), $range));
+            $end   = clone session('end', Navigation::endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
@@ -127,17 +127,17 @@ class ReconcileController extends Controller
 
         // 2025-10-08 replace with accountsBalancesOptimized
         // no longer need to do subday->endofday on $start, set inclusive = false for the same effect.
-        $startBalance = Steam::bcround(
+        $startBalance    = Steam::bcround(
             Steam::accountsBalancesOptimized(new Collection()->push($account), $start, convertToPrimary: null, inclusive: false)[$account->id]['balance'],
             $currency->decimal_places
         );
-        $endBalance   = Steam::bcround(
+        $endBalance      = Steam::bcround(
             Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id]['balance'],
             $currency->decimal_places
         );
 
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $subTitle     = (string) trans('firefly.reconcile_account', ['account'     => $account->name]);
+        $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
+        $subTitle        = (string) trans('firefly.reconcile_account', ['account'     => $account->name]);
 
         // various links
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
@@ -157,7 +157,7 @@ class ReconcileController extends Controller
             'endBalance'      => $endBalance,
             'transactionsUrl' => $transactionsUrl,
             'overviewUrl'     => $overviewUrl,
-            'indexUrl'        => $indexUrl
+            'indexUrl'        => $indexUrl,
         ]);
     }
 
@@ -173,7 +173,7 @@ class ReconcileController extends Controller
         }
 
         Log::debug('In ReconcileController::submit()');
-        $data = $request->getAll();
+        $data   = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
@@ -228,11 +228,11 @@ class ReconcileController extends Controller
         }
 
         // title:
-        $description = trans('firefly.reconciliation_transaction_title', [
+        $description    = trans('firefly.reconciliation_transaction_title', [
             'from' => $start->isoFormat($this->monthAndDayFormat),
-            'to'   => $end->isoFormat($this->monthAndDayFormat)
+            'to'   => $end->isoFormat($this->monthAndDayFormat),
         ]);
-        $submission  = [
+        $submission     = [
             'user'         => auth()->user(),
             'user_group'   => auth()->user()->userGroup,
             'group_title'  => null,
@@ -249,15 +249,15 @@ class ReconcileController extends Controller
                 'description'         => $description,
                 'source_id'           => $source->id,
                 'destination_id'      => $destination->id,
-                'reconciled'          => true
-            ]]
+                'reconciled'          => true,
+            ]],
         ];
 
         /** @var TransactionGroupFactory $factory */
-        $factory = app(TransactionGroupFactory::class);
+        $factory        = app(TransactionGroupFactory::class);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user           = auth()->user();
         $factory->setUser($user);
 
         try {

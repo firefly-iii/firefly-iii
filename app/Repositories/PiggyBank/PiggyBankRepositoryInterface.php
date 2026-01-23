@@ -49,7 +49,7 @@ interface PiggyBankRepositoryInterface
 {
     public function resetHistory(PiggyBank $piggyBank): void;
 
-    public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, null|TransactionJournal $journal = null): bool;
+    public function addAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
     public function addAmountToPiggyBank(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): void;
 
@@ -64,23 +64,23 @@ interface PiggyBankRepositoryInterface
 
     public function destroyAll(): void;
 
-    public function find(int $piggyBankId): null|PiggyBank;
+    public function find(int $piggyBankId): ?PiggyBank;
 
     /**
      * Find by name or return NULL.
      */
-    public function findByName(string $name): null|PiggyBank;
+    public function findByName(string $name): ?PiggyBank;
 
-    public function findPiggyBank(null|int $piggyBankId, null|string $piggyBankName): null|PiggyBank;
+    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
 
     public function getAttachments(PiggyBank $piggyBank): Collection;
 
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentAmount(PiggyBank $piggyBank, null|Account $account = null): string;
+    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
-    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, null|Account $account = null): string;
+    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string;
 
     /**
      * Get all events.
@@ -111,7 +111,7 @@ interface PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection;
 
-    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): null|PiggyBankRepetition;
+    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition;
 
     /**
      * Returns the suggested amount the user should save per month, or "".
@@ -125,7 +125,7 @@ interface PiggyBankRepositoryInterface
 
     public function purgeAll(): void;
 
-    public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, null|TransactionJournal $journal = null): bool;
+    public function removeAmount(PiggyBank $piggyBank, Account $account, string $amount, ?TransactionJournal $journal = null): bool;
 
     public function removeAmountFromAll(PiggyBank $piggyBank, string $amount): void;
 

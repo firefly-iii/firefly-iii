@@ -44,7 +44,7 @@ class ProfileFormRequest extends FormRequest
         return [
             'current_password'          => 'required',
             'new_password'              => 'required|confirmed|secure_password|min:16',
-            'new_password_confirmation' => 'required'
+            'new_password_confirmation' => 'required',
         ];
     }
 

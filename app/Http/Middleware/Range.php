@@ -77,9 +77,9 @@ class Range
                 $viewRange = '1M';
             }
 
-            $today = today(config('app.timezone'));
-            $start = Navigation::updateStartDate((string) $viewRange, $today);
-            $end   = Navigation::updateEndDate((string) $viewRange, $start);
+            $today     = today(config('app.timezone'));
+            $start     = Navigation::updateStartDate((string) $viewRange, $today);
+            $end       = Navigation::updateEndDate((string) $viewRange, $start);
 
             app('session')->put('start', $start);
             app('session')->put('end', $end);
@@ -105,15 +105,15 @@ class Range
     private function configureView(): void
     {
         // get locale preference:
-        $language = Steam::getLanguage();
-        $locale   = Steam::getLocale();
+        $language          = Steam::getLanguage();
+        $locale            = Steam::getLocale();
         App::setLocale($language);
         Carbon::setLocale(substr($locale, 0, 2));
 
-        $localeArray = Steam::getLocaleArray($locale);
+        $localeArray       = Steam::getLocaleArray($locale);
 
         setlocale(LC_TIME, $localeArray);
-        $moneyResult = setlocale(LC_MONETARY, $localeArray);
+        $moneyResult       = setlocale(LC_MONETARY, $localeArray);
 
         // send error to view, if it could not set money format
         if (false === $moneyResult) {
@@ -127,7 +127,7 @@ class Range
         $primaryCurrency   = Amount::getPrimaryCurrency();
 
         // also format for moment JS:
-        $madMomentJS = (string) trans('config.month_and_day_moment_js', [], $locale);
+        $madMomentJS       = (string) trans('config.month_and_day_moment_js', [], $locale);
 
         app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);

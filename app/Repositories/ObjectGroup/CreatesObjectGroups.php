@@ -31,16 +31,17 @@ use FireflyIII\Models\ObjectGroup;
  */
 trait CreatesObjectGroups
 {
-    protected function findObjectGroupById(int $groupId): null|ObjectGroup
+    protected function findObjectGroupById(int $groupId): ?ObjectGroup
     {
         /** @var null|ObjectGroup */
         return $this->user
             ->objectGroups()
             ->where('id', $groupId)
-            ->first();
+            ->first()
+        ;
     }
 
-    protected function findOrCreateObjectGroup(string $title): null|ObjectGroup
+    protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
     {
         $title    = substr($title, 0, 255);
         $maxOrder = $this->getObjectGroupMaxOrder();
@@ -49,7 +50,7 @@ trait CreatesObjectGroups
                 'user_id'       => $this->user->id,
                 'user_group_id' => $this->user->user_group_id,
                 'title'         => $title,
-                'order'         => $maxOrder + 1
+                'order'         => $maxOrder + 1,
             ]);
         }
 
@@ -66,15 +67,17 @@ trait CreatesObjectGroups
         return 1 === $this->user
             ->objectGroups()
             ->where('title', $title)
-            ->count();
+            ->count()
+        ;
     }
 
-    protected function findObjectGroup(string $title): null|ObjectGroup
+    protected function findObjectGroup(string $title): ?ObjectGroup
     {
         /** @var null|ObjectGroup */
         return $this->user
             ->objectGroups()
             ->where('title', $title)
-            ->first();
+            ->first()
+        ;
     }
 }

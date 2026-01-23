@@ -135,15 +135,15 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle     = (string) trans('firefly.edit_user', ['email'     => $user->email]);
-        $subTitleIcon = 'fa-user-o';
-        $currentUser  = auth()->user();
-        $isAdmin      = $this->repository->hasRole($user, 'owner');
-        $codes        = [
+        $subTitle       = (string) trans('firefly.edit_user', ['email'     => $user->email]);
+        $subTitleIcon   = 'fa-user-o';
+        $currentUser    = auth()->user();
+        $isAdmin        = $this->repository->hasRole($user, 'owner');
+        $codes          = [
             ''              => (string) trans('firefly.no_block_code'),
             'bounced'       => (string) trans('firefly.block_code_bounced'),
             'expired'       => (string) trans('firefly.block_code_expired'),
-            'email_changed' => (string) trans('firefly.block_code_email_changed')
+            'email_changed' => (string) trans('firefly.block_code_email_changed'),
         ];
 
         return view('settings.users.edit', [
@@ -153,7 +153,7 @@ class UserController extends Controller
             'subTitleIcon'   => $subTitleIcon,
             'codes'          => $codes,
             'currentUser'    => $currentUser,
-            'isAdmin'        => $isAdmin
+            'isAdmin'        => $isAdmin,
         ]);
     }
 
@@ -178,12 +178,12 @@ class UserController extends Controller
             $allowInvites = true;
         }
 
-        $invitedUsers = $this->repository->getInvitedUsers();
+        $invitedUsers   = $this->repository->getInvitedUsers();
 
         // add meta stuff.
         $users->each(function (User $user): void {
             $user->isAdmin = $this->repository->hasRole($user, 'owner');
-            $user->has2FA = null !== $user->mfa_secret;
+            $user->has2FA  = null !== $user->mfa_secret;
         });
 
         return view('settings.users.index', [
@@ -191,7 +191,7 @@ class UserController extends Controller
             'subTitleIcon' => $subTitleIcon,
             'users'        => $users,
             'allowInvites' => $allowInvites,
-            'invitedUsers' => $invitedUsers
+            'invitedUsers' => $invitedUsers,
         ]);
     }
 
@@ -226,7 +226,7 @@ class UserController extends Controller
             'subTitle'      => $subTitle,
             'subTitleIcon'  => $subTitleIcon,
             'information'   => $information,
-            'user'          => $user
+            'user'          => $user,
         ]);
     }
 
@@ -238,7 +238,7 @@ class UserController extends Controller
     public function update(UserFormRequest $request, User $user)
     {
         Log::debug('Actually here');
-        $data = $request->getUserData();
+        $data     = $request->getUserData();
 
         // var_dump($data);
 

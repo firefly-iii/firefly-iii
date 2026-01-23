@@ -47,7 +47,7 @@ class LinkTypeFormRequest extends FormRequest
         $idRule   = '';
 
         // get parameter link:
-        $link = $this->route()->parameter('linkType');
+        $link     = $this->route()->parameter('linkType');
 
         if (null !== $link) {
             $idRule   = 'exists:link_types,id';
@@ -58,7 +58,7 @@ class LinkTypeFormRequest extends FormRequest
             'id'      => $idRule,
             'name'    => $nameRule,
             'inward'  => 'required|max:255|min:1|different:outward',
-            'outward' => 'required|max:255|min:1|different:inward'
+            'outward' => 'required|max:255|min:1|different:inward',
         ];
     }
 

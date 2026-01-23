@@ -41,8 +41,8 @@ class UpgradesLiabilities extends Command
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
 
-    protected $description = 'Upgrade liabilities to new 5.6.0 structure.';
-    protected $signature   = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
+    protected $signature            = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -84,7 +84,8 @@ class UpgradesLiabilities extends Command
             ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-            ->get(['accounts.*']);
+            ->get(['accounts.*'])
+        ;
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -98,7 +99,7 @@ class UpgradesLiabilities extends Command
     private function upgradeLiability(Account $account): void
     {
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
+        $repository     = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
         // get opening balance, and correct if necessary.
@@ -109,7 +110,7 @@ class UpgradesLiabilities extends Command
         }
 
         // add liability direction property (if it does not yet exist!)
-        $value = $repository->getMetaValue($account, 'liability_direction');
+        $value          = $repository->getMetaValue($account, 'liability_direction');
         if (null === $value) {
             /** @var AccountMetaFactory $factory */
             $factory = app(AccountMetaFactory::class);
@@ -127,21 +128,21 @@ class UpgradesLiabilities extends Command
         // source MUST be the liability.
         if ($destination->account_id === $account->id) {
             // so if not, switch things around:
-            $sourceAccountId = $source->account_id;
-            $source->account_id = $destination->account_id;
+            $sourceAccountId         = $source->account_id;
+            $source->account_id      = $destination->account_id;
             $destination->account_id = $sourceAccountId;
             $source->save();
             $destination->save();
         }
     }
 
-    private function getSourceTransaction(TransactionJournal $journal): null|Transaction
+    private function getSourceTransaction(TransactionJournal $journal): ?Transaction
     {
         /** @var null|Transaction */
         return $journal->transactions()->where('amount', '<', 0)->first();
     }
 
-    private function getDestinationTransaction(TransactionJournal $journal): null|Transaction
+    private function getDestinationTransaction(TransactionJournal $journal): ?Transaction
     {
         /** @var null|Transaction */
         return $journal->transactions()->where('amount', '>', 0)->first();

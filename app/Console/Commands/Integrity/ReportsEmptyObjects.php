@@ -38,7 +38,7 @@ class ReportsEmptyObjects extends Command
 
     protected $description = 'Reports on empty database objects.';
 
-    protected $signature = 'integrity:empty-objects';
+    protected $signature   = 'integrity:empty-objects';
 
     /**
      * Execute the console command.
@@ -64,7 +64,8 @@ class ReportsEmptyObjects extends Command
             ->distinct()
             ->whereNull('budget_transaction_journal.budget_id')
             ->whereNull('budgets.deleted_at')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email']);
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -83,7 +84,8 @@ class ReportsEmptyObjects extends Command
             ->distinct()
             ->whereNull('category_transaction_journal.category_id')
             ->whereNull('categories.deleted_at')
-            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email']);
+            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -99,7 +101,8 @@ class ReportsEmptyObjects extends Command
             ->distinct()
             ->whereNull('tag_transaction_journal.tag_id')
             ->whereNull('tags.deleted_at')
-            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
+            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -117,7 +120,8 @@ class ReportsEmptyObjects extends Command
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
             ->whereNull('transactions.account_id')
-            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']);
+            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
@@ -136,7 +140,8 @@ class ReportsEmptyObjects extends Command
             ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
             ->groupBy(['budgets.id', 'budgets.name', 'budgets.encrypted', 'budgets.user_id', 'users.email'])
             ->whereNull('budget_limits.id')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'budgets.encrypted', 'users.email']);
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'budgets.encrypted', 'users.email'])
+        ;
 
         /** @var Budget $entry */
         foreach ($set as $entry) {

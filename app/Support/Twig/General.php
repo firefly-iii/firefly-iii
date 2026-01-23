@@ -67,7 +67,7 @@ class General extends AbstractExtension
             $this->hasRole(),
             $this->getRootSearchOperator(),
             $this->carbonize(),
-            $this->fireflyIIIConfig()
+            $this->fireflyIIIConfig(),
         ];
     }
 
@@ -80,7 +80,7 @@ class General extends AbstractExtension
         return new TwigFunction('activeRoutePartial', static function (): string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
-            $name = Route::getCurrentRoute()->getName() ?? '';
+            $name  = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'active';
             }
@@ -99,7 +99,7 @@ class General extends AbstractExtension
             'activeRoutePartialObjectType',
             static function (array $context): string {
                 [, $route, $objectType] = func_get_args();
-                $activeObjectType = $context['objectType'] ?? false;
+                $activeObjectType       = $context['objectType'] ?? false;
 
                 if ($objectType === $activeObjectType && false !== stripos((string) Route::getCurrentRoute()->getName(), (string) $route)) {
                     return 'active';
@@ -134,17 +134,17 @@ class General extends AbstractExtension
      */
     protected function balance(): TwigFilter
     {
-        return new TwigFilter('balance', static function (null|Account $account): string {
+        return new TwigFilter('balance', static function (?Account $account): string {
             if (!$account instanceof Account) {
                 return '0';
             }
 
             /** @var Carbon $date */
-            $date = now();
+            $date             = now();
 
             // get the date from the current session. If it's in the future, keep `now()`.
             /** @var Carbon $session */
-            $session = clone session('end', today(config('app.timezone'))->endOfMonth());
+            $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
             if ($session->lt($date)) {
                 $date = $session->copy();
                 $date->endOfDay();
@@ -152,13 +152,13 @@ class General extends AbstractExtension
             Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
 
             // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-            $info = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+            $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
             // $info             = Steam::finalAccountBalance($account, $date);
             $currency         = Steam::getAccountCurrency($account);
             $primary          = Amount::getPrimaryCurrency();
             $convertToPrimary = Amount::convertToPrimary();
             $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-            $currency         ??= $primary;
+            $currency ??= $primary;
             $strings          = [];
             foreach ($info as $key => $balance) {
                 if ('balance' === $key) {
@@ -191,7 +191,7 @@ class General extends AbstractExtension
 
     protected function carbonize(): TwigFunction
     {
-        return new TwigFunction('carbonize', static fn(string $date): Carbon => new Carbon($date, config('app.timezone')));
+        return new TwigFunction('carbonize', static fn (string $date): Carbon => new Carbon($date, config('app.timezone')));
     }
 
     /**
@@ -214,15 +214,15 @@ class General extends AbstractExtension
         return new TwigFilter('filesize', static function (int $size): string {
             // less than one GB, more than one MB
             if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                return round($size / (1024 * 1024), 2) . ' MB';
+                return round($size / (1024 * 1024), 2).' MB';
             }
 
             // less than one MB
             if ($size < (1024 * 1024)) {
-                return round($size / 1024, 2) . ' KB';
+                return round($size / 1024, 2).' KB';
             }
 
-            return $size . ' bytes';
+            return $size.' bytes';
         });
     }
 
@@ -286,7 +286,7 @@ class General extends AbstractExtension
         return new TwigFunction('menuOpenRoutePartial', static function (): string {
             $args  = func_get_args();
             $route = $args[0]; // name of the route.
-            $name = Route::getCurrentRoute()->getName() ?? '';
+            $name  = Route::getCurrentRoute()->getName() ?? '';
             if (str_contains($name, $route)) {
                 return 'menu-open';
             }
@@ -304,16 +304,15 @@ class General extends AbstractExtension
     {
         return new TwigFilter(
             'mimeIcon',
-            static fn(string $string): string => match ($string) {
-                'application/pdf' => 'fa-file-pdf-o',
+            static fn (string $string): string => match ($string) {
+                'application/pdf'                                          => 'fa-file-pdf-o',
                 'image/webp',
                 'image/png',
                 'image/jpeg',
                 'image/svg+xml',
                 'image/heic',
                 'image/heic-sequence',
-                'application/vnd.oasis.opendocument.image'
-                    => 'fa-file-image-o',
+                'application/vnd.oasis.opendocument.image'                 => 'fa-file-image-o',
                 'application/msword',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -326,8 +325,7 @@ class General extends AbstractExtension
                 'application/vnd.oasis.opendocument.text',
                 'application/vnd.oasis.opendocument.text-template',
                 'application/vnd.oasis.opendocument.text-web',
-                'application/vnd.oasis.opendocument.text-master'
-                    => 'fa-file-word-o',
+                'application/vnd.oasis.opendocument.text-master'           => 'fa-file-word-o',
                 'application/vnd.ms-excel',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
                 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
@@ -335,8 +333,7 @@ class General extends AbstractExtension
                 'application/vnd.sun.xml.calc.template',
                 'application/vnd.stardivision.calc',
                 'application/vnd.oasis.opendocument.spreadsheet',
-                'application/vnd.oasis.opendocument.spreadsheet-template'
-                    => 'fa-file-excel-o',
+                'application/vnd.oasis.opendocument.spreadsheet-template'  => 'fa-file-excel-o',
                 'application/vnd.ms-powerpoint',
                 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
                 'application/vnd.openxmlformats-officedocument.presentationml.template',
@@ -345,21 +342,18 @@ class General extends AbstractExtension
                 'application/vnd.sun.xml.impress.template',
                 'application/vnd.stardivision.impress',
                 'application/vnd.oasis.opendocument.presentation',
-                'application/vnd.oasis.opendocument.presentation-template'
-                    => 'fa-file-powerpoint-o',
+                'application/vnd.oasis.opendocument.presentation-template' => 'fa-file-powerpoint-o',
                 'application/vnd.sun.xml.draw',
                 'application/vnd.sun.xml.draw.template',
                 'application/vnd.stardivision.draw',
-                'application/vnd.oasis.opendocument.chart'
-                    => 'fa-paint-brush',
+                'application/vnd.oasis.opendocument.chart'                 => 'fa-paint-brush',
                 'application/vnd.oasis.opendocument.graphics',
                 'application/vnd.oasis.opendocument.graphics-template',
                 'application/vnd.sun.xml.math',
                 'application/vnd.stardivision.math',
                 'application/vnd.oasis.opendocument.formula',
-                'application/vnd.oasis.opendocument.database'
-                    => 'fa-calculator',
-                default => 'fa-file-o'
+                'application/vnd.oasis.opendocument.database'              => 'fa-calculator',
+                default                                                    => 'fa-file-o'
             },
             ['is_safe' => ['html']]
         );
@@ -394,6 +388,6 @@ class General extends AbstractExtension
 
     private function fireflyIIIConfig()
     {
-        return new TwigFunction('fireflyiiiconfig', static fn(string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data);
+        return new TwigFunction('fireflyiiiconfig', static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data);
     }
 }

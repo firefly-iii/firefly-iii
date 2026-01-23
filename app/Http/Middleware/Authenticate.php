@@ -124,7 +124,7 @@ class Authenticate
     /**
      * @throws AuthenticationException
      */
-    private function validateBlockedUser(null|User $user, array $guards): void
+    private function validateBlockedUser(?User $user, array $guards): void
     {
         if (!$user instanceof User) {
             Log::warning('User is null, throw exception?');

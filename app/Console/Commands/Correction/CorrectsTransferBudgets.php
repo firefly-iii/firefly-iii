@@ -47,7 +47,8 @@ class CorrectsTransferBudgets extends Command
             ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
             ->whereNotIn('transaction_types.type', [TransactionTypeEnum::WITHDRAWAL->value])
             ->whereNotNull('budget_transaction_journal.budget_id')
-            ->get(['transaction_journals.*']);
+            ->get(['transaction_journals.*'])
+        ;
         $count = 0;
 
         /** @var TransactionJournal $entry */

@@ -41,7 +41,7 @@ class UpdateRequest extends FormRequest
         $fields = [
             'title'                 => ['title', 'convertString'],
             'primary_currency_id'   => ['primary_currency_id', 'convertInteger'],
-            'primary_currency_code' => ['primary_currency_code', 'convertString']
+            'primary_currency_code' => ['primary_currency_code', 'convertString'],
         ];
 
         return $this->getAllData($fields);
@@ -55,7 +55,7 @@ class UpdateRequest extends FormRequest
         return [
             'title'                 => ['required', 'min:1', 'max:255'],
             'primary_currency_id'   => 'exists:transaction_currencies,id',
-            'primary_currency_code' => 'exists:transaction_currencies,code'
+            'primary_currency_code' => 'exists:transaction_currencies,code',
         ];
     }
 }

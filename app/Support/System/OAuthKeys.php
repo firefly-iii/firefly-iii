@@ -65,7 +65,7 @@ class OAuthKeys
         Log::debug(sprintf('Private key file at "%s" exists? %s', $private, var_export($privateExists, true)));
         Log::debug(sprintf('Public key file at "%s" exists ? %s', $public, var_export($publicExists, true)));
 
-        $result = file_exists($private) && file_exists($public);
+        $result        = file_exists($private) && file_exists($public);
         Log::debug(sprintf('Method will return %s', var_export($result, true)));
 
         return $result;
@@ -102,7 +102,7 @@ class OAuthKeys
         if ('' !== $publicKey) {
             Log::debug(sprintf('SHA2 hash of public key in DB : %s', hash('sha256', $publicKey)));
         }
-        $return = '' !== $privateKey && '' !== $publicKey;
+        $return     = '' !== $privateKey && '' !== $publicKey;
         Log::debug(sprintf('keysInDatabase will return %s', var_export($return, true)));
 
         return $return;
@@ -141,8 +141,8 @@ class OAuthKeys
 
             return false;
         }
-        $private = storage_path('oauth-private.key');
-        $public  = storage_path('oauth-public.key');
+        $private    = storage_path('oauth-private.key');
+        $public     = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 

@@ -46,7 +46,7 @@ final class CategoryControllerTest extends TestCase
     private function createTestCategories(int $count, User $user): void
     {
         for ($i = 1; $i <= $count; ++$i) {
-            $category = Category::create(['user_id'       => $user->id, 'name'          => 'Category ' . $i, 'user_group_id' => $user->user_group_id]);
+            $category = Category::create(['user_id'       => $user->id, 'name'          => 'Category '.$i, 'user_group_id' => $user->user_group_id]);
         }
     }
 
@@ -62,7 +62,7 @@ final class CategoryControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.categories'), ['Accept' => 'application/json']);
@@ -72,7 +72,7 @@ final class CategoryControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointThenReturnsCategories(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(5, $user);
@@ -86,7 +86,7 @@ final class CategoryControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(5, $user);
@@ -99,7 +99,7 @@ final class CategoryControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheCategoriesEndpointWithQueryThenReturnsCategoriesThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCategories(20, $user);

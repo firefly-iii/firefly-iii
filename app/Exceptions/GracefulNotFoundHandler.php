@@ -59,7 +59,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         if (null === $route) {
             return parent::render($request, $e);
         }
-        $name = $route->getName();
+        $name  = $route->getName();
         if (!auth()->check()) {
             return parent::render($request, $e);
         }
@@ -168,7 +168,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         }
 
         /** @var null|Account $account */
-        $account = $user->accounts()->withTrashed()->with(['accountType'])->find($accountId);
+        $account   = $user->accounts()->withTrashed()->with(['accountType'])->find($accountId);
         if (null === $account) {
             Log::error(sprintf('Could not find account %d, so give big fat error.', $accountId));
 
@@ -197,7 +197,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $groupId = is_object($param) ? 0 : (int) $param;
 
         /** @var null|TransactionGroup $group */
-        $group = $user->transactionGroups()->withTrashed()->find($groupId);
+        $group   = $user->transactionGroups()->withTrashed()->find($groupId);
         if (null === $group) {
             Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
 
@@ -211,7 +211,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
 
             return parent::render($request, $exception);
         }
-        $type = $journal->transactionType->type;
+        $type    = $journal->transactionType->type;
         $request->session()->reflash();
 
         if (TransactionTypeEnum::RECONCILIATION->value === $type) {
@@ -237,7 +237,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $attachmentId = is_object($param) ? 0 : (int) $param;
 
         /** @var null|Attachment $attachment */
-        $attachment = $user->attachments()->withTrashed()->find($attachmentId);
+        $attachment   = $user->attachments()->withTrashed()->find($attachmentId);
         if (null === $attachment) {
             Log::error(sprintf('Could not find attachment %d, so give big fat error.', $attachmentId));
 

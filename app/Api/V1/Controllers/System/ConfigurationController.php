@@ -102,7 +102,7 @@ class ConfigurationController extends Controller
             'is_demo_site'            => $isDemoSite?->data,
             'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
             'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
-            'single_user_mode'        => $singleUser?->data
+            'single_user_mode'        => $singleUser?->data,
         ];
     }
 
@@ -137,7 +137,7 @@ class ConfigurationController extends Controller
         }
 
         // fallback
-        $data = ['title'    => $configKey, 'value'    => config($shortKey), 'editable' => false];
+        $data     = ['title'    => $configKey, 'value'    => config($shortKey), 'editable' => false];
 
         return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
@@ -153,7 +153,7 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
-        $rules = ['value' => 'required'];
+        $rules     = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
             Validator::make([], $rules, $messages)->validate();

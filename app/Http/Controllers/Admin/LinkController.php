@@ -98,7 +98,7 @@ class LinkController extends Controller
         $otherTypes = $this->repository->get();
         $count      = $this->repository->countJournals($linkType);
         $moveTo     = [];
-        $moveTo[0] = (string) trans('firefly.do_not_save_connection');
+        $moveTo[0]  = (string) trans('firefly.do_not_save_connection');
 
         /** @var LinkType $otherType */
         foreach ($otherTypes as $otherType) {
@@ -191,7 +191,7 @@ class LinkController extends Controller
             'subTitle'     => $subTitle,
             'subTitleIcon' => $subTitleIcon,
             'linkType'     => $linkType,
-            'links'        => $links
+            'links'        => $links,
         ]);
     }
 
@@ -205,7 +205,7 @@ class LinkController extends Controller
         $data     = [
             'name'    => $request->convertString('name'),
             'inward'  => $request->convertString('inward'),
-            'outward' => $request->convertString('outward')
+            'outward' => $request->convertString('outward'),
         ];
         $linkType = $this->repository->store($data);
 
@@ -237,7 +237,7 @@ class LinkController extends Controller
             return redirect(route('settings.links.index'));
         }
 
-        $data = ['name'    => $request->convertString('name'), 'inward'  => $request->convertString('inward'), 'outward' => $request->convertString('outward')];
+        $data     = ['name'    => $request->convertString('name'), 'inward'  => $request->convertString('inward'), 'outward' => $request->convertString('outward')];
         $this->repository->update($linkType, $data);
 
         Log::channel('audit')->info(sprintf('User update link type #%d.', $linkType->id), $data);

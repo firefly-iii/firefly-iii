@@ -57,8 +57,8 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
-            $this->repository = app(BudgetRepositoryInterface::class);
+            $user               = auth()->user();
+            $this->repository   = app(BudgetRepositoryInterface::class);
             $this->blRepository = app(BudgetLimitRepositoryInterface::class);
             $this->repository->setUser($user);
             $this->blRepository->setUser($user);
@@ -76,35 +76,35 @@ class ShowController extends Controller
     public function index(Budget $budget): JsonResponse
     {
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin        = auth()->user();
         // enrich budget:
-        $enrichment = new BudgetEnrichment();
+        $enrichment   = new BudgetEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
 
         /** @var Budget $budget */
-        $budget = $enrichment->enrichSingle($budget);
+        $budget       = $enrichment->enrichSingle($budget);
 
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]) . $this->buildParams());
+        $paginator->setPath(route('api.v1.budgets.limits.index', [$budget->id]).$this->buildParams());
 
         // enrich
-        $enrichment = new BudgetLimitEnrichment();
+        $enrichment   = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
         $budgetLimits = $enrichment->enrich($budgetLimits);
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer  = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource     = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -120,27 +120,27 @@ class ShowController extends Controller
      */
     public function indexAll(SameDateRequest $request): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
         $collection   = $this->blRepository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budget-limits.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.budget-limits.index').$this->buildParams());
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new BudgetLimitEnrichment();
+        $admin        = auth()->user();
+        $enrichment   = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
         $budgetLimits = $enrichment->enrich($budgetLimits);
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer  = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
+        $resource     = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -158,19 +158,19 @@ class ShowController extends Controller
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
         // continue!
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new BudgetLimitEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
         $budgetLimit = $enrichment->enrichSingle($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
         $transformer = app(BudgetLimitTransformer::class);
 
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
+        $resource    = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

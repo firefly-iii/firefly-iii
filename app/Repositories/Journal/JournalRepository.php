@@ -67,18 +67,20 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
             ->transactionJournals()
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereIn('transaction_types.type', $types)
-            ->get(['transaction_journals.*']);
+            ->get(['transaction_journals.*'])
+        ;
     }
 
     /**
      * Get users first transaction journal or NULL.
      */
-    public function firstNull(): null|TransactionJournal
+    public function firstNull(): ?TransactionJournal
     {
         return $this->user
             ->transactionJournals()
             ->orderBy('date', 'ASC')
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account
@@ -97,7 +99,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function getJournalTotal(TransactionJournal $journal): string
     {
-        $cache = new CacheProperties();
+        $cache  = new CacheProperties();
         $cache->addProperty($journal->id);
         $cache->addProperty('amount-positive');
         if ($cache->has()) {
@@ -112,12 +114,13 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $amount;
     }
 
-    public function getLast(): null|TransactionJournal
+    public function getLast(): ?TransactionJournal
     {
         return $this->user
             ->transactionJournals()
             ->orderBy('date', 'DESC')
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
     }
 
     public function getLinkNoteText(TransactionJournalLink $link): string
@@ -131,7 +134,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Return Carbon value of a meta field (or NULL).
      */
-    public function getMetaDateById(int $journalId, string $field): null|Carbon
+    public function getMetaDateById(int $journalId, string $field): ?Carbon
     {
         $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
@@ -172,7 +175,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     /**
      * Find a specific journal.
      */
-    public function find(int $journalId): null|TransactionJournal
+    public function find(int $journalId): ?TransactionJournal
     {
         /** @var null|TransactionJournal */
         return $this->user->transactionJournals()->find($journalId);
@@ -186,7 +189,8 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         $query = $this->user
             ->transactionJournals()
             ->orderBy('date', 'DESC')
-            ->orderBy('description', 'ASC');
+            ->orderBy('description', 'ASC')
+        ;
         if ('' !== $search) {
             $query->whereLike('description', sprintf('%%%s%%', $search));
         }

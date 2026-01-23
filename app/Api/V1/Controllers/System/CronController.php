@@ -44,18 +44,18 @@ class CronController extends Controller
      */
     public function cron(CronRequest $request): JsonResponse
     {
-        $config = $request->getAll();
+        $config                           = $request->getAll();
 
         Log::debug(sprintf('Now in %s', __METHOD__));
         Log::debug(sprintf('Date is %s', $config['date']->toIsoString()));
-        $return = [];
+        $return                           = [];
         $return['recurring_transactions'] = $this->runRecurring($config['force'], $config['date']);
-        $return['auto_budgets'] = $this->runAutoBudget($config['force'], $config['date']);
+        $return['auto_budgets']           = $this->runAutoBudget($config['force'], $config['date']);
         if (true === FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data) {
             $return['exchange_rates'] = $this->exchangeRatesCronJob($config['force'], $config['date']);
         }
-        $return['bill_notifications'] = $this->billWarningCronJob($config['force'], $config['date']);
-        $return['webhooks'] = $this->webhookCronJob($config['force'], $config['date']);
+        $return['bill_notifications']     = $this->billWarningCronJob($config['force'], $config['date']);
+        $return['webhooks']               = $this->webhookCronJob($config['force'], $config['date']);
 
         return response()->api($return);
     }

@@ -31,7 +31,7 @@ class DateRangeRequest extends ApiRequest
     {
         return [
             'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|%s', $this->required),
-            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required)
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required),
         ];
     }
 

@@ -70,17 +70,17 @@ class AccountBalanceCalculator
             return;
         }
         Log::debug(__METHOD__);
-        $object = new self();
+        $object   = new self();
 
-        $set = [];
+        $set      = [];
         foreach ($transactionJournal->transactions as $transaction) {
             $set[$transaction->account_id] = $transaction->account;
         }
         $accounts = new Collection()->push(...$set);
 
         // find meta value:
-        $date = $transactionJournal->date;
-        $meta = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
+        $date     = $transactionJournal->date;
+        $meta     = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
         Log::debug(sprintf('Date used is "%s"', $date->toW3cString()));
         if (null !== $meta) {
             $date = Carbon::parse($meta->data);
@@ -90,14 +90,14 @@ class AccountBalanceCalculator
         $object->optimizedCalculation($accounts, $date);
     }
 
-    private function getLatestBalance(int $accountId, int $currencyId, null|Carbon $notBefore): string
+    private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
             Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
 
             return '0';
         }
-        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+        $query   = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->whereNull('transactions.deleted_at')
             ->where('transactions.transaction_currency_id', $currencyId)
             ->whereNull('transaction_journals.deleted_at')
@@ -107,17 +107,18 @@ class AccountBalanceCalculator
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
             ->orderBy('transactions.amount', 'DESC')
-            ->where('transactions.account_id', $accountId);
+            ->where('transactions.account_id', $accountId)
+        ;
         $query->where('transaction_journals.date', '<', $notBefore);
 
-        $first = $query->first([
+        $first   = $query->first([
             'transactions.id',
             'transactions.balance_dirty',
             'transactions.transaction_currency_id',
             'transaction_journals.date',
             'transactions.account_id',
             'transactions.amount',
-            'transactions.balance_after'
+            'transactions.balance_after',
         ]);
 
         if (null === $first) {
@@ -137,7 +138,7 @@ class AccountBalanceCalculator
         return $balance;
     }
 
-    private function optimizedCalculation(Collection $accounts, null|Carbon $notBefore = null): void
+    private function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
     {
         if ($notBefore instanceof Carbon) {
             $notBefore->startOfDay();
@@ -158,7 +159,8 @@ class AccountBalanceCalculator
             ->orderBy('transaction_journals.order', 'desc')
             ->orderBy('transaction_journals.id', 'asc')
             ->orderBy('transaction_journals.description', 'asc')
-            ->orderBy('transactions.amount', 'asc');
+            ->orderBy('transactions.amount', 'asc')
+        ;
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
@@ -166,13 +168,13 @@ class AccountBalanceCalculator
             $query->where('transaction_journals.date', '>=', $notBefore);
         }
 
-        $set = $query->get([
+        $set      = $query->get([
             'transactions.id',
             'transactions.balance_dirty',
             'transactions.transaction_currency_id',
             'transaction_journals.date',
             'transactions.account_id',
-            'transactions.amount'
+            'transactions.amount',
         ]);
         Log::debug(sprintf('Found %d transaction(s)', $set->count()));
 
@@ -183,23 +185,23 @@ class AccountBalanceCalculator
         foreach ($set as $entry) {
             // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
             // start with empty array:
-            $balances[$entry->account_id] ??= [];
+            $balances[$entry->account_id]                                  ??= [];
             $balances[$entry->account_id][$entry->transaction_currency_id] ??= [
                 $this->getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore),
-                null
+                null,
             ];
 
             // before and after are easy:
-            $before = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after  = bcadd($before, (string) $entry->amount);
+            $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
+            $after                                                         = bcadd($before, (string) $entry->amount);
 
             // Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
 
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;
-                $entry->balance_after = $after;
-                $entry->balance_dirty = false;
+                $entry->balance_after  = $after;
+                $entry->balance_dirty  = false;
                 $entry->saveQuietly(); // do not observe this change, or we get stuck in a loop.
                 ++$count;
             }
@@ -243,17 +245,18 @@ class AccountBalanceCalculator
                 }
 
                 /** @var AccountBalance $object */
-                $object = $account
+                $object          = $account
                     ->accountBalances()
                     ->firstOrCreate([
                         'title'                   => 'running_balance',
                         'balance'                 => '0',
                         'transaction_currency_id' => $currencyId,
                         'date'                    => $balance[1],
-                        'date_tz'                 => $balance[1]?->format('e')
-                    ]);
+                        'date_tz'                 => $balance[1]?->format('e'),
+                    ])
+                ;
                 $object->balance = $balance[0];
-                $object->date = $balance[1];
+                $object->date    = $balance[1];
                 $object->date_tz = $balance[1]?->format('e');
                 $object->saveQuietly();
             }

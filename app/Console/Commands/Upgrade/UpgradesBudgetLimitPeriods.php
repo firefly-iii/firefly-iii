@@ -36,9 +36,9 @@ class UpgradesBudgetLimitPeriods extends Command
 
     public const string CONFIG_NAME = '550_budget_limit_periods';
 
-    protected $description = 'Append budget limits with their (estimated) timeframe.';
+    protected $description          = 'Append budget limits with their (estimated) timeframe.';
 
-    protected $signature = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -76,7 +76,7 @@ class UpgradesBudgetLimitPeriods extends Command
 
     private function fixLimit(BudgetLimit $limit): void
     {
-        $period = $this->getLimitPeriod($limit);
+        $period        = $this->getLimitPeriod($limit);
 
         if (null === $period) {
             $message = sprintf(
@@ -93,7 +93,7 @@ class UpgradesBudgetLimitPeriods extends Command
         $limit->period = $period;
         $limit->save();
 
-        $msg = sprintf(
+        $msg           = sprintf(
             'Budget limit #%d (%s - %s) period is "%s".',
             $limit->id,
             $limit->start_date->format('Y-m-d'),
@@ -103,7 +103,7 @@ class UpgradesBudgetLimitPeriods extends Command
         Log::debug($msg);
     }
 
-    private function getLimitPeriod(BudgetLimit $limit): null|string
+    private function getLimitPeriod(BudgetLimit $limit): ?string
     {
         // is daily
         if ($limit->end_date->isSameDay($limit->start_date)) {

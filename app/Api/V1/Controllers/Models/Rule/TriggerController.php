@@ -54,7 +54,7 @@ class TriggerController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user                 = auth()->user();
 
             $this->ruleRepository = app(RuleRepositoryInterface::class);
             $this->ruleRepository->setUser($user);
@@ -69,10 +69,10 @@ class TriggerController extends Controller
      */
     public function testRule(TestRequest $request, Rule $rule): JsonResponse
     {
-        $parameters = $request->getTestParameters();
+        $parameters   = $request->getTestParameters();
 
         /** @var RuleEngineInterface $ruleEngine */
-        $ruleEngine = app(RuleEngineInterface::class);
+        $ruleEngine   = app(RuleEngineInterface::class);
         $ruleEngine->setRules(new Collection()->push($rule));
 
         // overrule the rule(s) if necessary.
@@ -94,21 +94,21 @@ class TriggerController extends Controller
         $count        = $transactions->count();
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($rule->user);
         $transactions = $enrichment->enrich($transactions);
 
-        $paginator = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
+        $paginator    = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rules.test', [$rule->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.
-        $manager = $this->getManager();
+        $manager      = $this->getManager();
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

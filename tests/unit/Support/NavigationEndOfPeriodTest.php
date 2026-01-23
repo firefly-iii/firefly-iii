@@ -69,7 +69,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addWeek()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'week' => [
@@ -78,7 +78,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addWeek()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'weekly' => [
@@ -87,7 +87,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addWeek()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'month' => [
@@ -96,7 +96,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addMonth()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield '1M' => [
@@ -105,7 +105,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addMonth()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'monthly' => [
@@ -114,7 +114,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addMonth()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield '3M' => [
@@ -123,7 +123,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addQuarter()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'quarter' => [
@@ -132,7 +132,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addQuarter()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'quarterly' => [
@@ -141,7 +141,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addQuarter()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'year' => [
@@ -150,7 +150,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addYearNoOverflow()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'yearly' => [
@@ -159,7 +159,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addYearNoOverflow()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield '1Y' => [
@@ -168,7 +168,7 @@ final class NavigationEndOfPeriodTest extends TestCase
             Carbon::now()
                 ->addYearNoOverflow()
                 ->subDay()
-                ->endOfDay()
+                ->endOfDay(),
         ];
 
         yield 'half-year' => ['half-year', Carbon::parse('2023-05-20'), Carbon::parse('2023-11-19')->endOfDay()];
@@ -200,7 +200,7 @@ final class NavigationEndOfPeriodTest extends TestCase
     ): void {
         Log::spy();
 
-        $period = $this->navigation->endOfPeriod($from, $frequency);
+        $period          = $this->navigation->endOfPeriod($from, $frequency);
         $this->assertSame($expected->toDateString(), $period->toDateString());
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 

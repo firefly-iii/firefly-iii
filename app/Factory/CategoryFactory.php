@@ -39,7 +39,7 @@ class CategoryFactory
     /**
      * @throws FireflyException
      */
-    public function findOrCreate(null|int $categoryId, null|string $categoryName): null|Category
+    public function findOrCreate(?int $categoryId, ?string $categoryName): ?Category
     {
         $categoryId   = (int) $categoryId;
         $categoryName = (string) $categoryName;
@@ -77,13 +77,14 @@ class CategoryFactory
         return null;
     }
 
-    public function findByName(string $name): null|Category
+    public function findByName(string $name): ?Category
     {
         /** @var null|Category */
         return $this->user
             ->categories()
             ->where('name', $name)
-            ->first();
+            ->first()
+        ;
     }
 
     public function setUser(User $user): void

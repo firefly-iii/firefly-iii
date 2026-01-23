@@ -58,7 +58,7 @@ class PiggyBankRepetition extends Model
             'updated_at'      => 'datetime',
             'start_date'      => SeparateTimezoneCaster::class,
             'target_date'     => SeparateTimezoneCaster::class,
-            'virtual_balance' => 'string'
+            'virtual_balance' => 'string',
         ];
     }
 
@@ -67,7 +67,7 @@ class PiggyBankRepetition extends Model
      */
     protected function currentAmount(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string) $value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     #[Scope]
@@ -78,7 +78,7 @@ class PiggyBankRepetition extends Model
 
     protected function piggyBankId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**

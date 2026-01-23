@@ -53,7 +53,7 @@ class BudgetFormUpdateRequest extends FormRequest
             'currency_id'        => $this->convertInteger('auto_budget_currency_id'),
             'auto_budget_amount' => $this->convertString('auto_budget_amount'),
             'auto_budget_period' => $this->convertString('auto_budget_period'),
-            'notes'              => $this->stringWithNewlines('notes')
+            'notes'              => $this->stringWithNewlines('notes'),
         ];
     }
 
@@ -65,10 +65,10 @@ class BudgetFormUpdateRequest extends FormRequest
         $nameRule = 'required|min:1|max:255|uniqueObjectForUser:budgets,name';
 
         /** @var null|Budget $budget */
-        $budget = $this->route()->parameter('budget');
+        $budget   = $this->route()->parameter('budget');
 
         if (null !== $budget) {
-            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:budgets,name,' . $budget->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:budgets,name,'.$budget->id;
         }
 
         return [
@@ -78,7 +78,7 @@ class BudgetFormUpdateRequest extends FormRequest
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2|numeric', new IsValidPositiveAmount()],
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
-            'notes'                   => 'min:1|max:32768|nullable'
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 

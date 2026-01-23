@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
  */
 class PiggyBankEventFactory
 {
-    public function create(TransactionJournal $journal, null|PiggyBank $piggyBank): void
+    public function create(TransactionJournal $journal, ?PiggyBank $piggyBank): void
     {
         Log::debug(sprintf('Now in PiggyBankEventCreate for a %s', $journal->transactionType->type));
         if (!$piggyBank instanceof PiggyBank) {
@@ -48,7 +48,7 @@ class PiggyBankEventFactory
         $piggyRepos = app(PiggyBankRepositoryInterface::class);
         $piggyRepos->setUser($journal->user);
 
-        $amount = $piggyRepos->getExactAmount($piggyBank, $journal);
+        $amount     = $piggyRepos->getExactAmount($piggyBank, $journal);
         if (0 === bccomp($amount, '0')) {
             Log::debug('Amount is zero, will not create event.');
 

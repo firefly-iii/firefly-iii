@@ -68,8 +68,8 @@ class NewUserController extends Controller
         app('view')->share('title', (string) trans('firefly.welcome'));
         app('view')->share('mainTitleIcon', 'fa-fire');
 
-        $types = config('firefly.accountTypesByIdentifier.asset');
-        $count = $this->repository->count($types);
+        $types     = config('firefly.accountTypesByIdentifier.asset');
+        $count     = $this->repository->count($types);
 
         $languages = [];
 
@@ -85,7 +85,7 @@ class NewUserController extends Controller
      */
     public function submit(NewUserFormRequest $request, CurrencyRepositoryInterface $currencyRepository): Redirector|RedirectResponse
     {
-        $language = $request->convertString('language');
+        $language      = $request->convertString('language');
         if (!array_key_exists($language, config('firefly.languages'))) {
             $language = 'en_US';
         }
@@ -93,7 +93,7 @@ class NewUserController extends Controller
         // set language preference:
         Preferences::set('language', $language);
         // Store currency preference from input:
-        $currency = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
+        $currency      = $currencyRepository->find((int) $request->input('amount_currency_id_bank_balance'));
 
         // if is null, set to EUR:
         if (!$currency instanceof TransactionCurrency) {
@@ -109,10 +109,11 @@ class NewUserController extends Controller
         $currencyRepository->makePrimary($currency);
 
         // store frontpage preferences:
-        $accounts = $this->repository
+        $accounts      = $this->repository
             ->getAccountsByType([AccountTypeEnum::ASSET->value])
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
         Preferences::set('frontpageAccounts', $accounts);
 
         // mark.
@@ -128,7 +129,7 @@ class NewUserController extends Controller
             'invoice_date'       => false,
             'internal_reference' => false,
             'notes'              => true,
-            'attachments'        => true
+            'attachments'        => true,
         ];
         Preferences::set('transaction_journal_optional_fields', $visibleFields);
 

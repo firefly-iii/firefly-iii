@@ -39,7 +39,7 @@ class TransactionJournalMeta extends Model
 
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
 
-    protected $table = 'journal_meta';
+    protected $table    = 'journal_meta';
 
     public function transactionJournal(): BelongsTo
     {
@@ -53,7 +53,7 @@ class TransactionJournalMeta extends Model
 
     protected function data(): Attribute
     {
-        return Attribute::make(get: static fn($value): mixed => json_decode((string) $value, false), set: static function ($value): array {
+        return Attribute::make(get: static fn ($value): mixed => json_decode((string) $value, false), set: static function ($value): array {
             $data = json_encode($value);
 
             return ['data' => $data, 'hash' => hash('sha256', $data)];
@@ -62,6 +62,6 @@ class TransactionJournalMeta extends Model
 
     protected function transactionJournalId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

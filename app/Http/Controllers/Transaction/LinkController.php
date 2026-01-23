@@ -58,7 +58,7 @@ class LinkController extends Controller
             app('view')->share('mainTitleIcon', 'fa-exchange');
 
             $this->journalRepository = app(JournalRepositoryInterface::class);
-            $this->repository = app(LinkTypeRepositoryInterface::class);
+            $this->repository        = app(LinkTypeRepositoryInterface::class);
 
             return $next($request);
         });
@@ -106,10 +106,10 @@ class LinkController extends Controller
      */
     public function store(JournalLinkRequest $request, TransactionJournal $journal): Redirector|RedirectResponse
     {
-        $linkInfo = $request->getLinkInfo();
+        $linkInfo      = $request->getLinkInfo();
 
         Log::debug('We are here (store)');
-        $other = $this->journalRepository->find($linkInfo['transaction_journal_id']);
+        $other         = $this->journalRepository->find($linkInfo['transaction_journal_id']);
         if (!$other instanceof TransactionJournal) {
             session()->flash('error', (string) trans('firefly.invalid_link_selection'));
 

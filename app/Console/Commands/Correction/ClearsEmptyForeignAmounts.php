@@ -37,7 +37,7 @@ class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:clears-empty-foreign-amounts';
+    protected $signature   = 'correction:clears-empty-foreign-amounts';
 
     /**
      * The console command description.

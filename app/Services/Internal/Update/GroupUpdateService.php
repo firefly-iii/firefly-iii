@@ -55,7 +55,7 @@ class GroupUpdateService
         // update group name.
         if (array_key_exists('group_title', $data)) {
             Log::debug(sprintf('Update transaction group #%d title.', $transactionGroup->id));
-            $oldTitle = $transactionGroup->title;
+            $oldTitle                = $transactionGroup->title;
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
             event(new TriggeredAuditLog($transactionGroup->user, $transactionGroup, 'update_group_title', $oldTitle, $data['group_title']));
@@ -81,8 +81,8 @@ class GroupUpdateService
 
         Log::debug('Going to update split group.');
 
-        $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
-        $updated  = $this->updateTransactions($transactionGroup, $transactions);
+        $existing     = $transactionGroup->transactionJournals->pluck('id')->toArray();
+        $updated      = $this->updateTransactions($transactionGroup, $transactions);
         Log::debug('Array of updated IDs: ', $updated);
 
         if (0 === count($updated)) {
@@ -94,7 +94,7 @@ class GroupUpdateService
             return $transactionGroup;
         }
 
-        $result = array_diff($existing, $updated);
+        $result       = array_diff($existing, $updated);
         Log::debug('Result of DIFF: ', $result);
 
         /** @var string $deletedId */
@@ -154,7 +154,7 @@ class GroupUpdateService
             $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
 
             /** @var null|TransactionJournal $journal */
-            $journal = $transactionGroup->transactionJournals()->find($journalId);
+            $journal   = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
                 Log::debug('This entry has no existing journal: make a new split.');
                 // force the transaction type on the transaction data.
@@ -194,12 +194,12 @@ class GroupUpdateService
      * @throws DuplicateTransactionException
      * @throws FireflyException
      */
-    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): null|TransactionJournal
+    private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
         $submission = ['transactions' => [$data]];
 
         /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
+        $factory    = app(TransactionJournalFactory::class);
         $factory->setUser($transactionGroup->user);
 
         try {

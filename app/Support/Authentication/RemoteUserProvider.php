@@ -53,7 +53,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function retrieveByCredentials(array $credentials): null|Authenticatable
+    public function retrieveByCredentials(array $credentials): ?Authenticatable
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 
@@ -94,7 +94,7 @@ class RemoteUserProvider implements UserProvider
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function retrieveByToken($identifier, #[SensitiveParameter] $token): null|Authenticatable
+    public function retrieveByToken($identifier, #[SensitiveParameter] $token): ?Authenticatable
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
 

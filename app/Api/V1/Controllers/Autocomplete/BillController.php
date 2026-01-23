@@ -63,7 +63,7 @@ class BillController extends Controller
     public function bills(AutocompleteApiRequest $request): JsonResponse
     {
         $result   = $this->repository->searchBill($request->attributes->get('query'), $request->attributes->get('limit'));
-        $filtered = $result->map(static fn(Bill $item): array => ['id'     => (string) $item->id, 'name'   => $item->name, 'active' => $item->active]);
+        $filtered = $result->map(static fn (Bill $item): array => ['id'     => (string) $item->id, 'name'   => $item->name, 'active' => $item->active]);
 
         return response()->api($filtered->toArray());
     }

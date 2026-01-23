@@ -53,23 +53,28 @@ final class ShowControllerTest extends TestCase
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::ASSET)
-            ->create();
+            ->create()
+        ;
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::REVENUE)
-            ->create();
+            ->create()
+        ;
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::EXPENSE)
-            ->create();
+            ->create()
+        ;
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::DEBT)
-            ->create();
+            ->create()
+        ;
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::ASSET)
-            ->create();
+            ->create()
+        ;
     }
 
     public function testIndex(): void
@@ -83,7 +88,7 @@ final class ShowControllerTest extends TestCase
     public function testIndexFailsOnUnknownAccountType(): void
     {
         $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index') . '?type=foobar');
+        $response = $this->getJson(route('api.v1.accounts.index').'?type=foobar');
         $response->assertStatus(422);
         $response->assertJson(['errors' => ['type' => ['The selected type is invalid.']]]);
     }
@@ -91,11 +96,11 @@ final class ShowControllerTest extends TestCase
     public function testIndexCanFilterOnAccountType(): void
     {
         $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index') . '?type=asset');
+        $response = $this->getJson(route('api.v1.accounts.index').'?type=asset');
         $response->assertStatus(200);
         $response->assertJson([
             'data' => [['attributes' => ['type' => 'asset']], ['attributes' => ['type' => 'asset']]],
-            'meta' => ['pagination' => ['total' => 2]]
+            'meta' => ['pagination' => ['total' => 2]],
         ]);
     }
 }

@@ -56,7 +56,7 @@ final class QuarterlyTest extends IntervalTestCase
             new IntervalProvider(Carbon::parse('2019-11-29'), Carbon::parse('2020-02-29')),
             new IntervalProvider(Carbon::parse('2019-11-30'), Carbon::parse('2020-02-29')),
             new IntervalProvider(Carbon::parse('2020-11-29'), Carbon::parse('2021-02-28')),
-            new IntervalProvider(Carbon::parse('2020-11-30'), Carbon::parse('2021-02-28'))
+            new IntervalProvider(Carbon::parse('2020-11-30'), Carbon::parse('2021-02-28')),
         ];
     }
 }

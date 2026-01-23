@@ -50,7 +50,8 @@ class TransactionJournalLink extends Model
                 ->leftJoin('transaction_journals as t_b', 't_b.id', '=', 'destination_id')
                 ->where('t_a.user_id', auth()->user()->id)
                 ->where('t_b.user_id', auth()->user()->id)
-                ->first(['journal_links.*']);
+                ->first(['journal_links.*'])
+            ;
             if (null !== $link) {
                 return $link;
             }
@@ -89,16 +90,16 @@ class TransactionJournalLink extends Model
 
     protected function destinationId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function linkTypeId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function sourceId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

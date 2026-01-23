@@ -51,19 +51,19 @@ final class RuleControllerTest extends TestCase
             'description'     => 'RuleGroup 1',
             'order'           => 1,
             'active'          => 1,
-            'stop_processing' => 0
+            'stop_processing' => 0,
         ]);
         for ($i = 1; $i <= $count; ++$i) {
             $rule = Rule::create([
                 'user_id'         => $user->id,
                 'user_group_id'   => $user->user_group_id,
                 'rule_group_id'   => $ruleGroup->id,
-                'title'           => 'Rule ' . $i,
-                'description'     => 'Rule ' . $i,
+                'title'           => 'Rule '.$i,
+                'description'     => 'Rule '.$i,
                 'order'           => 1,
                 'active'          => 1,
                 'stop_processing' => 0,
-                'strict'          => 0
+                'strict'          => 0,
             ]);
         }
     }
@@ -80,7 +80,7 @@ final class RuleControllerTest extends TestCase
     public function testAuthenticatedCall(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.rules'), ['Accept' => 'application/json']);
@@ -90,7 +90,7 @@ final class RuleControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItems(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRules(5, $user);
@@ -104,7 +104,7 @@ final class RuleControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRules(5, $user);
@@ -119,7 +119,7 @@ final class RuleControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestRules(20, $user);

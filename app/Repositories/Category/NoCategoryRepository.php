@@ -45,7 +45,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null): array
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -53,32 +53,32 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
-            $array[$currencyId] ??= [
+            $currencyId                                                              = (int) $journal['currency_id'];
+            $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
             // info about the non-existent category:
             $array[$currencyId]['categories'][0] ??= [
                 'id'                   => 0,
                 'name'                 => (string) trans('firefly.noCategory'),
-                'transaction_journals' => []
+                'transaction_journals' => [],
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId = (int) $journal['transaction_journal_id'];
+            $journalId                                                               = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId] = [
                 'amount' => Steam::negative($journal['amount']),
-                'date'   => $journal['date']
+                'date'   => $journal['date'],
             ];
         }
 
@@ -90,7 +90,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null): array
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -98,32 +98,32 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
-            $array[$currencyId] ??= [
+            $currencyId                                                              = (int) $journal['currency_id'];
+            $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
 
             // info about the non-existent category:
             $array[$currencyId]['categories'][0] ??= [
                 'id'                   => 0,
                 'name'                 => (string) trans('firefly.noCategory'),
-                'transaction_journals' => []
+                'transaction_journals' => [],
             ];
             // add journal to array:
             // only a subset of the fields.
-            $journalId = (int) $journal['transaction_journal_id'];
+            $journalId                                                               = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][0]['transaction_journals'][$journalId] = [
                 'amount' => Steam::positive($journal['amount']),
-                'date'   => $journal['date']
+                'date'   => $journal['date'],
             ];
         }
 
@@ -133,10 +133,10 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
     /**
      * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
      */
-    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null): array
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -151,7 +151,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
     /**
      * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
      */
-    public function sumIncome(Carbon $start, Carbon $end, null|Collection $accounts = null): array
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -160,18 +160,18 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::positive($journal['amount']));
         }
@@ -179,7 +179,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         return $array;
     }
 
-    public function sumTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null): array
+    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -188,18 +188,18 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        $journals = $collector->getExtractedJournals();
-        $array    = [];
+        $journals  = $collector->getExtractedJournals();
+        $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::positive($journal['amount']));
         }

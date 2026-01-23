@@ -63,8 +63,8 @@ trait MetaCollection
             // join bill table
             $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
             // add fields
-            $this->fields[] = 'bills.id as bill_id';
-            $this->fields[] = 'bills.name as bill_name';
+            $this->fields[]           = 'bills.id as bill_id';
+            $this->fields[]           = 'bills.name as bill_name';
             $this->hasBillInformation = true;
         }
 
@@ -97,8 +97,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
             // add fields
-            $this->fields[] = 'budgets.id as budget_id';
-            $this->fields[] = 'budgets.name as budget_name';
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
             $this->hasBudgetInformation = true;
         }
 
@@ -142,8 +142,8 @@ trait MetaCollection
             // join cat table
             $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
             // add fields
-            $this->fields[] = 'categories.id as category_id';
-            $this->fields[] = 'categories.name as category_name';
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
             $this->hasCatInformation = true;
         }
 
@@ -183,8 +183,8 @@ trait MetaCollection
         if (false === $this->hasJoinedMetaTables) {
             $this->hasJoinedMetaTables = true;
             $this->query->leftJoin('journal_meta', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id');
-            $this->fields[] = 'journal_meta.name as meta_name';
-            $this->fields[] = 'journal_meta.data as meta_data';
+            $this->fields[]            = 'journal_meta.name as meta_name';
+            $this->fields[]            = 'journal_meta.data as meta_data';
         }
     }
 
@@ -497,7 +497,7 @@ trait MetaCollection
                 $join->whereNull('notes.deleted_at');
             });
             // add fields
-            $this->fields[] = 'notes.text as notes';
+            $this->fields[]            = 'notes.text as notes';
             $this->hasNotesInformation = true;
         }
 
@@ -582,16 +582,16 @@ trait MetaCollection
         $this->query->whereNotNull('tag_transaction_journal.tag_id');
 
         // this method adds a "postFilter" to the collector.
-        $list   = $tags->pluck('tag')->toArray();
-        $list   = array_map(strtolower(...), $list);
-        $filter = static function (array $object) use ($list): bool|array {
-            $includedJournals = [];
-            $return           = $object;
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map(strtolower(...), $list);
+        $filter              = static function (array $object) use ($list): bool|array {
+            $includedJournals       = [];
+            $return                 = $object;
             unset($return['transactions']);
             $return['transactions'] = [];
             Log::debug(sprintf('Now in setAllTags(%s) filter', implode(', ', $list)));
-            $expectedTagCount = count($list);
-            $foundTagCount    = 0;
+            $expectedTagCount       = count($list);
+            $foundTagCount          = 0;
             foreach ($object['transactions'] as $transaction) {
                 $transactionTagCount = count($transaction['tags']);
                 Log::debug(sprintf('Transaction #%d has %d tag(s)', $transaction['transaction_journal_id'], $transactionTagCount));
@@ -608,7 +608,7 @@ trait MetaCollection
                         $journalId = $transaction['transaction_journal_id'];
                         // #8377 prevent adding a transaction twice when multiple tag searches find this transaction
                         if (!in_array($journalId, $includedJournals, true)) {
-                            $includedJournals[] = $journalId;
+                            $includedJournals[]       = $journalId;
                             $return['transactions'][] = $transaction;
                         }
                     }
@@ -617,7 +617,7 @@ trait MetaCollection
             Log::debug(sprintf('Found %d tags, need at least %d.', $foundTagCount, $expectedTagCount));
 
             // found at least the expected tags.
-            $result = $foundTagCount >= $expectedTagCount;
+            $result                 = $foundTagCount >= $expectedTagCount;
             if ($result) {
                 return $return;
             }
@@ -776,9 +776,9 @@ trait MetaCollection
         $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         // this method adds a "postFilter" to the collector.
-        $list   = $tags->pluck('tag')->toArray();
-        $list   = array_map(strtolower(...), $list);
-        $filter = static function (array $object) use ($list): bool {
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map(strtolower(...), $list);
+        $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 $total   = count($transaction['tags']);
@@ -816,9 +816,9 @@ trait MetaCollection
         $this->withTagInformation();
 
         // this method adds a "postFilter" to the collector.
-        $list   = $tags->pluck('tag')->toArray();
-        $list   = array_map(strtolower(...), $list);
-        $filter = static function (array $object) use ($list): bool {
+        $list                = $tags->pluck('tag')->toArray();
+        $list                = array_map(strtolower(...), $list);
+        $filter              = static function (array $object) use ($list): bool {
             Log::debug(sprintf('Now in setWithoutSpecificTags(%s) filter', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
                 Log::debug(sprintf('Transaction has %d tag(s)', count($transaction['tags'])));

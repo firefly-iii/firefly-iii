@@ -45,12 +45,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $tags = null): array
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
-        $tagIds = [];
+        $tagIds         = [];
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -74,14 +74,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
                 }
@@ -90,7 +90,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
-                $listedJournals[] = $journalId;
+                $listedJournals[]                                                       = $journalId;
                 $array[$currencyId]['tags'][$tagId] ??= ['id'                   => $tagId, 'name'                 => $tagName, 'transaction_journals' => []];
 
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
@@ -103,7 +103,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                     'destination_account_id'   => $journal['destination_account_id'],
                     'destination_account_name' => $journal['destination_account_name'],
                     'description'              => $journal['description'],
-                    'transaction_group_id'     => $journal['transaction_group_id']
+                    'transaction_group_id'     => $journal['transaction_group_id'],
                 ];
             }
         }
@@ -124,12 +124,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $tags = null): array
+    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
-        $tagIds = [];
+        $tagIds         = [];
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
@@ -154,14 +154,14 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places']
+                'currency_decimal_places' => $journal['currency_decimal_places'],
             ];
 
             // may have multiple tags:
             foreach ($journal['tags'] as $tag) {
-                $tagId     = (int) $tag['id'];
-                $tagName   = (string) $tag['name'];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $tagId                                                                  = (int) $tag['id'];
+                $tagName                                                                = (string) $tag['name'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
 
                 if (!in_array($tagId, $tagIds, true)) {
                     continue;
@@ -170,10 +170,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 if (in_array($journalId, $listedJournals, true)) {
                     continue;
                 }
-                $listedJournals[] = $journalId;
+                $listedJournals[]                                                       = $journalId;
 
                 $array[$currencyId]['tags'][$tagId] ??= ['id'                   => $tagId, 'name'                 => $tagName, 'transaction_journals' => []];
-                $journalId = (int) $journal['transaction_journal_id'];
+                $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => Steam::positive($journal['amount']),
                     'date'                     => $journal['date'],
@@ -183,7 +183,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                     'destination_account_id'   => $journal['destination_account_id'],
                     'destination_account_name' => $journal['destination_account_name'],
                     'description'              => $journal['description'],
-                    'transaction_group_id'     => $journal['transaction_group_id']
+                    'transaction_group_id'     => $journal['transaction_group_id'],
                 ];
             }
         }
@@ -196,7 +196,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      *
      * @throws FireflyException
      */
-    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $tags = null): array
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
     }
@@ -206,7 +206,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      *
      * @throws FireflyException
      */
-    public function sumIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $tags = null): array
+    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
     }

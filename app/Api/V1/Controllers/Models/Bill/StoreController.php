@@ -68,24 +68,24 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data    = $request->getAll();
-        $bill    = $this->repository->store($data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $bill        = $this->repository->store($data);
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new SubscriptionEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $bill = $enrichment->enrichSingle($bill);
+        $bill        = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($bill, $transformer, 'bills');
+        $resource    = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

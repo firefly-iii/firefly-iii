@@ -58,11 +58,11 @@ class CorrectsAccountTypes extends Command
     public function handle(): int
     {
         $this->stupidLaravel();
-        $this->factory = app(AccountFactory::class);
+        $this->factory  = app(AccountFactory::class);
         $this->expected = config('firefly.source_dests');
-        $expected = config('firefly.source_dests');
+        $expected       = config('firefly.source_dests');
 
-        $query = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
+        $query          = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
             ->leftJoin('transactions as source', static function (JoinClause $join): void {
                 $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
             })
@@ -72,7 +72,8 @@ class CorrectsAccountTypes extends Command
             ->leftJoin('accounts as source_account', 'source.account_id', '=', 'source_account.id')
             ->leftJoin('accounts as destination_account', 'destination.account_id', '=', 'destination_account.id')
             ->leftJoin('account_types as source_account_type', 'source_account.account_type_id', '=', 'source_account_type.id')
-            ->leftJoin('account_types as destination_account_type', 'destination_account.account_type_id', '=', 'destination_account_type.id');
+            ->leftJoin('account_types as destination_account_type', 'destination_account.account_type_id', '=', 'destination_account_type.id')
+        ;
 
         // list all valid combinations, those are allowed. So we select those which are broken.
         $query->where(static function (Builder $q) use ($expected): void {
@@ -89,7 +90,7 @@ class CorrectsAccountTypes extends Command
             }
         });
 
-        $resultSet = $query->get([
+        $resultSet      = $query->get([
             'transaction_journals.id',
             // 'transaction_type_id as type_id',
             'transaction_types.type as journal_type',
@@ -100,7 +101,7 @@ class CorrectsAccountTypes extends Command
             // 'destination.id as destination_transaction_id',
             // 'destination_account.id as destination_account_id',
             // 'destination_account_type.id as destination_account_type_id',
-            'destination_account_type.type as destination_account_type'
+            'destination_account_type.type as destination_account_type',
         ]);
         if ($resultSet->count() > 0) {
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
@@ -130,7 +131,7 @@ class CorrectsAccountTypes extends Command
     private function inspectJournal(TransactionJournal $journal): void
     {
         Log::debug(sprintf('Now inspecting journal #%d', $journal->id));
-        $transactions = $journal->transactions()->count();
+        $transactions      = $journal->transactions()->count();
         if (2 !== $transactions) {
             Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
             $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
@@ -157,7 +158,7 @@ class CorrectsAccountTypes extends Command
 
             return;
         }
-        $expectedTypes = $this->expected[$type][$sourceAccountType];
+        $expectedTypes     = $this->expected[$type][$sourceAccountType];
         if (!in_array($destAccountType, $expectedTypes, true)) {
             Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
@@ -177,13 +178,13 @@ class CorrectsAccountTypes extends Command
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
     {
         Log::debug(sprintf('Going to fix journal #%d', $journal->id));
-        $this->repository = app(AccountRepositoryInterface::class);
+        $this->repository       = app(AccountRepositoryInterface::class);
         $this->repository->setUser($journal->user);
         ++$this->count;
         // variables:
-        $sourceType      = $source->account->accountType->type;
-        $destinationType = $dest->account->accountType->type;
-        $combination     = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
+        $sourceType             = $source->account->accountType->type;
+        $destinationType        = $dest->account->accountType->type;
+        $combination            = sprintf('%s%s%s', $transactionType, $source->account->accountType->type, $dest->account->accountType->type);
         Log::debug(sprintf('Combination is "%s"', $combination));
 
         if ($this->shouldBeTransfer($transactionType, $sourceType, $destinationType)) {
@@ -208,9 +209,9 @@ class CorrectsAccountTypes extends Command
         }
 
         // transaction has no valid source.
-        $validSources    = array_keys($this->expected[$transactionType]);
-        $canCreateSource = $this->canCreateSource($validSources);
-        $hasValidSource  = $this->hasValidAccountType($validSources, $sourceType);
+        $validSources           = array_keys($this->expected[$transactionType]);
+        $canCreateSource        = $this->canCreateSource($validSources);
+        $hasValidSource         = $this->hasValidAccountType($validSources, $sourceType);
         if (!$hasValidSource && $canCreateSource) {
             $this->giveNewRevenue($journal, $source);
 
@@ -267,20 +268,18 @@ class CorrectsAccountTypes extends Command
 
     private function shouldBeTransfer(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return (
+        return
             TransactionTypeEnum::TRANSFER->value === $transactionType
             && AccountTypeEnum::ASSET->value === $sourceType
-            && $this->isLiability($destinationType)
-        );
+            && $this->isLiability($destinationType);
     }
 
     private function isLiability(string $destinationType): bool
     {
-        return (
+        return
             AccountTypeEnum::LOAN->value === $destinationType
             || AccountTypeEnum::DEBT->value === $destinationType
-            || AccountTypeEnum::MORTGAGE->value === $destinationType
-        );
+            || AccountTypeEnum::MORTGAGE->value === $destinationType;
     }
 
     private function makeTransfer(TransactionJournal $journal): void
@@ -289,7 +288,7 @@ class CorrectsAccountTypes extends Command
         $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
         $journal->transactionType()->associate($withdrawal);
         $journal->save();
-        $message = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
+        $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
         $this->friendlyInfo($message);
         Log::debug($message);
         // check it again:
@@ -298,11 +297,10 @@ class CorrectsAccountTypes extends Command
 
     private function shouldBeDeposit(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return (
+        return
             TransactionTypeEnum::TRANSFER->value === $transactionType
             && $this->isLiability($sourceType)
-            && AccountTypeEnum::ASSET->value === $destinationType
-        );
+            && AccountTypeEnum::ASSET->value === $destinationType;
     }
 
     private function makeDeposit(TransactionJournal $journal): void
@@ -320,11 +318,10 @@ class CorrectsAccountTypes extends Command
 
     private function shouldGoToExpenseAccount(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return (
+        return
             TransactionTypeEnum::WITHDRAWAL->value === $transactionType
             && AccountTypeEnum::ASSET->value === $sourceType
-            && AccountTypeEnum::REVENUE->value === $destinationType
-        );
+            && AccountTypeEnum::REVENUE->value === $destinationType;
     }
 
     private function makeExpenseDestination(TransactionJournal $journal, Transaction $destination): void
@@ -350,11 +347,10 @@ class CorrectsAccountTypes extends Command
 
     private function shouldComeFromRevenueAccount(string $transactionType, string $sourceType, string $destinationType): bool
     {
-        return (
+        return
             TransactionTypeEnum::DEPOSIT->value === $transactionType
             && AccountTypeEnum::EXPENSE->value === $sourceType
-            && AccountTypeEnum::ASSET->value === $destinationType
-        );
+            && AccountTypeEnum::ASSET->value === $destinationType;
     }
 
     private function makeRevenueSource(TransactionJournal $journal, Transaction $source): void
@@ -366,7 +362,7 @@ class CorrectsAccountTypes extends Command
         $oldSource = $source->account;
         $source->account()->associate($result);
         $source->save();
-        $message = sprintf(
+        $message   = sprintf(
             'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldSource->id,
@@ -437,11 +433,11 @@ class CorrectsAccountTypes extends Command
 
     private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void
     {
-        $destTransaction = $this->getDestinationTransaction($journal);
-        $oldDest         = $destTransaction->account;
+        $destTransaction             = $this->getDestinationTransaction($journal);
+        $oldDest                     = $destTransaction->account;
         $destTransaction->account_id = $newDestination->id;
         $destTransaction->save();
-        $message = sprintf(
+        $message                     = sprintf(
             'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
             $journal->id,
             $oldDest->id,

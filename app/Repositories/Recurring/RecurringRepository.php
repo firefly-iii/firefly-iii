@@ -104,7 +104,8 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->orderBy('active', 'DESC')
             ->orderBy('transaction_type_id', 'ASC')
             ->orderBy('title', 'ASC')
-            ->get();
+            ->get()
+        ;
     }
 
     /**
@@ -132,10 +133,11 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return Recurrence::with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
-            ->get();
+            ->get()
+        ;
     }
 
-    public function getBillId(RecurrenceTransaction $recTransaction): null|int
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = null;
 
@@ -152,7 +154,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the budget ID from a recurring transaction transaction.
      */
-    public function getBudget(RecurrenceTransaction $recTransaction): null|int
+    public function getBudget(RecurrenceTransaction $recTransaction): ?int
     {
         $return = 0;
 
@@ -169,7 +171,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the category from a recurring transaction transaction.
      */
-    public function getCategoryId(RecurrenceTransaction $recTransaction): null|int
+    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int
     {
         $return = '';
 
@@ -186,7 +188,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Get the category from a recurring transaction transaction.
      */
-    public function getCategoryName(RecurrenceTransaction $recTransaction): null|string
+    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
 
@@ -203,14 +205,15 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      */
-    public function getJournalCount(Recurrence $recurrence, null|Carbon $start = null, null|Carbon $end = null): int
+    public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int
     {
         Log::debug(sprintf('Now in getJournalCount(#%d, "%s", "%s")', $recurrence->id, $start?->format('Y-m-d H:i:s'), $end?->format('Y-m-d H:i:s')));
         $query = TransactionJournal::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transaction_journals.user_id', $recurrence->user_id)
             ->whereNull('transaction_journals.deleted_at')
             ->where('journal_meta.name', 'recurrence_id')
-            ->where('journal_meta.data', '"' . $recurrence->id . '"');
+            ->where('journal_meta.data', '"'.$recurrence->id.'"')
+        ;
         if ($start instanceof Carbon) {
             $query->where('transaction_journals.date', '>=', $start->format('Y-m-d 00:00:00'));
         }
@@ -234,7 +237,8 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
             ->get(['journal_meta.transaction_journal_id'])
             ->pluck('transaction_journal_id')
-            ->toArray();
+            ->toArray()
+        ;
     }
 
     /**
@@ -248,7 +252,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return (string) $note?->text;
     }
 
-    public function getPiggyBank(RecurrenceTransaction $transaction): null|int
+    public function getPiggyBank(RecurrenceTransaction $transaction): ?int
     {
         $meta = $transaction->recurrenceTransactionMeta;
 
@@ -288,14 +292,15 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('data', json_encode((string) $recurrence->id))
             ->get()
             ->pluck('transaction_journal_id')
-            ->toArray();
+            ->toArray()
+        ;
         $search      = [];
         foreach ($journalMeta as $journalId) {
             $search[] = (int) $journalId;
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector   = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)->withAccountInformation();
@@ -313,7 +318,8 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('data', json_encode((string) $recurrence->id))
             ->get()
             ->pluck('transaction_journal_id')
-            ->toArray();
+            ->toArray()
+        ;
         $search      = [];
 
         foreach ($journalMeta as $journalId) {
@@ -324,7 +330,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector   = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
         $collector->withCategoryInformation()->withBudgetInformation()->withAccountInformation();
@@ -403,7 +409,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
-    private function filterMaxDate(null|Carbon $max, array $occurrences): array
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
     {
         $filtered = [];
         if (!$max instanceof Carbon) {
@@ -465,21 +471,21 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             );
         }
         if ('ndom' === $repetition->repetition_type) {
-            $parts = explode(',', $repetition->repetition_moment);
+            $parts     = explode(',', $repetition->repetition_moment);
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
             return (string) trans('firefly.recurring_ndom', ['weekday'    => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
         }
         if ('yearly' === $repetition->repetition_type) {
-            $today   = today(config('app.timezone'))->endOfYear();
-            $repDate = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            $today       = today(config('app.timezone'))->endOfYear();
+            $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             if (!$repDate instanceof Carbon) {
                 $repDate = clone $today;
             }
             $diffInYears = (int) $today->diffInYears($repDate, true);
             $repDate->addYears($diffInYears); // technically not necessary.
-            $string = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
+            $string      = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
 
             return (string) trans('firefly.recurring_yearly', ['date' => $string], $language);
         }
@@ -539,7 +545,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $occurrences = [];
         $mutator     = clone $start;
         $mutator->startOfDay();
-        $skipMod = $repetition->repetition_skip + 1;
+        $skipMod     = $repetition->repetition_skip + 1;
         Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
         Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
 

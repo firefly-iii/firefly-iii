@@ -51,7 +51,7 @@ class Request extends FormRequest
             'currency_code' => ['currency_code', 'convertString'],
             'amount'        => ['amount', 'convertString'],
             'start'         => ['start', 'date'],
-            'end'           => ['end', 'date']
+            'end'           => ['end', 'date'],
         ];
 
         return $this->getAllData($fields);
@@ -67,7 +67,7 @@ class Request extends FormRequest
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
             'amount'        => ['nullable', new IsValidPositiveAmount()],
             'start'         => 'date|after:1970-01-02|before:2038-01-17',
-            'end'           => 'date|after:1970-01-02|before:2038-01-17'
+            'end'           => 'date|after:1970-01-02|before:2038-01-17',
         ];
     }
 

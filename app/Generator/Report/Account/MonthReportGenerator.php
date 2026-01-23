@@ -57,12 +57,13 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 'accountIds'      => $accountIds,
                 'reportType'      => $reportType,
                 'doubleIds'       => $doubleIds,
-                'preferredPeriod' => $preferredPeriod
+                'preferredPeriod' => $preferredPeriod,
             ])
                 ->with('start', $this->start)
                 ->with('end', $this->end)
                 ->with('doubles', $this->expense)
-                ->render();
+                ->render()
+            ;
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

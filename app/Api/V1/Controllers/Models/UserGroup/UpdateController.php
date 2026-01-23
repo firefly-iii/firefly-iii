@@ -55,8 +55,8 @@ class UpdateController extends Controller
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $data      = $request->getData();
-        $userGroup = $this->repository->update($userGroup, $data);
+        $data        = $request->getData();
+        $userGroup   = $this->repository->update($userGroup, $data);
         $userGroup->refresh();
         Preferences::mark();
 

@@ -39,9 +39,9 @@ class UpgradesBudgetLimits extends Command
 
     public const string CONFIG_NAME = '480_bl_currency';
 
-    protected $description = 'Give budget limits a currency';
+    protected $description          = 'Give budget limits a currency';
 
-    protected $signature = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -68,7 +68,7 @@ class UpgradesBudgetLimits extends Command
                     /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+                        $currency                             = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->friendlyInfo(sprintf(

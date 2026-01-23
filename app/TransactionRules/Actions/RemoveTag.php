@@ -45,11 +45,11 @@ class RemoveTag implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $name = $this->action->getValue($journal);
+        $name   = $this->action->getValue($journal);
 
         /** @var User $user */
-        $user = User::find($journal['user_id']);
-        $tag  = $user->tags()->where('tag', $name)->first();
+        $user   = User::find($journal['user_id']);
+        $tag    = $user->tags()->where('tag', $name)->first();
 
         // if tag does not exist, no need to continue:
         if (null === $tag) {
@@ -62,10 +62,11 @@ class RemoveTag implements ActionInterface
 
             return false;
         }
-        $count = DB::table('tag_transaction_journal')
+        $count  = DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->where('tag_id', $tag->id)
-            ->count();
+            ->count()
+        ;
         if (0 === $count) {
             Log::debug(sprintf(
                 'RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.',
@@ -81,7 +82,8 @@ class RemoveTag implements ActionInterface
         DB::table('tag_transaction_journal')
             ->where('transaction_journal_id', $journal['transaction_journal_id'])
             ->where('tag_id', $tag->id)
-            ->delete();
+            ->delete()
+        ;
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

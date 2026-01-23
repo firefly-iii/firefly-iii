@@ -38,7 +38,7 @@ trait CollectorProperties
     /** @var array<int, string> */
     public array $sorting;
     private array $booleanFields;
-    private null|int $endRow;
+    private ?int $endRow;
     private bool $expandGroupSearch;
     private array $fields;
     private bool $hasAccountInfo;
@@ -50,11 +50,11 @@ trait CollectorProperties
     private bool $hasJoinedTagTables;
     private bool $hasNotesInformation;
     private array $integerFields;
-    private null|int $limit;
-    private null|int $page;
+    private ?int $limit;
+    private ?int $page;
     private array $postFilters;
     private HasMany $query;
-    private null|int $startRow;
+    private ?int $startRow;
     private array $stringFields;
     /*
      * This array is used to collect ALL tags the user may search for (using 'setTags').
@@ -63,6 +63,6 @@ trait CollectorProperties
      */
     private array $tags;
     private int $total;
-    private null|User $user;
-    private null|UserGroup $userGroup;
+    private ?User $user;
+    private ?UserGroup $userGroup;
 }

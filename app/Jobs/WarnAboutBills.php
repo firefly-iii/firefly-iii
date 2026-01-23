@@ -54,14 +54,14 @@ class WarnAboutBills implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(null|Carbon $date)
+    public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon();
+        $newDate     = new Carbon();
         $newDate->startOfDay();
-        $this->date = $newDate;
+        $this->date  = $newDate;
 
         if ($date instanceof Carbon) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
@@ -147,7 +147,7 @@ class WarnAboutBills implements ShouldQueue
 
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         $this->date = $newDate;
     }
@@ -169,14 +169,14 @@ class WarnAboutBills implements ShouldQueue
         $enrichment->setEnd($end);
 
         /** @var Bill $single */
-        $single = $enrichment->enrichSingle($bill);
+        $single     = $enrichment->enrichSingle($bill);
 
         return ['pay_dates'  => $single->meta['pay_dates'] ?? [], 'paid_dates' => $single->meta['paid_dates'] ?? []];
     }
 
     private function needsOverdueAlert(array $dates): bool
     {
-        $count = count($dates['pay_dates']) - count($dates['paid_dates']);
+        $count    = count($dates['pay_dates']) - count($dates['paid_dates']);
         if (0 === $count || 0 === count($dates['pay_dates'])) {
             return false;
         }
@@ -184,7 +184,7 @@ class WarnAboutBills implements ShouldQueue
         $earliest = new Carbon($dates['pay_dates'][0]);
         $earliest->startOfDay();
         Log::debug(sprintf('Earliest expected pay date is %s', $earliest->toAtomString()));
-        $diff = $earliest->diffInDays($this->date);
+        $diff     = $earliest->diffInDays($this->date);
         Log::debug(sprintf('Difference in days is %s', $diff));
 
         return $diff >= 6; // FIXME hard coded value.

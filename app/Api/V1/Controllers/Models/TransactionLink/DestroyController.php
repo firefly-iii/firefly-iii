@@ -46,7 +46,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user             = auth()->user();
 
             $this->repository = app(LinkTypeRepositoryInterface::class);
 

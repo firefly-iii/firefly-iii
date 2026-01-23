@@ -43,10 +43,10 @@ trait RecalculatesAvailableBudgetsTrait
 {
     private function calculateAmount(AvailableBudget $availableBudget): void
     {
-        $repository = app(BudgetLimitRepositoryInterface::class);
+        $repository              = app(BudgetLimitRepositoryInterface::class);
         $repository->setUser($availableBudget->user);
-        $newAmount = '0';
-        $abPeriod  = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
+        $newAmount               = '0';
+        $abPeriod                = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
         Log::debug(sprintf(
             'Now at AB #%d, ("%s" to "%s")',
             $availableBudget->id,
@@ -54,7 +54,7 @@ trait RecalculatesAvailableBudgetsTrait
             $availableBudget->end_date->format('Y-m-d')
         ));
         // have to recalculate everything just in case.
-        $set = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
+        $set                     = $repository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
         Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
 
         /** @var BudgetLimit $budgetLimit */
@@ -122,7 +122,7 @@ trait RecalculatesAvailableBudgetsTrait
         Log::debug(sprintf('Now in updateAvailableBudget(limit #%d)', $budgetLimit->id));
 
         /** @var null|Budget $budget */
-        $budget = Budget::find($budgetLimit->budget_id);
+        $budget      = Budget::find($budgetLimit->budget_id);
         if (null === $budget) {
             Log::warning('Budget is null, probably deleted, find deleted version.');
 
@@ -137,7 +137,7 @@ trait RecalculatesAvailableBudgetsTrait
         }
 
         /** @var null|User $user */
-        $user = $budget->user;
+        $user        = $budget->user;
 
         // sanity check. It happens when the budget has been deleted so the original user is unknown.
         if (null === $user) {
@@ -160,15 +160,15 @@ trait RecalculatesAvailableBudgetsTrait
         if (null === $viewRange || is_array($viewRange)) {
             $viewRange = '1M';
         }
-        $viewRange = (string) $viewRange;
+        $viewRange   = (string) $viewRange;
 
-        $start = Navigation::startOfPeriod($budgetLimit->start_date, $viewRange);
-        $end   = Navigation::startOfPeriod($budgetLimit->end_date, $viewRange);
-        $end   = Navigation::endOfPeriod($end, $viewRange);
+        $start       = Navigation::startOfPeriod($budgetLimit->start_date, $viewRange);
+        $end         = Navigation::startOfPeriod($budgetLimit->end_date, $viewRange);
+        $end         = Navigation::endOfPeriod($end, $viewRange);
         if ($end < $start) {
-            [$start, $end] = [$end, $start];
+            [$start, $end]           = [$end, $start];
             $budgetLimit->start_date = $start;
-            $budgetLimit->end_date = $end;
+            $budgetLimit->end_date   = $end;
             $budgetLimit->saveQuietly();
         }
 
@@ -177,9 +177,9 @@ trait RecalculatesAvailableBudgetsTrait
         Log::debug(sprintf('Limit period is from %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // from the start until the end of the budget limit, need to loop!
-        $current = clone $start;
+        $current     = clone $start;
         while ($current <= $end) {
-            $currentEnd = Navigation::endOfPeriod($current, $viewRange);
+            $currentEnd      = Navigation::endOfPeriod($current, $viewRange);
 
             // create or find AB for this particular period, and set the amount accordingly.
             /** @var null|AvailableBudget $availableBudget */
@@ -188,7 +188,8 @@ trait RecalculatesAvailableBudgetsTrait
                 ->where('start_date', $current->format('Y-m-d'))
                 ->where('end_date', $currentEnd->format('Y-m-d'))
                 ->where('transaction_currency_id', $budgetLimit->transaction_currency_id)
-                ->first();
+                ->first()
+            ;
 
             if (null !== $availableBudget) {
                 Log::debug('Found 1 AB, will update.');
@@ -216,7 +217,7 @@ trait RecalculatesAvailableBudgetsTrait
                         'start_date_tz'           => $current->format('e'),
                         'end_date'                => $currentEnd,
                         'end_date_tz'             => $currentEnd->format('e'),
-                        'amount'                  => $amount
+                        'amount'                  => $amount,
                     ]);
                     $availableBudget->save();
                     Log::debug(sprintf('ID of new AB is #%d', $availableBudget->id));
@@ -225,7 +226,7 @@ trait RecalculatesAvailableBudgetsTrait
             }
 
             // prep for next loop
-            $current = Navigation::addPeriod($current, $viewRange);
+            $current         = Navigation::addPeriod($current, $viewRange);
         }
     }
 }

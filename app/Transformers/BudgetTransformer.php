@@ -45,13 +45,13 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->parameters = new ParameterBag();
-        $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->parameters       = new ParameterBag();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
-        $this->types = [
+        $this->types            = [
             AutoBudgetType::AUTO_BUDGET_RESET->value    => 'reset',
             AutoBudgetType::AUTO_BUDGET_ROLLOVER->value => 'rollover',
-            AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => 'adjusted'
+            AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => 'adjusted',
         ];
     }
 
@@ -66,7 +66,7 @@ class BudgetTransformer extends AbstractTransformer
         $abPrimary = null;
         $abPeriod  = null;
 
-        $currency = $budget->meta['currency'] ?? null;
+        $currency  = $budget->meta['currency'] ?? null;
 
         if (null !== $budget->meta['auto_budget']) {
             $abType    = $this->types[$budget->meta['auto_budget']['type']];
@@ -76,26 +76,26 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                 => (string) $budget->id,
-            'created_at'         => $budget->created_at->toAtomString(),
-            'updated_at'         => $budget->updated_at->toAtomString(),
-            'active'             => $budget->active,
-            'name'               => $budget->name,
-            'order'              => $budget->order,
-            'notes'              => $budget->meta['notes'],
-            'auto_budget_type'   => $abType,
-            'auto_budget_period' => $abPeriod,
-            'object_group_id'    => $budget->meta['object_group_id'],
-            'object_group_order' => $budget->meta['object_group_order'],
-            'object_group_title' => $budget->meta['object_group_title'],
+            'id'                              => (string) $budget->id,
+            'created_at'                      => $budget->created_at->toAtomString(),
+            'updated_at'                      => $budget->updated_at->toAtomString(),
+            'active'                          => $budget->active,
+            'name'                            => $budget->name,
+            'order'                           => $budget->order,
+            'notes'                           => $budget->meta['notes'],
+            'auto_budget_type'                => $abType,
+            'auto_budget_period'              => $abPeriod,
+            'object_group_id'                 => $budget->meta['object_group_id'],
+            'object_group_order'              => $budget->meta['object_group_order'],
+            'object_group_title'              => $budget->meta['object_group_title'],
 
             // new currency settings.
-            'object_has_currency_setting' => null !== $budget->meta['currency'],
-            'currency_id'                 => null === $currency ? null : (string) $currency->id,
-            'currency_code'               => $currency?->code,
-            'currency_name'               => $currency?->name,
-            'currency_symbol'             => $currency?->symbol,
-            'currency_decimal_places'     => $currency?->decimal_places,
+            'object_has_currency_setting'     => null !== $budget->meta['currency'],
+            'currency_id'                     => null === $currency ? null : (string) $currency->id,
+            'currency_code'                   => $currency?->code,
+            'currency_name'                   => $currency?->name,
+            'currency_symbol'                 => $currency?->symbol,
+            'currency_decimal_places'         => $currency?->decimal_places,
 
             'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
@@ -103,11 +103,11 @@ class BudgetTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
             'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
-            'auto_budget_amount'    => $abAmount,
-            'pc_auto_budget_amount' => $abPrimary,
-            'spent'                 => null === $budget->meta['spent'] ? null : $this->beautify($budget->meta['spent']),
-            'pc_spent'              => null === $budget->meta['pc_spent'] ? null : $this->beautify($budget->meta['pc_spent']),
-            'links'                 => [['rel' => 'self', 'uri' => '/budgets/' . $budget->id]]
+            'auto_budget_amount'              => $abAmount,
+            'pc_auto_budget_amount'           => $abPrimary,
+            'spent'                           => null === $budget->meta['spent'] ? null : $this->beautify($budget->meta['spent']),
+            'pc_spent'                        => null === $budget->meta['pc_spent'] ? null : $this->beautify($budget->meta['pc_spent']),
+            'links'                           => [['rel' => 'self', 'uri' => '/budgets/'.$budget->id]],
         ];
     }
 
@@ -116,7 +116,7 @@ class BudgetTransformer extends AbstractTransformer
         $return = [];
         foreach ($array as $data) {
             $data['sum'] = Steam::bcround($data['sum'], (int) $data['currency_decimal_places']);
-            $return[] = $data;
+            $return[]    = $data;
         }
 
         return $return;

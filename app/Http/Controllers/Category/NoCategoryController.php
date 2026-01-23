@@ -76,7 +76,7 @@ class NoCategoryController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, null|Carbon $start = null, null|Carbon $end = null): Factory|\Illuminate\Contracts\View\View
+    public function show(Request $request, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         Log::debug('Start of noCategory()');
         $start ??= session('start');
@@ -84,14 +84,14 @@ class NoCategoryController extends Controller
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-        $page     = (int) $request->get('page');
-        $pageSize = (int) Preferences::get('listPageSize', 50)->data;
-        $subTitle = trans('firefly.without_category_between', [
+        $page      = (int) $request->get('page');
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
+        $subTitle  = trans('firefly.without_category_between', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]);
-        $first    = $this->journalRepos->firstNull()->date ?? clone $start;
-        $periods  = $this->getNoModelPeriodOverview('category', $first, $end);
+        $first     = $this->journalRepos->firstNull()->date ?? clone $start;
+        $periods   = $this->getNoModelPeriodOverview('category', $first, $end);
 
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
@@ -105,8 +105,9 @@ class NoCategoryController extends Controller
             ->withoutCategory()
             ->withAccountInformation()
             ->withBudgetInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value]);
-        $groups = $collector->getPaginatedGroups();
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
         return view('categories.no-category', [
@@ -114,7 +115,7 @@ class NoCategoryController extends Controller
             'subTitle' => $subTitle,
             'periods'  => $periods,
             'start'    => $start,
-            'end'      => $end
+            'end'      => $end,
         ]);
     }
 
@@ -129,16 +130,16 @@ class NoCategoryController extends Controller
     public function showAll(Request $request): Factory|\Illuminate\Contracts\View\View
     {
         // default values:
-        $start    = null;
-        $end      = null;
-        $periods  = new Collection();
-        $page     = (int) $request->get('page');
-        $pageSize = (int) Preferences::get('listPageSize', 50)->data;
+        $start     = null;
+        $end       = null;
+        $periods   = new Collection();
+        $page      = (int) $request->get('page');
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
         Log::debug('Start of noCategory()');
-        $subTitle = (string) trans('firefly.all_journals_without_category');
-        $first    = $this->journalRepos->firstNull();
-        $start    = $first instanceof TransactionJournal ? $first->date : new Carbon();
-        $end      = today(config('app.timezone'));
+        $subTitle  = (string) trans('firefly.all_journals_without_category');
+        $first     = $this->journalRepos->firstNull();
+        $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
+        $end       = today(config('app.timezone'));
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
@@ -151,8 +152,9 @@ class NoCategoryController extends Controller
             ->withoutCategory()
             ->withAccountInformation()
             ->withBudgetInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value]);
-        $groups = $collector->getPaginatedGroups();
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
         return view('categories.no-category', [
@@ -160,7 +162,7 @@ class NoCategoryController extends Controller
             'subTitle' => $subTitle,
             'periods'  => $periods,
             'start'    => $start,
-            'end'      => $end
+            'end'      => $end,
         ]);
     }
 }

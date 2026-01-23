@@ -55,7 +55,7 @@ class UpdateRequest extends FormRequest
             'notes'         => ['notes', 'stringWithNewlines'],
 
             // webhooks
-            'fire_webhooks' => ['fire_webhooks', 'boolean']
+            'fire_webhooks' => ['fire_webhooks', 'boolean'],
         ];
         if (false === $this->has('notes')) {
             // ignore notes, not submitted.
@@ -79,7 +79,7 @@ class UpdateRequest extends FormRequest
             'notes'         => 'nullable|min:0|max:32768',
 
             // webhooks
-            'fire_webhooks' => [new IsBoolean()]
+            'fire_webhooks' => [new IsBoolean()],
         ];
     }
 

@@ -36,7 +36,7 @@ class ValidatesFilePermissions extends Command
      *
      * @var string
      */
-    protected $signature = 'integrity:file-permissions';
+    protected $signature   = 'integrity:file-permissions';
 
     /**
      * The console command description.

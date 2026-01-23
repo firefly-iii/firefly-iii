@@ -50,11 +50,11 @@ class AutomationHandler
         Log::debug('In reportJournals.');
 
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find($event->userId);
+        $repository  = app(UserRepositoryInterface::class);
+        $user        = $repository->find($event->userId);
 
         /** @var bool $sendReport */
-        $sendReport = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
+        $sendReport  = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
             Log::debug('Not sending report, because config says so.');

@@ -40,7 +40,7 @@ class QueryParser implements QueryParserInterface
     public function parse(string $query): NodeGroup
     {
         Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
-        $this->query = $query;
+        $this->query    = $query;
         $this->position = 0;
 
         return $this->buildNodeGroup(false);
@@ -64,7 +64,7 @@ class QueryParser implements QueryParserInterface
                 if ('\\' === $char && '"' === $nextChar) {
                     // Log::debug('BACKSLASH!');
                     // escaped quote, pretend it's a normal char and continue two places (skipping the actual character).
-                    $tokenUnderConstruction .= '\\' . $nextChar;
+                    $tokenUnderConstruction .= '\\'.$nextChar;
                     $this->position += 2;
 
                     continue;
@@ -141,7 +141,7 @@ class QueryParser implements QueryParserInterface
                     if ('' === $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
-                        $skipNext               = true;
+                        $skipNext = true;
                     }
                     if ('' !== $tokenUnderConstruction && !$skipNext) { // @phpstan-ignore-line
                         Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
@@ -169,7 +169,7 @@ class QueryParser implements QueryParserInterface
             ++$this->position;
         }
 
-        $finalNode = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
+        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
 
         return new NodeResult($finalNode, true);
     }
@@ -180,7 +180,7 @@ class QueryParser implements QueryParserInterface
         $nodeResult = $this->buildNextNode($isSubquery);
 
         while ($nodeResult->node instanceof Node) {
-            $nodes[] = $nodeResult->node;
+            $nodes[]    = $nodeResult->node;
             if ($nodeResult->isSubqueryEnd) {
                 break;
             }

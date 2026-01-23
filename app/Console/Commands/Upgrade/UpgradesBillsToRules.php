@@ -44,9 +44,9 @@ class UpgradesBillsToRules extends Command
 
     public const string CONFIG_NAME = '480_bills_to_rules';
 
-    protected $description = 'Migrate bills to rules.';
+    protected $description          = 'Migrate bills to rules.';
 
-    protected $signature = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:480-bills-to-rules {--F|force : Force the execution of this command.}';
     private BillRepositoryInterface $billRepository;
     private int $count;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
@@ -91,11 +91,11 @@ class UpgradesBillsToRules extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->count = 0;
-        $this->userRepository = app(UserRepositoryInterface::class);
+        $this->count               = 0;
+        $this->userRepository      = app(UserRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->billRepository = app(BillRepositoryInterface::class);
-        $this->ruleRepository = app(RuleRepositoryInterface::class);
+        $this->billRepository      = app(BillRepositoryInterface::class);
+        $this->ruleRepository      = app(RuleRepositoryInterface::class);
     }
 
     private function isExecuted(): bool
@@ -124,10 +124,10 @@ class UpgradesBillsToRules extends Command
             $ruleGroup = $this->ruleGroupRepository->store([
                 'title'       => (string) trans('firefly.rulegroup_for_bills_title', [], $language),
                 'description' => (string) trans('firefly.rulegroup_for_bills_description', [], $language),
-                'active'      => true
+                'active'      => true,
             ]);
         }
-        $bills = $this->billRepository->getBills();
+        $bills      = $this->billRepository->getBills();
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
@@ -143,17 +143,17 @@ class UpgradesBillsToRules extends Command
         $languageString = null !== $language->data && !is_array($language->data) ? (string) $language->data : 'en_US';
 
         // get match thing:
-        $match   = implode(' ', explode(',', $bill->match));
-        $newRule = [
+        $match          = implode(' ', explode(',', $bill->match));
+        $newRule        = [
             'rule_group_id'   => $ruleGroup->id,
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'       => (string) trans('firefly.rule_for_bill_title', ['name'       => $bill->name], $languageString),
-            'description' => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
-            'trigger'     => 'store-journal',
-            'triggers'    => [['type'  => 'description_contains', 'value' => $match]],
-            'actions'     => [['type'  => 'link_to_bill', 'value' => $bill->name]]
+            'title'           => (string) trans('firefly.rule_for_bill_title', ['name'       => $bill->name], $languageString),
+            'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
+            'trigger'         => 'store-journal',
+            'triggers'        => [['type'  => 'description_contains', 'value' => $match]],
+            'actions'         => [['type'  => 'link_to_bill', 'value' => $bill->name]],
         ];
 
         // two triggers or one, depends on bill content:
@@ -168,7 +168,7 @@ class UpgradesBillsToRules extends Command
         $this->ruleRepository->store($newRule);
 
         // update bill:
-        $newBillData = [
+        $newBillData    = [
             'currency_id' => $bill->transaction_currency_id,
             'name'        => $bill->name,
             'match'       => 'MIGRATED_TO_RULES',
@@ -177,7 +177,7 @@ class UpgradesBillsToRules extends Command
             'date'        => $bill->date,
             'repeat_freq' => $bill->repeat_freq,
             'skip'        => $bill->skip,
-            'active'      => $bill->active
+            'active'      => $bill->active,
         ];
         $this->billRepository->update($bill, $newBillData);
         ++$this->count;

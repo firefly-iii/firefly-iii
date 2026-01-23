@@ -67,9 +67,10 @@ class MFABackupNoLeftNotification extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject($subject);
+            ->subject($subject)
+        ;
     }
 
     //    public function toNtfy(User $notifiable): Message

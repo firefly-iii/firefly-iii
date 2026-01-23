@@ -59,12 +59,12 @@ class AccountFactory
      */
     public function __construct()
     {
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->canHaveVirtual = config('firefly.can_have_virtual_amounts');
+        $this->accountRepository     = app(AccountRepositoryInterface::class);
+        $this->canHaveVirtual        = config('firefly.can_have_virtual_amounts');
         $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
-        $this->validAssetFields = config('firefly.valid_asset_fields');
-        $this->validCCFields = config('firefly.valid_cc_fields');
-        $this->validFields = config('firefly.valid_account_fields');
+        $this->validAssetFields      = config('firefly.valid_asset_fields');
+        $this->validCCFields         = config('firefly.valid_cc_fields');
+        $this->validFields           = config('firefly.valid_account_fields');
     }
 
     /**
@@ -74,7 +74,7 @@ class AccountFactory
     {
         Log::debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
 
-        $type = $this->accountRepository->getAccountTypeByType($accountType);
+        $type   = $this->accountRepository->getAccountTypeByType($accountType);
         if (!$type instanceof AccountType) {
             throw new FireflyException(sprintf('Cannot find account type "%s"', $accountType));
         }
@@ -84,7 +84,8 @@ class AccountFactory
             ->accounts
             ->where('account_type_id', $type->id)
             ->where('name', $accountName)
-            ->first();
+            ->first()
+        ;
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
@@ -96,7 +97,7 @@ class AccountFactory
                 'account_type_name' => null,
                 'virtual_balance'   => '0',
                 'iban'              => null,
-                'active'            => true
+                'active'            => true,
             ]);
         }
 
@@ -109,17 +110,17 @@ class AccountFactory
     public function create(array $data): Account
     {
         Log::debug('Now in AccountFactory::create()');
-        $type = $this->getAccountType($data);
+        $type         = $this->getAccountType($data);
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
 
         // account may exist already:
-        $return = $this->find($data['name'], $type->type);
+        $return       = $this->find($data['name'], $type->type);
 
         if ($return instanceof Account) {
             return $return;
         }
 
-        $return = $this->createAccount($type, $data);
+        $return       = $this->createAccount($type, $data);
 
         event(new StoredAccount($return));
 
@@ -129,7 +130,7 @@ class AccountFactory
     /**
      * @throws FireflyException
      */
-    protected function getAccountType(array $data): null|AccountType
+    protected function getAccountType(array $data): ?AccountType
     {
         $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
         $accountTypeName = $data['account_type_name'] ?? null;
@@ -159,7 +160,7 @@ class AccountFactory
         return $result;
     }
 
-    public function find(string $accountName, string $accountType): null|Account
+    public function find(string $accountName, string $accountType): ?Account
     {
         Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
         $type = AccountType::whereType($accountType)->first();
@@ -169,7 +170,8 @@ class AccountFactory
             ->accounts()
             ->where('account_type_id', $type->id)
             ->where('name', $accountName)
-            ->first();
+            ->first()
+        ;
     }
 
     /**
@@ -190,7 +192,7 @@ class AccountFactory
             'order'           => 25000,
             'virtual_balance' => $virtualBalance,
             'active'          => $active,
-            'iban'            => $data['iban']
+            'iban'            => $data['iban'],
         ];
         // fix virtual balance when it's empty
         if ('' === (string) $databaseData['virtual_balance']) {
@@ -201,11 +203,11 @@ class AccountFactory
             $databaseData['virtual_balance'] = null;
         }
         // create account!
-        $account = Account::create($databaseData);
+        $account        = Account::create($databaseData);
         Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
-        $data = $this->cleanMetaDataArray($account, $data);
+        $data           = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
 
         // create opening balance (only asset accounts)
@@ -225,7 +227,7 @@ class AccountFactory
         }
 
         // create notes
-        $notes = array_key_exists('notes', $data) ? $data['notes'] : '';
+        $notes          = array_key_exists('notes', $data) ? $data['notes'] : '';
         $this->updateNote($account, $notes);
 
         // create location
@@ -245,10 +247,10 @@ class AccountFactory
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
-        $currencyId   = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
-        $currencyCode = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
-        $accountRole  = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
-        $currency     = $this->getCurrency($currencyId, $currencyCode);
+        $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
+        $currencyCode         = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
+        $accountRole          = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
+        $currency             = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
@@ -259,14 +261,14 @@ class AccountFactory
             $data['liability_direction'] = null;
         }
         $data['account_role'] = $accountRole;
-        $data['currency_id'] = $currency->id;
+        $data['currency_id']  = $currency->id;
 
         return $data;
     }
 
     private function storeMetaData(Account $account, array $data): void
     {
-        $fields = $this->validFields;
+        $fields  = $this->validFields;
         if (AccountTypeEnum::ASSET->value === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
@@ -275,8 +277,8 @@ class AccountFactory
         }
 
         // remove currency_id if necessary.
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type    = $account->accountType->type;
+        $list    = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
             $pos = array_search('currency_id', $fields, true);
             if (false !== $pos) {
@@ -353,9 +355,9 @@ class AccountFactory
      */
     private function storeOrder(Account $account, array $data): void
     {
-        $accountType = $account->accountType->type;
-        $maxOrder    = $this->accountRepository->maxOrder($accountType);
-        $order       = null;
+        $accountType   = $account->accountType->type;
+        $maxOrder      = $this->accountRepository->maxOrder($accountType);
+        $order         = null;
         if (!array_key_exists('order', $data)) {
             $order = $maxOrder + 1;
         }

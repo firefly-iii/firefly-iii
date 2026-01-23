@@ -48,7 +48,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user               = auth()->user();
             $this->blRepository = app(BudgetLimitRepositoryInterface::class);
             $this->blRepository->setUser($user);
 

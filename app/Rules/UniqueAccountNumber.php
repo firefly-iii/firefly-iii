@@ -42,8 +42,8 @@ class UniqueAccountNumber implements ValidationRule
      * Create a new rule instance.
      */
     public function __construct(
-        private readonly null|Account $account,
-        private null|string $expectedType
+        private readonly ?Account $account,
+        private ?string $expectedType
     ) {
         app('log')->debug('Constructed UniqueAccountNumber');
         // a very basic fix to make sure we get the correct account type:
@@ -131,7 +131,8 @@ class UniqueAccountNumber implements ValidationRule
             ->where('accounts.user_id', auth()->user()->id)
             ->where('account_types.type', $type)
             ->where('account_meta.name', '=', 'account_number')
-            ->where('account_meta.data', json_encode($accountNumber));
+            ->where('account_meta.data', json_encode($accountNumber))
+        ;
 
         if ($this->account instanceof Account) {
             $query->where('accounts.id', '!=', $this->account->id);

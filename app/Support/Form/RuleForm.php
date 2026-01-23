@@ -35,14 +35,14 @@ class RuleForm
 {
     use FormSupport;
 
-    public function ruleGroupList(string $name, mixed $value = null, null|array $options = null): string
+    public function ruleGroupList(string $name, mixed $value = null, ?array $options = null): string
     {
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $groupRepos->get();
-        $array = [];
+        $list       = $groupRepos->get();
+        $array      = [];
 
         /** @var RuleGroup $group */
         foreach ($list as $group) {
@@ -52,17 +52,17 @@ class RuleForm
         return $this->select($name, $array, $value, $options);
     }
 
-    public function ruleGroupListWithEmpty(string $name, $value = null, null|array $options = null): string
+    public function ruleGroupListWithEmpty(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
         $options['class'] = 'form-control';
 
         /** @var RuleGroupRepositoryInterface $groupRepos */
-        $groupRepos = app(RuleGroupRepositoryInterface::class);
+        $groupRepos       = app(RuleGroupRepositoryInterface::class);
 
         // get all currencies:
-        $list  = $groupRepos->get();
-        $array = [0 => (string) trans('firefly.none_in_select_list')];
+        $list             = $groupRepos->get();
+        $array            = [0 => (string) trans('firefly.none_in_select_list')];
 
         /** @var RuleGroup $group */
         foreach ($list as $group) {

@@ -44,25 +44,38 @@ class SendsTestNotification
 
         $type = str_contains(get_class($event), 'Owner') ? 'owner' : 'user';
         $key  = sprintf('%s-%s', $type, $event->channel);
+
         switch ($key) {
             case 'user-email':
                 $class = UserTestNotificationEmail::class;
+
                 break;
+
             case 'user-slack':
                 $class = UserTestNotificationSlack::class;
+
                 break;
+
             case 'user-pushover':
                 $class = UserTestNotificationPushover::class;
+
                 break;
+
             case 'owner-email':
                 $class = OwnerTestNotificationEmail::class;
+
                 break;
+
             case 'owner-slack':
                 $class = OwnerTestNotificationSlack::class;
+
                 break;
+
             case 'owner-pushover':
                 $class = OwnerTestNotificationPushover::class;
+
                 break;
+
             default:
                 Log::error(sprintf('Unknown key "%s" in sendTestNotification method.', $key));
 

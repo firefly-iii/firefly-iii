@@ -42,7 +42,7 @@ class SeparateTimezoneCaster implements CastsAttributes
     /**
      * @param array<string, mixed> $attributes
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): null|Carbon
+    public function get(Model $model, string $key, mixed $value, array $attributes): ?Carbon
     {
         if ('' === $value || null === $value) {
             return null;

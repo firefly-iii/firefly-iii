@@ -57,9 +57,9 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateLanguage(): bool
     {
-        $language = config('firefly.default_language');
-        $locale   = config('firefly.default_locale');
-        $options  = array_keys(config('firefly.languages'));
+        $language  = config('firefly.default_language');
+        $locale    = config('firefly.default_locale');
+        $options   = array_keys(config('firefly.languages'));
 
         if (!in_array($language, $options, true)) {
             $this->friendlyError(sprintf('DEFAULT_LANGUAGE "%s" is not a valid language for Firefly III.', $language));

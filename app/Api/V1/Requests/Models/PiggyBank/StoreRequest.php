@@ -47,18 +47,18 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields = ['order' => ['order', 'convertInteger']];
-        $data   = $this->getAllData($fields);
-        $data['name'] = $this->convertString('name');
-        $data['accounts'] = $this->parseAccounts($this->get('accounts'));
-        $data['target_amount'] = $this->convertString('target_amount');
-        $data['start_date'] = $this->getCarbonDate('start_date');
-        $data['target_date'] = $this->getCarbonDate('target_date');
-        $data['notes'] = $this->stringWithNewlines('notes');
-        $data['object_group_id'] = $this->convertInteger('object_group_id');
-        $data['transaction_currency_id'] = $this->convertInteger('transaction_currency_id');
+        $fields                            = ['order' => ['order', 'convertInteger']];
+        $data                              = $this->getAllData($fields);
+        $data['name']                      = $this->convertString('name');
+        $data['accounts']                  = $this->parseAccounts($this->get('accounts'));
+        $data['target_amount']             = $this->convertString('target_amount');
+        $data['start_date']                = $this->getCarbonDate('start_date');
+        $data['target_date']               = $this->getCarbonDate('target_date');
+        $data['notes']                     = $this->stringWithNewlines('notes');
+        $data['object_group_id']           = $this->convertInteger('object_group_id');
+        $data['transaction_currency_id']   = $this->convertInteger('transaction_currency_id');
         $data['transaction_currency_code'] = $this->convertString('transaction_currency_code');
-        $data['object_group_title'] = $this->convertString('object_group_title');
+        $data['object_group_title']        = $this->convertString('object_group_title');
 
         return $data;
     }
@@ -81,7 +81,7 @@ class StoreRequest extends FormRequest
             'transaction_currency_id'   => 'exists:transaction_currencies,id|required_without:transaction_currency_code',
             'transaction_currency_code' => 'exists:transaction_currencies,code|required_without:transaction_currency_id',
             'target_date'               => 'date|nullable|after:start_date',
-            'notes'                     => 'max:65000'
+            'notes'                     => 'max:65000',
         ];
     }
 
@@ -92,8 +92,8 @@ class StoreRequest extends FormRequest
     {
         $validator->after(function (Validator $validator): void {
             // validate start before end only if both are there.
-            $data     = $validator->getData();
-            $currency = $this->getCurrencyFromData($validator, $data);
+            $data          = $validator->getData();
+            $currency      = $this->getCurrencyFromData($validator, $data);
             if (!$currency instanceof TransactionCurrency) {
                 return;
             }
@@ -113,7 +113,7 @@ class StoreRequest extends FormRequest
                         if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
                         }
-                        $type = $account->accountType->type;
+                        $type            = $account->accountType->type;
                         if (!in_array($type, $types, true)) {
                             $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
                         }
@@ -129,7 +129,7 @@ class StoreRequest extends FormRequest
         }
     }
 
-    private function getCurrencyFromData(Validator $validator, array $data): null|TransactionCurrency
+    private function getCurrencyFromData(Validator $validator, array $data): ?TransactionCurrency
     {
         if (array_key_exists('transaction_currency_code', $data) && '' !== (string) $data['transaction_currency_code']) {
             return Amount::getTransactionCurrencyByCode((string) $data['transaction_currency_code']);

@@ -51,7 +51,8 @@ class UserRegistration extends Notification
     {
         return new MailMessage()
             ->markdown('emails.registered', ['address' => route('index')])
-            ->subject((string) trans('email.registered_subject'));
+            ->subject((string) trans('email.registered_subject'))
+        ;
     }
 
     /**

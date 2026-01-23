@@ -44,13 +44,13 @@ trait DepositValidation
         Log::debug('Now in validateDepositDestination', $array);
 
         // source can be any of the following types.
-        $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
+        $validTypes  = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string) trans('validation.deposit_dest_need_data');
             Log::error('Both values are NULL, cant create deposit destination.');
-            $result = false;
+            $result          = false;
         }
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
@@ -64,7 +64,7 @@ trait DepositValidation
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.');
                 $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
-                $result = false;
+                $result          = false;
             }
             if (null !== $search) {
                 Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
@@ -79,7 +79,7 @@ trait DepositValidation
 
     abstract protected function canCreateTypes(array $accountTypes): bool;
 
-    abstract protected function findExistingAccount(array $validTypes, array $data): null|Account;
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
      * Pretty complex unfortunately.
@@ -97,16 +97,16 @@ trait DepositValidation
 
         // null = we found nothing at all or didn't even search
         // false = invalid results
-        $result = null;
+        $result        = null;
 
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
+        $validTypes    = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && null === $accountIban && null === $accountNumber && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
             $this->sourceError = (string) trans('validation.deposit_source_need_data');
-            $result = false;
+            $result            = false;
         }
 
         // if there is an iban, it can only be in use by a valid source type, or we will fail.
@@ -129,7 +129,7 @@ trait DepositValidation
                 Log::debug(sprintf('Firefly III does not accept ID #%d as valid account data.', $accountId));
                 // #10921 Set result false
                 $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
-                $result = false;
+                $result            = false;
             }
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
                 Log::debug('ID result is not null and seems valid, save as source account.');
@@ -172,11 +172,11 @@ trait DepositValidation
 
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            $result = true;
+            $result               = true;
 
             // set the source to be a (dummy) revenue account.
-            $account     = new Account();
-            $accountType = AccountType::whereType(AccountTypeEnum::REVENUE->value)->first();
+            $account              = new Account();
+            $accountType          = AccountType::whereType(AccountTypeEnum::REVENUE->value)->first();
             $account->accountType = $accountType;
             $this->setSource($account);
         }

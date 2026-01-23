@@ -33,9 +33,9 @@ interface UserGroupInterface
 {
     public function checkUserGroupAccess(UserRoleEnum $role): bool;
 
-    public function getUser(): null|User;
+    public function getUser(): ?User;
 
-    public function getUserGroup(): null|UserGroup;
+    public function getUserGroup(): ?UserGroup;
 
     public function setUser(Authenticatable|User|null $user): void;
 

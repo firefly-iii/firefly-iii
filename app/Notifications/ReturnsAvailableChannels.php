@@ -35,7 +35,7 @@ use NotificationChannels\Pushover\PushoverChannel;
 
 class ReturnsAvailableChannels
 {
-    public static function returnChannels(string $type, null|User $user = null): array
+    public static function returnChannels(string $type, ?User $user = null): array
     {
         $channels = ['mail'];
 

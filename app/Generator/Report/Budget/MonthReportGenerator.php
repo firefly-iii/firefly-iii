@@ -60,7 +60,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('end', $this->end)
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
-                ->render();
+                ->render()
+            ;
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -128,16 +129,17 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts($this->accounts)
             ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->withAccountInformation()
             ->withBudgetInformation()
-            ->setBudgets($this->budgets);
+            ->setBudgets($this->budgets)
+        ;
 
-        $journals = $collector->getExtractedJournals();
+        $journals       = $collector->getExtractedJournals();
         $this->expenses = $journals;
 
         return $journals;

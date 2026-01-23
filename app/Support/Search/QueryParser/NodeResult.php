@@ -33,7 +33,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 class NodeResult
 {
     public function __construct(
-        public readonly null|Node $node,
+        public readonly ?Node $node,
         public readonly bool $isSubqueryEnd
     ) {}
 }

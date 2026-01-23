@@ -40,7 +40,7 @@ class ResetsErrorMailLimit extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:reset-error-mail-limit';
+    protected $signature   = 'firefly-iii:reset-error-mail-limit';
 
     /**
      * The console command description.

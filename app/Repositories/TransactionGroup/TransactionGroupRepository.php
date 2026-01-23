@@ -72,7 +72,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Find a transaction group by its ID.
      */
-    public function find(int $groupId): null|TransactionGroup
+    public function find(int $groupId): ?TransactionGroup
     {
         /** @var null|TransactionGroup */
         return $this->user->transactionGroups()->find($groupId);
@@ -87,7 +87,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
     public function expandGroup(TransactionGroup $group): array
     {
-        $result = $group->toArray();
+        $result                         = $group->toArray();
         $result['transaction_journals'] = [];
 
         /** @var TransactionJournal $journal */
@@ -100,16 +100,16 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
     private function expandJournal(TransactionJournal $journal): array
     {
-        $array = $journal->toArray();
-        $array['transactions'] = [];
-        $array['meta'] = $journal->transactionJournalMeta->toArray();
-        $array['tags'] = $journal->tags->toArray();
-        $array['categories'] = $journal->categories->toArray();
-        $array['budgets'] = $journal->budgets->toArray();
-        $array['notes'] = $journal->notes->toArray();
-        $array['locations'] = [];
-        $array['attachments'] = $journal->attachments->toArray();
-        $array['links'] = [];
+        $array                      = $journal->toArray();
+        $array['transactions']      = [];
+        $array['meta']              = $journal->transactionJournalMeta->toArray();
+        $array['tags']              = $journal->tags->toArray();
+        $array['categories']        = $journal->categories->toArray();
+        $array['budgets']           = $journal->budgets->toArray();
+        $array['notes']             = $journal->notes->toArray();
+        $array['locations']         = [];
+        $array['attachments']       = $journal->attachments->toArray();
+        $array['links']             = [];
         $array['piggy_bank_events'] = $journal->piggyBankEvents->toArray();
 
         /** @var Transaction $transaction */
@@ -122,9 +122,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
     private function expandTransaction(Transaction $transaction): array
     {
-        $array = $transaction->toArray();
-        $array['account'] = $transaction->account->toArray();
-        $array['budgets'] = [];
+        $array               = $transaction->toArray();
+        $array['account']    = $transaction->account->toArray();
+        $array['budgets']    = [];
         $array['categories'] = [];
 
         foreach ($transaction->categories as $category) {
@@ -145,25 +145,26 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($this->user);
-        $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = Attachment::whereIn('attachable_id', $journals)
+        $journals   = $group->transactionJournals->pluck('id')->toArray();
+        $set        = Attachment::whereIn('attachable_id', $journals)
             ->where('attachable_type', TransactionJournal::class)
             ->where('uploaded', true)
             ->whereNull('deleted_at')
-            ->get();
+            ->get()
+        ;
 
-        $result = [];
+        $result     = [];
 
         /** @var Attachment $attachment */
         foreach ($set as $attachment) {
-            $journalId = $attachment->attachable_id;
+            $journalId                = $attachment->attachable_id;
             $result[$journalId] ??= [];
-            $current = $attachment->toArray();
-            $current['file_exists'] = true;
-            $current['notes'] = $repository->getNoteText($attachment);
+            $current                  = $attachment->toArray();
+            $current['file_exists']   = true;
+            $current['notes']         = $repository->getNoteText($attachment);
             // already determined that this attachable is a TransactionJournal.
             $current['journal_title'] = $attachment->attachable->description;
-            $result[$journalId][] = $current;
+            $result[$journalId][]     = $current;
         }
 
         return $result;
@@ -172,7 +173,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     /**
      * Get the note text for a journal (by ID).
      */
-    public function getNoteText(int $journalId): null|string
+    public function getNoteText(int $journalId): ?string
     {
         /** @var null|Note $note */
         $note = Note::where('noteable_id', $journalId)->where('noteable_type', TransactionJournal::class)->first();
@@ -194,7 +195,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             'journal_links.*',
             'link_types.inward',
             'link_types.outward',
-            'link_types.editable'
+            'link_types.editable',
         ]);
 
         /** @var TransactionJournalLink $entry */
@@ -205,8 +206,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             // phpstan: the editable field is provided by the query.
 
             if ($journalId === $entry->source_id) {
-                $amount        = $this->getFormattedAmount($entry->destination);
-                $foreignAmount = $this->getFormattedForeignAmount($entry->destination);
+                $amount               = $this->getFormattedAmount($entry->destination);
+                $foreignAmount        = $this->getFormattedForeignAmount($entry->destination);
                 $return[$journalId][] = [
                     'id'             => $entry->id,
                     'link'           => $entry->outward,
@@ -214,12 +215,12 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'description'    => $entry->destination->description,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
-                    'foreign_amount' => $foreignAmount
+                    'foreign_amount' => $foreignAmount,
                 ];
             }
             if ($journalId === $entry->destination_id) {
-                $amount        = $this->getFormattedAmount($entry->source);
-                $foreignAmount = $this->getFormattedForeignAmount($entry->source);
+                $amount               = $this->getFormattedAmount($entry->source);
+                $foreignAmount        = $this->getFormattedForeignAmount($entry->source);
                 $return[$journalId][] = [
                     'id'             => $entry->id,
                     'link'           => $entry->inward,
@@ -227,7 +228,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'description'    => $entry->source->description,
                     'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
-                    'foreign_amount' => $foreignAmount
+                    'foreign_amount' => $foreignAmount,
                 ];
             }
         }
@@ -261,9 +262,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             return '';
         }
 
-        $currency = $transaction->foreignCurrency;
-        $type     = $journal->transactionType->type;
-        $amount   = Steam::positive($transaction->foreign_amount);
+        $currency    = $transaction->foreignCurrency;
+        $type        = $journal->transactionType->type;
+        $amount      = Steam::positive($transaction->foreign_amount);
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             return Amount::formatAnything($currency, Steam::negative($amount));
         }
@@ -271,7 +272,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         return Amount::formatAnything($currency, $amount);
     }
 
-    public function getLocation(int $journalId): null|Location
+    public function getLocation(int $journalId): ?Location
     {
         /** @var TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
@@ -291,7 +292,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
-            ->get(['name', 'data']);
+            ->get(['name', 'data'])
+        ;
         $return = [];
 
         foreach ($query as $row) {
@@ -310,7 +312,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
             ->whereNull('deleted_at')
-            ->get(['name', 'data']);
+            ->get(['name', 'data'])
+        ;
         $return = [];
 
         foreach ($query as $row) {
@@ -338,17 +341,17 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 continue;
             }
             // get currency preference.
-            $currencyPreference = AccountMeta::where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
+            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
             if (null !== $currencyPreference) {
                 $currency = Amount::getTransactionCurrencyById((int) $currencyPreference->data);
             }
-            $journalId = $row->transaction_journal_id;
+            $journalId            = $row->transaction_journal_id;
             $return[$journalId] ??= [];
 
             $return[$journalId][] = [
                 'piggy'    => $row->piggyBank->name,
                 'piggy_id' => $row->piggy_bank_id,
-                'amount'   => Amount::formatAnything($currency, $row->amount)
+                'amount'   => Amount::formatAnything($currency, $row->amount),
             ];
         }
 
@@ -375,7 +378,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
             ->where('tag_transaction_journal.transaction_journal_id', $journalId)
             ->orderBy('tags.tag', 'ASC')
-            ->get(['tags.tag']);
+            ->get(['tags.tag'])
+        ;
 
         return $result->pluck('tag')->toArray();
     }

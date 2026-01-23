@@ -55,7 +55,7 @@ class PiggyBankStoreRequest extends FormRequest
             'transaction_currency_id' => $this->convertInteger('transaction_currency_id'),
             'target_date'             => $this->getCarbonDate('target_date'),
             'notes'                   => $this->stringWithNewlines('notes'),
-            'object_group_title'      => $this->convertString('object_group')
+            'object_group_title'      => $this->convertString('object_group'),
         ];
         if (!is_array($accounts)) {
             $accounts = [];
@@ -81,7 +81,7 @@ class PiggyBankStoreRequest extends FormRequest
             'target_date'   => 'date|nullable',
             'order'         => 'integer|min:1',
             'object_group'  => 'min:0|max:255',
-            'notes'         => 'min:1|max:32768|nullable'
+            'notes'         => 'min:1|max:32768|nullable',
         ];
     }
 
@@ -106,7 +106,7 @@ class PiggyBankStoreRequest extends FormRequest
                         if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
                             $validator->errors()->add('accounts', trans('validation.invalid_account_currency'));
                         }
-                        $type = $account->accountType->type;
+                        $type            = $account->accountType->type;
                         if (!in_array($type, $types, true)) {
                             $validator->errors()->add('accounts', trans('validation.invalid_account_type'));
                         }

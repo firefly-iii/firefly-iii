@@ -52,7 +52,7 @@ class PiggyBank extends Model
         'target_date_tz',
         'active',
         'transaction_currency_id',
-        'native_target_amount'
+        'native_target_amount',
     ];
 
     /**
@@ -68,7 +68,8 @@ class PiggyBank extends Model
                 ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
                 ->where('accounts.user_id', auth()->user()->id)
-                ->first(['piggy_banks.*']);
+                ->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -133,7 +134,7 @@ class PiggyBank extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -148,13 +149,13 @@ class PiggyBank extends Model
             'active'               => 'boolean',
             'encrypted'            => 'boolean',
             'target_amount'        => 'string',
-            'native_target_amount' => 'string'
+            'native_target_amount' => 'string',
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -162,6 +163,6 @@ class PiggyBank extends Model
      */
     protected function targetAmount(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string) $value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 }

@@ -42,7 +42,7 @@ abstract class TestCase extends BaseTestCase
 
     protected const MAX_ITERATIONS = 2;
 
-    protected $seed = true;
+    protected $seed                = true;
 
     public function dateRangeProvider(): array
     {
@@ -53,7 +53,7 @@ abstract class TestCase extends BaseTestCase
             'three months' => ['3M'],
             'six months'   => ['6M'],
             'one year'     => ['1Y'],
-            'custom range' => ['custom']
+            'custom range' => ['custom'],
         ];
     }
 

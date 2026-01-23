@@ -40,20 +40,20 @@ class UserGroupFactory
      */
     public function create(array $data): UserGroup
     {
-        $userGroup = new UserGroup();
-        $userGroup->title = $data['title'];
+        $userGroup                      = new UserGroup();
+        $userGroup->title               = $data['title'];
         $userGroup->save();
 
         // grab the OWNER role:
-        $role = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
+        $role                           = UserRole::whereTitle(UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('Role "owner" does not exist.');
         }
         // make user member:
-        $groupMembership = new GroupMembership();
+        $groupMembership                = new GroupMembership();
         $groupMembership->user_group_id = $userGroup->id;
-        $groupMembership->user_id = $data['user']->id;
-        $groupMembership->user_role_id = $role->id;
+        $groupMembership->user_id       = $data['user']->id;
+        $groupMembership->user_role_id  = $role->id;
         $groupMembership->save();
 
         return $userGroup;

@@ -52,7 +52,7 @@ class Webhook extends Model
         'response'      => 'integer',
         'delivery'      => 'integer',
         'user_id'       => 'integer',
-        'user_group_id' => 'integer'
+        'user_group_id' => 'integer',
     ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
@@ -72,7 +72,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookDeliveryEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name] = $item->value;
+            $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -95,7 +95,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookResponseEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name] = $item->value;
+            $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -118,7 +118,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookTriggerEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name] = $item->value;
+            $array[$item->name]  = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -136,10 +136,10 @@ class Webhook extends Model
             $webhookId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook = $user->webhooks()->find($webhookId);
+            $webhook   = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }

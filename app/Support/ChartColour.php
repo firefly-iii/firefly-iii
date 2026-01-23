@@ -48,13 +48,13 @@ class ChartColour
         [92, 107, 192],
         [240, 98, 146],
         [0, 121, 107],
-        [194, 24, 91]
+        [194, 24, 91],
     ];
 
     public static function getColour(int $index): string
     {
         $index %= count(self::$colours);
-        $row   = self::$colours[$index];
+        $row = self::$colours[$index];
 
         return sprintf('rgba(%d, %d, %d, 0.7)', $row[0], $row[1], $row[2]);
     }

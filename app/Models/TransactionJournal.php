@@ -69,10 +69,10 @@ class TransactionJournal extends Model
         'completed',
         'order',
         'date',
-        'date_tz'
+        'date_tz',
     ];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -85,10 +85,10 @@ class TransactionJournal extends Model
             $journalId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user      = auth()->user();
 
             /** @var null|TransactionJournal $journal */
-            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
+            $journal   = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -224,18 +224,18 @@ class TransactionJournal extends Model
             'encrypted'     => 'boolean',
             'completed'     => 'boolean',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]

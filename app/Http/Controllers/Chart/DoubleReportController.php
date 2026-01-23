@@ -56,9 +56,9 @@ class DoubleReportController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $this->generator = app(GeneratorInterface::class);
+            $this->generator     = app(GeneratorInterface::class);
             $this->opsRepository = app(OperationsRepositoryInterface::class);
-            $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository    = app(AccountRepositoryInterface::class);
 
             return $next($request);
         });
@@ -74,19 +74,19 @@ class DoubleReportController extends Controller
         // loop expenses.
         foreach ($expenses as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $categoryName = $journal['budget_name'] ?? trans('firefly.no_budget');
-                $title        = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
+                $categoryName             = $journal['budget_name'] ?? trans('firefly.no_budget');
+                $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
-                    'currency_code'   => $currency['currency_code']
+                    'currency_code'   => $currency['currency_code'],
                 ];
-                $amount = Steam::positive($journal['amount']);
+                $amount                   = Steam::positive($journal['amount']);
                 $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -101,19 +101,19 @@ class DoubleReportController extends Controller
         // loop expenses.
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $categoryName = $journal['category_name'] ?? trans('firefly.no_category');
-                $title        = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
+                $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
+                $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
-                    'currency_code'   => $currency['currency_code']
+                    'currency_code'   => $currency['currency_code'],
                 ];
-                $amount = Steam::positive($journal['amount']);
+                $amount                   = Steam::positive($journal['amount']);
                 $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -128,19 +128,19 @@ class DoubleReportController extends Controller
         // loop income.
         foreach ($earned as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $categoryName = $journal['category_name'] ?? trans('firefly.no_category');
-                $title        = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
+                $categoryName             = $journal['category_name'] ?? trans('firefly.no_category');
+                $title                    = sprintf('%s (%s)', $categoryName, $currency['currency_name']);
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
-                    'currency_code'   => $currency['currency_code']
+                    'currency_code'   => $currency['currency_code'],
                 ];
-                $amount = Steam::positive($journal['amount']);
+                $amount                   = Steam::positive($journal['amount']);
                 $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data     = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -149,11 +149,11 @@ class DoubleReportController extends Controller
     {
         $chartData = [];
 
-        $opposing = $this->repository->expandWithDoubles(new Collection()->push($account));
-        $accounts = $accounts->merge($opposing);
-        $spent    = $this->opsRepository->listExpenses($start, $end, $accounts);
-        $earned   = $this->opsRepository->listIncome($start, $end, $accounts);
-        $format   = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $opposing  = $this->repository->expandWithDoubles(new Collection()->push($account));
+        $accounts  = $accounts->merge($opposing);
+        $spent     = $this->opsRepository->listExpenses($start, $end, $accounts);
+        $earned    = $this->opsRepository->listIncome($start, $end, $accounts);
+        $format    = Navigation::preferredCarbonLocalizedFormat($start, $end);
 
         // loop expenses.
         foreach ($spent as $currency) {
@@ -171,12 +171,12 @@ class DoubleReportController extends Controller
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
                 'currency_id'     => $currency['currency_id'],
-                'entries'         => $this->makeEntries($start, $end)
+                'entries'         => $this->makeEntries($start, $end),
             ];
 
             foreach ($currency['transaction_journals'] as $journal) {
-                $key    = $journal['date']->isoFormat($format);
-                $amount = Steam::positive($journal['amount']);
+                $key                                   = $journal['date']->isoFormat($format);
+                $amount                                = Steam::positive($journal['amount']);
                 $chartData[$spentKey]['entries'][$key] ??= '0';
                 $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
             }
@@ -197,18 +197,18 @@ class DoubleReportController extends Controller
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
                 'currency_id'     => $currency['currency_id'],
-                'entries'         => $this->makeEntries($start, $end)
+                'entries'         => $this->makeEntries($start, $end),
             ];
 
             foreach ($currency['transaction_journals'] as $journal) {
-                $key    = $journal['date']->isoFormat($format);
-                $amount = Steam::positive($journal['amount']);
+                $key                                    = $journal['date']->isoFormat($format);
+                $amount                                 = Steam::positive($journal['amount']);
                 $chartData[$earnedKey]['entries'][$key] ??= '0';
                 $chartData[$earnedKey]['entries'][$key] = bcadd($chartData[$earnedKey]['entries'][$key], $amount);
             }
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
     }
@@ -216,7 +216,7 @@ class DoubleReportController extends Controller
     /**
      * TODO duplicate function
      */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, null|string $iban): string
+    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -241,8 +241,8 @@ class DoubleReportController extends Controller
         $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
-            $currentEnd = Navigation::endOfPeriod($currentStart, $preferredRange);
-            $key        = $currentStart->isoFormat($format);
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -265,16 +265,16 @@ class DoubleReportController extends Controller
 
                 // no tags? also deserves a sport
                 if (0 === count($journal['tags'])) {
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
-                    $tagName = trans('firefly.no_tags');
-                    $title   = sprintf('%s (%s)', $tagName, $currency['currency_name']);
+                    $tagName                  = trans('firefly.no_tags');
+                    $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
 
@@ -284,22 +284,22 @@ class DoubleReportController extends Controller
                     if (in_array($journalId, $includedJournals, true)) {
                         continue;
                     }
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
-                    $tagName = $tag['name'];
-                    $title   = sprintf('%s (%s)', $tagName, $currency['currency_name']);
+                    $tagName                  = $tag['name'];
+                    $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data             = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -318,16 +318,16 @@ class DoubleReportController extends Controller
 
                 // no tags? also deserves a sport
                 if (0 === count($journal['tags'])) {
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
-                    $tagName = trans('firefly.no_tags');
-                    $title   = sprintf('%s (%s)', $tagName, $currency['currency_name']);
+                    $tagName                  = trans('firefly.no_tags');
+                    $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
 
@@ -337,22 +337,22 @@ class DoubleReportController extends Controller
                     if (in_array($journalId, $includedJournals, true)) {
                         continue;
                     }
-                    $includedJournals[] = $journalId;
+                    $includedJournals[]       = $journalId;
                     // do something
-                    $tagName = $tag['name'];
-                    $title   = sprintf('%s (%s)', $tagName, $currency['currency_name']);
+                    $tagName                  = $tag['name'];
+                    $title                    = sprintf('%s (%s)', $tagName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data             = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }

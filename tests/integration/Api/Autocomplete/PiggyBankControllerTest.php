@@ -49,7 +49,7 @@ final class PiggyBankControllerTest extends TestCase
 
     private function createTestPiggyBanks(int $count, User $user): void
     {
-        $type = AccountType::whereType(AccountTypeEnum::DEFAULT->value)->first();
+        $type     = AccountType::whereType(AccountTypeEnum::DEFAULT->value)->first();
         if (null === $type) {
             $type = AccountType::create(['type' => AccountTypeEnum::DEFAULT->value]);
         }
@@ -60,19 +60,19 @@ final class PiggyBankControllerTest extends TestCase
         for ($i = 1; $i <= $count; ++$i) {
             $piggyBank = PiggyBank::create([
                 'user_id'                 => $user->id,
-                'name'                    => 'Piggy bank ' . $i,
+                'name'                    => 'Piggy bank '.$i,
                 'target_amount'           => 1000,
                 'transaction_currency_id' => $currency->id,
                 'target_date'             => now()->addDays(30),
                 'user_group_id'           => $user->user_group_id,
-                'active'                  => 1
+                'active'                  => 1,
             ]);
             $account   = Account::create([
                 'user_id'         => $user->id,
-                'name'            => 'Account ' . $i,
+                'name'            => 'Account '.$i,
                 'user_group_id'   => $user->user_group_id,
                 'account_type_id' => $type->id,
-                'active'          => 1
+                'active'          => 1,
             ]);
             $piggyBank->accounts()->save($account);
         }
@@ -90,7 +90,7 @@ final class PiggyBankControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.piggy-banks'), ['Accept' => 'application/json']);
@@ -100,7 +100,7 @@ final class PiggyBankControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(5, $user);
@@ -114,7 +114,7 @@ final class PiggyBankControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(5, $user);
@@ -127,7 +127,7 @@ final class PiggyBankControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestPiggyBanks(20, $user);

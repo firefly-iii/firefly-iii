@@ -43,7 +43,8 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $this->userGroup
             ->currencyExchangeRates()
             ->where('id', $rate->id)
-            ->delete();
+            ->delete()
+        ;
     }
 
     #[Override]
@@ -52,7 +53,8 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         return $this->userGroup
             ->currencyExchangeRates()
             ->orderBy('date', 'ASC')
-            ->get();
+            ->get()
+        ;
     }
 
     #[Override]
@@ -69,11 +71,12 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
                 });
             })
             ->orderBy('date', 'DESC')
-            ->get(['currency_exchange_rates.*']);
+            ->get(['currency_exchange_rates.*'])
+        ;
     }
 
     #[Override]
-    public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): null|CurrencyExchangeRate
+    public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
         /** @var null|CurrencyExchangeRate */
         return $this->userGroup
@@ -81,27 +84,28 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
             ->where('from_currency_id', $from->id)
             ->where('to_currency_id', $to->id)
             ->where('date', $date->format('Y-m-d'))
-            ->first();
+            ->first()
+        ;
     }
 
     #[Override]
     public function storeExchangeRate(TransactionCurrency $from, TransactionCurrency $to, string $rate, Carbon $date): CurrencyExchangeRate
     {
-        $object = new CurrencyExchangeRate();
-        $object->user_id = auth()->user()->id;
-        $object->user_group_id = $this->userGroup->id;
+        $object                   = new CurrencyExchangeRate();
+        $object->user_id          = auth()->user()->id;
+        $object->user_group_id    = $this->userGroup->id;
         $object->from_currency_id = $from->id;
-        $object->to_currency_id = $to->id;
-        $object->rate = $rate;
-        $object->date = $date;
-        $object->date_tz = $date->format('e');
+        $object->to_currency_id   = $to->id;
+        $object->rate             = $rate;
+        $object->date             = $date;
+        $object->date_tz          = $date->format('e');
         $object->save();
 
         return $object;
     }
 
     #[Override]
-    public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, null|Carbon $date = null): CurrencyExchangeRate
+    public function updateExchangeRate(CurrencyExchangeRate $object, string $rate, ?Carbon $date = null): CurrencyExchangeRate
     {
         $object->rate = $rate;
         if ($date instanceof Carbon) {

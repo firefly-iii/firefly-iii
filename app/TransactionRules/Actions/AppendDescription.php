@@ -52,11 +52,12 @@ class AppendDescription implements ActionInterface
         DB::table('transaction_journals')
             ->where('id', $journal['transaction_journal_id'])
             ->limit(1)
-            ->update(['description' => $description]);
+            ->update(['description' => $description])
+        ;
 
         // event for audit log entry
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object      = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $journal['description'], $description));
 
         return true;

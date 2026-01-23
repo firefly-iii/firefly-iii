@@ -58,9 +58,9 @@ class WebhookCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the webhook cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
-                $this->message = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
-                $this->jobFired = false;
-                $this->jobErrored = false;
+                $this->message      = sprintf('It has been %s since the webhook cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->jobFired     = false;
+                $this->jobErrored   = false;
                 $this->jobSucceeded = false;
 
                 return;
@@ -86,10 +86,10 @@ class WebhookCronjob extends AbstractCronjob
         event(new RequestedSendWebhookMessages());
 
         // get stuff from job:
-        $this->jobFired = true;
-        $this->jobErrored = false;
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message = 'Send webhook messages cron job fired successfully.';
+        $this->message      = 'Send webhook messages cron job fired successfully.';
 
         FireflyConfig::set('last_webhook_job', (int) $this->date->format('U'));
         Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));

@@ -55,7 +55,7 @@ class IndexController extends Controller
             app('view')->share('title', (string) trans('firefly.rules'));
             app('view')->share('mainTitleIcon', 'fa-random');
             $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
-            $this->ruleRepos = app(RuleRepositoryInterface::class);
+            $this->ruleRepos      = app(RuleRepositoryInterface::class);
 
             return $next($request);
         });

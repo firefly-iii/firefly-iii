@@ -43,8 +43,8 @@ class UpgradesVariousCurrencyInformation extends Command
 
     public const string CONFIG_NAME = '480_other_currencies';
 
-    protected $description = 'Update all journal currency information.';
-    protected $signature   = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
+    protected $description          = 'Update all journal currency information.';
+    protected $signature            = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
     private array $accountCurrencies;
     private AccountRepositoryInterface $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
@@ -79,11 +79,11 @@ class UpgradesVariousCurrencyInformation extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->count = 0;
+        $this->count             = 0;
         $this->accountCurrencies = [];
-        $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->journalRepos = app(JournalRepositoryInterface::class);
-        $this->cliRepos = app(JournalCLIRepositoryInterface::class);
+        $this->accountRepos      = app(AccountRepositoryInterface::class);
+        $this->journalRepos      = app(JournalRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
     }
 
     private function isExecuted(): bool
@@ -105,7 +105,7 @@ class UpgradesVariousCurrencyInformation extends Command
             TransactionTypeEnum::WITHDRAWAL->value,
             TransactionTypeEnum::DEPOSIT->value,
             TransactionTypeEnum::OPENING_BALANCE->value,
-            TransactionTypeEnum::RECONCILIATION->value
+            TransactionTypeEnum::RECONCILIATION->value,
         ]);
 
         /** @var TransactionJournal $journal */
@@ -151,8 +151,8 @@ class UpgradesVariousCurrencyInformation extends Command
 
             // when mismatch in transaction:
             if ($transaction->transaction_currency_id !== $currency->id && !$isMultiCurrency) {
-                $transaction->foreign_currency_id = $transaction->transaction_currency_id;
-                $transaction->foreign_amount = $transaction->amount;
+                $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
+                $transaction->foreign_amount          = $transaction->amount;
                 $transaction->transaction_currency_id = $currency->id;
                 $transaction->save();
             }
@@ -169,7 +169,7 @@ class UpgradesVariousCurrencyInformation extends Command
      * Gets the transaction that determines the transaction that "leads" and will determine
      * the currency to be used by all transactions, and the journal itself.
      */
-    private function getLeadTransaction(TransactionJournal $journal): null|Transaction
+    private function getLeadTransaction(TransactionJournal $journal): ?Transaction
     {
         /** @var null|Transaction $lead */
         $lead = null;
@@ -195,7 +195,8 @@ class UpgradesVariousCurrencyInformation extends Command
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                     ->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)
-                    ->first(['transactions.*']);
+                    ->first(['transactions.*'])
+                ;
 
                 break;
 
@@ -206,7 +207,8 @@ class UpgradesVariousCurrencyInformation extends Command
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
                     ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
                     ->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)
-                    ->first(['transactions.*']);
+                    ->first(['transactions.*'])
+                ;
 
                 break;
         }
@@ -214,16 +216,16 @@ class UpgradesVariousCurrencyInformation extends Command
         return $lead;
     }
 
-    private function getCurrency(Account $account): null|TransactionCurrency
+    private function getCurrency(Account $account): ?TransactionCurrency
     {
-        $accountId = $account->id;
+        $accountId                           = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency = $this->accountRepos->getAccountCurrency($account);
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
         if (!$currency instanceof TransactionCurrency) {
             $this->accountCurrencies[$accountId] = 0;
 

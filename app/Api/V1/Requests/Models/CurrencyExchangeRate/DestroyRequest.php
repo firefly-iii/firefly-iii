@@ -34,7 +34,7 @@ class DestroyRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
 
-    public function getDate(): null|Carbon
+    public function getDate(): ?Carbon
     {
         return $this->getCarbonDate('date');
     }

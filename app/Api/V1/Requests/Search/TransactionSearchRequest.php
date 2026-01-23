@@ -36,7 +36,7 @@ class TransactionSearchRequest extends AggregateFormRequest
     {
         return [
             [PaginationRequest::class, 'sort_class' => TransactionJournal::class],
-            SearchQueryRequest::class
+            SearchQueryRequest::class,
             // [ObjectTypeApiRequest::class, 'object_type' => Account::class],
         ];
     }

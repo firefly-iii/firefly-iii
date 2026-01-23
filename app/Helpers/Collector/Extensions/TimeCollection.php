@@ -65,12 +65,12 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);
 
-        $filter = static function (array $object) use ($field, $start, $end): bool {
+        $filter              = static function (array $object) use ($field, $start, $end): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     if ($transaction[$field]->lt($start)) {
@@ -125,7 +125,7 @@ trait TimeCollection
     public function metaDayAfter(string $day, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $day): bool {
+        $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->day >= (int) $day;
@@ -142,7 +142,7 @@ trait TimeCollection
     public function metaDayBefore(string $day, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $day): bool {
+        $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->day <= (int) $day;
@@ -159,7 +159,7 @@ trait TimeCollection
     public function metaDayIs(string $day, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $day): bool {
+        $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $day === $transaction[$field]->day;
@@ -176,7 +176,7 @@ trait TimeCollection
     public function metaDayIsNot(string $day, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $day): bool {
+        $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $day !== $transaction[$field]->day;
@@ -193,7 +193,7 @@ trait TimeCollection
     public function metaMonthAfter(string $month, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $month): bool {
+        $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->month >= (int) $month;
@@ -210,7 +210,7 @@ trait TimeCollection
     public function metaMonthBefore(string $month, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $month): bool {
+        $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->month <= (int) $month;
@@ -227,7 +227,7 @@ trait TimeCollection
     public function metaMonthIs(string $month, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $month): bool {
+        $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $month === $transaction[$field]->month;
@@ -244,7 +244,7 @@ trait TimeCollection
     public function metaMonthIsNot(string $month, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $month): bool {
+        $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $month !== $transaction[$field]->month;
@@ -261,7 +261,7 @@ trait TimeCollection
     public function metaYearAfter(string $year, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $year): bool {
+        $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->year >= (int) $year;
@@ -278,7 +278,7 @@ trait TimeCollection
     public function metaYearBefore(string $year, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $year): bool {
+        $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->year <= (int) $year;
@@ -295,7 +295,7 @@ trait TimeCollection
     public function metaYearIs(string $year, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $year): bool {
+        $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $year === (string) $transaction[$field]->year;
@@ -312,7 +312,7 @@ trait TimeCollection
     public function metaYearIsNot(string $year, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $year): bool {
+        $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $year !== (string) $transaction[$field]->year;
@@ -490,7 +490,7 @@ trait TimeCollection
     {
         $this->withMetaDate($field);
         $date->startOfDay();
-        $filter = static function (array $object) use ($field, $date): bool {
+        $filter              = static function (array $object) use ($field, $date): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->gte($date);
@@ -507,7 +507,7 @@ trait TimeCollection
     public function setMetaBefore(Carbon $date, string $field): GroupCollectorInterface
     {
         $this->withMetaDate($field);
-        $filter = static function (array $object) use ($field, $date): bool {
+        $filter              = static function (array $object) use ($field, $date): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->lte($date);
@@ -526,12 +526,12 @@ trait TimeCollection
         if ($end < $start) {
             [$start, $end] = [$end, $start];
         }
-        $end = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
+        $end                 = clone $end; // this is so weird, but it works if $end and $start secretly point to the same object.
         $end->endOfDay();
         $start->startOfDay();
         $this->withMetaDate($field);
 
-        $filter = static function (array $object) use ($field, $start, $end): bool {
+        $filter              = static function (array $object) use ($field, $start, $end): bool {
             foreach ($object['transactions'] as $transaction) {
                 if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->gte($start) && $transaction[$field]->lte($end);
@@ -576,7 +576,7 @@ trait TimeCollection
      *
      * Can either or both be NULL
      */
-    public function setRange(null|Carbon $start, null|Carbon $end): GroupCollectorInterface
+    public function setRange(?Carbon $start, ?Carbon $end): GroupCollectorInterface
     {
         if ($start instanceof Carbon && $end instanceof Carbon && $end < $start) {
             [$start, $end] = [$end, $start];

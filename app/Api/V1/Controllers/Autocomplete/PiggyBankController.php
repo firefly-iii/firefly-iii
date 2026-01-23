@@ -52,7 +52,7 @@ class PiggyBankController extends Controller
         parent::__construct();
         $this->middleware(function (Request $request, $next) {
             $this->validateUserGroup($request);
-            $this->piggyRepository = app(PiggyBankRepositoryInterface::class);
+            $this->piggyRepository   = app(PiggyBankRepositoryInterface::class);
             $this->accountRepository = app(AccountRepositoryInterface::class);
             $this->piggyRepository->setUser($this->user);
             $this->piggyRepository->setUserGroup($this->userGroup);
@@ -72,7 +72,7 @@ class PiggyBankController extends Controller
         foreach ($piggies as $piggy) {
             $currency    = $piggy->transactionCurrency;
             $objectGroup = $piggy->objectGroups()->first();
-            $response[] = [
+            $response[]  = [
                 'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'currency_id'             => (string) $currency->id,
@@ -82,7 +82,7 @@ class PiggyBankController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
                 'object_group_title'      => $objectGroup?->title,
-                'object_group_order'      => $objectGroup?->order
+                'object_group_order'      => $objectGroup?->order,
             ];
         }
 
@@ -100,7 +100,7 @@ class PiggyBankController extends Controller
             $currency      = $piggy->transactionCurrency;
             $currentAmount = $this->piggyRepository->getCurrentAmount($piggy);
             $objectGroup   = $piggy->objectGroups()->first();
-            $response[] = [
+            $response[]    = [
                 'id'                      => (string) $piggy->id,
                 'name'                    => $piggy->name,
                 'name_with_balance'       => sprintf(
@@ -115,7 +115,7 @@ class PiggyBankController extends Controller
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
                 'object_group_id'         => null === $objectGroup ? null : (string) $objectGroup->id,
-                'object_group_title'      => $objectGroup?->title
+                'object_group_title'      => $objectGroup?->title,
             ];
         }
 

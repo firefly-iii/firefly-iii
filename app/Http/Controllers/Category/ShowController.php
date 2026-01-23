@@ -75,7 +75,7 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Category $category, null|Carbon $start = null, null|Carbon $end = null): Factory|\Illuminate\Contracts\View\View
+    public function show(Request $request, Category $category, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $start ??= session('start', today(config('app.timezone'))->startOfMonth());
         $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
@@ -92,11 +92,11 @@ class ShowController extends Controller
         $subTitle     = trans('firefly.journals_in_period_for_category', [
             'name'  => $category->name,
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setRange($start, $end)
             ->setLimit($pageSize)
@@ -104,9 +104,10 @@ class ShowController extends Controller
             ->withAccountInformation()
             ->setCategory($category)
             ->withBudgetInformation()
-            ->withCategoryInformation();
+            ->withCategoryInformation()
+        ;
 
-        $groups = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('categories.show', [
@@ -117,7 +118,7 @@ class ShowController extends Controller
             'subTitle'     => $subTitle,
             'subTitleIcon' => $subTitleIcon,
             'start'        => $start,
-            'end'          => $end
+            'end'          => $end,
         ]);
     }
 
@@ -139,17 +140,17 @@ class ShowController extends Controller
         $end          = null;
         $periods      = new Collection();
 
-        $subTitle = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
-        $first    = $this->repository->firstUseDate($category);
+        $subTitle     = (string) trans('firefly.all_journals_for_category', ['name' => $category->name]);
+        $first        = $this->repository->firstUseDate($category);
 
         /** @var Carbon $start */
-        $start       = $first ?? today(config('app.timezone'));
-        $end         = today(config('app.timezone'));
-        $path        = route('categories.show.all', [$category->id]);
-        $attachments = $this->repository->getAttachments($category);
+        $start        = $first ?? today(config('app.timezone'));
+        $end          = today(config('app.timezone'));
+        $path         = route('categories.show.all', [$category->id]);
+        $attachments  = $this->repository->getAttachments($category);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector
             ->setRange($start, $end)
             ->setLimit($pageSize)
@@ -157,9 +158,10 @@ class ShowController extends Controller
             ->withAccountInformation()
             ->setCategory($category)
             ->withBudgetInformation()
-            ->withCategoryInformation();
+            ->withCategoryInformation()
+        ;
 
-        $groups = $collector->getPaginatedGroups();
+        $groups       = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
         return view('categories.show', [
@@ -170,7 +172,7 @@ class ShowController extends Controller
             'subTitle'     => $subTitle,
             'subTitleIcon' => $subTitleIcon,
             'start'        => $start,
-            'end'          => $end
+            'end'          => $end,
         ]);
     }
 }

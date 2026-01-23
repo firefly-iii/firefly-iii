@@ -58,7 +58,8 @@ class UserLogin extends Notification
 
         return new MailMessage()
             ->markdown('emails.new-ip', ['ip'        => $ip, 'host'      => $host, 'userAgent' => $userAgent, 'time'      => $time])
-            ->subject((string) trans('email.login_from_new_ip'));
+            ->subject((string) trans('email.login_from_new_ip'))
+        ;
     }
 
     //    public function toNtfy(User $notifiable): Message

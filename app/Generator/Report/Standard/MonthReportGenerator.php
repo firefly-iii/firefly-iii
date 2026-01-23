@@ -36,13 +36,13 @@ use Throwable;
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     /** @var Collection The accounts involved in the report. */
-    private null|Collection $accounts = null;
+    private ?Collection $accounts = null;
 
     /** @var Carbon The end date. */
-    private null|Carbon $end = null;
+    private ?Carbon $end          = null;
 
     /** @var Carbon The start date. */
-    private null|Carbon $start = null;
+    private ?Carbon $start        = null;
 
     /**
      * Generates the report.
@@ -58,7 +58,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
             return view('reports.default.month', ['accountIds' => $accountIds, 'reportType' => $reportType])
                 ->with('start', $this->start)
                 ->with('end', $this->end)
-                ->render();
+                ->render()
+            ;
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.default.month: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

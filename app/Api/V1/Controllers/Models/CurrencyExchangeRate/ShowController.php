@@ -46,7 +46,7 @@ class ShowController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
-    protected array $acceptedRoles = [UserRoleEnum::OWNER];
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
@@ -62,12 +62,12 @@ class ShowController extends Controller
 
     public function show(TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-        $pageSize  = $this->parameters->get('limit');
-        $page      = $this->parameters->get('page');
-        $rates     = $this->repository->getRates($from, $to);
-        $count     = $rates->count();
-        $rates     = $rates->slice(($page - 1) * $pageSize, $pageSize);
-        $paginator = new LengthAwarePaginator($rates, $count, $pageSize, $page);
+        $pageSize    = $this->parameters->get('limit');
+        $page        = $this->parameters->get('page');
+        $rates       = $this->repository->getRates($from, $to);
+        $count       = $rates->count();
+        $rates       = $rates->slice(($page - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($rates, $count, $pageSize, $page);
 
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
@@ -85,7 +85,7 @@ class ShowController extends Controller
 
     public function showSingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
-        $transformer = new ExchangeRateTransformer();
+        $transformer  = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);

@@ -57,21 +57,21 @@ abstract class AggregateFormRequest extends ApiRequest
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
-            $requestClass = is_array($config) ? array_shift($config) : $config;
+            $requestClass         = is_array($config) ? array_shift($config) : $config;
 
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
             }
             Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
-            $instance = $this->requests[] = new $requestClass();
-            $instance->request = $this->request;
-            $instance->query = $this->query;
+            $instance             = $this->requests[] = new $requestClass();
+            $instance->request    = $this->request;
+            $instance->query      = $this->query;
             $instance->attributes = $this->attributes;
-            $instance->cookies = $this->cookies;
-            $instance->files = $this->files;
-            $instance->server = $this->server;
-            $instance->headers = $this->headers;
+            $instance->cookies    = $this->cookies;
+            $instance->files      = $this->files;
+            $instance->server     = $this->server;
+            $instance->headers    = $this->headers;
 
             if ($instance instanceof ApiRequest) {
                 $instance->handleConfig(is_array($config) ? $config : []);
@@ -85,7 +85,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // check all subrequests for rules and combine them
         return array_reduce(
             $this->requests,
-            static fn(array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
+            static fn (array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
             []
         );
     }

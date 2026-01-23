@@ -69,26 +69,26 @@ class CreateRecurringTransactions implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(null|Carbon $date)
+    public function __construct(?Carbon $date)
     {
-        $newDate = new Carbon();
+        $newDate                 = new Carbon();
         $newDate->startOfDay();
-        $this->date = $newDate;
+        $this->date              = $newDate;
 
         if ($date instanceof Carbon) {
-            $newDate = clone $date;
+            $newDate    = clone $date;
             $newDate->startOfDay();
             $this->date = $newDate;
         }
-        $this->repository = app(RecurringRepositoryInterface::class);
+        $this->repository        = app(RecurringRepositoryInterface::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-        $this->force = false;
-        $this->submitted = 0;
-        $this->executed = 0;
-        $this->created = 0;
-        $this->recurrences = new Collection();
-        $this->groups = new Collection();
+        $this->groupRepository   = app(TransactionGroupRepositoryInterface::class);
+        $this->force             = false;
+        $this->submitted         = 0;
+        $this->executed          = 0;
+        $this->created           = 0;
+        $this->recurrences       = new Collection();
+        $this->groups            = new Collection();
 
         Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
     }
@@ -114,13 +114,13 @@ class CreateRecurringTransactions implements ShouldQueue
             $this->recurrences = $this->repository->getAll();
         }
 
-        $result = [];
-        $count  = $this->recurrences->count();
+        $result          = [];
+        $count           = $this->recurrences->count();
         $this->submitted = $count;
         Log::debug(sprintf('Count of collection is %d', $count));
 
         // filter recurrences:
-        $filtered = $this->filterRecurrences($this->recurrences);
+        $filtered        = $this->filterRecurrences($this->recurrences);
         Log::debug(sprintf('Left after filtering is %d', $filtered->count()));
 
         /** @var Recurrence $recurrence */
@@ -136,7 +136,7 @@ class CreateRecurringTransactions implements ShouldQueue
             Preferences::setForUser($recurrence->user, 'lastActivity', microtime());
 
             Log::debug(sprintf('Now at recurrence #%d of user #%d', $recurrence->id, $recurrence->user_id));
-            $createdReps = $this->handleRepetitions($recurrence);
+            $createdReps                  = $this->handleRepetitions($recurrence);
             Log::debug(sprintf('Done with recurrence #%d', $recurrence->id));
             $result[$recurrence->user_id] = $result[$recurrence->user_id]->merge($createdReps);
             ++$this->executed;
@@ -290,12 +290,12 @@ class CreateRecurringTransactions implements ShouldQueue
             // add two days to $this->date, so we always include the weekend.
             $includeWeekend = clone $this->date;
             $includeWeekend->addDays(2);
-            $occurrences = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
+            $occurrences    = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
 
             unset($includeWeekend);
 
-            $result     = $this->handleOccurrences($recurrence, $repetition, $occurrences);
-            $collection = $collection->merge($result);
+            $result         = $this->handleOccurrences($recurrence, $repetition, $occurrences);
+            $collection     = $collection->merge($result);
         }
 
         return $collection;
@@ -326,7 +326,7 @@ class CreateRecurringTransactions implements ShouldQueue
      * @throws DuplicateTransactionException
      * @throws FireflyException
      */
-    private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): null|TransactionGroup
+    private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
     {
         $date->startOfDay();
         if ($date->ne($this->date)) {
@@ -335,7 +335,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
         // count created journals on THIS day.
-        $journalCount = $this->repository->getJournalCount($recurrence, $date, $date);
+        $journalCount               = $this->repository->getJournalCount($recurrence, $date, $date);
         if ($journalCount > 0 && false === $this->force) {
             Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
 
@@ -353,11 +353,11 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         // create transaction array and send to factory.
-        $groupTitle = null;
-        $count      = $recurrence->recurrenceTransactions->count();
+        $groupTitle                 = null;
+        $count                      = $recurrence->recurrenceTransactions->count();
         // #8844, if there is one recurrence transaction, use the first title as the title.
         // #9305, if there is one recurrence transaction, group title must be NULL.
-        $groupTitle = null;
+        $groupTitle                 = null;
 
         // #8844, if there are more, use the recurrence transaction itself.
         if ($count > 1) {
@@ -370,15 +370,15 @@ class CreateRecurringTransactions implements ShouldQueue
             return null;
         }
 
-        $array = [
+        $array                      = [
             'user'         => $recurrence->user,
             'user_group'   => $recurrence->user->userGroup,
             'group_title'  => $groupTitle,
-            'transactions' => $this->getTransactionData($recurrence, $repetition, $date)
+            'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
         ];
 
         /** @var TransactionGroup $group */
-        $group = $this->groupRepository->store($array);
+        $group                      = $this->groupRepository->store($array);
         ++$this->created;
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
@@ -387,7 +387,7 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->groups->push($group);
 
         // update recurring thing:
-        $recurrence->latest_date = $date;
+        $recurrence->latest_date    = $date;
         $recurrence->latest_date_tz = $date->format('e');
         $recurrence->save();
 
@@ -405,12 +405,12 @@ class CreateRecurringTransactions implements ShouldQueue
         $transactions = $recurrence->recurrenceTransactions()->get();
 
         $transactions->first();
-        $return = [];
+        $return       = [];
 
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
-            $single = [
-                'type' => null === $transaction?->transactionType?->type
+            $single   = [
+                'type'                  => null === $transaction?->transactionType?->type
                     ? strtolower((string) $recurrence->transactionType->type)
                     : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
                 'date'                  => $date,
@@ -443,7 +443,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'bill_name'             => null,
                 'recurrence_total'      => $total,
                 'recurrence_count'      => $count,
-                'recurrence_date'       => $date
+                'recurrence_date'       => $date,
             ];
             $return[] = $single;
         }
@@ -453,7 +453,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
     public function setDate(Carbon $date): void
     {
-        $newDate = clone $date;
+        $newDate    = clone $date;
         $newDate->startOfDay();
         Log::debug(sprintf('Overruled date to "%s', $newDate->format('Y-m-d H:i:s')));
         $this->date = $newDate;

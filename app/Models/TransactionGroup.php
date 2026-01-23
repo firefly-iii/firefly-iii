@@ -62,15 +62,16 @@ class TransactionGroup extends Model
             $groupId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user    = auth()->user();
             Log::debug(sprintf('User authenticated as %s', $user->email));
 
             /** @var null|TransactionGroup $group */
-            $group = $user
+            $group   = $user
                 ->transactionGroups()
                 ->with(['transactionJournals', 'transactionJournals.transactions'])
                 ->where('transaction_groups.id', $groupId)
-                ->first(['transaction_groups.*']);
+                ->first(['transaction_groups.*'])
+            ;
             if (null !== $group) {
                 Log::debug(sprintf('Found group #%d.', $group->id));
 
@@ -107,7 +108,7 @@ class TransactionGroup extends Model
             'title'         => 'string',
             'date'          => 'datetime',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 }

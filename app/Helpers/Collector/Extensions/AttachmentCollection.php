@@ -45,13 +45,13 @@ trait AttachmentCollection
          *
          * @return bool
          */
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        str_contains(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = str_contains(strtolower((string) $attachment['filename']), strtolower($name))
                         || str_contains(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -94,7 +94,8 @@ trait AttachmentCollection
                     // $q1->where('attachments.uploaded', true);
                     // $q1->whereNull('attachments.deleted_at');
                     $q1->orWhereNull('attachments.attachable_type');
-                });
+                })
+            ;
         }
     }
 
@@ -122,13 +123,13 @@ trait AttachmentCollection
          *
          * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        !str_contains(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = !str_contains(strtolower((string) $attachment['filename']), strtolower($name))
                         && !str_contains(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -155,13 +156,13 @@ trait AttachmentCollection
          *
          * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        !str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = !str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
                         && !str_ends_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -188,13 +189,13 @@ trait AttachmentCollection
          *
          * @SuppressWarnings("PHPMD.UnusedFormalParameter")
          */
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        !str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = !str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
                         && !str_starts_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -213,13 +214,13 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = str_ends_with(strtolower((string) $attachment['filename']), strtolower($name))
                         || str_ends_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -238,7 +239,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -261,7 +262,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -284,13 +285,13 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($name): bool {
+        $filter              = static function (array $object) use ($name): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
                 foreach ($transaction['attachments'] as $attachment) {
-                    $result =
-                        str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
+                    $result
+                        = str_starts_with(strtolower((string) $attachment['filename']), strtolower($name))
                         || str_starts_with(strtolower((string) $attachment['title']), strtolower($name));
                     if ($result) {
                         return true;
@@ -309,7 +310,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -333,7 +334,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -357,7 +358,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -381,7 +382,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -405,7 +406,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -429,7 +430,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -453,7 +454,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */
@@ -477,7 +478,7 @@ trait AttachmentCollection
     {
         $this->hasAttachments();
         $this->withAttachmentInformation();
-        $filter = static function (array $object) use ($value): bool {
+        $filter              = static function (array $object) use ($value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 /** @var array $attachment */

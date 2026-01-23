@@ -69,9 +69,10 @@ class MFABackupFewLeftNotification extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject($subject);
+            ->subject($subject)
+        ;
     }
 
     //    public function toNtfy(User $notifiable): Message
@@ -92,7 +93,7 @@ class MFABackupFewLeftNotification extends Notification
     {
         return PushoverMessage::create((string) trans('email.mfa_few_backups_left_slack', [
             'email' => $this->user->email,
-            'count' => $this->count
+            'count' => $this->count,
         ]))->title((string) trans('email.mfa_few_backups_left_subject'));
     }
 

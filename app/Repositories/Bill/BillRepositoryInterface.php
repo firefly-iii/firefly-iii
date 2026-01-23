@@ -63,17 +63,17 @@ interface BillRepositoryInterface
     /**
      * Find a bill by ID.
      */
-    public function find(int $billId): null|Bill;
+    public function find(int $billId): ?Bill;
 
     /**
      * Find bill by parameters.
      */
-    public function findBill(null|int $billId, null|string $billName): null|Bill;
+    public function findBill(?int $billId, ?string $billName): ?Bill;
 
     /**
      * Find a bill by name.
      */
-    public function findByName(string $name): null|Bill;
+    public function findByName(string $name): ?Bill;
 
     public function getActiveBills(): Collection;
 

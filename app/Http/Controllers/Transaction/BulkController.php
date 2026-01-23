@@ -72,7 +72,7 @@ class BulkController extends Controller
      */
     public function edit(array $journals): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string) trans('firefly.mass_bulk_journals');
+        $subTitle    = (string) trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUrl('transactions.bulk-edit.url');
 

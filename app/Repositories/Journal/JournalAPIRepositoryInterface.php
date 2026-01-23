@@ -47,7 +47,7 @@ interface JournalAPIRepositoryInterface
     /**
      * Returns transaction by ID. Used to validate attachments.
      */
-    public function findTransaction(int $transactionId): null|Transaction;
+    public function findTransaction(int $transactionId): ?Transaction;
 
     /**
      * Return all attachments for journal.

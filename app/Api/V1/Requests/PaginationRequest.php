@@ -32,7 +32,7 @@ use RuntimeException;
 
 class PaginationRequest extends ApiRequest
 {
-    private null|string $sortClass = null;
+    private ?string $sortClass = null;
 
     #[Override]
     public function handleConfig(array $config): void
@@ -51,7 +51,7 @@ class PaginationRequest extends ApiRequest
         return [
             'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
             'limit' => 'numeric|min:1|max:131337',
-            'page'  => 'numeric|min:1|max:131337'
+            'page'  => 'numeric|min:1|max:131337',
         ];
     }
 
@@ -62,7 +62,7 @@ class PaginationRequest extends ApiRequest
                 return;
             }
 
-            $limit = $this->convertInteger('limit');
+            $limit  = $this->convertInteger('limit');
             if (0 === $limit) {
                 // get default for user:
                 /** @var User $user */

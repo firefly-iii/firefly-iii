@@ -61,17 +61,17 @@ class BelongsUserGroup implements ValidationRule
         }
         Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
 
-        $result = match ($attribute) {
-            'piggy_bank_id' => $this->validatePiggyBankId((int) $value),
-            'piggy_bank_name' => $this->validatePiggyBankName($value),
-            'bill_id' => $this->validateBillId((int) $value),
+        $result    = match ($attribute) {
+            'piggy_bank_id'          => $this->validatePiggyBankId((int) $value),
+            'piggy_bank_name'        => $this->validatePiggyBankName($value),
+            'bill_id'                => $this->validateBillId((int) $value),
             'transaction_journal_id' => $this->validateJournalId((int) $value),
-            'bill_name' => $this->validateBillName($value),
-            'budget_id' => $this->validateBudgetId((int) $value),
-            'category_id' => $this->validateCategoryId((int) $value),
-            'budget_name' => $this->validateBudgetName($value),
+            'bill_name'              => $this->validateBillName($value),
+            'budget_id'              => $this->validateBudgetId((int) $value),
+            'category_id'            => $this->validateCategoryId((int) $value),
+            'budget_name'            => $this->validateBudgetName($value),
             'source_id', 'destination_id' => $this->validateAccountId((int) $value),
-            default => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
+            default                  => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
         };
         if (false === $result) {
             $fail('validation.belongs_user_or_user_group')->translate();
@@ -96,7 +96,8 @@ class BelongsUserGroup implements ValidationRule
         $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
             ->where('piggy_banks.id', '=', $value)
             ->where('accounts.user_group_id', '=', $this->userGroup->id)
-            ->count();
+            ->count()
+        ;
 
         return 1 === $count;
     }
@@ -123,7 +124,7 @@ class BelongsUserGroup implements ValidationRule
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();
         }
-        $count = 0;
+        $count   = 0;
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field}); // @phpstan-ignore-line
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));

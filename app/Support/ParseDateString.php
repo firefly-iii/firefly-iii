@@ -49,7 +49,7 @@ class ParseDateString
         'start of this quarter',
         'end of this quarter',
         'start of this year',
-        'end of this year'
+        'end of this year',
     ];
 
     public function isDateRange(string $date): bool
@@ -77,15 +77,15 @@ class ParseDateString
     public function parseDate(string $date): Carbon
     {
         Log::debug(sprintf('parseDate("%s")', $date));
-        $date = strtolower($date);
+        $date        = strtolower($date);
         // parse keywords:
         if (in_array($date, $this->keywords, true)) {
             return $this->parseKeyword($date);
         }
 
         // if regex for YYYY-MM-DD:
-        $pattern = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
-        $result  = preg_match($pattern, $date);
+        $pattern     = '/^(19|20)\d\d-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/';
+        $result      = preg_match($pattern, $date);
         if (0 !== $result) {
             return $this->parseDefaultDate($date);
         }
@@ -285,17 +285,17 @@ class ParseDateString
         $today = today(config('app.timezone'))->startOfDay();
 
         return match ($keyword) {
-            default => $today,
-            'yesterday' => $today->subDay(),
-            'tomorrow' => $today->addDay(),
-            'start of this week' => $today->startOfWeek(CarbonInterface::MONDAY),
-            'end of this week' => $today->endOfWeek(CarbonInterface::SUNDAY),
-            'start of this month' => $today->startOfMonth(),
-            'end of this month' => $today->endOfMonth(),
+            default                 => $today,
+            'yesterday'             => $today->subDay(),
+            'tomorrow'              => $today->addDay(),
+            'start of this week'    => $today->startOfWeek(CarbonInterface::MONDAY),
+            'end of this week'      => $today->endOfWeek(CarbonInterface::SUNDAY),
+            'start of this month'   => $today->startOfMonth(),
+            'end of this month'     => $today->endOfMonth(),
             'start of this quarter' => $today->startOfQuarter(),
-            'end of this quarter' => $today->endOfQuarter(),
-            'start of this year' => $today->startOfYear(),
-            'end of this year' => $today->endOfYear()
+            'end of this quarter'   => $today->endOfQuarter(),
+            'start of this year'    => $today->startOfYear(),
+            'end of this year'      => $today->endOfYear()
         };
     }
 
@@ -328,16 +328,16 @@ class ParseDateString
         $today     = today(config('app.timezone'))->startOfDay();
         $functions = [
             ['d' => 'subDays', 'w' => 'subWeeks', 'm' => 'subMonths', 'q' => 'subQuarters', 'y' => 'subYears'],
-            ['d' => 'addDays', 'w' => 'addWeeks', 'm' => 'addMonths', 'q' => 'addQuarters', 'y' => 'addYears']
+            ['d' => 'addDays', 'w' => 'addWeeks', 'm' => 'addMonths', 'q' => 'addQuarters', 'y' => 'addYears'],
         ];
 
         foreach ($parts as $part) {
             Log::debug(sprintf('Now parsing part "%s"', $part));
-            $part = trim($part);
+            $part      = trim($part);
 
             // verify if correct
-            $pattern = '/[+-]\d+[wqmdy]/';
-            $result  = preg_match($pattern, $part);
+            $pattern   = '/[+-]\d+[wqmdy]/';
+            $result    = preg_match($pattern, $part);
             if (0 === $result) {
                 Log::error(sprintf('Part "%s" does not match regular expression. Will be skipped.', $part));
 
@@ -351,7 +351,7 @@ class ParseDateString
 
                 continue;
             }
-            $func = $functions[$direction][$period];
+            $func      = $functions[$direction][$period];
             Log::debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
             $today->{$func}($number); // @phpstan-ignore-line
             Log::debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));

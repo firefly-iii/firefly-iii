@@ -36,19 +36,19 @@ use function Safe\json_encode;
  */
 class AccountSearch implements GenericSearchInterface
 {
-    public const string SEARCH_ALL = 'all';
+    public const string SEARCH_ALL    = 'all';
 
-    public const string SEARCH_IBAN = 'iban';
+    public const string SEARCH_IBAN   = 'iban';
 
-    public const string SEARCH_ID = 'id';
+    public const string SEARCH_ID     = 'id';
 
-    public const string SEARCH_NAME = 'name';
+    public const string SEARCH_NAME   = 'name';
 
     public const string SEARCH_NUMBER = 'number';
 
     private string $field;
     private string $query;
-    private array $types = [];
+    private array $types              = [];
     private User $user;
 
     public function search(): Collection
@@ -57,7 +57,8 @@ class AccountSearch implements GenericSearchInterface
             ->accounts()
             ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
-            ->whereIn('account_types.type', $this->types);
+            ->whereIn('account_types.type', $this->types)
+        ;
         $like          = sprintf('%%%s%%', $this->query);
         $originalQuery = $this->query;
 

@@ -37,7 +37,7 @@ class RecurrenceTransactionMeta extends Model
 
     protected $fillable = ['rt_id', 'name', 'value'];
 
-    protected $table = 'rt_meta';
+    protected $table    = 'rt_meta';
 
     public function recurrenceTransaction(): BelongsTo
     {
@@ -51,6 +51,6 @@ class RecurrenceTransactionMeta extends Model
 
     protected function rtId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

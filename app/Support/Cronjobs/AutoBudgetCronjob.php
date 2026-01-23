@@ -71,15 +71,15 @@ class AutoBudgetCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire auto budget cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var CreateAutoBudgetLimits $job */
-        $job = app(CreateAutoBudgetLimits::class, [$this->date]);
+        $job                = app(CreateAutoBudgetLimits::class, [$this->date]);
         $job->setDate($this->date);
         $job->handle();
 
         // get stuff from job:
-        $this->jobFired = true;
-        $this->jobErrored = false;
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message = 'Auto-budget cron job fired successfully.';
+        $this->message      = 'Auto-budget cron job fired successfully.';
 
         FireflyConfig::set('last_ab_job', (int) $this->date->format('U'));
         Log::info('Done with auto budget cron job task.');

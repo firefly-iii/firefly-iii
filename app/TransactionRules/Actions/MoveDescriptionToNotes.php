@@ -47,7 +47,7 @@ class MoveDescriptionToNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var null|TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object            = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
@@ -56,23 +56,23 @@ class MoveDescriptionToNotes implements ActionInterface
         }
 
         /** @var null|Note $note */
-        $note = $object->notes()->first();
+        $note              = $object->notes()->first();
         if (null === $note) {
-            $note = new Note();
+            $note       = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
         $before            = $note->text;
         $beforeDescription = $object->description;
         if ('' !== $note->text) {
-            $note->text = trim(sprintf("%s  \n%s", $note->text, $object->description));
+            $note->text          = trim(sprintf("%s  \n%s", $note->text, $object->description));
             $object->description = '(no description)';
         }
         if ('' === $note->text) {
-            $note->text = (string) $object->description;
+            $note->text          = (string) $object->description;
             $object->description = '(no description)';
         }
-        $after = $note->text;
+        $after             = $note->text;
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $beforeDescription, $object->description));
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $after));

@@ -37,7 +37,7 @@ class Translation extends AbstractExtension
     #[Override]
     public function getFilters(): array
     {
-        return [new TwigFilter('_', static fn(string $name) => (string) trans(sprintf('firefly.%s', $name)), ['is_safe' => ['html']])];
+        return [new TwigFilter('_', static fn (string $name) => (string) trans(sprintf('firefly.%s', $name)), ['is_safe' => ['html']])];
     }
 
     #[Override]

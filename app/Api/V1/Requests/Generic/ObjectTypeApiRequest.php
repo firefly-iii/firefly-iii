@@ -41,7 +41,7 @@ class ObjectTypeApiRequest extends ApiRequest
     use AccountFilter;
     use TransactionFilter;
 
-    private null|string $objectType = null;
+    private ?string $objectType = null;
 
     #[Override]
     public function handleConfig(array $config): void
@@ -57,7 +57,7 @@ class ObjectTypeApiRequest extends ApiRequest
 
     public function rules(): array
     {
-        $rule = null;
+        $rule  = null;
         if (Account::class === $this->objectType) {
             $rule = new IsValidAccountTypeList();
         }
@@ -85,7 +85,7 @@ class ObjectTypeApiRequest extends ApiRequest
                 default:
                     $this->attributes->set('types', []);
 
-                // no break
+                    // no break
                 case Account::class:
                     $types = $this->mapAccountTypes($type);
 
@@ -93,7 +93,7 @@ class ObjectTypeApiRequest extends ApiRequest
                     $types = array_values(array_diff($types, [
                         AccountTypeEnum::INITIAL_BALANCE->value,
                         AccountTypeEnum::RECONCILIATION->value,
-                        AccountTypeEnum::LIABILITY_CREDIT->value
+                        AccountTypeEnum::LIABILITY_CREDIT->value,
                     ]));
                     $this->attributes->set('types', $types);
 

@@ -42,8 +42,8 @@ class UniqueIban implements ValidationRule
      * Create a new rule instance.
      */
     public function __construct(
-        private readonly null|Account $account,
-        null|string $expectedType
+        private readonly ?Account $account,
+        ?string $expectedType
     ) {
         if (null === $expectedType) {
             return;
@@ -129,7 +129,7 @@ class UniqueIban implements ValidationRule
             AccountTypeEnum::ASSET->value   => 0,
             AccountTypeEnum::EXPENSE->value => 0,
             AccountTypeEnum::REVENUE->value => 0,
-            'liabilities'                   => 0
+            'liabilities'                   => 0,
         ];
 
         if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {
@@ -152,12 +152,13 @@ class UniqueIban implements ValidationRule
         if ('liabilities' === $type) {
             $typesArray = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         }
-        $query = auth()
+        $query      = auth()
             ->user()
             ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->where('accounts.iban', $iban)
-            ->whereIn('account_types.type', $typesArray);
+            ->whereIn('account_types.type', $typesArray)
+        ;
 
         if ($this->account instanceof Account) {
             $query->where('accounts.id', '!=', $this->account->id);

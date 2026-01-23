@@ -42,7 +42,7 @@ class BudgetLimitTransformer extends AbstractTransformer
 
     public function __construct()
     {
-        $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -57,7 +57,7 @@ class BudgetLimitTransformer extends AbstractTransformer
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
         $enrichment->setUser($budget->user);
-        $budget = $enrichment->enrichSingle($budget);
+        $budget     = $enrichment->enrichSingle($budget);
 
         return $this->item($budget, new BudgetTransformer(), 'budgets');
     }
@@ -78,21 +78,21 @@ class BudgetLimitTransformer extends AbstractTransformer
         }
 
         return [
-            'id'         => (string) $budgetLimit->id,
-            'created_at' => $budgetLimit->created_at->toAtomString(),
-            'updated_at' => $budgetLimit->updated_at->toAtomString(),
-            'start'      => $budgetLimit->start_date->toAtomString(),
-            'end'        => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'  => (string) $budgetLimit->budget_id,
+            'id'                              => (string) $budgetLimit->id,
+            'created_at'                      => $budgetLimit->created_at->toAtomString(),
+            'updated_at'                      => $budgetLimit->updated_at->toAtomString(),
+            'start'                           => $budgetLimit->start_date->toAtomString(),
+            'end'                             => $budgetLimit->end_date->endOfDay()->toAtomString(),
+            'budget_id'                       => (string) $budgetLimit->budget_id,
 
             // currency settings according to 6.3.0
-            'object_has_currency_setting' => true,
+            'object_has_currency_setting'     => true,
 
-            'currency_id'             => (string) $currency->id,
-            'currency_name'           => $currency->name,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'currency_id'                     => (string) $currency->id,
+            'currency_name'                   => $currency->name,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
@@ -100,13 +100,13 @@ class BudgetLimitTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
             'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
-            'amount'    => $amount,
-            'pc_amount' => $pcAmount,
-            'period'    => $budgetLimit->period,
-            'spent'     => $budgetLimit->meta['spent'],
-            'pc_spent'  => $budgetLimit->meta['pc_spent'],
-            'notes'     => $budgetLimit->meta['notes'],
-            'links'     => [['rel' => 'self', 'uri' => '/budgets/limits/' . $budgetLimit->id]]
+            'amount'                          => $amount,
+            'pc_amount'                       => $pcAmount,
+            'period'                          => $budgetLimit->period,
+            'spent'                           => $budgetLimit->meta['spent'],
+            'pc_spent'                        => $budgetLimit->meta['pc_spent'],
+            'notes'                           => $budgetLimit->meta['notes'],
+            'links'                           => [['rel' => 'self', 'uri' => '/budgets/limits/'.$budgetLimit->id]],
         ];
     }
 }

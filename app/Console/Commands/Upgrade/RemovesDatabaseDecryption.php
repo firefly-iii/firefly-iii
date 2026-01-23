@@ -61,7 +61,7 @@ class RemovesDatabaseDecryption extends Command
             'tags'                 => ['tag', 'description'],
             'transaction_journals' => ['description'],
             'transactions'         => ['description'],
-            'journal_links'        => ['comment']
+            'journal_links'        => ['comment'],
         ];
 
         /**
@@ -119,8 +119,8 @@ class RemovesDatabaseDecryption extends Command
         if (null === $original) {
             return;
         }
-        $id    = (int) $row->id;
-        $value = '';
+        $id       = (int) $row->id;
+        $value    = '';
 
         try {
             $value = $this->tryDecrypt($original);

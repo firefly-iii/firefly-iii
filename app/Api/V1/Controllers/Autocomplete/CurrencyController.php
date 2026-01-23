@@ -74,7 +74,7 @@ class CurrencyController extends Controller
                 'name'           => $currency->name,
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
-                'decimal_places' => $currency->decimal_places
+                'decimal_places' => $currency->decimal_places,
             ];
         }
 
@@ -99,7 +99,7 @@ class CurrencyController extends Controller
                 'name'           => sprintf('%s (%s)', $currency->name, $currency->code),
                 'code'           => $currency->code,
                 'symbol'         => $currency->symbol,
-                'decimal_places' => $currency->decimal_places
+                'decimal_places' => $currency->decimal_places,
             ];
         }
 

@@ -39,6 +39,6 @@ class WebhookResponse extends Model
      */
     protected function key(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

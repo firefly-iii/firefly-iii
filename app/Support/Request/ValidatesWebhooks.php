@@ -38,9 +38,9 @@ trait ValidatesWebhooks
             if (count($validator->failed()) > 0) {
                 return;
             }
-            $data      = $validator->getData();
-            $triggers  = $data['triggers'] ?? [];
-            $responses = $data['responses'] ?? [];
+            $data           = $validator->getData();
+            $triggers       = $data['triggers'] ?? [];
+            $responses      = $data['responses'] ?? [];
 
             if (0 === count($triggers) || 0 === count($responses)) {
                 Log::debug('No trigger or response, return.');

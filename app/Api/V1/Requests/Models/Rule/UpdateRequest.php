@@ -48,7 +48,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields = [
+        $fields   = [
             'title'           => ['title', 'convertString'],
             'description'     => ['description', 'stringWithNewlines'],
             'rule_group_id'   => ['rule_group_id', 'convertInteger'],
@@ -56,7 +56,7 @@ class UpdateRequest extends FormRequest
             'strict'          => ['strict', 'boolean'],
             'stop_processing' => ['stop_processing', 'boolean'],
             'active'          => ['active', 'boolean'],
-            'order'           => ['order', 'convertInteger']
+            'order'           => ['order', 'convertInteger'],
         ];
 
         $return   = $this->getAllData($fields);
@@ -72,7 +72,7 @@ class UpdateRequest extends FormRequest
         return $return;
     }
 
-    private function getRuleTriggers(): null|array
+    private function getRuleTriggers(): ?array
     {
         if (!$this->has('triggers')) {
             return null;
@@ -84,12 +84,12 @@ class UpdateRequest extends FormRequest
                 $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
                 $prohibited     = array_key_exists('prohibited', $trigger) ? $trigger['prohibited'] : false;
                 $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
-                $return[] = [
+                $return[]       = [
                     'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
                     'prohibited'      => $prohibited,
                     'active'          => $active,
-                    'stop_processing' => $stopProcessing
+                    'stop_processing' => $stopProcessing,
                 ];
             }
         }
@@ -97,7 +97,7 @@ class UpdateRequest extends FormRequest
         return $return;
     }
 
-    private function getRuleActions(): null|array
+    private function getRuleActions(): ?array
     {
         if (!$this->has('actions')) {
             return null;
@@ -110,7 +110,7 @@ class UpdateRequest extends FormRequest
                     'type'            => $action['type'],
                     'value'           => $action['value'],
                     'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false'))
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -123,11 +123,11 @@ class UpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         /** @var Rule $rule */
-        $rule = $this->route()->parameter('rule');
+        $rule            = $this->route()->parameter('rule');
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -139,18 +139,18 @@ class UpdateRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups',
             'rule_group_title'           => 'nullable|min:1|max:255|belongsToUser:rule_groups,title',
             'trigger'                    => 'in:store-journal,update-journal.manual-activation',
-            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue|max:1024',
+            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
+            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
             'actions.*.value'            => [sprintf('required_if:actions.*.type,%s', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
             'stop_processing'            => [new IsBoolean()],
             'active'                     => [new IsBoolean()],
-            'order'                      => 'numeric|min:1|max:2048'
+            'order'                      => 'numeric|min:1|max:2048',
         ];
     }
 

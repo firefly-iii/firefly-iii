@@ -56,34 +56,34 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      */
-    public function destroy(Account $account, null|Account $moveTo): bool;
+    public function destroy(Account $account, ?Account $moveTo): bool;
 
     /**
      * Find account with same name OR same IBAN or both, but not the same type or ID.
      */
     public function expandWithDoubles(Collection $accounts): Collection;
 
-    public function find(int $accountId): null|Account;
+    public function find(int $accountId): ?Account;
 
-    public function findByAccountNumber(string $number, array $types): null|Account;
+    public function findByAccountNumber(string $number, array $types): ?Account;
 
-    public function findByIbanNull(string $iban, array $types): null|Account;
+    public function findByIbanNull(string $iban, array $types): ?Account;
 
-    public function findByName(string $name, array $types): null|Account;
+    public function findByName(string $name, array $types): ?Account;
 
-    public function getAccountCurrency(Account $account): null|TransactionCurrency;
+    public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
     /**
      * Return account type or null if not found.
      */
-    public function getAccountTypeByType(string $type): null|AccountType;
+    public function getAccountTypeByType(string $type): ?AccountType;
 
     public function getAccountsById(array $accountIds): Collection;
 
     /**
      * @param array<int, int|string> $types
      */
-    public function getAccountsByType(array $types, null|array $sort = []): Collection;
+    public function getAccountsByType(array $types, ?array $sort = []): Collection;
 
     public function getActiveAccountsByType(array $types): Collection;
 
@@ -91,45 +91,45 @@ interface AccountRepositoryInterface
 
     public function getCashAccount(): Account;
 
-    public function getCreditTransactionGroup(Account $account): null|TransactionGroup;
+    public function getCreditTransactionGroup(Account $account): ?TransactionGroup;
 
     public function getInactiveAccountsByType(array $types): Collection;
 
     /**
      * Get account location, if any.
      */
-    public function getLocation(Account $account): null|Location;
+    public function getLocation(Account $account): ?Location;
 
     /**
      * Return meta value for account. Null if not found.
      */
-    public function getMetaValue(Account $account, string $field): null|string;
+    public function getMetaValue(Account $account, string $field): ?string;
 
     /**
      * Get note text or null.
      */
-    public function getNoteText(Account $account): null|string;
+    public function getNoteText(Account $account): ?string;
 
-    public function getOpeningBalance(Account $account): null|TransactionJournal;
+    public function getOpeningBalance(Account $account): ?TransactionJournal;
 
     /**
      * Returns the amount of the opening balance for this account.
      */
-    public function getOpeningBalanceAmount(Account $account, bool $convertToPrimary): null|string;
+    public function getOpeningBalanceAmount(Account $account, bool $convertToPrimary): ?string;
 
     /**
      * Return date of opening balance as string or null.
      */
-    public function getOpeningBalanceDate(Account $account): null|string;
+    public function getOpeningBalanceDate(Account $account): ?string;
 
-    public function getOpeningBalanceGroup(Account $account): null|TransactionGroup;
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
 
     public function getPiggyBanks(Account $account): Collection;
 
     /**
      * Find or create the opposing reconciliation account.
      */
-    public function getReconciliation(Account $account): null|Account;
+    public function getReconciliation(Account $account): ?Account;
 
     public function getUsedCurrencies(Account $account): Collection;
 
@@ -140,12 +140,12 @@ interface AccountRepositoryInterface
     /**
      * Returns the date of the very first transaction in this account.
      */
-    public function oldestJournal(Account $account): null|TransactionJournal;
+    public function oldestJournal(Account $account): ?TransactionJournal;
 
     /**
      * Returns the date of the very first transaction in this account.
      */
-    public function oldestJournalDate(Account $account): null|Carbon;
+    public function oldestJournalDate(Account $account): ?Carbon;
 
     public function periodCollection(Account $account, Carbon $start, Carbon $end): array;
 

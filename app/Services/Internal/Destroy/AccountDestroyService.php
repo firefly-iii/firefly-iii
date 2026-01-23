@@ -40,7 +40,7 @@ use stdClass;
  */
 class AccountDestroyService
 {
-    public function destroy(Account $account, null|Account $moveTo): void
+    public function destroy(Account $account, ?Account $moveTo): void
     {
         // find and delete opening balance journal + opposing account
         $this->destroyOpeningBalance($account);
@@ -72,9 +72,10 @@ class AccountDestroyService
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
-            ->get(['transactions.transaction_journal_id']);
+            ->get(['transactions.transaction_journal_id'])
+        ;
         if ($set->count() > 0) {
-            $journalId = $set->first()->transaction_journal_id;
+            $journalId    = $set->first()->transaction_journal_id;
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
@@ -92,7 +93,7 @@ class AccountDestroyService
             }
 
             /** @var null|TransactionJournal $journal */
-            $journal = TransactionJournal::find($journalId);
+            $journal      = TransactionJournal::find($journalId);
             if (null !== $journal) {
                 /** @var JournalDestroyService $service */
                 $service = app(JournalDestroyService::class);
@@ -109,15 +110,15 @@ class AccountDestroyService
         $collection = Transaction::groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get([
             'transaction_journal_id',
             'account_id',
-            DB::raw('count(*) as the_count')
+            DB::raw('count(*) as the_count'),
         ]);
         if (0 === $collection->count()) {
             return;
         }
 
         /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-        $user    = $account->user;
+        $service    = app(JournalDestroyService::class);
+        $user       = $account->user;
 
         /** @var stdClass $row */
         foreach ($collection as $row) {
@@ -140,7 +141,7 @@ class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences = RecurrenceTransaction::where(static function (Builder $q) use ($account): void {
+        $recurrences    = RecurrenceTransaction::where(static function (Builder $q) use ($account): void {
             $q->where('source_id', $account->id);
             $q->orWhere('destination_id', $account->id);
         })->get(['recurrence_id'])->pluck('recurrence_id')->toArray();

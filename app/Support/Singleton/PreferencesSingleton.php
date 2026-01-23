@@ -26,9 +26,9 @@ namespace FireflyIII\Support\Singleton;
 
 class PreferencesSingleton
 {
-    private static null|PreferencesSingleton $instance = null;
+    private static ?PreferencesSingleton $instance = null;
 
-    private array $preferences = [];
+    private array $preferences                     = [];
 
     private function __construct()
     {

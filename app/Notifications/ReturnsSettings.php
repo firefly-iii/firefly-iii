@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 
 class ReturnsSettings
 {
-    public static function getSettings(string $channel, string $type, null|User $user): array
+    public static function getSettings(string $channel, string $type, ?User $user): array
     {
         if ('ntfy' === $channel) {
             return self::getNtfySettings($type, $user);
@@ -41,24 +41,24 @@ class ReturnsSettings
         throw new FireflyException(sprintf('Cannot handle channel "%s"', $channel));
     }
 
-    private static function getNtfySettings(string $type, null|User $user): array
+    private static function getNtfySettings(string $type, ?User $user): array
     {
         Log::debug(sprintf('Getting Ntfy settings for %s and user #%d', $type, $user?->id));
         $settings = ['ntfy_server' => 'https://ntfy.sh', 'ntfy_topic'  => '', 'ntfy_auth'   => false, 'ntfy_user'   => '', 'ntfy_pass'   => ''];
         if ('user' === $type && $user instanceof User) {
             $settings['ntfy_server'] = Preferences::getEncryptedForUser($user, 'ntfy_server', 'https://ntfy.sh')->data;
-            $settings['ntfy_topic'] = Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;
-            $settings['ntfy_auth'] = '1' === Preferences::getForUser($user, 'ntfy_auth', false)->data;
-            $settings['ntfy_user'] = Preferences::getEncryptedForUser($user, 'ntfy_user', '')->data;
-            $settings['ntfy_pass'] = Preferences::getEncryptedForUser($user, 'ntfy_pass', '')->data;
+            $settings['ntfy_topic']  = Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;
+            $settings['ntfy_auth']   = '1' === Preferences::getForUser($user, 'ntfy_auth', false)->data;
+            $settings['ntfy_user']   = Preferences::getEncryptedForUser($user, 'ntfy_user', '')->data;
+            $settings['ntfy_pass']   = Preferences::getEncryptedForUser($user, 'ntfy_pass', '')->data;
             Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
         if ('owner' === $type) {
             $settings['ntfy_server'] = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-            $settings['ntfy_topic'] = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
-            $settings['ntfy_auth'] = FireflyConfig::get('ntfy_auth', false)->data;
-            $settings['ntfy_user'] = FireflyConfig::getEncrypted('ntfy_user', '')->data;
-            $settings['ntfy_pass'] = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
+            $settings['ntfy_topic']  = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
+            $settings['ntfy_auth']   = FireflyConfig::get('ntfy_auth', false)->data;
+            $settings['ntfy_user']   = FireflyConfig::getEncrypted('ntfy_user', '')->data;
+            $settings['ntfy_pass']   = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
             Log::debug(sprintf('Auth is %s, user = "%s"', var_export($settings['ntfy_auth'], true), $settings['ntfy_user']));
         }
 

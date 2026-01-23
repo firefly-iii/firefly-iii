@@ -32,8 +32,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait ReconciliationValidation
 {
-    public null|Account $destination = null;
-    public null|Account $source      = null;
+    public ?Account $destination = null;
+    public ?Account $source      = null;
 
     protected function validateReconciliationDestination(array $array): bool
     {
@@ -51,8 +51,8 @@ trait ReconciliationValidation
         Log::debug('Now in validateReconciliationDestination', $array);
 
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-        $search     = $this->findExistingAccount($validTypes, $array);
+        $validTypes  = array_keys($this->combinations[$this->transactionType]);
+        $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
@@ -86,8 +86,8 @@ trait ReconciliationValidation
         Log::debug('Now in validateReconciliationSource', $array);
 
         // source can be any of the following types.
-        $validTypes = array_keys($this->combinations[$this->transactionType]);
-        $search     = $this->findExistingAccount($validTypes, $array);
+        $validTypes  = array_keys($this->combinations[$this->transactionType]);
+        $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
             $this->sourceError = (string) trans('validation.reconciliation_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);

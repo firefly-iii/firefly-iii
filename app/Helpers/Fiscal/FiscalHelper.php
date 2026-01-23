@@ -79,7 +79,7 @@ class FiscalHelper implements FiscalHelperInterface
                 $prefStartStr = '01-01';
             }
             $prefStartStr = (string) $prefStartStr;
-            [$mth, $day] = explode('-', $prefStartStr);
+            [$mth, $day]  = explode('-', $prefStartStr);
             $startDate->day((int) $day)->month((int) $mth);
 
             // if start date is after passed date, sub 1 year.

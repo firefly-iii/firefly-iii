@@ -43,7 +43,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -65,19 +65,19 @@ class PiggyBankEventTransformer extends AbstractTransformer
         }
 
         return [
-            'id'         => (string) $event->id,
-            'created_at' => $event->created_at?->toAtomString(),
-            'updated_at' => $event->updated_at?->toAtomString(),
-            'amount'     => $amount,
-            'pc_amount'  => $primaryAmount,
+            'id'                              => (string) $event->id,
+            'created_at'                      => $event->created_at?->toAtomString(),
+            'updated_at'                      => $event->updated_at?->toAtomString(),
+            'amount'                          => $amount,
+            'pc_amount'                       => $primaryAmount,
 
             // currencies according to 6.3.0
-            'has_currency_setting'    => true,
-            'currency_id'             => (string) $currency->id,
-            'currency_name'           => $currency->name,
-            'currency_code'           => $currency->code,
-            'currency_symbol'         => $currency->symbol,
-            'currency_decimal_places' => $currency->decimal_places,
+            'has_currency_setting'            => true,
+            'currency_id'                     => (string) $currency->id,
+            'currency_name'                   => $currency->name,
+            'currency_code'                   => $currency->code,
+            'currency_symbol'                 => $currency->symbol,
+            'currency_decimal_places'         => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
@@ -85,9 +85,9 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
             'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
-            'transaction_journal_id' => null !== $event->transaction_journal_id ? (string) $event->transaction_journal_id : null,
-            'transaction_group_id'   => $event->meta['transaction_group_id'],
-            'links'                  => [['rel' => 'self', 'uri' => sprintf('/piggy-banks/%d/events/%s', $event->piggy_bank_id, $event->id)]]
+            'transaction_journal_id'          => null !== $event->transaction_journal_id ? (string) $event->transaction_journal_id : null,
+            'transaction_group_id'            => $event->meta['transaction_group_id'],
+            'links'                           => [['rel' => 'self', 'uri' => sprintf('/piggy-banks/%d/events/%s', $event->piggy_bank_id, $event->id)]],
         ];
     }
 }

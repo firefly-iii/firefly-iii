@@ -55,7 +55,7 @@ class TransactionLinkTransformer extends AbstractTransformer
             'outward_id'   => (string) $link->destination_id,
             'link_type_id' => (string) $link->link_type_id,
             'notes'        => '' === $notes ? null : $notes,
-            'links'        => [['rel' => 'self', 'uri' => '/transaction_links/' . $link->id]]
+            'links'        => [['rel' => 'self', 'uri' => '/transaction_links/'.$link->id]],
         ];
     }
 }

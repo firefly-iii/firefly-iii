@@ -33,14 +33,14 @@ class TriggeredStoredTransactionGroup extends Event
 {
     use SerializesModels;
 
-    public null|RuleGroup $ruleGroup = null;
+    public ?RuleGroup $ruleGroup = null;
 
     /**
      * Create a new event instance.
      */
     public function __construct(
         public TransactionGroup $transactionGroup,
-        null|RuleGroup $ruleGroup = null
+        ?RuleGroup $ruleGroup = null
     ) {
         $this->ruleGroup = $ruleGroup;
     }

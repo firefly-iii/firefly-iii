@@ -31,22 +31,22 @@ enum UserRoleEnum: string
 {
     // most basic rights, cannot see other members, can see everything else.
     // includes reading of metadata
-    case READ_ONLY = 'ro';
+    case READ_ONLY            = 'ro';
 
     // required to even USE the group properly (in this order)
-    case MANAGE_TRANSACTIONS = 'mng_trx';
+    case MANAGE_TRANSACTIONS  = 'mng_trx';
 
     // required to edit, add or change categories/tags/object-groups
-    case MANAGE_META = 'mng_meta';
+    case MANAGE_META          = 'mng_meta';
 
     // read other objects and things.
-    case READ_BUDGETS       = 'read_budgets';
-    case READ_PIGGY_BANKS   = 'read_piggies';
-    case READ_SUBSCRIPTIONS = 'read_subscriptions';
-    case READ_RULES         = 'read_rules';
-    case READ_RECURRING     = 'read_recurring';
-    case READ_WEBHOOKS      = 'read_webhooks';
-    case READ_CURRENCIES    = 'read_currencies';
+    case READ_BUDGETS         = 'read_budgets';
+    case READ_PIGGY_BANKS     = 'read_piggies';
+    case READ_SUBSCRIPTIONS   = 'read_subscriptions';
+    case READ_RULES           = 'read_rules';
+    case READ_RECURRING       = 'read_recurring';
+    case READ_WEBHOOKS        = 'read_webhooks';
+    case READ_CURRENCIES      = 'read_currencies';
 
     // manage other financial objects:
     case MANAGE_BUDGETS       = 'mng_budgets';
@@ -58,14 +58,14 @@ enum UserRoleEnum: string
     case MANAGE_CURRENCIES    = 'mng_currencies';
 
     // view and generate reports
-    case VIEW_REPORTS = 'view_reports';
+    case VIEW_REPORTS         = 'view_reports';
 
     // view memberships AND roles. needs FULL to manage them.
-    case VIEW_MEMBERSHIPS = 'view_memberships';
+    case VIEW_MEMBERSHIPS     = 'view_memberships';
 
     // everything the creator can, except remove/change original creator and delete group
-    case FULL = 'full';
+    case FULL                 = 'full';
 
     // reserved for original creator
-    case OWNER = 'owner';
+    case OWNER                = 'owner';
 }

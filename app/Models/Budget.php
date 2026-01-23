@@ -46,7 +46,7 @@ class Budget extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'name', 'active', 'order', 'user_group_id'];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -59,10 +59,10 @@ class Budget extends Model
             $budgetId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user     = auth()->user();
 
             /** @var null|Budget $budget */
-            $budget = $user->budgets()->find($budgetId);
+            $budget   = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }
@@ -118,13 +118,13 @@ class Budget extends Model
             'active'        => 'boolean',
             'encrypted'     => 'boolean',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function primaryPeriodStatistics(): MorphMany

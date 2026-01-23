@@ -37,7 +37,7 @@ trait TransactionFilter
             TransactionTypeEnum::DEPOSIT->value,
             TransactionTypeEnum::TRANSFER->value,
             TransactionTypeEnum::OPENING_BALANCE->value,
-            TransactionTypeEnum::RECONCILIATION->value
+            TransactionTypeEnum::RECONCILIATION->value,
         ],
         TransactionTypeEnum::WITHDRAWAL->value      => [TransactionTypeEnum::WITHDRAWAL->value],
         'withdrawal'                                => [TransactionTypeEnum::WITHDRAWAL->value],
@@ -61,8 +61,8 @@ trait TransactionFilter
         'default'                                   => [
             TransactionTypeEnum::WITHDRAWAL->value,
             TransactionTypeEnum::DEPOSIT->value,
-            TransactionTypeEnum::TRANSFER->value
-        ]
+            TransactionTypeEnum::TRANSFER->value,
+        ],
     ];
 
     /**

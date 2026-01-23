@@ -35,7 +35,7 @@ class CorrectsMetaDataFields extends Command
     protected $description = 'Rename changed meta fields.';
     protected $signature   = 'correction:meta-fields';
 
-    private int $count = 0;
+    private int $count     = 0;
 
     /**
      * Execute the console command.
@@ -54,7 +54,7 @@ class CorrectsMetaDataFields extends Command
             'sepa-ep'         => 'sepa_ep',
             'sepa-ci'         => 'sepa_ci',
             'sepa-batch-id'   => 'sepa_batch_id',
-            'external_uri'    => 'external_url'
+            'external_uri'    => 'external_url',
         ];
         foreach ($changes as $original => $update) {
             $this->rename($original, $update);

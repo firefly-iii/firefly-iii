@@ -64,7 +64,7 @@ class Kernel extends HttpKernel
         TrimStrings::class,
         ConvertEmptyStringsToNull::class,
         TrustProxies::class,
-        InstallationId::class
+        InstallationId::class,
     ];
     protected $middlewareAliases  = [
         'auth'       => Authenticate::class,
@@ -72,27 +72,27 @@ class Kernel extends HttpKernel
         'bindings'   => Binder::class,
         'can'        => Authorize::class,
         'guest'      => RedirectIfAuthenticated::class,
-        'throttle'   => ThrottleRequests::class
+        'throttle'   => ThrottleRequests::class,
     ];
     protected $middlewareGroups   = [
         // does not check login
         // does not check 2fa
         // does not check activation
-        'web'   => [
+        'web'                   => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartFireflySession::class,
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             AuthenticateSession::class,
-            CreateFreshApiToken::class
+            CreateFreshApiToken::class,
         ],
 
         // only the basic variable binders.
-        'binders-only' => [Installer::class, EncryptCookies::class, AddQueuedCookiesToResponse::class, Binder::class],
+        'binders-only'          => [Installer::class, EncryptCookies::class, AddQueuedCookiesToResponse::class, Binder::class],
 
         // MUST NOT be logged in. Does not care about 2FA or confirmation.
-        'user-not-logged-in' => [
+        'user-not-logged-in'    => [
             Installer::class,
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
@@ -100,7 +100,7 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             Binder::class,
-            RedirectIfAuthenticated::class
+            RedirectIfAuthenticated::class,
         ],
         // MUST be logged in.
         // MUST NOT have 2FA
@@ -113,28 +113,28 @@ class Kernel extends HttpKernel
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             Binder::class,
-            Authenticate::class
+            Authenticate::class,
             // RedirectIfTwoFactorAuthenticated::class,
         ],
 
         // MUST be logged in
         // don't care about 2fa
         // don't care about confirmation.
-        'user-simple-auth' => [
+        'user-simple-auth'      => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartFireflySession::class,
             ShareErrorsFromSession::class,
             VerifyCsrfToken::class,
             Binder::class,
-            Authenticate::class
+            Authenticate::class,
         ],
 
         // MUST be logged in
         // MUST have 2fa
         // MUST be confirmed.
         // (this group includes the other Firefly III middleware)
-        'user-full-auth' => [
+        'user-full-auth'        => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartFireflySession::class,
@@ -145,14 +145,14 @@ class Kernel extends HttpKernel
             Range::class,
             Binder::class,
             InterestingMessage::class,
-            CreateFreshApiToken::class
+            CreateFreshApiToken::class,
         ],
         // MUST be logged in
         // MUST have 2fa
         // MUST be confirmed.
         // MUST have owner role
         // (this group includes the other Firefly III middleware)
-        'admin' => [
+        'admin'                 => [
             EncryptCookies::class,
             AddQueuedCookiesToResponse::class,
             StartFireflySession::class,
@@ -163,13 +163,13 @@ class Kernel extends HttpKernel
             IsAdmin::class,
             Range::class,
             Binder::class,
-            CreateFreshApiToken::class
+            CreateFreshApiToken::class,
         ],
 
         // full API authentication
-        'api' => [AcceptHeaders::class, EnsureFrontendRequestsAreStateful::class, 'auth:api,sanctum', 'bindings'],
+        'api'                   => [AcceptHeaders::class, EnsureFrontendRequestsAreStateful::class, 'auth:api,sanctum', 'bindings'],
         // do only bindings, no auth
-        'api_basic' => [AcceptHeaders::class, 'bindings']
+        'api_basic'             => [AcceptHeaders::class, 'bindings'],
     ];
     protected $middlewarePriority = [StartFireflySession::class, ShareErrorsFromSession::class, Authenticate::class, Binder::class, Authorize::class];
 }

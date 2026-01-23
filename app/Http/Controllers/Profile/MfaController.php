@@ -75,7 +75,7 @@ class MfaController extends Controller
 
             return $next($request);
         });
-        $authGuard = config('firefly.authentication_guard');
+        $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
@@ -106,7 +106,7 @@ class MfaController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $enabledMFA = null !== auth()->user()->mfa_secret;
+        $enabledMFA    = null !== auth()->user()->mfa_secret;
         if (false === $enabledMFA) {
             request()->session()->flash('info', trans('firefly.mfa_not_enabled'));
 
@@ -121,7 +121,7 @@ class MfaController extends Controller
         Preferences::mark();
 
         // send user notification.
-        $user = auth()->user();
+        $user          = auth()->user();
         Log::channel('audit')->info(sprintf('User "%s" has generated new backup codes.', $user->email));
         event(new UserHasGeneratedNewBackupCodes($user));
 
@@ -135,7 +135,7 @@ class MfaController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $enabledMFA = null !== auth()->user()->mfa_secret;
+        $enabledMFA   = null !== auth()->user()->mfa_secret;
         if (false === $enabledMFA) {
             request()->session()->flash('info', trans('firefly.mfa_already_disabled'));
 
@@ -162,7 +162,7 @@ class MfaController extends Controller
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         Preferences::delete('temp-mfa-secret');
         Preferences::delete('temp-mfa-codes');
@@ -206,9 +206,9 @@ class MfaController extends Controller
             return redirect(route('profile.index'));
         }
 
-        $domain = $this->getDomain();
-        $secret = Google2FA::generateSecretKey();
-        $image  = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
+        $domain     = $this->getDomain();
+        $secret     = Google2FA::generateSecretKey();
+        $image      = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
         Preferences::set('temp-mfa-secret', $secret);
 
@@ -230,10 +230,10 @@ class MfaController extends Controller
         }
 
         /** @var User $user */
-        $user = auth()->user();
+        $user       = auth()->user();
 
         // verify password.
-        $password = $request->get('password');
+        $password   = $request->get('password');
         if (!auth()->validate(['email'    => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
@@ -246,7 +246,7 @@ class MfaController extends Controller
         if (is_array($secret)) {
             $secret = null;
         }
-        $secret = (string) $secret;
+        $secret     = (string) $secret;
 
         $repository->setMFACode($user, $secret);
 
@@ -256,7 +256,7 @@ class MfaController extends Controller
         Preferences::mark();
 
         // also save the code so replay attack is prevented.
-        $mfaCode = $request->get('code');
+        $mfaCode    = $request->get('code');
         $this->addToMFAHistory($mfaCode);
 
         // make sure MFA is logged out.
@@ -283,8 +283,8 @@ class MfaController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory = Preferences::get('mfa_history', [])->data;
-        $entry      = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
         Preferences::set('mfa_history', $mfaHistory);

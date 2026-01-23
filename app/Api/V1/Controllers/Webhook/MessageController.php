@@ -71,22 +71,22 @@ class MessageController extends Controller
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
         Log::channel('audit')->info(sprintf('User views messages of webhook #%d.', $webhook->id));
-        $manager    = $this->getManager();
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getMessages($webhook);
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getMessages($webhook);
 
-        $count    = $collection->count();
-        $messages = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count       = $collection->count();
+        $messages    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($messages, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]) . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($messages, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.webhooks.messages.index', [$webhook->id]).$this->buildParams());
 
         /** @var WebhookMessageTransformer $transformer */
         $transformer = app(WebhookMessageTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($messages, $transformer, 'webhook_messages');
+        $resource    = new FractalCollection($messages, $transformer, 'webhook_messages');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -113,12 +113,12 @@ class MessageController extends Controller
 
         Log::channel('audit')->info(sprintf('User views message #%d of webhook #%d.', $message->id, $webhook->id));
 
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var WebhookMessageTransformer $transformer */
         $transformer = app(WebhookMessageTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($message, $transformer, self::RESOURCE_KEY);
+        $resource    = new Item($message, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

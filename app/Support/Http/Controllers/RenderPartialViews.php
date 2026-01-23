@@ -54,20 +54,20 @@ trait RenderPartialViews
     protected function budgetEntry(array $attributes): string // generate view for report.
     {
         /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
+        $popupHelper      = app(PopupReportInterface::class);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budget           = $budgetRepository->find((int) $attributes['budgetId']);
 
-        $accountRepos = app(AccountRepositoryInterface::class);
-        $account      = $accountRepos->find((int) $attributes['accountId']);
+        $accountRepos     = app(AccountRepositoryInterface::class);
+        $account          = $accountRepos->find((int) $attributes['accountId']);
 
         if (null === $budget || null === $account) {
             throw new FireflyException('Could not render popup.report.balance-amount because budget or account is null.');
         }
 
-        $journals = $popupHelper->balanceForBudget($budget, $account, $attributes);
+        $journals         = $popupHelper->balanceForBudget($budget, $account, $attributes);
 
         try {
             $view = view('popup.report.balance-amount', ['journals' => $journals, 'budget'   => $budget, 'account'  => $account])->render();
@@ -115,14 +115,14 @@ trait RenderPartialViews
         $budgetRepository = app(BudgetRepositoryInterface::class);
 
         /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
+        $popupHelper      = app(PopupReportInterface::class);
 
-        $budget = $budgetRepository->find((int) $attributes['budgetId']);
+        $budget           = $budgetRepository->find((int) $attributes['budgetId']);
         if (null === $budget) {
             // transactions without a budget.
             $budget = new Budget();
         }
-        $journals = $popupHelper->byBudget($budget, $attributes);
+        $journals         = $popupHelper->byBudget($budget, $attributes);
 
         try {
             $view = view('popup.report.budget-spent-amount', ['journals' => $journals, 'budget'   => $budget])->render();
@@ -144,7 +144,7 @@ trait RenderPartialViews
     protected function categoryEntry(array $attributes): string // generate view for report.
     {
         /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
+        $popupHelper        = app(PopupReportInterface::class);
 
         /** @var CategoryRepositoryInterface $categoryRepository */
         $categoryRepository = app(CategoryRepositoryInterface::class);
@@ -199,13 +199,13 @@ trait RenderPartialViews
             AccountTypeEnum::EXPENSE->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::DEBT->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ]);
         $revenue    = $repository->getActiveAccountsByType([
             AccountTypeEnum::REVENUE->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::DEBT->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ]);
         $set        = [];
 
@@ -251,14 +251,14 @@ trait RenderPartialViews
         $accountRepository = app(AccountRepositoryInterface::class);
 
         /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
+        $popupHelper       = app(PopupReportInterface::class);
 
-        $account = $accountRepository->find((int) $attributes['accountId']);
+        $account           = $accountRepository->find((int) $attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown account. Apologies.';
         }
-        $journals = $popupHelper->byExpenses($account, $attributes);
+        $journals          = $popupHelper->byExpenses($account, $attributes);
 
         try {
             $view = view('popup.report.expense-entry', ['journals' => $journals, 'account'  => $account])->render();
@@ -279,8 +279,8 @@ trait RenderPartialViews
      */
     protected function getCurrentActions(Rule $rule): array // get info from object and present.
     {
-        $index   = 0;
-        $actions = [];
+        $index          = 0;
+        $actions        = [];
         // must be repos
         $currentActions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
 
@@ -293,7 +293,7 @@ trait RenderPartialViews
                     'oldAction'  => $entry->action_type,
                     'oldValue'   => $entry->action_value,
                     'oldChecked' => $entry->stop_processing,
-                    'count'      => $count
+                    'count'      => $count,
                 ])->render();
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
@@ -316,8 +316,8 @@ trait RenderPartialViews
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
         // TODO duplicated code.
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators       = config('search.operators');
+        $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -335,7 +335,7 @@ trait RenderPartialViews
                 $count = $index + 1;
 
                 try {
-                    $rootOperator = OperatorQuerySearch::getRootOperator((string) $entry->trigger_type);
+                    $rootOperator      = OperatorQuerySearch::getRootOperator((string) $entry->trigger_type);
                     if (str_starts_with($rootOperator, '-')) {
                         $rootOperator = substr($rootOperator, 1);
                     }
@@ -345,7 +345,7 @@ trait RenderPartialViews
                         'oldChecked'    => $entry->stop_processing,
                         'oldProhibited' => str_starts_with((string) $entry->trigger_type, '-'),
                         'count'         => $count,
-                        'triggers'      => $triggers
+                        'triggers'      => $triggers,
                     ])->render();
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
@@ -372,14 +372,14 @@ trait RenderPartialViews
         $accountRepository = app(AccountRepositoryInterface::class);
 
         /** @var PopupReportInterface $popupHelper */
-        $popupHelper = app(PopupReportInterface::class);
-        $account     = $accountRepository->find((int) $attributes['accountId']);
+        $popupHelper       = app(PopupReportInterface::class);
+        $account           = $accountRepository->find((int) $attributes['accountId']);
 
         if (null === $account) {
             return 'This is an unknown category. Apologies.';
         }
 
-        $journals = $popupHelper->byIncome($account, $attributes);
+        $journals          = $popupHelper->byIncome($account, $attributes);
 
         try {
             $view = view('popup.report.income-entry', ['journals' => $journals, 'account'  => $account])->render();
@@ -423,11 +423,11 @@ trait RenderPartialViews
         $repository = app(TagRepositoryInterface::class);
         $tags       = $repository->get();
 
-        $grouped = [];
+        $grouped    = [];
 
         /** @var Tag $tag */
         foreach ($tags as $tag) {
-            $year = (int) $tag->date?->year;
+            $year                     = (int) $tag->date?->year;
             $grouped[$year] ??= ['tags' => [], 'year' => 0 === $year ? trans('firefly.no_date') : $year];
             $grouped[$year]['tags'][] = $tag;
         }
