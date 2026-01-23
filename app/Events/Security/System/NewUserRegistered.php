@@ -1,8 +1,7 @@
 <?php
-
-/**
- * RegisteredUser.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * NewUserRegistered.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,23 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\System;
 
-namespace FireflyIII\Events;
-
+use FireflyIII\Events\Event;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Class RegisteredUser.
- */
-class RegisteredUser extends Event
+class NewUserRegistered extends Event
 {
     use SerializesModels;
 
-    /**
-     * Create a new event instance. This event is triggered when a new user registers.
-     */
     public function __construct(public OwnerNotifiable $owner, public User $user) {}
 }

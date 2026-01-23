@@ -26,9 +26,7 @@ namespace FireflyIII\Providers;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
-use FireflyIII\Events\NewVersionAvailable;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
@@ -54,13 +52,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-            RegisteredUser::class                  => [
-                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationMail',
-                'FireflyIII\Handlers\Events\UserEventHandler@sendAdminRegistrationNotification',
-                'FireflyIII\Handlers\Events\UserEventHandler@attachUserRole',
-                'FireflyIII\Handlers\Events\UserEventHandler@createGroupMembership',
-                'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
-            ],
+//            RegisteredUser::class                  => [
+//                'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
+//            ],
             //            UserAttemptedLogin::class              => [
             //                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
             //            ],
@@ -91,20 +85,10 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
             ],
-            // admin related
-            //            OwnerTestsNotificationChannel::class => [
-            //                'FireflyIII\Handlers\Events\AdminEventHandler@sendTestNotification',
-            //            ],
-            NewVersionAvailable::class             => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendNewVersion',
-            ],
             InvitationCreated::class               => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
             ],
-            //            UnknownUserAttemptedLogin::class       => [
-            //                'FireflyIII\Handlers\Events\AdminEventHandler@sendLoginAttemptNotification',
-            //            ],
 
             // is a Transaction Journal related event.
             StoredTransactionGroup::class          => [

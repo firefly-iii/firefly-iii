@@ -1,8 +1,7 @@
 <?php
-
 /*
- * NewVersionAvailable.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * SystemFoundNewVersionOnline.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,25 +19,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\System;
 
-namespace FireflyIII\Events;
-
+use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
-/**
- * Class NewVersionAvailable
- */
-class NewVersionAvailable extends Event
+class SystemFoundNewVersionOnline extends Event
 {
     use SerializesModels;
 
-    /**
-     * Create a new event instance. This event is triggered when a new version is available.
-     */
-    public function __construct(public string $message)
-    {
-        Log::debug(__METHOD__);
-    }
+    public function __construct(public string $message) {}
 }
+

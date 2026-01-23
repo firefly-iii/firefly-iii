@@ -1,8 +1,7 @@
 <?php
-
-/**
- * AdminEventHandler.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * NotifiesOwnerAboutNewVersion.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,32 +18,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Security\System;
 
 use Exception;
-use FireflyIII\Events\Admin\InvitationCreated;
-use FireflyIII\Notifications\Admin\UserInvitation;
+use FireflyIII\Events\Security\System\SystemFoundNewVersionOnline;
+use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-/**
- * Class AdminEventHandler.
- */
-class AdminEventHandler
+class NotifiesOwnerAboutNewVersion
 {
-    public function sendInvitationNotification(InvitationCreated $event): void
+    public function handle(SystemFoundNewVersionOnline $event): void
     {
-        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
+        $sendMail = FireflyConfig::get('notification_new_version', true)->data;
         if (false === $sendMail) {
             return;
         }
 
         try {
-            Notification::send(new OwnerNotifiable(), new UserInvitation($event->invitee));
+            $owner = new OwnerNotifiable();
+            Notification::send($owner, new VersionCheckResult($event->message));
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -62,7 +58,4 @@ class AdminEventHandler
         }
     }
 
-    /**
-     * Send new version message to admin.
-     */
 }

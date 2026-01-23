@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
-use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Events\Security\System\SystemFoundNewVersionOnline;
 use FireflyIII\Support\System\IsOldVersion;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -271,7 +271,7 @@ class UpdateRequest implements UpdateRequestInterface
             ]
         );
         Log::debug('New release is here!', [$message]);
-        event(new NewVersionAvailable($message));
+        event(new SystemFoundNewVersionOnline($message));
 
         return [
             'level'   => 'success',

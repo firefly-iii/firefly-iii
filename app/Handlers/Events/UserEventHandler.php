@@ -23,25 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Database\Seeders\ExchangeRateSeeder;
 use Exception;
-use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Events\Admin\InvitationCreated;
-use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\InvitationMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
-use FireflyIII\Models\GroupMembership;
-use FireflyIII\Models\UserGroup;
-use FireflyIII\Models\UserRole;
-use FireflyIII\Notifications\Admin\UserRegistration as AdminRegistrationNotification;
 use FireflyIII\Notifications\User\UserNewPassword;
-use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotification;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
@@ -58,20 +49,7 @@ use Illuminate\Support\Facades\Notification;
  */
 class UserEventHandler
 {
-    /**
-     * This method will bestow upon a user the "owner" role if he is the first user in the system.
-     */
-    public function attachUserRole(RegisteredUser $event): void
-    {
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
 
-        // first user ever?
-        if (1 === $repository->count()) {
-            Log::debug('User count is one, attach role.');
-            $repository->attachRole($event->user, 'owner');
-        }
-    }
 
     /**
      * Fires to see if a user is admin.
@@ -101,58 +79,6 @@ class UserEventHandler
         }
     }
 
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function createExchangeRates(RegisteredUser $event): void
-    {
-        $seeder = new ExchangeRateSeeder();
-        $seeder->run();
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function createGroupMembership(RegisteredUser $event): void
-    {
-        $user        = $event->user;
-        $groupExists = true;
-        $groupTitle  = $user->email;
-        $index       = 1;
-
-        /** @var null|UserGroup $group */
-        $group = null;
-
-        // create a new group.
-        while ($groupExists) { // @phpstan-ignore-line
-            $groupExists = UserGroup::where('title', $groupTitle)->count() > 0;
-            if (false === $groupExists) {
-                $group = UserGroup::create(['title' => $groupTitle]);
-
-                break;
-            }
-            $groupTitle = sprintf('%s-%d', $user->email, $index);
-            ++$index;
-            if ($index > 99) {
-                throw new FireflyException('Email address can no longer be used for registrations.');
-            }
-        }
-
-        /** @var null|UserRole $role */
-        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
-        if (null === $role) {
-            throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
-        }
-        GroupMembership::create(
-            [
-                'user_id'       => $user->id,
-                'user_group_id' => $group->id,
-                'user_role_id'  => $role->id,
-            ]
-        );
-        $user->user_group_id = $group->id;
-        $user->save();
-    }
 
     /**
      * Set the demo user back to English.
@@ -173,31 +99,6 @@ class UserEventHandler
         }
     }
 
-    public function sendAdminRegistrationNotification(RegisteredUser $event): void
-    {
-        $sendMail = (bool)FireflyConfig::get('notification_admin_new_reg', true)->data;
-        if ($sendMail) {
-            $owner = $event->owner;
-
-            try {
-                Notification::send($owner, new AdminRegistrationNotification($event->user));
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-        }
-    }
 
     /**
      * Send email to confirm email change. Will not be made into a notification, because
@@ -291,31 +192,5 @@ class UserEventHandler
         }
     }
 
-    /**
-     * This method will send the user a registration mail, welcoming him or her to Firefly III.
-     * This message is only sent when the configuration of Firefly III says so.
-     */
-    public function sendRegistrationMail(RegisteredUser $event): void
-    {
-        $sendMail = (bool)FireflyConfig::get('notification_user_new_reg', true)->data;
-        if ($sendMail) {
-            try {
-                Notification::send($event->user, new UserRegistrationNotification());
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
 
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-        }
-    }
 }
