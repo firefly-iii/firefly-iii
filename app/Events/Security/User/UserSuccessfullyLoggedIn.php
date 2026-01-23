@@ -40,6 +40,7 @@ class UserSuccessfullyLoggedIn extends Event
     {
         if ($user instanceof User) {
             $this->user = $user;
+            return;
         }
 
         throw new InvalidArgumentException(sprintf('User cannot be an instance of %s.', get_class($user)));
