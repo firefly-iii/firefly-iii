@@ -45,14 +45,14 @@ class AccountMeta extends Model
 
     protected function casts(): array
     {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime'];
     }
 
     protected function data(): Attribute
     {
-        return Attribute::make(get: static fn (mixed $value): string => (string)json_decode((string)$value, true), set: static fn (mixed $value): array => ['data' => json_encode($value)]);
+        return Attribute::make(
+            get: static fn(mixed $value): string => (string) json_decode((string) $value, true),
+            set: static fn(mixed $value): array => ['data' => json_encode($value)]
+        );
     }
 }

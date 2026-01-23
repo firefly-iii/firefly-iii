@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Jobs\DownloadExchangeRates;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -40,7 +40,7 @@ class ExchangeRatesCronjob extends AbstractCronjob
     {
         /** @var Configuration $config */
         $config        = FireflyConfig::get('last_cer_job', 0);
-        $lastTime      = (int)$config->data;
+        $lastTime      = (int) $config->data;
         $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
         $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
         if (0 === $lastTime) {
@@ -72,17 +72,17 @@ class ExchangeRatesCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire exchange rates cron job task for date "%s".', $this->date->format('Y-m-d')));
 
         /** @var DownloadExchangeRates $job */
-        $job                = app(DownloadExchangeRates::class);
+        $job = app(DownloadExchangeRates::class);
         $job->setDate($this->date);
         $job->handle();
 
         // get stuff from job:
-        $this->jobFired     = true;
-        $this->jobErrored   = false;
+        $this->jobFired = true;
+        $this->jobErrored = false;
         $this->jobSucceeded = true;
-        $this->message      = 'Exchange rates cron job fired successfully.';
+        $this->message = 'Exchange rates cron job fired successfully.';
 
-        FireflyConfig::set('last_cer_job', (int)$this->date->format('U'));
+        FireflyConfig::set('last_cer_job', (int) $this->date->format('U'));
         Log::info('Done with exchange rates job task.');
     }
 }

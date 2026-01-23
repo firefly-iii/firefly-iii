@@ -38,12 +38,14 @@ class MFAManyFailedAttemptsNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private User $user, private int $count) {}
+    public function __construct(
+        private User $user,
+        private int $count
+    ) {}
 
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -51,13 +53,22 @@ class MFAManyFailedAttemptsNotification extends Notification
      */
     public function toMail(User $notifiable): MailMessage
     {
-        $subject   = (string) trans('email.mfa_many_failed_subject', ['count' => $this->count]);
+        $subject   = (string) trans('email.mfa_many_failed_subject', ['count'   => $this->count]);
         $ip        = Request::ip();
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return new MailMessage()->markdown('emails.security.many-failed-attempts', ['user' => $this->user, 'count' => $this->count, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
+        return new MailMessage()
+            ->markdown('emails.security.many-failed-attempts', [
+                'user'      => $this->user,
+                'count'     => $this->count,
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time
+            ])
+            ->subject($subject);
     }
 
     //    public function toNtfy(User $notifiable): Message
@@ -76,9 +87,10 @@ class MFAManyFailedAttemptsNotification extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        return PushoverMessage::create((string) trans('email.mfa_many_failed_slack', ['email' => $this->user->email, 'count' => $this->count]))
-            ->title((string) trans('email.mfa_many_failed_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.mfa_many_failed_slack', [
+            'email' => $this->user->email,
+            'count' => $this->count
+        ]))->title((string) trans('email.mfa_many_failed_subject'));
     }
 
     /**

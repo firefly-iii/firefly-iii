@@ -60,23 +60,35 @@ interface OperationsRepositoryInterface
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
+    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $budgets = null): array;
 
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $budgets = null,
-        ?TransactionCurrency $currency = null,
-        bool                 $convertToPrimary = false
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $budgets = null,
+        null|TransactionCurrency $currency = null,
+        bool $convertToPrimary = false
     ): array;
 
-    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array;
+    public function sumCollectedExpenses(
+        array $expenses,
+        Carbon $start,
+        Carbon $end,
+        TransactionCurrency $transactionCurrency,
+        bool $convertToPrimary = false
+    ): array;
 
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array;
 
-    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array;
+    public function collectExpenses(
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $budgets = null,
+        null|TransactionCurrency $currency = null
+    ): array;
 }

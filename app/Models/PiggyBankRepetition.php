@@ -48,7 +48,7 @@ class PiggyBankRepetition extends Model
      */
     public function setCurrentAmountAttribute($value): void
     {
-        $this->attributes['current_amount'] = (string)$value;
+        $this->attributes['current_amount'] = (string) $value;
     }
 
     protected function casts(): array
@@ -58,7 +58,7 @@ class PiggyBankRepetition extends Model
             'updated_at'      => 'datetime',
             'start_date'      => SeparateTimezoneCaster::class,
             'target_date'     => SeparateTimezoneCaster::class,
-            'virtual_balance' => 'string',
+            'virtual_balance' => 'string'
         ];
     }
 
@@ -67,9 +67,7 @@ class PiggyBankRepetition extends Model
      */
     protected function currentAmount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     #[Scope]
@@ -80,9 +78,7 @@ class PiggyBankRepetition extends Model
 
     protected function piggyBankId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     /**
@@ -91,18 +87,12 @@ class PiggyBankRepetition extends Model
     #[Scope]
     protected function relevantOnDate(EloquentBuilder $query, Carbon $date)
     {
-        return $query->where(
-            static function (EloquentBuilder $q) use ($date): void {
-                $q->where('start_date', '<=', $date->format('Y-m-d 00:00:00'));
-                $q->orWhereNull('start_date');
-            }
-        )
-            ->where(
-                static function (EloquentBuilder $q) use ($date): void {
-                    $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
-                    $q->orWhereNull('target_date');
-                }
-            )
-        ;
+        return $query->where(static function (EloquentBuilder $q) use ($date): void {
+            $q->where('start_date', '<=', $date->format('Y-m-d 00:00:00'));
+            $q->orWhereNull('start_date');
+        })->where(static function (EloquentBuilder $q) use ($date): void {
+            $q->where('target_date', '>=', $date->format('Y-m-d 00:00:00'));
+            $q->orWhereNull('target_date');
+        });
     }
 }

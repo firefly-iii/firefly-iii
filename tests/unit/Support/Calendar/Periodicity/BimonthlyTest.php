@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 
-use FireflyIII\Support\Calendar\Periodicity\Bimonthly;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Bimonthly;
 
 /**
  * @group unit-test
@@ -57,7 +57,7 @@ final class BimonthlyTest extends IntervalTestCase
             new IntervalProvider(Carbon::parse('2019-11-30'), Carbon::parse('2020-01-30')),
             new IntervalProvider(Carbon::parse('2020-12-29'), Carbon::parse('2021-02-28')),
             new IntervalProvider(Carbon::parse('2020-12-30'), Carbon::parse('2021-02-28')),
-            new IntervalProvider(Carbon::parse('2020-12-31'), Carbon::parse('2021-02-28')),
+            new IntervalProvider(Carbon::parse('2020-12-31'), Carbon::parse('2021-02-28'))
         ];
     }
 }

@@ -56,7 +56,7 @@ class WebhookMessageTransformer extends AbstractTransformer
             'errored'    => $message->errored,
             'webhook_id' => (string) $message->webhook_id,
             'uuid'       => $message->uuid,
-            'message'    => $json,
+            'message'    => $json
         ];
     }
 }

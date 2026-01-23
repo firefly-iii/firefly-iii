@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UniqueIban
@@ -41,8 +41,10 @@ class UniqueIban implements ValidationRule
     /**
      * Create a new rule instance.
      */
-    public function __construct(private readonly ?Account $account, ?string $expectedType)
-    {
+    public function __construct(
+        private readonly null|Account $account,
+        null|string $expectedType
+    ) {
         if (null === $expectedType) {
             return;
         }
@@ -106,15 +108,13 @@ class UniqueIban implements ValidationRule
             $count = $this->countHits($type, $value);
             Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                Log::debug(
-                    sprintf(
-                        'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
-                        $value,
-                        $count,
-                        $type,
-                        implode(', ', $this->expectedTypes)
-                    )
-                );
+                Log::debug(sprintf(
+                    'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
+                    $value,
+                    $count,
+                    $type,
+                    implode(', ', $this->expectedTypes)
+                ));
 
                 return false;
             }
@@ -129,7 +129,7 @@ class UniqueIban implements ValidationRule
             AccountTypeEnum::ASSET->value   => 0,
             AccountTypeEnum::EXPENSE->value => 0,
             AccountTypeEnum::REVENUE->value => 0,
-            'liabilities'                   => 0,
+            'liabilities'                   => 0
         ];
 
         if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {
@@ -152,13 +152,12 @@ class UniqueIban implements ValidationRule
         if ('liabilities' === $type) {
             $typesArray = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
         }
-        $query
-                    = auth()->user()
-                        ->accounts()
-                        ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                        ->where('accounts.iban', $iban)
-                        ->whereIn('account_types.type', $typesArray)
-        ;
+        $query = auth()
+            ->user()
+            ->accounts()
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.iban', $iban)
+            ->whereIn('account_types.type', $typesArray);
 
         if ($this->account instanceof Account) {
             $query->where('accounts.id', '!=', $this->account->id);

@@ -52,7 +52,6 @@ class HandlesNewUserRegistration
         $this->createExchangeRates();
     }
 
-
     private function attachUserRole(User $user): void
     {
         /** @var UserRepositoryInterface $repository */
@@ -97,17 +96,10 @@ class HandlesNewUserRegistration
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
-        GroupMembership::create(
-            [
-                'user_id'       => $user->id,
-                'user_group_id' => $group->id,
-                'user_role_id'  => $role->id,
-            ]
-        );
+        GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
         $user->user_group_id = $group->id;
         $user->save();
     }
-
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -120,7 +112,7 @@ class HandlesNewUserRegistration
 
     private function sendAdminRegistrationNotification(User $user, OwnerNotifiable $owner): void
     {
-        $sendMail = (bool)FireflyConfig::get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) FireflyConfig::get('notification_admin_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }
@@ -143,10 +135,9 @@ class HandlesNewUserRegistration
         }
     }
 
-
     private function sendRegistrationMail(User $user): void
     {
-        $sendMail = (bool)FireflyConfig::get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) FireflyConfig::get('notification_user_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }

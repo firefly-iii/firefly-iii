@@ -48,16 +48,14 @@ class DestroyController extends Controller
     {
         parent::__construct();
         $this->middleware(ApiDemoUser::class)->except(['delete', 'download', 'show', 'index']);
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(AttachmentRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
+            $this->repository = app(AttachmentRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**

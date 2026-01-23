@@ -27,8 +27,8 @@ namespace FireflyIII\Helpers\Webhook;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\WebhookMessage;
-use JsonException;
 use Illuminate\Support\Facades\Log;
+use JsonException;
 
 use function Safe\json_encode;
 
@@ -48,7 +48,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         if (null === $message->webhook) {
             throw new FireflyException('Part of a deleted webhook.');
         }
-        $json      = '';
+        $json = '';
 
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);

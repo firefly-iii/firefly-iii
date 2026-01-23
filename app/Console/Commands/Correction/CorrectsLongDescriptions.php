@@ -35,8 +35,9 @@ class CorrectsLongDescriptions extends Command
     use ShowsFriendlyMessages;
 
     private const int MAX_LENGTH = 1000;
-    protected $description       = 'Fixes long descriptions in journals and groups.';
-    protected $signature         = 'correction:long-descriptions';
+
+    protected $description = 'Fixes long descriptions in journals and groups.';
+    protected $signature   = 'correction:long-descriptions';
 
     /**
      * Execute the console command.
@@ -56,7 +57,7 @@ class CorrectsLongDescriptions extends Command
             }
         }
 
-        $groups   = TransactionGroup::where(DB::raw('LENGTH(title)'), '>', self::MAX_LENGTH)->get(['id', 'title']);
+        $groups = TransactionGroup::where(DB::raw('LENGTH(title)'), '>', self::MAX_LENGTH)->get(['id', 'title']);
 
         /** @var TransactionGroup $group */
         foreach ($groups as $group) {

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * NotifiesAboutOverdueSubscription.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -38,15 +39,15 @@ class NotifiesAboutOverdueSubscriptions implements ShouldQueue
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         // make sure user does not get the warning twice.
-        $overdue          = $event->overdue;
-        $user             = $event->user;
-        $toBeWarned       = [];
+        $overdue    = $event->overdue;
+        $user       = $event->user;
+        $toBeWarned = [];
         Log::debug(sprintf('%d subscriptions to warn about.', count($overdue)));
         foreach ($overdue as $item) {
             /** @var Bill $bill */
-            $bill         = $item['bill'];
-            $key          = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
-            $pref         = Preferences::getForUser($bill->user, $key, false);
+            $bill = $item['bill'];
+            $key  = sprintf('bill_overdue_%s_%s', $bill->id, substr(hash('sha256', json_encode($item['dates']['pay_dates'], JSON_THROW_ON_ERROR)), 0, 10));
+            $pref = Preferences::getForUser($bill->user, $key, false);
             if (true === $pref->data) {
                 Log::debug(sprintf('User #%d has already been warned about overdue subscription #%d.', $bill->user->id, $bill->id));
 
@@ -95,7 +96,5 @@ class NotifiesAboutOverdueSubscriptions implements ShouldQueue
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
-
-
     }
 }

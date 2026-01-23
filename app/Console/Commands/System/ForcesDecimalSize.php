@@ -58,37 +58,35 @@ class ForcesDecimalSize extends Command
     protected $description = 'This command resizes DECIMAL columns in MySQL or PostgreSQL and correct amounts (only MySQL).';
     protected $signature   = 'firefly-iii:force-decimal-size {--force}';
     private string $cast;
-    private array  $classes
-                           = [
-            'accounts'                 => Account::class,
-            'auto_budgets'             => AutoBudget::class,
-            'available_budgets'        => AvailableBudget::class,
-            'bills'                    => Bill::class,
-            'budget_limits'            => BudgetLimit::class,
-            'piggy_bank_events'        => PiggyBankEvent::class,
-            'piggy_bank_repetitions'   => PiggyBankRepetition::class,
-            'piggy_banks'              => PiggyBank::class,
-            'recurrences_transactions' => RecurrenceTransaction::class,
-            'transactions'             => Transaction::class,
-        ];
+    private array $classes = [
+        'accounts'                 => Account::class,
+        'auto_budgets'             => AutoBudget::class,
+        'available_budgets'        => AvailableBudget::class,
+        'bills'                    => Bill::class,
+        'budget_limits'            => BudgetLimit::class,
+        'piggy_bank_events'        => PiggyBankEvent::class,
+        'piggy_bank_repetitions'   => PiggyBankRepetition::class,
+        'piggy_banks'              => PiggyBank::class,
+        'recurrences_transactions' => RecurrenceTransaction::class,
+        'transactions'             => Transaction::class
+    ];
 
     private string $operator;
     private string $regularExpression;
-    private array  $tables
-                           = [
-            'accounts'                 => ['virtual_balance'],
-            'auto_budgets'             => ['amount'],
-            'available_budgets'        => ['amount'],
-            'bills'                    => ['amount_min', 'amount_max'],
-            'budget_limits'            => ['amount'],
-            'currency_exchange_rates'  => ['rate', 'user_rate'],
-            'limit_repetitions'        => ['amount'],
-            'piggy_bank_events'        => ['amount'],
-            'piggy_bank_repetitions'   => ['current_amount'],
-            'piggy_banks'              => ['target_amount'],
-            'recurrences_transactions' => ['amount', 'foreign_amount'],
-            'transactions'             => ['amount', 'foreign_amount'],
-        ];
+    private array $tables = [
+        'accounts'                 => ['virtual_balance'],
+        'auto_budgets'             => ['amount'],
+        'available_budgets'        => ['amount'],
+        'bills'                    => ['amount_min', 'amount_max'],
+        'budget_limits'            => ['amount'],
+        'currency_exchange_rates'  => ['rate', 'user_rate'],
+        'limit_repetitions'        => ['amount'],
+        'piggy_bank_events'        => ['amount'],
+        'piggy_bank_repetitions'   => ['current_amount'],
+        'piggy_banks'              => ['target_amount'],
+        'recurrences_transactions' => ['amount', 'foreign_amount'],
+        'transactions'             => ['amount', 'foreign_amount']
+    ];
 
     /**
      * Execute the console command.
@@ -117,13 +115,13 @@ class ForcesDecimalSize extends Command
     private function determineDatabaseType(): void
     {
         // switch stuff based on database connection:
-        $this->operator          = 'REGEXP';
+        $this->operator = 'REGEXP';
         $this->regularExpression = '\'\\\.[\\\d]{%d}[1-9]+\'';
-        $this->cast              = 'CHAR';
+        $this->cast = 'CHAR';
         if ('pgsql' === config('database.default')) {
-            $this->operator          = 'SIMILAR TO';
+            $this->operator = 'SIMILAR TO';
             $this->regularExpression = '\'%%\.[\d]{%d}[1-9]+%%\'';
-            $this->cast              = 'TEXT';
+            $this->cast = 'TEXT';
         }
         if ('sqlite' === config('database.default')) {
             $this->regularExpression = '"\.[\d]{%d}[1-9]+"';
@@ -136,17 +134,19 @@ class ForcesDecimalSize extends Command
     private function correctAmounts(): void
     {
         // if sqlite, add function?
-        if ('sqlite' === (string)config('database.default')) {
-            DB::connection()->getPdo()->sqliteCreateFunction('REGEXP', static function ($pattern, $value): int {
-                mb_regex_encoding('UTF-8');
-                $pattern = trim($pattern, '"');
+        if ('sqlite' === (string) config('database.default')) {
+            DB::connection()
+                ->getPdo()
+                ->sqliteCreateFunction('REGEXP', static function ($pattern, $value): int {
+                    mb_regex_encoding('UTF-8');
+                    $pattern = trim($pattern, '"');
 
-                return (mb_ereg($pattern, (string)$value)) ? 1 : 0;
-            });
+                    return mb_ereg($pattern, (string) $value) ? 1 : 0;
+                });
         }
 
-        if (!in_array((string)config('database.default'), ['mysql', 'pgsql', 'sqlite'], true)) {
-            $this->friendlyWarning(sprintf('Skip correcting amounts, does not support "%s"...', (string)config('database.default')));
+        if (!in_array((string) config('database.default'), ['mysql', 'pgsql', 'sqlite'], true)) {
+            $this->friendlyWarning(sprintf('Skip correcting amounts, does not support "%s"...', (string) config('database.default')));
 
             return;
         }
@@ -239,10 +239,9 @@ class ForcesDecimalSize extends Command
         $regularExpression = $this->regularExpression;
 
         /** @var Builder $query */
-        $query             = Account::leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+        $query = Account::leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string)$currency->id))
-        ;
+            ->where('account_meta.data', json_encode((string) $currency->id));
         $query->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
             foreach ($fields as $field) {
                 $q->orWhere(
@@ -252,7 +251,7 @@ class ForcesDecimalSize extends Command
                 );
             }
         });
-        $result            = $query->get(['accounts.*']);
+        $result = $query->get(['accounts.*']);
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All accounts in %s are OK', $currency->code));
 
@@ -263,13 +262,13 @@ class ForcesDecimalSize extends Command
         foreach ($result as $account) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value         = $account->{$field};
+                $value = $account->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow           = 10 ** $currency->decimal_places;
-                $correct       = bcdiv((string)round($value * $pow), (string)$pow, 12);
+                $pow     = 10 ** $currency->decimal_places;
+                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyInfo(sprintf('Account #%d has %s with value "%s", this has been corrected to "%s".', $account->id, $field, $value, $correct));
 
                 /** @var null|Account $updateAccount */
@@ -291,20 +290,15 @@ class ForcesDecimalSize extends Command
         $regularExpression = $this->regularExpression;
 
         /** @var Builder $query */
-        $query             = $class::where('transaction_currency_id', $currency->id)->where(
-            static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
+        $query = $class::where('transaction_currency_id', $currency->id)
+            ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 /** @var string $field */
                 foreach ($fields as $field) {
-                    $q->orWhere(
-                        DB::raw(sprintf('CAST(%s AS %s)', $field, $cast)),
-                        $operator,
-                        DB::raw(sprintf($regularExpression, $currency->decimal_places))
-                    );
+                    $q->orWhere(DB::raw(sprintf('CAST(%s AS %s)', $field, $cast)), $operator, DB::raw(sprintf($regularExpression, $currency->decimal_places)));
                 }
-            }
-        );
+            });
 
-        $result            = $query->get();
+        $result = $query->get();
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All %s in %s are OK', $table, $currency->code));
 
@@ -315,17 +309,17 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value   = $item->{$field};
+                $value = $item->{$field};
                 if (null === $value || '' === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
                 $pow     = 10 ** $currency->decimal_places;
-                $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
+                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('%s #%d has %s with value "%s", this has been corrected to "%s".', $table, $item->id, $field, $value, $correct));
 
                 /** @var null|Model $model */
-                $model   = $class::find($item->id);
+                $model = $class::find($item->id);
                 $model?->update([$field => $correct]);
             }
         }
@@ -341,11 +335,11 @@ class ForcesDecimalSize extends Command
         $regularExpression = $this->regularExpression;
 
         /** @var Builder $query */
-        $query             = PiggyBankEvent::leftJoin('piggy_banks', 'piggy_bank_events.piggy_bank_id', '=', 'piggy_banks.id')
+        $query = PiggyBankEvent::leftJoin('piggy_banks', 'piggy_bank_events.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string)$currency->id))
+            ->where('account_meta.data', json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $cast, $operator, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -354,10 +348,9 @@ class ForcesDecimalSize extends Command
                         DB::raw(sprintf($regularExpression, $currency->decimal_places))
                     );
                 }
-            })
-        ;
+            });
 
-        $result            = $query->get(['piggy_bank_events.*']);
+        $result = $query->get(['piggy_bank_events.*']);
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All piggy bank events in %s are OK', $currency->code));
 
@@ -368,19 +361,23 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value   = $item->{$field};
+                $value = $item->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
                 $pow     = 10 ** $currency->decimal_places;
-                $correct = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->friendlyWarning(
-                    sprintf('Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
-                );
+                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
+                $this->friendlyWarning(sprintf(
+                    'Piggy bank event #%d has %s with value "%s", this has been corrected to "%s".',
+                    $item->id,
+                    $field,
+                    $value,
+                    $correct
+                ));
 
                 /** @var null|PiggyBankEvent $event */
-                $event   = PiggyBankEvent::find($item->id);
+                $event = PiggyBankEvent::find($item->id);
                 $event?->update([$field => $correct]);
             }
         }
@@ -397,11 +394,11 @@ class ForcesDecimalSize extends Command
 
         // select all piggy bank repetitions with this currency and issue.
         /** @var Builder $query */
-        $query             = PiggyBankRepetition::leftJoin('piggy_banks', 'piggy_bank_repetitions.piggy_bank_id', '=', 'piggy_banks.id')
+        $query = PiggyBankRepetition::leftJoin('piggy_banks', 'piggy_bank_repetitions.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string)$currency->id))
+            ->where('account_meta.data', json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -410,10 +407,9 @@ class ForcesDecimalSize extends Command
                         DB::raw(sprintf($regularExpression, $currency->decimal_places))
                     );
                 }
-            })
-        ;
+            });
 
-        $result            = $query->get(['piggy_bank_repetitions.*']);
+        $result = $query->get(['piggy_bank_repetitions.*']);
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All piggy bank repetitions in %s', $currency->code));
 
@@ -424,16 +420,20 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value      = $item->{$field};
+                $value = $item->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow        = 10 ** $currency->decimal_places;
-                $correct    = bcdiv((string)round($value * $pow), (string)$pow, 12);
-                $this->friendlyWarning(
-                    sprintf('Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct)
-                );
+                $pow     = 10 ** $currency->decimal_places;
+                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
+                $this->friendlyWarning(sprintf(
+                    'Piggy bank repetition #%d has %s with value "%s", this has been corrected to "%s".',
+                    $item->id,
+                    $field,
+                    $value,
+                    $correct
+                ));
 
                 /** @var null|PiggyBankRepetition $repetition */
                 $repetition = PiggyBankRepetition::find($item->id);
@@ -452,10 +452,10 @@ class ForcesDecimalSize extends Command
         $regularExpression = $this->regularExpression;
 
         /** @var Builder $query */
-        $query             = PiggyBank::leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
+        $query = PiggyBank::leftJoin('accounts', 'piggy_banks.account_id', '=', 'accounts.id')
             ->leftJoin('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
-            ->where('account_meta.data', json_encode((string)$currency->id))
+            ->where('account_meta.data', json_encode((string) $currency->id))
             ->where(static function (Builder $q) use ($fields, $currency, $operator, $cast, $regularExpression): void {
                 foreach ($fields as $field) {
                     $q->orWhere(
@@ -464,10 +464,9 @@ class ForcesDecimalSize extends Command
                         DB::raw(sprintf($regularExpression, $currency->decimal_places))
                     );
                 }
-            })
-        ;
+            });
 
-        $result            = $query->get(['piggy_banks.*']);
+        $result = $query->get(['piggy_banks.*']);
         if (0 === $result->count()) {
             $this->friendlyPositive(sprintf('All piggy banks in %s are OK', $currency->code));
 
@@ -478,13 +477,13 @@ class ForcesDecimalSize extends Command
         foreach ($result as $item) {
             /** @var string $field */
             foreach ($fields as $field) {
-                $value     = $item->{$field};
+                $value = $item->{$field};
                 if (null === $value) {
                     continue;
                 }
                 // fix $field by rounding it down correctly.
-                $pow       = 10 ** $currency->decimal_places;
-                $correct   = bcdiv((string)round($value * $pow), (string)$pow, 12);
+                $pow     = 10 ** $currency->decimal_places;
+                $correct = bcdiv((string) round($value * $pow), (string) $pow, 12);
                 $this->friendlyWarning(sprintf('Piggy bank #%d has %s with value "%s", this has been corrected to "%s".', $item->id, $field, $value, $correct));
 
                 /** @var null|PiggyBank $piggyBank */
@@ -501,7 +500,7 @@ class ForcesDecimalSize extends Command
     {
         // select all transactions with this currency and issue.
         /** @var Builder $query */
-        $query  = Transaction::where('transaction_currency_id', $currency->id)->where(
+        $query = Transaction::where('transaction_currency_id', $currency->id)->where(
             DB::raw(sprintf('CAST(amount as %s)', $this->cast)),
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
@@ -514,13 +513,13 @@ class ForcesDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value       = $item->amount;
+            $value = $item->amount;
             if ('' === $value) {
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow         = 10.0 ** $currency->decimal_places;
-            $correct     = bcdiv((string)round((float)$value * $pow), (string)$pow, 12);
+            $pow     = 10.0 ** $currency->decimal_places;
+            $correct = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
             $this->friendlyWarning(sprintf('Transaction #%d has amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct));
 
             /** @var null|Transaction $transaction */
@@ -530,7 +529,7 @@ class ForcesDecimalSize extends Command
 
         // select all transactions with this FOREIGN currency and issue.
         /** @var Builder $query */
-        $query  = Transaction::where('foreign_currency_id', $currency->id)->where(
+        $query = Transaction::where('foreign_currency_id', $currency->id)->where(
             DB::raw(sprintf('CAST(foreign_amount as %s)', $this->cast)),
             $this->operator,
             DB::raw(sprintf($this->regularExpression, $currency->decimal_places))
@@ -545,16 +544,19 @@ class ForcesDecimalSize extends Command
 
         /** @var Transaction $item */
         foreach ($result as $item) {
-            $value       = $item->foreign_amount;
+            $value = $item->foreign_amount;
             if (null === $value) {
                 continue;
             }
             // fix $field by rounding it down correctly.
-            $pow         = 10.0 ** $currency->decimal_places;
-            $correct     = bcdiv((string)round((float)$value * $pow), (string)$pow, 12);
-            $this->friendlyWarning(
-                sprintf('Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".', $item->id, $value, $correct)
-            );
+            $pow     = 10.0 ** $currency->decimal_places;
+            $correct = bcdiv((string) round((float) $value * $pow), (string) $pow, 12);
+            $this->friendlyWarning(sprintf(
+                'Transaction #%d has foreign amount with value "%s", this has been corrected to "%s".',
+                $item->id,
+                $value,
+                $correct
+            ));
 
             /** @var null|Transaction $transaction */
             $transaction = Transaction::find($item->id);
@@ -565,7 +567,7 @@ class ForcesDecimalSize extends Command
     private function updateDecimals(): void
     {
         $this->friendlyInfo('Going to force the size of DECIMAL columns. Please hold.');
-        $type = (string)config('database.default');
+        $type = (string) config('database.default');
 
         /**
          * @var string $name

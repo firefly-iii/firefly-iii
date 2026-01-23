@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class JournalDestroyService

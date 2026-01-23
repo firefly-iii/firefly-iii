@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,16 +49,14 @@ class DeleteController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->repository = app(RuleGroupRepositoryInterface::class);
+            $this->repository = app(RuleGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,7 +71,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('rule-groups.delete.url');
 
-        return view('rules.rule-group.delete', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
+        return view('rules.rule-group.delete', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
     }
 
     /**
@@ -81,7 +79,7 @@ class DeleteController extends Controller
      */
     public function destroy(Request $request, RuleGroup $ruleGroup): Redirector|RedirectResponse
     {
-        $title  = $ruleGroup->title;
+        $title = $ruleGroup->title;
 
         /** @var RuleGroup $moveTo */
         $moveTo = $this->repository->find((int) $request->get('move_rules_before_delete'));

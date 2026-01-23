@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Category;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -43,10 +43,7 @@ class CategoryFormRequest extends FormRequest
      */
     public function getCategoryData(): array
     {
-        return [
-            'name'  => $this->convertString('name'),
-            'notes' => $this->stringWithNewlines('notes'),
-        ];
+        return ['name'  => $this->convertString('name'), 'notes' => $this->stringWithNewlines('notes')];
     }
 
     /**
@@ -60,14 +57,11 @@ class CategoryFormRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {
-            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,'.$category->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,' . $category->id;
         }
 
         // fixed
-        return [
-            'name'  => $nameRule,
-            'notes' => 'min:1|max:32768|nullable',
-        ];
+        return ['name'  => $nameRule, 'notes' => 'min:1|max:32768|nullable'];
     }
 
     public function withValidator(Validator $validator): void

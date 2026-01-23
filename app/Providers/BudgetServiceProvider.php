@@ -45,7 +45,9 @@ class BudgetServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     /**
      * Register the application services.
@@ -56,68 +58,58 @@ class BudgetServiceProvider extends ServiceProvider
     public function register(): void
     {
         // reference to auth is not understood by phpstan.
-        $this->app->bind(
-            static function (Application $app): BudgetRepositoryInterface {
-                /** @var BudgetRepositoryInterface $repository */
-                $repository = app(BudgetRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): BudgetRepositoryInterface {
+            /** @var BudgetRepositoryInterface $repository */
+            $repository = app(BudgetRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
 
         // available budget repos
-        $this->app->bind(
-            static function (Application $app): AvailableBudgetRepositoryInterface {
-                /** @var AvailableBudgetRepositoryInterface $repository */
-                $repository = app(AvailableBudgetRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): AvailableBudgetRepositoryInterface {
+            /** @var AvailableBudgetRepositoryInterface $repository */
+            $repository = app(AvailableBudgetRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
 
         // budget limit repository.
-        $this->app->bind(
-            static function (Application $app): BudgetLimitRepositoryInterface {
-                /** @var BudgetLimitRepositoryInterface $repository */
-                $repository = app(BudgetLimitRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): BudgetLimitRepositoryInterface {
+            /** @var BudgetLimitRepositoryInterface $repository */
+            $repository = app(BudgetLimitRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
 
         // no budget repos
-        $this->app->bind(
-            static function (Application $app): NoBudgetRepositoryInterface {
-                /** @var NoBudgetRepositoryInterface $repository */
-                $repository = app(NoBudgetRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): NoBudgetRepositoryInterface {
+            /** @var NoBudgetRepositoryInterface $repository */
+            $repository = app(NoBudgetRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
 
         // operations repos
-        $this->app->bind(
-            static function (Application $app): OperationsRepositoryInterface {
-                /** @var OperationsRepositoryInterface $repository */
-                $repository = app(OperationsRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): OperationsRepositoryInterface {
+            /** @var OperationsRepositoryInterface $repository */
+            $repository = app(OperationsRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

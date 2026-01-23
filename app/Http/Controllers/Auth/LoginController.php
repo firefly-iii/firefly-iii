@@ -67,7 +67,7 @@ class LoginController extends Controller
     /**
      * Where to redirect users after login.
      */
-    protected string                $redirectTo = RouteServiceProvider::HOME;
+    protected string $redirectTo = RouteServiceProvider::HOME;
     private UserRepositoryInterface $repository;
 
     private string $username = 'email';
@@ -87,7 +87,7 @@ class LoginController extends Controller
      *
      * @throws ValidationException
      */
-    public function login(Request $request): JsonResponse | RedirectResponse
+    public function login(Request $request): JsonResponse|RedirectResponse
     {
         $username = $request->get($this->username());
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $username));
@@ -100,11 +100,7 @@ class LoginController extends Controller
             // report the failed login to the user if the count is 2 or 5.
             // TODO here be warning.
             return redirect(route('login'))
-                ->withErrors(
-                    [
-                        $this->username => trans('auth.failed'),
-                    ]
-                )
+                ->withErrors([$this->username => trans('auth.failed')])
                 ->onlyInput($this->username);
         }
         Log::debug('Login data is present.');
@@ -133,7 +129,7 @@ class LoginController extends Controller
             return $this->sendLoginResponse($request);
         }
         Log::warning('Login attempt failed.');
-        $username = (string)$request->get($this->username());
+        $username = (string) $request->get($this->username());
         $user     = $this->repository->findByEmail($username);
         if (!$user instanceof User) {
             // send event to owner.
@@ -173,11 +169,7 @@ class LoginController extends Controller
      */
     protected function sendFailedLoginResponse(Request $request): void
     {
-        $exception             = ValidationException::withMessages(
-            [
-                $this->username() => [trans('auth.failed')],
-            ]
-        );
+        $exception = ValidationException::withMessages([$this->username() => [trans('auth.failed')]]);
         $exception->redirectTo = route('login');
 
         throw $exception;
@@ -186,7 +178,7 @@ class LoginController extends Controller
     /**
      * Log the user out of the application.
      */
-    public function logout(Request $request): Redirector | RedirectResponse | Response
+    public function logout(Request $request): Redirector|RedirectResponse|Response
     {
         $authGuard = config('firefly.authentication_guard');
         $logoutUrl = config('firefly.custom_logout_url');
@@ -209,9 +201,7 @@ class LoginController extends Controller
 
         $this->loggedOut($request);
 
-        return $request->wantsJson()
-            ? new Response('', ResponseAlias::HTTP_NO_CONTENT)
-            : redirect('/');
+        return $request->wantsJson() ? new Response('', ResponseAlias::HTTP_NO_CONTENT) : redirect('/');
     }
 
     /**
@@ -223,13 +213,13 @@ class LoginController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function showLoginForm(Request $request): Factory | Redirector | RedirectResponse | View
+    public function showLoginForm(Request $request): Factory|Redirector|RedirectResponse|View
     {
         Log::channel('audit')->info('Show login form (1.1).');
 
         $count = DB::table('users')->count();
         $guard = config('auth.defaults.guard');
-        $title = (string)trans('firefly.login_page_title');
+        $title = (string) trans('firefly.login_page_title');
 
         if (0 === $count && 'web' === $guard) {
             return redirect(route('register'));
@@ -259,7 +249,14 @@ class LoginController extends Controller
         }
         $usernameField = $this->username();
 
-        return view('auth.login', ['allowRegistration' => $allowRegistration, 'email' => $email, 'remember' => $remember, 'allowReset' => $allowReset, 'title' => $title, 'usernameField' => $usernameField]);
+        return view('auth.login', [
+            'allowRegistration' => $allowRegistration,
+            'email'             => $email,
+            'remember'          => $remember,
+            'allowReset'        => $allowReset,
+            'title'             => $title,
+            'usernameField'     => $usernameField
+        ]);
     }
 
     /**

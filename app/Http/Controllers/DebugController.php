@@ -34,6 +34,7 @@ use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -51,7 +52,6 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\file_get_contents;
 use function Safe\ini_get;
@@ -119,7 +119,7 @@ class DebugController extends Controller
 
         try {
             Artisan::call('twig:clean');
-        } catch (Exception $e) {  // intentional generic exception
+        } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -137,14 +137,14 @@ class DebugController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        $table      = $this->generateTable();
-        $table      = str_replace(["\n", "\t", '  '], '', $table);
-        $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
+        $table = $this->generateTable();
+        $table = str_replace(["\n", "\t", '  '], '', $table);
+        $now   = now(config('app.timezone'))->format('Y-m-d H:i:s');
 
         // get latest log file:
-        $logger     = Log::driver();
+        $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
+        $handlers = $logger->getHandlers(); // @phpstan-ignore-line
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -156,10 +156,10 @@ class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
+            $logContent = 'Truncated from this point <----|' . substr($logContent, -16384);
         }
 
-        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
+        return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
     }
 
     public function apiTest(): View
@@ -175,7 +175,7 @@ class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
     }
 
     private function getSystemInformation(): array
@@ -198,18 +198,18 @@ class DebugController extends Controller
             'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
-            'current_driver'  => $currentDriver,
+            'current_driver'  => $currentDriver
         ];
     }
 
     private function getBuildInfo(): array
     {
         $return = [
-            'is_docker'       => env('IS_DOCKER', false), // @phpstan-ignore-line
+            'is_docker' => env('IS_DOCKER', false), // @phpstan-ignore-line
             'build'           => '(unknown)',
             'build_date'      => '(unknown)',
             'base_build'      => '(unknown)',
-            'base_build_date' => '(unknown)',
+            'base_build_date' => '(unknown)'
         ];
 
         try {
@@ -230,10 +230,10 @@ class DebugController extends Controller
             Log::debug('Could not check build date, but thats ok.');
             Log::warning($e->getMessage());
         }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) {       // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
             $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
         }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) {            // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
             $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
         }
 
@@ -242,7 +242,7 @@ class DebugController extends Controller
 
     private function getAppInfo(): array
     {
-        $userGuard      = config('auth.defaults.guard');
+        $userGuard = config('auth.defaults.guard');
 
         $config         = FireflyConfig::get('last_rt_job', 0);
         $lastTime       = (int) $config->data;
@@ -267,26 +267,26 @@ class DebugController extends Controller
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
 
-            'last_cronjob'       => $lastCronjob,
-            'last_cronjob_ago'   => $lastCronjobAgo,
+            'last_cronjob'     => $lastCronjob,
+            'last_cronjob_ago' => $lastCronjobAgo
         ];
     }
 
     private function getUserInfo(): array
     {
-        $userFlags      = $this->getUserFlags();
+        $userFlags = $this->getUserFlags();
 
         // user info
-        $userAgent      = request()->header('user-agent');
+        $userAgent = request()->header('user-agent');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = Steam::getLocaleArray(Steam::getLocale());
         foreach ($parts as $code) {
-            $code                  = trim($code);
+            $code = trim($code);
             Log::debug(sprintf('Trying to set %s', $code));
-            $result                = setlocale(LC_ALL, $code);
+            $result = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
         setlocale(LC_ALL, (string) $original);
@@ -301,16 +301,16 @@ class DebugController extends Controller
             'locale_attempts'    => $localeAttempts,
             'locale'             => Steam::getLocale(),
             'language'           => Steam::getLanguage(),
-            'view_range'         => Preferences::get('viewRange', '1M')->data,
+            'view_range'         => Preferences::get('viewRange', '1M')->data
         ];
     }
 
     private function getUserFlags(): string
     {
-        $flags      = [];
+        $flags = [];
 
         /** @var User $user */
-        $user       = auth()->user();
+        $user = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value])->count() > 0) {
@@ -326,7 +326,7 @@ class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
+        $type = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
@@ -375,8 +375,7 @@ class DebugController extends Controller
             foreach ($routes as $route) {
                 ++$i;
                 // skip API and other routes.
-                if (!str_starts_with($route->uri(), 'api/v1')
-                ) {
+                if (!str_starts_with($route->uri(), 'api/v1')) {
                     continue;
                 }
                 // skip non GET routes
@@ -387,21 +386,20 @@ class DebugController extends Controller
                 if (null === $route->getName()) {
                     var_dump($route);
 
-                    exit;
+                    exit();
                 }
 
                 echo substr($route->uri(), 3);
-                if (0 === $i % 5) {
+                if (0 === ($i % 5)) {
                     echo '"<br>PATHS="${PATHS},';
                 }
-                if (0 !== $i % 5) {
+                if (0 !== ($i % 5)) {
                     echo ',';
                 }
             }
 
-            exit;
+            exit();
         }
-
 
         $return = [];
 
@@ -429,34 +427,33 @@ class DebugController extends Controller
             if (null === $route->getName()) {
                 var_dump($route);
 
-                exit;
+                exit();
             }
             if (!str_contains($route->uri(), '{')) {
-
                 $return[$route->getName()] = route($route->getName());
 
                 continue;
             }
-            $params                    = [];
+            $params = [];
             foreach ($route->parameterNames() as $name) {
                 $params[] = $this->getParameter($name);
             }
             $return[$route->getName()] = route($route->getName(), $params);
         }
-        $count  = 0;
+        $count = 0;
         echo '<hr>';
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
         foreach ($return as $name => $path) {
-            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
+            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name) . PHP_EOL;
             ++$count;
-            if (0 === $count % 10) {
+            if (0 === ($count % 10)) {
                 echo '<hr>';
                 echo sprintf('<h2>%s</h2>', $count);
             }
         }
 
-        exit;
+        exit();
     }
 
     private function getParameter(string $name): string
@@ -552,7 +549,6 @@ class DebugController extends Controller
 
             case 'transactionType':
                 return 'withdrawal';
-
         }
     }
 

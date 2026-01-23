@@ -31,29 +31,29 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class TransactionFactory
  */
 class TransactionFactory
 {
-    private Account              $account;
-    private array                $accountInformation = [];
-    private TransactionCurrency  $currency;
-    private ?TransactionCurrency $foreignCurrency    = null;
-    private TransactionJournal   $journal;
-    private bool                 $reconciled         = false;
+    private Account $account;
+    private array $accountInformation = [];
+    private TransactionCurrency $currency;
+    private null|TransactionCurrency $foreignCurrency = null;
+    private TransactionJournal $journal;
+    private bool $reconciled = false;
 
     /**
      * Create transaction with negative amount (for source accounts).
      *
      * @throws FireflyException
      */
-    public function createNegative(string $amount, ?string $foreignAmount): Transaction
+    public function createNegative(string $amount, null|string $foreignAmount): Transaction
     {
         if ('' === $foreignAmount) {
             $foreignAmount = null;
@@ -68,7 +68,7 @@ class TransactionFactory
     /**
      * @throws FireflyException
      */
-    private function create(string $amount, ?string $foreignAmount): Transaction
+    private function create(string $amount, null|string $foreignAmount): Transaction
     {
         if ('' === $foreignAmount) {
             $foreignAmount = null;
@@ -82,7 +82,7 @@ class TransactionFactory
             'amount'                  => $amount,
             'foreign_amount'          => null,
             'foreign_currency_id'     => null,
-            'identifier'              => 0,
+            'identifier'              => 0
         ];
 
         try {
@@ -99,23 +99,19 @@ class TransactionFactory
             throw new FireflyException('Transaction is NULL.');
         }
 
-        Log::debug(
-            sprintf(
-                'Created transaction #%d (%s %s, account %s), part of journal #%d',
-                $result->id,
-                $this->currency->code,
-                $amount,
-                $this->account->name,
-                $this->journal->id
-            )
-        );
+        Log::debug(sprintf(
+            'Created transaction #%d (%s %s, account %s), part of journal #%d',
+            $result->id,
+            $this->currency->code,
+            $amount,
+            $this->account->name,
+            $this->journal->id
+        ));
 
         // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-        if ($this->foreignCurrency instanceof TransactionCurrency
-            && null !== $foreignAmount
-            && $this->foreignCurrency->id !== $this->currency->id) {
+        if ($this->foreignCurrency instanceof TransactionCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
             $result->foreign_currency_id = $this->foreignCurrency->id;
-            $result->foreign_amount      = $foreignAmount;
+            $result->foreign_amount = $foreignAmount;
         }
         $result->save();
 
@@ -146,9 +142,10 @@ class TransactionFactory
             return;
         }
         // validate info:
-        $validator = Validator::make(['iban' => $this->accountInformation['iban']], [
-            'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
-        ]);
+        $validator = Validator::make(['iban' => $this->accountInformation['iban']], ['iban' => [
+            'required',
+            new UniqueIban($this->account, $this->account->accountType->type)
+        ]]);
         if ($validator->fails()) {
             Log::debug('Invalid or non-unique IBAN, will not update.');
 
@@ -156,7 +153,7 @@ class TransactionFactory
         }
 
         Log::debug('Will update account with IBAN information.');
-        $service   = app(AccountUpdateService::class);
+        $service = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 
@@ -165,7 +162,7 @@ class TransactionFactory
      *
      * @throws FireflyException
      */
-    public function createPositive(string $amount, ?string $foreignAmount): Transaction
+    public function createPositive(string $amount, null|string $foreignAmount): Transaction
     {
         if ('' === $foreignAmount) {
             $foreignAmount = null;
@@ -195,7 +192,7 @@ class TransactionFactory
     /**
      * @param null|TransactionCurrency $foreignCurrency |null
      */
-    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    public function setForeignCurrency(null|TransactionCurrency $foreignCurrency): void
     {
         $this->foreignCurrency = $foreignCurrency;
     }

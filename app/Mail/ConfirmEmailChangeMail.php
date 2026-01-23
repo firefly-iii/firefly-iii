@@ -40,7 +40,11 @@ class ConfirmEmailChangeMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public string $newEmail, public string $oldEmail, public string $url) {}
+    public function __construct(
+        public string $newEmail,
+        public string $oldEmail,
+        public string $url
+    ) {}
 
     /**
      * Build the message.
@@ -53,7 +57,6 @@ class ConfirmEmailChangeMail extends Mailable
             // ->view('emails.confirm-email-change-html')
             // ->text('emails.confirm-email-change-text')
             ->markdown('emails.confirm-email-change')
-            ->subject((string) trans('email.email_change_subject'))
-        ;
+            ->subject((string) trans('email.email_change_subject'));
     }
 }

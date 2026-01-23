@@ -50,7 +50,7 @@ class ExportsData extends Command
 
     protected $description = 'Command to export data from Firefly III.';
 
-    protected $signature   = 'firefly-iii:export-data
+    protected $signature = 'firefly-iii:export-data
     {--user=1 : The user ID that the export should run for.}
     {--token= : The user\'s access token.}
     {--start= : First transaction to export. Defaults to your very first transaction. Only applies to transaction export.}
@@ -85,7 +85,7 @@ class ExportsData extends Command
         }
         // set up repositories.
         $this->stupidLaravel();
-        $user       = $this->getUser();
+        $user = $this->getUser();
         $this->journalRepository->setUser($user);
         $this->accountRepository->setUser($user);
 
@@ -100,7 +100,7 @@ class ExportsData extends Command
 
         // make export object and configure it.
         /** @var ExportDataGenerator $exporter */
-        $exporter   = app(ExportDataGenerator::class);
+        $exporter = app(ExportDataGenerator::class);
         $exporter->setUser($user);
 
         $exporter->setStart($options['start']);
@@ -115,7 +115,7 @@ class ExportsData extends Command
         $exporter->setExportRules($options['export']['rules']);
         $exporter->setExportBills($options['export']['bills']);
         $exporter->setExportPiggies($options['export']['piggies']);
-        $data       = $exporter->export();
+        $data = $exporter->export();
         if (0 === count($data)) {
             $this->friendlyError('You must export *something*. Use --export-transactions or another option. See docs.firefly-iii.org');
         }
@@ -165,13 +165,13 @@ class ExportsData extends Command
                 'recurring'    => $this->option('export-recurring'),
                 'rules'        => $this->option('export-rules'),
                 'bills'        => $this->option('export-subscriptions'),
-                'piggies'      => $this->option('export-piggies'),
+                'piggies'      => $this->option('export-piggies')
             ],
             'start'     => $start,
             'end'       => $end,
             'accounts'  => $accounts,
             'directory' => $export,
-            'force'     => $this->option('force'),
+            'force'     => $this->option('force')
         ];
     }
 

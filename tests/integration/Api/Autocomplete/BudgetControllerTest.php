@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class BudgetControllerTest
@@ -48,9 +48,9 @@ final class BudgetControllerTest extends TestCase
         for ($i = 1; $i <= $count; ++$i) {
             $budget = Budget::create([
                 'user_id'       => $user->id,
-                'name'          => 'Budget '.$i,
+                'name'          => 'Budget ' . $i,
                 'user_group_id' => $user->user_group_id,
-                'active'        => 1,
+                'active'        => 1
             ]);
         }
     }
@@ -67,18 +67,17 @@ final class BudgetControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
-
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
@@ -87,24 +86,16 @@ final class BudgetControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Budget 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.budgets', ['query' => 'Budget', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
@@ -113,14 +104,11 @@ final class BudgetControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsThatMatchQuery(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.budgets', ['query' => 'Budget 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

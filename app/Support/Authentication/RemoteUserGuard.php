@@ -39,13 +39,15 @@ use Illuminate\Support\Facades\Log;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
-    protected ?User       $user = null;
+    protected null|User $user = null;
 
     /**
      * Create a new authentication guard.
      */
-    public function __construct(protected UserProvider $provider, Application $app)
-    {
+    public function __construct(
+        protected UserProvider $provider,
+        Application $app
+    ) {
         $app->get('request');
         // Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
@@ -60,8 +62,8 @@ class RemoteUserGuard implements Guard
             return;
         }
         // Get the user identifier from $_SERVER or apache filtered headers
-        $header        = config('auth.guard_header', 'REMOTE_USER');
-        $userID        = request()->server($header) ?? null;
+        $header = config('auth.guard_header', 'REMOTE_USER');
+        $userID = request()->server($header) ?? null;
 
         if (function_exists('apache_request_headers')) {
             Log::debug('Use apache_request_headers to find user ID.');
@@ -80,10 +82,10 @@ class RemoteUserGuard implements Guard
         $retrievedUser = $this->provider->retrieveById($userID);
 
         // store email address if present in header and not already set.
-        $header        = config('auth.guard_email');
+        $header = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {
@@ -96,7 +98,7 @@ class RemoteUserGuard implements Guard
         }
 
         Log::debug(sprintf('Result of getting user from provider: %s', $retrievedUser->email));
-        $this->user    = $retrievedUser;
+        $this->user = $retrievedUser;
     }
 
     public function check(): bool
@@ -141,7 +143,7 @@ class RemoteUserGuard implements Guard
         Log::error(sprintf('Did not set user at %s', __METHOD__));
     }
 
-    public function user(): ?User
+    public function user(): null|User
     {
         // Log::debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;

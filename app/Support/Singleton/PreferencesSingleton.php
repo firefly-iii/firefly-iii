@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * PreferencesSingleton.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -27,9 +26,9 @@ namespace FireflyIII\Support\Singleton;
 
 class PreferencesSingleton
 {
-    private static ?PreferencesSingleton $instance = null;
+    private static null|PreferencesSingleton $instance = null;
 
-    private array $preferences                     = [];
+    private array $preferences = [];
 
     private function __construct()
     {

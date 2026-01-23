@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Chart\Category;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Collection;
 
 /**
  * Class WholePeriodChartGenerator
@@ -42,68 +42,74 @@ class WholePeriodChartGenerator
 
     public function generate(Category $category, Carbon $start, Carbon $end): array
     {
-        $collection        = new Collection()->push($category);
+        $collection = new Collection()->push($category);
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository     = app(OperationsRepositoryInterface::class);
+        $opsRepository = app(OperationsRepositoryInterface::class);
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
-        $types             = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
-        $accounts          = $accountRepository->getAccountsByType($types);
-        $step              = $this->calculateStep($start, $end);
-        $chartData         = [];
-        $spent             = [];
-        $earned            = [];
+        $types     = [
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value
+        ];
+        $accounts  = $accountRepository->getAccountsByType($types);
+        $step      = $this->calculateStep($start, $end);
+        $chartData = [];
+        $spent     = [];
+        $earned    = [];
 
-        $current           = clone $start;
+        $current = clone $start;
 
         while ($current <= $end) {
-            $key          = $current->format('Y-m-d');
-            $currentEnd   = Navigation::endOfPeriod($current, $step);
-            $spent[$key]  = $opsRepository->sumExpenses($current, $currentEnd, $accounts, $collection);
+            $key        = $current->format('Y-m-d');
+            $currentEnd = Navigation::endOfPeriod($current, $step);
+            $spent[$key] = $opsRepository->sumExpenses($current, $currentEnd, $accounts, $collection);
             $earned[$key] = $opsRepository->sumIncome($current, $currentEnd, $accounts, $collection);
-            $current      = Navigation::addPeriod($current, $step);
+            $current = Navigation::addPeriod($current, $step);
         }
 
-        $currencies        = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
+        $currencies = $this->extractCurrencies($spent) + $this->extractCurrencies($earned);
 
         // generate chart data (for each currency)
         /** @var array $currency */
         foreach ($currencies as $currency) {
-            $code                                      = $currency['currency_code'];
-            $name                                      = $currency['currency_name'];
-            $chartData[sprintf('spent-in-%s', $code)]  = [
-                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
+            $code = $currency['currency_code'];
+            $name = $currency['currency_name'];
+            $chartData[sprintf('spent-in-%s', $code)] = [
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency'           => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
-                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)' // red
             ];
 
             $chartData[sprintf('earned-in-%s', $code)] = [
-                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $name]),
+                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency'           => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
-                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)' // green
             ];
         }
 
-        $current           = clone $start;
+        $current = clone $start;
 
         while ($current <= $end) {
-            $key     = $current->format('Y-m-d');
-            $label   = Navigation::periodShow($current, $step);
+            $key   = $current->format('Y-m-d');
+            $label = Navigation::periodShow($current, $step);
 
             /** @var array $currency */
             foreach ($currencies as $currency) {
-                $code                                         = $currency['currency_code'];
-                $currencyId                                   = $currency['currency_id'];
-                $spentInfoKey                                 = sprintf('spent-in-%s', $code);
-                $earnedInfoKey                                = sprintf('earned-in-%s', $code);
-                $spentAmount                                  = $spent[$key][$currencyId]['sum'] ?? '0';
-                $earnedAmount                                 = $earned[$key][$currencyId]['sum'] ?? '0';
-                $chartData[$spentInfoKey]['entries'][$label]  = Steam::bcround($spentAmount, $currency['currency_decimal_places']);
+                $code          = $currency['currency_code'];
+                $currencyId    = $currency['currency_id'];
+                $spentInfoKey  = sprintf('spent-in-%s', $code);
+                $earnedInfoKey = sprintf('earned-in-%s', $code);
+                $spentAmount   = $spent[$key][$currencyId]['sum'] ?? '0';
+                $earnedAmount  = $earned[$key][$currencyId]['sum'] ?? '0';
+                $chartData[$spentInfoKey]['entries'][$label] = Steam::bcround($spentAmount, $currency['currency_decimal_places']);
                 $chartData[$earnedInfoKey]['entries'][$label] = Steam::bcround($earnedAmount, $currency['currency_decimal_places']);
             }
             $current = Navigation::addPeriod($current, $step);
@@ -146,7 +152,7 @@ class WholePeriodChartGenerator
                     'currency_name'           => $currencyRow['currency_name'],
                     'currency_symbol'         => $currencyRow['currency_symbol'],
                     'currency_code'           => $currencyRow['currency_code'],
-                    'currency_decimal_places' => $currencyRow['currency_decimal_places'],
+                    'currency_decimal_places' => $currencyRow['currency_decimal_places']
                 ];
             }
         }

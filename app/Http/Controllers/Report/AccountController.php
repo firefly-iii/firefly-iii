@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -45,7 +45,7 @@ class AccountController extends Controller
     public function general(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache         = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('account-report');

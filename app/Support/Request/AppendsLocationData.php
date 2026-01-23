@@ -39,9 +39,9 @@ trait AppendsLocationData
             $lat  = $information['latitude'] ?? null;
             if (null !== $long && null !== $lat && $this->validLongitude($long) && $this->validLatitude($lat)) {
                 $return['store_location'] = true;
-                $return['longitude']      = $information['longitude'];
-                $return['latitude']       = $information['latitude'];
-                $return['zoom_level']     = $information['zoom_level'];
+                $return['longitude'] = $information['longitude'];
+                $return['latitude'] = $information['latitude'];
+                $return['zoom_level'] = $information['zoom_level'];
             }
         }
 
@@ -88,58 +88,56 @@ trait AppendsLocationData
     /**
      * Read the submitted Request data and add new or updated Location data to the array.
      */
-    protected function appendLocationData(array $data, ?string $prefix): array
+    protected function appendLocationData(array $data, null|string $prefix): array
     {
         Log::debug(sprintf('Now in appendLocationData("%s")', $prefix), $data);
-        $data['store_location']  = false;
+        $data['store_location'] = false;
         $data['update_location'] = false;
         $data['remove_location'] = false;
-        $data['longitude']       = null;
-        $data['latitude']        = null;
-        $data['zoom_level']      = null;
+        $data['longitude'] = null;
+        $data['latitude'] = null;
+        $data['zoom_level'] = null;
 
-        $longitudeKey            = $this->getLocationKey($prefix, 'longitude');
-        $latitudeKey             = $this->getLocationKey($prefix, 'latitude');
-        $zoomLevelKey            = $this->getLocationKey($prefix, 'zoom_level');
-        $isValidPOST             = $this->isValidPost($prefix);
-        $isValidPUT              = $this->isValidPUT($prefix);
-        $isValidEmptyPUT         = $this->isValidEmptyPUT($prefix);
+        $longitudeKey    = $this->getLocationKey($prefix, 'longitude');
+        $latitudeKey     = $this->getLocationKey($prefix, 'latitude');
+        $zoomLevelKey    = $this->getLocationKey($prefix, 'zoom_level');
+        $isValidPOST     = $this->isValidPost($prefix);
+        $isValidPUT      = $this->isValidPUT($prefix);
+        $isValidEmptyPUT = $this->isValidEmptyPUT($prefix);
 
         // for a POST (store), all fields must be present and not NULL.
         if ($isValidPOST) {
             Log::debug('Method is POST and all fields present and not NULL.');
             $data['store_location'] = true;
-            $data['longitude']      = $this->convertString($longitudeKey);
-            $data['latitude']       = $this->convertString($latitudeKey);
-            $data['zoom_level']     = $this->convertString($zoomLevelKey);
+            $data['longitude'] = $this->convertString($longitudeKey);
+            $data['latitude'] = $this->convertString($latitudeKey);
+            $data['zoom_level'] = $this->convertString($zoomLevelKey);
         }
 
         // for a PUT (api update) or POST update (UI)
         if ($isValidPUT) {
             Log::debug('Method is PUT and all fields present and not NULL.');
             $data['update_location'] = true;
-            $data['longitude']       = $this->convertString($longitudeKey);
-            $data['latitude']        = $this->convertString($latitudeKey);
-            $data['zoom_level']      = $this->convertString($zoomLevelKey);
+            $data['longitude'] = $this->convertString($longitudeKey);
+            $data['latitude'] = $this->convertString($latitudeKey);
+            $data['zoom_level'] = $this->convertString($zoomLevelKey);
         }
         if ($isValidEmptyPUT) {
             Log::debug('Method is PUT and all fields present and NULL.');
             $data['remove_location'] = true;
         }
         Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
-        Log::debug(
-            sprintf(
-                'Returning actions: store: %s, update: %s, delete: %s',
-                var_export($data['store_location'], true),
-                var_export($data['update_location'], true),
-                var_export($data['remove_location'], true),
-            )
-        );
+        Log::debug(sprintf(
+            'Returning actions: store: %s, update: %s, delete: %s',
+            var_export($data['store_location'], true),
+            var_export($data['update_location'], true),
+            var_export($data['remove_location'], true)
+        ));
 
         return $data;
     }
 
-    private function getLocationKey(?string $prefix, string $key): string
+    private function getLocationKey(null|string $prefix, string $key): string
     {
         if (null === $prefix) {
             return $key;
@@ -148,7 +146,7 @@ trait AppendsLocationData
         return sprintf('%s_%s', $prefix, $key);
     }
 
-    private function isValidEmptyPUT(?string $prefix): bool
+    private function isValidEmptyPUT(null|string $prefix): bool
     {
         $longitudeKey = $this->getLocationKey($prefix, 'longitude');
         $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
@@ -157,14 +155,12 @@ trait AppendsLocationData
         return (
             null === $this->get($longitudeKey)
             && null === $this->get($latitudeKey)
-            && null === $this->get($zoomLevelKey))
-               && (
-                   'PUT' === $this->method()
-                   || ('POST' === $this->method() && $this->routeIs('*.update'))
-               );
+            && null === $this->get($zoomLevelKey)
+            && ('PUT' === $this->method() || 'POST' === $this->method() && $this->routeIs('*.update'))
+        );
     }
 
-    private function isValidPUT(?string $prefix): bool
+    private function isValidPUT(null|string $prefix): bool
     {
         $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
         $latitudeKey    = $this->getLocationKey($prefix, 'latitude');
@@ -204,7 +200,7 @@ trait AppendsLocationData
         return false;
     }
 
-    private function isValidPost(?string $prefix): bool
+    private function isValidPost(null|string $prefix): bool
     {
         Log::debug('Now in isValidPost()');
         $longitudeKey   = $this->getLocationKey($prefix, 'longitude');
@@ -244,14 +240,14 @@ trait AppendsLocationData
 
     private function validLatitude(string $latitude): bool
     {
-        $number = (float)$latitude;
+        $number = (float) $latitude;
 
         return $number >= -90 && $number <= 90;
     }
 
     private function validLongitude(string $longitude): bool
     {
-        $number = (float)$longitude;
+        $number = (float) $longitude;
 
         return $number >= -180 && $number <= 180;
     }

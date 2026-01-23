@@ -32,5 +32,9 @@ class SubscriptionNeedsExtensionOrRenewal extends Event
 {
     use SerializesModels;
 
-    public function __construct(public Bill $subscription, public string $field, public int $diff) {}
+    public function __construct(
+        public Bill $subscription,
+        public string $field,
+        public int $diff
+    ) {}
 }

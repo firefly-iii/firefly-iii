@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Bill;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -61,7 +61,7 @@ class UpdateRequest extends FormRequest
             'order'              => ['order', 'convertInteger'],
             'notes'              => ['notes', 'stringWithNewlines'],
             'object_group_id'    => ['object_group_id', 'convertInteger'],
-            'object_group_title' => ['object_group_title', 'convertString'],
+            'object_group_title' => ['object_group_title', 'convertString']
         ];
 
         return $this->getAllData($fields);
@@ -87,7 +87,7 @@ class UpdateRequest extends FormRequest
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly',
             'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
-            'notes'          => 'min:1|max:32768',
+            'notes'          => 'min:1|max:32768'
         ];
     }
 
@@ -96,19 +96,17 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            static function (Validator $validator): void {
-                $data = $validator->getData();
-                if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
-                    $min = $data['amount_min'] ?? '0';
-                    $max = $data['amount_max'] ?? '0';
+        $validator->after(static function (Validator $validator): void {
+            $data = $validator->getData();
+            if (array_key_exists('amount_min', $data) && array_key_exists('amount_max', $data)) {
+                $min = $data['amount_min'] ?? '0';
+                $max = $data['amount_max'] ?? '0';
 
-                    if (1 === bccomp($min, $max)) {
-                        $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
-                    }
+                if (1 === bccomp($min, $max)) {
+                    $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
                 }
             }
-        );
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

@@ -37,7 +37,7 @@ class OutputsInstructions extends Command
 
     protected $description = 'Instructions in case of upgrade trouble.';
 
-    protected $signature   = 'firefly-iii:instructions {task=install}';
+    protected $signature = 'firefly-iii:instructions {task=install}';
 
     /**
      * Execute the console command.
@@ -60,26 +60,26 @@ class OutputsInstructions extends Command
      */
     private function updateInstructions(): void
     {
-        $version = (string)config('firefly.version');
+        $version = (string) config('firefly.version');
 
         /** @var array $config */
-        $config  = config('upgrade.text.upgrade');
-        $text    = '';
+        $config = config('upgrade.text.upgrade');
+        $text   = '';
 
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string)$config[$compare];
+                $text = (string) $config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string) config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
-        $prefix  = 'v';
+        $prefix = 'v';
         if (str_starts_with($version, 'develop') || str_starts_with($version, 'branch')) {
             $prefix = '';
         }
@@ -116,8 +116,8 @@ class OutputsInstructions extends Command
      */
     private function showLogo(): void
     {
-        $today  = Carbon::now()->format('m-d');
-        $month  = Carbon::now()->format('m');
+        $today = Carbon::now()->format('m-d');
+        $month = Carbon::now()->format('m');
         // variation in colors and effects just because I can!
         // default is Ukraine flag:
         $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
@@ -166,7 +166,7 @@ class OutputsInstructions extends Command
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->line('| '.sprintf('%-77s', $string).'|');
+            $this->line('| ' . sprintf('%-77s', $string) . '|');
         }
     }
 
@@ -177,7 +177,7 @@ class OutputsInstructions extends Command
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->info('| '.sprintf('%-77s', $string).'|');
+            $this->info('| ' . sprintf('%-77s', $string) . '|');
         }
     }
 
@@ -193,26 +193,26 @@ class OutputsInstructions extends Command
      */
     private function installInstructions(): void
     {
-        $version = (string)config('firefly.version');
+        $version = (string) config('firefly.version');
 
         /** @var array $config */
-        $config  = config('upgrade.text.install');
-        $text    = '';
+        $config = config('upgrade.text.install');
+        $text   = '';
 
         /** @var string $compare */
         foreach (array_keys($config) as $compare) {
             // if string starts with:
             if (str_starts_with($version, $compare)) {
-                $text = (string)$config[$compare];
+                $text = (string) $config[$compare];
             }
         }
 
         // validate some settings.
-        if ('' === $text && 'local' === (string)config('app.env')) {
+        if ('' === $text && 'local' === (string) config('app.env')) {
             $text = 'Please set APP_ENV=production for a safer environment.';
         }
 
-        $prefix  = 'v';
+        $prefix = 'v';
         if (str_starts_with($version, 'develop')) {
             $prefix = '';
         }
@@ -251,7 +251,7 @@ class OutputsInstructions extends Command
             '"Be there or forever wonder."',
             '"A year from now you will wish you had started today."',
             '🇺🇦 Слава Україні!',
-            '🇺🇦 Slava Ukraini!',
+            '🇺🇦 Slava Ukraini!'
         ];
 
         // fuck the Russian aggression in Ukraine.
@@ -263,10 +263,7 @@ class OutputsInstructions extends Command
         // going on, to allow that to happen.
 
         if ('ru_RU' === config('firefly.default_language')) {
-            $lines = [
-                '🇺🇦 Слава Україні!',
-                '🇺🇦 Slava Ukraini!',
-            ];
+            $lines = ['🇺🇦 Слава Україні!', '🇺🇦 Slava Ukraini!'];
         }
 
         try {
@@ -275,6 +272,5 @@ class OutputsInstructions extends Command
             $random = 0;
         }
         $this->line(sprintf('       %s', $lines[$random]));
-
     }
 }

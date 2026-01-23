@@ -42,13 +42,13 @@ trait OBValidation
         Log::debug('Now in validateOBDestination', $array);
 
         // source can be any of the following types.
-        $validTypes  = $this->combinations[$this->transactionType][$this->source?->accountType->type] ?? [];
+        $validTypes = $this->combinations[$this->transactionType][$this->source?->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return false,
             // because the destination of a deposit can't be created.
             $this->destError = (string) trans('validation.ob_dest_need_data');
             Log::error('Both values are NULL, cant create OB destination.');
-            $result          = false;
+            $result = false;
         }
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
@@ -61,8 +61,8 @@ trait OBValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
-                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
-                $result          = false;
+                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+                $result = false;
             }
             if (null !== $search) {
                 Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
@@ -86,16 +86,16 @@ trait OBValidation
         $accountId   = $array['id'] ?? null;
         $accountName = $array['name'] ?? null;
         Log::debug('Now in validateOBSource', $array);
-        $result      = null;
+        $result = null;
         // source can be any of the following types.
-        $validTypes  = array_keys($this->combinations[$this->transactionType]);
+        $validTypes = array_keys($this->combinations[$this->transactionType]);
 
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL return false,
             // because the source of a deposit can't be created.
             // (this never happens).
             $this->sourceError = (string) trans('validation.ob_source_need_data');
-            $result            = false;
+            $result = false;
         }
 
         // if the user submits an ID only but that ID is not of the correct type,
@@ -106,10 +106,10 @@ trait OBValidation
 
             // the source resulted in an account, but it's not of a valid type.
             if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
-                $message           = sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type);
+                $message = sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type);
                 Log::debug($message);
                 $this->sourceError = $message;
-                $result            = false;
+                $result = false;
             }
             // the source resulted in an account, AND it's of a valid type.
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {
@@ -122,13 +122,13 @@ trait OBValidation
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
             Log::debug('Result is still null.');
-            $result               = true;
+            $result = true;
 
             // set the source to be a (dummy) initial balance account.
-            $account              = new Account();
+            $account = new Account();
 
             /** @var AccountType $accountType */
-            $accountType          = AccountType::whereType(AccountTypeEnum::INITIAL_BALANCE->value)->first();
+            $accountType = AccountType::whereType(AccountTypeEnum::INITIAL_BALANCE->value)->first();
             $account->accountType = $accountType;
             $this->setSource($account);
         }

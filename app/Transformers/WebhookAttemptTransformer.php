@@ -43,7 +43,7 @@ class WebhookAttemptTransformer extends AbstractTransformer
             'webhook_message_id' => (string) $attempt->webhook_message_id,
             'status_code'        => (int) $attempt->status_code,
             'logs'               => $attempt->logs,
-            'response'           => $attempt->response,
+            'response'           => $attempt->response
         ];
     }
 }

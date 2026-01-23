@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Exceptions\FireflyException;
@@ -34,8 +32,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
-use FireflyIII\User;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountUpdateService
@@ -46,11 +46,11 @@ class AccountUpdateService
     use AccountServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
-    protected array                      $validAssetFields;
-    protected array                      $validCCFields;
-    protected array                      $validFields;
-    private array                        $canHaveOpeningBalance;
-    private User                         $user;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array $canHaveOpeningBalance;
+    private User $user;
 
     /**
      * Constructor.
@@ -58,10 +58,10 @@ class AccountUpdateService
     public function __construct()
     {
         $this->canHaveOpeningBalance = config('firefly.can_have_opening_balance');
-        $this->validAssetFields      = config('firefly.valid_asset_fields');
-        $this->validCCFields         = config('firefly.valid_cc_fields');
-        $this->validFields           = config('firefly.valid_account_fields');
-        $this->accountRepository     = app(AccountRepositoryInterface::class);
+        $this->validAssetFields = config('firefly.valid_asset_fields');
+        $this->validCCFields = config('firefly.valid_cc_fields');
+        $this->validFields = config('firefly.valid_account_fields');
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -74,12 +74,12 @@ class AccountUpdateService
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->accountRepository->setUser($account->user);
         $this->user = $account->user;
-        $account    = $this->updateAccount($account, $data);
-        $account    = $this->updateAccountOrder($account, $data);
+        $account = $this->updateAccount($account, $data);
+        $account = $this->updateAccountOrder($account, $data);
 
         // find currency, or use default currency instead.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $currency            = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
+            $currency = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
             unset($data['currency_code'], $data['currency_id']);
             $data['currency_id'] = $currency->id;
         }
@@ -130,7 +130,7 @@ class AccountUpdateService
         // set liability, but account must already be a liability.
         // $liabilityType = $data['liability_type'] ?? '';
         if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
-            $type                     = $this->getAccountType($data['liability_type']);
+            $type = $this->getAccountType($data['liability_type']);
             $account->account_type_id = $type->id;
         }
         // set liability, alternative method used in v1 layout:
@@ -174,27 +174,33 @@ class AccountUpdateService
             return $account;
         }
         // skip if not of orderable type.
-        $type           = $account->accountType->type;
-        if (!in_array($type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], true)) {
+        $type = $account->accountType->type;
+        if (!in_array(
+            $type,
+            [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value],
+            true
+        )) {
             Log::debug('Will not change order of this account.');
 
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder       = $account->order;
-        $newOrder       = $data['order'];
+        $oldOrder = $account->order;
+        $newOrder = $data['order'];
         Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
-        $list           = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
+        $list = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
         if (AccountTypeEnum::ASSET->value === $type) {
             $list = $this->getTypeIds([AccountTypeEnum::ASSET->value]);
         }
 
         if ($newOrder > $oldOrder) {
-            $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
+            $this->user
+                ->accounts()
+                ->where('accounts.order', '<=', $newOrder)
+                ->where('accounts.order', '>', $oldOrder)
                 ->where('accounts.id', '!=', $account->id)
                 ->whereIn('accounts.account_type_id', $list)
-                ->decrement('order')
-            ;
+                ->decrement('order');
             $account->order = $newOrder;
             Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
             $account->save();
@@ -202,11 +208,13 @@ class AccountUpdateService
             return $account;
         }
 
-        $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
+        $this->user
+            ->accounts()
+            ->where('accounts.order', '>=', $newOrder)
+            ->where('accounts.order', '<', $oldOrder)
             ->where('accounts.id', '!=', $account->id)
             ->whereIn('accounts.account_type_id', $list)
-            ->increment('order')
-        ;
+            ->increment('order');
         $account->order = $newOrder;
         Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
         $account->save();
@@ -221,7 +229,7 @@ class AccountUpdateService
         /** @var string $type */
         foreach ($array as $type) {
             /** @var AccountType $type */
-            $type     = AccountType::whereType($type)->first();
+            $type = AccountType::whereType($type)->first();
             $return[] = $type->id;
         }
 
@@ -240,14 +248,14 @@ class AccountUpdateService
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location             = $this->accountRepository->getLocation($account);
+                $location = $this->accountRepository->getLocation($account);
                 if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($account);
                 }
 
-                $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
-                $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
                 $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
                 $location->save();
             }
@@ -270,9 +278,7 @@ class AccountUpdateService
 
                 // if liability, make sure the amount is positive for a credit, and negative for a debit.
                 if ($this->isLiability($account)) {
-                    $openingBalance = 'credit' === $data['liability_direction'] ? Steam::positive($openingBalance) : Steam::negative(
-                        $openingBalance
-                    );
+                    $openingBalance = 'credit' === $data['liability_direction'] ? Steam::positive($openingBalance) : Steam::negative($openingBalance);
                 }
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }
@@ -293,11 +299,11 @@ class AccountUpdateService
         if (true === $account->active) {
             return;
         }
-        $preference      = Preferences::getForUser($account->user, 'frontpageAccounts');
+        $preference = Preferences::getForUser($account->user, 'frontpageAccounts');
         if (null === $preference) {
             return;
         }
-        $array           = $preference->data;
+        $array = $preference->data;
         if (!is_array($array)) {
             $array = [$array];
         }

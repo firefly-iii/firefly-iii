@@ -41,34 +41,48 @@ class LinkToBill implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user       = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
 
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName   = $this->action->getValue($journal);
-        $bill       = $repository->findByName($billName);
+        $billName = $this->action->getValue($journal);
+        $bill     = $repository->findByName($billName);
 
         /** @var TransactionJournal $object */
-        $object     = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
-        $type       = $object->transactionType->type;
+        $object = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
+        $type   = $object->transactionType->type;
 
         if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            $count  = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->where('bill_id', $bill->id)->count();
+            $count = DB::table('transaction_journals')
+                ->where('id', '=', $journal['transaction_journal_id'])
+                ->where('bill_id', $bill->id)
+                ->count();
             if (0 !== $count) {
-                Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.', $journal['transaction_journal_id'], $billName));
+                Log::error(sprintf(
+                    'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',
+                    $journal['transaction_journal_id'],
+                    $billName
+                ));
                 // event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_subscription', ['name' => $billName])));
 
                 return false;
             }
 
             DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->update(['bill_id' => $bill->id]);
-            Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name));
+            Log::debug(sprintf(
+                'RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $bill->id,
+                $bill->name
+            ));
 
             /** @var TransactionJournal $object */
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
@@ -77,7 +91,11 @@ class LinkToBill implements ActionInterface
             return true;
         }
 
-        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.', $journal['transaction_journal_id'], $billName));
+        Log::error(sprintf(
+            'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
+            $journal['transaction_journal_id'],
+            $billName
+        ));
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_subscription', ['name' => $billName])));
 
         return false;

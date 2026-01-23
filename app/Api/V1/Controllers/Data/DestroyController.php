@@ -72,8 +72,8 @@ class DestroyController extends Controller
 
     public function destroy(DestroyRequest $request): JsonResponse
     {
-        $objects         = $request->getObjects();
-        $this->unused    = $request->boolean('unused');
+        $objects = $request->getObjects();
+        $this->unused = $request->boolean('unused');
 
         $allExceptAssets = [
             AccountTypeEnum::BENEFICIARY->value,
@@ -85,7 +85,7 @@ class DestroyController extends Controller
             AccountTypeEnum::INITIAL_BALANCE->value,
             AccountTypeEnum::LIABILITY_CREDIT->value,
             AccountTypeEnum::RECONCILIATION->value,
-            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::REVENUE->value
         ];
         $all             = [
             AccountTypeEnum::ASSET->value,
@@ -100,36 +100,36 @@ class DestroyController extends Controller
             AccountTypeEnum::LIABILITY_CREDIT->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::MORTGAGE->value,
-            AccountTypeEnum::RECONCILIATION->value,
+            AccountTypeEnum::RECONCILIATION->value
         ];
         $liabilities     = [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value];
         $transactions    = [
             TransactionTypeEnum::WITHDRAWAL->value,
             TransactionTypeEnum::DEPOSIT->value,
             TransactionTypeEnum::TRANSFER->value,
-            TransactionTypeEnum::RECONCILIATION->value,
+            TransactionTypeEnum::RECONCILIATION->value
         ];
 
         match ($objects) {
-            'budgets'                => $this->destroyBudgets(),
-            'bills'                  => $this->destroyBills(),
-            'piggy_banks'            => $this->destroyPiggyBanks(),
-            'rules'                  => $this->destroyRules(),
-            'recurring'              => $this->destroyRecurringTransactions(),
-            'categories'             => $this->destroyCategories(),
-            'tags'                   => $this->destroyTags(),
-            'object_groups'          => $this->destroyObjectGroups(),
+            'budgets' => $this->destroyBudgets(),
+            'bills' => $this->destroyBills(),
+            'piggy_banks' => $this->destroyPiggyBanks(),
+            'rules' => $this->destroyRules(),
+            'recurring' => $this->destroyRecurringTransactions(),
+            'categories' => $this->destroyCategories(),
+            'tags' => $this->destroyTags(),
+            'object_groups' => $this->destroyObjectGroups(),
             'not_assets_liabilities' => $this->destroyAccounts($allExceptAssets),
-            'accounts'               => $this->destroyAccounts($all),
-            'asset_accounts'         => $this->destroyAccounts([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]),
-            'expense_accounts'       => $this->destroyAccounts([AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::EXPENSE->value]),
-            'revenue_accounts'       => $this->destroyAccounts([AccountTypeEnum::REVENUE->value]),
-            'liabilities'            => $this->destroyAccounts($liabilities),
-            'transactions'           => $this->destroyTransactions($transactions),
-            'withdrawals'            => $this->destroyTransactions([TransactionTypeEnum::WITHDRAWAL->value]),
-            'deposits'               => $this->destroyTransactions([TransactionTypeEnum::DEPOSIT->value]),
-            'transfers'              => $this->destroyTransactions([TransactionTypeEnum::TRANSFER->value]),
-            default                  => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects))
+            'accounts' => $this->destroyAccounts($all),
+            'asset_accounts' => $this->destroyAccounts([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]),
+            'expense_accounts' => $this->destroyAccounts([AccountTypeEnum::BENEFICIARY->value, AccountTypeEnum::EXPENSE->value]),
+            'revenue_accounts' => $this->destroyAccounts([AccountTypeEnum::REVENUE->value]),
+            'liabilities' => $this->destroyAccounts($liabilities),
+            'transactions' => $this->destroyTransactions($transactions),
+            'withdrawals' => $this->destroyTransactions([TransactionTypeEnum::WITHDRAWAL->value]),
+            'deposits' => $this->destroyTransactions([TransactionTypeEnum::DEPOSIT->value]),
+            'transfers' => $this->destroyTransactions([TransactionTypeEnum::TRANSFER->value]),
+            default => throw new FireflyException(sprintf('200033: This endpoint can\'t handle object "%s"', $objects))
         };
 
         Preferences::mark();
@@ -140,11 +140,11 @@ class DestroyController extends Controller
     private function destroyBudgets(): void
     {
         /** @var AvailableBudgetRepositoryInterface $abRepository */
-        $abRepository     = app(AvailableBudgetRepositoryInterface::class);
+        $abRepository = app(AvailableBudgetRepositoryInterface::class);
         $abRepository->destroyAll();
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
         $blRepository->destroyAll();
 
         /** @var BudgetRepositoryInterface $budgetRepository */

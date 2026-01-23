@@ -45,29 +45,24 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(UserGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(UserGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $data        = $request->getData();
-        $userGroup   = $this->repository->update($userGroup, $data);
+        $data      = $request->getData();
+        $userGroup = $this->repository->update($userGroup, $data);
         $userGroup->refresh();
         Preferences::mark();
 
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);
 
-        return response()
-            ->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

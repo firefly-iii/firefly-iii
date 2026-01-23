@@ -59,7 +59,7 @@ class CorrectsFrontpageAccounts extends Command
 
     private function fixPreference(Preference $preference): void
     {
-        $fixed      = [];
+        $fixed = [];
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -67,15 +67,21 @@ class CorrectsFrontpageAccounts extends Command
             return;
         }
         $repository->setUser($preference->user);
-        $data       = $preference->data;
+        $data = $preference->data;
         if (is_array($data)) {
             /** @var string $accountId */
             foreach ($data as $accountId) {
                 $accountIdInt = (int) $accountId;
                 $account      = $repository->find($accountIdInt);
-                if (null !== $account
-                    && in_array($account->accountType->type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value], true)
-                    && true === $account->active) {
+                if (
+                    null !== $account
+                    && in_array(
+                        $account->accountType->type,
+                        [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+                        true
+                    )
+                    && true === $account->active
+                ) {
                     $fixed[] = $account->id;
                 }
             }

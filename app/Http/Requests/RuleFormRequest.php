@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Rule;
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -56,7 +56,7 @@ class RuleFormRequest extends FormRequest
             'strict'          => $this->boolean('strict'),
             'run_after_form'  => $this->boolean('run_after_form'),
             'triggers'        => $this->getRuleTriggerData(),
-            'actions'         => $this->getRuleActionData(),
+            'actions'         => $this->getRuleActionData()
         ];
     }
 
@@ -72,10 +72,10 @@ class RuleFormRequest extends FormRequest
                     'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
                     'stop_processing' => 1 === (int) $stopProcessing,
-                    'prohibited'      => 1 === (int) $prohibited,
+                    'prohibited'      => 1 === (int) $prohibited
                 ];
                 $set            = self::replaceAmountTrigger($set);
-                $return[]       = $set;
+                $return[] = $set;
             }
         }
 
@@ -98,7 +98,7 @@ class RuleFormRequest extends FormRequest
             'foreign_amount_less',
             'foreign_amount_max',
             'foreign_amount_more',
-            'foreign_amount_min',
+            'foreign_amount_min'
         ];
         if (in_array($array['type'], $amountFields, true) && '0' === $array['value']) {
             $array['value'] = '0.00';
@@ -114,10 +114,10 @@ class RuleFormRequest extends FormRequest
         if (is_array($actionData)) {
             foreach ($actionData as $action) {
                 $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
+                $return[] = [
                     'type'            => $action['type'] ?? 'invalid',
                     'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
+                    'stop_processing' => 1 === (int) $stopProcessing
                 ];
             }
         }
@@ -130,35 +130,35 @@ class RuleFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers   = $this->getTriggers();
-        $validActions    = array_keys(config('firefly.rule-actions'));
+        $validTriggers = $this->getTriggers();
+        $validActions  = array_keys(config('firefly.rule-actions'));
 
         // some actions require text (aka context):
-        $contextActions  = implode(',', config('firefly.context-rule-actions'));
+        $contextActions = implode(',', config('firefly.context-rule-actions'));
 
         // some triggers require text (aka context):
         $contextTriggers = implode(',', $this->getTriggersWithContext());
 
         // initial set of rules:
-        $rules           = [
-            'title'                    => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
-            'description'              => 'min:1|max:32768|nullable',
-            'stop_processing'          => 'boolean',
-            'rule_group_id'            => 'required|belongsToUser:rule_groups',
-            'trigger'                  => 'required|in:store-journal,update-journal,manual-activation',
-            'triggers.*.type'          => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value'         => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.type'           => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'          => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
-            'strict'                   => 'in:0,1',
-            'run_after_form'           => 'in:0,1',
+        $rules = [
+            'title'            => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
+            'description'      => 'min:1|max:32768|nullable',
+            'stop_processing'  => 'boolean',
+            'rule_group_id'    => 'required|belongsToUser:rule_groups',
+            'trigger'          => 'required|in:store-journal,update-journal,manual-activation',
+            'triggers.*.type'  => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
+            'actions.*.type'   => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'  => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
+            'strict'           => 'in:0,1',
+            'run_after_form'   => 'in:0,1'
         ];
 
         /** @var null|Rule $rule */
-        $rule            = $this->route()->parameter('rule');
+        $rule = $this->route()->parameter('rule');
 
         if (null !== $rule) {
-            $rules['title'] = 'required|min:1|max:255|uniqueObjectForUser:rules,title,'.$rule->id;
+            $rules['title'] = 'required|min:1|max:255|uniqueObjectForUser:rules,title,' . $rule->id;
         }
 
         return $rules;

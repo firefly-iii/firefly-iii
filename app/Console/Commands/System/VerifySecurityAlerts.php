@@ -25,13 +25,13 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\FilesystemException;
 use Safe\Exceptions\JsonException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\json_decode;
 
@@ -41,7 +41,7 @@ class VerifySecurityAlerts extends Command
 
     protected $description = 'Verify security alerts';
 
-    protected $signature   = 'firefly-iii:verify-security-alerts';
+    protected $signature = 'firefly-iii:verify-security-alerts';
 
     /**
      * Execute the console command.

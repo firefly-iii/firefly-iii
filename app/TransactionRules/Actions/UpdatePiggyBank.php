@@ -42,7 +42,9 @@ class UpdatePiggyBank implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -52,12 +54,12 @@ class UpdatePiggyBank implements ActionInterface
 
         // refresh the transaction type.
         /** @var User $user */
-        $user        = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
 
         /** @var TransactionJournal $journalObj */
-        $journalObj  = $user->transactionJournals()->find($journal['transaction_journal_id']);
+        $journalObj = $user->transactionJournals()->find($journal['transaction_journal_id']);
 
-        $piggyBank   = $this->findPiggyBank($user, $actionValue);
+        $piggyBank = $this->findPiggyBank($user, $actionValue);
         if (!$piggyBank instanceof PiggyBank) {
             Log::info(sprintf('No piggy bank named "%s", cant execute action #%d of rule #%d', $actionValue, $this->action->id, $this->action->rule_id));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
@@ -69,18 +71,22 @@ class UpdatePiggyBank implements ActionInterface
 
         // piggy bank already has an event for this transaction journal?
         if ($this->alreadyEventPresent($piggyBank, $journal)) {
-            Log::info(sprintf('Piggy bank #%d ("%s") already has an event for transaction journal #%d, so no action will be taken.', $piggyBank->id, $piggyBank->name, $journalObj->id));
+            Log::info(sprintf(
+                'Piggy bank #%d ("%s") already has an event for transaction journal #%d, so no action will be taken.',
+                $piggyBank->id,
+                $piggyBank->name,
+                $journalObj->id
+            ));
 
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_piggy', ['name' => $actionValue])));
 
             return false;
         }
 
-
         /** @var Transaction $destination */
         $destination = $journalObj->transactions()->where('amount', '>', 0)->first();
 
-        $accounts    = $this->getAccounts($journalObj);
+        $accounts = $this->getAccounts($journalObj);
         Log::debug(sprintf('Source account is #%d: "%s"', $accounts['source']->id, $accounts['source']->name));
         Log::debug(sprintf('Destination account is #%d: "%s"', $accounts['destination']->id, $accounts['source']->name));
 
@@ -88,20 +94,12 @@ class UpdatePiggyBank implements ActionInterface
         if ($this->isConnected($piggyBank, $accounts['source']) && !$this->isConnected($piggyBank, $accounts['destination'])) {
             Log::debug('Piggy bank account is linked to source, so remove amount from piggy bank.');
             $this->removeAmount($piggyBank, $journal, $journalObj, $accounts['source'], $destination->amount);
-            event(
-                new TriggeredAuditLog(
-                    $this->action->rule,
-                    $journalObj,
-                    'remove_from_piggy',
-                    null,
-                    [
-                        'currency_symbol' => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
-                        'amount'          => $destination->amount,
-                        'piggy'           => $piggyBank->name,
-                    ]
-                )
-            );
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'remove_from_piggy', null, [
+                'currency_symbol' => $journalObj->transactionCurrency->symbol,
+                'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
+                'amount'          => $destination->amount,
+                'piggy'           => $piggyBank->name
+            ]));
 
             return true;
         }
@@ -111,37 +109,37 @@ class UpdatePiggyBank implements ActionInterface
             Log::debug('Piggy bank account is linked to source, so add amount to piggy bank.');
             $this->addAmount($piggyBank, $journal, $journalObj, $accounts['destination'], $destination->amount);
 
-            event(
-                new TriggeredAuditLog(
-                    $this->action->rule,
-                    $journalObj,
-                    'add_to_piggy',
-                    null,
-                    [
-                        'currency_symbol' => $journalObj->transactionCurrency->symbol,
-                        'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
-                        'amount'          => $destination->amount,
-                        'piggy'           => $piggyBank->name,
-                        'piggy_id'        => $piggyBank->id,
-                    ]
-                )
-            );
+            event(new TriggeredAuditLog($this->action->rule, $journalObj, 'add_to_piggy', null, [
+                'currency_symbol' => $journalObj->transactionCurrency->symbol,
+                'decimal_places'  => $journalObj->transactionCurrency->decimal_places,
+                'amount'          => $destination->amount,
+                'piggy'           => $piggyBank->name,
+                'piggy_id'        => $piggyBank->id
+            ]));
 
             return true;
         }
         if ($this->isConnected($piggyBank, $accounts['source']) && $this->isConnected($piggyBank, $accounts['destination'])) {
-            Log::info(sprintf('Piggy bank is linked to BOTH source ("#%d") and destination ("#%d"), so no action will be taken.', $accounts['source']->id, $accounts['destination']->id));
+            Log::info(sprintf(
+                'Piggy bank is linked to BOTH source ("#%d") and destination ("#%d"), so no action will be taken.',
+                $accounts['source']->id,
+                $accounts['destination']->id
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $actionValue])));
 
             return false;
         }
-        Log::info(sprintf('Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.', $accounts['source']->id, $accounts['destination']->id));
+        Log::info(sprintf(
+            'Piggy bank is not linked to source ("#%d") or destination ("#%d"), so no action will be taken.',
+            $accounts['source']->id,
+            $accounts['destination']->id
+        ));
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_link_piggy', ['name' => $actionValue])));
 
         return false;
     }
 
-    private function findPiggyBank(User $user, string $name): ?PiggyBank
+    private function findPiggyBank(User $user, string $name): null|PiggyBank
     {
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
@@ -154,11 +152,11 @@ class UpdatePiggyBank implements ActionInterface
     {
         return [
             'source'      => $journal->transactions()->where('amount', '<', '0')->first()?->account,
-            'destination' => $journal->transactions()->where('amount', '>', '0')->first()?->account,
+            'destination' => $journal->transactions()->where('amount', '>', '0')->first()?->account
         ];
     }
 
-    private function isConnected(PiggyBank $piggyBank, ?Account $link): bool
+    private function isConnected(PiggyBank $piggyBank, null|Account $link): bool
     {
         if (!$link instanceof Account) {
             return false;
@@ -181,11 +179,11 @@ class UpdatePiggyBank implements ActionInterface
         $accountRepository->setUser($account->user);
 
         // how much can we remove from this piggy bank?
-        $toRemove          = $repository->getCurrentAmount($piggyBank, $account);
+        $toRemove = $repository->getCurrentAmount($piggyBank, $account);
         Log::debug(sprintf('Amount is %s, max to remove is %s', $amount, $toRemove));
 
         // if $amount is bigger than $toRemove, shrink it.
-        $amount            = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
+        $amount = -1 === bccomp($amount, $toRemove) ? $amount : $toRemove;
         Log::debug(sprintf('Amount is now %s', $amount));
 
         // if amount is zero, stop.
@@ -199,7 +197,10 @@ class UpdatePiggyBank implements ActionInterface
         if (false === $repository->canRemoveAmount($piggyBank, $account, $amount)) {
             Log::warning(sprintf('Cannot remove %s from piggy bank.', $amount));
             $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', ['amount' => Amount::formatAnything($amount, $currency, false), 'name' => $piggyBank->name])));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', [
+                'amount' => Amount::formatAnything($amount, $currency, false),
+                'name'   => $piggyBank->name
+            ])));
 
             return;
         }
@@ -217,7 +218,7 @@ class UpdatePiggyBank implements ActionInterface
 
         // how much can we add to the piggy bank?
         if (0 !== bccomp($piggyBank->target_amount, '0')) {
-            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
+            $toAdd = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
             Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
 
             // update amount to fit:
@@ -239,7 +240,10 @@ class UpdatePiggyBank implements ActionInterface
         if (false === $repository->canAddAmount($piggyBank, $account, $amount)) {
             Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
             $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', ['amount' => Amount::formatAnything($currency, $amount, false), 'name' => $piggyBank->name])));
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', [
+                'amount' => Amount::formatAnything($currency, $amount, false),
+                'name'   => $piggyBank->name
+            ])));
 
             return;
         }

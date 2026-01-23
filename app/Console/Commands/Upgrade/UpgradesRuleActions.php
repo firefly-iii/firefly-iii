@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpgradesRuleActions.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -27,8 +26,8 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 class UpgradesRuleActions extends Command
 {
@@ -36,9 +35,9 @@ class UpgradesRuleActions extends Command
 
     public const string CONFIG_NAME = '610_migrate_rule_actions';
 
-    protected $description          = 'Migrate rule actions away from expression engine';
+    protected $description = 'Migrate rule actions away from expression engine';
 
-    protected $signature            = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:600-rule-actions {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -66,8 +65,7 @@ class UpgradesRuleActions extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function replaceEqualSign(): void
@@ -101,7 +99,7 @@ class UpgradesRuleActions extends Command
             'append_descr_to_notes',
             'append_notes_to_descr',
             'move_descr_to_notes',
-            'move_notes_to_descr',
+            'move_notes_to_descr'
         ];
         $actions  = RuleAction::whereIn('action_type', $obsolete)->get();
 
@@ -116,7 +114,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'append_description':
-                    $action->action_type  = 'set_description';
+                    $action->action_type = 'set_description';
                     $action->action_value = sprintf('=description~"%s"', str_replace('"', '\"', $action->action_value));
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -124,7 +122,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'prepend_description':
-                    $action->action_type  = 'set_description';
+                    $action->action_type = 'set_description';
                     $action->action_value = sprintf('="%s"~description', str_replace('"', '\"', $action->action_value));
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -132,7 +130,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'append_notes':
-                    $action->action_type  = 'set_notes';
+                    $action->action_type = 'set_notes';
                     $action->action_value = sprintf('=notes~"%s"', str_replace('"', '\"', $action->action_value));
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -140,7 +138,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'prepend_notes':
-                    $action->action_type  = 'set_notes';
+                    $action->action_type = 'set_notes';
                     $action->action_value = sprintf('="%s"~notes', str_replace('"', '\"', $action->action_value));
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -148,7 +146,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'append_descr_to_notes':
-                    $action->action_type  = 'set_notes';
+                    $action->action_type = 'set_notes';
                     $action->action_value = '=notes~" "~description';
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -156,7 +154,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'append_notes_to_descr':
-                    $action->action_type  = 'set_description';
+                    $action->action_type = 'set_description';
                     $action->action_value = '=description~" "~notes';
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -164,7 +162,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'move_descr_to_notes':
-                    $action->action_type  = 'set_notes';
+                    $action->action_type = 'set_notes';
                     $action->action_value = '=description';
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));
@@ -172,7 +170,7 @@ class UpgradesRuleActions extends Command
                     break;
 
                 case 'move_notes_to_descr':
-                    $action->action_type  = 'set_description';
+                    $action->action_type = 'set_description';
                     $action->action_value = '=notes';
                     $action->save();
                     $this->friendlyInfo(sprintf('Upgraded action #%d from "%s" to "%s".', $action->id, $oldType, $action->action_type));

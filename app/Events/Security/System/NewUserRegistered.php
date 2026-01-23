@@ -33,5 +33,8 @@ class NewUserRegistered extends Event
 {
     use SerializesModels;
 
-    public function __construct(public OwnerNotifiable $owner, public User $user) {}
+    public function __construct(
+        public OwnerNotifiable $owner,
+        public User $user
+    ) {}
 }

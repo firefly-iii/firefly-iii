@@ -37,7 +37,9 @@ class RuleGroupServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     /**
      * Register the application services.
@@ -45,16 +47,14 @@ class RuleGroupServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): RuleGroupRepositoryInterface {
-                /** @var RuleGroupRepository $repository */
-                $repository = app(RuleGroupRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): RuleGroupRepositoryInterface {
+            /** @var RuleGroupRepository $repository */
+            $repository = app(RuleGroupRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

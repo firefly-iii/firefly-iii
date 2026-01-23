@@ -38,16 +38,20 @@ class PiggyBankAmountIsChanged extends Event
 {
     use SerializesModels;
 
-    public string    $amount;
+    public string $amount;
     public PiggyBank $piggyBank;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(PiggyBank $piggyBank, string $amount, public ?TransactionJournal $transactionJournal, public ?TransactionGroup $transactionGroup)
-    {
+    public function __construct(
+        PiggyBank $piggyBank,
+        string $amount,
+        public null|TransactionJournal $transactionJournal,
+        public null|TransactionGroup $transactionGroup
+    ) {
         Log::debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
         $this->piggyBank = $piggyBank;
-        $this->amount    = $amount;
+        $this->amount = $amount;
     }
 }

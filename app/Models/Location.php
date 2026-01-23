@@ -41,8 +41,8 @@ class Location extends Model
      */
     public static function requestRules(array $rules): array
     {
-        $rules['latitude']   = 'numeric|min:-90|max:90|nullable|required_with:longitude';
-        $rules['longitude']  = 'numeric|min:-180|max:180|nullable|required_with:latitude';
+        $rules['latitude'] = 'numeric|min:-90|max:90|nullable|required_with:longitude';
+        $rules['longitude'] = 'numeric|min:-180|max:180|nullable|required_with:latitude';
         $rules['zoom_level'] = 'numeric|min:0|max:80|nullable|required_with:latitude';
 
         return $rules;
@@ -74,14 +74,12 @@ class Location extends Model
             'deleted_at' => 'datetime',
             'zoomLevel'  => 'int',
             'latitude'   => 'float',
-            'longitude'  => 'float',
+            'longitude'  => 'float'
         ];
     }
 
     protected function locatableId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

@@ -38,9 +38,9 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
-    private NoBudgetRepositoryInterface   $noRepository;
+    private NoBudgetRepositoryInterface $noRepository;
     private OperationsRepositoryInterface $opsRepository;
-    private BudgetRepositoryInterface     $repository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -48,19 +48,17 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->repository    = app(BudgetRepositoryInterface::class);
-                $this->noRepository  = app(NoBudgetRepositoryInterface::class);
-                $user                = auth()->user();
-                $this->opsRepository->setUser($user);
-                $this->repository->setUser($user);
-                $this->noRepository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
+            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->noRepository = app(NoBudgetRepositoryInterface::class);
+            $user = auth()->user();
+            $this->opsRepository->setUser($user);
+            $this->repository->setUser($user);
+            $this->noRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function budget(GenericRequest $request): JsonResponse
@@ -85,8 +83,8 @@ class BudgetController extends Controller
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
                     'difference_float' => (float) $expense['sum'], // intentional float
-                    'currency_id'      => (string) $expense['currency_id'],
-                    'currency_code'    => $expense['currency_code'],
+                    'currency_id'   => (string) $expense['currency_id'],
+                    'currency_code' => $expense['currency_code']
                 ];
             }
         }
@@ -107,8 +105,8 @@ class BudgetController extends Controller
             $result[] = [
                 'difference'       => $expense['sum'],
                 'difference_float' => (float) $expense['sum'], // intentional float
-                'currency_id'      => (string) $expense['currency_id'],
-                'currency_code'    => $expense['currency_code'],
+                'currency_id'   => (string) $expense['currency_id'],
+                'currency_code' => $expense['currency_code']
             ];
         }
 

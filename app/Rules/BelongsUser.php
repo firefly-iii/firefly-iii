@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -34,6 +33,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUser
@@ -50,17 +50,17 @@ class BelongsUser implements ValidationRule
         }
         Log::debug(sprintf('Going to validate %s', $attribute));
 
-        $result    = match ($attribute) {
-            'piggy_bank_id'               => $this->validatePiggyBankId((int) $value),
-            'piggy_bank_name'             => $this->validatePiggyBankName($value),
-            'bill_id'                     => $this->validateBillId((int) $value),
-            'transaction_journal_id'      => $this->validateJournalId((int) $value),
-            'bill_name'                   => $this->validateBillName($value),
-            'budget_id'                   => $this->validateBudgetId((int) $value),
-            'category_id'                 => $this->validateCategoryId((int) $value),
-            'budget_name'                 => $this->validateBudgetName($value),
+        $result = match ($attribute) {
+            'piggy_bank_id' => $this->validatePiggyBankId((int) $value),
+            'piggy_bank_name' => $this->validatePiggyBankName($value),
+            'bill_id' => $this->validateBillId((int) $value),
+            'transaction_journal_id' => $this->validateJournalId((int) $value),
+            'bill_name' => $this->validateBillName($value),
+            'budget_id' => $this->validateBudgetId((int) $value),
+            'category_id' => $this->validateCategoryId((int) $value),
+            'budget_name' => $this->validateBudgetName($value),
             'source_id', 'destination_id' => $this->validateAccountId((int) $value),
-            default                       => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute)),
+            default => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
         };
         if (false === $result) {
             $fail('validation.belongs_user')->translate();
@@ -82,13 +82,11 @@ class BelongsUser implements ValidationRule
 
     private function validatePiggyBankId(int $value): bool
     {
-
-
         $count = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('piggy_banks.id', '=', $value)
-            ->where('accounts.user_id', '=', auth()->user()->id)->count()
-        ;
+            ->where('accounts.user_id', '=', auth()->user()->id)
+            ->count();
 
         return $count > 0;
     }
@@ -98,8 +96,8 @@ class BelongsUser implements ValidationRule
         $count = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('piggy_banks.name', '=', $value)
-            ->where('accounts.user_id', '=', auth()->user()->id)->count()
-        ;
+            ->where('accounts.user_id', '=', auth()->user()->id)
+            ->count();
 
         return $count > 0;
     }
@@ -138,14 +136,14 @@ class BelongsUser implements ValidationRule
         $objects = [];
         // get all objects belonging to user:
         if (PiggyBank::class === $class) {
-            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                ->where('accounts.user_id', '=', auth()->user()->id)->get(['piggy_banks.*'])
-            ;
+            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where('accounts.user_id', '=', auth()->user()->id)->get([
+                'piggy_banks.*'
+            ]);
         }
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();
         }
-        $count   = 0;
+        $count = 0;
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field}); // @phpstan-ignore-line
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));

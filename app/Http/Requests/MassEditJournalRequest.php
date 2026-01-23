@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -48,7 +48,7 @@ class MassEditJournalRequest extends FormRequest
             'destination_id.*' => 'numeric|belongsToUser:accounts,id',
             'journals.*'       => 'numeric|belongsToUser:transaction_journals,id',
             'revenue_account'  => 'max:255',
-            'expense_account'  => 'max:255',
+            'expense_account'  => 'max:255'
         ];
     }
 

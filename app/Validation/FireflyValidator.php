@@ -23,9 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use ErrorException;
-use FireflyIII\Support\Facades\Preferences;
 use Config;
+use ErrorException;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -39,6 +38,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\ParseDateString;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
@@ -80,7 +80,7 @@ class FireflyValidator extends Validator
         if (!is_string($value) || 6 !== strlen($value)) {
             return false;
         }
-        $user             = auth()->user();
+        $user = auth()->user();
         if (null === $user) {
             Log::error('No user during validate2faCode');
 
@@ -91,7 +91,7 @@ class FireflyValidator extends Validator
         if (is_array($secret)) {
             $secret = '';
         }
-        $secret           = (string) $secret;
+        $secret = (string) $secret;
 
         return (bool) Facade::verifyKey($secret, $value);
     }
@@ -110,7 +110,10 @@ class FireflyValidator extends Validator
         if (0 === (int) $value) {
             return true;
         }
-        $count = DB::table($parameters[0])->where('user_id', auth()->user()->id)->where($field, $value)->count();
+        $count = DB::table($parameters[0])
+            ->where('user_id', auth()->user()->id)
+            ->where($field, $value)
+            ->count();
 
         return 1 === $count;
     }
@@ -134,7 +137,7 @@ class FireflyValidator extends Validator
         if (!is_string($value) || 6 !== strlen($value)) {
             return false;
         }
-        $user   = auth()->user();
+        $user = auth()->user();
         if (null === $user) {
             Log::error('No user during validate2faCode');
 
@@ -204,7 +207,7 @@ class FireflyValidator extends Validator
             "\u{FEFF}", // zero width no -break space
             ' ',
             '-',
-            '?',
+            '?'
         ];
         $replace = '';
         $value   = str_replace($search, $replace, $value);
@@ -218,13 +221,41 @@ class FireflyValidator extends Validator
             Log::error($e->getMessage());
         }
         $search  = [' ', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
-        $replace = ['', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27', '28', '29', '30', '31', '32', '33', '34', '35'];
+        $replace = [
+            '',
+            '10',
+            '11',
+            '12',
+            '13',
+            '14',
+            '15',
+            '16',
+            '17',
+            '18',
+            '19',
+            '20',
+            '21',
+            '22',
+            '23',
+            '24',
+            '25',
+            '26',
+            '27',
+            '28',
+            '29',
+            '30',
+            '31',
+            '32',
+            '33',
+            '34',
+            '35'
+        ];
 
         // take
-        $first   = substr($value, 0, 4);
-        $last    = substr($value, 4);
-        $iban    = $last.$first;
-        $iban    = trim(str_replace($search, $replace, $iban));
+        $first = substr($value, 0, 4);
+        $last  = substr($value, 4);
+        $iban  = $last . $first;
+        $iban  = trim(str_replace($search, $replace, $iban));
         if ('' === $iban) {
             return false;
         }
@@ -291,12 +322,12 @@ class FireflyValidator extends Validator
         return 1 === $count;
     }
 
-    public function validateRuleActionValue(string $attribute, ?string $value = null): bool
+    public function validateRuleActionValue(string $attribute, null|string $value = null): bool
     {
         // first, get the index from this string:
         $value ??= '';
-        $parts      = explode('.', $attribute);
-        $index      = (int) ($parts[1] ?? '0');
+        $parts = explode('.', $attribute);
+        $index = (int) ($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
         $actionType = $this->data['actions'][$index]['type'] ?? 'invalid';
@@ -332,17 +363,14 @@ class FireflyValidator extends Validator
         if ('convert_transfer' === $actionType) {
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $account    = $repository->findByName(
-                $value,
-                [
-                    AccountTypeEnum::DEFAULT->value,
-                    AccountTypeEnum::ASSET->value,
-                    AccountTypeEnum::LOAN->value,
-                    AccountTypeEnum::DEBT->value,
-                    AccountTypeEnum::MORTGAGE->value,
-                    AccountTypeEnum::CREDITCARD->value,
-                ]
-            );
+            $account    = $repository->findByName($value, [
+                AccountTypeEnum::DEFAULT->value,
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::CREDITCARD->value
+            ]);
 
             return null !== $account;
         }
@@ -362,11 +390,11 @@ class FireflyValidator extends Validator
     /**
      * $attribute has the format triggers.%d.value.
      */
-    public function validateRuleTriggerValue(string $attribute, ?string $value = null): bool
+    public function validateRuleTriggerValue(string $attribute, null|string $value = null): bool
     {
         // first, get the index from this string:
-        $parts       = explode('.', $attribute);
-        $index       = (int) ($parts[1] ?? '0');
+        $parts = explode('.', $attribute);
+        $index = (int) ($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
         $triggerType = $this->data['triggers'][$index]['type'] ?? 'invalid';
@@ -377,21 +405,35 @@ class FireflyValidator extends Validator
         }
 
         // these trigger types need a numerical check:
-        $numerical   = ['amount_less', 'amount_more', 'amount_exactly'];
+        $numerical = ['amount_less', 'amount_more', 'amount_exactly'];
         if (in_array($triggerType, $numerical, true)) {
             return is_numeric($value);
         }
 
         // these triggers need just the word "true":
         // TODO create a helper to automatically return these.
-        $needTrue    = [
-            'reconciled', 'has_attachments', 'has_any_category', 'has_any_budget', 'has_any_bill', 'has_any_tag', 'any_notes', 'any_external_url', 'has_no_attachments', 'has_no_category', 'has_no_budget', 'has_no_bill', 'has_no_tag', 'no_notes', 'no_external_url',
+        $needTrue = [
+            'reconciled',
+            'has_attachments',
+            'has_any_category',
+            'has_any_budget',
+            'has_any_bill',
+            'has_any_tag',
+            'any_notes',
+            'any_external_url',
+            'has_no_attachments',
+            'has_no_category',
+            'has_no_budget',
+            'has_no_bill',
+            'has_no_tag',
+            'no_notes',
+            'no_external_url',
             'source_is_cash',
             'destination_is_cash',
             'account_is_cash',
             'exists',
             'no_external_id',
-            'any_external_id',
+            'any_external_id'
         ];
         if (in_array($triggerType, $needTrue, true)) {
             return 'true' === $value;
@@ -399,7 +441,7 @@ class FireflyValidator extends Validator
 
         // these trigger types need a simple strlen check:
         // TODO create a helper to automatically return these.
-        $length      = [
+        $length = [
             'source_account_starts',
             'source_account_ends',
             'source_account_is',
@@ -419,7 +461,7 @@ class FireflyValidator extends Validator
             'notes_contain',
             'notes_start',
             'notes_end',
-            'notes_are',
+            'notes_are'
         ];
         if (in_array($triggerType, $length, true)) {
             return '' !== $value;
@@ -463,9 +505,9 @@ class FireflyValidator extends Validator
      *
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateSecurePassword($attribute, ?string $value): bool
+    public function validateSecurePassword($attribute, null|string $value): bool
     {
-        $value  = (string)$value;
+        $value  = (string) $value;
         $verify = false;
         if (array_key_exists('verify_password', $this->data)) {
             $verify = 1 === (int) $this->data['verify_password'];
@@ -540,9 +582,9 @@ class FireflyValidator extends Validator
         }
 
         /** @var User $user */
-        $user   = User::find($this->data['user_id']);
-        $type   = AccountType::find($this->data['account_type_id'])->first();
-        $value  = $this->data['name'];
+        $user  = User::find($this->data['user_id']);
+        $type  = AccountType::find($this->data['account_type_id'])->first();
+        $value = $this->data['name'];
 
         /** @var null|Account $result */
         $result = $user->accounts()->where('account_type_id', $type->id)->where('name', $value)->first();
@@ -553,7 +595,7 @@ class FireflyValidator extends Validator
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
         /** @var null|array $search */
-        $search         = Config::get('firefly.accountTypeByIdentifier.'.$type);
+        $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
 
         if (null === $search) {
             return false;
@@ -564,10 +606,7 @@ class FireflyValidator extends Validator
         $accountTypeIds = $accountTypes->pluck('id')->toArray();
 
         /** @var null|Account $result */
-        $result         = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
+        $result = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->where('name', $value)->first();
 
         return null === $result;
     }
@@ -582,10 +621,7 @@ class FireflyValidator extends Validator
         $ignore = (int) ($parameters[0] ?? 0.0);
 
         /** @var null|Account $result */
-        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
+        $result = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->where('name', $value)->first();
 
         return null === $result;
     }
@@ -598,13 +634,10 @@ class FireflyValidator extends Validator
         /** @var Account $existingAccount */
         $existingAccount = Account::find($accountId);
 
-        $type            = $existingAccount->accountType;
-        $ignore          = $existingAccount->id;
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
 
-        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->where('name', $value)->first();
 
         return null === $entry;
     }
@@ -617,13 +650,10 @@ class FireflyValidator extends Validator
         /** @var Account $existingAccount */
         $existingAccount = Account::find($this->data['id']);
 
-        $type            = $existingAccount->accountType;
-        $ignore          = $existingAccount->id;
+        $type   = $existingAccount->accountType;
+        $ignore = $existingAccount->id;
 
-        $entry           = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)
-            ->where('name', $value)
-            ->first()
-        ;
+        $entry = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->where('name', $value)->first();
 
         return null === $entry;
     }
@@ -649,19 +679,18 @@ class FireflyValidator extends Validator
             $accountId = (int) ($parameters[0] ?? 0.0);
         }
 
-        $query     = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
             ->where('accounts.user_id', auth()->user()->id)
             ->where('account_meta.name', 'account_number')
-            ->where('account_meta.data', json_encode($value))
-        ;
+            ->where('account_meta.data', json_encode($value));
 
         if ($accountId > 0) {
             // exclude current account from check.
             $query->where('account_meta.account_id', '!=', $accountId);
         }
-        $set       = $query->get(['account_meta.*']);
-        $count     = $set->count();
+        $set   = $query->get(['account_meta.*']);
+        $count = $set->count();
         if (0 === $count) {
             return true;
         }
@@ -669,7 +698,7 @@ class FireflyValidator extends Validator
             // pretty much impossible but still.
             return false;
         }
-        $type      = $this->data['objectType'] ?? 'unknown';
+        $type = $this->data['objectType'] ?? 'unknown';
         if ('expense' !== $type && 'revenue' !== $type) {
             Log::warning(sprintf('Account number "%s" is not unique and account type "%s" cannot share its account number.', $value, $type));
 
@@ -696,7 +725,7 @@ class FireflyValidator extends Validator
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
-    public function validateUniqueCurrencyCode(?string $attribute, ?string $value): bool
+    public function validateUniqueCurrencyCode(null|string $attribute, null|string $value): bool
     {
         return $this->validateUniqueCurrency('code', (string) $attribute, (string) $value);
     }
@@ -706,15 +735,18 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueCurrency(string $field, string $attribute, string $value): bool
     {
-        return 0 === DB::table('transaction_currencies')->where($field, $value)->whereNull('deleted_at')->count();
+        return 0 === DB::table('transaction_currencies')
+            ->where($field, $value)
+            ->whereNull('deleted_at')
+            ->count();
     }
 
-    public function validateUniqueCurrencyName(?string $attribute, ?string $value): bool
+    public function validateUniqueCurrencyName(null|string $attribute, null|string $value): bool
     {
         return $this->validateUniqueCurrency('name', (string) $attribute, (string) $value);
     }
 
-    public function validateUniqueCurrencySymbol(?string $attribute, ?string $value): bool
+    public function validateUniqueCurrencySymbol(null|string $attribute, null|string $value): bool
     {
         return $this->validateUniqueCurrency('symbol', (string) $attribute, (string) $value);
     }
@@ -739,7 +771,7 @@ class FireflyValidator extends Validator
             // get existing webhook value:
             if (0 !== $existingId) {
                 /** @var null|Webhook $webhook */
-                $webhook  = auth()->user()->webhooks()->find($existingId);
+                $webhook = auth()->user()->webhooks()->find($existingId);
                 if (null === $webhook) {
                     return false;
                 }
@@ -761,8 +793,8 @@ class FireflyValidator extends Validator
                 ->where('response', $response)
                 ->where('delivery', $delivery)
                 ->where('id', '!=', $existingId)
-                ->where('url', $url)->count()
-            ;
+                ->where('url', $url)
+                ->count();
         }
 
         return false;
@@ -784,22 +816,23 @@ class FireflyValidator extends Validator
     public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
         [$table, $field] = $parameters;
-        $exclude         = (int) ($parameters[2] ?? 0.0);
+        $exclude = (int) ($parameters[2] ?? 0.0);
 
         /*
          * If other data (in $this->getData()) contains
          * ID field, set that field to be the $exclude.
          */
-        $data            = $this->getData();
+        $data = $this->getData();
         if (!array_key_exists(2, $parameters) && array_key_exists('id', $data) && (int) $data['id'] > 0) {
             $exclude = (int) $data['id'];
         }
         // get entries from table
-        $result          = DB::table($table)->where('user_id', auth()->user()->id)->whereNull('deleted_at')
+        $result = DB::table($table)
+            ->where('user_id', auth()->user()->id)
+            ->whereNull('deleted_at')
             ->where('id', '!=', $exclude)
             ->where($field, $value)
-            ->first([$field])
-        ;
+            ->first([$field]);
         if (null === $result) {
             return true; // not found, so true.
         }
@@ -821,8 +854,7 @@ class FireflyValidator extends Validator
         $query   = DB::table('object_groups')
             ->whereNull('object_groups.deleted_at')
             ->where('object_groups.user_id', auth()->user()->id)
-            ->where('object_groups.title', $value)
-        ;
+            ->where('object_groups.title', $value);
         if (null !== $exclude) {
             $query->where('object_groups.id', '!=', (int) $exclude);
         }
@@ -842,8 +874,7 @@ class FireflyValidator extends Validator
         $exclude = $parameters[0] ?? null;
         $query   = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', auth()->user()->id)
-        ;
+            ->where('accounts.user_id', auth()->user()->id);
         if (null !== $exclude) {
             $query->where('piggy_banks.id', '!=', (int) $exclude);
         }
@@ -866,18 +897,18 @@ class FireflyValidator extends Validator
             $deliveries = Webhook::getDeliveriesForValidation();
 
             // integers
-            $trigger    = $triggers[$this->data['trigger']] ?? 0;
-            $response   = $responses[$this->data['response']] ?? 0;
-            $delivery   = $deliveries[$this->data['delivery']] ?? 0;
-            $url        = $this->data['url'];
-            $userId     = auth()->user()->id;
+            $trigger  = $triggers[$this->data['trigger']] ?? 0;
+            $response = $responses[$this->data['response']] ?? 0;
+            $delivery = $deliveries[$this->data['delivery']] ?? 0;
+            $url      = $this->data['url'];
+            $userId   = auth()->user()->id;
 
             return 0 === Webhook::whereUserId($userId)
                 ->where('trigger', $trigger)
                 ->where('response', $response)
                 ->where('delivery', $delivery)
-                ->where('url', $url)->count()
-            ;
+                ->where('url', $url)
+                ->count();
         }
 
         return false;

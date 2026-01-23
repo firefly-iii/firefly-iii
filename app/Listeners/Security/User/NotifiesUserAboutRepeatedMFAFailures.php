@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * NotifiesUserAboutRepeatedMFAFailures.php
  * Copyright (c) 2026 james@firefly-iii.org

@@ -37,8 +37,10 @@ class OwnerTestsNotificationChannel
     /**
      * Create a new event instance.
      */
-    public function __construct(string $channel, public OwnerNotifiable $owner)
-    {
+    public function __construct(
+        string $channel,
+        public OwnerNotifiable $owner
+    ) {
         Log::debug(sprintf('Triggered OwnerTestsNotificationChannels("%s")', $channel));
         $this->channel = $channel;
     }

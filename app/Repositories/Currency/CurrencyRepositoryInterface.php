@@ -53,7 +53,7 @@ interface CurrencyRepositoryInterface
     /**
      * @throws FireflyException
      */
-    public function currencyInUseAt(TransactionCurrency $currency): ?string;
+    public function currencyInUseAt(TransactionCurrency $currency): null|string;
 
     public function destroy(TransactionCurrency $currency): bool;
 
@@ -61,20 +61,20 @@ interface CurrencyRepositoryInterface
 
     public function enable(TransactionCurrency $currency): void;
 
-    public function find(int $currencyId): ?TransactionCurrency;
+    public function find(int $currencyId): null|TransactionCurrency;
 
     /**
      * Find by currency code, return NULL if unfound.
      *
      * Used in the download exchange rates cron job. Does not require user object.
      */
-    public function findByCode(string $currencyCode): ?TransactionCurrency;
+    public function findByCode(string $currencyCode): null|TransactionCurrency;
 
-    public function findByName(string $name): ?TransactionCurrency;
+    public function findByName(string $name): null|TransactionCurrency;
 
-    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency;
+    public function findCurrency(null|int $currencyId, null|string $currencyCode): TransactionCurrency;
 
-    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency;
+    public function findCurrencyNull(null|int $currencyId, null|string $currencyCode): null|TransactionCurrency;
 
     /**
      * Get the user group's currencies.
@@ -98,7 +98,7 @@ interface CurrencyRepositoryInterface
      *
      * Used in the download exchange rate cron job. Needs the user object!
      */
-    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
+    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): null|CurrencyExchangeRate;
 
     public function isFallbackCurrency(TransactionCurrency $currency): bool;
 

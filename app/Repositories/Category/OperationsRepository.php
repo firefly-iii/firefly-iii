@@ -50,7 +50,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      *
      * First currency, then categories.
      */
-    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -66,13 +66,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int) $journal['currency_id'];
-            $categoryId                                                                        = (int) $journal['category_id'];
-            $categoryName                                                                      = (string) $journal['category_name'];
+            $currencyId   = (int) $journal['currency_id'];
+            $categoryId   = (int) $journal['category_id'];
+            $categoryName = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -80,25 +80,25 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             }
 
             // info about the currency:
-            $array[$currencyId]                            ??= [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_decimal_places' => $journal['currency_decimal_places']
             ];
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
-                'transaction_journals' => [],
+                'transaction_journals' => []
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int) $journal['transaction_journal_id'];
+            $journalId = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => Steam::negative($journal['amount']),
                 'date'                     => $journal['date'],
@@ -108,7 +108,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string) $journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id']
             ];
         }
 
@@ -128,7 +128,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -144,13 +144,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int) $journal['currency_id'];
-            $categoryId                                                                        = (int) $journal['category_id'];
-            $categoryName                                                                      = (string) $journal['category_name'];
+            $currencyId   = (int) $journal['currency_id'];
+            $categoryId   = (int) $journal['category_id'];
+            $categoryName = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -158,25 +158,25 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             }
 
             // info about the currency:
-            $array[$currencyId]                            ??= [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_decimal_places' => $journal['currency_decimal_places']
             ];
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
-                'transaction_journals' => [],
+                'transaction_journals' => []
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int) $journal['transaction_journal_id'];
+            $journalId = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => Steam::positive($journal['amount']),
                 'date'                     => $journal['date'],
@@ -185,20 +185,23 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'source_account_name'      => $journal['source_account_name'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string) $journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id']
             ];
         }
 
         return $array;
     }
 
-    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
+    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
-            ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
-        ;
+        $collector
+            ->setUser($this->user)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
+            ->setDestinationAccounts($accounts)
+            ->excludeSourceAccounts($accounts);
         if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -206,13 +209,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int) $journal['currency_id'];
-            $categoryId                                                                        = (int) $journal['category_id'];
-            $categoryName                                                                      = (string) $journal['category_name'];
+            $currencyId   = (int) $journal['currency_id'];
+            $categoryId   = (int) $journal['category_id'];
+            $categoryName = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -220,25 +223,25 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             }
 
             // info about the currency:
-            $array[$currencyId]                            ??= [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_decimal_places' => $journal['currency_decimal_places']
             ];
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
-                'transaction_journals' => [],
+                'transaction_journals' => []
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int) $journal['transaction_journal_id'];
+            $journalId = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => Steam::positive($journal['amount']),
                 'date'                     => $journal['date'],
@@ -248,20 +251,23 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string) $journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id']
             ];
         }
 
         return $array;
     }
 
-    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array
+    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
-            ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
-        ;
+        $collector
+            ->setUser($this->user)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
+            ->setSourceAccounts($accounts)
+            ->excludeDestinationAccounts($accounts);
         if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
         }
@@ -269,13 +275,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $collector->setCategories($this->getCategories());
         }
         $collector->withCategoryInformation()->withAccountInformation()->withBudgetInformation();
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                                                                        = (int) $journal['currency_id'];
-            $categoryId                                                                        = (int) $journal['category_id'];
-            $categoryName                                                                      = (string) $journal['category_name'];
+            $currencyId   = (int) $journal['currency_id'];
+            $categoryId   = (int) $journal['category_id'];
+            $categoryName = (string) $journal['category_name'];
 
             // catch "no category" entries.
             if (0 === $categoryId) {
@@ -283,25 +289,25 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             }
 
             // info about the currency:
-            $array[$currencyId]                            ??= [
+            $array[$currencyId] ??= [
                 'categories'              => [],
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_decimal_places' => $journal['currency_decimal_places']
             ];
 
             // info about the categories:
             $array[$currencyId]['categories'][$categoryId] ??= [
                 'id'                   => (string) $categoryId,
                 'name'                 => $categoryName,
-                'transaction_journals' => [],
+                'transaction_journals' => []
             ];
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId                                                                         = (int) $journal['transaction_journal_id'];
+            $journalId = (int) $journal['transaction_journal_id'];
             $array[$currencyId]['categories'][$categoryId]['transaction_journals'][$journalId] = [
                 'amount'                   => Steam::negative($journal['amount']),
                 'date'                     => $journal['date'],
@@ -311,7 +317,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'destination_account_id'   => (string) $journal['destination_account_id'],
                 'destination_account_name' => $journal['destination_account_name'],
                 'description'              => $journal['description'],
-                'transaction_group_id'     => (string) $journal['transaction_group_id'],
+                'transaction_group_id'     => (string) $journal['transaction_group_id']
             ];
         }
 
@@ -321,10 +327,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -344,13 +350,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function sumIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector        = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
-        ;
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -366,12 +370,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         foreach ($journals as $journal) {
             // Almost the same as in \FireflyIII\Repositories\Budget\OperationsRepository::sumExpenses
-            $amount                    = '0';
-            $currencyId                = (int) $journal['currency_id'];
-            $currencyName              = $journal['currency_name'];
-            $currencySymbol            = $journal['currency_symbol'];
-            $currencyCode              = $journal['currency_code'];
-            $currencyDecimalPlaces     = $journal['currency_decimal_places'];
+            $amount                = '0';
+            $currencyId            = (int) $journal['currency_id'];
+            $currencyName          = $journal['currency_name'];
+            $currencySymbol        = $journal['currency_symbol'];
+            $currencyCode          = $journal['currency_code'];
+            $currencyDecimalPlaces = $journal['currency_decimal_places'];
             if ($convertToPrimary) {
                 $amount = Amount::getAmountFromJournal($journal);
                 if ($primary->id !== (int) $journal['currency_id'] && $primary->id !== (int) $journal['foreign_currency_id']) {
@@ -402,7 +406,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 'currency_name'           => $currencyName,
                 'currency_symbol'         => $currencySymbol,
                 'currency_code'           => $currencyCode,
-                'currency_decimal_places' => $currencyDecimalPlaces,
+                'currency_decimal_places' => $currencyDecimalPlaces
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::positive($amount));
         }
@@ -413,13 +417,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function sumTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::TRANSFER->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -428,18 +430,18 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             $categories = $this->getCategories();
         }
         $collector->setCategories($categories);
-        $journals  = $collector->getExtractedJournals();
-        $array     = [];
+        $journals = $collector->getExtractedJournals();
+        $array    = [];
 
         foreach ($journals as $journal) {
-            $currencyId                = (int) $journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => (string) $currencyId,
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_code'           => $journal['currency_code'],
-                'currency_decimal_places' => $journal['currency_decimal_places'],
+                'currency_decimal_places' => $journal['currency_decimal_places']
             ];
             $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], Steam::positive($journal['amount']));
         }
@@ -447,7 +449,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $array;
     }
 
-    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function collectExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -465,13 +467,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $collector->getExtractedJournals();
     }
 
-    public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function collectIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -484,13 +484,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $collector->getExtractedJournals();
     }
 
-    public function collectTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array
+    public function collectTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::TRANSFER->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -510,7 +508,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['category_id'] === $category->id);
+        $expenses = array_filter($expenses, static fn(array $expense): bool => $expense['category_id'] === $category->id);
 
         return $summarizer->groupByCurrencyId($expenses, $method, false);
     }

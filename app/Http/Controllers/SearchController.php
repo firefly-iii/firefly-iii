@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -45,14 +45,12 @@ class SearchController extends Controller
     {
         parent::__construct();
         app('view')->share('showCategory', true);
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-search');
-                app('view')->share('title', (string) trans('firefly.search'));
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-search');
+            app('view')->share('title', (string) trans('firefly.search'));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -63,18 +61,18 @@ class SearchController extends Controller
     public function index(Request $request, SearchInterface $searcher): Factory|\Illuminate\Contracts\View\View
     {
         // search params:
-        $fullQuery        = $request->get('search');
+        $fullQuery = $request->get('search');
         if (is_array($request->get('search'))) {
             $fullQuery = '';
         }
-        $fullQuery        = (string) $fullQuery;
-        $page             = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $ruleId           = (int) $request->get('rule');
-        $ruleChanged      = false;
+        $fullQuery   = (string) $fullQuery;
+        $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $ruleId      = (int) $request->get('rule');
+        $ruleChanged = false;
 
         // find rule, check if query is different, offer to update.
-        $ruleRepository   = app(RuleRepositoryInterface::class);
-        $rule             = $ruleRepository->find($ruleId);
+        $ruleRepository = app(RuleRepositoryInterface::class);
+        $rule           = $ruleRepository->find($ruleId);
         if (null !== $rule) {
             $originalQuery = $ruleRepository->getSearchQuery($rule);
             if ($originalQuery !== $fullQuery) {
@@ -89,9 +87,20 @@ class SearchController extends Controller
         $excludedWords    = $searcher->getExcludedWords();
         $operators        = $searcher->getOperators();
         $invalidOperators = $searcher->getInvalidOperators();
-        $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
+        $subTitle         = (string) trans('breadcrumbs.search_result', ['query'         => $fullQuery]);
 
-        return view('search.index', ['words' => $words, 'excludedWords' => $excludedWords, 'operators' => $operators, 'page' => $page, 'rule' => $rule, 'fullQuery' => $fullQuery, 'subTitle' => $subTitle, 'ruleId' => $ruleId, 'ruleChanged' => $ruleChanged, 'invalidOperators' => $invalidOperators]);
+        return view('search.index', [
+            'words'            => $words,
+            'excludedWords'    => $excludedWords,
+            'operators'        => $operators,
+            'page'             => $page,
+            'rule'             => $rule,
+            'fullQuery'        => $fullQuery,
+            'subTitle'         => $subTitle,
+            'ruleId'           => $ruleId,
+            'ruleChanged'      => $ruleChanged,
+            'invalidOperators' => $invalidOperators
+        ]);
     }
 
     /**
@@ -101,12 +110,12 @@ class SearchController extends Controller
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
-        $entry      = $request->get('query');
+        $entry = $request->get('query');
         if (!is_scalar($entry)) {
             $entry = '';
         }
-        $fullQuery  = (string) $entry;
-        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $fullQuery = (string) $entry;
+        $page      = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
 
         $searcher->parseQuery($fullQuery);
 
@@ -115,11 +124,11 @@ class SearchController extends Controller
         $hasPages   = $groups->hasPages();
         $searchTime = round($searcher->searchTime(), 3); // in seconds
         $parameters = ['search' => $fullQuery];
-        $url        = route('search.index').'?'.http_build_query($parameters);
+        $url        = route('search.index') . '?' . http_build_query($parameters);
         $groups->setPath($url);
 
         try {
-            $html = view('search.search', ['groups' => $groups, 'hasPages' => $hasPages, 'searchTime' => $searchTime])->render();
+            $html = view('search.search', ['groups'     => $groups, 'hasPages'   => $hasPages, 'searchTime' => $searchTime])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -128,6 +137,6 @@ class SearchController extends Controller
             throw new FireflyException($html, 0, $e);
         }
 
-        return response()->json(['count' => $groups->count(), 'html' => $html]);
+        return response()->json(['count' => $groups->count(), 'html'  => $html]);
     }
 }

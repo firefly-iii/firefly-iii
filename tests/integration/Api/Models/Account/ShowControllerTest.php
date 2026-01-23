@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountControllerTest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -25,11 +24,11 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Models\Account;
 
-use Override;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Override;
 use Tests\integration\TestCase;
 
 /**
@@ -40,6 +39,7 @@ use Tests\integration\TestCase;
 final class ShowControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private User $user;
 
     #[Override]
@@ -50,11 +50,26 @@ final class ShowControllerTest extends TestCase
         $this->user = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
-        Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
-        Account::factory()->for($this->user)->withType(AccountTypeEnum::REVENUE)->create();
-        Account::factory()->for($this->user)->withType(AccountTypeEnum::EXPENSE)->create();
-        Account::factory()->for($this->user)->withType(AccountTypeEnum::DEBT)->create();
-        Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
+        Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::ASSET)
+            ->create();
+        Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::REVENUE)
+            ->create();
+        Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::EXPENSE)
+            ->create();
+        Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::DEBT)
+            ->create();
+        Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::ASSET)
+            ->create();
     }
 
     public function testIndex(): void
@@ -62,15 +77,13 @@ final class ShowControllerTest extends TestCase
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.accounts.index'));
         $response->assertStatus(200);
-        $response->assertJson([
-            'meta' => ['pagination' => ['total' => 5]],
-        ]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 5]]]);
     }
 
     public function testIndexFailsOnUnknownAccountType(): void
     {
         $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index').'?type=foobar');
+        $response = $this->getJson(route('api.v1.accounts.index') . '?type=foobar');
         $response->assertStatus(422);
         $response->assertJson(['errors' => ['type' => ['The selected type is invalid.']]]);
     }
@@ -78,14 +91,11 @@ final class ShowControllerTest extends TestCase
     public function testIndexCanFilterOnAccountType(): void
     {
         $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index').'?type=asset');
+        $response = $this->getJson(route('api.v1.accounts.index') . '?type=asset');
         $response->assertStatus(200);
         $response->assertJson([
-            'data' => [
-                ['attributes' => ['type' => 'asset']],
-                ['attributes' => ['type' => 'asset']],
-            ],
-            'meta' => ['pagination' => ['total' => 2]],
+            'data' => [['attributes' => ['type' => 'asset']], ['attributes' => ['type' => 'asset']]],
+            'meta' => ['pagination' => ['total' => 2]]
         ]);
     }
 }

@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait GroupValidation.
@@ -56,7 +56,7 @@ trait GroupValidation
             'source_iban',
             'destination_iban',
             'source_number',
-            'destination_number',
+            'destination_number'
         ];
 
         /** @var null|array $transaction */
@@ -73,16 +73,11 @@ trait GroupValidation
             }
             // set errors:
             if (false === $hasAccountInfo && !$hasJournalId) {
-                $validator->errors()->add(
-                    sprintf('transactions.%d.source_id', $index),
-                    (string) trans('validation.generic_no_source')
-                );
-                $validator->errors()->add(
-                    sprintf('transactions.%d.destination_id', $index),
-                    (string) trans('validation.generic_no_destination')
-                );
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), (string) trans('validation.generic_no_source'));
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), (string) trans('validation.generic_no_destination'));
             }
         }
+
         // only an issue if there is no transaction_journal_id
     }
 
@@ -92,20 +87,33 @@ trait GroupValidation
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        $count     = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+        $count = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_groups', 'transaction_groups.id', 'transaction_journals.transaction_group_id')
             ->where('transaction_journals.transaction_group_id', $transactionGroup->id)
-            ->where('transactions.reconciled', 1)->where('transactions.amount', '<', 0)->count('transactions.id')
-        ;
+            ->where('transactions.reconciled', 1)
+            ->where('transactions.amount', '<', 0)
+            ->count('transactions.id');
         if (0 === $count) {
             Log::debug(sprintf('Transaction is not reconciled, done with %s', __METHOD__));
 
             return;
         }
         $data      = $validator->getData();
-        $forbidden = ['amount', 'foreign_amount', 'currency_code', 'currency_id', 'foreign_currency_code', 'foreign_currency_id',
-            'source_id', 'source_name', 'source_number', 'source_iban',
-            'destination_id', 'destination_name', 'destination_number', 'destination_iban',
+        $forbidden = [
+            'amount',
+            'foreign_amount',
+            'currency_code',
+            'currency_id',
+            'foreign_currency_code',
+            'foreign_currency_id',
+            'source_id',
+            'source_name',
+            'source_number',
+            'source_iban',
+            'destination_id',
+            'destination_name',
+            'destination_number',
+            'destination_iban'
         ];
 
         // stop protesting when reconciliation is set to FALSE.
@@ -163,7 +171,7 @@ trait GroupValidation
         $data         = $validator->getData();
         $transactions = $this->getTransactionsArray($validator);
 
-        $groupTitle   = $data['group_title'] ?? '';
+        $groupTitle = $data['group_title'] ?? '';
         if ('' === $groupTitle && count($transactions) > 1) {
             $validator->errors()->add('group_title', (string) trans('validation.group_title_mandatory'));
         }

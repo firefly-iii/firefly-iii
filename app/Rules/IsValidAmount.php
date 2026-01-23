@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * IsValidAmount.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -73,7 +72,7 @@ class IsValidAmount implements ValidationRule
 
         // must be more than minus a lots:
         if ($this->lessThanLots($value)) {
-            $amount  = bcmul('-1', self::BIG_AMOUNT);
+            $amount = bcmul('-1', self::BIG_AMOUNT);
             $fail('validation.gte.numeric')->translate(['value' => $amount]);
             $message = sprintf('IsValidAmount: "%s" must be more than %s.', $value, $amount);
             Log::debug($message);

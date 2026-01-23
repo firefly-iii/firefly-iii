@@ -38,5 +38,7 @@ class RequestedVersionCheckStatus extends Event
      * Create a new event instance. This event is triggered when Firefly III wants to know
      * what the deal is with the version checker.
      */
-    public function __construct(public User $user) {}
+    public function __construct(
+        public User $user
+    ) {}
 }

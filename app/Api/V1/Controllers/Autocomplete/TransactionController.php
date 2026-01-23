@@ -53,7 +53,7 @@ class TransactionController extends Controller
         parent::__construct();
         $this->middleware(function (Request $request, $next) {
             $this->validateUserGroup($request);
-            $this->repository      = app(JournalRepositoryInterface::class);
+            $this->repository = app(JournalRepositoryInterface::class);
             $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
             $this->repository->setUser($this->user);
             $this->repository->setUserGroup($this->userGroup);
@@ -66,7 +66,7 @@ class TransactionController extends Controller
 
     public function transactions(AutocompleteTransactionApiRequest $request): JsonResponse
     {
-        $result   = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
+        $result = $this->repository->searchJournalDescriptions($request->attributes->get('query'), $request->attributes->get('limit'));
 
         // limit and unique
         $filtered = $result->unique('description');
@@ -78,7 +78,7 @@ class TransactionController extends Controller
                 'id'                   => (string) $journal->id,
                 'transaction_group_id' => (string) $journal->transaction_group_id,
                 'name'                 => $journal->description,
-                'description'          => $journal->description,
+                'description'          => $journal->description
             ];
         }
 
@@ -103,7 +103,7 @@ class TransactionController extends Controller
         }
 
         // limit and unique
-        $array  = [];
+        $array = [];
 
         /** @var TransactionJournal $journal */
         foreach ($result as $journal) {
@@ -111,7 +111,7 @@ class TransactionController extends Controller
                 'id'                   => (string) $journal->id,
                 'transaction_group_id' => (string) $journal->transaction_group_id,
                 'name'                 => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
-                'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description),
+                'description'          => sprintf('#%d: %s', $journal->transaction_group_id, $journal->description)
             ];
         }
 

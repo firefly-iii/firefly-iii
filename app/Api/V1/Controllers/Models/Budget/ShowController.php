@@ -43,7 +43,7 @@ use League\Fractal\Resource\Item;
 class ShowController extends Controller
 {
     private BudgetLimitRepositoryInterface $blRepository;
-    private BudgetRepositoryInterface      $repository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * ListController constructor.
@@ -51,16 +51,14 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository   = app(BudgetRepositoryInterface::class);
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
-                $this->blRepository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
+            $this->blRepository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -71,34 +69,34 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
+        $pageSize = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection  = $this->repository->getBudgets();
-        $count       = $collection->count();
-        $budgets     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection = $this->repository->getBudgets();
+        $count      = $collection->count();
+        $budgets    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new BudgetEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new BudgetEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $budgets     = $enrichment->enrich($budgets);
+        $budgets = $enrichment->enrich($budgets);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.budgets.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($budgets, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.budgets.index') . $this->buildParams());
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($budgets, $transformer, 'budgets');
+        $resource = new FractalCollection($budgets, $transformer, 'budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -109,22 +107,22 @@ class ShowController extends Controller
      */
     public function show(Budget $budget): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new BudgetEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new BudgetEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $budget      = $enrichment->enrichSingle($budget);
+        $budget = $enrichment->enrichSingle($budget);
 
         /** @var BudgetTransformer $transformer */
         $transformer = app(BudgetTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($budget, $transformer, 'budgets');
+        $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

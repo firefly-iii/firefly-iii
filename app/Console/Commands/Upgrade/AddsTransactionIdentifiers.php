@@ -28,21 +28,22 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class AddsTransactionIdentifiers extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_transaction_identifier';
-    protected $description          = 'Fixes transaction identifiers.';
-    protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
+
+    protected $description = 'Fixes transaction identifiers.';
+    protected $signature   = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
-    private int                           $count;
+    private int $count;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they
@@ -93,15 +94,14 @@ class AddsTransactionIdentifiers extends Command
     private function stupidLaravel(): void
     {
         $this->cliRepository = app(JournalCLIRepositoryInterface::class);
-        $this->count         = 0;
+        $this->count = 0;
     }
 
     private function isExecuted(): bool
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     /**
@@ -110,8 +110,8 @@ class AddsTransactionIdentifiers extends Command
      */
     private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
     {
-        $identifier   = 0;
-        $exclude      = []; // transactions already processed.
+        $identifier = 0;
+        $exclude    = []; // transactions already processed.
         $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
 
         /** @var Transaction $transaction */
@@ -120,18 +120,18 @@ class AddsTransactionIdentifiers extends Command
             if ($opposing instanceof Transaction) {
                 // give both a new identifier:
                 $transaction->identifier = $identifier;
-                $opposing->identifier    = $identifier;
+                $opposing->identifier = $identifier;
                 $transaction->save();
                 $opposing->save();
-                $exclude[]               = $transaction->id;
-                $exclude[]               = $opposing->id;
+                $exclude[] = $transaction->id;
+                $exclude[] = $opposing->id;
                 ++$this->count;
             }
             ++$identifier;
         }
     }
 
-    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
+    private function findOpposing(Transaction $transaction, array $exclude): null|Transaction
     {
         // find opposing:
         $amount = bcmul($transaction->amount, '-1');
@@ -139,10 +139,10 @@ class AddsTransactionIdentifiers extends Command
         try {
             /** @var Transaction $opposing */
             $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
-                ->where('amount', $amount)->where('identifier', '=', 0)
+                ->where('amount', $amount)
+                ->where('identifier', '=', 0)
                 ->whereNotIn('id', $exclude)
-                ->first()
-            ;
+                ->first();
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');

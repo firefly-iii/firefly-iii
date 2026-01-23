@@ -27,8 +27,8 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 class UpgradesTagLocations extends Command
 {
@@ -36,9 +36,9 @@ class UpgradesTagLocations extends Command
 
     public const string CONFIG_NAME = '500_migrate_tag_locations';
 
-    protected $description          = 'Migrate tag locations.';
+    protected $description = 'Migrate tag locations.';
 
-    protected $signature            = 'upgrade:500-tag-locations {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:500-tag-locations {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -60,8 +60,7 @@ class UpgradesTagLocations extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function migrateTagLocations(): void
@@ -83,16 +82,16 @@ class UpgradesTagLocations extends Command
 
     private function migrateLocationDetails(Tag $tag): void
     {
-        $location             = new Location();
-        $location->longitude  = $tag->longitude;
-        $location->latitude   = $tag->latitude;
+        $location = new Location();
+        $location->longitude = $tag->longitude;
+        $location->latitude = $tag->latitude;
         $location->zoom_level = $tag->zoomLevel;
         $location->locatable()->associate($tag);
         $location->save();
 
-        $tag->longitude       = null;
-        $tag->latitude        = null;
-        $tag->zoomLevel       = null;
+        $tag->longitude = null;
+        $tag->latitude = null;
+        $tag->zoomLevel = null;
         $tag->save();
     }
 

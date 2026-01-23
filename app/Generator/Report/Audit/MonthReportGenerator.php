@@ -31,11 +31,11 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class MonthReportGenerator.
@@ -43,8 +43,8 @@ use FireflyIII\Support\Facades\Amount;
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
-    private Carbon     $end;
-    private Carbon     $start;
+    private Carbon $end;
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -53,8 +53,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function generate(): string
     {
-        $auditData   = [];
-        $dayBefore   = clone $this->start;
+        $auditData = [];
+        $dayBefore = clone $this->start;
 
         // set date to subday + end-of-day for account balance. so it is at $date 23:59:59
         $dayBefore->subDay()->endOfDay();
@@ -62,7 +62,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             // balance the day before:
-            $id             = $account->id;
+            $id = $account->id;
             $auditData[$id] = $this->getAuditReport($account, $dayBefore);
         }
 
@@ -97,14 +97,21 @@ class MonthReportGenerator implements ReportGeneratorInterface
             'process_date',
             'due_date',
             'payment_date',
-            'invoice_date',
+            'invoice_date'
         ];
 
         try {
-            $result = view('reports.audit.report', ['reportType' => $reportType, 'accountIds' => $accountIds, 'auditData' => $auditData, 'hideable' => $hideable, 'defaultShow' => $defaultShow])
-                ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
-                ->render()
-            ;
+            $result = view('reports.audit.report', [
+                'reportType'  => $reportType,
+                'accountIds'  => $accountIds,
+                'auditData'   => $auditData,
+                'hideable'    => $hideable,
+                'defaultShow' => $defaultShow
+            ])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
+                ->with('accounts', $this->accounts)
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -132,25 +139,30 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $journalRepository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector         = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection()->push($account))->setRange($this->start, $this->end)->withAccountInformation()
-            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()->withNotes()
-        ;
-        $journals          = $collector->getExtractedJournals();
-        $journals          = array_reverse($journals, true);
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts(new Collection()->push($account))
+            ->setRange($this->start, $this->end)
+            ->withAccountInformation()
+            ->withBudgetInformation()
+            ->withCategoryInformation()
+            ->withBillInformation()
+            ->withNotes();
+        $journals = $collector->getExtractedJournals();
+        $journals = array_reverse($journals, true);
 
         Log::debug(sprintf('getAuditReport: Call accountsBalancesOptimized with date/time "%s"', $date->toIso8601String()));
         // 2025-10-08 replace with accountsBalancesOptimized.
         // $dayBeforeBalance  = Steam::finalAccountBalance($account, $date);
-        $dayBeforeBalance  = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+        $dayBeforeBalance = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
 
-        $startBalance      = $dayBeforeBalance['balance'];
-        $primaryCurrency   = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
-        $currency          = $accountRepository->getAccountCurrency($account) ?? $primaryCurrency;
+        $startBalance    = $dayBeforeBalance['balance'];
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        $currency        = $accountRepository->getAccountCurrency($account) ?? $primaryCurrency;
 
         foreach ($journals as $index => $journal) {
             $journals[$index]['balance_before'] = $startBalance;
-            $transactionAmount                  = $journal['amount'];
+            $transactionAmount = $journal['amount'];
 
             // make sure amount is in the right "direction".
             if ($account->id === $journal['destination_account_id']) {
@@ -164,32 +176,32 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 }
             }
 
-            $newBalance                         = bcadd((string) $startBalance, (string) $transactionAmount);
-            $journals[$index]['balance_after']  = $newBalance;
-            $startBalance                       = $newBalance;
+            $newBalance = bcadd((string) $startBalance, (string) $transactionAmount);
+            $journals[$index]['balance_after'] = $newBalance;
+            $startBalance = $newBalance;
 
             // add meta dates for each journal.
-            $journals[$index]['interest_date']  = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
-            $journals[$index]['book_date']      = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
-            $journals[$index]['process_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
-            $journals[$index]['due_date']       = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
-            $journals[$index]['payment_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
-            $journals[$index]['invoice_date']   = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
+            $journals[$index]['interest_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'interest_date');
+            $journals[$index]['book_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'book_date');
+            $journals[$index]['process_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'process_date');
+            $journals[$index]['due_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'due_date');
+            $journals[$index]['payment_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'payment_date');
+            $journals[$index]['invoice_date'] = $journalRepository->getMetaDateById($journal['transaction_journal_id'], 'invoice_date');
         }
-        $locale            = Steam::getLocale();
+        $locale = Steam::getLocale();
         // call is correct.
         Log::debug(sprintf('getAuditReport end: Call finalAccountBalance with date/time "%s"', $this->end->toIso8601String()));
 
         // 2025-10-08 replace with accountsBalancesOptimized:
         return [
-            'journals'         => $journals,
-            'currency'         => $currency,
-            'exists'           => 0 !== count($journals),
-            'end'              => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
+            'journals' => $journals,
+            'currency' => $currency,
+            'exists'   => 0 !== count($journals),
+            'end'      => $this->end->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
             // 'endBalance'       => Steam::finalAccountBalance($account, $this->end)['balance'],
             'endBalance'       => Steam::accountsBalancesOptimized(new Collection()->push($account), $this->end)[$account->id]['balance'],
             'dayBefore'        => $date->isoFormat((string) trans('config.month_and_day_moment_js', [], $locale)),
-            'dayBeforeBalance' => $dayBeforeBalance,
+            'dayBeforeBalance' => $dayBeforeBalance
         ];
     }
 

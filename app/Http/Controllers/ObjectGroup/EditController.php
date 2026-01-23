@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ObjectGroupFormRequest;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -49,16 +49,14 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-envelope-o');
-                app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-envelope-o');
+            app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
 
-                $this->repository = app(ObjectGroupRepositoryInterface::class);
+            $this->repository = app(ObjectGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -66,7 +64,7 @@ class EditController extends Controller
      */
     public function edit(ObjectGroup $objectGroup): Factory|View
     {
-        $subTitle     = (string) trans('firefly.edit_object_group', ['title' => $objectGroup->title]);
+        $subTitle     = (string) trans('firefly.edit_object_group', ['title'     => $objectGroup->title]);
         $subTitleIcon = 'fa-pencil';
 
         if (true !== session('object-groups.edit.fromUpdate')) {
@@ -74,7 +72,7 @@ class EditController extends Controller
         }
         session()->forget('object-groups.edit.fromUpdate');
 
-        return view('object-groups.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'objectGroup' => $objectGroup]);
+        return view('object-groups.edit', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'objectGroup'  => $objectGroup]);
     }
 
     /**
@@ -90,7 +88,7 @@ class EditController extends Controller
         session()->flash('success', (string) trans('firefly.updated_object_group', ['title' => $objectGroup->title]));
         Preferences::mark();
 
-        $redirect  = redirect($this->getPreviousUrl('object-groups.edit.url'));
+        $redirect = redirect($this->getPreviousUrl('object-groups.edit.url'));
 
         if (1 === (int) $request->get('return_to_edit')) {
             session()->put('object-groups.edit.fromUpdate', true);

@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceController
@@ -50,13 +50,11 @@ class RecurrenceController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                $this->recurring = app(RecurringRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->recurring = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -69,20 +67,20 @@ class RecurrenceController extends Controller
      */
     public function events(Request $request): JsonResponse
     {
-        $occurrences                   = [];
-        $return                        = [];
-        $start                         = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end                           = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $firstDate                     = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
-        $endDate                       = '' !== (string) $request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
-        $endsAt                        = (string) $request->get('ends');
-        $repetitionType                = explode(',', (string) $request->get('type'))[0];
-        $repetitions                   = (int) $request->get('reps');
-        $weekend                       = (int) $request->get('weekend');
-        $repetitionMoment              = '';
-        $skip                          = (int) $request->get('skip');
-        $skip                          = $skip < 0 || $skip > 31 ? 0 : $skip;
-        $weekend                       = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
+        $occurrences      = [];
+        $return           = [];
+        $start            = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end              = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+        $firstDate        = Carbon::createFromFormat('Y-m-d', $request->get('first_date'));
+        $endDate          = '' !== (string) $request->get('end_date') ? Carbon::createFromFormat('Y-m-d', $request->get('end_date')) : null;
+        $endsAt           = (string) $request->get('ends');
+        $repetitionType   = explode(',', (string) $request->get('type'))[0];
+        $repetitions      = (int) $request->get('reps');
+        $weekend          = (int) $request->get('weekend');
+        $repetitionMoment = '';
+        $skip             = (int) $request->get('skip');
+        $skip             = $skip < 0 || $skip > 31 ? 0 : $skip;
+        $weekend          = $weekend < 1 || $weekend > 4 ? 1 : $weekend;
 
         if (!$endDate instanceof Carbon) {
             // safety catch:
@@ -100,7 +98,7 @@ class RecurrenceController extends Controller
             return response()->json();
         }
         // if $firstDate is beyond start, use that one:
-        $actualStart                   = clone $firstDate;
+        $actualStart = clone $firstDate;
 
         if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
             $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '1';
@@ -112,12 +110,12 @@ class RecurrenceController extends Controller
             $repetitionMoment = explode(',', (string) $request->get('type'))[1] ?? '2025-01-01';
         }
         $actualStart->startOfDay();
-        $repetition                    = new RecurrenceRepetition();
-        $repetition->repetition_type   = $repetitionType;
+        $repetition = new RecurrenceRepetition();
+        $repetition->repetition_type = $repetitionType;
         $repetition->repetition_moment = $repetitionMoment;
-        $repetition->repetition_skip   = $skip;
-        $repetition->weekend           = $weekend;
-        $actualEnd                     = clone $end;
+        $repetition->repetition_skip = $skip;
+        $repetition->weekend = $weekend;
+        $actualEnd = clone $end;
 
         if ('until_date' === $endsAt) {
             $actualEnd   = $endDate;
@@ -134,14 +132,14 @@ class RecurrenceController extends Controller
         /** @var Carbon $current */
         foreach ($occurrences as $current) {
             if ($current->gte($start)) {
-                $event    = [
-                    'id'        => $repetitionType.$firstDate->format('Ymd'),
+                $event = [
+                    'id'        => $repetitionType . $firstDate->format('Ymd'),
                     'title'     => 'X',
                     'allDay'    => true,
                     'start'     => $current->format('Y-m-d'),
                     'end'       => $current->format('Y-m-d'),
                     'editable'  => false,
-                    'rendering' => 'background',
+                    'rendering' => 'background'
                 ];
                 $return[] = $event;
             }
@@ -155,8 +153,8 @@ class RecurrenceController extends Controller
      */
     public function suggest(Request $request): JsonResponse
     {
-        $string      = '' === (string) $request->get('date') ? Carbon::now()->format('Y-m-d') : (string) $request->get('date');
-        $today       = today(config('app.timezone'))->startOfDay();
+        $string = '' === (string) $request->get('date') ? Carbon::now()->format('Y-m-d') : (string) $request->get('date');
+        $today  = today(config('app.timezone'))->startOfDay();
 
         try {
             $date = Carbon::createFromFormat('Y-m-d', $string, config('app.timezone'));
@@ -173,7 +171,7 @@ class RecurrenceController extends Controller
         Log::debug(sprintf('date = %s, today = %s. date > today? %s', $date->toAtomString(), $today->toAtomString(), var_export($date > $today, true)));
         Log::debug(sprintf('past = true? %s', var_export('true' === (string) $request->get('past'), true)));
 
-        $result      = [];
+        $result = [];
         if ($date > $today || 'true' === (string) $request->get('past')) {
             Log::debug('Will fill dropdown.');
             $weekly     = sprintf('weekly,%s', $date->dayOfWeekIso);
@@ -183,23 +181,23 @@ class RecurrenceController extends Controller
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
             $yearlyDate = $date->isoFormat((string) trans('config.month_and_day_no_year_js', [], $locale));
             $result     = [
-                'daily'  => ['label' => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
+                'daily'  => ['label'    => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => [
-                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
-                    'selected' => str_starts_with($preSelected, 'weekly'),
+                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday'    => $dayOfWeek]),
+                    'selected' => str_starts_with($preSelected, 'weekly')
                 ],
                 $monthly => [
-                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
-                    'selected' => str_starts_with($preSelected, 'monthly'),
+                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth'    => $date->day]),
+                    'selected' => str_starts_with($preSelected, 'monthly')
                 ],
                 $ndom    => [
-                    'label'    => (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
-                    'selected' => str_starts_with($preSelected, 'ndom'),
+                    'label'    => (string) trans('firefly.recurring_ndom', ['weekday'    => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
+                    'selected' => str_starts_with($preSelected, 'ndom')
                 ],
                 $yearly  => [
-                    'label'    => (string) trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
-                    'selected' => str_starts_with($preSelected, 'yearly'),
-                ],
+                    'label'    => (string) trans('firefly.recurring_yearly', ['date'    => $yearlyDate]),
+                    'selected' => str_starts_with($preSelected, 'yearly')
+                ]
             ];
         }
         Log::debug('Dropdown is', $result);

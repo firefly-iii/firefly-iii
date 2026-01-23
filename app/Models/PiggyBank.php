@@ -42,7 +42,18 @@ class PiggyBank extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $fillable = ['name', 'order', 'target_amount', 'start_date', 'start_date_tz', 'target_date', 'target_date_tz', 'active', 'transaction_currency_id', 'native_target_amount'];
+    protected $fillable = [
+        'name',
+        'order',
+        'target_amount',
+        'start_date',
+        'start_date_tz',
+        'target_date',
+        'target_date_tz',
+        'active',
+        'transaction_currency_id',
+        'native_target_amount'
+    ];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -52,12 +63,12 @@ class PiggyBank extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $piggyBankId = (int)$value;
+            $piggyBankId = (int) $value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
                 ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*'])
-            ;
+                ->where('accounts.user_id', auth()->user()->id)
+                ->first(['piggy_banks.*']);
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -112,7 +123,7 @@ class PiggyBank extends Model
      */
     public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['target_amount'] = (string)$value;
+        $this->attributes['target_amount'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -122,9 +133,7 @@ class PiggyBank extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -139,15 +148,13 @@ class PiggyBank extends Model
             'active'               => 'boolean',
             'encrypted'            => 'boolean',
             'target_amount'        => 'string',
-            'native_target_amount' => 'string',
+            'native_target_amount' => 'string'
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     /**
@@ -155,8 +162,6 @@ class PiggyBank extends Model
      */
     protected function targetAmount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 }

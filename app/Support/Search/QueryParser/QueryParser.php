@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * QueryParser.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -35,13 +34,13 @@ use SensitiveParameter;
  */
 class QueryParser implements QueryParserInterface
 {
-    private int    $position = 0;
+    private int $position = 0;
     private string $query;
 
     public function parse(string $query): NodeGroup
     {
         Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
-        $this->query    = $query;
+        $this->query = $query;
         $this->position = 0;
 
         return $this->buildNodeGroup(false);
@@ -65,8 +64,8 @@ class QueryParser implements QueryParserInterface
                 if ('\\' === $char && '"' === $nextChar) {
                     // Log::debug('BACKSLASH!');
                     // escaped quote, pretend it's a normal char and continue two places (skipping the actual character).
-                    $tokenUnderConstruction .= '\\'.$nextChar;
-                    $this->position         += 2;
+                    $tokenUnderConstruction .= '\\' . $nextChar;
+                    $this->position += 2;
 
                     continue;
                 }
@@ -114,10 +113,7 @@ class QueryParser implements QueryParserInterface
                         // A left parentheses at the beginning of a token indicates the start of a subquery
                         ++$this->position;
 
-                        return new NodeResult(
-                            $this->buildNodeGroup(true, $prohibited),
-                            false
-                        );
+                        return new NodeResult($this->buildNodeGroup(true, $prohibited), false);
                     }
                     // In any other location, it's just a normal character
                     $tokenUnderConstruction .= $char;
@@ -131,9 +127,7 @@ class QueryParser implements QueryParserInterface
                         ++$this->position;
 
                         return new NodeResult(
-                            '' !== $tokenUnderConstruction
-                                ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-                                : null,
+                            '' !== $tokenUnderConstruction ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null,
                             true
                         );
                     }
@@ -142,13 +136,12 @@ class QueryParser implements QueryParserInterface
 
                     break;
 
-
                 case ':':
                     $skipNext = false;
                     if ('' === $tokenUnderConstruction) {
                         // In any other location, it's just a normal character
                         $tokenUnderConstruction .= $char;
-                        $skipNext = true;
+                        $skipNext               = true;
                     }
                     if ('' !== $tokenUnderConstruction && !$skipNext) { // @phpstan-ignore-line
                         Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
@@ -157,7 +150,6 @@ class QueryParser implements QueryParserInterface
                         $tokenUnderConstruction = '';
                     }
 
-
                     break;
 
                 case ' ':
@@ -165,10 +157,7 @@ class QueryParser implements QueryParserInterface
                     if ('' !== $tokenUnderConstruction) {
                         ++$this->position;
 
-                        return new NodeResult(
-                            $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
-                            false
-                        );
+                        return new NodeResult($this->createNode($tokenUnderConstruction, $fieldName, $prohibited), false);
                     }
 
                     break;
@@ -180,9 +169,7 @@ class QueryParser implements QueryParserInterface
             ++$this->position;
         }
 
-        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName
-            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-            : null;
+        $finalNode = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
 
         return new NodeResult($finalNode, true);
     }
@@ -193,7 +180,7 @@ class QueryParser implements QueryParserInterface
         $nodeResult = $this->buildNextNode($isSubquery);
 
         while ($nodeResult->node instanceof Node) {
-            $nodes[]    = $nodeResult->node;
+            $nodes[] = $nodeResult->node;
             if ($nodeResult->isSubqueryEnd) {
                 break;
             }

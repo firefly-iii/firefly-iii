@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Factory;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Support\Domain;
 use FireflyIII\TransactionRules\Actions\ActionInterface;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ActionFactory can create actions.
@@ -65,12 +65,12 @@ class ActionFactory
         $actionTypes = self::getActionTypes();
 
         if (!array_key_exists($actionType, $actionTypes)) {
-            throw new FireflyException('No such action exists ("'.e($actionType).'").');
+            throw new FireflyException('No such action exists ("' . e($actionType) . '").');
         }
 
-        $class       = $actionTypes[$actionType];
+        $class = $actionTypes[$actionType];
         if (!class_exists($class)) {
-            throw new FireflyException('Could not instantiate class for rule action type "'.e($actionType).'" ('.e($class).').');
+            throw new FireflyException('Could not instantiate class for rule action type "' . e($actionType) . '" (' . e($class) . ').');
         }
 
         return $class;

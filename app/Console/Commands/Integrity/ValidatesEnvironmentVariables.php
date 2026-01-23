@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * ValidatesEnvironmentVariables.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -58,9 +57,9 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateLanguage(): bool
     {
-        $language  = config('firefly.default_language');
-        $locale    = config('firefly.default_locale');
-        $options   = array_keys(config('firefly.languages'));
+        $language = config('firefly.default_language');
+        $locale   = config('firefly.default_locale');
+        $options  = array_keys(config('firefly.languages'));
 
         if (!in_array($language, $options, true)) {
             $this->friendlyError(sprintf('DEFAULT_LANGUAGE "%s" is not a valid language for Firefly III.', $language));
@@ -97,7 +96,7 @@ class ValidatesEnvironmentVariables extends Command
 
     private function validateStaticToken(): bool
     {
-        $token = (string)config('firefly.static_cron_token');
+        $token = (string) config('firefly.static_cron_token');
         if ('' !== $token && 32 !== strlen($token)) {
             $this->friendlyError('STATIC_CRON_TOKEN must be empty or a 32-character string.');
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');

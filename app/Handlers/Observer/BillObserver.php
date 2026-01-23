@@ -46,11 +46,11 @@ class BillObserver
         if (!Amount::convertToPrimary($bill->user)) {
             return;
         }
-        $userCurrency            = Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
+        $userCurrency = Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
         $bill->native_amount_min = null;
         $bill->native_amount_max = null;
         if ($bill->transactionCurrency->id !== $userCurrency->id) {
-            $converter               = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($bill->user->userGroup);
             $converter->setIgnoreSettings(true);
             $bill->native_amount_min = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_min);

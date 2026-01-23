@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Repositories\Recurring;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait CalculateRangeOccurrences
@@ -41,7 +41,7 @@ trait CalculateRangeOccurrences
         $return   = [];
         $attempts = 0;
         while ($start <= $end) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $start;
             }
             $start->addDay();
@@ -59,15 +59,15 @@ trait CalculateRangeOccurrences
     {
         $return     = [];
         $attempts   = 0;
-        $dayOfMonth = (int)$moment;
+        $dayOfMonth = (int) $moment;
         if ($start->day > $dayOfMonth) {
             // day has passed already, add a month.
             $start->addMonth();
         }
         while ($start < $end) {
             $domCorrected = min($dayOfMonth, $start->daysInMonth);
-            $start->day   = $domCorrected;
-            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+            $start->day = $domCorrected;
+            if (0 === ($attempts % $skipMod) && $start->lte($start) && $end->gte($start)) {
                 $return[] = clone $start;
             }
             ++$attempts;
@@ -83,8 +83,8 @@ trait CalculateRangeOccurrences
      */
     protected function getNdomInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return     = [];
-        $attempts   = 0;
+        $return   = [];
+        $attempts = 0;
         $start->startOfMonth();
         // this feels a bit like a cop out but why reinvent the wheel?
         $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth'];
@@ -93,7 +93,7 @@ trait CalculateRangeOccurrences
         while ($start <= $end) {
             $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $start->format('F'), $start->format('Y'));
             $newCarbon = new Carbon($string);
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $newCarbon;
             }
             ++$attempts;
@@ -109,12 +109,12 @@ trait CalculateRangeOccurrences
      */
     protected function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $return        = [];
-        $attempts      = 0;
+        $return   = [];
+        $attempts = 0;
         Log::debug('Rep is weekly.');
         // monday = 1
         // sunday = 7
-        $dayOfWeek     = (int)$moment;
+        $dayOfWeek = (int) $moment;
         Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
         if ($start->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
@@ -128,7 +128,7 @@ trait CalculateRangeOccurrences
         $start->addDays($dayDifference);
         Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         while ($start <= $end) {
-            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+            if (0 === ($attempts % $skipMod) && $start->lte($start) && $end->gte($start)) {
                 Log::debug('Date is in range of start+end, add to set.');
                 $return[] = clone $start;
             }
@@ -146,19 +146,19 @@ trait CalculateRangeOccurrences
      */
     protected function getYearlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
-        $attempts   = 0;
-        $date       = new Carbon($moment);
+        $attempts = 0;
+        $date     = new Carbon($moment);
         $date->year = $start->year;
-        $return     = [];
+        $return = [];
         if ($start > $date) {
             $date->addYear();
         }
 
         // is $date between $start and $end?
-        $obj        = clone $date;
-        $count      = 0;
+        $obj   = clone $date;
+        $count = 0;
         while ($obj <= $end && $obj >= $start && $count < 10) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $obj;
             }
             $obj->addYears();

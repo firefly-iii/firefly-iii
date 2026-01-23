@@ -41,11 +41,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'    => $this->convertString('name'),
-            'outward' => $this->convertString('outward'),
-            'inward'  => $this->convertString('inward'),
-        ];
+        return ['name'    => $this->convertString('name'), 'outward' => $this->convertString('outward'), 'inward'  => $this->convertString('inward')];
     }
 
     /**
@@ -56,7 +52,7 @@ class StoreRequest extends FormRequest
         return [
             'name'    => 'required|unique:link_types,name|min:1|max:1024',
             'outward' => 'required|unique:link_types,outward|min:1|different:inward|max:1024',
-            'inward'  => 'required|unique:link_types,inward|min:1|different:outward|max:1024',
+            'inward'  => 'required|unique:link_types,inward|min:1|different:outward|max:1024'
         ];
     }
 }

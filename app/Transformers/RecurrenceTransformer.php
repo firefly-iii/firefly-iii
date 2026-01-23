@@ -39,13 +39,13 @@ class RecurrenceTransformer extends AbstractTransformer
     {
         Log::debug('Now in Recurrence::transform()');
 
-        $shortType = (string)config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
-        $reps      = 0 === (int)$recurrence->repetitions ? null : (int)$recurrence->repetitions;
+        $shortType = (string) config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
+        $reps      = 0 === (int) $recurrence->repetitions ? null : (int) $recurrence->repetitions;
         Log::debug('Get basic data.');
 
         // basic data.
         return [
-            'id'                => (string)$recurrence->id,
+            'id'                => (string) $recurrence->id,
             'created_at'        => $recurrence->created_at->toAtomString(),
             'updated_at'        => $recurrence->updated_at->toAtomString(),
             'type'              => $shortType,
@@ -60,12 +60,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'notes'             => $recurrence->meta['notes'],
             'repetitions'       => $recurrence->meta['repetitions'],
             'transactions'      => $recurrence->meta['transactions'],
-            'links'             => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/recurring/'.$recurrence->id,
-                ],
-            ],
+            'links'             => [['rel' => 'self', 'uri' => '/recurring/' . $recurrence->id]]
         ];
     }
 }

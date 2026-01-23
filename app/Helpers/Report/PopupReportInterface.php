@@ -50,7 +50,7 @@ interface PopupReportInterface
     /**
      * Group by category.
      */
-    public function byCategory(?Category $category, array $attributes): array;
+    public function byCategory(null|Category $category, array $attributes): array;
 
     /**
      * Do something with expense. Sorry, I am not very inspirational here.

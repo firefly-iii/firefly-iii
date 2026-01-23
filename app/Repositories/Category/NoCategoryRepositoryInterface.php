@@ -48,27 +48,27 @@ interface NoCategoryRepositoryInterface
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 
     /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have no category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 
     /**
      * Sum of withdrawal journals in period without a category, grouped per currency. Amounts are always negative.
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 
     /**
      * Sum of income journals in period without a category, grouped per currency. Amounts are always positive.
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumIncome(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 
     /**
      * Sum of transfers in period without a category, grouped per currency. Amounts are always positive.
      */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function sumTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 }

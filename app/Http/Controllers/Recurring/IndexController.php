@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
@@ -58,16 +58,14 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -82,11 +80,11 @@ class IndexController extends Controller
      */
     public function index(Request $request): Factory|\Illuminate\Contracts\View\View
     {
-        $page        = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
-        $pageSize    = (int) Preferences::get('listPageSize', 50)->data;
-        $collection  = $this->repository->get();
-        $today       = today(config('app.timezone'));
-        $year        = today(config('app.timezone'));
+        $page       = 0 === (int) $request->get('page') ? 1 : (int) $request->get('page');
+        $pageSize   = (int) Preferences::get('listPageSize', 50)->data;
+        $collection = $this->repository->get();
+        $today      = today(config('app.timezone'));
+        $year       = today(config('app.timezone'));
 
         // split collection
         $total       = $collection->count();
@@ -94,8 +92,8 @@ class IndexController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new RecurringEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new RecurringEnrichment();
         $enrichment->setUser($admin);
         $recurrences = $enrichment->enrich($recurrences);
 
@@ -103,7 +101,7 @@ class IndexController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
-        $recurring   = [];
+        $recurring = [];
 
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
@@ -113,12 +111,12 @@ class IndexController extends Controller
                 $year  = clone $today;
                 $year->addYear();
             }
-            $array                 = $transformer->transform($recurrence);
-            $array['first_date']   = new Carbon($array['first_date']);
+            $array = $transformer->transform($recurrence);
+            $array['first_date'] = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
-            $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
+            $array['latest_date'] = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
             // lazy but OK
-            $array['attachments']  = $recurrence->attachments()->count();
+            $array['attachments'] = $recurrence->attachments()->count();
 
             // make carbon objects out of occurrences
             foreach ($array['repetitions'] as $repIndex => $repetition) {
@@ -127,14 +125,20 @@ class IndexController extends Controller
                 }
             }
 
-            $recurring[]           = $array;
+            $recurring[] = $array;
         }
-        $paginator   = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
+        $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
-        $today       = today(config('app.timezone'));
+        $today = today(config('app.timezone'));
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', ['paginator' => $paginator, 'today' => $today, 'page' => $page, 'pageSize' => $pageSize, 'total' => $total]);
+        return view('recurring.index', [
+            'paginator' => $paginator,
+            'today'     => $today,
+            'page'      => $page,
+            'pageSize'  => $pageSize,
+            'total'     => $total
+        ]);
     }
 }

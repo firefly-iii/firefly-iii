@@ -39,25 +39,25 @@ class NotificationController extends Controller
     public function index(): View
     {
         Log::channel('audit')->info('User visits notifications index.');
-        $title                          = (string) trans('firefly.system_settings');
-        $mainTitleIcon                  = 'fa-hand-spock-o';
-        $subTitle                       = (string) trans('firefly.title_owner_notifications');
-        $subTitleIcon                   = 'envelope-o';
+        $title         = (string) trans('firefly.system_settings');
+        $mainTitleIcon = 'fa-hand-spock-o';
+        $subTitle      = (string) trans('firefly.title_owner_notifications');
+        $subTitleIcon  = 'envelope-o';
 
         // notification settings:
-        $slackUrl                       = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
-        $pushoverAppToken               = FireflyConfig::getEncrypted('pushover_app_token', '')->data;
-        $pushoverUserToken              = FireflyConfig::getEncrypted('pushover_user_token', '')->data;
-        $ntfyServer                     = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
-        $ntfyTopic                      = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
-        $ntfyAuth                       = FireflyConfig::get('ntfy_auth', false)->data;
-        $ntfyUser                       = FireflyConfig::getEncrypted('ntfy_user', '')->data;
-        $ntfyPass                       = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
-        $channels                       = config('notifications.channels');
-        $forcedAvailability             = [];
+        $slackUrl           = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $pushoverAppToken   = FireflyConfig::getEncrypted('pushover_app_token', '')->data;
+        $pushoverUserToken  = FireflyConfig::getEncrypted('pushover_user_token', '')->data;
+        $ntfyServer         = FireflyConfig::getEncrypted('ntfy_server', 'https://ntfy.sh')->data;
+        $ntfyTopic          = FireflyConfig::getEncrypted('ntfy_topic', '')->data;
+        $ntfyAuth           = FireflyConfig::get('ntfy_auth', false)->data;
+        $ntfyUser           = FireflyConfig::getEncrypted('ntfy_user', '')->data;
+        $ntfyPass           = FireflyConfig::getEncrypted('ntfy_pass', '')->data;
+        $channels           = config('notifications.channels');
+        $forcedAvailability = [];
 
         // admin notification settings:
-        $notifications                  = [];
+        $notifications = [];
         foreach (config('notifications.notifications.owner') as $key => $info) {
             if (true === $info['enabled']) {
                 $notifications[$key] = FireflyConfig::get(sprintf('notification_%s', $key), true)->data;
@@ -68,19 +68,32 @@ class NotificationController extends Controller
         foreach ($channels as $channel => $info) {
             $forcedAvailability[$channel] = true;
         }
-        $forcedAvailability['ntfy']     = '' !== $ntfyTopic;
+        $forcedAvailability['ntfy'] = '' !== $ntfyTopic;
         $forcedAvailability['pushover'] = '' !== $pushoverAppToken && '' !== $pushoverUserToken;
-        $forcedAvailability['slack']    = '' !== $slackUrl;
+        $forcedAvailability['slack'] = '' !== $slackUrl;
 
-        return view(
-            'settings.notifications.index',
-            ['title' => $title, 'subTitle' => $subTitle, 'forcedAvailability' => $forcedAvailability, 'mainTitleIcon' => $mainTitleIcon, 'subTitleIcon' => $subTitleIcon, 'channels' => $channels, 'slackUrl' => $slackUrl, 'notifications' => $notifications, 'pushoverAppToken' => $pushoverAppToken, 'pushoverUserToken' => $pushoverUserToken, 'ntfyServer' => $ntfyServer, 'ntfyTopic' => $ntfyTopic, 'ntfyAuth' => $ntfyAuth, 'ntfyUser' => $ntfyUser, 'ntfyPass' => $ntfyPass]
-        );
+        return view('settings.notifications.index', [
+            'title'              => $title,
+            'subTitle'           => $subTitle,
+            'forcedAvailability' => $forcedAvailability,
+            'mainTitleIcon'      => $mainTitleIcon,
+            'subTitleIcon'       => $subTitleIcon,
+            'channels'           => $channels,
+            'slackUrl'           => $slackUrl,
+            'notifications'      => $notifications,
+            'pushoverAppToken'   => $pushoverAppToken,
+            'pushoverUserToken'  => $pushoverUserToken,
+            'ntfyServer'         => $ntfyServer,
+            'ntfyTopic'          => $ntfyTopic,
+            'ntfyAuth'           => $ntfyAuth,
+            'ntfyUser'           => $ntfyUser,
+            'ntfyPass'           => $ntfyPass
+        ]);
     }
 
     public function postIndex(NotificationRequest $request): RedirectResponse
     {
-        $all       = $request->getAll();
+        $all = $request->getAll();
 
         foreach (config('notifications.notifications.owner') as $key => $info) {
             if (array_key_exists($key, $all)) {
@@ -97,7 +110,6 @@ class NotificationController extends Controller
             }
         }
         FireflyConfig::set('ntfy_auth', $all['ntfy_auth'] ?? false);
-
 
         session()->flash('success', (string) trans('firefly.notification_settings_saved'));
 

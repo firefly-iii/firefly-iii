@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -44,7 +44,7 @@ class ProfileFormRequest extends FormRequest
         return [
             'current_password'          => 'required',
             'new_password'              => 'required|confirmed|secure_password|min:16',
-            'new_password_confirmation' => 'required',
+            'new_password_confirmation' => 'required'
         ];
     }
 

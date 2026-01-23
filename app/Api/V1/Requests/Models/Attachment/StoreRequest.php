@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
             'title'           => $this->convertString('title'),
             'notes'           => $this->stringWithNewlines('notes'),
             'attachable_type' => $this->convertString('attachable_type'),
-            'attachable_id'   => $this->convertInteger('attachable_id'),
+            'attachable_id'   => $this->convertInteger('attachable_id')
         ];
     }
 
@@ -57,10 +57,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         $models = config('firefly.valid_attachment_models');
-        $models = array_map(
-            static fn (string $className): string => str_replace('FireflyIII\Models\\', '', $className),
-            $models
-        );
+        $models = array_map(static fn(string $className): string => str_replace('FireflyIII\Models\\', '', $className), $models);
         $models = implode(',', $models);
         $model  = $this->convertString('attachable_type');
 
@@ -69,7 +66,7 @@ class StoreRequest extends FormRequest
             'title'           => ['min:1', 'max:255'],
             'notes'           => 'min:1|max:32768',
             'attachable_type' => sprintf('required|in:%s', $models),
-            'attachable_id'   => ['required', 'numeric', new IsValidAttachmentModel($model)],
+            'attachable_id'   => ['required', 'numeric', new IsValidAttachmentModel($model)]
         ];
     }
 }

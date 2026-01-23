@@ -47,19 +47,14 @@ trait CronRunner
         try {
             $billWarning->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
             'job_fired'     => $billWarning->jobFired,
             'job_succeeded' => $billWarning->jobSucceeded,
             'job_errored'   => $billWarning->jobErrored,
-            'message'       => $billWarning->message,
+            'message'       => $billWarning->message
         ];
     }
 
@@ -73,19 +68,14 @@ trait CronRunner
         try {
             $exchangeRates->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
             'job_fired'     => $exchangeRates->jobFired,
             'job_succeeded' => $exchangeRates->jobSucceeded,
             'job_errored'   => $exchangeRates->jobErrored,
-            'message'       => $exchangeRates->message,
+            'message'       => $exchangeRates->message
         ];
     }
 
@@ -99,19 +89,14 @@ trait CronRunner
         try {
             $autoBudget->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
             'job_fired'     => $autoBudget->jobFired,
             'job_succeeded' => $autoBudget->jobSucceeded,
             'job_errored'   => $autoBudget->jobErrored,
-            'message'       => $autoBudget->message,
+            'message'       => $autoBudget->message
         ];
     }
 
@@ -125,19 +110,14 @@ trait CronRunner
         try {
             $recurring->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
             'job_fired'     => $recurring->jobFired,
             'job_succeeded' => $recurring->jobSucceeded,
             'job_errored'   => $recurring->jobErrored,
-            'message'       => $recurring->message,
+            'message'       => $recurring->message
         ];
     }
 
@@ -151,19 +131,14 @@ trait CronRunner
         try {
             $webhook->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
             'job_fired'     => $webhook->jobFired,
             'job_succeeded' => $webhook->jobSucceeded,
             'job_errored'   => $webhook->jobErrored,
-            'message'       => $webhook->message,
+            'message'       => $webhook->message
         ];
     }
 }

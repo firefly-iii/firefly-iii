@@ -40,7 +40,7 @@ class Kernel extends ConsoleKernel
     #[Override]
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
@@ -51,23 +51,19 @@ class Kernel extends ConsoleKernel
     #[Override]
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(
-            static function (): void {
-                Log::error(
-                    'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://docs.firefly-iii.org/'
-                );
-                echo "\n";
-                echo '------------';
-                echo "\n";
-                echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
-                echo "\n";
-                echo 'https://docs.firefly-iii.org/';
-                echo "\n\n";
-                echo 'Disable this cron job!';
-                echo "\n";
-                echo '------------';
-                echo "\n";
-            }
-        )->daily();
+        $schedule->call(static function (): void {
+            Log::error('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://docs.firefly-iii.org/');
+            echo "\n";
+            echo '------------';
+            echo "\n";
+            echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
+            echo "\n";
+            echo 'https://docs.firefly-iii.org/';
+            echo "\n\n";
+            echo 'Disable this cron job!';
+            echo "\n";
+            echo '------------';
+            echo "\n";
+        })->daily();
     }
 }

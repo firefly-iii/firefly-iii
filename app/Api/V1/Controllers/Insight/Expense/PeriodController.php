@@ -47,14 +47,14 @@ class PeriodController extends Controller
         $primary          = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector        = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
-        $genericSet       = $collector->getExtractedJournals();
+        $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // same code as many other sumExpense methods. I think this needs some kind of generic method.
-            $amount                                    = '0';
-            $currencyId                                = (int) $journal['currency_id'];
-            $currencyCode                              = $journal['currency_code'];
+            $amount       = '0';
+            $currencyId   = (int) $journal['currency_id'];
+            $currencyCode = $journal['currency_code'];
             if ($convertToPrimary) {
                 $amount = Amount::getAmountFromJournal($journal);
                 if ($primary->id !== (int) $journal['currency_id'] && $primary->id !== (int) $journal['foreign_currency_id']) {
@@ -73,14 +73,13 @@ class PeriodController extends Controller
                 $amount = $journal['amount'];
             }
 
-
             $response[$currencyId] ??= [
                 'difference'       => '0',
                 'difference_float' => 0,
                 'currency_id'      => (string) $currencyId,
-                'currency_code'    => $currencyCode,
+                'currency_code'    => $currencyCode
             ];
-            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], $amount);
+            $response[$currencyId]['difference'] = bcadd($response[$currencyId]['difference'], $amount);
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // intentional float
         }
 

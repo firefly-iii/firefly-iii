@@ -29,10 +29,10 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesJournalMetaData extends Command
 {
@@ -40,9 +40,9 @@ class UpgradesJournalMetaData extends Command
 
     public const string CONFIG_NAME = '480_back_to_journals';
 
-    protected $description          = 'Move meta data back to journals, not individual transactions.';
+    protected $description = 'Move meta data back to journals, not individual transactions.';
 
-    protected $signature            = 'upgrade:480-journal-meta-data {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:480-journal-meta-data {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -110,12 +110,18 @@ class UpgradesJournalMetaData extends Command
 
     private function getIdsForBudgets(): array
     {
-        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $transactions = DB::table('budget_transaction')
+            ->distinct()
+            ->pluck('transaction_id')
+            ->toArray();
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions')
+                ->whereIn('transactions.id', $chunk)
+                ->pluck('transaction_journal_id')
+                ->toArray();
             $array = array_merge($array, $set);
         }
 
@@ -126,7 +132,7 @@ class UpgradesJournalMetaData extends Command
     {
         // grab category from first transaction
         /** @var null|Transaction $transaction */
-        $transaction   = $journal->transactions->first();
+        $transaction = $journal->transactions->first();
         if (null === $transaction) {
             $this->friendlyInfo(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
@@ -134,7 +140,7 @@ class UpgradesJournalMetaData extends Command
         }
 
         /** @var null|Budget $budget */
-        $budget        = $transaction->budgets->first();
+        $budget = $transaction->budgets->first();
 
         /** @var null|Budget $journalBudget */
         $journalBudget = $journal->budgets->first();
@@ -159,7 +165,7 @@ class UpgradesJournalMetaData extends Command
         $journals = new Collection();
         $allIds   = $this->getIdsForCategories();
 
-        $chunks   = array_chunk($allIds, 500);
+        $chunks = array_chunk($allIds, 500);
         foreach ($chunks as $chunk) {
             $collected = TransactionJournal::whereIn('id', $chunk)->with(['transactions', 'categories', 'transactions.categories'])->get();
             $journals  = $journals->merge($collected);
@@ -173,15 +179,18 @@ class UpgradesJournalMetaData extends Command
 
     private function getIdsForCategories(): array
     {
-        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $transactions = DB::table('category_transaction')
+            ->distinct()
+            ->pluck('transaction_id')
+            ->toArray();
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
             $set   = DB::table('transactions')
                 ->whereIn('transactions.id', $chunk)
-                ->pluck('transaction_journal_id')->toArray()
-            ;
+                ->pluck('transaction_journal_id')
+                ->toArray();
             $array = array_merge($array, $set);
         }
 
@@ -192,7 +201,7 @@ class UpgradesJournalMetaData extends Command
     {
         // grab category from first transaction
         /** @var null|Transaction $transaction */
-        $transaction     = $journal->transactions->first();
+        $transaction = $journal->transactions->first();
         if (null === $transaction) {
             $this->friendlyInfo(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
@@ -200,7 +209,7 @@ class UpgradesJournalMetaData extends Command
         }
 
         /** @var null|Category $category */
-        $category        = $transaction->categories->first();
+        $category = $transaction->categories->first();
 
         /** @var null|Category $journalCategory */
         $journalCategory = $journal->categories->first();

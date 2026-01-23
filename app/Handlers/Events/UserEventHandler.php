@@ -43,8 +43,6 @@ use Illuminate\Support\Facades\Mail;
  */
 class UserEventHandler
 {
-
-
     /**
      * Fires to see if a user is admin.
      */
@@ -73,7 +71,6 @@ class UserEventHandler
         }
     }
 
-
     /**
      * Set the demo user back to English.
      */
@@ -93,7 +90,6 @@ class UserEventHandler
         }
     }
 
-
     /**
      * @throws FireflyException
      */
@@ -112,6 +108,4 @@ class UserEventHandler
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
-
-
 }

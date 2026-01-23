@@ -47,17 +47,15 @@ class ListController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-                $this->ruleGroupRepository->setUser($user);
+            $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+            $this->ruleGroupRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -66,24 +64,24 @@ class ListController extends Controller
      */
     public function rules(RuleGroup $group): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
+        $pageSize = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection  = $this->ruleGroupRepository->getRules($group);
-        $count       = $collection->count();
-        $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection = $this->ruleGroupRepository->getRules($group);
+        $count      = $collection->count();
+        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.rule-groups.rules', [$group->id]).$this->buildParams());
+        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.rule-groups.rules', [$group->id]) . $this->buildParams());
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($rules, $transformer, 'rules');
+        $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

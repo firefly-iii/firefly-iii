@@ -57,7 +57,7 @@ class StoreRequest extends FormRequest
             'symbol'         => $this->convertString('symbol'),
             'decimal_places' => $this->convertInteger('decimal_places'),
             'default'        => $default,
-            'enabled'        => $enabled,
+            'enabled'        => $enabled
         ];
     }
 
@@ -72,7 +72,7 @@ class StoreRequest extends FormRequest
             'symbol'         => 'required|min:1|max:32|unique:transaction_currencies,symbol',
             'decimal_places' => 'numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
-            'default'        => [new IsBoolean()],
+            'default'        => [new IsBoolean()]
         ];
     }
 }

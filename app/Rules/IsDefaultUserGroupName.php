@@ -24,19 +24,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsDefaultUserGroupName
  */
 class IsDefaultUserGroupName implements ValidationRule
 {
-    public function __construct(private readonly UserGroup $userGroup) {}
+    public function __construct(
+        private readonly UserGroup $userGroup
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -47,12 +49,12 @@ class IsDefaultUserGroupName implements ValidationRule
 
         // are you owner of this group and the name is the same? fail.
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
 
         /** @var UserRepositoryInterface $userRepos */
         $userRepos = app(UserRepositoryInterface::class);
 
-        $roles     = $userRepos->getRolesInGroup($user, $this->userGroup->id);
+        $roles = $userRepos->getRolesInGroup($user, $this->userGroup->id);
         if ($this->userGroup->title === $user->email && in_array('owner', $roles, true)) {
             $fail('validation.administration_owner_rename')->translate();
         }

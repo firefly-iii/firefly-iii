@@ -47,7 +47,7 @@ trait AccountCollection
          *
          * @return bool
          */
-        $filter              = static function (array $object) use ($direction, $operator, $value): bool {
+        $filter = static function (array $object) use ($direction, $operator, $value): bool {
             /** @var array $transaction */
             foreach ($object['transactions'] as $transaction) {
                 $key       = sprintf('%s_account_id', $direction);
@@ -58,7 +58,7 @@ trait AccountCollection
 
                 // in theory, this could lead to finding other users accounts.
                 /** @var null|Account $account */
-                $account   = Account::find($accountId);
+                $account = Account::find($accountId);
                 if (null === $account) {
                     continue;
                 }
@@ -67,9 +67,14 @@ trait AccountCollection
                 // the balance must be found BEFORE the transaction date.
                 // so inclusive = false
                 Log::debug(sprintf('accountBalanceIs: Call accountsBalancesOptimized with date/time "%s"', $transaction['date']->toIso8601String()));
-                $balance   = Steam::accountsBalancesOptimized(new Collection()->push($account), $transaction['date'], convertToPrimary: null, inclusive: false)[$account->id];
+                $balance = Steam::accountsBalancesOptimized(
+                    new Collection()->push($account),
+                    $transaction['date'],
+                    convertToPrimary: null,
+                    inclusive: false
+                )[$account->id];
                 // $balance   = Steam::finalAccountBalance($account, $date);
-                $result    = bccomp((string) $balance['balance'], $value);
+                $result = bccomp((string) $balance['balance'], $value);
                 Log::debug(sprintf('"%s" vs "%s" is %d', $balance['balance'], $value, $result));
 
                 switch ($operator) {
@@ -108,8 +113,8 @@ trait AccountCollection
 
                         return 1 !== $result;
                 }
-                // if($balance['balance'] $operator $value) {
 
+                // if($balance['balance'] $operator $value) {
                 // }
             }
 
@@ -173,12 +178,11 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
-                    $query->whereIn('source.account_id', $accountIds);
-                    $query->orWhereIn('destination.account_id', $accountIds);
-                }
-            );
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+                $query->whereIn('source.account_id', $accountIds);
+                $query->orWhereIn('destination.account_id', $accountIds);
+            });
+
             // Log::debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
@@ -192,12 +196,10 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
-                    $query->whereIn('source.account_id', $accountIds);
-                    $query->whereIn('destination.account_id', $accountIds);
-                }
-            );
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+                $query->whereIn('source.account_id', $accountIds);
+                $query->whereIn('destination.account_id', $accountIds);
+            });
             Log::debug(sprintf('GroupCollector: setBothAccounts: %s', implode(', ', $accountIds)));
         }
 
@@ -226,12 +228,11 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
-                    $query->whereNotIn('source.account_id', $accountIds);
-                    $query->whereNotIn('destination.account_id', $accountIds);
-                }
-            );
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+                $query->whereNotIn('source.account_id', $accountIds);
+                $query->whereNotIn('destination.account_id', $accountIds);
+            });
+
             // Log::debug(sprintf('GroupCollector: setAccounts: %s', implode(', ', $accountIds)));
         }
 
@@ -260,25 +261,19 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(
-                static function (EloquentBuilder $q1) use ($accountIds): void { // @phpstan-ignore-line
-                    // sourceAccount is in the set, and destination is NOT.
+            $this->query->where(static function (EloquentBuilder $q1) use ($accountIds): void { // @phpstan-ignore-line
+                // sourceAccount is in the set, and destination is NOT.
 
-                    $q1->where(
-                        static function (EloquentBuilder $q2) use ($accountIds): void {
-                            $q2->whereIn('source.account_id', $accountIds);
-                            $q2->whereNotIn('destination.account_id', $accountIds);
-                        }
-                    );
-                    // destination is in the set, and source is NOT
-                    $q1->orWhere(
-                        static function (EloquentBuilder $q3) use ($accountIds): void {
-                            $q3->whereNotIn('source.account_id', $accountIds);
-                            $q3->whereIn('destination.account_id', $accountIds);
-                        }
-                    );
-                }
-            );
+                $q1->where(static function (EloquentBuilder $q2) use ($accountIds): void {
+                    $q2->whereIn('source.account_id', $accountIds);
+                    $q2->whereNotIn('destination.account_id', $accountIds);
+                });
+                // destination is in the set, and source is NOT
+                $q1->orWhere(static function (EloquentBuilder $q3) use ($accountIds): void {
+                    $q3->whereNotIn('source.account_id', $accountIds);
+                    $q3->whereIn('destination.account_id', $accountIds);
+                });
+            });
 
             Log::debug(sprintf('GroupCollector: setXorAccounts: %s', implode(', ', $accountIds)));
         }
@@ -298,18 +293,18 @@ trait AccountCollection
             $this->query->leftJoin('account_types as source_account_type', 'source_account_type.id', '=', 'source_account.account_type_id');
 
             // add source account fields:
-            $this->fields[]       = 'source_account.name as source_account_name';
-            $this->fields[]       = 'source_account.iban as source_account_iban';
-            $this->fields[]       = 'source_account_type.type as source_account_type';
+            $this->fields[] = 'source_account.name as source_account_name';
+            $this->fields[] = 'source_account.iban as source_account_iban';
+            $this->fields[] = 'source_account_type.type as source_account_type';
 
             // same for dest
             $this->query->leftJoin('accounts as dest_account', 'dest_account.id', '=', 'destination.account_id');
             $this->query->leftJoin('account_types as dest_account_type', 'dest_account_type.id', '=', 'dest_account.account_type_id');
 
             // and add fields:
-            $this->fields[]       = 'dest_account.name as destination_account_name';
-            $this->fields[]       = 'dest_account.iban as destination_account_iban';
-            $this->fields[]       = 'dest_account_type.type as destination_account_type';
+            $this->fields[] = 'dest_account.name as destination_account_name';
+            $this->fields[] = 'dest_account.iban as destination_account_iban';
+            $this->fields[] = 'dest_account_type.type as destination_account_type';
             $this->hasAccountInfo = true;
         }
 

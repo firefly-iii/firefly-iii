@@ -23,9 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -37,12 +34,15 @@ use FireflyIII\Http\Requests\ReconciliationStoreRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -61,16 +61,14 @@ class ReconcileController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
-                $this->repository   = app(JournalRepositoryInterface::class);
-                $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
+            $this->repository = app(JournalRepositoryInterface::class);
+            $this->accountRepos = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -80,8 +78,11 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function reconcile(Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
-    {
+    public function reconcile(
+        Account $account,
+        null|Carbon $start = null,
+        null|Carbon $end = null
+    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);
         }
@@ -90,10 +91,10 @@ class ReconcileController extends Controller
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
         }
-        $currency        = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
+        $currency = $this->accountRepos->getAccountCurrency($account) ?? $this->primaryCurrency;
 
         // no start or end:
-        $range           = Navigation::getViewRange(false);
+        $range = Navigation::getViewRange(false);
 
         // get start and end
 
@@ -102,7 +103,7 @@ class ReconcileController extends Controller
             $start = clone session('start', Navigation::startOfPeriod(new Carbon(), $range));
 
             /** @var Carbon $end */
-            $end   = clone session('end', Navigation::endOfPeriod(new Carbon(), $range));
+            $end = clone session('end', Navigation::endOfPeriod(new Carbon(), $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
@@ -126,12 +127,17 @@ class ReconcileController extends Controller
 
         // 2025-10-08 replace with accountsBalancesOptimized
         // no longer need to do subday->endofday on $start, set inclusive = false for the same effect.
-        $startBalance    = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $start, convertToPrimary: null, inclusive: false)[$account->id]['balance'], $currency->decimal_places);
-        $endBalance      = Steam::bcround(Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id]['balance'], $currency->decimal_places);
+        $startBalance = Steam::bcround(
+            Steam::accountsBalancesOptimized(new Collection()->push($account), $start, convertToPrimary: null, inclusive: false)[$account->id]['balance'],
+            $currency->decimal_places
+        );
+        $endBalance   = Steam::bcround(
+            Steam::accountsBalancesOptimized(new Collection()->push($account), $end)[$account->id]['balance'],
+            $currency->decimal_places
+        );
 
-
-        $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $subTitle        = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
+        $subTitle     = (string) trans('firefly.reconcile_account', ['account'     => $account->name]);
 
         // various links
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);
@@ -139,10 +145,20 @@ class ReconcileController extends Controller
         $indexUrl        = route('accounts.reconcile', [$account->id, '%start%', '%end%']);
         $objectType      = 'asset';
 
-        return view(
-            'accounts.reconcile.index',
-            ['account' => $account, 'currency' => $currency, 'objectType' => $objectType, 'subTitleIcon' => $subTitleIcon, 'start' => $start, 'end' => $end, 'subTitle' => $subTitle, 'startBalance' => $startBalance, 'endBalance' => $endBalance, 'transactionsUrl' => $transactionsUrl, 'overviewUrl' => $overviewUrl, 'indexUrl' => $indexUrl]
-        );
+        return view('accounts.reconcile.index', [
+            'account'         => $account,
+            'currency'        => $currency,
+            'objectType'      => $objectType,
+            'subTitleIcon'    => $subTitleIcon,
+            'start'           => $start,
+            'end'             => $end,
+            'subTitle'        => $subTitle,
+            'startBalance'    => $startBalance,
+            'endBalance'      => $endBalance,
+            'transactionsUrl' => $transactionsUrl,
+            'overviewUrl'     => $overviewUrl,
+            'indexUrl'        => $indexUrl
+        ]);
     }
 
     /**
@@ -157,7 +173,7 @@ class ReconcileController extends Controller
         }
 
         Log::debug('In ReconcileController::submit()');
-        $data   = $request->getAll();
+        $data = $request->getAll();
 
         /** @var string $journalId */
         foreach ($data['journals'] as $journalId) {
@@ -212,41 +228,36 @@ class ReconcileController extends Controller
         }
 
         // title:
-        $description    = trans(
-            'firefly.reconciliation_transaction_title',
-            [
-                'from' => $start->isoFormat($this->monthAndDayFormat),
-                'to'   => $end->isoFormat($this->monthAndDayFormat),
-            ]
-        );
-        $submission     = [
+        $description = trans('firefly.reconciliation_transaction_title', [
+            'from' => $start->isoFormat($this->monthAndDayFormat),
+            'to'   => $end->isoFormat($this->monthAndDayFormat)
+        ]);
+        $submission  = [
             'user'         => auth()->user(),
             'user_group'   => auth()->user()->userGroup,
             'group_title'  => null,
-            'transactions' => [
-                [
-                    'user'                => auth()->user(),
-                    'user_group'          => auth()->user()->userGroup,
-                    'type'                => strtolower(TransactionTypeEnum::RECONCILIATION->value),
-                    'date'                => $end,
-                    'order'               => 0,
-                    'currency_id'         => $currency->id,
-                    'foreign_currency_id' => null,
-                    'amount'              => $difference,
-                    'foreign_amount'      => null,
-                    'description'         => $description,
-                    'source_id'           => $source->id,
-                    'destination_id'      => $destination->id,
-                    'reconciled'          => true,
-                ],
-            ],
+            'transactions' => [[
+                'user'                => auth()->user(),
+                'user_group'          => auth()->user()->userGroup,
+                'type'                => strtolower(TransactionTypeEnum::RECONCILIATION->value),
+                'date'                => $end,
+                'order'               => 0,
+                'currency_id'         => $currency->id,
+                'foreign_currency_id' => null,
+                'amount'              => $difference,
+                'foreign_amount'      => null,
+                'description'         => $description,
+                'source_id'           => $source->id,
+                'destination_id'      => $destination->id,
+                'reconciled'          => true
+            ]]
         ];
 
         /** @var TransactionGroupFactory $factory */
-        $factory        = app(TransactionGroupFactory::class);
+        $factory = app(TransactionGroupFactory::class);
 
         /** @var User $user */
-        $user           = auth()->user();
+        $user = auth()->user();
         $factory->setUser($user);
 
         try {

@@ -53,7 +53,7 @@ class StoreRequest extends FormRequest
         if (null !== $this->get('include_net_worth')) {
             $includeNetWorth = $this->boolean('include_net_worth');
         }
-        $data            = [
+        $data = [
             'name'                    => $this->convertString('name'),
             'active'                  => $active,
             'include_net_worth'       => $includeNetWorth,
@@ -73,15 +73,15 @@ class StoreRequest extends FormRequest
             'cc_monthly_payment_date' => $this->convertString('monthly_payment_date'),
             'notes'                   => $this->stringWithNewlines('notes'),
             'interest'                => $this->convertString('interest'),
-            'interest_period'         => $this->convertString('interest_period'),
+            'interest_period'         => $this->convertString('interest_period')
         ];
         // append location information.
-        $data            = $this->appendLocationData($data, null);
+        $data = $this->appendLocationData($data, null);
 
         if ('liability' === $data['account_type_name'] || 'liabilities' === $data['account_type_name']) {
-            $data['account_type_name']   = $this->convertString('liability_type');
+            $data['account_type_name'] = $this->convertString('liability_type');
             $data['liability_direction'] = $this->convertString('liability_direction');
-            $data['account_type_id']     = null;
+            $data['account_type_id'] = null;
         }
 
         return $data;
@@ -98,7 +98,7 @@ class StoreRequest extends FormRequest
         $type           = $this->convertString('type');
         $rules          = [
             'name'                 => 'required|max:1024|min:1|uniqueAccountForUser',
-            'type'                 => 'required|max:1024|min:1|'.sprintf('in:%s', $types),
+            'type'                 => 'required|max:1024|min:1|' . sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban(null, $type)],
             'bic'                  => 'bic|nullable',
             'account_number'       => ['min:1', 'max:255', 'nullable', new UniqueAccountNumber(null, $type)],
@@ -119,7 +119,7 @@ class StoreRequest extends FormRequest
             'liability_direction'  => 'nullable|required_if:type,liability|required_if:type,liabilities|in:credit,debit',
             'interest'             => 'min:0|max:100|numeric',
             'interest_period'      => sprintf('nullable|in:%s', implode(',', config('firefly.interest_periods'))),
-            'notes'                => 'min:0|max:32768',
+            'notes'                => 'min:0|max:32768'
         ];
 
         return Location::requestRules($rules);

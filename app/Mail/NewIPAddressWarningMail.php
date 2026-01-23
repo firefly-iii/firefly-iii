@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Mail;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class NewIPAddressWarningMail
@@ -45,7 +45,9 @@ class NewIPAddressWarningMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(public string $ipAddress) {}
+    public function __construct(
+        public string $ipAddress
+    ) {}
 
     /**
      * Build the message.
@@ -67,9 +69,6 @@ class NewIPAddressWarningMail extends Mailable
             $this->host = $hostName;
         }
 
-        return $this
-            ->markdown('emails.new-ip')
-            ->subject((string) trans('email.login_from_new_ip'))
-        ;
+        return $this->markdown('emails.new-ip')->subject((string) trans('email.login_from_new_ip'));
     }
 }

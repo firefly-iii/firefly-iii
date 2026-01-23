@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Notification;
 
 class SendsTestNotification
 {
-    public function handle(OwnerTestsNotificationChannel | UserTestsNotificationChannel $event): void
+    public function handle(OwnerTestsNotificationChannel|UserTestsNotificationChannel $event): void
     {
         Log::debug(sprintf('Now in SendsTestNotification::handle(%s->"%s")', get_class($event), $event->channel));
 

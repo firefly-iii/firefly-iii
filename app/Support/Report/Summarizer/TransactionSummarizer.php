@@ -36,7 +36,7 @@ class TransactionSummarizer
     private TransactionCurrency $default;
     private User $user;
 
-    public function __construct(?User $user = null)
+    public function __construct(null|User $user = null)
     {
         if ($user instanceof User) {
             $this->setUser($user);
@@ -48,14 +48,14 @@ class TransactionSummarizer
         Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s", %s)', count($journals), $method, var_export($includeForeign, true)));
         $array = [];
         foreach ($journals as $journal) {
-            $field                        = 'amount';
+            $field = 'amount';
 
             // grab default currency information.
-            $currencyId                   = (int) $journal['currency_id'];
-            $currencyName                 = $journal['currency_name'];
-            $currencySymbol               = $journal['currency_symbol'];
-            $currencyCode                 = $journal['currency_code'];
-            $currencyDecimalPlaces        = $journal['currency_decimal_places'];
+            $currencyId            = (int) $journal['currency_id'];
+            $currencyName          = $journal['currency_name'];
+            $currencySymbol        = $journal['currency_symbol'];
+            $currencyCode          = $journal['currency_code'];
+            $currencyDecimalPlaces = $journal['currency_decimal_places'];
 
             // prepare foreign currency info:
             $foreignCurrencyId            = 0;
@@ -106,14 +106,14 @@ class TransactionSummarizer
             }
 
             // first process normal amount
-            $amount                       = (string) ($journal[$field] ?? '0');
+            $amount = (string) ($journal[$field] ?? '0');
             $array[$currencyId] ??= [
                 'sum'                     => '0',
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyName,
                 'currency_symbol'         => $currencySymbol,
                 'currency_code'           => $currencyCode,
-                'currency_decimal_places' => $currencyDecimalPlaces,
+                'currency_decimal_places' => $currencyDecimalPlaces
             ];
 
             if ('positive' === $method) {
@@ -132,7 +132,7 @@ class TransactionSummarizer
                     'currency_name'           => $foreignCurrencyName,
                     'currency_symbol'         => $foreignCurrencySymbol,
                     'currency_code'           => $foreignCurrencyCode,
-                    'currency_decimal_places' => $foreignCurrencyDecimalPlaces,
+                    'currency_decimal_places' => $foreignCurrencyDecimalPlaces
                 ];
 
                 if ('positive' === $method) {
@@ -181,7 +181,7 @@ class TransactionSummarizer
             if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
-            $key                   = sprintf('%s-%s', $journal[$idKey], $currencyId);
+            $key = sprintf('%s-%s', $journal[$idKey], $currencyId);
             // sum it all up or create a new array.
             $array[$key] ??= [
                 'id'                      => $journal[$idKey],
@@ -191,11 +191,11 @@ class TransactionSummarizer
                 'currency_name'           => $currencyName,
                 'currency_symbol'         => $currencySymbol,
                 'currency_code'           => $currencyCode,
-                'currency_decimal_places' => $currencyDecimalPlaces,
+                'currency_decimal_places' => $currencyDecimalPlaces
             ];
 
             // add the data from the $field to the array.
-            $array[$key]['sum']    = bcadd($array[$key]['sum'], (string) Steam::{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
+            $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) Steam::{$method}((string) ($journal[$field] ?? '0'))); // @phpstan-ignore-line
             Log::debug(sprintf(
                 'Field for transaction #%d is "%s" (%s). Sum: %s',
                 $journal['transaction_group_id'],
@@ -214,7 +214,7 @@ class TransactionSummarizer
                     $journal['foreign_amount'],
                     $array[$key]['sum']
                 ));
-                $key                = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
+                $key = sprintf('%s-%s', $journal[$idKey], $journal['foreign_currency_id']);
                 $array[$key] ??= [
                     'id'                      => $journal[$idKey],
                     'name'                    => $journal[$nameKey],
@@ -223,7 +223,7 @@ class TransactionSummarizer
                     'currency_name'           => $journal['foreign_currency_name'],
                     'currency_symbol'         => $journal['foreign_currency_symbol'],
                     'currency_code'           => $journal['foreign_currency_code'],
-                    'currency_decimal_places' => $journal['foreign_currency_decimal_places'],
+                    'currency_decimal_places' => $journal['foreign_currency_decimal_places']
                 ];
                 $array[$key]['sum'] = bcadd($array[$key]['sum'], (string) Steam::{$method}((string) $journal['foreign_amount'])); // @phpstan-ignore-line
             }
@@ -240,8 +240,8 @@ class TransactionSummarizer
 
     public function setUser(User $user): void
     {
-        $this->user             = $user;
-        $this->default          = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->user = $user;
+        $this->default = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
         $this->convertToPrimary = Amount::convertToPrimary($user);
     }
 }

@@ -52,7 +52,11 @@ trait CurrencyValidation
                 continue;
             }
 
-            if (!array_key_exists('foreign_amount', $transaction) && !array_key_exists('foreign_currency_id', $transaction) && !array_key_exists('foreign_currency_code', $transaction)) {
+            if (
+                !array_key_exists('foreign_amount', $transaction)
+                && !array_key_exists('foreign_currency_id', $transaction)
+                && !array_key_exists('foreign_currency_code', $transaction)
+            ) {
                 Log::debug('validateForeignCurrencyInformation: no foreign currency information present at all.');
 
                 continue;
@@ -66,27 +70,27 @@ trait CurrencyValidation
                     (array_key_exists('foreign_currency_id', $transaction) || array_key_exists('foreign_currency_code', $transaction))
                     && (null !== $foreignId || null !== $foreignCode)
                 ) {
-                    $validator->errors()->add('transactions.'.$index.'.foreign_amount', (string) trans('validation.require_currency_amount'));
-                    $validator->errors()->add('transactions.'.$index.'.foreign_currency_id', (string) trans('validation.require_currency_amount'));
-                    $validator->errors()->add('transactions.'.$index.'.foreign_currency_code', (string) trans('validation.require_currency_amount'));
+                    $validator->errors()->add('transactions.' . $index . '.foreign_amount', (string) trans('validation.require_currency_amount'));
+                    $validator->errors()->add('transactions.' . $index . '.foreign_currency_id', (string) trans('validation.require_currency_amount'));
+                    $validator->errors()->add('transactions.' . $index . '.foreign_currency_code', (string) trans('validation.require_currency_amount'));
                 }
 
                 continue;
             }
 
-            $compare       = bccomp('0', $foreignAmount);
+            $compare = bccomp('0', $foreignAmount);
             if (-1 === $compare) {
                 Log::debug('validateForeignCurrencyInformation: array contains foreign amount info.');
                 if (!array_key_exists('foreign_currency_id', $transaction) && !array_key_exists('foreign_currency_code', $transaction)) {
                     Log::debug('validateForeignCurrencyInformation: array contains NO foreign currency info.');
-                    $validator->errors()->add('transactions.'.$index.'.foreign_amount', (string) trans('validation.require_currency_info'));
+                    $validator->errors()->add('transactions.' . $index . '.foreign_amount', (string) trans('validation.require_currency_info'));
                 }
             }
             if (0 === $compare && ('' !== (string) $foreignId || '' !== (string) $foreignCode)) {
                 Log::debug('validateForeignCurrencyInformation: array contains foreign currency info, but zero amount.');
-                $validator->errors()->add('transactions.'.$index.'.foreign_currency_id', (string) trans('validation.require_currency_amount'));
-                $validator->errors()->add('transactions.'.$index.'.foreign_currency_code', (string) trans('validation.require_currency_amount'));
-                $validator->errors()->add('transactions.'.$index.'.foreign_amount', (string) trans('validation.require_currency_amount'));
+                $validator->errors()->add('transactions.' . $index . '.foreign_currency_id', (string) trans('validation.require_currency_amount'));
+                $validator->errors()->add('transactions.' . $index . '.foreign_currency_code', (string) trans('validation.require_currency_amount'));
+                $validator->errors()->add('transactions.' . $index . '.foreign_amount', (string) trans('validation.require_currency_amount'));
             }
         }
     }

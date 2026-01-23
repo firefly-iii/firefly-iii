@@ -60,5 +60,4 @@ class NotifiesOwnerAboutNewVersion
             Log::error($e->getTraceAsString());
         }
     }
-
 }

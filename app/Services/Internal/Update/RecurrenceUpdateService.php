@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Note;
@@ -34,6 +33,7 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceUpdateService
@@ -66,13 +66,13 @@ class RecurrenceUpdateService
                 $recurrence->description = $info['description'];
             }
             if (array_key_exists('first_date', $info)) {
-                $recurrence->first_date    = $info['first_date'];
+                $recurrence->first_date = $info['first_date'];
                 $recurrence->first_date_tz = $info['first_date']?->format('e');
             }
             if (array_key_exists('repeat_until', $info)) {
-                $recurrence->repeat_until    = $info['repeat_until'];
+                $recurrence->repeat_until = $info['repeat_until'];
                 $recurrence->repeat_until_tz = $info['repeat_until']?->format('e');
-                $recurrence->repetitions     = 0;
+                $recurrence->repetitions = 0;
             }
             if (array_key_exists('nr_of_repetitions', $info)) {
                 if (0 !== (int) $info['nr_of_repetitions']) {
@@ -145,16 +145,11 @@ class RecurrenceUpdateService
         // loop all and try to match them:
         Log::debug('Loop and find');
         foreach ($repetitions as $current) {
-            $match  = $this->matchRepetition($recurrence, $current);
+            $match = $this->matchRepetition($recurrence, $current);
             if (!$match instanceof RecurrenceRepetition) {
                 throw new FireflyException('Cannot match recurring repetition to existing repetition. Not sure what to do. Break.');
             }
-            $fields = [
-                'type'    => 'repetition_type',
-                'moment'  => 'repetition_moment',
-                'skip'    => 'repetition_skip',
-                'weekend' => 'weekend',
-            ];
+            $fields = ['type'    => 'repetition_type', 'moment'  => 'repetition_moment', 'skip'    => 'repetition_skip', 'weekend' => 'weekend'];
             foreach ($fields as $field => $column) {
                 if (array_key_exists($field, $current)) {
                     $match->{$column} = $current[$field];
@@ -164,7 +159,7 @@ class RecurrenceUpdateService
         }
     }
 
-    private function matchRepetition(Recurrence $recurrence, array $data): ?RecurrenceRepetition
+    private function matchRepetition(Recurrence $recurrence, array $data): null|RecurrenceRepetition
     {
         $originalCount = $recurrence->recurrenceRepetitions()->count();
         if (1 === $originalCount) {
@@ -174,14 +169,8 @@ class RecurrenceUpdateService
             return $recurrence->recurrenceRepetitions()->first();
         }
         // find it:
-        $fields        = [
-            'id'      => 'id',
-            'type'    => 'repetition_type',
-            'moment'  => 'repetition_moment',
-            'skip'    => 'repetition_skip',
-            'weekend' => 'weekend',
-        ];
-        $query         = $recurrence->recurrenceRepetitions();
+        $fields = ['id'      => 'id', 'type'    => 'repetition_type', 'moment'  => 'repetition_moment', 'skip'    => 'repetition_skip', 'weekend' => 'weekend'];
+        $query  = $recurrence->recurrenceRepetitions();
         foreach ($fields as $field => $column) {
             if (array_key_exists($field, $data)) {
                 $query->where($column, $data[$field]);
@@ -200,7 +189,7 @@ class RecurrenceUpdateService
     private function updateTransactions(Recurrence $recurrence, array $transactions): void
     {
         Log::debug('Now in updateTransactions()');
-        $originalCount        = $recurrence->recurrenceTransactions()->count();
+        $originalCount = $recurrence->recurrenceTransactions()->count();
         Log::debug(sprintf('Original count is %d', $originalCount));
         if (0 === count($transactions)) {
             // won't drop transactions, rather avoid.
@@ -215,22 +204,16 @@ class RecurrenceUpdateService
             foreach ($transactions as $ii => $submittedTransaction) {
                 if (array_key_exists('id', $submittedTransaction) && (int) $originalTransaction['id'] === (int) $submittedTransaction['id']) {
                     Log::debug(sprintf('Match original transaction #%d with an entry in the submitted array.', $originalTransaction['id']));
-                    $combinations[] = [
-                        'original'  => $originalTransaction,
-                        'submitted' => $submittedTransaction,
-                    ];
+                    $combinations[] = ['original'  => $originalTransaction, 'submitted' => $submittedTransaction];
                     unset($originalTransactions[$i], $transactions[$ii]);
                 }
             }
         }
         // If one left of both we can match those as well and presto.
         if (1 === count($originalTransactions) && 1 === count($transactions)) {
-            $first          = array_shift($originalTransactions);
+            $first = array_shift($originalTransactions);
             Log::debug(sprintf('One left of each, link them (ID is #%d)', $first['id']));
-            $combinations[] = [
-                'original'  => $first,
-                'submitted' => array_shift($transactions),
-            ];
+            $combinations[] = ['original'  => $first, 'submitted' => array_shift($transactions)];
             unset($first);
         }
         // if they are both empty, we can safely loop all combinations and update them.
@@ -261,7 +244,7 @@ class RecurrenceUpdateService
         $currencyFactory = app(TransactionCurrencyFactory::class);
 
         /** @var RecurrenceTransaction $transaction */
-        $transaction     = $recurrence->recurrenceTransactions()->find($original['id']);
+        $transaction = $recurrence->recurrenceTransactions()->find($original['id']);
         Log::debug(sprintf('Now in updateCombination(#%d)', $original['id']));
 
         // loop all and try to match them:
@@ -293,14 +276,14 @@ class RecurrenceUpdateService
         }
 
         // update fields that are part of the recurring transaction itself.
-        $fields          = [
+        $fields = [
             'source_id'           => 'source_id',
             'destination_id'      => 'destination_id',
             'amount'              => 'amount',
             'foreign_amount'      => 'foreign_amount',
             'description'         => 'description',
             'currency_id'         => 'transaction_currency_id',
-            'foreign_currency_id' => 'foreign_currency_id',
+            'foreign_currency_id' => 'foreign_currency_id'
         ];
         foreach ($fields as $field => $column) {
             if (array_key_exists($field, $submitted)) {
@@ -320,7 +303,7 @@ class RecurrenceUpdateService
         if (array_key_exists('category_name', $submitted) && '' === (string) $submitted['category_name']) {
             Log::debug('Category name is submitted but is empty. Set category to be empty.');
             $submitted['category_name'] = null;
-            $submitted['category_id']   = 0;
+            $submitted['category_id'] = 0;
         }
 
         if (array_key_exists('category_id', $submitted)) {

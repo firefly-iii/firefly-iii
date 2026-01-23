@@ -88,11 +88,11 @@ class AccountController extends Controller
         // set date to end-of-day for account balance. so it is at $date 23:59:59
         $date->endOfDay();
 
-        $return                                                                     = [];
-        $timer                                                                      = Timer::getInstance();
+        $return = [];
+        $timer  = Timer::getInstance();
         $timer->start(sprintf('AC accounts "%s"', $query));
-        $result                                                                     = $this->repository->searchAccount((string) $query, $types, $limit);
-        $allBalances                                                                = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
+        $result      = $this->repository->searchAccount((string) $query, $types, $limit);
+        $allBalances = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
         /** @var Account $account */
         foreach ($result as $account) {
@@ -109,7 +109,7 @@ class AccountController extends Controller
                 $nameWithBalance = sprintf('%s (%s)', $account->name, Amount::formatAnything($useCurrency, $amount, false));
             }
 
-            $return[]        = [
+            $return[] = [
                 'id'                              => (string) $account->id,
                 'name'                            => $account->name,
                 'name_with_balance'               => $nameWithBalance,
@@ -124,7 +124,7 @@ class AccountController extends Controller
                 'account_currency_name'           => $currency->name,
                 'account_currency_code'           => $currency->code,
                 'account_currency_symbol'         => $currency->symbol,
-                'account_currency_decimal_places' => $currency->decimal_places,
+                'account_currency_decimal_places' => $currency->decimal_places
             ];
         }
 

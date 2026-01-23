@@ -55,8 +55,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     public Collection $attachments;
     public MessageBag $errors;
     public MessageBag $messages;
-    protected array   $allowedMimes  = [];
-    protected int     $maxUploadSize = 0;
+    protected array $allowedMimes  = [];
+    protected int   $maxUploadSize = 0;
 
     protected Filesystem $uploadDisk;
 
@@ -66,11 +66,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function __construct()
     {
         $this->maxUploadSize = (int) config('firefly.maxUploadSize');
-        $this->allowedMimes  = (array) config('firefly.allowedMimes');
-        $this->errors        = new MessageBag();
-        $this->messages      = new MessageBag();
-        $this->attachments   = new Collection();
-        $this->uploadDisk    = Storage::disk('upload');
+        $this->allowedMimes = (array) config('firefly.allowedMimes');
+        $this->errors = new MessageBag();
+        $this->messages = new MessageBag();
+        $this->attachments = new Collection();
+        $this->uploadDisk = Storage::disk('upload');
     }
 
     /**
@@ -143,7 +143,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             return false;
         }
 
-        $path                 = stream_get_meta_data($resource)['uri'];
+        $path = stream_get_meta_data($resource)['uri'];
         Log::debug(sprintf('Path is %s', $path));
 
         try {
@@ -162,8 +162,8 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             return false;
         }
-        $mime                 = (string) finfo_file($finfo, $path);
-        $allowedMime          = config('firefly.allowedMimes');
+        $mime        = (string) finfo_file($finfo, $path);
+        $allowedMime = config('firefly.allowedMimes');
         if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
             fclose($resource);
@@ -172,15 +172,15 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
         Log::debug(sprintf('Found mime "%s" in file "%s"', $mime, $path));
         // is allowed? Save the file, without encryption.
-        $parts                = explode('/', $attachment->fileName());
-        $file                 = $parts[count($parts) - 1];
+        $parts = explode('/', $attachment->fileName());
+        $file  = $parts[count($parts) - 1];
         Log::debug(sprintf('Write file to disk in file named "%s"', $file));
         $this->uploadDisk->put($file, $content);
 
         // update attachment.
-        $attachment->md5      = md5_file($path);
-        $attachment->mime     = $mime;
-        $attachment->size     = strlen($content);
+        $attachment->md5 = md5_file($path);
+        $attachment->mime = $mime;
+        $attachment->size = strlen($content);
         $attachment->uploaded = true;
         $attachment->save();
 
@@ -194,7 +194,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @throws FireflyException
      */
-    public function saveAttachmentsForModel(object $model, ?array $files): bool
+    public function saveAttachmentsForModel(object $model, null|array $files): bool
     {
         if (!$model instanceof Model) {
             return false;
@@ -224,30 +224,30 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @throws StringsException
      */
-    protected function processFile(UploadedFile $file, Model $model): ?Attachment
+    protected function processFile(UploadedFile $file, Model $model): null|Attachment
     {
         Log::debug('Now in processFile()');
         $validation = $this->validateUpload($file, $model);
         $attachment = null;
         if ($validation) {
-            $user                 = $model->user;
+            $user = $model->user;
             // ignore lines about polymorphic calls.
             if ($model instanceof PiggyBank) {
                 $user = $model->account->user;
             }
 
-            $attachment           = new Attachment(); // create Attachment object.
+            $attachment = new Attachment(); // create Attachment object.
             $attachment->user()->associate($user);
             $attachment->attachable()->associate($model);
-            $attachment->md5      = md5_file($file->getRealPath());
+            $attachment->md5 = md5_file($file->getRealPath());
             $attachment->filename = $file->getClientOriginalName();
-            $attachment->mime     = $file->getMimeType();
-            $attachment->size     = $file->getSize();
+            $attachment->mime = $file->getMimeType();
+            $attachment->size = $file->getSize();
             $attachment->uploaded = false;
             $attachment->save();
             Log::debug('Created attachment:', $attachment->toArray());
 
-            $fileObject           = $file->openFile();
+            $fileObject = $file->openFile();
             $fileObject->rewind();
 
             if (0 === $file->getSize()) {
@@ -256,7 +256,7 @@ class AttachmentHelper implements AttachmentHelperInterface
                 return null;
             }
 
-            $content              = (string) $fileObject->fread($file->getSize());
+            $content = (string) $fileObject->fread($file->getSize());
             Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
 
             // store it without encryption.
@@ -265,8 +265,8 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment->save();
             $this->attachments->push($attachment);
 
-            $name                 = e($file->getClientOriginalName()); // add message:
-            $msg                  = (string) trans('validation.file_attached', ['name' => $name]);
+            $name = e($file->getClientOriginalName()); // add message:
+            $msg = (string) trans('validation.file_attached', ['name' => $name]);
             $this->messages->add('attachments', $msg);
         }
 
@@ -306,14 +306,14 @@ class AttachmentHelper implements AttachmentHelperInterface
     protected function validMime(UploadedFile $file): bool
     {
         Log::debug('Now in validMime()');
-        $mime   = e($file->getMimeType());
-        $name   = e($file->getClientOriginalName());
+        $mime = e($file->getMimeType());
+        $name = e($file->getClientOriginalName());
         Log::debug(sprintf('Name is %s, and mime is %s', $name, $mime));
         Log::debug('Valid mimes are', $this->allowedMimes);
         $result = true;
 
         if (!in_array($mime, $this->allowedMimes, true)) {
-            $msg    = (string) trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
+            $msg = (string) trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
 
@@ -332,7 +332,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $name   = e($file->getClientOriginalName());
         $result = true;
         if ($size > $this->maxUploadSize) {
-            $msg    = (string) trans('validation.file_too_large', ['name' => $name]);
+            $msg = (string) trans('validation.file_too_large', ['name' => $name]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
 
@@ -347,10 +347,10 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     protected function hasFile(UploadedFile $file, Model $model): bool
     {
-        $md5    = md5_file($file->getRealPath());
-        $name   = $file->getClientOriginalName();
-        $class  = $model::class;
-        $count  = 0;
+        $md5   = md5_file($file->getRealPath());
+        $name  = $file->getClientOriginalName();
+        $class = $model::class;
+        $count = 0;
         // ignore lines about polymorphic calls.
         if ($model instanceof PiggyBank) {
             $count = $model->account->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
@@ -360,7 +360,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         }
         $result = false;
         if ($count > 0) {
-            $msg    = (string) trans('validation.file_already_attached', ['name' => $name]);
+            $msg = (string) trans('validation.file_already_attached', ['name' => $name]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);
             $result = true;

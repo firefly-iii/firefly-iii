@@ -44,8 +44,7 @@ class NewAccessToken extends Notification
 
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -59,9 +58,8 @@ class NewAccessToken extends Notification
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
         return new MailMessage()
-            ->markdown('emails.token-created', ['ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
-            ->subject((string) trans('email.access_token_created_subject'))
-        ;
+            ->markdown('emails.token-created', ['ip'        => $ip, 'host'      => $host, 'userAgent' => $userAgent, 'time'      => $time])
+            ->subject((string) trans('email.access_token_created_subject'));
     }
 
     //    public function toNtfy(User $notifiable): Message
@@ -80,9 +78,7 @@ class NewAccessToken extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        return PushoverMessage::create((string) trans('email.access_token_created_body'))
-            ->title((string) trans('email.access_token_created_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.access_token_created_body'))->title((string) trans('email.access_token_created_subject'));
     }
 
     /**

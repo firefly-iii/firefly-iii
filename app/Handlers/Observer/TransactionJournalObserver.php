@@ -42,7 +42,6 @@ class TransactionJournalObserver
         $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($transactionJournal->user);
 
-
         // to make sure the listener doesn't get back to use and loop
         TransactionJournal::withoutEvents(static function () use ($transactionJournal): void {
             foreach ($transactionJournal->transactions()->get() as $transaction) {
@@ -79,8 +78,5 @@ class TransactionJournalObserver
         $transactionJournal->auditLogEntries()->delete();
 
         // set all transactions AFTER this one to balance_dirty for recalc.
-
-
-
     }
 }

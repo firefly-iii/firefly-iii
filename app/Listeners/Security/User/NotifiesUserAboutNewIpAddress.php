@@ -33,42 +33,43 @@ use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutNewIpAddress
 {
-public function handle(UserLoggedInFromNewIpAddress $event): void {
-    $user = $event->user;
+    public function handle(UserLoggedInFromNewIpAddress $event): void
+    {
+        $user = $event->user;
 
-    if ($user->hasRole('demo')) {
-        return; // do not email demo user.
-    }
-
-    $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
-    if (!is_array($list)) {
-        $list = [];
-    }
-
-    /** @var array $entry */
-    foreach ($list as $index => $entry) {
-        if (false === $entry['notified']) {
-            try {
-                Notification::send($user, new UserLogin());
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
+        if ($user->hasRole('demo')) {
+            return; // do not email demo user.
         }
-        $list[$index]['notified'] = true;
-    }
 
-    Preferences::setForUser($user, 'login_ip_history', $list);
-}
+        $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
+        if (!is_array($list)) {
+            $list = [];
+        }
+
+        /** @var array $entry */
+        foreach ($list as $index => $entry) {
+            if (false === $entry['notified']) {
+                try {
+                    Notification::send($user, new UserLogin());
+                } catch (Exception $e) {
+                    $message = $e->getMessage();
+                    if (str_contains($message, 'Bcc')) {
+                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                        return;
+                    }
+                    if (str_contains($message, 'RFC 2822')) {
+                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
+
+                        return;
+                    }
+                    Log::error($e->getMessage());
+                    Log::error($e->getTraceAsString());
+                }
+            }
+            $list[$index]['notified'] = true;
+        }
+
+        Preferences::setForUser($user, 'login_ip_history', $list);
+    }
 }

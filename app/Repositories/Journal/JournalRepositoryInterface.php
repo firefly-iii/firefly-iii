@@ -60,14 +60,14 @@ interface JournalRepositoryInterface
     /**
      * Find a specific journal.
      */
-    public function find(int $journalId): ?TransactionJournal;
+    public function find(int $journalId): null|TransactionJournal;
 
     public function findByType(array $types): Collection;
 
     /**
      * Get users very first transaction journal.
      */
-    public function firstNull(): ?TransactionJournal;
+    public function firstNull(): null|TransactionJournal;
 
     /**
      * Returns the destination account of the journal.
@@ -81,14 +81,14 @@ interface JournalRepositoryInterface
      */
     public function getJournalTotal(TransactionJournal $journal): string;
 
-    public function getLast(): ?TransactionJournal;
+    public function getLast(): null|TransactionJournal;
 
     public function getLinkNoteText(TransactionJournalLink $link): string;
 
     /**
      * Return Carbon value of a meta field (or NULL).
      */
-    public function getMetaDateById(int $journalId, string $field): ?Carbon;
+    public function getMetaDateById(int $journalId, string $field): null|Carbon;
 
     /**
      * Returns the source account of the journal.

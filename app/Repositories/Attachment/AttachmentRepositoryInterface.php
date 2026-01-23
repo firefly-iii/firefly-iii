@@ -51,7 +51,7 @@ interface AttachmentRepositoryInterface
     /**
      * Get attachment note text or empty string.
      */
-    public function getNoteText(Attachment $attachment): ?string;
+    public function getNoteText(Attachment $attachment): null|string;
 
     /**
      * @throws FireflyException

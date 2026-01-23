@@ -49,14 +49,12 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(CategoryRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(CategoryRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -67,33 +65,33 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
+        $pageSize = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection  = $this->repository->getCategories();
-        $count       = $collection->count();
-        $categories  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection = $this->repository->getCategories();
+        $count      = $collection->count();
+        $categories = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new CategoryEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new CategoryEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $categories  = $enrichment->enrich($categories);
+        $categories = $enrichment->enrich($categories);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.categories.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($categories, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.categories.index') . $this->buildParams());
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource    = new FractalCollection($categories, $transformer, 'categories');
+        $resource = new FractalCollection($categories, $transformer, 'categories');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -107,7 +105,7 @@ class ShowController extends Controller
      */
     public function show(Category $category): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var CategoryTransformer $transformer */
         $transformer = app(CategoryTransformer::class);
@@ -115,14 +113,14 @@ class ShowController extends Controller
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new CategoryEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new CategoryEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($this->parameters->get('start'));
         $enrichment->setEnd($this->parameters->get('end'));
-        $category    = $enrichment->enrichSingle($category);
+        $category = $enrichment->enrichSingle($category);
 
-        $resource    = new Item($category, $transformer, 'categories');
+        $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

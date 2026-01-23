@@ -82,7 +82,10 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
     public function get(): Collection
     {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->orderBy('tag', 'ASC')
+            ->get(['tags.*']);
     }
 
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array
@@ -96,19 +99,22 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $collector->getExtractedJournals();
     }
 
-    public function find(int $tagId): ?Tag
+    public function find(int $tagId): null|Tag
     {
         /** @var null|Tag */
         return $this->user->tags()->find($tagId);
     }
 
-    public function findByTag(string $tag): ?Tag
+    public function findByTag(string $tag): null|Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->where('tag', $tag)->first();
+        return $this->user
+            ->tags()
+            ->where('tag', $tag)
+            ->first();
     }
 
-    public function firstUseDate(Tag $tag): ?Carbon
+    public function firstUseDate(Tag $tag): null|Carbon
     {
         return $tag->transactionJournals()->orderBy('date', 'ASC')->first()?->date;
     }
@@ -118,21 +124,22 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         $set  = $tag->attachments()->get();
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
-                /** @var null|Note $note */
-                $note                    = $attachment->notes()->first();
-                // only used in v1 view of tags
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null === $note ? '' : $note->text;
-            }
-        );
+        return $set->each(static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
+            /** @var null|Note $note */
+            $note = $attachment->notes()->first();
+            // only used in v1 view of tags
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text = null === $note ? '' : $note->text;
+        });
     }
 
-    public function getTagsInYear(?int $year): array
+    public function getTagsInYear(null|int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery = $this->user
+            ->tags()
+            ->with(['locations', 'attachments'])
+            ->orderBy('tags.tag');
 
         // add date range (or not):
         if (null === $year) {
@@ -156,7 +163,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                 'id'          => $tag->id,
                 'created_at'  => $tag->created_at,
                 'location'    => $tag->locations->first(),
-                'attachments' => $tag->attachments,
+                'attachments' => $tag->attachments
             ];
         }
 
@@ -174,7 +181,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $collector->getExtractedJournals();
     }
 
-    public function lastUseDate(Tag $tag): ?Carbon
+    public function lastUseDate(Tag $tag): null|Carbon
     {
         return $tag->transactionJournals()->orderBy('date', 'DESC')->first()?->date;
     }
@@ -182,16 +189,24 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     /**
      * Will return the newest tag (if known) or NULL.
      */
-    public function newestTag(): ?Tag
+    public function newestTag(): null|Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
+        return $this->user
+            ->tags()
+            ->whereNotNull('date')
+            ->orderBy('date', 'DESC')
+            ->first();
     }
 
-    public function oldestTag(): ?Tag
+    public function oldestTag(): null|Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
+        return $this->user
+            ->tags()
+            ->whereNotNull('date')
+            ->orderBy('date', 'ASC')
+            ->first();
     }
 
     /**
@@ -201,7 +216,10 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         $search = sprintf('%%%s%%', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*']);
     }
 
     /**
@@ -227,7 +245,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $factory->create($data);
     }
 
-    public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
+    public function sumsOfTag(Tag $tag, null|Carbon $start, null|Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -237,13 +255,13 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         }
 
         $collector->setTag($tag)->withAccountInformation();
-        $journals  = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
 
-        $sums      = [];
+        $sums = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $found                    = false;
+            $found = false;
 
             /** @var array $localTag */
             foreach ($journal['tags'] as $localTag) {
@@ -254,7 +272,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             if (false === $found) {
                 continue;
             }
-            $currencyId               = (int) $journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
             $sums[$currencyId] ??= [
                 'currency_id'                               => $currencyId,
                 'currency_name'                             => $journal['currency_name'],
@@ -264,18 +282,18 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                 TransactionTypeEnum::DEPOSIT->value         => '0',
                 TransactionTypeEnum::TRANSFER->value        => '0',
                 TransactionTypeEnum::RECONCILIATION->value  => '0',
-                TransactionTypeEnum::OPENING_BALANCE->value => '0',
+                TransactionTypeEnum::OPENING_BALANCE->value => '0'
             ];
 
             // add amount to correct type:
-            $amount                   = Steam::positive((string) $journal['amount']);
-            $type                     = $journal['transaction_type_type'];
+            $amount = Steam::positive((string) $journal['amount']);
+            $type   = $journal['transaction_type_type'];
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 $amount = bcmul($amount, '-1');
             }
             $sums[$currencyId][$type] = bcadd((string) $sums[$currencyId][$type], $amount);
 
-            $foreignCurrencyId        = $journal['foreign_currency_id'];
+            $foreignCurrencyId = $journal['foreign_currency_id'];
             if (null !== $foreignCurrencyId && 0 !== $foreignCurrencyId) {
                 $sums[$foreignCurrencyId] ??= [
                     'currency_id'                               => $foreignCurrencyId,
@@ -286,10 +304,10 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                     TransactionTypeEnum::DEPOSIT->value         => '0',
                     TransactionTypeEnum::TRANSFER->value        => '0',
                     TransactionTypeEnum::RECONCILIATION->value  => '0',
-                    TransactionTypeEnum::OPENING_BALANCE->value => '0',
+                    TransactionTypeEnum::OPENING_BALANCE->value => '0'
                 ];
                 // add foreign amount to correct type:
-                $amount                          = Steam::positive((string) $journal['foreign_amount']);
+                $amount = Steam::positive((string) $journal['foreign_amount']);
                 if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                     $amount = bcmul($amount, '-1');
                 }
@@ -304,14 +322,20 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         $search = sprintf('%%%s', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*']);
     }
 
     public function tagStartsWith(string $query): Collection
     {
         $search = sprintf('%s%%', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*']);
     }
 
     public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
@@ -336,7 +360,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
             $tag->description = $data['description'];
         }
 
-        $tag->latitude  = null;
+        $tag->latitude = null;
         $tag->longitude = null;
         $tag->zoomLevel = null;
         $tag->save();
@@ -354,14 +378,14 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location             = $this->getLocation($tag);
+                $location = $this->getLocation($tag);
                 if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($tag);
                 }
 
-                $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
-                $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
+                $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+                $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
                 $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
                 $location->save();
             }
@@ -373,7 +397,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         return $tag;
     }
 
-    public function getLocation(Tag $tag): ?Location
+    public function getLocation(Tag $tag): null|Location
     {
         /** @var null|Location */
         return $tag->locations()->first();
@@ -384,7 +408,8 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        return $tag->transactionJournals()
+        return $tag
+            ->transactionJournals()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
@@ -413,9 +438,8 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                 'transaction_journals.transaction_currency_id',
                 'transactions.amount',
                 'transactions.native_amount as pc_amount',
-                'transactions.foreign_amount',
+                'transactions.foreign_amount'
             ])
-            ->toArray()
-        ;
+            ->toArray();
     }
 }

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Api;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Collection;
 
 trait CollectsAccountsFromFilter
@@ -40,7 +40,7 @@ trait CollectsAccountsFromFilter
         // always collect from the query parameter, even when it's empty.
         if (null !== $queryParameters['accounts']) {
             foreach ($queryParameters['accounts'] as $accountId) {
-                $account = $this->repository->find((int)$accountId);
+                $account = $this->repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -53,7 +53,10 @@ trait CollectsAccountsFromFilter
         }
         // if no preselected, but no accounts:
         if ('empty' === $queryParameters['preselected'] && 0 === $collection->count()) {
-            $defaultSet = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value])->pluck('id')->toArray();
+            $defaultSet = $this->repository
+                ->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value])
+                ->pluck('id')
+                ->toArray();
             $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
             if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
@@ -66,7 +69,13 @@ trait CollectsAccountsFromFilter
 
         // both options are overruled by "preselected"
         if ('all' === $queryParameters['preselected']) {
-            return $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
+            return $this->repository->getAccountsByType([
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEFAULT->value,
+                AccountTypeEnum::LOAN->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value
+            ]);
         }
         if ('assets' === $queryParameters['preselected'] || 'Asset account' === $queryParameters['preselected']) {
             return $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value]);

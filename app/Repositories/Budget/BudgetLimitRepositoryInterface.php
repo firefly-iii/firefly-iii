@@ -50,7 +50,7 @@ interface BudgetLimitRepositoryInterface
      * Tells you which amount has been budgeted (for the given budgets)
      * in the selected query. Returns a positive amount as a string.
      */
-    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
+    public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, null|Collection $budgets = null): string;
 
     /**
      * Destroy all budget limits.
@@ -62,16 +62,16 @@ interface BudgetLimitRepositoryInterface
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
 
-    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): ?BudgetLimit;
+    public function find(Budget $budget, TransactionCurrency $currency, Carbon $start, Carbon $end): null|BudgetLimit;
 
     /**
      * TODO this method is not multi currency aware.
      */
-    public function getAllBudgetLimits(?Carbon $start = null, ?Carbon $end = null): Collection;
+    public function getAllBudgetLimits(null|Carbon $start = null, null|Carbon $end = null): Collection;
 
-    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection;
+    public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, null|Carbon $start = null, null|Carbon $end = null): Collection;
 
-    public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
+    public function getBudgetLimits(Budget $budget, null|Carbon $start = null, null|Carbon $end = null): Collection;
 
     public function getNoteText(BudgetLimit $budgetLimit): string;
 

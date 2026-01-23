@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,15 +50,13 @@ class DeleteController extends Controller
 
         app('view')->share('showBudget', true);
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->repository = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->repository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,7 +70,7 @@ class DeleteController extends Controller
         $this->rememberPreviousUrl('bills.delete.url');
         $subTitle = (string) trans('firefly.delete_bill', ['name' => $bill->name]);
 
-        return view('bills.delete', ['bill' => $bill, 'subTitle' => $subTitle]);
+        return view('bills.delete', ['bill'     => $bill, 'subTitle' => $subTitle]);
     }
 
     /**

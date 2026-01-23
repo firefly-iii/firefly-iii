@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionLink;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -51,7 +51,7 @@ class UpdateRequest extends FormRequest
             'link_type_name' => $this->convertString('link_type_name'),
             'inward_id'      => $this->convertInteger('inward_id'),
             'outward_id'     => $this->convertInteger('outward_id'),
-            'notes'          => $this->stringWithNewlines('notes'),
+            'notes'          => $this->stringWithNewlines('notes')
         ];
     }
 
@@ -65,7 +65,7 @@ class UpdateRequest extends FormRequest
             'link_type_name' => 'exists:link_types,name',
             'inward_id'      => 'belongsToUser:transaction_journals,id|different:outward_id',
             'outward_id'     => 'belongsToUser:transaction_journals,id|different:inward_id',
-            'notes'          => 'min:1|max:32768|nullable',
+            'notes'          => 'min:1|max:32768|nullable'
         ];
     }
 
@@ -74,11 +74,9 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                $this->validateUpdate($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            $this->validateUpdate($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
@@ -87,21 +85,21 @@ class UpdateRequest extends FormRequest
     private function validateUpdate(Validator $validator): void
     {
         /** @var TransactionJournalLink $existing */
-        $existing     = $this->route()->parameter('journalLink');
-        $data         = $validator->getData();
+        $existing = $this->route()->parameter('journalLink');
+        $data     = $validator->getData();
 
         /** @var LinkTypeRepositoryInterface $repository */
-        $repository   = app(LinkTypeRepositoryInterface::class);
+        $repository = app(LinkTypeRepositoryInterface::class);
         $repository->setUser(auth()->user());
 
         /** @var JournalRepositoryInterface $journalRepos */
         $journalRepos = app(JournalRepositoryInterface::class);
         $journalRepos->setUser(auth()->user());
 
-        $inwardId     = $data['inward_id'] ?? $existing->source_id;
-        $outwardId    = $data['outward_id'] ?? $existing->destination_id;
-        $inward       = $journalRepos->find((int) $inwardId);
-        $outward      = $journalRepos->find((int) $outwardId);
+        $inwardId  = $data['inward_id'] ?? $existing->source_id;
+        $outwardId = $data['outward_id'] ?? $existing->destination_id;
+        $inward    = $journalRepos->find((int) $inwardId);
+        $outward   = $journalRepos->find((int) $outwardId);
         if (null === $inward) {
             $inward = $existing->source;
         }
@@ -113,7 +111,7 @@ class UpdateRequest extends FormRequest
             $validator->errors()->add('outward_id', 'Inward ID must be different from outward ID.');
         }
 
-        $inDB         = $repository->findSpecificLink($existing->linkType, $inward, $outward);
+        $inDB = $repository->findSpecificLink($existing->linkType, $inward, $outward);
         if (null === $inDB) {
             return;
         }

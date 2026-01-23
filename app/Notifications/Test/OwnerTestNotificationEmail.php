@@ -42,8 +42,7 @@ class OwnerTestNotificationEmail extends Notification
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -55,8 +54,7 @@ class OwnerTestNotificationEmail extends Notification
 
         return new MailMessage()
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+            ->subject((string) trans('email.admin_test_subject'));
     }
 
     /**

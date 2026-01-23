@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -32,12 +31,13 @@ use FireflyIII\Http\Requests\BudgetFormUpdateRequest;
 use FireflyIII\Models\AutoBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
@@ -54,16 +54,14 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository  = app(BudgetRepositoryInterface::class);
-                $this->attachments = app(AttachmentHelperInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.budgets'));
+            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,15 +71,15 @@ class EditController extends Controller
      */
     public function edit(Request $request, Budget $budget): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle          = (string) trans('firefly.edit_budget', ['name' => $budget->name]);
-        $autoBudget        = $this->repository->getAutoBudget($budget);
+        $subTitle   = (string) trans('firefly.edit_budget', ['name'   => $budget->name]);
+        $autoBudget = $this->repository->getAutoBudget($budget);
 
         // auto budget types
         $autoBudgetTypes   = [
             0                                           => (string) trans('firefly.auto_budget_none'),
             AutoBudgetType::AUTO_BUDGET_RESET->value    => (string) trans('firefly.auto_budget_reset'),
             AutoBudgetType::AUTO_BUDGET_ROLLOVER->value => (string) trans('firefly.auto_budget_rollover'),
-            AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => (string) trans('firefly.auto_budget_adjusted'),
+            AutoBudgetType::AUTO_BUDGET_ADJUSTED->value => (string) trans('firefly.auto_budget_adjusted')
         ];
         $autoBudgetPeriods = [
             'daily'     => (string) trans('firefly.auto_budget_period_daily'),
@@ -89,22 +87,22 @@ class EditController extends Controller
             'monthly'   => (string) trans('firefly.auto_budget_period_monthly'),
             'quarterly' => (string) trans('firefly.auto_budget_period_quarterly'),
             'half_year' => (string) trans('firefly.auto_budget_period_half_year'),
-            'yearly'    => (string) trans('firefly.auto_budget_period_yearly'),
+            'yearly'    => (string) trans('firefly.auto_budget_period_yearly')
         ];
 
         // code to handle active-checkboxes
-        $hasOldInput       = null !== $request->old('_token');
-        $preFilled         = [
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $budget->active,
             'auto_budget_currency_id' => $hasOldInput ? (int) $request->old('auto_budget_currency_id') : $this->primaryCurrency->id,
-            'notes'                   => $this->repository->getNoteText($budget),
+            'notes'                   => $this->repository->getNoteText($budget)
         ];
         if ($autoBudget instanceof AutoBudget) {
-            $amount                          = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
+            $amount = $hasOldInput ? $request->old('auto_budget_amount') : $autoBudget->amount;
             if (is_array($amount)) {
                 $amount = '0';
             }
-            $amount                          = (string) $amount;
+            $amount = (string) $amount;
             $preFilled['auto_budget_amount'] = Steam::bcround($amount, $autoBudget->transactionCurrency->decimal_places);
         }
 
@@ -115,7 +113,13 @@ class EditController extends Controller
         $request->session()->forget('budgets.edit.fromUpdate');
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('budgets.edit', ['budget' => $budget, 'subTitle' => $subTitle, 'autoBudgetTypes' => $autoBudgetTypes, 'autoBudgetPeriods' => $autoBudgetPeriods, 'autoBudget' => $autoBudget]);
+        return view('budgets.edit', [
+            'budget'            => $budget,
+            'subTitle'          => $subTitle,
+            'autoBudgetTypes'   => $autoBudgetTypes,
+            'autoBudgetPeriods' => $autoBudgetPeriods,
+            'autoBudget'        => $autoBudget
+        ]);
     }
 
     /**
@@ -123,7 +127,7 @@ class EditController extends Controller
      */
     public function update(BudgetFormUpdateRequest $request, Budget $budget): RedirectResponse
     {
-        $data     = $request->getBudgetData();
+        $data = $request->getBudgetData();
         $this->repository->update($budget, $data);
 
         $request->session()->flash('success', (string) trans('firefly.updated_budget', ['name' => $budget->name]));
@@ -136,7 +140,7 @@ class EditController extends Controller
 
         // store new attachment(s):
         /** @var null|array $files */
-        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($budget, $files);
         }

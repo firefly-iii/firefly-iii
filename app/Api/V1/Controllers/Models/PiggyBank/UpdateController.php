@@ -47,14 +47,12 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(PiggyBankRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(PiggyBankRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -65,23 +63,23 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, PiggyBank $piggyBank): JsonResponse
     {
-        $data        = $request->getAll();
-        $piggyBank   = $this->repository->update($piggyBank, $data);
+        $data      = $request->getAll();
+        $piggyBank = $this->repository->update($piggyBank, $data);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new PiggyBankEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
-        $piggyBank   = $enrichment->enrichSingle($piggyBank);
+        $piggyBank = $enrichment->enrichSingle($piggyBank);
 
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($piggyBank, $transformer, 'piggy-banks');
+        $resource = new Item($piggyBank, $transformer, 'piggy-banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

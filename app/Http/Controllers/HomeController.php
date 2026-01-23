@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
@@ -34,6 +33,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -63,8 +63,8 @@ class HomeController extends Controller
      */
     public function dateRange(Request $request): JsonResponse
     {
-        $stringStart   = '';
-        $stringEnd     = '';
+        $stringStart = '';
+        $stringEnd   = '';
 
         try {
             $stringStart = e((string) $request->get('start'));
@@ -91,7 +91,7 @@ class HomeController extends Controller
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end'   => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
@@ -99,7 +99,7 @@ class HomeController extends Controller
             Log::debug('Range is now marked as "custom".');
         }
 
-        $diff          = $start->diffInDays($end, true) + 1;
+        $diff = $start->diffInDays($end, true) + 1;
 
         if ($diff > 366) {
             $request->session()->flash('warning', (string) trans('firefly.warning_much_data', ['days' => (int) $diff]));
@@ -154,13 +154,13 @@ class HomeController extends Controller
         }
 
         /** @var Carbon $start */
-        $start          = session('start', today(config('app.timezone'))->startOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end            = session('end', today(config('app.timezone'))->endOfMonth());
-        $accounts       = $repository->getAccountsById($frontpageArray);
-        $today          = today(config('app.timezone'));
-        $accounts       = $accounts->sortBy('order'); // sort frontpage accounts by order
+        $end      = session('end', today(config('app.timezone'))->endOfMonth());
+        $accounts = $repository->getAccountsById($frontpageArray);
+        $today    = today(config('app.timezone'));
+        $accounts = $accounts->sortBy('order'); // sort frontpage accounts by order
 
         Log::debug('Frontpage accounts are ', $frontpageArray);
 
@@ -170,17 +170,26 @@ class HomeController extends Controller
         // collect groups for each transaction.
         foreach ($accounts as $account) {
             /** @var GroupCollectorInterface $collector */
-            $collector      = app(GroupCollectorInterface::class);
+            $collector = app(GroupCollectorInterface::class);
             $collector->setAccounts(new Collection()->push($account))->withAccountInformation()->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set            = $collector->getExtractedJournals();
-            $transactions[] = ['transactions' => $set, 'account' => $account];
+            $set = $collector->getExtractedJournals();
+            $transactions[] = ['transactions' => $set, 'account'      => $account];
         }
 
         /** @var User $user */
-        $user           = auth()->user();
+        $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', ['count' => $count, 'subTitle' => $subTitle, 'transactions' => $transactions, 'billCount' => $billCount, 'start' => $start, 'end' => $end, 'today' => $today, 'pageTitle' => $pageTitle]);
+        return view('index', [
+            'count'        => $count,
+            'subTitle'     => $subTitle,
+            'transactions' => $transactions,
+            'billCount'    => $billCount,
+            'start'        => $start,
+            'end'          => $end,
+            'today'        => $today,
+            'pageTitle'    => $pageTitle
+        ]);
     }
 
     private function indexV2(): mixed
@@ -188,13 +197,13 @@ class HomeController extends Controller
         $subTitle  = (string) trans('firefly.welcome_back');
         $pageTitle = (string) trans('firefly.main_dashboard_page_title');
 
-        $start     = session('start', today(config('app.timezone'))->startOfMonth());
-        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $start = session('start', today(config('app.timezone'))->startOfMonth());
+        $end   = session('end', today(config('app.timezone'))->endOfMonth());
 
         /** @var User $user */
-        $user      = auth()->user();
+        $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view('index', ['subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'pageTitle' => $pageTitle]);
+        return view('index', ['subTitle'  => $subTitle, 'start'     => $start, 'end'       => $end, 'pageTitle' => $pageTitle]);
     }
 }

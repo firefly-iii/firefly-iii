@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -47,7 +47,7 @@ class UserFormRequest extends FormRequest
             'blocked'      => 1 === $this->convertInteger('blocked'),
             'blocked_code' => $this->convertString('blocked_code'),
             'password'     => $this->convertString('password'),
-            'is_owner'     => 1 === $this->convertInteger('is_owner'),
+            'is_owner'     => 1 === $this->convertInteger('is_owner')
         ];
     }
 
@@ -62,7 +62,7 @@ class UserFormRequest extends FormRequest
             'password'     => 'confirmed|secure_password',
             'blocked_code' => 'min:0|max:32|nullable',
             'blocked'      => 'min:0|max:1|numeric',
-            'is_owner'     => 'min:0|max:1|numeric',
+            'is_owner'     => 'min:0|max:1|numeric'
         ];
     }
 

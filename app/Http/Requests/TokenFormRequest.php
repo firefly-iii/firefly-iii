@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -41,10 +41,7 @@ class TokenFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return [
-            'password' => 'required|currentPassword',
-            'code'     => 'required|2faCode',
-        ];
+        return ['password' => 'required|currentPassword', 'code'     => 'required|2faCode'];
     }
 
     public function withValidator(Validator $validator): void

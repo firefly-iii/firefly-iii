@@ -43,11 +43,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'    => $this->convertString('name'),
-            'outward' => $this->convertString('outward'),
-            'inward'  => $this->convertString('inward'),
-        ];
+        return ['name'    => $this->convertString('name'), 'outward' => $this->convertString('outward'), 'inward'  => $this->convertString('inward')];
     }
 
     /**
@@ -61,7 +57,7 @@ class UpdateRequest extends FormRequest
         return [
             'name'    => [Rule::unique('link_types', 'name')->ignore($linkType->id), 'min:1', 'max:1024'],
             'outward' => ['different:inward', Rule::unique('link_types', 'outward')->ignore($linkType->id), 'min:1', 'max:1024'],
-            'inward'  => ['different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1', 'max:1024'],
+            'inward'  => ['different:outward', Rule::unique('link_types', 'inward')->ignore($linkType->id), 'min:1', 'max:1024']
         ];
     }
 }

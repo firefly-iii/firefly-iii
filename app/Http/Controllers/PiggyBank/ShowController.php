@@ -50,16 +50,14 @@ class ShowController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
+            $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,19 +70,19 @@ class ShowController extends Controller
     public function show(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $end */
-        $end         = session('end', today(config('app.timezone'))->endOfMonth());
+        $end = session('end', today(config('app.timezone'))->endOfMonth());
         // transform piggies using the transformer:
-        $parameters  = new ParameterBag();
+        $parameters = new ParameterBag();
         $parameters->set('end', $end);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new PiggyBankEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
 
         /** @var PiggyBank $piggyBank */
-        $piggyBank   = $enrichment->enrichSingle($piggyBank);
+        $piggyBank = $enrichment->enrichSingle($piggyBank);
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -94,7 +92,12 @@ class ShowController extends Controller
         $subTitle    = $piggyBank->name;
         $attachments = $this->piggyRepos->getAttachments($piggyBank);
 
-
-        return view('piggy-banks.show', ['piggyBank' => $piggyBank, 'events' => $events, 'subTitle' => $subTitle, 'piggy' => $piggy, 'attachments' => $attachments]);
+        return view('piggy-banks.show', [
+            'piggyBank'   => $piggyBank,
+            'events'      => $events,
+            'subTitle'    => $subTitle,
+            'piggy'       => $piggy,
+            'attachments' => $attachments
+        ]);
     }
 }

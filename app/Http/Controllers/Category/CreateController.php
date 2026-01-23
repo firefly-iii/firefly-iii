@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\CategoryFormRequest;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    private AttachmentHelperInterface   $attachments;
+    private AttachmentHelperInterface $attachments;
     private CategoryRepositoryInterface $repository;
 
     /**
@@ -52,16 +52,14 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.categories'));
-                app('view')->share('mainTitleIcon', 'fa-bookmark');
-                $this->repository  = app(CategoryRepositoryInterface::class);
-                $this->attachments = app(AttachmentHelperInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.categories'));
+            app('view')->share('mainTitleIcon', 'fa-bookmark');
+            $this->repository = app(CategoryRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -97,7 +95,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($category, $files);
         }

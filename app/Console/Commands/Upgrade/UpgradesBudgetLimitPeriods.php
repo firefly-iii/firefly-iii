@@ -26,9 +26,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesBudgetLimitPeriods extends Command
 {
@@ -36,9 +36,9 @@ class UpgradesBudgetLimitPeriods extends Command
 
     public const string CONFIG_NAME = '550_budget_limit_periods';
 
-    protected $description          = 'Append budget limits with their (estimated) timeframe.';
+    protected $description = 'Append budget limits with their (estimated) timeframe.';
 
-    protected $signature            = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:550-budget-limit-periods {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -76,7 +76,7 @@ class UpgradesBudgetLimitPeriods extends Command
 
     private function fixLimit(BudgetLimit $limit): void
     {
-        $period        = $this->getLimitPeriod($limit);
+        $period = $this->getLimitPeriod($limit);
 
         if (null === $period) {
             $message = sprintf(
@@ -93,7 +93,7 @@ class UpgradesBudgetLimitPeriods extends Command
         $limit->period = $period;
         $limit->save();
 
-        $msg           = sprintf(
+        $msg = sprintf(
             'Budget limit #%d (%s - %s) period is "%s".',
             $limit->id,
             $limit->start_date->format('Y-m-d'),
@@ -103,14 +103,18 @@ class UpgradesBudgetLimitPeriods extends Command
         Log::debug($msg);
     }
 
-    private function getLimitPeriod(BudgetLimit $limit): ?string
+    private function getLimitPeriod(BudgetLimit $limit): null|string
     {
         // is daily
         if ($limit->end_date->isSameDay($limit->start_date)) {
             return 'daily';
         }
         // is weekly
-        if ('1' === $limit->start_date->format('N') && '7' === $limit->end_date->format('N') && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)) {
+        if (
+            '1' === $limit->start_date->format('N')
+            && '7' === $limit->end_date->format('N')
+            && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)
+        ) {
             return 'weekly';
         }
 

@@ -35,14 +35,17 @@ class RemovesZeroAmount extends Command
 
     protected $description = 'Delete transactions with zero amount.';
 
-    protected $signature   = 'correction:zero-amounts';
+    protected $signature = 'correction:zero-amounts';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set      = Transaction::where('amount', 0)
+            ->get(['transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray();
         $set      = array_unique($set);
         $journals = TransactionJournal::whereIn('id', $set)->get();
 

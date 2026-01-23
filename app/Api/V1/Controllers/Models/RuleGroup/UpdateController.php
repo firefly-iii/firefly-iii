@@ -46,17 +46,15 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-                $this->ruleGroupRepository->setUser($user);
+            $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+            $this->ruleGroupRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -67,14 +65,14 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, RuleGroup $ruleGroup): JsonResponse
     {
-        $ruleGroup   = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
-        $manager     = $this->getManager();
+        $ruleGroup = $this->ruleGroupRepository->update($ruleGroup, $request->getAll());
+        $manager   = $this->getManager();
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($ruleGroup, $transformer, 'rule_groups');
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

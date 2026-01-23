@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * SearchRequest.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -35,7 +36,7 @@ class TransactionSearchRequest extends AggregateFormRequest
     {
         return [
             [PaginationRequest::class, 'sort_class' => TransactionJournal::class],
-            SearchQueryRequest::class,
+            SearchQueryRequest::class
             // [ObjectTypeApiRequest::class, 'object_type' => Account::class],
         ];
     }

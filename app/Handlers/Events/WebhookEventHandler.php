@@ -26,8 +26,8 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class WebhookEventHandler
@@ -49,10 +49,8 @@ class WebhookEventHandler
         // kick off the job!
         $messages = WebhookMessage::where('webhook_messages.sent', false)
             ->get(['webhook_messages.*'])
-            ->filter(
-                static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2
-            )->splice(0, 5)
-        ;
+            ->filter(static fn(WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
+            ->splice(0, 5);
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
 
         /** @var WebhookMessage $message */

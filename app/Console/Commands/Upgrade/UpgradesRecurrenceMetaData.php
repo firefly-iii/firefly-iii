@@ -28,8 +28,8 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 use function Safe\json_encode;
 
@@ -39,9 +39,9 @@ class UpgradesRecurrenceMetaData extends Command
 
     public const string CONFIG_NAME = '481_migrate_recurrence_meta';
 
-    protected $description          = 'Migrate recurrence meta data';
+    protected $description = 'Migrate recurrence meta data';
 
-    protected $signature            = 'upgrade:481-recurrence-meta {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:481-recurrence-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -68,13 +68,12 @@ class UpgradesRecurrenceMetaData extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function migrateMetaData(): int
     {
-        $count      = 0;
+        $count = 0;
         // get all recurrence meta data:
         $collection = RecurrenceMeta::with('recurrence')->get();
 
@@ -89,7 +88,7 @@ class UpgradesRecurrenceMetaData extends Command
     private function migrateEntry(RecurrenceMeta $meta): int
     {
         /** @var null|Recurrence $recurrence */
-        $recurrence       = $meta->recurrence;
+        $recurrence = $meta->recurrence;
         if (null === $recurrence) {
             return 0;
         }
@@ -97,20 +96,14 @@ class UpgradesRecurrenceMetaData extends Command
         if (null === $firstTransaction) {
             return 0;
         }
-        $value            = $meta->value;
+        $value = $meta->value;
 
         if ('tags' === $meta->name) {
             $array = explode(',', $meta->value);
             $value = json_encode($array, JSON_THROW_ON_ERROR);
         }
 
-        RecurrenceTransactionMeta::create(
-            [
-                'rt_id' => $firstTransaction->id,
-                'name'  => $meta->name,
-                'value' => $value,
-            ]
-        );
+        RecurrenceTransactionMeta::create(['rt_id' => $firstTransaction->id, 'name'  => $meta->name, 'value' => $value]);
         $meta->forceDelete();
 
         return 1;

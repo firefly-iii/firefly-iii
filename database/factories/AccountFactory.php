@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Database\Factories;
@@ -11,10 +12,7 @@ class AccountFactory extends Factory
 {
     public function definition(): array
     {
-        return [
-            'name' => $this->faker->name(),
-            'active' => true,
-        ];
+        return ['name'   => $this->faker->name(), 'active' => true];
     }
 
     public function withType(AccountTypeEnum $type): static

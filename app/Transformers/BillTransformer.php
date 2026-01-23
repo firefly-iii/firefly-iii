@@ -50,20 +50,19 @@ class BillTransformer extends AbstractTransformer
     {
         $currency = $bill->transactionCurrency;
 
-
         return [
-            'id'                              => $bill->id,
-            'created_at'                      => $bill->created_at->toAtomString(),
-            'updated_at'                      => $bill->updated_at->toAtomString(),
-            'name'                            => $bill->name,
+            'id'         => $bill->id,
+            'created_at' => $bill->created_at->toAtomString(),
+            'updated_at' => $bill->updated_at->toAtomString(),
+            'name'       => $bill->name,
 
             // currencies according to 6.3.0
-            'object_has_currency_setting'     => true,
-            'currency_id'                     => (string) $bill->transaction_currency_id,
-            'currency_name'                   => $currency->name,
-            'currency_code'                   => $currency->code,
-            'currency_symbol'                 => $currency->symbol,
-            'currency_decimal_places'         => $currency->decimal_places,
+            'object_has_currency_setting' => true,
+            'currency_id'                 => (string) $bill->transaction_currency_id,
+            'currency_name'               => $currency->name,
+            'currency_code'               => $currency->code,
+            'currency_symbol'             => $currency->symbol,
+            'currency_decimal_places'     => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_name'           => $this->primary->name,
@@ -72,38 +71,33 @@ class BillTransformer extends AbstractTransformer
             'primary_currency_decimal_places' => $this->primary->decimal_places,
 
             // amounts according to 6.3.0
-            'amount_min'                      => $bill->amounts['amount_min'],
-            'pc_amount_min'                   => $bill->amounts['pc_amount_min'],
+            'amount_min'    => $bill->amounts['amount_min'],
+            'pc_amount_min' => $bill->amounts['pc_amount_min'],
 
-            'amount_max'                      => $bill->amounts['amount_max'],
-            'pc_amount_max'                   => $bill->amounts['pc_amount_max'],
+            'amount_max'    => $bill->amounts['amount_max'],
+            'pc_amount_max' => $bill->amounts['pc_amount_max'],
 
-            'amount_avg'                      => $bill->amounts['average'],
-            'pc_amount_avg'                   => $bill->amounts['pc_average'],
+            'amount_avg'    => $bill->amounts['average'],
+            'pc_amount_avg' => $bill->amounts['pc_average'],
 
-            'date'                            => $bill->date->toAtomString(),
-            'end_date'                        => $bill->end_date?->toAtomString(),
-            'extension_date'                  => $bill->extension_date?->toAtomString(),
-            'repeat_freq'                     => $bill->repeat_freq,
-            'skip'                            => $bill->skip,
-            'active'                          => $bill->active,
-            'order'                           => $bill->order,
-            'notes'                           => $bill->meta['notes'],
-            'object_group_id'                 => $bill->meta['object_group_id'],
-            'object_group_order'              => $bill->meta['object_group_order'],
-            'object_group_title'              => $bill->meta['object_group_title'],
+            'date'               => $bill->date->toAtomString(),
+            'end_date'           => $bill->end_date?->toAtomString(),
+            'extension_date'     => $bill->extension_date?->toAtomString(),
+            'repeat_freq'        => $bill->repeat_freq,
+            'skip'               => $bill->skip,
+            'active'             => $bill->active,
+            'order'              => $bill->order,
+            'notes'              => $bill->meta['notes'],
+            'object_group_id'    => $bill->meta['object_group_id'],
+            'object_group_order' => $bill->meta['object_group_order'],
+            'object_group_title' => $bill->meta['object_group_title'],
 
-            'paid_dates'                      => $bill->meta['paid_dates'],
-            'pay_dates'                       => $bill->meta['pay_dates'],
-            'next_expected_match'             => $bill->meta['nem']?->toAtomString(),
-            'next_expected_match_diff'        => $bill->meta['nem_diff'],
+            'paid_dates'               => $bill->meta['paid_dates'],
+            'pay_dates'                => $bill->meta['pay_dates'],
+            'next_expected_match'      => $bill->meta['nem']?->toAtomString(),
+            'next_expected_match_diff' => $bill->meta['nem_diff'],
 
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/bills/'.$bill->id,
-                ],
-            ],
+            'links' => [['rel' => 'self', 'uri' => '/bills/' . $bill->id]]
         ];
     }
 }

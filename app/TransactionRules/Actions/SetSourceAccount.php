@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -34,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetSourceAccount.
@@ -45,17 +45,19 @@ class SetSourceAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
-        $accountName      = $this->action->getValue($journal);
+        $accountName = $this->action->getValue($journal);
 
         /** @var User $user */
-        $user             = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
-        $object           = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
+        $object = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
         $this->repository = app(AccountRepositoryInterface::class);
         if (null === $object) {
             Log::error('Could not find journal.');
@@ -63,15 +65,13 @@ class SetSourceAccount implements ActionInterface
 
             return false;
         }
-        $type             = $object->transactionType->type;
+        $type = $object->transactionType->type;
         $this->repository->setUser($user);
 
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
-        $newAccount       = $this->findAssetAccount($type, $accountName);
+        $newAccount = $this->findAssetAccount($type, $accountName);
         if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && !$newAccount instanceof Account) {
-            Log::error(
-                sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
-            );
+            Log::error(sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
 
             return false;
@@ -79,7 +79,7 @@ class SetSourceAccount implements ActionInterface
 
         // new source account must be different from the current destination account:
         /** @var null|Transaction $destination */
-        $destination      = $object->transactions()->where('amount', '>', 0)->first();
+        $destination = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $destination) {
             Log::error('Could not find destination transaction.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_destination_transaction')));
@@ -94,13 +94,11 @@ class SetSourceAccount implements ActionInterface
             return false;
         }
         if ($newAccount instanceof Account && $newAccount->id === $destination->account_id) {
-            Log::error(
-                sprintf(
-                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
-                    $newAccount->id,
-                    $destination->account_id
-                )
-            );
+            Log::error(sprintf(
+                'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
+                $newAccount->id,
+                $destination->account_id
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_source', ['name' => $newAccount->name])));
 
             return false;
@@ -118,8 +116,7 @@ class SetSourceAccount implements ActionInterface
         DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $newAccount->id])
-        ;
+            ->update(['account_id' => $newAccount->id]);
 
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
@@ -128,7 +125,7 @@ class SetSourceAccount implements ActionInterface
         return true;
     }
 
-    private function findAssetAccount(string $type, string $accountName): ?Account
+    private function findAssetAccount(string $type, string $accountName): null|Account
     {
         // switch on type:
         $allowed = config(sprintf('firefly.expected_source_types.source.%s', $type));
@@ -150,7 +147,7 @@ class SetSourceAccount implements ActionInterface
                 'account_type_id'   => null,
                 'virtual_balance'   => 0,
                 'active'            => true,
-                'iban'              => null,
+                'iban'              => null
             ];
             $account = $this->repository->store($data);
         }

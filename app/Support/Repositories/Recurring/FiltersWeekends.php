@@ -46,7 +46,7 @@ trait FiltersWeekends
 
             return $dates;
         }
-        $return     = [];
+        $return = [];
 
         /** @var Carbon $date */
         foreach ($dates as $date) {
@@ -60,11 +60,13 @@ trait FiltersWeekends
 
             // is weekend and must set back to Friday?
             if (RecurrenceRepetitionWeekend::WEEKEND_TO_FRIDAY->value === $repetition->weekend) {
-                $clone    = clone $date;
+                $clone = clone $date;
                 $clone->addDays(5 - $date->dayOfWeekIso);
-                Log::debug(
-                    sprintf('Date is %s, and this is in the weekend, so corrected to %s (Friday).', $date->format('D d M Y'), $clone->format('D d M Y'))
-                );
+                Log::debug(sprintf(
+                    'Date is %s, and this is in the weekend, so corrected to %s (Friday).',
+                    $date->format('D d M Y'),
+                    $clone->format('D d M Y')
+                ));
                 $return[] = clone $clone;
 
                 continue;
@@ -72,14 +74,16 @@ trait FiltersWeekends
 
             // postpone to Monday?
             if (RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value === $repetition->weekend) {
-                $clone    = clone $date;
+                $clone = clone $date;
                 $clone->addDays(8 - $date->dayOfWeekIso);
-                Log::debug(
-                    sprintf('Date is %s, and this is in the weekend, so corrected to %s (Monday).', $date->format('D d M Y'), $clone->format('D d M Y'))
-                );
+                Log::debug(sprintf(
+                    'Date is %s, and this is in the weekend, so corrected to %s (Monday).',
+                    $date->format('D d M Y'),
+                    $clone->format('D d M Y')
+                ));
                 $return[] = $clone;
-
             }
+
             // Log::debug(sprintf('Date is %s, removed from final result', $date->format('D d M Y')));
         }
 

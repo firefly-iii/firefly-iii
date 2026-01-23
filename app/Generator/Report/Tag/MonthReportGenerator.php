@@ -28,8 +28,8 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
-use Throwable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Log;
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
-    private Carbon     $end;
-    private Carbon     $start;
+    private Carbon $end;
+    private Carbon $start;
     private Collection $tags;
 
     /**
@@ -46,7 +46,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function __construct()
     {
-        $this->tags     = new Collection();
+        $this->tags = new Collection();
         $this->accounts = new Collection();
     }
 
@@ -63,10 +63,12 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            $result = view(
-                'reports.tag.month',
-                ['accountIds' => $accountIds, 'reportType' => $reportType, 'tagIds' => $tagIds]
-            )->with('start', $this->start)->with('end', $this->end)->with('tags', $this->tags)->with('accounts', $this->accounts)->render();
+            $result = view('reports.tag.month', ['accountIds' => $accountIds, 'reportType' => $reportType, 'tagIds'     => $tagIds])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
+                ->with('tags', $this->tags)
+                ->with('accounts', $this->accounts)
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

@@ -43,7 +43,7 @@ use Illuminate\View\View;
 class DeleteController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
-    protected UserRepositoryInterface     $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
@@ -52,16 +52,14 @@ class DeleteController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.currencies'));
-                app('view')->share('mainTitleIcon', 'fa-usd');
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.currencies'));
+            app('view')->share('mainTitleIcon', 'fa-usd');
+            $this->repository = app(CurrencyRepositoryInterface::class);
+            $this->userRepository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -74,7 +72,7 @@ class DeleteController extends Controller
     public function delete(Request $request, TransactionCurrency $currency): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
-        $user     = auth()->user();
+        $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->warning(sprintf('Tried to visit page to delete currency %s but is not site owner.', $currency->code));
@@ -84,7 +82,7 @@ class DeleteController extends Controller
 
         if ($this->repository->currencyInUse($currency)) {
             $location = $this->repository->currencyInUseAt($currency);
-            $message  = (string) trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name' => e($currency->name)]);
+            $message  = (string) trans(sprintf('firefly.cannot_disable_currency_%s', $location), ['name'  => e($currency->name)]);
             $request->session()->flash('error', $message);
             Log::channel('audit')->warning(sprintf('Tried to visit page to delete currency %s but currency is in use.', $currency->code));
 

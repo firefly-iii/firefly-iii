@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Log;
  */
 class NetWorth implements NetWorthInterface
 {
-    private AccountRepositoryInterface  $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -69,29 +69,31 @@ class NetWorth implements NetWorthInterface
             return $cache->get();
         }
         Log::debug(sprintf('Now in byAccounts("%s", "%s")', $ids, $date->format('Y-m-d H:i:s')));
-        $primary          = Amount::getPrimaryCurrency();
-        $netWorth         = [];
+        $primary  = Amount::getPrimaryCurrency();
+        $netWorth = [];
         Log::debug(sprintf('NetWorth: accountsBalancesOptimized("%s")', $date->format('Y-m-d H:i:s')));
-        $balances         = Steam::accountsBalancesOptimized($accounts, $date, null, $convertToPrimary);
+        $balances = Steam::accountsBalancesOptimized($accounts, $date, null, $convertToPrimary);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
             //            Log::debug(sprintf('Now at account #%d ("%s")', $account->id, $account->name));
-            $currency                           = $this->accountRepository->getAccountCurrency($account) ?? $primary;
-            $usePrimary                         = $convertToPrimary && $primary->id !== $currency->id;
-            $currency                           = $usePrimary ? $primary : $currency;
-            $currencyCode                       = $currency->code;
-            $balance                            = '0';
-            $primaryBalance                     = '0';
+            $currency       = $this->accountRepository->getAccountCurrency($account) ?? $primary;
+            $usePrimary     = $convertToPrimary && $primary->id !== $currency->id;
+            $currency       = $usePrimary ? $primary : $currency;
+            $currencyCode   = $currency->code;
+            $balance        = '0';
+            $primaryBalance = '0';
             if (array_key_exists($account->id, $balances)) {
                 $balance        = $balances[$account->id]['balance'] ?? '0';
                 $primaryBalance = $balances[$account->id]['pc_balance'] ?? '0';
             }
             //            Log::debug(sprintf('Balance is %s, primary balance is %s', $balance, $primaryBalance));
             // always subtract virtual balance again.
-            $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
-            $primaryBalance                     = '' !== (string) $account->native_virtual_balance ? bcsub($primaryBalance, (string) $account->native_virtual_balance) : $primaryBalance;
-            $amountToUse                        = $usePrimary ? $primaryBalance : $balance;
+            $balance        = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
+            $primaryBalance = '' !== (string) $account->native_virtual_balance
+                ? bcsub($primaryBalance, (string) $account->native_virtual_balance)
+                : $primaryBalance;
+            $amountToUse    = $usePrimary ? $primaryBalance : $balance;
             //            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
             $netWorth[$currencyCode] ??= [
@@ -100,7 +102,7 @@ class NetWorth implements NetWorthInterface
                 'currency_code'           => $currency->code,
                 'currency_name'           => $currency->name,
                 'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
+                'currency_decimal_places' => $currency->decimal_places
             ];
 
             $netWorth[$currencyCode]['balance'] = bcadd((string) $amountToUse, $netWorth[$currencyCode]['balance']);
@@ -122,6 +124,5 @@ class NetWorth implements NetWorthInterface
     {
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
-
     }
 }

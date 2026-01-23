@@ -23,16 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use Override;
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsValidSortInstruction;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
+use Illuminate\Contracts\Validation\Validator;
+use Override;
 use RuntimeException;
 
 class PaginationRequest extends ApiRequest
 {
-    private ?string $sortClass = null;
+    private null|string $sortClass = null;
 
     #[Override]
     public function handleConfig(array $config): void
@@ -49,36 +49,34 @@ class PaginationRequest extends ApiRequest
     public function rules(): array
     {
         return [
-            'sort'  => ['nullable', new IsValidSortInstruction((string)$this->sortClass)],
+            'sort'  => ['nullable', new IsValidSortInstruction((string) $this->sortClass)],
             'limit' => 'numeric|min:1|max:131337',
-            'page'  => 'numeric|min:1|max:131337',
+            'page'  => 'numeric|min:1|max:131337'
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-
-                $limit  = $this->convertInteger('limit');
-                if (0 === $limit) {
-                    // get default for user:
-                    /** @var User $user */
-                    $user  = auth()->user();
-                    $limit = (int)Preferences::getForUser($user, 'listPageSize', 50)->data;
-                }
-                $page   = $this->convertInteger('page');
-                $page   = min(max(1, $page), 2 ** 16);
-                $offset = ($page - 1) * $limit;
-                $sort   = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
-                $this->attributes->set('limit', $limit);
-                $this->attributes->set('sort', $sort);
-                $this->attributes->set('page', $page);
-                $this->attributes->set('offset', $offset);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+
+            $limit = $this->convertInteger('limit');
+            if (0 === $limit) {
+                // get default for user:
+                /** @var User $user */
+                $user  = auth()->user();
+                $limit = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
+            }
+            $page   = $this->convertInteger('page');
+            $page   = min(max(1, $page), 2 ** 16);
+            $offset = ($page - 1) * $limit;
+            $sort   = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
+            $this->attributes->set('limit', $limit);
+            $this->attributes->set('sort', $sort);
+            $this->attributes->set('page', $page);
+            $this->attributes->set('offset', $offset);
+        });
     }
 }

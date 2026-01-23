@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * CreatesPiggyBankEventForChangedAmount.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -38,13 +39,10 @@ class CreatesPiggyBankEventForChangedAmount implements ShouldQueue
         if ($event->transactionGroup instanceof TransactionGroup) {
             $journal = $event->transactionGroup->transactionJournals()->first();
         }
-        $date    = $journal->date ?? today(config('app.timezone'));
+        $date = $journal->date ?? today(config('app.timezone'));
         // sanity check: event must not already exist for this journal and piggy bank.
         if (null !== $journal) {
-            $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)
-                ->where('transaction_journal_id', $journal->id)
-                ->exists()
-            ;
+            $exists = PiggyBankEvent::where('piggy_bank_id', $event->piggyBank->id)->where('transaction_journal_id', $journal->id)->exists();
             if ($exists) {
                 Log::warning('Already have event for this journal and piggy, will not create another.');
 
@@ -52,14 +50,12 @@ class CreatesPiggyBankEventForChangedAmount implements ShouldQueue
             }
         }
 
-        PiggyBankEvent::create(
-            [
-                'piggy_bank_id'          => $event->piggyBank->id,
-                'transaction_journal_id' => $journal?->id,
-                'date'                   => $date->format('Y-m-d'),
-                'date_tz'                => $date->format('e'),
-                'amount'                 => $event->amount,
-            ]
-        );
+        PiggyBankEvent::create([
+            'piggy_bank_id'          => $event->piggyBank->id,
+            'transaction_journal_id' => $journal?->id,
+            'date'                   => $date->format('Y-m-d'),
+            'date_tz'                => $date->format('e'),
+            'amount'                 => $event->amount
+        ]);
     }
 }

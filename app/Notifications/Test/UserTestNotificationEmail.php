@@ -42,8 +42,7 @@ class UserTestNotificationEmail extends Notification
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     public function toMail(User $notifiable): MailMessage
@@ -52,8 +51,7 @@ class UserTestNotificationEmail extends Notification
 
         return new MailMessage()
             ->markdown('emails.admin-test', ['email' => $address])
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+            ->subject((string) trans('email.admin_test_subject'));
     }
 
     /**

@@ -46,16 +46,14 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(ObjectGroupRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
+            $this->repository = app(ObjectGroupRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -64,15 +62,15 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, ObjectGroup $objectGroup): JsonResponse
     {
-        $data        = $request->getUpdateData();
+        $data = $request->getUpdateData();
         $this->repository->update($objectGroup, $data);
         $this->repository->resetOrder();
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var ObjectGroupTransformer $transformer */
         $transformer = app(ObjectGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource    = new Item($objectGroup, $transformer, 'object_groups');
+        $resource = new Item($objectGroup, $transformer, 'object_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -36,15 +36,16 @@ class TransactionCreation extends Notification
 {
     use Queueable;
 
-    public function __construct(private array $collection) {}
+    public function __construct(
+        private array $collection
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -54,8 +55,7 @@ class TransactionCreation extends Notification
     {
         return new MailMessage()
             ->markdown('emails.report-new-journals', ['transformed' => $this->collection])
-            ->subject(trans_choice('email.new_journals_subject', count($this->collection)))
-        ;
+            ->subject(trans_choice('email.new_journals_subject', count($this->collection)));
     }
 
     /**

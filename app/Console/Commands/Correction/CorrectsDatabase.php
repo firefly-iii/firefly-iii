@@ -79,7 +79,7 @@ class CorrectsDatabase extends Command
             'correction:recalculate-pc-amounts',
             'correction:remove-links-to-deleted-objects',
             'correction:clears-empty-foreign-amounts',
-            'firefly-iii:report-integrity',
+            'firefly-iii:report-integrity'
         ];
         foreach ($commands as $command) {
             $this->friendlyLine(sprintf('Now executing command "%s"', $command));

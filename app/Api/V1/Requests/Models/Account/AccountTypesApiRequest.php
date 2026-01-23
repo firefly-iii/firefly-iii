@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * AccountTypeApiRequest.php
  * Copyright (c) 2025 https://github.com/ctrl-f5
@@ -23,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Rules\Account\IsValidAccountTypeList;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use Illuminate\Contracts\Validation\Validator;
 
 class AccountTypesApiRequest extends ApiRequest
 {
@@ -35,27 +36,23 @@ class AccountTypesApiRequest extends ApiRequest
     public function rules(): array
     {
         //  sprintf('in:%s', implode(',', array_keys($this->types))),
-        return [
-            'types'  => new IsValidAccountTypeList(),
-        ];
+        return ['types' => new IsValidAccountTypeList()];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $types  = explode(',', $this->convertString('types', 'all'));
-                $result = [];
-                // split and find all types:
-                foreach ($types as $type) {
-                    $result = array_merge($result, $this->mapAccountTypes($type));
-                }
-                $result = array_unique($result);
-                $this->attributes->set('types', $result);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $types  = explode(',', $this->convertString('types', 'all'));
+            $result = [];
+            // split and find all types:
+            foreach ($types as $type) {
+                $result = array_merge($result, $this->mapAccountTypes($type));
+            }
+            $result = array_unique($result);
+            $this->attributes->set('types', $result);
+        });
     }
 }

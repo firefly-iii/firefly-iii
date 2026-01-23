@@ -47,15 +47,15 @@ use function Safe\json_encode;
  */
 trait JournalServiceTrait
 {
-    private AccountRepositoryInterface  $accountRepository;
-    private BudgetRepositoryInterface   $budgetRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private BudgetRepositoryInterface $budgetRepository;
     private CategoryRepositoryInterface $categoryRepository;
-    private TagFactory                  $tagFactory;
+    private TagFactory $tagFactory;
 
     /**
      * @throws FireflyException
      */
-    protected function getAccount(string $transactionType, string $direction, array $data, ?Account $opposite = null): ?Account
+    protected function getAccount(string $transactionType, string $direction, array $data, null|Account $opposite = null): null|Account
     {
         // some debug logging:
         Log::debug(sprintf('Now in getAccount(%s)', $direction), $data);
@@ -67,23 +67,23 @@ trait JournalServiceTrait
         unset($array);
 
         // and now try to find it, based on the type of transaction.
-        $message       = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
+        $message = 'Transaction = %s, %s account should be in: %s. Direction is %s.';
         Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType] ?? ['UNKNOWN']), $direction));
 
-        $result        = $this->findAccountById($data, $expectedTypes[$transactionType], $opposite);
-        $result        = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType], $opposite);
-        $ibanResult    = $result;
-        $result        = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType], $opposite);
-        $numberResult  = $result;
-        $result        = $this->findAccountByName($result, $data, $expectedTypes[$transactionType], $opposite);
-        $nameResult    = $result;
+        $result       = $this->findAccountById($data, $expectedTypes[$transactionType], $opposite);
+        $result       = $this->findAccountByIban($result, $data, $expectedTypes[$transactionType], $opposite);
+        $ibanResult   = $result;
+        $result       = $this->findAccountByNumber($result, $data, $expectedTypes[$transactionType], $opposite);
+        $numberResult = $result;
+        $result       = $this->findAccountByName($result, $data, $expectedTypes[$transactionType], $opposite);
+        $nameResult   = $result;
 
         // if $result (find by name) is NULL, but IBAN is set, any result of the search by NAME can't overrule
         // this account. In such a case, the name search must be retried with a new name.
         if (null !== $nameResult && null === $numberResult && null === $ibanResult && '' !== (string) $data['iban'] && '' !== (string) $nameResult->iban) {
             $data['name'] = sprintf('%s (%s)', $data['name'], $data['iban']);
             Log::debug(sprintf('Search again using the new name, "%s".', $data['name']));
-            $result       = $this->findAccountByName(null, $data, $expectedTypes[$transactionType], $opposite);
+            $result = $this->findAccountByName(null, $data, $expectedTypes[$transactionType], $opposite);
         }
 
         // the account that Firefly III creates must be "creatable", aka select the one we can create from the list just in case
@@ -96,12 +96,7 @@ trait JournalServiceTrait
             Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
             $temp = $this->findAccountById(['id' => $data['id']], []);
             if (null !== $temp) {
-                $tempData = [
-                    'name'   => $temp->name,
-                    'iban'   => $temp->iban,
-                    'number' => null,
-                    'bic'    => null,
-                ];
+                $tempData = ['name'   => $temp->name, 'iban'   => $temp->iban, 'number' => null, 'bic'    => null];
                 $result   = $this->createAccount(null, $tempData, $creatableType);
             }
         }
@@ -117,7 +112,7 @@ trait JournalServiceTrait
         return $result;
     }
 
-    private function findAccountById(array $data, array $types, ?Account $opposite = null): ?Account
+    private function findAccountById(array $data, array $types, null|Account $opposite = null): null|Account
     {
         // first attempt, find by ID.
         if (null !== $data['id']) {
@@ -134,9 +129,7 @@ trait JournalServiceTrait
                 return $search;
             }
             if (null !== $search && 0 === count($types)) {
-                Log::debug(
-                    sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type)
-                );
+                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type));
 
                 return $search;
             }
@@ -146,7 +139,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function findAccountByIban(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    private function findAccountByIban(null|Account $account, array $data, array $types, null|Account $opposite = null): null|Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -179,7 +172,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function findAccountByNumber(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    private function findAccountByNumber(null|Account $account, array $data, array $types, null|Account $opposite = null): null|Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -214,7 +207,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function findAccountByName(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    private function findAccountByName(null|Account $account, array $data, array $types, null|Account $opposite = null): null|Account
     {
         if ($account instanceof Account) {
             Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
@@ -251,7 +244,7 @@ trait JournalServiceTrait
         return null;
     }
 
-    private function getCreatableType(array $types): ?string
+    private function getCreatableType(array $types): null|string
     {
         $result = null;
         $list   = config('firefly.dynamic_creation_allowed');
@@ -272,19 +265,12 @@ trait JournalServiceTrait
      * @throws FireflyException
      * @throws JsonException
      */
-    private function createAccount(?Account $account, array $data, string $preferredType): ?Account
+    private function createAccount(null|Account $account, array $data, string $preferredType): null|Account
     {
         Log::debug('Now in createAccount()', $data);
         // return new account.
         if ($account instanceof Account) {
-            Log::debug(
-                sprintf(
-                    'Was given %s account #%d ("%s") so will simply return that.',
-                    $account->accountType->type,
-                    $account->id,
-                    $account->name
-                )
-            );
+            Log::debug(sprintf('Was given %s account #%d ("%s") so will simply return that.', $account->accountType->type, $account->id, $account->name));
         }
         if (!$account instanceof Account) {
             // final attempt, create it.
@@ -314,43 +300,39 @@ trait JournalServiceTrait
                 $data['iban'] = null;
             }
 
-
             // $data['name'] = $data['name'] ?? '(no name)';
 
-            $account   = $this->accountRepository->store(
-                [
-                    'account_type_id'   => null,
-                    'account_type_name' => $preferredType,
-                    'name'              => $data['name'],
-                    'virtual_balance'   => null,
-                    'active'            => true,
-                    'iban'              => $data['iban'],
-                    'currency_id'       => $data['currency_id'] ?? null,
-                    'order'             => $this->accountRepository->maxOrder($preferredType),
-                ]
-            );
+            $account = $this->accountRepository->store([
+                'account_type_id'   => null,
+                'account_type_name' => $preferredType,
+                'name'              => $data['name'],
+                'virtual_balance'   => null,
+                'active'            => true,
+                'iban'              => $data['iban'],
+                'currency_id'       => $data['currency_id'] ?? null,
+                'order'             => $this->accountRepository->maxOrder($preferredType)
+            ]);
             // store BIC
             if (null !== $data['bic']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'BIC', 'data' => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'BIC', 'data'       => $data['bic']]);
             }
             // store account number
             if (null !== $data['number']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'account_number', 'data'       => $data['number']]);
             }
         }
 
         return $account;
     }
 
-    private function getCashAccount(?Account $account, array $data, array $types): ?Account
+    private function getCashAccount(null|Account $account, array $data, array $types): null|Account
     {
         // return cash account.
-        if (!$account instanceof Account && '' === (string) $data['name']
-            && in_array(AccountTypeEnum::CASH->value, $types, true)) {
+        if (!$account instanceof Account && '' === (string) $data['name'] && in_array(AccountTypeEnum::CASH->value, $types, true)) {
             $account = $this->accountRepository->getCashAccount();
         }
         Log::debug('Cannot return cash account, return input instead.');
@@ -374,7 +356,7 @@ trait JournalServiceTrait
         return $amount;
     }
 
-    protected function getForeignAmount(?string $amount): ?string
+    protected function getForeignAmount(null|string $amount): null|string
     {
         if (null === $amount) {
             Log::debug('No foreign amount info in array. Return NULL');
@@ -427,7 +409,7 @@ trait JournalServiceTrait
         $journal->categories()->sync([]);
     }
 
-    protected function storeNotes(TransactionJournal $journal, ?string $notes): void
+    protected function storeNotes(TransactionJournal $journal, null|string $notes): void
     {
         $notes = (string) $notes;
         $note  = $journal->notes()->first();
@@ -449,7 +431,7 @@ trait JournalServiceTrait
     /**
      * Link tags to journal.
      */
-    protected function storeTags(TransactionJournal $journal, ?array $tags): void
+    protected function storeTags(TransactionJournal $journal, null|array $tags): void
     {
         Log::debug('Now in storeTags()', $tags ?? []);
         $this->tagFactory->setUser($journal->user);

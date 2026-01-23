@@ -34,7 +34,7 @@ class SetsLatestVersion extends Command
 
     protected $description = 'Set latest version in DB.';
 
-    protected $signature   = 'firefly-iii:set-latest-version {--james-is-cool}';
+    protected $signature = 'firefly-iii:set-latest-version {--james-is-cool}';
 
     /**
      * Execute the console command.

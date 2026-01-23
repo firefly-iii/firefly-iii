@@ -32,38 +32,37 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class EitherConfigKey
 {
-    public static array $static
-        = [
-            // currency conversion
-            'cer.enabled',
+    public static array $static = [
+        // currency conversion
+        'cer.enabled',
 
-            // firefly iii settings
-            'firefly.version',
-            'firefly.default_location',
-            'firefly.account_to_transaction',
-            'firefly.allowed_opposing_types',
-            'firefly.accountRoles',
-            'firefly.valid_liabilities',
-            'firefly.interest_periods',
-            'firefly.bill_periods',
-            'firefly.enable_external_map',
-            'firefly.expected_source_types',
-            'firefly.credit_card_types',
-            'firefly.languages',
-            'app.timezone',
-            'firefly.valid_view_ranges',
-            'firefly.preselected_accounts',
+        // firefly iii settings
+        'firefly.version',
+        'firefly.default_location',
+        'firefly.account_to_transaction',
+        'firefly.allowed_opposing_types',
+        'firefly.accountRoles',
+        'firefly.valid_liabilities',
+        'firefly.interest_periods',
+        'firefly.bill_periods',
+        'firefly.enable_external_map',
+        'firefly.expected_source_types',
+        'firefly.credit_card_types',
+        'firefly.languages',
+        'app.timezone',
+        'firefly.valid_view_ranges',
+        'firefly.preselected_accounts',
 
-            // triggers and actions:
-            'firefly.rule-actions',
-            'firefly.context-rule-actions',
-            'search.operators',
+        // triggers and actions:
+        'firefly.rule-actions',
+        'firefly.context-rule-actions',
+        'search.operators',
 
-            // webhooks
-            'webhook.triggers',
-            'webhook.responses',
-            'webhook.deliveries',
-        ];
+        // webhooks
+        'webhook.triggers',
+        'webhook.responses',
+        'webhook.deliveries'
+    ];
 
     /**
      * @throws NotFoundHttpException

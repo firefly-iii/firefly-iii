@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -42,13 +42,13 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function amountNoCurrency(string $name, $value = null, ?array $options = null): string
+    public function amountNoCurrency(string $name, $value = null, null|array $options = null): string
     {
         $options ??= [];
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['currency'], $options['placeholder']);
 
@@ -57,7 +57,13 @@ class ExpandedForm
         // $value = round((float)$value, 8);
         // }
         try {
-            $html = view('form.amount-no-currency', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.amount-no-currency', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
@@ -73,26 +79,32 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function checkbox(string $name, ?int $value = null, $checked = null, ?array $options = null): string
+    public function checkbox(string $name, null|int $value = null, $checked = null, null|array $options = null): string
     {
         $options ??= [];
         $value   ??= 1;
         $options['checked'] = true === $checked;
 
         if (app('session')->has('preFilled')) {
-            $preFilled          = session('preFilled');
+            $preFilled = session('preFilled');
             $options['checked'] = $preFilled[$name] ?? $options['checked'];
         }
 
-        $label              = $this->label($name, $options);
-        $options            = $this->expandOptionArray($name, $label, $options);
-        $classes            = $this->getHolderClasses($name);
-        $value              = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
         try {
-            $html = view('form.checkbox', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.checkbox', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
@@ -108,7 +120,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function date(string $name, $value = null, ?array $options = null): string
+    public function date(string $name, $value = null, null|array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -117,7 +129,7 @@ class ExpandedForm
         unset($options['placeholder']);
 
         try {
-            $html = view('form.date', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.date', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
             $html = 'Could not render date.';
@@ -131,7 +143,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function file(string $name, ?array $options = null): string
+    public function file(string $name, null|array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -139,7 +151,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.file', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.file', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = 'Could not render file.';
@@ -155,9 +167,9 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function integer(string $name, $value = null, ?array $options = null): string
+    public function integer(string $name, $value = null, null|array $options = null): string
     {
-        $options         ??= [];
+        $options ??= [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -165,7 +177,13 @@ class ExpandedForm
         $options['step'] ??= '1';
 
         try {
-            $html = view('form.integer', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.integer', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render integer(): %s', $e->getMessage()));
             $html = 'Could not render integer.';
@@ -181,7 +199,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function location(string $name, $value = null, ?array $options = null): string
+    public function location(string $name, $value = null, null|array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -190,7 +208,13 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         try {
-            $html = view('form.location', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.location', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render location(): %s', $e->getMessage()));
             $html = 'Could not render location.';
@@ -203,16 +227,16 @@ class ExpandedForm
 
     public function makeSelectListWithEmpty(Collection $set): array
     {
-        $selectList    = [];
+        $selectList = [];
         $selectList[0] = '(none)';
-        $fields        = ['title', 'name', 'description'];
+        $fields = ['title', 'name', 'description'];
 
         /** @var Model $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
-            $entryId              = $entry->id;
-            $current              = $entry->toArray();
-            $title                = null;
+            $entryId = $entry->id;
+            $current = $entry->toArray();
+            $title   = null;
             foreach ($fields as $field) {
                 if (array_key_exists($field, $current) && null === $title) {
                     $title = $current[$field];
@@ -229,13 +253,13 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function objectGroup($value = null, ?array $options = null): string
+    public function objectGroup($value = null, null|array $options = null): string
     {
-        $name            = 'object_group';
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $name    = 'object_group';
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
 
         if (null === $value) {
@@ -243,7 +267,13 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.object_group', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.object_group', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
             $html = 'Could not render objectGroup.';
@@ -274,14 +304,14 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function password(string $name, ?array $options = null): string
+    public function password(string $name, null|array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.password', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
@@ -295,14 +325,20 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function passwordWithValue(string $name, string $value, ?array $options = null): string
+    public function passwordWithValue(string $name, string $value, null|array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', ['classes' => $classes, 'value' => $value, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.password', [
+                'classes' => $classes,
+                'value'   => $value,
+                'name'    => $name,
+                'label'   => $label,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render passwordWithValue(): %s', $e->getMessage()));
             $html = 'Could not render passwordWithValue.';
@@ -320,17 +356,23 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function percentage(string $name, $value = null, ?array $options = null): string
+    public function percentage(string $name, $value = null, null|array $options = null): string
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['placeholder']);
 
         try {
-            $html = view('form.percentage', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.percentage', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
             $html = 'Could not render percentage.';
@@ -346,14 +388,14 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function staticText(string $name, $value, ?array $options = null): string
+    public function staticText(string $name, $value, null|array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.static', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.static', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
             $html = 'Could not render staticText.';
@@ -369,7 +411,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function text(string $name, $value = null, ?array $options = null): string
+    public function text(string $name, $value = null, null|array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -377,7 +419,7 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         try {
-            $html = view('form.text', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.text', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
             $html = 'Could not render text.';
@@ -393,12 +435,12 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function textarea(string $name, $value = null, ?array $options = null): string
+    public function textarea(string $name, $value = null, null|array $options = null): string
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
 
         if (null === $value) {
@@ -406,7 +448,13 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.textarea', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.textarea', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
             $html = 'Could not render textarea.';

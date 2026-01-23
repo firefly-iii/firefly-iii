@@ -56,7 +56,7 @@ interface OperationsRepositoryInterface
      * which have the specified accounts. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null): array;
+    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null): array;
 
     /**
      * Sum of withdrawal journals in period for a set of accounts, grouped per currency. Amounts are always negative.
@@ -64,11 +64,11 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $expense = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -78,11 +78,11 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $expense = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -92,11 +92,11 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $expense = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -105,11 +105,11 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncome(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $revenue = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -119,11 +119,11 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $revenue = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
@@ -133,15 +133,15 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
-        ?TransactionCurrency $currency = null
+        Carbon $start,
+        Carbon $end,
+        null|Collection $accounts = null,
+        null|Collection $revenue = null,
+        null|TransactionCurrency $currency = null
     ): array;
 
     /**
      * Sum of transfers in period for a set of accounts, grouped per currency. Amounts are always positive.
      */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array;
+    public function sumTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null, null|TransactionCurrency $currency = null): array;
 }

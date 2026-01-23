@@ -27,9 +27,9 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankObserver
@@ -44,16 +44,16 @@ class PiggyBankObserver
 
     private function updatePrimaryCurrencyAmount(PiggyBank $piggyBank): void
     {
-        $group                           = $piggyBank->accounts()->first()?->user->userGroup;
+        $group = $piggyBank->accounts()->first()?->user->userGroup;
         if (null === $group) {
             Log::debug(sprintf('No account(s) yet for piggy bank #%d.', $piggyBank->id));
 
             return;
         }
-        $userCurrency                    = Amount::getPrimaryCurrencyByUserGroup($group);
+        $userCurrency = Amount::getPrimaryCurrencyByUserGroup($group);
         $piggyBank->native_target_amount = null;
         if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
-            $converter                       = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setIgnoreSettings(true);
             $converter->setUserGroup($group);
             $piggyBank->native_target_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $piggyBank->target_amount);

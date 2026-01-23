@@ -24,13 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\Support\Search\OperatorQuerySearch;
@@ -39,6 +38,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -59,16 +59,14 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->ruleRepos = app(RuleRepositoryInterface::class);
+            $this->ruleRepos = app(RuleRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -80,15 +78,15 @@ class EditController extends Controller
      */
     public function edit(Request $request, Rule $rule): Factory|\Illuminate\Contracts\View\View
     {
-        $triggerCount   = 0;
-        $actionCount    = 0;
-        $oldActions     = [];
-        $oldTriggers    = [];
+        $triggerCount = 0;
+        $actionCount  = 0;
+        $oldActions   = [];
+        $oldTriggers  = [];
 
         // build triggers from query, if present.
-        $query          = (string) $request->get('from_query');
+        $query = (string) $request->get('from_query');
         if ('' !== $query) {
-            $search        = app(SearchInterface::class);
+            $search = app(SearchInterface::class);
             $search->parseQuery($query);
             $words         = $search->getWords();
             $excludedWords = $search->getExcludedWords();
@@ -96,30 +94,24 @@ class EditController extends Controller
             if (count($words) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $words)]));
                 foreach ($words as $word) {
-                    $operators[] = [
-                        'type'  => 'description_contains',
-                        'value' => $word,
-                    ];
+                    $operators[] = ['type'  => 'description_contains', 'value' => $word];
                 }
             }
             if (count($excludedWords) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $excludedWords)]));
                 foreach ($excludedWords as $excludedWord) {
-                    $operators[] = [
-                        'type'  => '-description_contains',
-                        'value' => $excludedWord,
-                    ];
+                    $operators[] = ['type'  => '-description_contains', 'value' => $excludedWord];
                 }
             }
-            $oldTriggers   = $this->parseFromOperators($operators);
+            $oldTriggers = $this->parseFromOperators($operators);
         }
         // has old input?
         if (null !== $request->old() && is_array($request->old()) && count($request->old()) > 0) {
             $oldTriggers = $this->getPreviousTriggers($request);
             $oldActions  = $this->getPreviousActions($request);
         }
-        $triggerCount   = count($oldTriggers);
-        $actionCount    = count($oldActions);
+        $triggerCount = count($oldTriggers);
+        $actionCount  = count($oldActions);
 
         // overrule old input and query data when it has no rule data:
         if (0 === $triggerCount && 0 === $actionCount) {
@@ -129,16 +121,16 @@ class EditController extends Controller
             $actionCount  = count($oldActions);
         }
 
-        $hasOldInput    = null !== $request->old('_token');
-        $preFilled      = [
+        $hasOldInput = null !== $request->old('_token');
+        $preFilled   = [
             'active'          => $hasOldInput ? (bool) $request->old('active') : $rule->active,
             'stop_processing' => $hasOldInput ? (bool) $request->old('stop_processing') : $rule->stop_processing,
-            'strict'          => $hasOldInput ? (bool) $request->old('strict') : $rule->strict,
+            'strict'          => $hasOldInput ? (bool) $request->old('strict') : $rule->strict
         ];
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
-        $subTitle       = (string) trans('firefly.edit_rule', ['nr' => $rule->order, 'title' => $rule->title]);
+        $subTitle       = (string) trans('firefly.edit_rule', ['nr'    => $rule->order, 'title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {
@@ -148,7 +140,15 @@ class EditController extends Controller
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule.edit', ['rule' => $rule, 'subTitle' => $subTitle, 'primaryTrigger' => $primaryTrigger, 'oldTriggers' => $oldTriggers, 'oldActions' => $oldActions, 'triggerCount' => $triggerCount, 'actionCount' => $actionCount]);
+        return view('rules.rule.edit', [
+            'rule'           => $rule,
+            'subTitle'       => $subTitle,
+            'primaryTrigger' => $primaryTrigger,
+            'oldTriggers'    => $oldTriggers,
+            'oldActions'     => $oldActions,
+            'triggerCount'   => $triggerCount,
+            'actionCount'    => $actionCount
+        ]);
     }
 
     /**
@@ -167,19 +167,16 @@ class EditController extends Controller
         }
         asort($triggers);
 
-        $index           = 0;
+        $index = 0;
         foreach ($submittedOperators as $operator) {
             try {
-                $renderedEntries[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
-                        'oldValue'   => $operator['value'],
-                        'oldChecked' => false,
-                        'count'      => $index + 1,
-                        'triggers'   => $triggers,
-                    ]
-                )->render();
+                $renderedEntries[] = view('rules.partials.trigger', [
+                    'oldTrigger' => OperatorQuerySearch::getRootOperator($operator['type']),
+                    'oldValue'   => $operator['value'],
+                    'oldChecked' => false,
+                    'count'      => $index + 1,
+                    'triggers'   => $triggers
+                ])->render();
             } catch (Throwable $e) {
                 $message = sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage());
                 Log::debug($message);
@@ -200,7 +197,7 @@ class EditController extends Controller
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {
-        $data     = $request->getRuleData();
+        $data = $request->getRuleData();
 
         $this->ruleRepos->update($rule, $data);
 

@@ -32,13 +32,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 trait LocationServiceTrait
 {
-    protected function storeNewLocation(Model $model, array $data): ?Location
+    protected function storeNewLocation(Model $model, array $data): null|Location
     {
         $data['store_location'] ??= false;
         if ($data['store_location']) {
-            $location             = new Location();
-            $location->latitude   = $data['latitude'] ?? config('firefly.default_location.latitude');
-            $location->longitude  = $data['longitude'] ?? config('firefly.default_location.longitude');
+            $location = new Location();
+            $location->latitude = $data['latitude'] ?? config('firefly.default_location.latitude');
+            $location->longitude = $data['longitude'] ?? config('firefly.default_location.longitude');
             $location->zoom_level = $data['zoom_level'] ?? config('firefly.default_location.zoom_level');
             $location->locatable()->associate($model);
             $location->save();

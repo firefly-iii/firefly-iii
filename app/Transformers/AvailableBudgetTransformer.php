@@ -34,7 +34,7 @@ use FireflyIII\Support\Facades\Steam;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                $convertToPrimary;
+    private readonly bool $convertToPrimary;
     private readonly TransactionCurrency $primary;
 
     /**
@@ -42,7 +42,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
-        $this->primary          = Amount::getPrimaryCurrency();
+        $this->primary = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -60,17 +60,17 @@ class AvailableBudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                              => (string) $availableBudget->id,
-            'created_at'                      => $availableBudget->created_at->toAtomString(),
-            'updated_at'                      => $availableBudget->updated_at->toAtomString(),
+            'id'         => (string) $availableBudget->id,
+            'created_at' => $availableBudget->created_at->toAtomString(),
+            'updated_at' => $availableBudget->updated_at->toAtomString(),
 
             // currencies according to 6.3.0
-            'object_has_currency_setting'     => true,
-            'currency_id'                     => (string) $currency->id,
-            'currency_name'                   => $currency->name,
-            'currency_code'                   => $currency->code,
-            'currency_symbol'                 => $currency->symbol,
-            'currency_decimal_places'         => $currency->decimal_places,
+            'object_has_currency_setting' => true,
+            'currency_id'                 => (string) $currency->id,
+            'currency_name'               => $currency->name,
+            'currency_code'               => $currency->code,
+            'currency_symbol'             => $currency->symbol,
+            'currency_decimal_places'     => $currency->decimal_places,
 
             'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_name'           => $this->primary->name,
@@ -78,20 +78,15 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'primary_currency_symbol'         => $this->primary->symbol,
             'primary_currency_decimal_places' => $this->primary->decimal_places,
 
-            'amount'                          => $amount,
-            'pc_amount'                       => $pcAmount,
-            'start'                           => $availableBudget->start_date->toAtomString(),
-            'end'                             => $availableBudget->end_date->endOfDay()->toAtomString(),
-            'spent_in_budgets'                => $availableBudget->meta['spent_in_budgets'],
-            'pc_spent_in_budgets'             => $availableBudget->meta['pc_spent_in_budgets'],
-            'spent_outside_budgets'           => $availableBudget->meta['spent_outside_budgets'],
-            'pc_spent_outside_budgets'        => $availableBudget->meta['pc_spent_outside_budgets'],
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/available_budgets/'.$availableBudget->id,
-                ],
-            ],
+            'amount'                   => $amount,
+            'pc_amount'                => $pcAmount,
+            'start'                    => $availableBudget->start_date->toAtomString(),
+            'end'                      => $availableBudget->end_date->endOfDay()->toAtomString(),
+            'spent_in_budgets'         => $availableBudget->meta['spent_in_budgets'],
+            'pc_spent_in_budgets'      => $availableBudget->meta['pc_spent_in_budgets'],
+            'spent_outside_budgets'    => $availableBudget->meta['spent_outside_budgets'],
+            'pc_spent_outside_budgets' => $availableBudget->meta['pc_spent_outside_budgets'],
+            'links'                    => [['rel' => 'self', 'uri' => '/available_budgets/' . $availableBudget->id]]
         ];
     }
 }

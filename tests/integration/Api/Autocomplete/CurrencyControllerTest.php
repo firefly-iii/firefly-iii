@@ -46,11 +46,11 @@ final class CurrencyControllerTest extends TestCase
     {
         for ($i = 1; $i <= $count; ++$i) {
             $currency = TransactionCurrency::create([
-                'name'           => 'Currency '.$i,
-                'code'           => 'CUR'.$i,
-                'symbol'         => 'C'.$i,
+                'name'           => 'Currency ' . $i,
+                'code'           => 'CUR' . $i,
+                'symbol'         => 'C' . $i,
                 'decimal_places' => $i,
-                'enabled'        => $enabled,
+                'enabled'        => $enabled
             ]);
         }
     }
@@ -67,7 +67,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // test API
@@ -79,7 +79,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturnsACollectionOfEnabledCurrencies(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -91,15 +91,7 @@ final class CurrencyControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
         $response->assertJsonFragment(['code' => 'CUR1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(10);
     }
@@ -107,7 +99,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointDoesNotReturnDisabledCurrencies(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -123,7 +115,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesWithLimit(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -134,30 +126,18 @@ final class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(1);
-
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCurrencies(20, true);
-        $response = $this->get(route('api.v1.autocomplete.currencies', [
-            'query' => 'Currency 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.currencies', ['query' => 'Currency 1', 'limit' => 20]), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)

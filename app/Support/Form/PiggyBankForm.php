@@ -41,45 +41,31 @@ class PiggyBankForm
      *
      * @param mixed $value
      */
-    public function piggyBankList(string $name, $value = null, ?array $options = null): string
+    public function piggyBankList(string $name, $value = null, null|array $options = null): string
     {
         // make repositories
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
         $piggyBanks = $repository->getPiggyBanksWithAmount();
-        $title      = (string)trans('firefly.default_group_title_name');
+        $title      = (string) trans('firefly.default_group_title_name');
         $array      = [];
-        $subList    = [
-            0 => [
-                'group'   => [
-                    'title' => $title,
-                ],
-                'piggies' => [
-                    (string)trans('firefly.none_in_select_list'),
-                ],
-            ],
-        ];
+        $subList    = [0    => ['group'   => ['title'   => $title], 'piggies' => [(string) trans('firefly.none_in_select_list')]]];
 
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
-            $group                                       = $piggy->objectGroups->first();
-            $groupTitle                                  = null;
-            $groupOrder                                  = 0;
+            $group      = $piggy->objectGroups->first();
+            $groupTitle = null;
+            $groupOrder = 0;
             if (null !== $group) {
                 $groupTitle = $group->title;
                 $groupOrder = $group->order;
             }
-            $subList[$groupOrder] ??= [
-                'group'   => [
-                    'title' => $groupTitle,
-                ],
-                'piggies' => [],
-            ];
+            $subList[$groupOrder] ??= ['group'   => ['title'   => $groupTitle], 'piggies' => []];
             $subList[$groupOrder]['piggies'][$piggy->id] = $piggy->name;
         }
         ksort($subList);
         foreach ($subList as $info) {
-            $groupTitle         = $info['group']['title'];
+            $groupTitle = $info['group']['title'];
             $array[$groupTitle] = $info['piggies'];
         }
 

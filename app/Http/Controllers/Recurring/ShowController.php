@@ -58,16 +58,14 @@ class ShowController extends Controller
         app('view')->share('showCategory', true);
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -79,50 +77,49 @@ class ShowController extends Controller
      */
     public function show(Recurrence $recurrence): Factory|\Illuminate\Contracts\View\View
     {
-        $repos                  = app(AttachmentRepositoryInterface::class);
+        $repos = app(AttachmentRepositoryInterface::class);
 
         // enrich
         /** @var User $admin */
-        $admin                  = auth()->user();
-        $enrichment             = new RecurringEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new RecurringEnrichment();
         $enrichment->setUser($admin);
 
         /** @var Recurrence $recurrence */
-        $recurrence             = $enrichment->enrichSingle($recurrence);
+        $recurrence = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
-        $transformer            = app(RecurrenceTransformer::class);
+        $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag());
 
-        $array                  = $transformer->transform($recurrence);
+        $array = $transformer->transform($recurrence);
 
-        $groups                 = $this->repository->getTransactions($recurrence);
-        $today                  = today(config('app.timezone'));
-        $array['repeat_until']  = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
+        $groups = $this->repository->getTransactions($recurrence);
+        $today  = today(config('app.timezone'));
+        $array['repeat_until'] = null !== $array['repeat_until'] ? new Carbon($array['repeat_until']) : null;
         $array['journal_count'] = $this->repository->getJournalCount($recurrence);
 
         // transform dates back to Carbon objects and expand information
         foreach ($array['repetitions'] as $index => $repetition) {
             foreach ($repetition['occurrences'] as $item => $occurrence) {
-                $date                                               = new Carbon($occurrence)->startOfDay();
-                $set                                                = [
+                $date = new Carbon($occurrence)->startOfDay();
+                $set  = [
                     'date'  => $date,
-                    'fired' => $this->repository->createdPreviously($recurrence, $date)
-                               || $this->repository->getJournalCount($recurrence, $date) > 0,
+                    'fired' => $this->repository->createdPreviously($recurrence, $date) || $this->repository->getJournalCount($recurrence, $date) > 0
                 ];
                 $array['repetitions'][$index]['occurrences'][$item] = $set;
             }
         }
 
         // add attachments to the recurrence object.
-        $attachments            = $recurrence->attachments()->get();
-        $array['attachments']   = [];
-        $attachmentTransformer  = app(AttachmentTransformer::class);
+        $attachments = $recurrence->attachments()->get();
+        $array['attachments'] = [];
+        $attachmentTransformer = app(AttachmentTransformer::class);
 
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
-            $item                   = $attachmentTransformer->transform($attachment);
-            $item['file_exists']    = $repos->exists($attachment); // TODO this should be part of the transformer
+            $item = $attachmentTransformer->transform($attachment);
+            $item['file_exists'] = $repos->exists($attachment); // TODO this should be part of the transformer
             $array['attachments'][] = $item;
         }
 
@@ -135,8 +132,14 @@ class ShowController extends Controller
             }
         }
 
-        $subTitle               = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
+        $subTitle = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'array' => $array, 'groups' => $groups, 'today' => $today]);
+        return view('recurring.show', [
+            'recurrence' => $recurrence,
+            'subTitle'   => $subTitle,
+            'array'      => $array,
+            'groups'     => $groups,
+            'today'      => $today
+        ]);
     }
 }

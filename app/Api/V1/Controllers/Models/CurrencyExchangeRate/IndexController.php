@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -41,20 +41,19 @@ class IndexController extends Controller
     use ValidatesUserGroupTrait;
 
     public const string RESOURCE_KEY = 'exchange-rates';
-    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
+
+    protected array $acceptedRoles = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->repository = app(ExchangeRateRepositoryInterface::class);
-                $this->repository->setUserGroup($this->validateUserGroup($request));
+        $this->middleware(function (Request $request, $next) {
+            $this->repository = app(ExchangeRateRepositoryInterface::class);
+            $this->repository->setUserGroup($this->validateUserGroup($request));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function index(): JsonResponse
@@ -67,9 +66,6 @@ class IndexController extends Controller
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 
-        return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

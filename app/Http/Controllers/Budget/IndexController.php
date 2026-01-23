@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -38,6 +36,9 @@ use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\OperationsRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Contracts\View\Factory;
@@ -46,7 +47,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class IndexController
@@ -56,10 +56,10 @@ class IndexController extends Controller
     use DateCalculation;
 
     private AvailableBudgetRepositoryInterface $abRepository;
-    private BudgetLimitRepositoryInterface     $blRepository;
-    private CurrencyRepositoryInterface        $currencyRepository;
-    private OperationsRepositoryInterface      $opsRepository;
-    private BudgetRepositoryInterface          $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private CurrencyRepositoryInterface $currencyRepository;
+    private OperationsRepositoryInterface $opsRepository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -68,20 +68,18 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository         = app(BudgetRepositoryInterface::class);
-                $this->opsRepository      = app(OperationsRepositoryInterface::class);
-                $this->abRepository       = app(AvailableBudgetRepositoryInterface::class);
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->blRepository       = app(BudgetLimitRepositoryInterface::class);
-                $this->repository->cleanupBudgets();
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.budgets'));
+            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
+            $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
+            $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->repository->cleanupBudgets();
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -91,14 +89,14 @@ class IndexController extends Controller
      *
      * @throws FireflyException
      *                                              */
-    public function index(?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
+    public function index(null|Carbon $start = null, null|Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $this->abRepository->cleanup();
         Log::debug(sprintf('Start of IndexController::index("%s", "%s")', $start?->format('Y-m-d'), $end?->format('Y-m-d')));
 
         // collect some basic vars:
-        $range            = Navigation::getViewRange(true);
-        $isCustomRange    = session('is_custom_range', false);
+        $range         = Navigation::getViewRange(true);
+        $isCustomRange = session('is_custom_range', false);
         if (false === $isCustomRange) {
             $start ??= session('start', today(config('app.timezone'))->startOfMonth());
             $end   ??= Navigation::endOfPeriod($start, $range);
@@ -110,23 +108,23 @@ class IndexController extends Controller
             $end   ??= session('end', today(config('app.timezone'))->endOfMonth());
         }
 
-        $currencies       = $this->currencyRepository->get();
-        $budgeted         = '0';
-        $spent            = '0';
+        $currencies = $this->currencyRepository->get();
+        $budgeted   = '0';
+        $spent      = '0';
 
         // new period stuff:
-        $periodTitle      = Navigation::periodShow($start, $range);
-        $prevLoop         = $this->getPreviousPeriods($start, $range);
-        $nextLoop         = $this->getNextPeriods($start, $range);
+        $periodTitle = Navigation::periodShow($start, $range);
+        $prevLoop    = $this->getPreviousPeriods($start, $range);
+        $nextLoop    = $this->getNextPeriods($start, $range);
 
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
-        $budgets          = $this->getAllBudgets($start, $end, $currencies, $this->primaryCurrency);
+        $budgets = $this->getAllBudgets($start, $end, $currencies, $this->primaryCurrency);
 
         //        echo '<pre>';
         //        var_dump($budgets[0]);exit;
-        $sums             = $this->getSums($budgets);
+        $sums = $this->getSums($budgets);
 
         // get budgeted for default currency:
         if (0 === count($availableBudgets)) {
@@ -137,21 +135,33 @@ class IndexController extends Controller
         }
         // number of days for consistent budgeting.
         $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
-        $activeDaysLeft   = $this->activeDaysLeft($start, $end);   // see method description.
+        $activeDaysLeft = $this->activeDaysLeft($start, $end); // see method description.
 
         // get all inactive budgets, and simply list them:
-        $inactive         = $this->repository->getInactiveBudgets();
+        $inactive = $this->repository->getInactiveBudgets();
 
-        return view(
-            'budgets.index',
-            ['availableBudgets' => $availableBudgets, 'budgeted' => $budgeted, 'spent' => $spent, 'prevLoop' => $prevLoop, 'nextLoop' => $nextLoop, 'currencies' => $currencies, 'periodTitle' => $periodTitle, 'activeDaysPassed' => $activeDaysPassed, 'activeDaysLeft' => $activeDaysLeft, 'inactive' => $inactive, 'budgets' => $budgets, 'start' => $start, 'end' => $end, 'sums' => $sums]
-        );
+        return view('budgets.index', [
+            'availableBudgets' => $availableBudgets,
+            'budgeted'         => $budgeted,
+            'spent'            => $spent,
+            'prevLoop'         => $prevLoop,
+            'nextLoop'         => $nextLoop,
+            'currencies'       => $currencies,
+            'periodTitle'      => $periodTitle,
+            'activeDaysPassed' => $activeDaysPassed,
+            'activeDaysLeft'   => $activeDaysLeft,
+            'inactive'         => $inactive,
+            'budgets'          => $budgets,
+            'start'            => $start,
+            'end'              => $end,
+            'sums'             => $sums
+        ]);
     }
 
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Start of getAllAvailableBudgets("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        $converter        = new ExchangeRateConverter();
+        $converter = new ExchangeRateConverter();
         // get all available budgets.
         $ab               = $this->abRepository->get($start, $end);
         $availableBudgets = [];
@@ -159,22 +169,25 @@ class IndexController extends Controller
         // for each, complement with spent amount:
         /** @var AvailableBudget $entry */
         foreach ($ab as $entry) {
-            $array                = $entry->toArray();
-            $array['start_date']  = $entry->start_date;
-            $array['end_date']    = $entry->end_date;
+            $array = $entry->toArray();
+            $array['start_date'] = $entry->start_date;
+            $array['end_date'] = $entry->end_date;
 
             // spent in period:
-            $spentArr             = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
-            $array['spent']       = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
-            $array['pc_spent']    = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent']) : null;
+            $spentArr = $this->opsRepository->sumExpenses($entry->start_date, $entry->end_date, null, null, $entry->transactionCurrency);
+            $array['spent'] = $spentArr[$entry->transaction_currency_id]['sum'] ?? '0';
+            $array['pc_spent'] = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id
+                ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $array['spent'])
+                : null;
             // budgeted in period:
-            $budgeted             = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
-            $array['budgeted']    = $budgeted;
-            $array['pc_budgeted'] = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $budgeted) : null;
+            $budgeted = $this->blRepository->budgeted($entry->start_date, $entry->end_date, $entry->transactionCurrency);
+            $array['budgeted'] = $budgeted;
+            $array['pc_budgeted'] = $this->convertToPrimary && $entry->transaction_currency_id !== $this->primaryCurrency->id
+                ? $converter->convert($entry->transactionCurrency, $this->primaryCurrency, $entry->start_date, $budgeted)
+                : null;
             // this time, because of complex sums, use the currency converter.
 
-
-            $availableBudgets[]   = $array;
+            $availableBudgets[] = $array;
             unset($spentArr);
         }
 
@@ -192,19 +205,19 @@ class IndexController extends Controller
         /** @var Budget $current */
         foreach ($collection as $current) {
             Log::debug(sprintf('Working on budget #%d ("%s")', $current->id, $current->name));
-            $array                = $current->toArray();
-            $array['spent']       = [];
+            $array = $current->toArray();
+            $array['spent'] = [];
             $array['spent_total'] = [];
-            $array['budgeted']    = [];
+            $array['budgeted'] = [];
             $array['attachments'] = $this->repository->getAttachments($current);
             $array['auto_budget'] = $this->repository->getAutoBudget($current);
-            $budgetLimits         = $this->blRepository->getBudgetLimits($current, $start, $end);
+            $budgetLimits = $this->blRepository->getBudgetLimits($current, $start, $end);
 
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
                 Log::debug(sprintf('Working on budget limit #%d', $limit->id));
-                $currency            = $limit->transactionCurrency ?? $primaryCurrency;
-                $amount              = Steam::bcround($limit->amount, $currency->decimal_places);
+                $currency = $limit->transactionCurrency ?? $primaryCurrency;
+                $amount   = Steam::bcround($limit->amount, $currency->decimal_places);
                 $array['budgeted'][] = [
                     'id'                      => $limit->id,
                     'amount'                  => $amount,
@@ -216,7 +229,7 @@ class IndexController extends Controller
                     'currency_id'             => $currency->id,
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
-                    'currency_decimal_places' => $currency->decimal_places,
+                    'currency_decimal_places' => $currency->decimal_places
                 ];
                 Log::debug(sprintf('The amount budgeted for budget limit #%d is %s %s', $limit->id, $currency->code, $amount));
             }
@@ -227,13 +240,13 @@ class IndexController extends Controller
             foreach ($currencies as $currency) {
                 $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($current), $currency);
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
-                    $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['currency_id']             = $currency->id;
-                    $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
+                    $array['spent'][$currency->id]['spent'] = $spentArr[$currency->id]['sum'];
+                    $array['spent'][$currency->id]['currency_id'] = $currency->id;
+                    $array['spent'][$currency->id]['currency_symbol'] = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;
                 }
             }
-            $budgets[]            = $array;
+            $budgets[] = $array;
         }
 
         return $budgets;
@@ -241,11 +254,7 @@ class IndexController extends Controller
 
     private function getSums(array $budgets): array
     {
-        $sums = [
-            'budgeted' => [],
-            'spent'    => [],
-            'left'     => [],
-        ];
+        $sums = ['budgeted' => [], 'spent'    => [], 'left'     => []];
 
         /** @var array $budget */
         foreach ($budgets as $budget) {
@@ -253,37 +262,34 @@ class IndexController extends Controller
 
             /** @var array $spent */
             foreach ($budget['spent'] as $spent) {
-                $currencyId                           = $spent['currency_id'];
-                $sums['spent'][$currencyId]
-                                                      ??= [
-                                                          'amount'                  => '0',
-                                                          'currency_id'             => $spent['currency_id'],
-                                                          'currency_symbol'         => $spent['currency_symbol'],
-                                                          'currency_decimal_places' => $spent['currency_decimal_places'],
-                                                      ];
+                $currencyId = $spent['currency_id'];
+                $sums['spent'][$currencyId] ??= [
+                    'amount'                  => '0',
+                    'currency_id'             => $spent['currency_id'],
+                    'currency_symbol'         => $spent['currency_symbol'],
+                    'currency_decimal_places' => $spent['currency_decimal_places']
+                ];
                 $sums['spent'][$currencyId]['amount'] = bcadd($sums['spent'][$currencyId]['amount'], (string) $spent['spent']);
             }
 
             /** @var array $budgeted */
             foreach ($budget['budgeted'] as $budgeted) {
-                $currencyId                              = $budgeted['currency_id'];
-                $sums['budgeted'][$currencyId]
-                                                         ??= [
-                                                             'amount'                  => '0',
-                                                             'currency_id'             => $budgeted['currency_id'],
-                                                             'currency_symbol'         => $budgeted['currency_symbol'],
-                                                             'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                                         ];
+                $currencyId = $budgeted['currency_id'];
+                $sums['budgeted'][$currencyId] ??= [
+                    'amount'                  => '0',
+                    'currency_id'             => $budgeted['currency_id'],
+                    'currency_symbol'         => $budgeted['currency_symbol'],
+                    'currency_decimal_places' => $budgeted['currency_decimal_places']
+                ];
                 $sums['budgeted'][$currencyId]['amount'] = bcadd($sums['budgeted'][$currencyId]['amount'], (string) $budgeted['amount']);
 
                 // also calculate how much left from budgeted:
-                $sums['left'][$currencyId]
-                                                         ??= [
-                                                             'amount'                  => '0',
-                                                             'currency_id'             => $budgeted['currency_id'],
-                                                             'currency_symbol'         => $budgeted['currency_symbol'],
-                                                             'currency_decimal_places' => $budgeted['currency_decimal_places'],
-                                                         ];
+                $sums['left'][$currencyId] ??= [
+                    'amount'                  => '0',
+                    'currency_id'             => $budgeted['currency_id'],
+                    'currency_symbol'         => $budgeted['currency_symbol'],
+                    'currency_decimal_places' => $budgeted['currency_decimal_places']
+                ];
             }
         }
 
@@ -292,8 +298,8 @@ class IndexController extends Controller
          * @var int $currencyId
          */
         foreach (array_keys($sums['budgeted']) as $currencyId) {
-            $spent                               = $sums['spent'][$currencyId]['amount'] ?? '0';
-            $budgeted                            = $sums['budgeted'][$currencyId]['amount'] ?? '0';
+            $spent    = $sums['spent'][$currencyId]['amount'] ?? '0';
+            $budgeted = $sums['budgeted'][$currencyId]['amount'] ?? '0';
             $sums['left'][$currencyId]['amount'] = bcadd($spent, $budgeted);
         }
 

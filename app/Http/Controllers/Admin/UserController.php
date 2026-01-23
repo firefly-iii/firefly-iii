@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -33,23 +31,25 @@ use FireflyIII\Http\Requests\InviteUserFormRequest;
 use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UserController.
  */
 class UserController extends Controller
 {
-    protected bool                  $externalIdentity;
+    protected bool $externalIdentity;
     private UserRepositoryInterface $repository;
 
     /**
@@ -59,15 +59,13 @@ class UserController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.system_settings'));
-                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
-                $this->repository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.system_settings'));
+            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+            $this->repository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $this->middleware(IsDemoUser::class)->except(['index', 'show']);
         $this->externalIdentity = 'web' !== config('firefly.authentication_guard');
     }
@@ -85,7 +83,7 @@ class UserController extends Controller
 
         $subTitle = (string) trans('firefly.delete_user', ['email' => $user->email]);
 
-        return view('settings.users.delete', ['user' => $user, 'subTitle' => $subTitle]);
+        return view('settings.users.delete', ['user'     => $user, 'subTitle' => $subTitle]);
     }
 
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse
@@ -137,18 +135,26 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle       = (string) trans('firefly.edit_user', ['email' => $user->email]);
-        $subTitleIcon   = 'fa-user-o';
-        $currentUser    = auth()->user();
-        $isAdmin        = $this->repository->hasRole($user, 'owner');
-        $codes          = [
+        $subTitle     = (string) trans('firefly.edit_user', ['email'     => $user->email]);
+        $subTitleIcon = 'fa-user-o';
+        $currentUser  = auth()->user();
+        $isAdmin      = $this->repository->hasRole($user, 'owner');
+        $codes        = [
             ''              => (string) trans('firefly.no_block_code'),
             'bounced'       => (string) trans('firefly.block_code_bounced'),
             'expired'       => (string) trans('firefly.block_code_expired'),
-            'email_changed' => (string) trans('firefly.block_code_email_changed'),
+            'email_changed' => (string) trans('firefly.block_code_email_changed')
         ];
 
-        return view('settings.users.edit', ['user' => $user, 'canEditDetails' => $canEditDetails, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'codes' => $codes, 'currentUser' => $currentUser, 'isAdmin' => $isAdmin]);
+        return view('settings.users.edit', [
+            'user'           => $user,
+            'canEditDetails' => $canEditDetails,
+            'subTitle'       => $subTitle,
+            'subTitleIcon'   => $subTitleIcon,
+            'codes'          => $codes,
+            'currentUser'    => $currentUser,
+            'isAdmin'        => $isAdmin
+        ]);
     }
 
     /**
@@ -172,17 +178,21 @@ class UserController extends Controller
             $allowInvites = true;
         }
 
-        $invitedUsers   = $this->repository->getInvitedUsers();
+        $invitedUsers = $this->repository->getInvitedUsers();
 
         // add meta stuff.
-        $users->each(
-            function (User $user): void {
-                $user->isAdmin = $this->repository->hasRole($user, 'owner');
-                $user->has2FA  = null !== $user->mfa_secret;
-            }
-        );
+        $users->each(function (User $user): void {
+            $user->isAdmin = $this->repository->hasRole($user, 'owner');
+            $user->has2FA = null !== $user->mfa_secret;
+        });
 
-        return view('settings.users.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'users' => $users, 'allowInvites' => $allowInvites, 'invitedUsers' => $invitedUsers]);
+        return view('settings.users.index', [
+            'subTitle'     => $subTitle,
+            'subTitleIcon' => $subTitleIcon,
+            'users'        => $users,
+            'allowInvites' => $allowInvites,
+            'invitedUsers' => $invitedUsers
+        ]);
     }
 
     public function invite(InviteUserFormRequest $request): RedirectResponse
@@ -206,14 +216,18 @@ class UserController extends Controller
     {
         $title         = (string) trans('firefly.system_settings');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $subTitle      = (string) trans('firefly.single_user_administration', ['email' => $user->email]);
+        $subTitle      = (string) trans('firefly.single_user_administration', ['email'      => $user->email]);
         $subTitleIcon  = 'fa-user';
         $information   = $this->repository->getUserData($user);
 
-        return view(
-            'settings.users.show',
-            ['title' => $title, 'mainTitleIcon' => $mainTitleIcon, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'information' => $information, 'user' => $user]
-        );
+        return view('settings.users.show', [
+            'title'         => $title,
+            'mainTitleIcon' => $mainTitleIcon,
+            'subTitle'      => $subTitle,
+            'subTitleIcon'  => $subTitleIcon,
+            'information'   => $information,
+            'user'          => $user
+        ]);
     }
 
     /**
@@ -224,7 +238,7 @@ class UserController extends Controller
     public function update(UserFormRequest $request, User $user)
     {
         Log::debug('Actually here');
-        $data     = $request->getUserData();
+        $data = $request->getUserData();
 
         // var_dump($data);
 

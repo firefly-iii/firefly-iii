@@ -31,13 +31,13 @@ use Carbon\Carbon;
  */
 abstract class AbstractCronjob
 {
-    public bool      $jobErrored      = false;
-    public bool      $jobFired        = false;
-    public bool      $jobSucceeded    = false;
-    public ?string   $message         = null;
-    public int       $timeBetweenRuns = 43200;
+    public bool    $jobErrored      = false;
+    public bool    $jobFired        = false;
+    public bool    $jobSucceeded    = false;
+    public null|string $message         = null;
+    public int     $timeBetweenRuns = 43200;
     protected Carbon $date;
-    protected bool   $force           = false;
+    protected bool $force = false;
 
     /**
      * AbstractCronjob constructor.
@@ -51,7 +51,7 @@ abstract class AbstractCronjob
 
     final public function setDate(Carbon $date): void
     {
-        $newDate    = clone $date;
+        $newDate = clone $date;
         $this->date = $newDate;
     }
 

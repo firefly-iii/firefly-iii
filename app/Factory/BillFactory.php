@@ -29,10 +29,10 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BillFactory
@@ -47,42 +47,42 @@ class BillFactory
     /**
      * @throws FireflyException
      */
-    public function create(array $data): ?Bill
+    public function create(array $data): null|Bill
     {
         Log::debug(sprintf('Now in %s', __METHOD__), $data);
-        $factory          = app(TransactionCurrencyFactory::class);
-        $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null))
-                    ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $factory  = app(TransactionCurrencyFactory::class);
+        $currency = $factory->find(
+            (int) ($data['currency_id'] ?? null),
+            (string) ($data['currency_code'] ?? null)
+        ) ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
             $active = array_key_exists('active', $data) ? $data['active'] : 0;
 
             $data['extension_date'] ??= null;
-            $data['end_date']       ??= null;
+            $data['end_date'] ??= null;
 
             /** @var Bill $bill */
-            $bill   = Bill::create(
-                [
-                    'name'                    => $data['name'],
-                    'match'                   => 'MIGRATED_TO_RULES',
-                    'amount_min'              => $data['amount_min'],
-                    'user_id'                 => $this->user->id,
-                    'user_group_id'           => $this->user->user_group_id,
-                    'transaction_currency_id' => $currency->id,
-                    'amount_max'              => $data['amount_max'],
-                    'date'                    => $data['date'],
-                    'date_tz'                 => $data['date']->format('e'),
-                    'end_date'                => $data['end_date'] ?? null,
-                    'end_date_tz'             => $data['end_date']?->format('e'),
-                    'extension_date'          => $data['extension_date'] ?? null,
-                    'extension_date_tz'       => $data['extension_date']?->format('e'),
-                    'repeat_freq'             => $data['repeat_freq'],
-                    'skip'                    => $skip,
-                    'automatch'               => true,
-                    'active'                  => $active,
-                ]
-            );
+            $bill = Bill::create([
+                'name'                    => $data['name'],
+                'match'                   => 'MIGRATED_TO_RULES',
+                'amount_min'              => $data['amount_min'],
+                'user_id'                 => $this->user->id,
+                'user_group_id'           => $this->user->user_group_id,
+                'transaction_currency_id' => $currency->id,
+                'amount_max'              => $data['amount_max'],
+                'date'                    => $data['date'],
+                'date_tz'                 => $data['date']->format('e'),
+                'end_date'                => $data['end_date'] ?? null,
+                'end_date_tz'             => $data['end_date']?->format('e'),
+                'extension_date'          => $data['extension_date'] ?? null,
+                'extension_date_tz'       => $data['extension_date']?->format('e'),
+                'repeat_freq'             => $data['repeat_freq'],
+                'skip'                    => $skip,
+                'automatch'               => true,
+                'active'                  => $active
+            ]);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -102,7 +102,7 @@ class BillFactory
             }
         }
         // try also with ID:
-        $objectGroupId    = (int) ($data['object_group_id'] ?? 0);
+        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if ($objectGroup instanceof ObjectGroup) {
@@ -114,7 +114,7 @@ class BillFactory
         return $bill;
     }
 
-    public function find(?int $billId, ?string $billName): ?Bill
+    public function find(null|int $billId, null|string $billName): null|Bill
     {
         $billId   = (int) $billId;
         $billName = (string) $billName;
@@ -133,10 +133,13 @@ class BillFactory
         return $bill;
     }
 
-    public function findByName(string $name): ?Bill
+    public function findByName(string $name): null|Bill
     {
         /** @var null|Bill */
-        return $this->user->bills()->whereLike('name', sprintf('%%%s%%', $name))->first();
+        return $this->user
+            ->bills()
+            ->whereLike('name', sprintf('%%%s%%', $name))
+            ->first();
     }
 
     public function setUser(User $user): void

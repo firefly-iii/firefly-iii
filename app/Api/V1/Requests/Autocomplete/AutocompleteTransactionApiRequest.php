@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * AutocompleteApiRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -41,7 +42,7 @@ class AutocompleteTransactionApiRequest extends AggregateFormRequest
             DateRequest::class,
             [PaginationRequest::class, 'sort_class' => Account::class],
             [ObjectTypeApiRequest::class, 'object_type' => Transaction::class],
-            QueryRequest::class,
+            QueryRequest::class
         ];
     }
 }

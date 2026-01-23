@@ -67,7 +67,7 @@ class RuleController extends Controller
                 'id'          => (string) $rule->id,
                 'name'        => $rule->title,
                 'description' => $rule->description,
-                'active'      => $rule->active,
+                'active'      => $rule->active
             ];
         }
 

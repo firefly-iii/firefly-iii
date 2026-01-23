@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
@@ -34,7 +35,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\json_decode;
 
@@ -61,7 +61,7 @@ class RemovesDatabaseDecryption extends Command
             'tags'                 => ['tag', 'description'],
             'transaction_journals' => ['description'],
             'transactions'         => ['description'],
-            'journal_links'        => ['comment'],
+            'journal_links'        => ['comment']
         ];
 
         /**
@@ -78,7 +78,6 @@ class RemovesDatabaseDecryption extends Command
     private function decryptTable(string $table, array $fields): void
     {
         if ($this->isDecrypted($table)) {
-
             return;
         }
         foreach ($fields as $field) {
@@ -101,8 +100,7 @@ class RemovesDatabaseDecryption extends Command
             Log::error($e->getMessage());
         }
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function decryptField(string $table, string $field): void
@@ -121,8 +119,8 @@ class RemovesDatabaseDecryption extends Command
         if (null === $original) {
             return;
         }
-        $id       = (int)$row->id;
-        $value    = '';
+        $id    = (int) $row->id;
+        $value = '';
 
         try {
             $value = $this->tryDecrypt($original);

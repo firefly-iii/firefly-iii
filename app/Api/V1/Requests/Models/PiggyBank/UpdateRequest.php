@@ -45,7 +45,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields             = [
+        $fields = [
             'name'                      => ['name', 'convertString'],
             'target_amount'             => ['target_amount', 'convertString'],
             'start_date'                => ['start_date', 'convertDateTime'],
@@ -55,10 +55,10 @@ class UpdateRequest extends FormRequest
             'object_group_title'        => ['object_group_title', 'convertString'],
             'object_group_id'           => ['object_group_id', 'convertInteger'],
             'transaction_currency_code' => ['transaction_currency_code', 'convertString'],
-            'transaction_currency_id'   => ['transaction_currency_id', 'convertInteger'],
+            'transaction_currency_id'   => ['transaction_currency_id', 'convertInteger']
         ];
 
-        $result             = $this->getAllData($fields);
+        $result = $this->getAllData($fields);
         $result['accounts'] = $this->parseAccounts($this->get('accounts'));
 
         return $result;
@@ -73,7 +73,7 @@ class UpdateRequest extends FormRequest
         $piggyBank = $this->route()->parameter('piggyBank');
 
         return [
-            'name'                      => 'min:1|max:255|uniquePiggyBankForUser:'.$piggyBank->id,
+            'name'                      => 'min:1|max:255|uniquePiggyBankForUser:' . $piggyBank->id,
             'current_amount'            => ['nullable', new LessThanPiggyTarget(), new IsValidPositiveAmount()],
             'target_amount'             => ['nullable', new IsValidZeroOrMoreAmount()],
             'start_date'                => 'date|nullable',
@@ -86,7 +86,7 @@ class UpdateRequest extends FormRequest
             'object_group_id'           => 'numeric|belongsToUser:object_groups,id',
             'object_group_title'        => ['min:1', 'max:255'],
             'transaction_currency_id'   => 'exists:transaction_currencies,id|nullable',
-            'transaction_currency_code' => 'exists:transaction_currencies,code|nullable',
+            'transaction_currency_code' => 'exists:transaction_currencies,code|nullable'
         ];
     }
 }

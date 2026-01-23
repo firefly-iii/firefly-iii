@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Location;
 use FireflyIII\Models\Tag;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -49,7 +49,7 @@ class TagFormRequest extends FormRequest
         $data = [
             'tag'         => $this->convertString('tag'),
             'date'        => $this->getCarbonDate('date'),
-            'description' => $this->convertString('description'),
+            'description' => $this->convertString('description')
         ];
 
         return $this->appendLocationData($data, 'location');
@@ -60,21 +60,21 @@ class TagFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        $idRule  = '';
+        $idRule = '';
 
         /** @var null|Tag $tag */
         $tag     = $this->route()->parameter('tag');
         $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag';
         if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,'.$tag->id;
+            $tagRule = 'required|max:1024|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
         }
 
-        $rules   = [
+        $rules = [
             'tag'         => $tagRule,
             'id'          => $idRule,
             'description' => 'max:32768|min:1|nullable',
-            'date'        => 'date|nullable|after:1970-01-02|before:2038-01-17',
+            'date'        => 'date|nullable|after:1970-01-02|before:2038-01-17'
         ];
 
         return Location::requestRules($rules);

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * PeriodStatisticRepository.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -39,37 +40,27 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 
     public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection
     {
-        return $model->primaryPeriodStatistics()
-            ->where('start', $start)
-            ->where('end', $end)
-            ->whereIn('type', $types)
-            ->get()
-        ;
+        return $model->primaryPeriodStatistics()->where('start', $start)->where('end', $end)->whereIn('type', $types)->get();
     }
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection
     {
-        return $model->primaryPeriodStatistics()
-            ->where('start', $start)
-            ->where('end', $end)
-            ->where('type', $type)
-            ->get()
-        ;
+        return $model->primaryPeriodStatistics()->where('start', $start)->where('end', $end)->where('type', $type)->get();
     }
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat                          = new PeriodStatistic();
+        $stat = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
-        $stat->user_group_id           = $this->getUserGroup()->id;
-        $stat->start                   = $start;
-        $stat->start_tz                = $start->format('e');
-        $stat->end                     = $end;
-        $stat->end_tz                  = $end->format('e');
-        $stat->amount                  = $amount;
-        $stat->count                   = $count;
-        $stat->type                    = $type;
+        $stat->user_group_id = $this->getUserGroup()->id;
+        $stat->start = $start;
+        $stat->start_tz = $start->format('e');
+        $stat->end = $end;
+        $stat->end_tz = $end->format('e');
+        $stat->amount = $amount;
+        $stat->count = $count;
+        $stat->type = $type;
         $stat->save();
 
         Log::debug(sprintf(
@@ -100,25 +91,34 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection
     {
-        return $this->userGroup->periodStatistics()
+        return $this->userGroup
+            ->periodStatistics()
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
-            ->where('start', '>=', $start)->where('end', '<=', $end)->get()
-        ;
+            ->where('start', '>=', $start)
+            ->where('end', '<=', $end)
+            ->get();
     }
 
     #[Override]
-    public function savePrefixedStatistic(string $prefix, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
-    {
-        $stat                          = new PeriodStatistic();
+    public function savePrefixedStatistic(
+        string $prefix,
+        int $currencyId,
+        Carbon $start,
+        Carbon $end,
+        string $type,
+        int $count,
+        string $amount
+    ): PeriodStatistic {
+        $stat = new PeriodStatistic();
         $stat->transaction_currency_id = $currencyId;
-        $stat->user_group_id           = $this->getUserGroup()->id;
-        $stat->start                   = $start;
-        $stat->start_tz                = $start->format('e');
-        $stat->end                     = $end;
-        $stat->end_tz                  = $end->format('e');
-        $stat->amount                  = $amount;
-        $stat->count                   = $count;
-        $stat->type                    = sprintf('%s_%s', $prefix, $type);
+        $stat->user_group_id = $this->getUserGroup()->id;
+        $stat->start = $start;
+        $stat->start_tz = $start->format('e');
+        $stat->end = $end;
+        $stat->end_tz = $end->format('e');
+        $stat->amount = $amount;
+        $stat->count = $count;
+        $stat->type = sprintf('%s_%s', $prefix, $type);
         $stat->save();
 
         Log::debug(sprintf(

@@ -67,7 +67,7 @@ class RuleGroupController extends Controller
                 'id'          => (string) $group->id,
                 'name'        => $group->title,
                 'description' => $group->description,
-                'active'      => $group->active,
+                'active'      => $group->active
             ];
         }
 

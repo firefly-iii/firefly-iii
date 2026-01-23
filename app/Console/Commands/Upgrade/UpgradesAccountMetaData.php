@@ -27,8 +27,8 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountMeta;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 class UpgradesAccountMetaData extends Command
 {
@@ -36,9 +36,9 @@ class UpgradesAccountMetaData extends Command
 
     public const string CONFIG_NAME = '480_rename_account_meta';
 
-    protected $description          = 'Rename account meta-data to new format.';
+    protected $description = 'Rename account meta-data to new format.';
 
-    protected $signature            = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -57,7 +57,7 @@ class UpgradesAccountMetaData extends Command
             'accountRole'          => 'account_role',
             'ccType'               => 'cc_type',
             'accountNumber'        => 'account_number',
-            'ccMonthlyPaymentDate' => 'cc_monthly_payment_date',
+            'ccMonthlyPaymentDate' => 'cc_monthly_payment_date'
         ];
         $count = 0;
 
@@ -85,8 +85,7 @@ class UpgradesAccountMetaData extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

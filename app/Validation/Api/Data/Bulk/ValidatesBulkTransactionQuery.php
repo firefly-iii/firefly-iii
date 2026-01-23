@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Api\Data\Bulk;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Contracts\Validation\Validator;
 
 use function Safe\json_decode;
 
@@ -33,7 +33,7 @@ trait ValidatesBulkTransactionQuery
 {
     protected function validateTransactionQuery(Validator $validator): void
     {
-        $data  = $validator->getData();
+        $data = $validator->getData();
         // assumption is all validation has already taken place and the query key exists.
         $query = $data['query'] ?? '[]';
         $json  = json_decode($query, true, 8, JSON_THROW_ON_ERROR);
@@ -41,13 +41,14 @@ trait ValidatesBulkTransactionQuery
         if (
             array_key_exists('where', $json)
             && array_key_exists('update', $json)
-            && array_key_exists('account_id', $json['where']) && array_key_exists('account_id', $json['update'])
+            && array_key_exists('account_id', $json['where'])
+            && array_key_exists('account_id', $json['update'])
         ) {
             // find both accounts, must be same type.
             // already validated: belongs to this user.
-            $repository     = app(AccountRepositoryInterface::class);
-            $source         = $repository->find((int) $json['where']['account_id']);
-            $dest           = $repository->find((int) $json['update']['account_id']);
+            $repository = app(AccountRepositoryInterface::class);
+            $source     = $repository->find((int) $json['where']['account_id']);
+            $dest       = $repository->find((int) $json['update']['account_id']);
             if (null === $source) {
                 $validator->errors()->add('query', sprintf((string) trans('validation.invalid_query_data'), 'where', 'account_id'));
 
@@ -68,11 +69,7 @@ trait ValidatesBulkTransactionQuery
             // some account types (like expenses) do not have currency, so they have to be omitted
             $sourceCurrency = $repository->getAccountCurrency($source);
             $destCurrency   = $repository->getAccountCurrency($dest);
-            if (
-                null !== $sourceCurrency
-                && null !== $destCurrency
-                && $sourceCurrency->id !== $destCurrency->id
-            ) {
+            if (null !== $sourceCurrency && null !== $destCurrency && $sourceCurrency->id !== $destCurrency->id) {
                 $validator->errors()->add('query', (string) trans('validation.invalid_query_currency'));
             }
         }

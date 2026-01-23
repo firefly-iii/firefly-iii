@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -56,7 +56,7 @@ class BillStoreRequest extends FormRequest
             'skip'               => $this->convertInteger('skip'),
             'notes'              => $this->stringWithNewlines('notes'),
             'active'             => $this->boolean('active'),
-            'object_group_title' => $this->convertString('object_group'),
+            'object_group_title' => $this->convertString('object_group')
         ];
     }
 
@@ -76,7 +76,7 @@ class BillStoreRequest extends FormRequest
             'extension_date'          => 'nullable|date',
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
-            'active'                  => 'boolean',
+            'active'                  => 'boolean'
         ];
     }
 

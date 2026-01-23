@@ -39,24 +39,16 @@ class ActionExpressionLanguageProvider implements ExpressionFunctionProviderInte
                 return (string) $str;
             }
 
-            return strtolower($str.'!');
+            return strtolower($str . '!');
         };
 
         return [
-            new ExpressionFunction(
-                'constant2',
-                static fn ($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!'),
-                $function
-            ),
-            new ExpressionFunction(
-                'constant',
-                static fn ($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str.'!'),
-                $function
-            ),
+            new ExpressionFunction('constant2', static fn($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str . '!'), $function),
+            new ExpressionFunction('constant', static fn($str): string => sprintf('(is_string(%1$s) ? strtolower(%1$s) : %1$s)', $str . '!'), $function),
 
             ExpressionFunction::fromPhp('substr'),
             ExpressionFunction::fromPhp('strlen'),
-            ExpressionFunction::fromPhp('strpos'),
+            ExpressionFunction::fromPhp('strpos')
         ];
     }
 }

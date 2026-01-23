@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -56,7 +56,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // this is the way:
-        $fields                 = [
+        $fields       = [
             'title'             => ['title', 'convertString'],
             'description'       => ['description', 'convertString'],
             'first_date'        => ['first_date', 'convertDateTime'],
@@ -64,13 +64,11 @@ class UpdateRequest extends FormRequest
             'nr_of_repetitions' => ['nr_of_repetitions', 'convertInteger'],
             'apply_rules'       => ['apply_rules', 'boolean'],
             'active'            => ['active', 'boolean'],
-            'notes'             => ['notes', 'convertString'],
+            'notes'             => ['notes', 'convertString']
         ];
-        $reps                   = $this->getRepetitionData();
-        $transactions           = $this->getTransactionData();
-        $return                 = [
-            'recurrence' => $this->getAllData($fields),
-        ];
+        $reps         = $this->getRepetitionData();
+        $transactions = $this->getTransactionData();
+        $return       = ['recurrence'       => $this->getAllData($fields)];
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }
@@ -82,9 +80,9 @@ class UpdateRequest extends FormRequest
     /**
      * Returns the repetition data as it is found in the submitted data.
      */
-    private function getRepetitionData(): ?array
+    private function getRepetitionData(): null|array
     {
-        $return      = [];
+        $return = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -95,7 +93,7 @@ class UpdateRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current  = [];
+            $current = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
@@ -126,7 +124,7 @@ class UpdateRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return       = [];
+        $return = [];
 
         // transaction data:
         /** @var null|array $transactions */
@@ -152,18 +150,18 @@ class UpdateRequest extends FormRequest
         $recurrence = $this->route()->parameter('recurrence');
 
         return [
-            'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'                          => 'min:1|max:32768',
-            'first_date'                           => 'date|after:1970-01-02|before:2038-01-17',
-            'apply_rules'                          => [new IsBoolean()],
-            'active'                               => [new IsBoolean()],
-            'repeat_until'                         => 'nullable|date',
-            'nr_of_repetitions'                    => 'nullable|numeric|min:1|max:31',
+            'title'             => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'       => 'min:1|max:32768',
+            'first_date'        => 'date|after:1970-01-02|before:2038-01-17',
+            'apply_rules'       => [new IsBoolean()],
+            'active'            => [new IsBoolean()],
+            'repeat_until'      => 'nullable|date',
+            'nr_of_repetitions' => 'nullable|numeric|min:1|max:31',
 
-            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => 'min:0|max:10|numeric',
-            'repetitions.*.skip'                   => 'nullable|numeric|min:0|max:31',
-            'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
+            'repetitions.*.type'    => 'in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'  => 'min:0|max:10|numeric',
+            'repetitions.*.skip'    => 'nullable|numeric|min:0|max:31',
+            'repetitions.*.weekend' => 'nullable|numeric|min:1|max:4',
 
             'transactions.*.description'           => ['min:1', 'max:255'],
             'transactions.*.amount'                => [new IsValidPositiveAmount()],
@@ -178,13 +176,13 @@ class UpdateRequest extends FormRequest
             'transactions.*.destination_name'      => 'min:1|max:255|nullable',
 
             // new and updated fields:
-            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
-            'transactions.*.budget_name'           => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser()],
-            'transactions.*.category_name'         => 'min:1|max:255|nullable',
-            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
-            'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => 'nullable|min:1|max:255',
+            'transactions.*.budget_id'       => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'     => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'     => ['nullable', 'mustExist:categories,id', new BelongsUser()],
+            'transactions.*.category_name'   => 'min:1|max:255|nullable',
+            'transactions.*.piggy_bank_id'   => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
+            'transactions.*.piggy_bank_name' => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.tags'            => 'nullable|min:1|max:255'
         ];
     }
 
@@ -193,20 +191,18 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // $this->validateOneRecurrenceTransaction($validator);
-                // $this->validateOneRepetitionUpdate($validator);
+        $validator->after(function (Validator $validator): void {
+            // $this->validateOneRecurrenceTransaction($validator);
+            // $this->validateOneRepetitionUpdate($validator);
 
-                /** @var Recurrence $recurrence */
-                $recurrence = $this->route()->parameter('recurrence');
-                $this->validateTransactionId($recurrence, $validator);
-                $this->validateRecurrenceRepetition($validator);
-                $this->validateRepetitionMoment($validator);
-                $this->validateForeignCurrencyInformation($validator);
-                $this->valUpdateAccountInfo($validator);
-            }
-        );
+            /** @var Recurrence $recurrence */
+            $recurrence = $this->route()->parameter('recurrence');
+            $this->validateTransactionId($recurrence, $validator);
+            $this->validateRecurrenceRepetition($validator);
+            $this->validateRepetitionMoment($validator);
+            $this->validateForeignCurrencyInformation($validator);
+            $this->valUpdateAccountInfo($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

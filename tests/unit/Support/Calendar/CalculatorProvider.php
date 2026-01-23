@@ -26,15 +26,18 @@ namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 use Generator;
+use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {
-    public string           $label;
+    public string $label;
 
-    private function __construct(public IntervalProvider $intervalProvider, public Periodicity $periodicity, public int $skip = 0)
-    {
+    private function __construct(
+        public IntervalProvider $intervalProvider,
+        public Periodicity $periodicity,
+        public int $skip = 0
+    ) {
         $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
     }
 
@@ -103,7 +106,7 @@ readonly class CalculatorProvider
 
             self::from(Periodicity::Yearly, new IntervalProvider(Carbon::now(), Carbon::now()->addYearsNoOverflow(3)), 2),
             self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2025-01-29')), 5),
-            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10),
+            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10)
         ];
 
         /** @var IntervalProvider $interval */

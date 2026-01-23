@@ -27,11 +27,11 @@ namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UpdateRequest
@@ -44,23 +44,19 @@ class UpdateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields               = [
-            'title'    => ['title', 'convertString'],
-            'active'   => ['active', 'boolean'],
-            'url'      => ['url', 'convertString'],
-        ];
+        $fields = ['title'  => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url'    => ['url', 'convertString']];
 
-        $triggers             = $this->get('triggers', []);
-        $responses            = $this->get('responses', []);
-        $deliveries           = $this->get('deliveries', []);
+        $triggers   = $this->get('triggers', []);
+        $responses  = $this->get('responses', []);
+        $deliveries = $this->get('deliveries', []);
 
         if (in_array(0, [count($triggers), count($responses), count($deliveries)], true)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
         }
 
-        $return               = $this->getAllData($fields);
-        $return['triggers']   = $triggers;
-        $return['responses']  = $responses;
+        $return = $this->getAllData($fields);
+        $return['triggers'] = $triggers;
+        $return['responses'] = $responses;
         $return['deliveries'] = $deliveries;
 
         return $return;
@@ -77,23 +73,10 @@ class UpdateRequest extends FormRequest
         $validProtocols = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         /** @var Webhook $webhook */
-        $webhook        = $this->route()->parameter('webhook');
+        $webhook = $this->route()->parameter('webhook');
 
-        return [
-            'title'        => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
-            'active'       => [new IsBoolean()],
-
-            'trigger'      => 'prohibited',
-            'triggers'     => 'required|array|min:1|max:10',
-            'triggers.*'   => sprintf('required|in:%s', $triggers),
-            'response'     => 'prohibited',
-            'responses'    => 'required|array|min:1|max:1',
-            'responses.*'  => sprintf('required|in:%s', $responses),
-            'delivery'     => 'prohibited',
-            'deliveries'   => 'required|array|min:1|max:1',
-            'deliveries.*' => sprintf('required|in:%s', $deliveries),
-
-            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
-        ];
+        return ['title'  => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id), 'active' => [new IsBoolean()],
+            'trigger'      => 'prohibited', 'triggers'     => 'required|array|min:1|max:10', 'triggers.*'   => sprintf('required|in:%s', $triggers), 'response'     => 'prohibited', 'responses'    => 'required|array|min:1|max:1', 'responses.*'  => sprintf('required|in:%s', $responses), 'delivery'     => 'prohibited', 'deliveries'   => 'required|array|min:1|max:1', 'deliveries.*' => sprintf('required|in:%s', $deliveries),
+            'url' => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)]];
     }
 }

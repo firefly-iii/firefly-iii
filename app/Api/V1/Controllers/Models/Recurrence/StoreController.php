@@ -47,14 +47,12 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(RecurringRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -67,22 +65,22 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $data        = $request->getAll();
-        $recurrence  = $this->repository->store($data);
-        $manager     = $this->getManager();
+        $data       = $request->getAll();
+        $recurrence = $this->repository->store($data);
+        $manager    = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new RecurringEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new RecurringEnrichment();
         $enrichment->setUser($admin);
-        $recurrence  = $enrichment->enrichSingle($recurrence);
+        $recurrence = $enrichment->enrichSingle($recurrence);
 
         /** @var RecurrenceTransformer $transformer */
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($recurrence, $transformer, 'recurrences');
+        $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

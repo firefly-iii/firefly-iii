@@ -49,16 +49,16 @@ interface RuleGroupRepositoryInterface
 
     public function count(): int;
 
-    public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool;
+    public function destroy(RuleGroup $ruleGroup, null|RuleGroup $moveTo): bool;
 
     /**
      * Delete everything.
      */
     public function destroyAll(): void;
 
-    public function find(int $ruleGroupId): ?RuleGroup;
+    public function find(int $ruleGroupId): null|RuleGroup;
 
-    public function findByTitle(string $title): ?RuleGroup;
+    public function findByTitle(string $title): null|RuleGroup;
 
     /**
      * Get all rule groups.
@@ -76,11 +76,11 @@ interface RuleGroupRepositoryInterface
     /**
      * Also inactive groups.
      */
-    public function getAllRuleGroupsWithRules(?string $filter): Collection;
+    public function getAllRuleGroupsWithRules(null|string $filter): Collection;
 
     public function getHighestOrderRuleGroup(): int;
 
-    public function getRuleGroupsWithRules(?string $filter): Collection;
+    public function getRuleGroupsWithRules(null|string $filter): Collection;
 
     public function getRules(RuleGroup $group): Collection;
 

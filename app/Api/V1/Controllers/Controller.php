@@ -66,9 +66,9 @@ abstract class Controller extends BaseController
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';
 
-    protected array $accepts                 = ['application/json', 'application/vnd.api+json'];
+    protected array $accepts = ['application/json', 'application/vnd.api+json'];
 
-    protected bool $convertToPrimary         = false;
+    protected bool $convertToPrimary = false;
     protected TransactionCurrency $primaryCurrency;
 
     /** @deprecated use Request classes */
@@ -83,9 +83,9 @@ abstract class Controller extends BaseController
         $this->middleware(function ($request, $next) {
             $this->parameters = $this->getParameters();
             if (auth()->check()) {
-                $language               = Steam::getLanguage();
+                $language = Steam::getLanguage();
                 $this->convertToPrimary = Amount::convertToPrimary();
-                $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                $this->primaryCurrency = Amount::getPrimaryCurrency();
                 app()->setLocale($language);
             }
 
@@ -99,18 +99,18 @@ abstract class Controller extends BaseController
     }
 
     #[Deprecated(message: <<<'TXT'
-        use Request classes
-         Method to grab all parameters from the URL
-        TXT)]
+    use Request classes
+     Method to grab all parameters from the URL
+    TXT)]
     private function getParameters(): ParameterBag
     {
-        $bag      = new ParameterBag();
-        $page     = (int) request()->get('page');
-        $page     = min(max(1, $page), 2 ** 16);
+        $bag  = new ParameterBag();
+        $page = (int) request()->get('page');
+        $page = min(max(1, $page), 2 ** 16);
         $bag->set('page', $page);
 
         // some date fields:
-        $dates    = ['start', 'end', 'date'];
+        $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
             $date = null;
 
@@ -121,7 +121,7 @@ abstract class Controller extends BaseController
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-            $obj  = null;
+            $obj = null;
             if (null !== $date) {
                 try {
                     $obj = Carbon::parse((string) $date, config('app.timezone'));
@@ -158,7 +158,7 @@ abstract class Controller extends BaseController
             ) {
                 // set default for user:
                 /** @var User $user */
-                $user     = auth()->user();
+                $user = auth()->user();
 
                 $pageSize = (int) Preferences::getForUser($user, 'listPageSize', 50)->data;
                 $bag->set($integer, $pageSize);
@@ -190,14 +190,14 @@ abstract class Controller extends BaseController
             $params[$key] = $value;
         }
 
-        return $return.http_build_query($params);
+        return $return . http_build_query($params);
     }
 
     final protected function getManager(): Manager
     {
         // create some objects:
         $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $baseUrl = request()->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         return $manager;
@@ -205,14 +205,14 @@ abstract class Controller extends BaseController
 
     final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
     {
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
 
         // TODO add stuff to path?
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $objects  = $paginator->getCollection();
+        $objects = $paginator->getCollection();
 
         // the transformer, at this point, needs to collect information that ALL items in the collection
         // require, like meta-data and stuff like that, and save it for later.
@@ -233,8 +233,8 @@ abstract class Controller extends BaseController
     final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
     {
         // create some objects:
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
+        $manager = new Manager();
+        $baseUrl = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($object, $transformer, $key);

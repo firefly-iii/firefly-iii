@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -63,29 +63,113 @@ final class NavigationEndOfPeriodTest extends TestCase
 
         yield 'daily' => ['daily', Carbon::now(), Carbon::now()->endOfDay()];
 
-        yield '1W' => ['1W', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+        yield '1W' => [
+            '1W',
+            Carbon::now(),
+            Carbon::now()
+                ->addWeek()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'week' => ['week', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+        yield 'week' => [
+            'week',
+            Carbon::now(),
+            Carbon::now()
+                ->addWeek()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'weekly' => ['weekly', Carbon::now(), Carbon::now()->addWeek()->subDay()->endOfDay()];
+        yield 'weekly' => [
+            'weekly',
+            Carbon::now(),
+            Carbon::now()
+                ->addWeek()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'month' => ['month', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+        yield 'month' => [
+            'month',
+            Carbon::now(),
+            Carbon::now()
+                ->addMonth()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield '1M' => ['1M', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+        yield '1M' => [
+            '1M',
+            Carbon::now(),
+            Carbon::now()
+                ->addMonth()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'monthly' => ['monthly', Carbon::now(), Carbon::now()->addMonth()->subDay()->endOfDay()];
+        yield 'monthly' => [
+            'monthly',
+            Carbon::now(),
+            Carbon::now()
+                ->addMonth()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield '3M' => ['3M', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+        yield '3M' => [
+            '3M',
+            Carbon::now(),
+            Carbon::now()
+                ->addQuarter()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'quarter' => ['quarter', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+        yield 'quarter' => [
+            'quarter',
+            Carbon::now(),
+            Carbon::now()
+                ->addQuarter()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'quarterly' => ['quarterly', Carbon::now(), Carbon::now()->addQuarter()->subDay()->endOfDay()];
+        yield 'quarterly' => [
+            'quarterly',
+            Carbon::now(),
+            Carbon::now()
+                ->addQuarter()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'year' => ['year', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+        yield 'year' => [
+            'year',
+            Carbon::now(),
+            Carbon::now()
+                ->addYearNoOverflow()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield 'yearly' => ['yearly', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+        yield 'yearly' => [
+            'yearly',
+            Carbon::now(),
+            Carbon::now()
+                ->addYearNoOverflow()
+                ->subDay()
+                ->endOfDay()
+        ];
 
-        yield '1Y' => ['1Y', Carbon::now(), Carbon::now()->addYearNoOverflow()->subDay()->endOfDay()];
+        yield '1Y' => [
+            '1Y',
+            Carbon::now(),
+            Carbon::now()
+                ->addYearNoOverflow()
+                ->subDay()
+                ->endOfDay()
+        ];
 
         yield 'half-year' => ['half-year', Carbon::parse('2023-05-20'), Carbon::parse('2023-11-19')->endOfDay()];
 
@@ -99,8 +183,7 @@ final class NavigationEndOfPeriodTest extends TestCase
 
         yield 'last365' => ['last365', Carbon::now(), Carbon::now()->addDays(365)->endOfDay()];
 
-        yield 'MTD' => ['MTD', Carbon::now(),
-            Carbon::now()->isSameMonth(Carbon::now()) ? Carbon::now()->endOfDay() : Carbon::now()->endOfMonth()];
+        yield 'MTD' => ['MTD', Carbon::now(), Carbon::now()->isSameMonth(Carbon::now()) ? Carbon::now()->endOfDay() : Carbon::now()->endOfMonth()];
 
         yield 'QTD' => ['QTD', Carbon::now(), Carbon::now()->firstOfQuarter()->startOfDay()];
 
@@ -110,11 +193,14 @@ final class NavigationEndOfPeriodTest extends TestCase
     }
 
     #[DataProvider('provideUnknownFrequencies')]
-    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
-    {
+    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(
+        string $frequency,
+        Carbon $from,
+        Carbon $expected
+    ): void {
         Log::spy();
 
-        $period          = $this->navigation->endOfPeriod($from, $frequency);
+        $period = $this->navigation->endOfPeriod($from, $frequency);
         $this->assertSame($expected->toDateString(), $period->toDateString());
         $expectedMessage = sprintf('Cannot do endOfPeriod for $repeat_freq "%s"', $frequency);
 

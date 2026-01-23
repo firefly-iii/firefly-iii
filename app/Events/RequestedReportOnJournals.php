@@ -43,8 +43,10 @@ class RequestedReportOnJournals
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $userId, public Collection $groups)
-    {
+    public function __construct(
+        public int $userId,
+        public Collection $groups
+    ) {
         Log::debug('In event RequestedReportOnJournals.');
     }
 

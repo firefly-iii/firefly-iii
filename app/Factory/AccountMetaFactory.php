@@ -36,7 +36,7 @@ class AccountMetaFactory
     /**
      * Create update or delete meta data.
      */
-    public function crud(Account $account, string $field, string $value): ?AccountMeta
+    public function crud(Account $account, string $field, string $value): null|AccountMeta
     {
         /** @var null|AccountMeta $entry */
         $entry = $account->accountMeta()->where('name', $field)->first();
@@ -48,9 +48,8 @@ class AccountMetaFactory
             }
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
-                return $this->create(['account_id' => $account->id, 'name' => $field, 'data' => $value]);
+                return $this->create(['account_id' => $account->id, 'name'       => $field, 'data'       => $value]);
             }
-
 
             // if $data has field and $entry is not null, update $entry:
             $entry->data = $value;
@@ -65,7 +64,7 @@ class AccountMetaFactory
         return $entry;
     }
 
-    public function create(array $data): ?AccountMeta
+    public function create(array $data): null|AccountMeta
     {
         return AccountMeta::create($data);
     }

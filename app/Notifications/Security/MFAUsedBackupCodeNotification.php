@@ -38,15 +38,16 @@ class MFAUsedBackupCodeNotification extends Notification
 {
     use Queueable;
 
-    public function __construct(private User $user) {}
+    public function __construct(
+        private User $user
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -60,7 +61,15 @@ class MFAUsedBackupCodeNotification extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-        return new MailMessage()->markdown('emails.security.used-backup-code', ['user' => $this->user, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])->subject($subject);
+        return new MailMessage()
+            ->markdown('emails.security.used-backup-code', [
+                'user'      => $this->user,
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time
+            ])
+            ->subject($subject);
     }
 
     //    public function toNtfy(User $notifiable): Message
@@ -79,9 +88,9 @@ class MFAUsedBackupCodeNotification extends Notification
      */
     public function toPushover(User $notifiable): PushoverMessage
     {
-        return PushoverMessage::create((string) trans('email.used_backup_code_slack', ['email' => $this->user->email]))
-            ->title((string) trans('email.used_backup_code_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.used_backup_code_slack', ['email' => $this->user->email]))->title((string) trans(
+            'email.used_backup_code_subject'
+        ));
     }
 
     /**

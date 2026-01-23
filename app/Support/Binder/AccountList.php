@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -43,24 +43,31 @@ class AccountList implements BinderInterface
             $collection = new Collection();
             if ('allAssetAccounts' === $value) {
                 /** @var Collection $collection */
-                $collection = auth()->user()->accounts()
+                $collection = auth()
+                    ->user()
+                    ->accounts()
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                    ->whereIn('account_types.type', [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value])
+                    ->whereIn('account_types.type', [
+                        AccountTypeEnum::ASSET->value,
+                        AccountTypeEnum::LOAN->value,
+                        AccountTypeEnum::DEBT->value,
+                        AccountTypeEnum::MORTGAGE->value
+                    ])
                     ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
+                    ->get(['accounts.*']);
             }
             if ('allAssetAccounts' !== $value) {
-                $incoming   = array_map(\intval(...), explode(',', $value));
-                $list       = array_merge(array_unique($incoming), [0]);
+                $incoming = array_map(\intval(...), explode(',', $value));
+                $list     = array_merge(array_unique($incoming), [0]);
 
                 /** @var Collection $collection */
-                $collection = auth()->user()->accounts()
+                $collection = auth()
+                    ->user()
+                    ->accounts()
                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                     ->whereIn('accounts.id', $list)
                     ->orderBy('accounts.name', 'ASC')
-                    ->get(['accounts.*'])
-                ;
+                    ->get(['accounts.*']);
             }
 
             if ($collection->count() > 0) {

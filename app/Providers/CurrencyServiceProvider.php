@@ -40,7 +40,9 @@ class CurrencyServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     /**
      * Register the application services.
@@ -48,43 +50,36 @@ class CurrencyServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): GroupCurrencyRepositoryInterface {
-                /** @var CurrencyRepository $repository */
-                $repository = app(GroupCurrencyRepository::class);
-                // phpstan does not get the reference to auth
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): GroupCurrencyRepositoryInterface {
+            /** @var CurrencyRepository $repository */
+            $repository = app(GroupCurrencyRepository::class);
+            // phpstan does not get the reference to auth
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
-        $this->app->bind(
-            static function (Application $app): GroupCurrencyRepositoryInterface {
-                /** @var GroupCurrencyRepository $repository */
-                $repository = app(GroupCurrencyRepository::class);
-                // phpstan does not get the reference to auth
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
 
-                return $repository;
+            return $repository;
+        });
+        $this->app->bind(static function (Application $app): GroupCurrencyRepositoryInterface {
+            /** @var GroupCurrencyRepository $repository */
+            $repository = app(GroupCurrencyRepository::class);
+            // phpstan does not get the reference to auth
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
 
-        $this->app->bind(
-            static function (Application $app): ExchangeRateRepositoryInterface {
-                /** @var ExchangeRateRepository $repository */
-                $repository = app(ExchangeRateRepository::class);
-                // phpstan does not get the reference to auth
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUserGroup(auth()->user()->userGroup);
-                }
+            return $repository;
+        });
 
-                return $repository;
+        $this->app->bind(static function (Application $app): ExchangeRateRepositoryInterface {
+            /** @var ExchangeRateRepository $repository */
+            $repository = app(ExchangeRateRepository::class);
+            // phpstan does not get the reference to auth
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUserGroup(auth()->user()->userGroup);
             }
-        );
 
+            return $repository;
+        });
     }
 }

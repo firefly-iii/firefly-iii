@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Requests\AttachmentFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,15 +50,13 @@ class AttachmentController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paperclip');
-                app('view')->share('title', (string) trans('firefly.attachments'));
-                $this->repository = app(AttachmentRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paperclip');
+            app('view')->share('title', (string) trans('firefly.attachments'));
+            $this->repository = app(AttachmentRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,7 +71,7 @@ class AttachmentController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('attachments.delete.url');
 
-        return view('attachments.delete', ['attachment' => $attachment, 'subTitle' => $subTitle]);
+        return view('attachments.delete', ['attachment' => $attachment, 'subTitle'   => $subTitle]);
     }
 
     /**
@@ -101,22 +99,21 @@ class AttachmentController extends Controller
     public function download(Attachment $attachment)
     {
         if ($this->repository->exists($attachment)) {
-            $content  = $this->repository->getContent($attachment);
-            $quoted   = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
+            $content = $this->repository->getContent($attachment);
+            $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
             /** @var LaravelResponse $response */
             $response = response($content);
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')
-                ->header('Content-Disposition', 'attachment; filename='.$quoted)
+                ->header('Content-Disposition', 'attachment; filename=' . $quoted)
                 ->header('Content-Transfer-Encoding', 'binary')
                 ->header('Connection', 'Keep-Alive')
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', (string) strlen($content))
-            ;
+                ->header('Content-Length', (string) strlen($content));
 
             return $response;
         }
@@ -133,19 +130,17 @@ class AttachmentController extends Controller
     public function edit(Request $request, Attachment $attachment): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon = 'fa-pencil';
-        $subTitle     = (string) trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+        $subTitle     = (string) trans('firefly.edit_attachment', ['name'     => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('attachments.edit.fromUpdate')) {
             $this->rememberPreviousUrl('attachments.edit.url');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
-        $preFilled    = [
-            'notes' => $this->repository->getNoteText($attachment),
-        ];
+        $preFilled = ['notes' => $this->repository->getNoteText($attachment)];
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('attachments.edit', ['attachment' => $attachment, 'subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
+        return view('attachments.edit', ['attachment'   => $attachment, 'subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
     }
 
     /**
@@ -156,13 +151,11 @@ class AttachmentController extends Controller
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
         $set = $this->repository->get()->reverse();
-        $set = $set->each(
-            function (Attachment $attachment): Attachment {
-                $attachment->file_exists = $this->repository->exists($attachment);
+        $set = $set->each(function (Attachment $attachment): Attachment {
+            $attachment->file_exists = $this->repository->exists($attachment);
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
 
         return view('attachments.index', ['set' => $set]);
     }
@@ -172,7 +165,7 @@ class AttachmentController extends Controller
      */
     public function update(AttachmentFormRequest $request, Attachment $attachment): RedirectResponse
     {
-        $data     = $request->getAttachmentData();
+        $data = $request->getAttachmentData();
         $this->repository->update($attachment, $data);
 
         $request->session()->flash('success', (string) trans('firefly.attachment_updated', ['name' => $attachment->filename]));
@@ -200,7 +193,7 @@ class AttachmentController extends Controller
             $content = $this->repository->getContent($attachment);
 
             // prevent XSS by adding a new secure header.
-            $csp     = [
+            $csp = [
                 "default-src 'none'",
                 "object-src 'none'",
                 "script-src 'none'",
@@ -209,18 +202,14 @@ class AttachmentController extends Controller
                 "font-src 'none'",
                 "connect-src 'none'",
                 "img-src 'self'",
-                "manifest-src 'none'",
+                "manifest-src 'none'"
             ];
 
-            return response()->make(
-                $content,
-                200,
-                [
-                    'Content-Security-Policy' => implode('; ', $csp),
-                    'Content-Type'            => $attachment->mime,
-                    'Content-Disposition'     => 'inline; filename="'.$attachment->filename.'"',
-                ]
-            );
+            return response()->make($content, 200, [
+                'Content-Security-Policy' => implode('; ', $csp),
+                'Content-Type'            => $attachment->mime,
+                'Content-Disposition'     => 'inline; filename="' . $attachment->filename . '"'
+            ]);
         }
 
         $message = 'Could not find the indicated attachment. The file is no longer there.';

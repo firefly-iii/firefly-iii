@@ -33,7 +33,7 @@ class BudgetFactory
 {
     private User $user;
 
-    public function find(?int $budgetId, ?string $budgetName): ?Budget
+    public function find(null|int $budgetId, null|string $budgetName): null|Budget
     {
         $budgetId   = (int) $budgetId;
         $budgetName = (string) $budgetName;
@@ -61,10 +61,13 @@ class BudgetFactory
         return null;
     }
 
-    public function findByName(string $name): ?Budget
+    public function findByName(string $name): null|Budget
     {
         /** @var null|Budget */
-        return $this->user->budgets()->where('name', $name)->first();
+        return $this->user
+            ->budgets()
+            ->where('name', $name)
+            ->first();
     }
 
     public function setUser(User $user): void

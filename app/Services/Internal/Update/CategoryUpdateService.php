@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
@@ -32,6 +31,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryUpdateService
@@ -47,7 +47,7 @@ class CategoryUpdateService
     {
         if (auth()->check()) {
             /** @var User $user */
-            $user       = auth()->user();
+            $user = auth()->user();
             $this->user = $user;
         }
     }
@@ -87,8 +87,7 @@ class CategoryUpdateService
             ->where('rules.user_id', $this->user->id)
             ->whereIn('rule_triggers.trigger_type', $types)
             ->where('rule_triggers.trigger_value', $oldName)
-            ->get(['rule_triggers.*'])
-        ;
+            ->get(['rule_triggers.*']);
         Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
 
         /** @var RuleTrigger $trigger */
@@ -106,8 +105,7 @@ class CategoryUpdateService
             ->where('rules.user_id', $this->user->id)
             ->whereIn('rule_actions.action_type', $types)
             ->where('rule_actions.action_value', $oldName)
-            ->get(['rule_actions.*'])
-        ;
+            ->get(['rule_actions.*']);
         Log::debug(sprintf('Found %d actions to update.', $actions->count()));
 
         /** @var RuleAction $action */
@@ -125,8 +123,7 @@ class CategoryUpdateService
             ->where('recurrences.user_id', $this->user->id)
             ->where('rt_meta.name', 'category_name')
             ->where('rt_meta.value', $oldName)
-            ->update(['rt_meta.value' => $newName])
-        ;
+            ->update(['rt_meta.value' => $newName]);
     }
 
     /**
@@ -134,7 +131,7 @@ class CategoryUpdateService
      */
     private function updateNotes(Category $category, array $data): void
     {
-        $note         = $data['notes'] ?? null;
+        $note = $data['notes'] ?? null;
         if (null === $note) {
             return;
         }
@@ -144,7 +141,7 @@ class CategoryUpdateService
 
             return;
         }
-        $dbNote       = $category->notes()->first();
+        $dbNote = $category->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($category);

@@ -23,18 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class SessionFilter.
@@ -77,9 +77,9 @@ class Range
                 $viewRange = '1M';
             }
 
-            $today     = today(config('app.timezone'));
-            $start     = Navigation::updateStartDate((string) $viewRange, $today);
-            $end       = Navigation::updateEndDate((string) $viewRange, $start);
+            $today = today(config('app.timezone'));
+            $start = Navigation::updateStartDate((string) $viewRange, $today);
+            $end   = Navigation::updateEndDate((string) $viewRange, $start);
 
             app('session')->put('start', $start);
             app('session')->put('end', $end);
@@ -105,15 +105,15 @@ class Range
     private function configureView(): void
     {
         // get locale preference:
-        $language          = Steam::getLanguage();
-        $locale            = Steam::getLocale();
+        $language = Steam::getLanguage();
+        $locale   = Steam::getLocale();
         App::setLocale($language);
         Carbon::setLocale(substr($locale, 0, 2));
 
-        $localeArray       = Steam::getLocaleArray($locale);
+        $localeArray = Steam::getLocaleArray($locale);
 
         setlocale(LC_TIME, $localeArray);
-        $moneyResult       = setlocale(LC_MONETARY, $localeArray);
+        $moneyResult = setlocale(LC_MONETARY, $localeArray);
 
         // send error to view, if it could not set money format
         if (false === $moneyResult) {
@@ -127,7 +127,7 @@ class Range
         $primaryCurrency   = Amount::getPrimaryCurrency();
 
         // also format for moment JS:
-        $madMomentJS       = (string) trans('config.month_and_day_moment_js', [], $locale);
+        $madMomentJS = (string) trans('config.month_and_day_moment_js', [], $locale);
 
         app('view')->share('madMomentJS', $madMomentJS);
         app('view')->share('monthAndDayFormat', $monthAndDayFormat);
@@ -144,10 +144,7 @@ class Range
         app('view')->share('listLength', $pref);
 
         // share security message:
-        if (
-            FireflyConfig::has('upgrade_security_message')
-            && FireflyConfig::has('upgrade_security_level')
-        ) {
+        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
             app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
             app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
         }

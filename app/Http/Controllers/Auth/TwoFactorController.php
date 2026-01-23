@@ -54,9 +54,9 @@ class TwoFactorController extends Controller
         /** @var User $user */
         $user      = auth()->user();
         $siteOwner = config('firefly.site_owner');
-        $title     = (string)trans('firefly.two_factor_forgot_title');
+        $title     = (string) trans('firefly.two_factor_forgot_title');
 
-        return view('auth.lost-two-factor', ['user' => $user, 'siteOwner' => $siteOwner, 'title' => $title]);
+        return view('auth.lost-two-factor', ['user'      => $user, 'siteOwner' => $siteOwner, 'title'     => $title]);
     }
 
     /**
@@ -66,8 +66,8 @@ class TwoFactorController extends Controller
     public function submitMFA(Request $request): Redirector|RedirectResponse
     {
         /** @var array $mfaHistory */
-        $mfaHistory    = Preferences::get('mfa_history', [])->data;
-        $mfaCode       = (string)$request->get('one_time_password');
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $mfaCode    = (string) $request->get('one_time_password');
 
         // is in history? then refuse to use it.
         if ($this->inMFAHistory($mfaCode, $mfaHistory)) {
@@ -82,7 +82,7 @@ class TwoFactorController extends Controller
 
         // if not OK, save error.
         if (!$authenticator->isAuthenticated()) {
-            $user    = auth()->user();
+            $user = auth()->user();
             $this->addToMFAFailureCounter();
             $counter = $this->getMFAFailureCounter();
             if (3 === $counter || 10 === $counter) {
@@ -136,7 +136,7 @@ class TwoFactorController extends Controller
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
-            if ($code === $mfaCode && $now - $time <= 300) {
+            if ($code === $mfaCode && ($now - $time) <= 300) {
                 return true;
             }
         }
@@ -156,11 +156,8 @@ class TwoFactorController extends Controller
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
-            if ($now - $time <= 300) {
-                $newHistory[] = [
-                    'time' => $time,
-                    'code' => $code,
-                ];
+            if (($now - $time) <= 300) {
+                $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
         Preferences::set('mfa_history', $newHistory);
@@ -168,7 +165,7 @@ class TwoFactorController extends Controller
 
     private function addToMFAFailureCounter(): void
     {
-        $preference = (int)Preferences::get('mfa_failure_count', 0)->data;
+        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
         ++$preference;
         Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
         Preferences::set('mfa_failure_count', $preference);
@@ -176,7 +173,7 @@ class TwoFactorController extends Controller
 
     private function getMFAFailureCounter(): int
     {
-        $value = (int)Preferences::get('mfa_failure_count', 0)->data;
+        $value = (int) Preferences::get('mfa_failure_count', 0)->data;
         Log::channel('audit')->info(sprintf('MFA failure count is %d.', $value));
 
         return $value;
@@ -185,11 +182,8 @@ class TwoFactorController extends Controller
     private function addToMFAHistory(string $mfaCode): void
     {
         /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = [
-            'time' => Carbon::now()->getTimestamp(),
-            'code' => $mfaCode,
-        ];
+        $mfaHistory = Preferences::get('mfa_history', [])->data;
+        $entry      = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
         Preferences::set('mfa_history', $mfaHistory);
@@ -220,7 +214,7 @@ class TwoFactorController extends Controller
      */
     private function removeFromBackupCodes(string $mfaCode): void
     {
-        $list    = Preferences::get('mfa_recovery', [])->data;
+        $list = Preferences::get('mfa_recovery', [])->data;
         if (!is_array($list)) {
             $list = [];
         }

@@ -33,10 +33,10 @@ use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class Cron extends Command
 {
@@ -44,7 +44,7 @@ class Cron extends Command
 
     protected $description = 'Runs all Firefly III cron-job related commands. Configure a cron job according to the official Firefly III documentation.';
 
-    protected $signature   = 'firefly-iii:cron
+    protected $signature = 'firefly-iii:cron
         {--F|force : Force the cron job(s) to execute.}
         {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
         {--check-version : Check if there is a new Firefly III version. Other tasks will be skipped unless also requested.}
@@ -58,11 +58,11 @@ class Cron extends Command
     public function handle(): int
     {
         $doAll = !$this->option('download-cer')
-                 && !$this->option('create-recurring')
-                 && !$this->option('create-auto-budgets')
-                 && !$this->option('send-subscription-warnings')
-                 && !$this->option('check-version')
-                 && !$this->option('send-webhook-messages');
+        && !$this->option('create-recurring')
+        && !$this->option('create-auto-budgets')
+        && !$this->option('send-subscription-warnings')
+        && !$this->option('check-version')
+        && !$this->option('send-webhook-messages');
         $date  = null;
 
         try {
@@ -142,7 +142,7 @@ class Cron extends Command
         return 0;
     }
 
-    private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
+    private function exchangeRatesCronJob(bool $force, null|Carbon $date): void
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         $exchangeRates = new ExchangeRatesCronjob();
@@ -185,7 +185,7 @@ class Cron extends Command
     /**
      * @throws FireflyException
      */
-    private function recurringCronJob(bool $force, ?Carbon $date): void
+    private function recurringCronJob(bool $force, null|Carbon $date): void
     {
         $recurring = new RecurringCronjob();
         $recurring->setForce($force);
@@ -207,7 +207,7 @@ class Cron extends Command
         }
     }
 
-    private function autoBudgetCronJob(bool $force, ?Carbon $date): void
+    private function autoBudgetCronJob(bool $force, null|Carbon $date): void
     {
         $autoBudget = new AutoBudgetCronjob();
         $autoBudget->setForce($force);
@@ -232,7 +232,7 @@ class Cron extends Command
     /**
      * @throws FireflyException
      */
-    private function subscriptionWarningCronJob(bool $force, ?Carbon $date): void
+    private function subscriptionWarningCronJob(bool $force, null|Carbon $date): void
     {
         $subscriptionWarningJob = new BillWarningCronjob();
         $subscriptionWarningJob->setForce($force);
@@ -254,7 +254,7 @@ class Cron extends Command
         }
     }
 
-    private function webhookCronJob(bool $force, ?Carbon $date): void
+    private function webhookCronJob(bool $force, null|Carbon $date): void
     {
         $webhook = new WebhookCronjob();
         $webhook->setForce($force);

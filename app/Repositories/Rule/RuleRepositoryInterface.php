@@ -51,7 +51,7 @@ interface RuleRepositoryInterface
 
     public function duplicate(Rule $rule): Rule;
 
-    public function find(int $ruleId): ?Rule;
+    public function find(int $ruleId): null|Rule;
 
     /**
      * Get all the users rules.

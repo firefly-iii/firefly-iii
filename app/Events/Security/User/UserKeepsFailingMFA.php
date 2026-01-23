@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * UserKeepsFailingMFA.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -35,8 +36,10 @@ class UserKeepsFailingMFA extends Event
 
     public User $user;
 
-    public function __construct(Authenticatable|User|null $user, public int $count)
-    {
+    public function __construct(
+        Authenticatable|User|null $user,
+        public int $count
+    ) {
         if ($user instanceof User) {
             $this->user = $user;
 

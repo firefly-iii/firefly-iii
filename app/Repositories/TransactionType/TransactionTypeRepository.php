@@ -24,17 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionType;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionTypeRepository
  */
 class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 {
-    public function findTransactionType(?TransactionType $type, ?string $typeString): TransactionType
+    public function findTransactionType(null|TransactionType $type, null|string $typeString): TransactionType
     {
         Log::debug('Now looking for a transaction type.');
         if ($type instanceof TransactionType) {
@@ -43,7 +43,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
             return $type;
         }
         $typeString ??= TransactionTypeEnum::WITHDRAWAL->value;
-        $search = $this->findByType($typeString);
+        $search     = $this->findByType($typeString);
         if (!$search instanceof TransactionType) {
             $search = $this->findByType(TransactionTypeEnum::WITHDRAWAL->value);
         }
@@ -52,7 +52,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         return $search;
     }
 
-    public function findByType(string $type): ?TransactionType
+    public function findByType(string $type): null|TransactionType
     {
         $search = ucfirst($type);
 

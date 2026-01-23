@@ -29,8 +29,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Support\Collection;
-use Throwable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -40,10 +40,10 @@ class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
     private Collection $categories;
-    private Carbon     $end;
-    private array      $expenses = [];
-    private array      $income   = [];
-    private Carbon     $start;
+    private Carbon $end;
+    private array $expenses = [];
+    private array $income   = [];
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -58,12 +58,12 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            return view('reports.category.month', ['accountIds' => $accountIds, 'categoryIds' => $categoryIds, 'reportType' => $reportType])
-                ->with('start', $this->start)->with('end', $this->end)
+            return view('reports.category.month', ['accountIds'  => $accountIds, 'categoryIds' => $categoryIds, 'reportType'  => $reportType])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
-                ->render()
-            ;
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -129,13 +129,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector      = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts($this->accounts)
+            ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
-            ->setCategories($this->categories)->withAccountInformation()
-        ;
+            ->setCategories($this->categories)
+            ->withAccountInformation();
 
-        $transactions   = $collector->getExtractedJournals();
+        $transactions = $collector->getExtractedJournals();
         $this->expenses = $transactions;
 
         return $transactions;
@@ -171,12 +173,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+        $collector
+            ->setAccounts($this->accounts)
+            ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
-            ->setCategories($this->categories)->withAccountInformation()
-        ;
+            ->setCategories($this->categories)
+            ->withAccountInformation();
 
         $transactions = $collector->getExtractedJournals();
         $this->income = $transactions;

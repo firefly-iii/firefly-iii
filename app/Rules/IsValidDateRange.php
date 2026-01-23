@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 class IsValidDateRange implements ValidationRule
 {
@@ -38,13 +38,13 @@ class IsValidDateRange implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $value      = (string) $value;
+        $value = (string) $value;
         if ('' === $value) {
             $fail('validation.date_or_time')->translate();
 
             return;
         }
-        $other      = 'startPeriod';
+        $other = 'startPeriod';
         if ('startPeriod' === $attribute) {
             $other = 'endPeriod';
         }

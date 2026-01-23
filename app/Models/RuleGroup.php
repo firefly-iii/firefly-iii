@@ -57,13 +57,13 @@ class RuleGroup extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $ruleGroupId = (int)$value;
+            $ruleGroupId = (int) $value;
 
             /** @var User $user */
-            $user        = auth()->user();
+            $user = auth()->user();
 
             /** @var null|RuleGroup $ruleGroup */
-            $ruleGroup   = $user->ruleGroups()->find($ruleGroupId);
+            $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
@@ -92,14 +92,12 @@ class RuleGroup extends Model
             'stop_processing' => 'boolean',
             'order'           => 'int',
             'user_id'         => 'integer',
-            'user_group_id'   => 'integer',
+            'user_group_id'   => 'integer'
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

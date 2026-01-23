@@ -67,17 +67,17 @@ interface JournalCLIRepositoryInterface
     /**
      * Return Carbon value of a meta field (or NULL).
      */
-    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
+    public function getMetaDate(TransactionJournal $journal, string $field): null|Carbon;
 
     /**
      * Return value of a meta field (or NULL).
      */
-    public function getMetaField(TransactionJournal $journal, string $field): ?string;
+    public function getMetaField(TransactionJournal $journal, string $field): null|string;
 
     /**
      * Return text of a note attached to journal, or NULL
      */
-    public function getNoteText(TransactionJournal $journal): ?string;
+    public function getNoteText(TransactionJournal $journal): null|string;
 
     /**
      * Returns all journals with more than 2 transactions. Should only return empty collections

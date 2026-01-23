@@ -50,16 +50,14 @@ class UpdateController extends Controller
     {
         parent::__construct();
         $this->middleware(ApiDemoUser::class)->except(['delete', 'download', 'show', 'index']);
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(AttachmentRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
+            $this->repository = app(AttachmentRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -75,14 +73,14 @@ class UpdateController extends Controller
 
             throw new NotFoundHttpException();
         }
-        $data        = $request->getAll();
+        $data = $request->getAll();
         $this->repository->update($attachment, $data);
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
 
-        $resource    = new Item($attachment, $transformer, 'attachments');
+        $resource = new Item($attachment, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

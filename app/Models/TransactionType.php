@@ -36,41 +36,36 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[Deprecated]
     /** @deprecated */
-    public const string DEPOSIT          = 'Deposit';
+    #[Deprecated]
+    public const string DEPOSIT = 'Deposit';
 
-    #[Deprecated]
     /** @deprecated */
-    public const string INVALID          = 'Invalid';
+    #[Deprecated]
+    public const string INVALID = 'Invalid';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string LIABILITY_CREDIT = 'Liability credit';
 
-    #[Deprecated]
     /** @deprecated */
-    public const string OPENING_BALANCE  = 'Opening balance';
-
     #[Deprecated]
-    /** @deprecated */
-    public const string RECONCILIATION   = 'Reconciliation';
+    public const string OPENING_BALANCE = 'Opening balance';
 
+    /** @deprecated */
     #[Deprecated]
-    /** @deprecated */
-    public const string TRANSFER         = 'Transfer';
+    public const string RECONCILIATION = 'Reconciliation';
 
+    /** @deprecated */
     #[Deprecated]
-    /** @deprecated */
-    public const string WITHDRAWAL       = 'Withdrawal';
+    public const string TRANSFER = 'Transfer';
 
-    protected $casts
-                                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
-    protected $fillable                  = ['type'];
+    /** @deprecated */
+    #[Deprecated]
+    public const string WITHDRAWAL = 'Withdrawal';
+
+    protected $casts    = ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+    protected $fillable = ['type'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

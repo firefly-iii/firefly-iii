@@ -43,8 +43,7 @@ class UserTestNotificationSlack extends Notification
      */
     public function toArray(User $user): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -53,6 +52,7 @@ class UserTestNotificationSlack extends Notification
     public function toSlack(User $user): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
+
         // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
     }
 

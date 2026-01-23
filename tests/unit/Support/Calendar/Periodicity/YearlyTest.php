@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 
-use FireflyIII\Support\Calendar\Periodicity\Yearly;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Yearly;
 
 /**
  * @group unit-test
@@ -50,7 +50,7 @@ final class YearlyTest extends IntervalTestCase
         return [
             new IntervalProvider(Carbon::now(), Carbon::now()->addYears(1)),
             new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2020-01-29')),
-            new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28')),
+            new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2021-02-28'))
         ];
     }
 }

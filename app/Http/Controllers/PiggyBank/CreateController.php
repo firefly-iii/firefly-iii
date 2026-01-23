@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankStoreRequest;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    private AttachmentHelperInterface    $attachments;
+    private AttachmentHelperInterface $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -52,17 +52,15 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -75,7 +73,7 @@ class CreateController extends Controller
         $subTitle     = (string) trans('firefly.new_piggy_bank');
         $subTitleIcon = 'fa-plus';
         $request->old('_token');
-        $preFilled    = $request->old();
+        $preFilled = $request->old();
         if (!array_key_exists('transaction_currency_id', $preFilled)) {
             $preFilled['transaction_currency_id'] = $this->primaryCurrency->id;
         }
@@ -86,7 +84,7 @@ class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled' => $preFilled]);
+        return view('piggy-banks.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled'    => $preFilled]);
     }
 
     /**
@@ -98,7 +96,7 @@ class CreateController extends Controller
      */
     public function store(PiggyBankStoreRequest $request)
     {
-        $data      = $request->getPiggyBankData();
+        $data = $request->getPiggyBankData();
 
         if (null === $data['start_date']) {
             $data['start_date'] = today(config('app.timezone'));
@@ -111,7 +109,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($piggyBank, $files);
         }
@@ -123,7 +121,7 @@ class CreateController extends Controller
         if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
-        $redirect  = redirect($this->getPreviousUrl('piggy-banks.create.url'));
+        $redirect = redirect($this->getPreviousUrl('piggy-banks.create.url'));
 
         if (1 === (int) $request->get('create_another')) {
             session()->put('piggy-banks.create.fromStore', true);

@@ -47,7 +47,7 @@ class PreferencesEventHandler
             // !!! this array is also in the migration
             'accounts'          => ['native_virtual_balance'],
             'available_budgets' => ['native_amount'],
-            'bills'             => ['native_amount_min', 'native_amount_max'],
+            'bills'             => ['native_amount_min', 'native_amount_max']
         ];
         foreach ($tables as $table => $columns) {
             foreach ($columns as $column) {
@@ -103,7 +103,7 @@ class PreferencesEventHandler
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set        = $repository->getBudgets();
+        $set = $repository->getBudgets();
 
         Log::debug(sprintf('Resetting %d budget(s).', $set->count()));
 
@@ -125,7 +125,6 @@ class PreferencesEventHandler
                 }
             }
         }
-
     }
 
     private function resetTransactions(UserGroup $userGroup): void
@@ -135,12 +134,9 @@ class PreferencesEventHandler
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
             ->where(static function (Builder $q): void {
-                $q->whereNotNull('native_amount')
-                    ->orWhereNotNull('native_foreign_amount')
-                ;
+                $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
             })
-            ->update(['native_amount' => null, 'native_foreign_amount' => null])
-        ;
+            ->update(['native_amount'         => null, 'native_foreign_amount' => null]);
         Log::debug(sprintf('Reset %d transactions.', $success));
     }
 }

@@ -37,22 +37,13 @@ class Translation extends AbstractExtension
     #[Override]
     public function getFilters(): array
     {
-        return [
-            new TwigFilter(
-                '_',
-                static fn (string $name) => (string)trans(sprintf('firefly.%s', $name)),
-                ['is_safe' => ['html']]
-            ),
-        ];
+        return [new TwigFilter('_', static fn(string $name) => (string) trans(sprintf('firefly.%s', $name)), ['is_safe' => ['html']])];
     }
 
     #[Override]
     public function getFunctions(): array
     {
-        return [
-            $this->journalLinkTranslation(),
-            $this->laravelTranslation(),
-        ];
+        return [$this->journalLinkTranslation(), $this->laravelTranslation()];
     }
 
     public function journalLinkTranslation(): TwigFunction
@@ -74,16 +65,13 @@ class Translation extends AbstractExtension
 
     public function laravelTranslation(): TwigFunction
     {
-        return new TwigFunction(
-            '__',
-            static function (string $key): array|string|Translator {
-                $translation = trans($key);
-                if ($key === $translation) {
-                    return $key;
-                }
-
-                return $translation;
+        return new TwigFunction('__', static function (string $key): array|string|Translator {
+            $translation = trans($key);
+            if ($key === $translation) {
+                return $key;
             }
-        );
+
+            return $translation;
+        });
     }
 }

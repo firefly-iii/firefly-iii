@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsTransferAccount
@@ -43,7 +43,7 @@ class IsTransferAccount implements ValidationRule
         Log::debug(sprintf('Now in %s(%s)', __METHOD__, $value));
 
         /** @var AccountValidator $validator */
-        $validator    = app(AccountValidator::class);
+        $validator = app(AccountValidator::class);
         $validator->setTransactionType(TransactionTypeEnum::TRANSFER->value);
         $validator->setUser(auth()->user());
 

@@ -31,23 +31,21 @@ class DateRangeRequest extends ApiRequest
     {
         return [
             'start' => sprintf('date|after:1970-01-02|before:2038-01-17|before:end|required_with:end|%s', $this->required),
-            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required),
+            'end'   => sprintf('date|after:1970-01-02|before:2038-01-17|after:start|required_with:start|%s', $this->required)
         ];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $start = $this->getCarbonDate('start')?->startOfDay();
-                $end   = $this->getCarbonDate('end')?->endOfDay();
-
-                $this->attributes->set('start', $start);
-                $this->attributes->set('end', $end);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $start = $this->getCarbonDate('start')?->startOfDay();
+            $end   = $this->getCarbonDate('end')?->endOfDay();
+
+            $this->attributes->set('start', $start);
+            $this->attributes->set('end', $end);
+        });
     }
 }

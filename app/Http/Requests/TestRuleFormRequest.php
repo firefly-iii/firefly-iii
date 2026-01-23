@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -47,8 +47,8 @@ class TestRuleFormRequest extends FormRequest
         $validTriggers = $this->getTriggers();
 
         return [
-            'rule-trigger.*'       => 'required|max:1024|min:1|in:'.implode(',', $validTriggers),
-            'rule-trigger-value.*' => 'required|max:1024|min:1|ruleTriggerValue',
+            'rule-trigger.*'       => 'required|max:1024|min:1|in:' . implode(',', $validTriggers),
+            'rule-trigger-value.*' => 'required|max:1024|min:1|ruleTriggerValue'
         ];
     }
 

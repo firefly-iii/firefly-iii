@@ -49,14 +49,14 @@ interface OperationsRepositoryInterface
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
     /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified category set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always positive.
      */
-    public function listIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function listIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
     /**
      * This method returns a list of all the transfer transaction journals (as arrays) set in that period
@@ -64,7 +64,7 @@ interface OperationsRepositoryInterface
      * It excludes any transfers between the listed accounts.
      * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
      */
-    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array;
+    public function listTransferredIn(Carbon $start, Carbon $end, Collection $accounts, null|Collection $categories = null): array;
 
     /**
      * This method returns a list of all the transfer transaction journals (as arrays) set in that period
@@ -72,28 +72,28 @@ interface OperationsRepositoryInterface
      * It excludes any transfers between the listed accounts.
      * It's grouped per currency, with as few details in the array as possible. Amounts are always negative.
      */
-    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, ?Collection $categories = null): array;
+    public function listTransferredOut(Carbon $start, Carbon $end, Collection $accounts, null|Collection $categories = null): array;
 
     /**
      * Sum of withdrawal journals in period for a set of categories, grouped per currency. Amounts are always negative.
      */
-    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
-    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function collectExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
-    public function collectIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function collectIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
-    public function collectTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function collectTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
     public function sumCollectedTransactionsByCategory(array $expenses, Category $category, string $method, bool $convertToPrimary = false): array;
 
     /**
      * Sum of income journals in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function sumIncome(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 
     /**
      * Sum of transfers in period for a set of categories, grouped per currency. Amounts are always positive.
      */
-    public function sumTransfers(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $categories = null): array;
+    public function sumTransfers(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $categories = null): array;
 }

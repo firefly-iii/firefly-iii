@@ -46,7 +46,7 @@ trait BasicDataSupport
     /**
      * Find the ID in a given array. Return null if not there (amount).
      */
-    protected function isInArrayDate(array $array, int $entryId): ?Carbon
+    protected function isInArrayDate(array $array, int $entryId): null|Carbon
     {
         return $array[$entryId] ?? null;
     }

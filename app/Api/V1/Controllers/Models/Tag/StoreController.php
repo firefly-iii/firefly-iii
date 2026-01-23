@@ -45,17 +45,15 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -66,14 +64,14 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $rule        = $this->repository->store($request->getAll());
-        $manager     = $this->getManager();
+        $rule    = $this->repository->store($request->getAll());
+        $manager = $this->getManager();
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($rule, $transformer, 'tags');
+        $resource = new Item($rule, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

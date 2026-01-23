@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Budget;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,15 +49,13 @@ class DeleteController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository = app(BudgetRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.budgets'));
+            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            $this->repository = app(BudgetRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,7 +70,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('budgets.delete.url');
 
-        return view('budgets.delete', ['budget' => $budget, 'subTitle' => $subTitle]);
+        return view('budgets.delete', ['budget'   => $budget, 'subTitle' => $subTitle]);
     }
 
     /**

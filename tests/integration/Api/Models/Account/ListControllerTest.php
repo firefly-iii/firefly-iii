@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountControllerTest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -25,12 +24,12 @@ declare(strict_types=1);
 
 namespace Tests\integration\Api\Models\Account;
 
-use Override;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Factory\AttachmentFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Override;
 use Tests\integration\TestCase;
 
 /**
@@ -41,6 +40,7 @@ use Tests\integration\TestCase;
 final class ListControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private User $user;
     private Account $account;
 
@@ -49,22 +49,29 @@ final class ListControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user    = $this->createAuthenticatedUser();
+        $this->user = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
-        $this->account = Account::factory()->for($this->user)->withType(AccountTypeEnum::ASSET)->create();
-        app(AttachmentFactory::class)->setUser($this->user)->create([
-            'filename'        => 'test 1',
-            'title'           => 'test 1',
-            'attachable_type' => Account::class,
-            'attachable_id'   => $this->account->id,
-        ]);
-        app(AttachmentFactory::class)->setUser($this->user)->create([
-            'filename'        => 'test 2',
-            'title'           => 'test 2',
-            'attachable_type' => Account::class,
-            'attachable_id'   => $this->account->id,
-        ]);
+        $this->account = Account::factory()
+            ->for($this->user)
+            ->withType(AccountTypeEnum::ASSET)
+            ->create();
+        app(AttachmentFactory::class)
+            ->setUser($this->user)
+            ->create([
+                'filename'        => 'test 1',
+                'title'           => 'test 1',
+                'attachable_type' => Account::class,
+                'attachable_id'   => $this->account->id
+            ]);
+        app(AttachmentFactory::class)
+            ->setUser($this->user)
+            ->create([
+                'filename'        => 'test 2',
+                'title'           => 'test 2',
+                'attachable_type' => Account::class,
+                'attachable_id'   => $this->account->id
+            ]);
     }
 
     public function testIndex(): void
@@ -72,18 +79,14 @@ final class ListControllerTest extends TestCase
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.accounts.attachments', ['account' => $this->account->id]));
         $response->assertStatus(200);
-        $response->assertJson([
-            'meta' => ['pagination' => ['total' => 2, 'total_pages' => 1]],
-        ]);
+        $response->assertJson(['meta' => ['pagination' => ['total'       => 2, 'total_pages' => 1]]]);
     }
 
     public function testIndexCanChangePageSize(): void
     {
         $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.attachments', ['account' => $this->account->id, 'limit' => 1]));
+        $response = $this->getJson(route('api.v1.accounts.attachments', ['account' => $this->account->id, 'limit'   => 1]));
         $response->assertStatus(200);
-        $response->assertJson([
-            'meta' => ['pagination' => ['total' => 2, 'total_pages' => 2]],
-        ]);
+        $response->assertJson(['meta' => ['pagination' => ['total'       => 2, 'total_pages' => 2]]]);
     }
 }

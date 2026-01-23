@@ -33,5 +33,10 @@ class UserRequestedNewPassword extends Event
 {
     use SerializesModels;
 
-    public function __construct(public User $user, #[SensitiveParameter] public string $token, public string $ipAddress) {}
+    public function __construct(
+        public User $user,
+        #[SensitiveParameter]
+        public string $token,
+        public string $ipAddress
+    ) {}
 }

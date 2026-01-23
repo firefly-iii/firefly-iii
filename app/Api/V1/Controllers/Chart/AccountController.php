@@ -51,7 +51,7 @@ class AccountController extends Controller
 
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
 
-    private array $chartData       = [];
+    private array $chartData = [];
     private AccountRepositoryInterface $repository;
 
     /**
@@ -99,18 +99,18 @@ class AccountController extends Controller
     private function renderAccountData(array $params, Account $account): void
     {
         Log::debug(sprintf('Now in %s(array, #%d)', __METHOD__, $account->id));
-        $currency          = $this->repository->getAccountCurrency($account);
-        $currentStart      = clone $params['start'];
-        $range             = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
-        $period            = $params['period'] ?? '1D';
+        $currency     = $this->repository->getAccountCurrency($account);
+        $currentStart = clone $params['start'];
+        $range        = Steam::finalAccountBalanceInRange($account, $params['start'], clone $params['end'], $this->convertToPrimary);
+        $period       = $params['period'] ?? '1D';
 
-        $previous          = array_values($range)[0]['balance'];
-        $pcPrevious        = null;
+        $previous   = array_values($range)[0]['balance'];
+        $pcPrevious = null;
         if (!$currency instanceof TransactionCurrency) {
             $currency = $this->primaryCurrency;
         }
-        $currentSet        = [
-            'label'                   => $account->name,
+        $currentSet = [
+            'label' => $account->name,
 
             // the currency that belongs to the account.
             'currency_id'             => (string) $currency->id,
@@ -120,43 +120,43 @@ class AccountController extends Controller
             'currency_decimal_places' => $currency->decimal_places,
 
             // the primary currency
-            'primary_currency_id'     => (string) $this->primaryCurrency->id,
+            'primary_currency_id' => (string) $this->primaryCurrency->id,
 
             // the default currency of the user (could be the same!)
-            'date'                    => $params['start']->toAtomString(),
-            'start_date'              => $params['start']->toAtomString(),
-            'end_date'                => $params['end']->toAtomString(),
-            'type'                    => 'line',
-            'yAxisID'                 => 0,
-            'period'                  => $period,
-            'entries'                 => [],
-            'pc_entries'              => [],
+            'date'       => $params['start']->toAtomString(),
+            'start_date' => $params['start']->toAtomString(),
+            'end_date'   => $params['end']->toAtomString(),
+            'type'       => 'line',
+            'yAxisID'    => 0,
+            'period'     => $period,
+            'entries'    => [],
+            'pc_entries' => []
         ];
         if ($this->convertToPrimary) {
-            $currentSet['pc_entries']                      = [];
-            $currentSet['primary_currency_id']             = (string) $this->primaryCurrency->id;
-            $currentSet['primary_currency_code']           = $this->primaryCurrency->code;
-            $currentSet['primary_currency_symbol']         = $this->primaryCurrency->symbol;
+            $currentSet['pc_entries'] = [];
+            $currentSet['primary_currency_id'] = (string) $this->primaryCurrency->id;
+            $currentSet['primary_currency_code'] = $this->primaryCurrency->code;
+            $currentSet['primary_currency_symbol'] = $this->primaryCurrency->symbol;
             $currentSet['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
-            $pcPrevious                                    = array_values($range)[0]['pc_balance'];
+            $pcPrevious = array_values($range)[0]['pc_balance'];
         }
         // create array of values to collect.
 
         while ($currentStart <= $params['end']) {
-            $format                        = $currentStart->format('Y-m-d');
-            $label                         = $currentStart->toAtomString();
-            $balance                       = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
-            $previous                      = $balance;
+            $format   = $currentStart->format('Y-m-d');
+            $label    = $currentStart->toAtomString();
+            $balance  = array_key_exists($format, $range) ? $range[$format]['balance'] : $previous;
+            $previous = $balance;
             $currentSet['entries'][$label] = $balance;
 
             // do the same for the primary currency balance, if relevant:
-            $pcBalance                     = null;
+            $pcBalance = null;
             if ($this->convertToPrimary) {
-                $pcBalance                        = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
-                $pcPrevious                       = $pcBalance;
+                $pcBalance  = array_key_exists($format, $range) ? $range[$format]['pc_balance'] : $pcPrevious;
+                $pcPrevious = $pcBalance;
                 $currentSet['pc_entries'][$label] = $pcBalance;
             }
-            $currentStart                  = Navigation::addPeriod($currentStart, $period);
+            $currentStart = Navigation::addPeriod($currentStart, $period);
 
             // $currentStart->addDay();
         }

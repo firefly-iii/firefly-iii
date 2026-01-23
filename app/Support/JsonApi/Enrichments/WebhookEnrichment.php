@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * WebhookEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -43,13 +42,13 @@ use stdClass;
 class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array      $deliveries        = [];      // @phpstan-ignore-line
-    private array      $ids               = [];      // @phpstan-ignore-line
-    private array      $responses         = [];
-    private array      $triggers          = [];
-    private array      $webhookDeliveries = [];
-    private array      $webhookResponses  = [];
-    private array      $webhookTriggers   = [];
+    private array $deliveries = []; // @phpstan-ignore-line
+    private array $ids = []; // @phpstan-ignore-line
+    private array $responses         = [];
+    private array $triggers          = [];
+    private array $webhookDeliveries = [];
+    private array $webhookResponses  = [];
+    private array $webhookTriggers   = [];
 
     public function enrich(Collection $collection): Collection
     {
@@ -73,17 +72,21 @@ class WebhookEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    public function setUser(User $user): void {}
+    public function setUser(User $user): void
+    {
+    }
 
-    public function setUserGroup(UserGroup $userGroup): void {}
+    public function setUserGroup(UserGroup $userGroup): void
+    {
+    }
 
     private function appendCollectedInfo(): void
     {
         $this->collection = $this->collection->map(function (Webhook $item): Webhook {
-            $meta       = [
+            $meta = [
                 'deliveries' => $this->webhookDeliveries[$item->id] ?? [],
                 'responses'  => $this->webhookResponses[$item->id] ?? [],
-                'triggers'   => $this->webhookTriggers[$item->id] ?? [],
+                'triggers'   => $this->webhookTriggers[$item->id] ?? []
             ];
             $item->meta = $meta;
 
@@ -120,7 +123,6 @@ class WebhookEnrichment implements EnrichmentInterface
         foreach ($all as $item) {
             $this->triggers[$item->id] = $item->key;
         }
-
     }
 
     private function collectWebhookInfo(): void
@@ -129,8 +131,8 @@ class WebhookEnrichment implements EnrichmentInterface
 
         /** @var stdClass $item */
         foreach ($set as $item) {
-            $id                             = $item->webhook_id;
-            $deliveryId                     = $item->webhook_delivery_id;
+            $id         = $item->webhook_id;
+            $deliveryId = $item->webhook_delivery_id;
             $this->webhookDeliveries[$id][] = WebhookDeliveryEnum::from($this->deliveries[$deliveryId])->name;
         }
 
@@ -138,8 +140,8 @@ class WebhookEnrichment implements EnrichmentInterface
 
         /** @var stdClass $item */
         foreach ($set as $item) {
-            $id                            = $item->webhook_id;
-            $responseId                    = $item->webhook_response_id;
+            $id         = $item->webhook_id;
+            $responseId = $item->webhook_response_id;
             $this->webhookResponses[$id][] = WebhookResponseEnum::from($this->responses[$responseId])->name;
         }
 
@@ -147,8 +149,8 @@ class WebhookEnrichment implements EnrichmentInterface
 
         /** @var stdClass $item */
         foreach ($set as $item) {
-            $id                           = $item->webhook_id;
-            $triggerId                    = $item->webhook_trigger_id;
+            $id        = $item->webhook_id;
+            $triggerId = $item->webhook_trigger_id;
             $this->webhookTriggers[$id][] = WebhookTriggerEnum::from($this->triggers[$triggerId])->name;
         }
     }

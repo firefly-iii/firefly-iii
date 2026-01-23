@@ -39,7 +39,7 @@ use League\Fractal\Resource\Item;
  */
 class UpdateController extends Controller
 {
-    private JournalRepositoryInterface  $journalRepository;
+    private JournalRepositoryInterface $journalRepository;
     private LinkTypeRepositoryInterface $repository;
 
     /**
@@ -48,20 +48,18 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                    = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->repository        = app(LinkTypeRepositoryInterface::class);
-                $this->journalRepository = app(JournalRepositoryInterface::class);
+            $this->repository = app(LinkTypeRepositoryInterface::class);
+            $this->journalRepository = app(JournalRepositoryInterface::class);
 
-                $this->repository->setUser($user);
-                $this->journalRepository->setUser($user);
+            $this->repository->setUser($user);
+            $this->journalRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -80,7 +78,7 @@ class UpdateController extends Controller
         $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($journalLink, $transformer, 'transaction_links');
+        $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

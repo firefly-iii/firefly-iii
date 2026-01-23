@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * CurrencyCodeRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -23,28 +24,24 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\TransactionCurrency;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
+use Illuminate\Contracts\Validation\Validator;
 
 class CurrencyCodeRequest extends ApiRequest
 {
     public function rules(): array
     {
-        return [
-            'code' => sprintf('exists:transaction_currencies,code|%s', $this->required),
-        ];
+        return ['code' => sprintf('exists:transaction_currencies,code|%s', $this->required)];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if (!$validator->valid()) {
-                    return;
-                }
-                $code = $this->convertString('code', '');
-                $this->attributes->set('code', $code);
+        $validator->after(function (Validator $validator): void {
+            if (!$validator->valid()) {
+                return;
             }
-        );
+            $code = $this->convertString('code', '');
+            $this->attributes->set('code', $code);
+        });
     }
 }

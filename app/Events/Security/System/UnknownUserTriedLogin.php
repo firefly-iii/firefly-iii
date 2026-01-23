@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * UnknownUserTriedLogin.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,5 +30,7 @@ class UnknownUserTriedLogin
 {
     use SerializesModels;
 
-    public function __construct(public string $address) {}
+    public function __construct(
+        public string $address
+    ) {}
 }

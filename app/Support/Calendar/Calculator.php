@@ -33,9 +33,10 @@ use SplObjectStorage;
  */
 class Calculator
 {
-    public const int DEFAULT_INTERVAL             = 1;
-    private static ?SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
-    private static array             $intervals   = [];
+    public const int DEFAULT_INTERVAL = 1;
+
+    private static null|SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
+    private static array $intervals = [];
 
     private function containsInterval(Periodicity $periodicity): bool
     {
@@ -49,7 +50,7 @@ class Calculator
         }
         self::$intervalMap = new SplObjectStorage();
         foreach (Periodicity::cases() as $interval) {
-            $periodicityClass  = sprintf('%s\Periodicity\%s', __NAMESPACE__, $interval->name);
+            $periodicityClass = sprintf('%s\Periodicity\%s', __NAMESPACE__, $interval->name);
             self::$intervals[] = $interval->name;
             self::$intervalMap->attach($interval, new $periodicityClass());
         }

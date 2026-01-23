@@ -33,13 +33,13 @@ use Illuminate\Support\Facades\Log;
  */
 class TransactionJournalMetaFactory
 {
-    public function updateOrCreate(array $data): ?TransactionJournalMeta
+    public function updateOrCreate(array $data): null|TransactionJournalMeta
     {
         // Log::debug('In updateOrCreate()');
-        $value       = $data['data'];
+        $value = $data['data'];
 
         /** @var null|TransactionJournalMeta $entry */
-        $entry       = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
+        $entry = $data['journal']->transactionJournalMeta()->where('name', $data['name'])->first();
         if (null === $value && null !== $entry) {
             // Log::debug('Value is empty, delete meta value.');
             $entry->delete();
@@ -51,7 +51,7 @@ class TransactionJournalMetaFactory
             Log::debug('Is a carbon object.');
             $value = $data['data']->toW3cString();
         }
-        if ('' === (string)$value) {
+        if ('' === (string) $value) {
             // Log::debug('Is an empty string.');
             // don't store blank strings.
             if (null !== $entry) {
@@ -65,7 +65,7 @@ class TransactionJournalMetaFactory
         if (null === $entry) {
             // Log::debug('Will create new object.');
             Log::debug(sprintf('Going to create new meta-data entry to store "%s".', $data['name']));
-            $entry       = new TransactionJournalMeta();
+            $entry = new TransactionJournalMeta();
             $entry->transactionJournal()->associate($data['journal']);
             $entry->name = $data['name'];
         }

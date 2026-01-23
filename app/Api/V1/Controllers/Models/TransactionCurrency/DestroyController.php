@@ -41,7 +41,7 @@ use Illuminate\Validation\ValidationException;
 class DestroyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
-    private UserRepositoryInterface     $userRepository;
+    private UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyRepository constructor.
@@ -49,15 +49,13 @@ class DestroyController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(CurrencyRepositoryInterface::class);
+            $this->userRepository = app(UserRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**

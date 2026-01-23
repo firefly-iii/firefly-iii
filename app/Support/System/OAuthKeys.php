@@ -65,7 +65,7 @@ class OAuthKeys
         Log::debug(sprintf('Private key file at "%s" exists? %s', $private, var_export($privateExists, true)));
         Log::debug(sprintf('Public key file at "%s" exists ? %s', $public, var_export($publicExists, true)));
 
-        $result        = file_exists($private) && file_exists($public);
+        $result = file_exists($private) && file_exists($public);
         Log::debug(sprintf('Method will return %s', var_export($result, true)));
 
         return $result;
@@ -83,8 +83,8 @@ class OAuthKeys
 
         if ($hasPrivate && $hasPublic) {
             try {
-                $privateKey = trim((string)FireflyConfig::get(self::PRIVATE_KEY)?->data);
-                $publicKey  = trim((string)FireflyConfig::get(self::PUBLIC_KEY)?->data);
+                $privateKey = trim((string) FireflyConfig::get(self::PRIVATE_KEY)?->data);
+                $publicKey  = trim((string) FireflyConfig::get(self::PUBLIC_KEY)?->data);
             } catch (ContainerExceptionInterface|FireflyException|NotFoundExceptionInterface $e) {
                 Log::error(sprintf('Could not validate keysInDatabase(): %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());
@@ -102,7 +102,7 @@ class OAuthKeys
         if ('' !== $publicKey) {
             Log::debug(sprintf('SHA2 hash of public key in DB : %s', hash('sha256', $publicKey)));
         }
-        $return     = '' !== $privateKey && '' !== $publicKey;
+        $return = '' !== $privateKey && '' !== $publicKey;
         Log::debug(sprintf('keysInDatabase will return %s', var_export($return, true)));
 
         return $return;
@@ -117,8 +117,8 @@ class OAuthKeys
     public static function restoreKeysFromDB(): bool
     {
         Log::debug('restoreKeysFromDB()');
-        $privateKey = (string)FireflyConfig::get(self::PRIVATE_KEY)?->data;
-        $publicKey  = (string)FireflyConfig::get(self::PUBLIC_KEY)?->data;
+        $privateKey = (string) FireflyConfig::get(self::PRIVATE_KEY)?->data;
+        $publicKey  = (string) FireflyConfig::get(self::PUBLIC_KEY)?->data;
 
         if ('' === $privateKey) {
             Log::warning('Private key is not in the database.');
@@ -141,8 +141,8 @@ class OAuthKeys
 
             return false;
         }
-        $private    = storage_path('oauth-private.key');
-        $public     = storage_path('oauth-public.key');
+        $private = storage_path('oauth-private.key');
+        $public  = storage_path('oauth-public.key');
         file_put_contents($private, $privateContent);
         file_put_contents($public, $publicContent);
 
@@ -162,8 +162,18 @@ class OAuthKeys
         FireflyConfig::set(self::PRIVATE_KEY, Crypt::encrypt($privateContent));
         FireflyConfig::set(self::PUBLIC_KEY, Crypt::encrypt($publicContent));
 
-        Log::debug(sprintf('Will store the content of file "%s" as "%s" in the database (hash: %s)', $private, self::PRIVATE_KEY, hash('sha256', $privateContent)));
-        Log::debug(sprintf('Will store the content of file "%s" as "%s" in the database (hash: %s)', $public, self::PUBLIC_KEY, hash('sha256', $publicContent)));
+        Log::debug(sprintf(
+            'Will store the content of file "%s" as "%s" in the database (hash: %s)',
+            $private,
+            self::PRIVATE_KEY,
+            hash('sha256', $privateContent)
+        ));
+        Log::debug(sprintf(
+            'Will store the content of file "%s" as "%s" in the database (hash: %s)',
+            $public,
+            self::PUBLIC_KEY,
+            hash('sha256', $publicContent)
+        ));
     }
 
     public static function verifyKeysRoutine(): void

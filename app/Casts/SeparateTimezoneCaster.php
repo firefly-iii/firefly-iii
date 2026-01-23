@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * SeparateTimezoneCaster.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -43,7 +42,7 @@ class SeparateTimezoneCaster implements CastsAttributes
     /**
      * @param array<string, mixed> $attributes
      */
-    public function get(Model $model, string $key, mixed $value, array $attributes): ?Carbon
+    public function get(Model $model, string $key, mixed $value, array $attributes): null|Carbon
     {
         if ('' === $value || null === $value) {
             return null;
@@ -51,6 +50,7 @@ class SeparateTimezoneCaster implements CastsAttributes
         $timeZone = $attributes[sprintf('%s_tz', $key)] ?? config('app.timezone');
 
         return Carbon::parse($value, $timeZone)->setTimezone(config('app.timezone'));
+
         // Log::debug(sprintf('SeparateTimezoneCaster: %s.%s = %s', str_replace('FireflyIII\\Models\\','',get_class($model)), $key, $result->toAtomString()));
     }
 

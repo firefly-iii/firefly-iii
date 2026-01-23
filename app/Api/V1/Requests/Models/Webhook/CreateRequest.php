@@ -27,11 +27,11 @@ namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class CreateRequest
@@ -44,23 +44,18 @@ class CreateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields               = [
-            'title'  => ['title', 'convertString'],
-            'active' => ['active', 'boolean'],
-            'url'    => ['url', 'convertString'],
-        ];
-        $triggers             = $this->get('triggers', []);
-        $responses            = $this->get('responses', []);
-        $deliveries           = $this->get('deliveries', []);
+        $fields     = ['title'  => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url'    => ['url', 'convertString']];
+        $triggers   = $this->get('triggers', []);
+        $responses  = $this->get('responses', []);
+        $deliveries = $this->get('deliveries', []);
 
         if (in_array(0, [count($triggers), count($responses), count($deliveries)], true)) {
             throw new FireflyException('Unexpectedly got no responses, triggers or deliveries.');
         }
 
-
-        $return               = $this->getAllData($fields);
-        $return['triggers']   = $triggers;
-        $return['responses']  = $responses;
+        $return = $this->getAllData($fields);
+        $return['triggers'] = $triggers;
+        $return['responses'] = $responses;
         $return['deliveries'] = $deliveries;
 
         return $return;
@@ -88,7 +83,7 @@ class CreateRequest extends FormRequest
             'delivery'     => 'prohibited',
             'deliveries'   => 'required|array|min:1|max:1',
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
-            'url'          => ['required', sprintf('url:%s', $validProtocols)],
+            'url'          => ['required', sprintf('url:%s', $validProtocols)]
         ];
     }
 }

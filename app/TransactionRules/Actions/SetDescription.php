@@ -40,7 +40,9 @@ class SetDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action) {}
+    public function __construct(
+        private RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -52,26 +54,21 @@ class SetDescription implements ActionInterface
         $after  = $this->action->getValue($journal);
 
         // replace newlines.
-        $after  = trim(str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after));
+        $after = trim(str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after));
 
         if ('' === $after) {
             Log::warning('Action resulted in an empty description, reset to default value.');
             $after = '(no description)';
         }
 
-        DB::table('transaction_journals')
-            ->where('id', '=', $journal['transaction_journal_id'])
-            ->update(['description' => $after])
-        ;
+        DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->update(['description' => $after]);
 
-        Log::debug(
-            sprintf(
-                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
-                $journal['transaction_journal_id'],
-                $journal['description'],
-                $after
-            )
-        );
+        Log::debug(sprintf(
+            'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
+            $journal['transaction_journal_id'],
+            $journal['description'],
+            $after
+        ));
         $object->refresh();
         event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
 

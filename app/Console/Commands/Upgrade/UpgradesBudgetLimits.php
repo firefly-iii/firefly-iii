@@ -28,10 +28,10 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Facades\Amount;
 
 class UpgradesBudgetLimits extends Command
 {
@@ -39,9 +39,9 @@ class UpgradesBudgetLimits extends Command
 
     public const string CONFIG_NAME = '480_bl_currency';
 
-    protected $description          = 'Give budget limits a currency';
+    protected $description = 'Give budget limits a currency';
 
-    protected $signature            = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:480-budget-limit-currencies {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -68,12 +68,15 @@ class UpgradesBudgetLimits extends Command
                     /** @var null|User $user */
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+                        $currency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
-                        $this->friendlyInfo(
-                            sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
-                        );
+                        $this->friendlyInfo(sprintf(
+                            'Budget limit #%d (part of budget "%s") now has a currency setting (%s).',
+                            $budgetLimit->id,
+                            $budget->name,
+                            $currency->name
+                        ));
                         ++$count;
                     }
                 }
@@ -88,8 +91,7 @@ class UpgradesBudgetLimits extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

@@ -46,15 +46,13 @@ class BillController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $user             = auth()->user();
-                $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $user = auth()->user();
+            $this->repository = app(BillRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -76,11 +74,11 @@ class BillController extends Controller
         }
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector        = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->setBills($bills);
 
-        $genericSet       = $collector->getExtractedJournals();
+        $genericSet = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             $billId       = (int) $journal['bill_id'];
             $currencyId   = (int) $journal['currency_id'];
@@ -97,9 +95,16 @@ class BillController extends Controller
             if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
-            Log::debug(sprintf('Journal #%d in bill #%d will use %s (%s %s)', $journal['transaction_group_id'], $billId, $field, $currencyCode, $journal[$field] ?? '0'));
+            Log::debug(sprintf(
+                'Journal #%d in bill #%d will use %s (%s %s)',
+                $journal['transaction_group_id'],
+                $billId,
+                $field,
+                $currencyCode,
+                $journal[$field] ?? '0'
+            ));
 
-            $key          = sprintf('%d-%d', $billId, $currencyId);
+            $key = sprintf('%d-%d', $billId, $currencyId);
 
             if (0 !== $currencyId) {
                 $response[$key] ??= [
@@ -108,9 +113,9 @@ class BillController extends Controller
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $currencyCode,
+                    'currency_code'    => $currencyCode
                 ];
-                $response[$key]['difference']       = bcadd($response[$key]['difference'], (string) ($journal[$field] ?? '0'));
+                $response[$key]['difference'] = bcadd($response[$key]['difference'], (string) ($journal[$field] ?? '0'));
                 $response[$key]['difference_float'] = (float) $response[$key]['difference']; // intentional float
             }
         }
@@ -131,11 +136,11 @@ class BillController extends Controller
         $response         = [];
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
-        $collector        = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setRange($start, $end)->setSourceAccounts($accounts);
         $collector->withoutBill();
 
-        $genericSet       = $collector->getExtractedJournals();
+        $genericSet = $collector->getExtractedJournals();
 
         foreach ($genericSet as $journal) {
             $currencyId   = (int) $journal['currency_id'];
@@ -159,9 +164,9 @@ class BillController extends Controller
                     'difference'       => '0',
                     'difference_float' => 0,
                     'currency_id'      => (string) $currencyId,
-                    'currency_code'    => $currencyCode,
+                    'currency_code'    => $currencyCode
                 ];
-                $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], (string) ($journal[$field] ?? '0'));
+                $response[$currencyId]['difference'] = bcadd($response[$currencyId]['difference'], (string) ($journal[$field] ?? '0'));
                 $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference']; // intentional float
             }
         }

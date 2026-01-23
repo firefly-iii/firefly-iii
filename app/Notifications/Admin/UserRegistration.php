@@ -43,15 +43,16 @@ class UserRegistration extends Notification
 {
     use Queueable;
 
-    public function __construct(private User $user) {}
+    public function __construct(
+        private User $user
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -65,9 +66,15 @@ class UserRegistration extends Notification
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
         return new MailMessage()
-            ->markdown('emails.registered-admin', ['email' => $this->user->email, 'id' => $this->user->id, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
-            ->subject((string) trans('email.registered_subject_admin'))
-        ;
+            ->markdown('emails.registered-admin', [
+                'email'     => $this->user->email,
+                'id'        => $this->user->id,
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time
+            ])
+            ->subject((string) trans('email.registered_subject_admin'));
     }
 
     //    /**
@@ -92,9 +99,10 @@ class UserRegistration extends Notification
     {
         Log::debug('Now in toPushover() for UserRegistration');
 
-        return PushoverMessage::create((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'invitee' => $this->user->email]))
-            ->title((string) trans('email.registered_subject_admin'))
-        ;
+        return PushoverMessage::create((string) trans('email.admin_new_user_registered', [
+            'email'   => $this->user->email,
+            'invitee' => $this->user->email
+        ]))->title((string) trans('email.registered_subject_admin'));
     }
 
     /**
@@ -102,7 +110,7 @@ class UserRegistration extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
-        return new SlackMessage()->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id' => $this->user->id]));
+        return new SlackMessage()->content((string) trans('email.admin_new_user_registered', ['email' => $this->user->email, 'id'    => $this->user->id]));
     }
 
     /**

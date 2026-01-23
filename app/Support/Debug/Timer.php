@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Log;
 
 class Timer
 {
-    private static ?Timer $instance = null;
-    private array         $times    = [];
+    private static null|Timer $instance = null;
+    private array $times = [];
 
     private function __construct()
     {

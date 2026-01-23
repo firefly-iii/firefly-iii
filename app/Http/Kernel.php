@@ -57,142 +57,119 @@ use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
  */
 class Kernel extends HttpKernel
 {
-    protected $middleware
-        = [
-            SecureHeaders::class,
-            CheckForMaintenanceMode::class,
-            ValidatePostSize::class,
-            TrimStrings::class,
-            ConvertEmptyStringsToNull::class,
-            TrustProxies::class,
-            InstallationId::class,
-        ];
-    protected $middlewareAliases
-        = [
-            'auth'       => Authenticate::class,
-            'auth.basic' => AuthenticateWithBasicAuth::class,
-            'bindings'   => Binder::class,
-            'can'        => Authorize::class,
-            'guest'      => RedirectIfAuthenticated::class,
-            'throttle'   => ThrottleRequests::class,
-        ];
-    protected $middlewareGroups
-        = [
-            // does not check login
-            // does not check 2fa
-            // does not check activation
-            'web'                   => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                AuthenticateSession::class,
-                CreateFreshApiToken::class,
-            ],
-
-            // only the basic variable binders.
-            'binders-only'          => [
-                Installer::class,
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                Binder::class,
-            ],
-
-            // MUST NOT be logged in. Does not care about 2FA or confirmation.
-            'user-not-logged-in'    => [
-                Installer::class,
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                Binder::class,
-                RedirectIfAuthenticated::class,
-            ],
-            // MUST be logged in.
-            // MUST NOT have 2FA
-            // don't care about confirmation:
-            'user-logged-in-no-2fa' => [
-                Installer::class,
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                Binder::class,
-                Authenticate::class,
-                // RedirectIfTwoFactorAuthenticated::class,
-            ],
-
-            // MUST be logged in
-            // don't care about 2fa
-            // don't care about confirmation.
-            'user-simple-auth'      => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                Binder::class,
-                Authenticate::class,
-            ],
-
-            // MUST be logged in
-            // MUST have 2fa
-            // MUST be confirmed.
-            // (this group includes the other Firefly III middleware)
-            'user-full-auth'        => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                Authenticate::class,
-                MFAMiddleware::class,
-                Range::class,
-                Binder::class,
-                InterestingMessage::class,
-                CreateFreshApiToken::class,
-            ],
-            // MUST be logged in
-            // MUST have 2fa
-            // MUST be confirmed.
-            // MUST have owner role
-            // (this group includes the other Firefly III middleware)
-            'admin'                 => [
-                EncryptCookies::class,
-                AddQueuedCookiesToResponse::class,
-                StartFireflySession::class,
-                ShareErrorsFromSession::class,
-                VerifyCsrfToken::class,
-                Authenticate::class,
-                // AuthenticateTwoFactor::class,
-                IsAdmin::class,
-                Range::class,
-                Binder::class,
-                CreateFreshApiToken::class,
-            ],
-
-            // full API authentication
-            'api'                   => [
-                AcceptHeaders::class,
-                EnsureFrontendRequestsAreStateful::class,
-                'auth:api,sanctum',
-                'bindings',
-            ],
-            // do only bindings, no auth
-            'api_basic'             => [
-                AcceptHeaders::class,
-                'bindings',
-            ],
-        ];
-    protected $middlewarePriority
-        = [
+    protected $middleware         = [
+        SecureHeaders::class,
+        CheckForMaintenanceMode::class,
+        ValidatePostSize::class,
+        TrimStrings::class,
+        ConvertEmptyStringsToNull::class,
+        TrustProxies::class,
+        InstallationId::class
+    ];
+    protected $middlewareAliases  = [
+        'auth'       => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'bindings'   => Binder::class,
+        'can'        => Authorize::class,
+        'guest'      => RedirectIfAuthenticated::class,
+        'throttle'   => ThrottleRequests::class
+    ];
+    protected $middlewareGroups   = [
+        // does not check login
+        // does not check 2fa
+        // does not check activation
+        'web'   => [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
             StartFireflySession::class,
             ShareErrorsFromSession::class,
-            Authenticate::class,
+            VerifyCsrfToken::class,
+            AuthenticateSession::class,
+            CreateFreshApiToken::class
+        ],
+
+        // only the basic variable binders.
+        'binders-only' => [Installer::class, EncryptCookies::class, AddQueuedCookiesToResponse::class, Binder::class],
+
+        // MUST NOT be logged in. Does not care about 2FA or confirmation.
+        'user-not-logged-in' => [
+            Installer::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
             Binder::class,
-            Authorize::class,
-        ];
+            RedirectIfAuthenticated::class
+        ],
+        // MUST be logged in.
+        // MUST NOT have 2FA
+        // don't care about confirmation:
+        'user-logged-in-no-2fa' => [
+            Installer::class,
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            Binder::class,
+            Authenticate::class
+            // RedirectIfTwoFactorAuthenticated::class,
+        ],
+
+        // MUST be logged in
+        // don't care about 2fa
+        // don't care about confirmation.
+        'user-simple-auth' => [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            Binder::class,
+            Authenticate::class
+        ],
+
+        // MUST be logged in
+        // MUST have 2fa
+        // MUST be confirmed.
+        // (this group includes the other Firefly III middleware)
+        'user-full-auth' => [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            Authenticate::class,
+            MFAMiddleware::class,
+            Range::class,
+            Binder::class,
+            InterestingMessage::class,
+            CreateFreshApiToken::class
+        ],
+        // MUST be logged in
+        // MUST have 2fa
+        // MUST be confirmed.
+        // MUST have owner role
+        // (this group includes the other Firefly III middleware)
+        'admin' => [
+            EncryptCookies::class,
+            AddQueuedCookiesToResponse::class,
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            VerifyCsrfToken::class,
+            Authenticate::class,
+            // AuthenticateTwoFactor::class,
+            IsAdmin::class,
+            Range::class,
+            Binder::class,
+            CreateFreshApiToken::class
+        ],
+
+        // full API authentication
+        'api' => [AcceptHeaders::class, EnsureFrontendRequestsAreStateful::class, 'auth:api,sanctum', 'bindings'],
+        // do only bindings, no auth
+        'api_basic' => [AcceptHeaders::class, 'bindings']
+    ];
+    protected $middlewarePriority = [StartFireflySession::class, ShareErrorsFromSession::class, Authenticate::class, Binder::class, Authorize::class];
 }

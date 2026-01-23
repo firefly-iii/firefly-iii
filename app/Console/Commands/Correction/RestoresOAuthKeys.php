@@ -73,7 +73,6 @@ class RestoresOAuthKeys extends Command
         if (!$this->keysInDatabase() && $this->keysOnDrive()) {
             $this->storeKeysInDB();
             $this->friendlyInfo('Stored OAuth keys in database.');
-
         }
     }
 

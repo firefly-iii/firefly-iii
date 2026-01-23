@@ -44,8 +44,8 @@ class CorrectsGroupAccounts extends Command
      */
     public function handle(): int
     {
-        $groups  = [];
-        $res     = TransactionJournal::groupBy('transaction_group_id')->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
+        $groups = [];
+        $res    = TransactionJournal::groupBy('transaction_group_id')->get(['transaction_group_id', DB::raw('COUNT(transaction_group_id) as the_count')]);
 
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {

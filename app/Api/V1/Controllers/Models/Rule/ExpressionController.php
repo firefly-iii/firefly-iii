@@ -41,8 +41,6 @@ class ExpressionController extends Controller
      */
     public function validateExpression(ValidateExpressionRequest $request): JsonResponse
     {
-        return response()->json([
-            'valid' => true,
-        ]);
+        return response()->json(['valid' => true]);
     }
 }

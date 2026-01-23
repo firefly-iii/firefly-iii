@@ -36,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -44,7 +45,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Override;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankRepository.
@@ -62,11 +62,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->delete()
-        ;
+            ->delete();
     }
 
-    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
+    public function findPiggyBank(null|int $piggyBankId, null|string $piggyBankName): null|PiggyBank
     {
         Log::debug('Searching for piggy information.');
 
@@ -91,48 +90,46 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         return null;
     }
 
-    public function find(int $piggyBankId): ?PiggyBank
+    public function find(int $piggyBankId): null|PiggyBank
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*'])
-        ;
+            ->where('piggy_banks.id', $piggyBankId)
+            ->first(['piggy_banks.*']);
     }
 
     /**
      * Find by name or return NULL.
      */
-    public function findByName(string $name): ?PiggyBank
+    public function findByName(string $name): null|PiggyBank
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.name', $name)->first(['piggy_banks.*'])
-        ;
+            ->where('piggy_banks.name', $name)
+            ->first(['piggy_banks.*']);
     }
 
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
-        $set  = $piggyBank->attachments()->get();
+        $set = $piggyBank->attachments()->get();
 
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null !== $notes ? $notes->text : '';
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+            $notes = $attachment->notes()->first();
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text = null !== $notes ? $notes->text : '';
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
     }
 
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    public function getCurrentPrimaryCurrencyAmount(PiggyBank $piggyBank, null|Account $account = null): string
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
@@ -161,15 +158,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     {
         Log::debug(sprintf('Now in getExactAmount(%d, %d)', $piggyBank->id, $journal->id));
 
-        $operator        = null;
-        $currency        = null;
+        $operator = null;
+        $currency = null;
 
         /** @var JournalRepositoryInterface $journalRepost */
-        $journalRepost   = app(JournalRepositoryInterface::class);
+        $journalRepost = app(JournalRepositoryInterface::class);
         $journalRepost->setUser($this->user);
 
         /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos    = app(AccountRepositoryInterface::class);
+        $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($this->user);
 
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
@@ -177,13 +174,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         Log::debug(sprintf('Piggy bank #%d currency is %s', $piggyBank->id, $piggyBank->transactionCurrency->code));
 
         /** @var Transaction $source */
-        $source          = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
+        $source = $journal->transactions()->with(['account'])->where('amount', '<', 0)->first();
 
         /** @var Transaction $destination */
-        $destination     = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
-        $hits            = 0;
+        $destination = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
+        $hits        = 0;
         foreach ($piggyBank->accounts as $account) {
-
             // matches source, which means amount will be removed from piggy:
             if ($account->id === $source->account_id) {
                 $operator = 'negative';
@@ -205,7 +201,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             return '0';
         }
 
-
         if (null === $operator || null === $currency) {
             Log::debug('Currency is NULL and operator is NULL, return "0".');
 
@@ -213,7 +208,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         }
         // currency of the account + the piggy bank currency are almost the same.
         // which amount from the transaction matches?
-        $amount          = null;
+        $amount = null;
         if ((int) $source->transaction_currency_id === $currency->id) {
             Log::debug('Use normal amount');
             $amount = Steam::{$operator}($source->amount); // @phpstan-ignore-line
@@ -229,9 +224,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         }
 
         Log::debug(sprintf('The currency is %s and the amount is %s', $currency->code, $amount));
-        $currentAmount   = $this->getCurrentAmount($piggyBank);
-        $room            = bcsub($piggyBank->target_amount, $currentAmount);
-        $compare         = bcmul($currentAmount, '-1');
+        $currentAmount = $this->getCurrentAmount($piggyBank);
+        $room          = bcsub($piggyBank->target_amount, $currentAmount);
+        $compare       = bcmul($currentAmount, '-1');
 
         if (0 === bccomp($piggyBank->target_amount, '0')) {
             // amount is zero? then the "room" is positive amount of we wish to add or remove.
@@ -266,7 +261,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     /**
      * Get current amount saved in piggy bank.
      */
-    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    public function getCurrentAmount(PiggyBank $piggyBank, null|Account $account = null): string
     {
         $sum = '0';
         foreach ($piggyBank->accounts as $current) {
@@ -303,7 +298,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         /** @var PiggyBank $piggy */
         foreach ($set as $piggy) {
             $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = sprintf('%s (%s)', $piggy->name, Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
+            $piggy->name = sprintf('%s (%s)', $piggy->name, Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
         }
 
         return $set;
@@ -311,9 +306,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
     public function getPiggyBanks(): Collection
     {
-        $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-        ;
+        $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')->leftJoin(
+            'accounts',
+            'accounts.id',
+            '=',
+            'account_piggy_bank.account_id'
+        );
         if (!$this->user instanceof User) {
             $query->where('accounts.user_group_id', $this->userGroup->id);
         }
@@ -322,16 +320,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         }
 
         return $query
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
-        ;
+            ->with(['objectGroups'])
+            ->orderBy('piggy_banks.order', 'ASC')
+            ->distinct()
+            ->get(['piggy_banks.*']);
     }
 
-    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
+    public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): null|PiggyBankRepetition
     {
         if (false === $overrule) {
             throw new FireflyException('[b] Piggy bank repetitions are EOL.');
@@ -404,19 +399,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->delete()
-        ;
+            ->with(['objectGroups'])
+            ->delete();
     }
 
     #[Override]
     public function resetOrder(): void
     {
-        $factory       = new PiggyBankFactory();
+        $factory = new PiggyBankFactory();
         $factory->user = $this->user;
         $factory->resetOrder();
     }
@@ -426,19 +416,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC')->distinct()
-        ;
+            ->with(['objectGroups'])
+            ->orderBy('piggy_banks.order', 'ASC')
+            ->orderBy('piggy_banks.name', 'ASC')
+            ->distinct();
         if ('' !== $query) {
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
         }
-        $search->orderBy('piggy_banks.order', 'ASC')
-            ->orderBy('piggy_banks.name', 'ASC')
-        ;
+        $search->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get(['piggy_banks.*']);
     }

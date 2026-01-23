@@ -52,16 +52,14 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-life-bouy');
-                app('view')->share('title', (string) trans('firefly.export_data_title'));
-                $this->journalRepository = app(JournalRepositoryInterface::class);
-                $this->middleware(IsDemoUser::class)->except(['index']);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-life-bouy');
+            app('view')->share('title', (string) trans('firefly.export_data_title'));
+            $this->journalRepository = app(JournalRepositoryInterface::class);
+            $this->middleware(IsDemoUser::class)->except(['index']);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -85,31 +83,30 @@ class IndexController extends Controller
         // get first transaction in DB:
         $firstDate = today(config('app.timezone'));
         $firstDate->subYear();
-        $journal   = $this->journalRepository->firstNull();
+        $journal = $this->journalRepository->firstNull();
         if ($journal instanceof TransactionJournal) {
             Log::debug('First journal is NULL, using today() - 1 year.');
             $firstDate = clone $journal->date;
         }
         $generator->setStart($firstDate);
-        $result    = $generator->export();
+        $result = $generator->export();
 
-        $name      = sprintf('%s_transaction_export.csv', Carbon::now()->format('Y_m_d'));
-        $quoted    = sprintf('"%s"', addcslashes($name, '"\\'));
+        $name   = sprintf('%s_transaction_export.csv', Carbon::now()->format('Y_m_d'));
+        $quoted = sprintf('"%s"', addcslashes($name, '"\\'));
 
         // headers for CSV file.
         /** @var LaravelResponse $response */
-        $response  = response($result['transactions']);
+        $response = response($result['transactions']);
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'text/x-csv')
-            ->header('Content-Disposition', 'attachment; filename='.$quoted)
+            ->header('Content-Disposition', 'attachment; filename=' . $quoted)
             // ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen((string) $result['transactions']))
-        ;
+            ->header('Content-Length', (string) strlen((string) $result['transactions']));
 
         // return CSV file made from 'transactions' array.
         return $response;

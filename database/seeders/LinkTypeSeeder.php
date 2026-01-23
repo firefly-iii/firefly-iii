@@ -35,30 +35,10 @@ class LinkTypeSeeder extends Seeder
     public function run(): void
     {
         $types = [
-            [
-                'name'     => 'Related',
-                'inward'   => 'relates to',
-                'outward'  => 'relates to',
-                'editable' => false,
-            ],
-            [
-                'name'     => 'Refund',
-                'inward'   => 'is (partially) refunded by',
-                'outward'  => '(partially) refunds',
-                'editable' => false,
-            ],
-            [
-                'name'     => 'Paid',
-                'inward'   => 'is (partially) paid for by',
-                'outward'  => '(partially) pays for',
-                'editable' => false,
-            ],
-            [
-                'name'     => 'Reimbursement',
-                'inward'   => 'is (partially) reimbursed by',
-                'outward'  => '(partially) reimburses',
-                'editable' => false,
-            ],
+            ['name'     => 'Related', 'inward'   => 'relates to', 'outward'  => 'relates to', 'editable' => false],
+            ['name'     => 'Refund', 'inward'   => 'is (partially) refunded by', 'outward'  => '(partially) refunds', 'editable' => false],
+            ['name'     => 'Paid', 'inward'   => 'is (partially) paid for by', 'outward'  => '(partially) pays for', 'editable' => false],
+            ['name'     => 'Reimbursement', 'inward'   => 'is (partially) reimbursed by', 'outward'  => '(partially) reimburses', 'editable' => false]
         ];
         foreach ($types as $type) {
             if (null === LinkType::where('name', $type['name'])->first()) {

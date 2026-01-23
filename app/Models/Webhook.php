@@ -46,15 +46,14 @@ class Webhook extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'active'        => 'boolean',
-            'trigger'       => 'integer',
-            'response'      => 'integer',
-            'delivery'      => 'integer',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
+    protected $casts    = [
+        'active'        => 'boolean',
+        'trigger'       => 'integer',
+        'response'      => 'integer',
+        'delivery'      => 'integer',
+        'user_id'       => 'integer',
+        'user_group_id' => 'integer'
+    ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveries(): array
@@ -73,7 +72,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookDeliveryEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name]  = $item->value;
+            $array[$item->name] = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -96,7 +95,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookResponseEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name]  = $item->value;
+            $array[$item->name] = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -119,7 +118,7 @@ class Webhook extends Model
         $array = [];
         $set   = WebhookTriggerEnum::cases();
         foreach ($set as $item) {
-            $array[$item->name]  = $item->value;
+            $array[$item->name] = $item->value;
             $array[$item->value] = $item->value;
         }
 
@@ -134,13 +133,13 @@ class Webhook extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $webhookId = (int)$value;
+            $webhookId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Webhook $webhook */
-            $webhook   = $user->webhooks()->find($webhookId);
+            $webhook = $user->webhooks()->find($webhookId);
             if (null !== $webhook) {
                 return $webhook;
             }

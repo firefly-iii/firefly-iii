@@ -52,5 +52,4 @@ class SendsUserNewPassword
             Log::error($e->getTraceAsString());
         }
     }
-
 }

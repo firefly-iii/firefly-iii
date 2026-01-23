@@ -76,7 +76,7 @@ class UpgradesDatabase extends Command
             'upgrade:620-piggy-banks',
             'upgrade:620-pc-amounts',
             'upgrade:640-upgrade-webhooks',
-            'firefly-iii:correct-database',
+            'firefly-iii:correct-database'
         ];
         $args     = [];
         if ($this->option('force')) {
@@ -94,7 +94,7 @@ class UpgradesDatabase extends Command
 
     private function callInitialCommands(): void
     {
-        $this->call('migrate', ['--seed' => true, '--force' => true, '--no-interaction' => true]);
+        $this->call('migrate', ['--seed'           => true, '--force'          => true, '--no-interaction' => true]);
         $this->call('upgrade:600-pgsql-sequences');
         $this->call('upgrade:480-decrypt-all');
     }

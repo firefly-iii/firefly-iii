@@ -43,20 +43,19 @@ class Transaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                      = [
-            'account_id',
-            'transaction_journal_id',
-            'description',
-            'amount',
-            'native_amount',
-            'native_foreign_amount',
-            'identifier',
-            'transaction_currency_id',
-            'foreign_currency_id',
-            'foreign_amount',
-            'reconciled',
-        ];
+    protected $fillable = [
+        'account_id',
+        'transaction_journal_id',
+        'description',
+        'amount',
+        'native_amount',
+        'native_foreign_amount',
+        'identifier',
+        'transaction_currency_id',
+        'foreign_currency_id',
+        'foreign_amount',
+        'reconciled'
+    ];
 
     protected $hidden = ['encrypted'];
 
@@ -97,7 +96,7 @@ class Transaction extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string)$value;
+        $this->attributes['amount'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -112,9 +111,7 @@ class Transaction extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     /**
@@ -150,16 +147,12 @@ class Transaction extends Model
      */
     protected function amount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     protected function balanceDirty(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): bool => 1 === (int)$value,
-        );
+        return Attribute::make(get: static fn($value): bool => 1 === (int) $value);
     }
 
     /**
@@ -177,11 +170,11 @@ class Transaction extends Model
     protected function casts(): array
     {
         return [
-            'created_at'            => 'datetime',
-            'updated_at'            => 'datetime',
-            'deleted_at'            => 'datetime',
-            'identifier'            => 'int',
-            'encrypted'             => 'boolean', // model does not have these fields though
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
+            'identifier' => 'int',
+            'encrypted'  => 'boolean', // model does not have these fields though
             'bill_name_encrypted'   => 'boolean',
             'reconciled'            => 'boolean',
             'balance_dirty'         => 'boolean',
@@ -191,7 +184,7 @@ class Transaction extends Model
             'amount'                => 'string',
             'foreign_amount'        => 'string',
             'native_amount'         => 'string',
-            'native_foreign_amount' => 'string',
+            'native_foreign_amount' => 'string'
         ];
     }
 
@@ -200,16 +193,12 @@ class Transaction extends Model
      */
     protected function foreignAmount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     protected function transactionJournalId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     #[Scope]

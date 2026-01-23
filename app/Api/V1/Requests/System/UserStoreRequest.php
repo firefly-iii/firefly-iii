@@ -59,7 +59,7 @@ class UserStoreRequest extends FormRequest
             'email'        => $this->convertString('email'),
             'blocked'      => $blocked,
             'blocked_code' => $this->convertString('blocked_code'),
-            'role'         => $this->convertString('role'),
+            'role'         => $this->convertString('role')
         ];
     }
 
@@ -72,7 +72,7 @@ class UserStoreRequest extends FormRequest
             'email'        => 'required|email|unique:users,email',
             'blocked'      => [new IsBoolean()],
             'blocked_code' => 'in:email_changed',
-            'role'         => 'in:owner,demo',
+            'role'         => 'in:owner,demo'
         ];
     }
 }

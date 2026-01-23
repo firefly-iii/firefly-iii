@@ -50,14 +50,13 @@ class AboutController extends Controller
         $phpVersion    = str_replace($search, $replace, PHP_VERSION);
         $phpOs         = str_replace($search, $replace, PHP_OS);
         $currentDriver = DB::getDriverName();
-        $data
-                       = [
-                           'version'     => config('firefly.version'),
-                           'api_version' => config('firefly.version'),
-                           'php_version' => $phpVersion,
-                           'os'          => $phpOs,
-                           'driver'      => $currentDriver,
-                       ];
+        $data          = [
+            'version'     => config('firefly.version'),
+            'api_version' => config('firefly.version'),
+            'php_version' => $phpVersion,
+            'os'          => $phpOs,
+            'driver'      => $currentDriver
+        ];
 
         return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
@@ -70,13 +69,13 @@ class AboutController extends Controller
      */
     public function user(): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var UserTransformer $transformer */
         $transformer = app(UserTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item(auth()->user(), $transformer, 'users');
+        $resource = new Item(auth()->user(), $transformer, 'users');
 
         return response()->api($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

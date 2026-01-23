@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
-use Throwable;
-use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class CurrencyForm
@@ -47,7 +47,7 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    public function amount(string $name, $value = null, ?array $options = null): string
+    public function amount(string $name, $value = null, null|array $options = null): string
     {
         return $this->currencyField($name, 'amount', $value, $options);
     }
@@ -59,7 +59,7 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    public function balanceAll(string $name, $value = null, ?array $options = null): string
+    public function balanceAll(string $name, $value = null, null|array $options = null): string
     {
         return $this->allCurrencyField($name, 'balance', $value, $options);
     }
@@ -69,18 +69,18 @@ class CurrencyForm
      *
      * @param mixed $value
      */
-    public function currencyList(string $name, $value = null, ?array $options = null): string
+    public function currencyList(string $name, $value = null, null|array $options = null): string
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         // get all currencies:
-        $list          = $currencyRepos->get();
-        $array         = [];
+        $list  = $currencyRepos->get();
+        $array = [];
 
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
 
         return $this->select($name, $array, $value, $options);
@@ -91,20 +91,18 @@ class CurrencyForm
      *
      * @param mixed $value
      */
-    public function currencyListEmpty(string $name, $value = null, ?array $options = null): string
+    public function currencyListEmpty(string $name, $value = null, null|array $options = null): string
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         // get all currencies:
-        $list          = $currencyRepos->get();
-        $array         = [
-            0 => (string)trans('firefly.no_currency'),
-        ];
+        $list  = $currencyRepos->get();
+        $array = [0 => (string) trans('firefly.no_currency')];
 
         /** @var TransactionCurrency $currency */
         foreach ($list as $currency) {
-            $array[$currency->id] = $currency->name.' ('.$currency->symbol.')';
+            $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
 
         return $this->select($name, $array, $value, $options);
@@ -117,26 +115,26 @@ class CurrencyForm
      *
      * @throws FireflyException
      */
-    protected function allCurrencyField(string $name, string $view, $value = null, ?array $options = null): string
+    protected function allCurrencyField(string $name, string $view, $value = null, null|array $options = null): string
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $primaryCurrency = $options['currency'] ?? Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = Amount::getAllCurrencies();
+        $currencies = Amount::getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled       = session('preFilled');
+        $preFilled = session('preFilled');
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $primaryCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -156,7 +154,15 @@ class CurrencyForm
         }
 
         try {
-            $html = view('form.'.$view, ['primaryCurrency' => $primaryCurrency, 'currencies' => $currencies, 'classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.' . $view, [
+                'primaryCurrency' => $primaryCurrency,
+                'currencies'      => $currencies,
+                'classes'         => $classes,
+                'name'            => $name,
+                'label'           => $label,
+                'value'           => $value,
+                'options'         => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';
@@ -170,25 +176,25 @@ class CurrencyForm
     /**
      * @throws FireflyException
      */
-    protected function currencyField(string $name, string $view, mixed $value = null, ?array $options = null): string
+    protected function currencyField(string $name, string $view, mixed $value = null, null|array $options = null): string
     {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
+        $label   = $this->label($name, $options);
+        $options = $this->expandOptionArray($name, $label, $options);
+        $classes = $this->getHolderClasses($name);
+        $value   = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         $primaryCurrency = $options['currency'] ?? Amount::getPrimaryCurrency();
 
         /** @var Collection $currencies */
-        $currencies      = Amount::getCurrencies();
+        $currencies = Amount::getCurrencies();
         unset($options['currency'], $options['placeholder']);
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled       = session('preFilled');
+        $preFilled = session('preFilled');
         if (!is_array($preFilled)) {
             $preFilled = [];
         }
-        $key             = 'amount_currency_id_'.$name;
-        $sentCurrencyId  = array_key_exists($key, $preFilled) ? (int)$preFilled[$key] : $primaryCurrency->id;
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = array_key_exists($key, $preFilled) ? (int) $preFilled[$key] : $primaryCurrency->id;
 
         Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
 
@@ -208,7 +214,15 @@ class CurrencyForm
         }
 
         try {
-            $html = view('form.'.$view, ['primaryCurrency' => $primaryCurrency, 'currencies' => $currencies, 'classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.' . $view, [
+                'primaryCurrency' => $primaryCurrency,
+                'currencies'      => $currencies,
+                'classes'         => $classes,
+                'name'            => $name,
+                'label'           => $label,
+                'value'           => $value,
+                'options'         => $options
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
             $html = 'Could not render currencyField.';

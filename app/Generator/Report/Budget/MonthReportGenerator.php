@@ -29,8 +29,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Support\Collection;
-use Throwable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -40,9 +40,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
     private Collection $budgets;
-    private Carbon     $end;
-    private array      $expenses = [];
-    private Carbon     $start;
+    private Carbon $end;
+    private array $expenses = [];
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -55,15 +55,12 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $budgetIds  = implode(',', $this->budgets->pluck('id')->toArray());
 
         try {
-            $result = view(
-                'reports.budget.month',
-                ['accountIds' => $accountIds, 'budgetIds' => $budgetIds]
-            )
-                ->with('start', $this->start)->with('end', $this->end)
+            $result = view('reports.budget.month', ['accountIds' => $accountIds, 'budgetIds'  => $budgetIds])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
-                ->render()
-            ;
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -131,15 +128,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector      = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts($this->accounts)
+            ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->withAccountInformation()
             ->withBudgetInformation()
-            ->setBudgets($this->budgets)
-        ;
+            ->setBudgets($this->budgets);
 
-        $journals       = $collector->getExtractedJournals();
+        $journals = $collector->getExtractedJournals();
         $this->expenses = $journals;
 
         return $journals;

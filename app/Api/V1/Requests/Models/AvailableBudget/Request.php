@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\AvailableBudget;
 
-use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -51,7 +51,7 @@ class Request extends FormRequest
             'currency_code' => ['currency_code', 'convertString'],
             'amount'        => ['amount', 'convertString'],
             'start'         => ['start', 'date'],
-            'end'           => ['end', 'date'],
+            'end'           => ['end', 'date']
         ];
 
         return $this->getAllData($fields);
@@ -67,7 +67,7 @@ class Request extends FormRequest
             'currency_code' => 'min:3|max:51|exists:transaction_currencies,code',
             'amount'        => ['nullable', new IsValidPositiveAmount()],
             'start'         => 'date|after:1970-01-02|before:2038-01-17',
-            'end'           => 'date|after:1970-01-02|before:2038-01-17',
+            'end'           => 'date|after:1970-01-02|before:2038-01-17'
         ];
     }
 
@@ -76,19 +76,17 @@ class Request extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            static function (Validator $validator): void {
-                // validate start before end only if both are there.
-                $data = $validator->getData();
-                if (array_key_exists('start', $data) && array_key_exists('end', $data)) {
-                    $start = new Carbon($data['start']);
-                    $end   = new Carbon($data['end']);
-                    if ($end->isBefore($start)) {
-                        $validator->errors()->add('end', (string) trans('validation.date_after'));
-                    }
+        $validator->after(static function (Validator $validator): void {
+            // validate start before end only if both are there.
+            $data = $validator->getData();
+            if (array_key_exists('start', $data) && array_key_exists('end', $data)) {
+                $start = new Carbon($data['start']);
+                $end   = new Carbon($data['end']);
+                if ($end->isBefore($start)) {
+                    $validator->errors()->add('end', (string) trans('validation.date_after'));
                 }
             }
-        );
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

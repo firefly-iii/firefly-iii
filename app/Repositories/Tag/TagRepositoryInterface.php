@@ -60,11 +60,11 @@ interface TagRepositoryInterface
 
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array;
 
-    public function find(int $tagId): ?Tag;
+    public function find(int $tagId): null|Tag;
 
-    public function findByTag(string $tag): ?Tag;
+    public function findByTag(string $tag): null|Tag;
 
-    public function firstUseDate(Tag $tag): ?Carbon;
+    public function firstUseDate(Tag $tag): null|Carbon;
 
     /**
      * This method returns all the user's tags.
@@ -76,23 +76,23 @@ interface TagRepositoryInterface
     /**
      * Return location, or NULL.
      */
-    public function getLocation(Tag $tag): ?Location;
+    public function getLocation(Tag $tag): null|Location;
 
-    public function getTagsInYear(?int $year): array;
+    public function getTagsInYear(null|int $year): array;
 
     public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): array;
 
-    public function lastUseDate(Tag $tag): ?Carbon;
+    public function lastUseDate(Tag $tag): null|Carbon;
 
     /**
      * Will return the newest tag (if known) or NULL.
      */
-    public function newestTag(): ?Tag;
+    public function newestTag(): null|Tag;
 
     /**
      * Will return the newest tag (if known) or NULL.
      */
-    public function oldestTag(): ?Tag;
+    public function oldestTag(): null|Tag;
 
     /**
      * Find one or more tags based on the query.
@@ -112,7 +112,7 @@ interface TagRepositoryInterface
     /**
      * Calculates various amounts in tag.
      */
-    public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array;
+    public function sumsOfTag(Tag $tag, null|Carbon $start, null|Carbon $end): array;
 
     /**
      * Find one or more tags that start with the string in the query

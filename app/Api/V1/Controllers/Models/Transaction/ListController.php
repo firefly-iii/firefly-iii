@@ -52,17 +52,15 @@ class ListController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $admin */
-                $admin                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $admin */
+            $admin = auth()->user();
 
-                $this->journalAPIRepository = app(JournalAPIRepositoryInterface::class);
-                $this->journalAPIRepository->setUser($admin);
+            $this->journalAPIRepository = app(JournalAPIRepositoryInterface::class);
+            $this->journalAPIRepository->setUser($admin);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -71,9 +69,9 @@ class ListController extends Controller
      */
     public function attachments(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager     = $this->getManager();
-        $pageSize    = $this->parameters->get('limit');
-        $collection  = new Collection();
+        $manager    = $this->getManager();
+        $pageSize   = $this->parameters->get('limit');
+        $collection = new Collection();
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getAttachments($transactionJournal)->merge($collection);
         }
@@ -82,14 +80,14 @@ class ListController extends Controller
         $attachments = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transactions.attachments', [$transactionGroup->id]).$this->buildParams());
+        $paginator = new LengthAwarePaginator($attachments, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.transactions.attachments', [$transactionGroup->id]) . $this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
         $transformer = app(AttachmentTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -101,31 +99,31 @@ class ListController extends Controller
      */
     public function piggyBankEvents(TransactionGroup $transactionGroup): JsonResponse
     {
-        $manager     = $this->getManager();
-        $collection  = new Collection();
-        $pageSize    = $this->parameters->get('limit');
+        $manager    = $this->getManager();
+        $collection = new Collection();
+        $pageSize   = $this->parameters->get('limit');
         foreach ($transactionGroup->transactionJournals as $transactionJournal) {
             $collection = $this->journalAPIRepository->getPiggyBankEvents($transactionJournal)->merge($collection);
         }
-        $count       = $collection->count();
-        $events      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $count  = $collection->count();
+        $events = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new PiggyBankEventEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new PiggyBankEventEnrichment();
         $enrichment->setUser($admin);
-        $events      = $enrichment->enrich($events);
+        $events = $enrichment->enrich($events);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transactions.piggy-bank-events', [$transactionGroup->id]).$this->buildParams());
+        $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.transactions.piggy-bank-events', [$transactionGroup->id]) . $this->buildParams());
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($events, $transformer, 'piggy_bank_events');
+        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
         //        /** @var PiggyBankEventTransformer $transformer */
         //        $transformer = app(PiggyBankEventTransformer::class);
@@ -149,14 +147,14 @@ class ListController extends Controller
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator    = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.transaction-journals.transaction-links', [$transactionJournal->id]).$this->buildParams());
+        $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.transaction-journals.transaction-links', [$transactionJournal->id]) . $this->buildParams());
 
         /** @var TransactionLinkTransformer $transformer */
-        $transformer  = app(TransactionLinkTransformer::class);
+        $transformer = app(TransactionLinkTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource     = new FractalCollection($journalLinks, $transformer, 'transaction_links');
+        $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

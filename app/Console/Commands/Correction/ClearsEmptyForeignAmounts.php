@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * ClearsEmptyForeignAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -36,7 +37,7 @@ class ClearsEmptyForeignAmounts extends Command
      *
      * @var string
      */
-    protected $signature   = 'correction:clears-empty-foreign-amounts';
+    protected $signature = 'correction:clears-empty-foreign-amounts';
 
     /**
      * The console command description.

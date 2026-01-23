@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CategoryEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -38,18 +37,18 @@ use Illuminate\Support\Facades\Log;
 class CategoryEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array      $earned      = [];
-    private ?Carbon    $end         = null;
-    private array      $ids         = [];
-    private array      $notes       = [];
-    private array      $pcEarned    = [];
-    private array      $pcSpent     = [];
-    private array      $pcTransfers = [];
-    private array      $spent       = [];
-    private ?Carbon    $start       = null;
-    private array      $transfers   = [];
-    private User       $user;
-    private UserGroup  $userGroup;
+    private array   $earned      = [];
+    private null|Carbon $end         = null;
+    private array   $ids         = [];
+    private array   $notes       = [];
+    private array   $pcEarned    = [];
+    private array   $pcSpent     = [];
+    private array   $pcTransfers = [];
+    private array   $spent       = [];
+    private null|Carbon $start       = null;
+    private array   $transfers   = [];
+    private User $user;
+    private UserGroup $userGroup;
 
     public function enrich(Collection $collection): Collection
     {
@@ -71,12 +70,12 @@ class CategoryEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    public function setEnd(?Carbon $end): void
+    public function setEnd(null|Carbon $end): void
     {
         $this->end = $end;
     }
 
-    public function setStart(?Carbon $start): void
+    public function setStart(null|Carbon $start): void
     {
         $this->start = $start;
     }
@@ -95,15 +94,15 @@ class CategoryEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Category $item): Category {
-            $id         = (int)$item->id;
-            $meta       = [
+            $id   = (int) $item->id;
+            $meta = [
                 'notes'        => $this->notes[$id] ?? null,
                 'spent'        => $this->spent[$id] ?? null,
                 'pc_spent'     => $this->pcSpent[$id] ?? null,
                 'earned'       => $this->earned[$id] ?? null,
                 'pc_earned'    => $this->pcEarned[$id] ?? null,
                 'transfers'    => $this->transfers[$id] ?? null,
-                'pc_transfers' => $this->pcTransfers[$id] ?? null,
+                'pc_transfers' => $this->pcTransfers[$id] ?? null
             ];
             $item->meta = $meta;
 
@@ -115,20 +114,22 @@ class CategoryEnrichment implements EnrichmentInterface
     {
         /** @var Category $category */
         foreach ($this->collection as $category) {
-            $this->ids[] = (int)$category->id;
+            $this->ids[] = (int) $category->id;
         }
         $this->ids = array_unique($this->ids);
     }
 
     private function collectNotes(): void
     {
-        $notes = Note::query()->whereIn('noteable_id', $this->ids)
+        $notes = Note::query()
+            ->whereIn('noteable_id', $this->ids)
             ->whereNotNull('notes.text')
             ->where('notes.text', '!=', '')
-            ->where('noteable_type', Category::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
-        ;
+            ->where('noteable_type', Category::class)
+            ->get(['notes.noteable_id', 'notes.text'])
+            ->toArray();
         foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
         Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
@@ -140,16 +141,16 @@ class CategoryEnrichment implements EnrichmentInterface
             $opsRepository = app(OperationsRepositoryInterface::class);
             $opsRepository->setUser($this->user);
             $opsRepository->setUserGroup($this->userGroup);
-            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
-            $income        = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
-            $transfers     = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
+            $expenses  = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
+            $income    = $opsRepository->collectIncome($this->start, $this->end, null, $this->collection);
+            $transfers = $opsRepository->collectTransfers($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
-                $id                     = (int)$item->id;
-                $this->spent[$id]       = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative'));
-                $this->pcSpent[$id]     = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative', true));
-                $this->earned[$id]      = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive'));
-                $this->pcEarned[$id]    = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive', true));
-                $this->transfers[$id]   = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive'));
+                $id = (int) $item->id;
+                $this->spent[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative'));
+                $this->pcSpent[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($expenses, $item, 'negative', true));
+                $this->earned[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive'));
+                $this->pcEarned[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($income, $item, 'positive', true));
+                $this->transfers[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive'));
                 $this->pcTransfers[$id] = array_values($opsRepository->sumCollectedTransactionsByCategory($transfers, $item, 'positive', true));
             }
         }

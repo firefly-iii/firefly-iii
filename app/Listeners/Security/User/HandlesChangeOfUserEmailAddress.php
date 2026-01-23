@@ -41,7 +41,6 @@ class HandlesChangeOfUserEmailAddress
         $this->sendEmailChangeUndoMail($event);
     }
 
-
     /**
      * Send email to confirm email change. Will not be made into a notification, because
      * this requires some custom fields from the user and not just the "user" object.
@@ -78,7 +77,7 @@ class HandlesChangeOfUserEmailAddress
         $oldEmail = $event->oldEmail;
         $user     = $event->user;
         $token    = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
+        $hashed   = hash('sha256', sprintf('%s%s', (string) config('app.key'), $oldEmail));
         $url      = route('profile.undo-email-change', [$token->data, $hashed]);
 
         try {
@@ -90,5 +89,4 @@ class HandlesChangeOfUserEmailAddress
             throw new FireflyException($e->getMessage(), 0, $e);
         }
     }
-
 }

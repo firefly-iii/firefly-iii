@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IntroController.
@@ -39,10 +39,10 @@ class IntroController extends Controller
     /**
      * Returns the introduction wizard for a page.
      */
-    public function getIntroSteps(string $route, ?string $specificPage = null): JsonResponse
+    public function getIntroSteps(string $route, null|string $specificPage = null): JsonResponse
     {
         Log::debug(sprintf('getIntroSteps for route "%s" and page "%s"', $route, $specificPage));
-        $specificPage ??= '';
+        $specificPage  ??= '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
         if (0 === count($specificSteps)) {
@@ -56,8 +56,8 @@ class IntroController extends Controller
             // remove last step:
             array_pop($steps);
             // merge arrays and add last step again
-            $steps    = array_merge($steps, $specificSteps);
-            $steps[]  = $lastStep;
+            $steps = array_merge($steps, $specificSteps);
+            $steps[] = $lastStep;
         }
         if (!$this->hasOutroStep($route)) {
             $steps = array_merge($steps, $specificSteps);
@@ -78,7 +78,7 @@ class IntroController extends Controller
             return false;
         }
 
-        $hasStep  = array_key_exists('outro', $elements);
+        $hasStep = array_key_exists('outro', $elements);
 
         Log::debug('Elements is array', $elements);
         Log::debug('Keys is', array_keys($elements));
@@ -90,11 +90,11 @@ class IntroController extends Controller
     /**
      * Enable the boxes for a specific page again.
      */
-    public function postEnable(string $route, ?string $specialPage = null): JsonResponse
+    public function postEnable(string $route, null|string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
-        $route = str_replace('.', '_', $route);
-        $key   = sprintf('shown_demo_%s', $route);
+        $route       = str_replace('.', '_', $route);
+        $key         = sprintf('shown_demo_%s', $route);
         if ('' !== $specialPage) {
             $key = sprintf('%s_%s', $key, $specialPage);
         }
@@ -108,10 +108,10 @@ class IntroController extends Controller
     /**
      * Set that you saw them.
      */
-    public function postFinished(string $route, ?string $specialPage = null): JsonResponse
+    public function postFinished(string $route, null|string $specialPage = null): JsonResponse
     {
         $specialPage ??= '';
-        $key = sprintf('shown_demo_%s', $route);
+        $key         = sprintf('shown_demo_%s', $route);
         if ('' !== $specialPage) {
             $key = sprintf('%s_%s', $key, $specialPage);
         }

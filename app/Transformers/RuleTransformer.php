@@ -69,12 +69,7 @@ class RuleTransformer extends AbstractTransformer
             'trigger'          => $this->getRuleTrigger($rule),
             'triggers'         => $this->triggers($rule),
             'actions'          => $this->actions($rule),
-            'links'            => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/rules/'.$rule->id,
-                ],
-            ],
+            'links'            => [['rel' => 'self', 'uri' => '/rules/' . $rule->id]]
         ];
     }
 
@@ -123,7 +118,7 @@ class RuleTransformer extends AbstractTransformer
                 $triggerValue = 'true';
             }
 
-            $result[]     = [
+            $result[] = [
                 'id'              => (string) $ruleTrigger->id,
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
                 'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
@@ -132,7 +127,7 @@ class RuleTransformer extends AbstractTransformer
                 'prohibited'      => $prohibited,
                 'order'           => $ruleTrigger->order,
                 'active'          => $ruleTrigger->active,
-                'stop_processing' => $ruleTrigger->stop_processing,
+                'stop_processing' => $ruleTrigger->stop_processing
             ];
         }
 
@@ -154,7 +149,7 @@ class RuleTransformer extends AbstractTransformer
                 'value'           => $ruleAction->action_value,
                 'order'           => $ruleAction->order,
                 'active'          => $ruleAction->active,
-                'stop_processing' => $ruleAction->stop_processing,
+                'stop_processing' => $ruleAction->stop_processing
             ];
         }
 

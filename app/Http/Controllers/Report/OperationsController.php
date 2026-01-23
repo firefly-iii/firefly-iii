@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -48,13 +48,11 @@ class OperationsController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                $this->tasker = app(AccountTaskerInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->tasker = app(AccountTaskerInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -67,7 +65,7 @@ class OperationsController extends Controller
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('expense-report');
@@ -79,7 +77,7 @@ class OperationsController extends Controller
         $type   = 'expense-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type'   => $type])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -101,7 +99,7 @@ class OperationsController extends Controller
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
         // chart properties for cache:
-        $cache  = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('income-report');
@@ -113,7 +111,7 @@ class OperationsController extends Controller
         $type   = 'income-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type'   => $type])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -137,7 +135,7 @@ class OperationsController extends Controller
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
         // chart properties for cache:
-        $cache    = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('inc-exp-report');
@@ -153,7 +151,7 @@ class OperationsController extends Controller
 
         /** @var int $currencyId */
         foreach ($keys as $currencyId) {
-            $currencyInfo             = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
+            $currencyInfo = $incomes['sums'][$currencyId] ?? $expenses['sums'][$currencyId];
             $sums[$currencyId] ??= [
                 'currency_id'             => $currencyId,
                 'currency_name'           => $currencyInfo['currency_name'],
@@ -162,7 +160,7 @@ class OperationsController extends Controller
                 'currency_decimal_places' => $currencyInfo['currency_decimal_places'],
                 'in'                      => $incomes['sums'][$currencyId]['sum'] ?? '0',
                 'out'                     => $expenses['sums'][$currencyId]['sum'] ?? '0',
-                'sum'                     => '0',
+                'sum'                     => '0'
             ];
             $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['in'], $sums[$currencyId]['out']);
         }

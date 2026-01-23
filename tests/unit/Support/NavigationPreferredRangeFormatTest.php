@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -51,8 +51,11 @@ final class NavigationPreferredRangeFormatTest extends TestCase
     }
 
     #[DataProvider('providePeriods')]
-    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
+    public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(
+        Carbon $start,
+        Carbon $end,
+        string $expected
+    ): void {
         $formatPeriod = $this->navigation->preferredRangeFormat($start, $end);
         $this->assertSame($expected, $formatPeriod);
     }

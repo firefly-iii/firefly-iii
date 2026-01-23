@@ -27,8 +27,8 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
-use Throwable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -36,9 +36,9 @@ use Illuminate\Support\Facades\Log;
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
-    private Carbon     $end;
+    private Carbon $end;
     private Collection $expense;
-    private Carbon     $start;
+    private Carbon $start;
 
     /**
      * Generate the report.
@@ -53,11 +53,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $preferredPeriod = $this->preferredPeriod();
 
         try {
-            $result = view('reports.double.report', ['accountIds' => $accountIds, 'reportType' => $reportType, 'doubleIds' => $doubleIds, 'preferredPeriod' => $preferredPeriod])
-                ->with('start', $this->start)->with('end', $this->end)
+            $result = view('reports.double.report', [
+                'accountIds'      => $accountIds,
+                'reportType'      => $reportType,
+                'doubleIds'       => $doubleIds,
+                'preferredPeriod' => $preferredPeriod
+            ])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
                 ->with('doubles', $this->expense)
-                ->render()
-            ;
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.double.report: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

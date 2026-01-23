@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -65,15 +65,13 @@ class ShowController extends Controller
 
         app('view')->share('showBudget', true);
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->repository = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->repository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -81,13 +79,13 @@ class ShowController extends Controller
      */
     public function rescan(Request $request, Bill $bill): Redirector|RedirectResponse
     {
-        $total      = 0;
+        $total = 0;
         if (false === $bill->active) {
             $request->session()->flash('warning', (string) trans('firefly.cannot_scan_inactive_bill'));
 
             return redirect(route('bills.show', [$bill->id]));
         }
-        $set        = $this->repository->getRulesForBill($bill);
+        $set = $this->repository->getRulesForBill($bill);
         if (0 === $set->count()) {
             $request->session()->flash('error', (string) trans('firefly.no_rules_for_bill'));
 
@@ -123,71 +121,77 @@ class ShowController extends Controller
     {
         $this->repository->correctTransfers();
         // add info about rules:
-        $rules                      = $this->repository->getRulesForBill($bill);
-        $subTitle                   = $bill->name;
+        $rules    = $this->repository->getRulesForBill($bill);
+        $subTitle = $bill->name;
 
         /** @var Carbon $start */
-        $start                      = session('start');
+        $start = session('start');
 
         /** @var Carbon $end */
-        $end                        = session('end');
-        $year                       = $start->year;
-        $page                       = (int) $request->get('page');
-        $pageSize                   = (int) Preferences::get('listPageSize', 50)->data;
-        $yearAverage                = $this->repository->getYearAverage($bill, $start);
-        $overallAverage             = $this->repository->getOverallAverage($bill);
-        $manager                    = new Manager();
+        $end            = session('end');
+        $year           = $start->year;
+        $page           = (int) $request->get('page');
+        $pageSize       = (int) Preferences::get('listPageSize', 50)->data;
+        $yearAverage    = $this->repository->getYearAverage($bill, $start);
+        $overallAverage = $this->repository->getOverallAverage($bill);
+        $manager        = new Manager();
         $manager->setSerializer(new DataArraySerializer());
         $manager->parseIncludes(['attachments', 'notes']);
 
         // add another period to end, could fix 8163
-        $range                      = Navigation::getViewRange(true);
-        $end                        = Navigation::addPeriod($end, $range);
+        $range = Navigation::getViewRange(true);
+        $end   = Navigation::addPeriod($end, $range);
 
         // Make a resource out of the data and
-        $parameters                 = new ParameterBag();
+        $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
 
         // enrich
         /** @var User $admin */
-        $admin                      = auth()->user();
-        $enrichment                 = new SubscriptionEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
 
         /** @var Bill $bill */
-        $bill                       = $enrichment->enrichSingle($bill);
+        $bill = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */
-        $transformer                = app(BillTransformer::class);
+        $transformer = app(BillTransformer::class);
         $transformer->setParameters($parameters);
 
-        $resource                   = new Item($bill, $transformer, 'bill');
-        $object                     = $manager->createData($resource)->toArray();
+        $resource = new Item($bill, $transformer, 'bill');
+        $object   = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
         /** @var GroupCollectorInterface $collector */
-        $collector                  = app(GroupCollectorInterface::class);
-        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-            ->withCategoryInformation()->withAccountInformation()
-        ;
-        $groups                     = $collector->getPaginatedGroups();
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
-        $collection                 = $this->repository->getAttachments($bill);
-        $attachments                = new Collection();
+        $collection  = $this->repository->getAttachments($bill);
+        $attachments = new Collection();
 
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
-            $attachments = $collection->each(
-                $transformer->transform(...)
-            );
+            $attachments = $collection->each($transformer->transform(...));
         }
 
-        return view('bills.show', ['attachments' => $attachments, 'groups' => $groups, 'rules' => $rules, 'yearAverage' => $yearAverage, 'overallAverage' => $overallAverage, 'year' => $year, 'object' => $object, 'bill' => $bill, 'subTitle' => $subTitle]);
+        return view('bills.show', [
+            'attachments'    => $attachments,
+            'groups'         => $groups,
+            'rules'          => $rules,
+            'yearAverage'    => $yearAverage,
+            'overallAverage' => $overallAverage,
+            'year'           => $year,
+            'object'         => $object,
+            'bill'           => $bill,
+            'subTitle'       => $subTitle
+        ]);
     }
 }

@@ -31,6 +31,7 @@ use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -42,7 +43,6 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ShowController
@@ -50,19 +50,18 @@ use FireflyIII\Support\Facades\FireflyConfig;
 class ShowController extends Controller
 {
     public const string RESOURCE_KEY = 'webhooks';
+
     private WebhookRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(WebhookRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -80,28 +79,28 @@ class ShowController extends Controller
         }
 
         Log::channel('audit')->info('User views all webhooks.');
-        $manager     = $this->getManager();
-        $collection  = $this->repository->all();
-        $pageSize    = $this->parameters->get('limit');
-        $count       = $collection->count();
-        $webhooks    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $manager    = $this->getManager();
+        $collection = $this->repository->all();
+        $pageSize   = $this->parameters->get('limit');
+        $count      = $collection->count();
+        $webhooks   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.webhooks.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($webhooks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.webhooks.index') . $this->buildParams());
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new WebhookEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new WebhookEnrichment();
         $enrichment->setUser($admin);
-        $webhooks    = $enrichment->enrich($webhooks);
+        $webhooks = $enrichment->enrich($webhooks);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($webhooks, $transformer, self::RESOURCE_KEY);
+        $resource = new FractalCollection($webhooks, $transformer, self::RESOURCE_KEY);
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -122,19 +121,19 @@ class ShowController extends Controller
         }
 
         Log::channel('audit')->info(sprintf('User views webhook #%d.', $webhook->id));
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new WebhookEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new WebhookEnrichment();
         $enrichment->setUser($admin);
-        $webhook     = $enrichment->enrichSingle($webhook);
+        $webhook = $enrichment->enrichSingle($webhook);
 
         /** @var WebhookTransformer $transformer */
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource    = new Item($webhook, $transformer, self::RESOURCE_KEY);
+        $resource = new Item($webhook, $transformer, self::RESOURCE_KEY);
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -148,14 +147,17 @@ class ShowController extends Controller
     public function triggerTransaction(Webhook $webhook, TransactionGroup $group): JsonResponse
     {
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
-            Log::channel('audit')->info(sprintf('User tries to trigger webhook #%d on transaction group #%d, but webhooks are DISABLED.', $webhook->id, $group->id));
+            Log::channel('audit')->info(sprintf(
+                'User tries to trigger webhook #%d on transaction group #%d, but webhooks are DISABLED.',
+                $webhook->id,
+                $group->id
+            ));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
         Log::debug(sprintf('Now in triggerTransaction(%d, %d)', $webhook->id, $group->id));
         Log::channel('audit')->info(sprintf('User triggers webhook #%d on transaction group #%d.', $webhook->id, $group->id));
-
 
         /** @var \FireflyIII\Models\WebhookTrigger $trigger */
         foreach ($webhook->webhookTriggers as $trigger) {
@@ -164,7 +166,7 @@ class ShowController extends Controller
             $engine->setUser(auth()->user());
 
             // tell the generator which trigger it should look for
-            $engine->setTrigger(WebhookTrigger::tryFrom((int)$trigger->key));
+            $engine->setTrigger(WebhookTrigger::tryFrom((int) $trigger->key));
             // tell the generator which objects to process
             $engine->setObjects(new Collection()->push($group));
             // set the webhook to trigger
@@ -172,7 +174,6 @@ class ShowController extends Controller
             // tell the generator to generate the messages
             $engine->generateMessages();
         }
-
 
         // trigger event to send them:
         Log::debug('send event RequestedSendWebhookMessages from ShowController::triggerTransaction()');

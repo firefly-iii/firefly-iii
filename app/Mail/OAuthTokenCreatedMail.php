@@ -40,7 +40,9 @@ class OAuthTokenCreatedMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(public Client $client) {}
+    public function __construct(
+        public Client $client
+    ) {}
 
     /**
      * Build the message.
@@ -49,9 +51,6 @@ class OAuthTokenCreatedMail extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.oauth-client-created')
-            ->subject((string) trans('email.oauth_created_subject'))
-        ;
+        return $this->markdown('emails.oauth-client-created')->subject((string) trans('email.oauth_created_subject'));
     }
 }

@@ -41,7 +41,9 @@ class AccountServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     /**
      * Register the application services.
@@ -58,33 +60,29 @@ class AccountServiceProvider extends ServiceProvider
      */
     private function registerRepository(): void
     {
-        $this->app->bind(
-            static function (Application $app): AccountRepositoryInterface {
-                /** @var AccountRepositoryInterface $repository */
-                $repository = app(AccountRepository::class);
+        $this->app->bind(static function (Application $app): AccountRepositoryInterface {
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepository::class);
 
-                // phpstan thinks auth does not exist.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+            // phpstan thinks auth does not exist.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
 
-        $this->app->bind(
-            static function (Application $app): OperationsRepositoryInterface {
-                /** @var OperationsRepository $repository */
-                $repository = app(OperationsRepository::class);
+            return $repository;
+        });
 
-                // phpstan thinks auth does not exist.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
+        $this->app->bind(static function (Application $app): OperationsRepositoryInterface {
+            /** @var OperationsRepository $repository */
+            $repository = app(OperationsRepository::class);
 
-                return $repository;
+            // phpstan thinks auth does not exist.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 
     /**
@@ -92,18 +90,16 @@ class AccountServiceProvider extends ServiceProvider
      */
     private function registerTasker(): void
     {
-        $this->app->bind(
-            static function (Application $app): AccountTaskerInterface {
-                /** @var AccountTaskerInterface $tasker */
-                $tasker = app(AccountTasker::class);
+        $this->app->bind(static function (Application $app): AccountTaskerInterface {
+            /** @var AccountTaskerInterface $tasker */
+            $tasker = app(AccountTasker::class);
 
-                // phpstan thinks auth does not exist.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $tasker->setUser(auth()->user());
-                }
-
-                return $tasker;
+            // phpstan thinks auth does not exist.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $tasker->setUser(auth()->user());
             }
-        );
+
+            return $tasker;
+        });
     }
 }

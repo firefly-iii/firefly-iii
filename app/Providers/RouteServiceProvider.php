@@ -32,8 +32,9 @@ use Override;
  */
 class RouteServiceProvider extends ServiceProvider
 {
-    public const string   HOME = '/';
-    protected $namespace       = '';
+    public const string HOME = '/';
+
+    protected $namespace = '';
 
     /**
      * Define the routes for the application.
@@ -45,19 +46,14 @@ class RouteServiceProvider extends ServiceProvider
             Route::prefix('api')
                 ->middleware('api')
                 ->namespace($this->namespace)
-                ->group(base_path('routes/api.php'))
-            ;
+                ->group(base_path('routes/api.php'));
 
             Route::prefix('api/v1/cron')
                 ->middleware('api_basic')
                 ->namespace($this->namespace)
-                ->group(base_path('routes/api-noauth.php'))
-            ;
+                ->group(base_path('routes/api-noauth.php'));
 
-            Route::middleware('web')
-                ->namespace($this->namespace)
-                ->group(base_path('routes/web.php'))
-            ;
+            Route::middleware('web')->namespace($this->namespace)->group(base_path('routes/web.php'));
         });
     }
 }

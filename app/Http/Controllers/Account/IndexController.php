@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Contracts\View\Factory;
@@ -55,16 +55,14 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -87,41 +85,42 @@ class IndexController extends Controller
         unset($collection);
 
         /** @var Carbon $start */
-        $start        = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end          = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $ids          = $accounts->pluck('id')->toArray();
+        $ids = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('inactive start: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        [
-            $startBalances,
-            $endBalances,
-        ]             = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
-        $activities   = Steam::getLastActivities($ids);
+        [$startBalances, $endBalances] = Steam::accountsBalancesInRange($accounts, $start, $end, $this->primaryCurrency, $this->convertToPrimary);
+        $activities = Steam::getLastActivities($ids);
 
-
-        $accounts->each(
-            function (Account $account) use ($activities, $startBalances, $endBalances): void {
-                $currency                   = $this->repository->getAccountCurrency($account);
-                $account->lastActivityDate  = $this->isInArrayDate($activities, $account->id);
-                $account->startBalances     = Steam::filterAccountBalance($startBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
-                $account->endBalances       = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
-                $account->differences       = $this->subtract($account->startBalances, $account->endBalances);
-                $account->interest          = Steam::bcround($this->repository->getMetaValue($account, 'interest'), 4);
-                $account->interestPeriod    = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
-                $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
-                $account->current_debt      = '0';
-                $account->currency          = $currency ?? $this->primaryCurrency;
-                $account->iban              = implode(' ', str_split((string) $account->iban, 4));
-            }
-        );
+        $accounts->each(function (Account $account) use ($activities, $startBalances, $endBalances): void {
+            $currency = $this->repository->getAccountCurrency($account);
+            $account->lastActivityDate = $this->isInArrayDate($activities, $account->id);
+            $account->startBalances = Steam::filterAccountBalance($startBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
+            $account->endBalances = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
+            $account->differences = $this->subtract($account->startBalances, $account->endBalances);
+            $account->interest = Steam::bcround($this->repository->getMetaValue($account, 'interest'), 4);
+            $account->interestPeriod = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+            $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+            $account->current_debt = '0';
+            $account->currency = $currency ?? $this->primaryCurrency;
+            $account->iban = implode(' ', str_split((string) $account->iban, 4));
+        });
 
         // make paginator:
-        $accounts     = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.inactive.index', [$objectType]));
 
-        return view('accounts.index', ['objectType' => $objectType, 'inactivePage' => $inactivePage, 'subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle, 'page' => $page, 'accounts' => $accounts]);
+        return view('accounts.index', [
+            'objectType'   => $objectType,
+            'inactivePage' => $inactivePage,
+            'subTitleIcon' => $subTitleIcon,
+            'subTitle'     => $subTitle,
+            'page'         => $page,
+            'accounts'     => $accounts
+        ]);
     }
 
     private function subtract(array $startBalances, array $endBalances): array
@@ -145,9 +144,9 @@ class IndexController extends Controller
     public function index(Request $request, string $objectType): Factory|\Illuminate\Contracts\View\View
     {
         Log::debug(sprintf('Now at %s', __METHOD__));
-        $subTitle      = (string) trans(sprintf('firefly.%s_accounts', $objectType));
-        $subTitleIcon  = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
-        $types         = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
+        $subTitle     = (string) trans(sprintf('firefly.%s_accounts', $objectType));
+        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $types        = config(sprintf('firefly.accountTypesByIdentifier.%s', $objectType));
 
         $this->repository->resetAccountOrder();
 
@@ -163,57 +162,56 @@ class IndexController extends Controller
         unset($collection);
 
         /** @var Carbon $start */
-        $start         = clone session('start', today(config('app.timezone'))->startOfMonth());
+        $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end           = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $now           = now();
+        $now = now();
         if ($now->gt($end) || $now->lt($start)) {
             $now = $end;
         }
 
-        $ids           = $accounts->pluck('id')->toArray();
+        $ids = $accounts->pluck('id')->toArray();
         Log::debug(sprintf('index: accountsBalancesInRange("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        [
-            $startBalances,
-            $endBalances,
-        ]              = Steam::accountsBalancesInRange($accounts, $start, $now, $this->primaryCurrency, $this->convertToPrimary);
-        $activities    = Steam::getLastActivities($ids);
+        [$startBalances, $endBalances] = Steam::accountsBalancesInRange($accounts, $start, $now, $this->primaryCurrency, $this->convertToPrimary);
+        $activities = Steam::getLastActivities($ids);
 
+        $accounts->each(function (Account $account) use ($activities, $startBalances, $endBalances): void {
+            $interest = (string) $this->repository->getMetaValue($account, 'interest');
+            $interest = '' === $interest ? '0' : $interest;
+            $currency = $this->repository->getAccountCurrency($account);
 
-        $accounts->each(
-            function (Account $account) use ($activities, $startBalances, $endBalances): void {
-                $interest                     = (string) $this->repository->getMetaValue($account, 'interest');
-                $interest                     = '' === $interest ? '0' : $interest;
-                $currency                     = $this->repository->getAccountCurrency($account);
-
-                $account->startBalances       = Steam::filterAccountBalance($startBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
-                $account->endBalances         = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
-                $account->differences         = $this->subtract($account->startBalances, $account->endBalances);
-                $account->lastActivityDate    = $this->isInArrayDate($activities, $account->id);
-                $account->interest            = Steam::bcround($interest, 4);
-                $account->interestPeriod      = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
-                $account->accountTypeString   = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
-                $account->location            = $this->repository->getLocation($account);
-                $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
-                $account->current_debt        = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
-                $account->currency            = $currency ?? $this->primaryCurrency;
-                $account->iban                = implode(' ', str_split((string) $account->iban, 4));
-
-
-            }
-        );
+            $account->startBalances = Steam::filterAccountBalance($startBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
+            $account->endBalances = Steam::filterAccountBalance($endBalances[$account->id] ?? [], $account, $this->convertToPrimary, $currency);
+            $account->differences = $this->subtract($account->startBalances, $account->endBalances);
+            $account->lastActivityDate = $this->isInArrayDate($activities, $account->id);
+            $account->interest = Steam::bcround($interest, 4);
+            $account->interestPeriod = (string) trans(sprintf('firefly.interest_calc_%s', $this->repository->getMetaValue($account, 'interest_period')));
+            $account->accountTypeString = (string) trans(sprintf('firefly.account_type_%s', $account->accountType->type));
+            $account->location = $this->repository->getLocation($account);
+            $account->liability_direction = $this->repository->getMetaValue($account, 'liability_direction');
+            $account->current_debt = $this->repository->getMetaValue($account, 'current_debt') ?? '-';
+            $account->currency = $currency ?? $this->primaryCurrency;
+            $account->iban = implode(' ', str_split((string) $account->iban, 4));
+        });
         // make paginator:
         Log::debug(sprintf('Count of accounts before LAP: %d', $accounts->count()));
 
         /** @var LengthAwarePaginator $accounts */
-        $accounts      = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
+        $accounts = new LengthAwarePaginator($accounts, $total, $pageSize, $page);
         $accounts->setPath(route('accounts.index', [$objectType]));
 
         Log::debug(sprintf('Count of accounts after LAP (1): %d', $accounts->count()));
         Log::debug(sprintf('Count of accounts after LAP (2): %d', $accounts->getCollection()->count()));
 
-        return view('accounts.index', ['objectType' => $objectType, 'inactiveCount' => $inactiveCount, 'subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle, 'page' => $page, 'accounts' => $accounts]);
+        return view('accounts.index', [
+            'objectType'    => $objectType,
+            'inactiveCount' => $inactiveCount,
+            'subTitleIcon'  => $subTitleIcon,
+            'subTitle'      => $subTitle,
+            'page'          => $page,
+            'accounts'      => $accounts
+        ]);
     }
 }

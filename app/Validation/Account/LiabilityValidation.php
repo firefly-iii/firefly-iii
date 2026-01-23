@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait LiabilityValidation
@@ -78,7 +78,7 @@ trait LiabilityValidation
         Log::debug('Now in validateLCSource', $array);
         // if the array has an ID and ID is not null, try to find it and check type.
         // this account must be a liability
-        $accountId   = $array['id'] ?? null;
+        $accountId = $array['id'] ?? null;
         if (null !== $accountId) {
             Log::debug('Source ID is not null, assume were looking for a liability.');
             // find liability credit:
@@ -97,7 +97,7 @@ trait LiabilityValidation
         // if array has name and is not null, return true.
         $accountName = $array['name'] ?? null;
 
-        $result      = true;
+        $result = true;
         if ('' === $accountName || null === $accountName) {
             Log::error('Array must have a name, is not the case, return false.');
             $result = false;
@@ -105,8 +105,8 @@ trait LiabilityValidation
         if ($result) {
             Log::error('Array has a name, return true.');
             // set the source to be a (dummy) revenue account.
-            $account              = new Account();
-            $accountType          = AccountType::whereType(AccountTypeEnum::LIABILITY_CREDIT->value)->first();
+            $account     = new Account();
+            $accountType = AccountType::whereType(AccountTypeEnum::LIABILITY_CREDIT->value)->first();
             $account->accountType = $accountType;
             $this->setSource($account);
         }

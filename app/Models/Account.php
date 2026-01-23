@@ -50,9 +50,9 @@ class Account extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable              = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
+    protected $fillable = ['user_id', 'user_group_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban', 'native_virtual_balance'];
 
-    protected $hidden                = ['encrypted'];
+    protected $hidden = ['encrypted'];
     private bool $joinedAccountTypes = false;
 
     /**
@@ -63,13 +63,13 @@ class Account extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $accountId = (int)$value;
+            $accountId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Account $account */
-            $account   = $user->accounts()->with(['accountType'])->find($accountId);
+            $account = $user->accounts()->with(['accountType'])->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -126,7 +126,7 @@ class Account extends Model
 
     public function setVirtualBalanceAttribute(mixed $value): void
     {
-        $value                               = (string)$value;
+        $value = (string) $value;
         if ('' === $value) {
             $value = null;
         }
@@ -145,9 +145,7 @@ class Account extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     /**
@@ -157,10 +155,7 @@ class Account extends Model
     {
         return Attribute::make(get: function () {
             /** @var null|AccountMeta $metaValue */
-            $metaValue = $this->accountMeta()
-                ->where('name', 'account_number')
-                ->first()
-            ;
+            $metaValue = $this->accountMeta()->where('name', 'account_number')->first();
 
             return null !== $metaValue ? $metaValue->data : '';
         });
@@ -176,9 +171,7 @@ class Account extends Model
      */
     protected function accountTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     #[Scope]
@@ -202,7 +195,7 @@ class Account extends Model
             'active'                 => 'boolean',
             'encrypted'              => 'boolean',
             'virtual_balance'        => 'string',
-            'native_virtual_balance' => 'string',
+            'native_virtual_balance' => 'string'
         ];
     }
 
@@ -220,16 +213,12 @@ class Account extends Model
 
     protected function iban(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
-        );
+        return Attribute::make(get: static fn($value): null|string => null === $value ? null : trim(str_replace(' ', '', (string) $value)));
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     /**
@@ -237,15 +226,11 @@ class Account extends Model
      */
     protected function virtualBalance(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     public function primaryPeriodStatistics(): MorphMany
     {
-
         return $this->morphMany(PeriodStatistic::class, 'primary_statable');
-
     }
 }

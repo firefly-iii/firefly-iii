@@ -36,8 +36,8 @@ trait ValidatesAutoBudgetRequest
      */
     protected function validateAutoBudgetAmount(Validator $validator): void
     {
-        $data         = $validator->getData();
-        $type         = $data['auto_budget_type'] ?? '';
+        $data = $validator->getData();
+        $type = $data['auto_budget_type'] ?? '';
 
         /** @var null|float|int|string $amount */
         $amount       = $data['auto_budget_amount'] ?? null;

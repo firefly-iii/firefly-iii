@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * TriggeredStoredTransactionGroup.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -31,13 +32,16 @@ use Illuminate\Queue\SerializesModels;
 class TriggeredStoredTransactionGroup extends Event
 {
     use SerializesModels;
-    public ?RuleGroup $ruleGroup = null;
+
+    public null|RuleGroup $ruleGroup = null;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, ?RuleGroup $ruleGroup = null)
-    {
+    public function __construct(
+        public TransactionGroup $transactionGroup,
+        null|RuleGroup $ruleGroup = null
+    ) {
         $this->ruleGroup = $ruleGroup;
     }
 }

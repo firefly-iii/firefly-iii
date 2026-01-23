@@ -44,7 +44,7 @@ use Illuminate\View\View;
 class CreateController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
-    protected UserRepositoryInterface     $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
@@ -53,16 +53,14 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.currencies'));
-                app('view')->share('mainTitleIcon', 'fa-usd');
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.currencies'));
+            app('view')->share('mainTitleIcon', 'fa-usd');
+            $this->repository = app(CurrencyRepositoryInterface::class);
+            $this->userRepository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,7 +71,7 @@ class CreateController extends Controller
     public function create(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
-        $user         = auth()->user();
+        $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
 
@@ -91,7 +89,7 @@ class CreateController extends Controller
 
         Log::channel('audit')->info('Create new currency.');
 
-        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
+        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
     }
 
     /**
@@ -102,10 +100,10 @@ class CreateController extends Controller
     public function store(CurrencyFormRequest $request)
     {
         /** @var User $user */
-        $user            = auth()->user();
-        $data            = $request->getCurrencyData();
+        $user = auth()->user();
+        $data = $request->getCurrencyData();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            Log::error('User '.auth()->user()->id.' is not admin, but tried to store a currency.');
+            Log::error('User ' . auth()->user()->id . ' is not admin, but tried to store a currency.');
             Log::channel('audit')->warning('Tried to create (POST) currency without admin rights.', $data);
 
             return redirect($this->getPreviousUrl('currencies.create.url'))->withInput();
@@ -121,7 +119,7 @@ class CreateController extends Controller
             $request->session()->flash('error', (string) trans('firefly.could_not_store_currency'));
             $currency = null;
         }
-        $redirect        = redirect($this->getPreviousUrl('currencies.create.url'));
+        $redirect = redirect($this->getPreviousUrl('currencies.create.url'));
 
         if ($currency instanceof TransactionCurrency) {
             $request->session()->flash('success', (string) trans('firefly.created_currency', ['name' => $currency->name]));

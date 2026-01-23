@@ -47,14 +47,12 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.system_settings'));
-                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.system_settings'));
+            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
@@ -74,16 +72,23 @@ class UpdateController extends Controller
         $options         = [
             -1 => (string) trans('firefly.updates_ask_me_later'),
             0  => (string) trans('firefly.updates_do_not_check'),
-            1  => (string) trans('firefly.updates_enable_check'),
+            1  => (string) trans('firefly.updates_enable_check')
         ];
 
-        $channelOptions  = [
+        $channelOptions = [
             'stable' => (string) trans('firefly.update_channel_stable'),
             'beta'   => (string) trans('firefly.update_channel_beta'),
-            'alpha'  => (string) trans('firefly.update_channel_alpha'),
+            'alpha'  => (string) trans('firefly.update_channel_alpha')
         ];
 
-        return view('settings.update.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'selected' => $selected, 'options' => $options, 'channelSelected' => $channelSelected, 'channelOptions' => $channelOptions]);
+        return view('settings.update.index', [
+            'subTitle'        => $subTitle,
+            'subTitleIcon'    => $subTitleIcon,
+            'selected'        => $selected,
+            'options'         => $options,
+            'channelSelected' => $channelSelected,
+            'channelOptions'  => $channelOptions
+        ]);
     }
 
     /**

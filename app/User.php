@@ -251,21 +251,20 @@ class User extends Authenticatable
         Log::debug(sprintf('in hasAnyRoleInGroup(%s)', implode(', ', $roles)));
 
         /** @var Collection $dbRoles */
-        $dbRoles          = UserRole::whereIn('title', $roles)->get();
+        $dbRoles = UserRole::whereIn('title', $roles)->get();
         if (0 === $dbRoles->count()) {
             Log::error(sprintf('Could not find role(s): %s. Probably migration mishap.', implode(', ', $roles)));
 
             return false;
         }
-        $dbRolesIds       = $dbRoles->pluck('id')->toArray();
-        $dbRolesTitles    = $dbRoles->pluck('title')->toArray();
+        $dbRolesIds    = $dbRoles->pluck('id')->toArray();
+        $dbRolesTitles = $dbRoles->pluck('title')->toArray();
 
         $groupMemberships = $this
             ->groupMemberships()
             ->whereIn('user_role_id', $dbRolesIds)
             ->where('user_group_id', $userGroup->id)
-            ->get()
-        ;
+            ->get();
         if (0 === $groupMemberships->count()) {
             Log::error(sprintf(
                 'User #%d "%s" does not have roles %s in user group #%d "%s"',
@@ -360,13 +359,13 @@ class User extends Authenticatable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor'.Str::studly($driver);
+        $method = 'routeNotificationFor' . Str::studly($driver);
         if (method_exists($this, $method)) {
             return $this->{$method}($notification); // @phpstan-ignore-line
         }
-        $email  = $this->email;
+        $email = $this->email;
         // see if user has alternative email address:
-        $pref   = Preferences::getForUser($this, 'remote_guard_alt_email');
+        $pref = Preferences::getForUser($this, 'remote_guard_alt_email');
         if (null !== $pref) {
             $email = $pref->data;
         }
@@ -376,7 +375,7 @@ class User extends Authenticatable
         }
 
         return match ($driver) {
-            'mail'  => $email,
+            'mail' => $email,
             default => null
         };
     }
@@ -408,14 +407,14 @@ class User extends Authenticatable
     /**
      * Route notifications for the Slack channel.
      */
-    public function routeNotificationForSlack(Notification $notification): ?string
+    public function routeNotificationForSlack(Notification $notification): null|string
     {
         // this check does not validate if the user is owner, Should be done by notification itself.
-        $res  = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
+        $res = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;
         if (is_array($res)) {
             $res = '';
         }
-        $res  = (string) $res;
+        $res = (string) $res;
 
         if (property_exists($notification, 'type') && 'owner' === $notification->type) {
             return $res;

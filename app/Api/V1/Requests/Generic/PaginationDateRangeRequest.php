@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * PaginationDateRangeRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -39,7 +40,7 @@ class PaginationDateRangeRequest extends AggregateFormRequest
         return [
             DateRangeRequest::class,
             [ObjectTypeApiRequest::class, 'object_type' => Transaction::class],
-            [PaginationRequest::class, 'sort_class' => Transaction::class],
+            [PaginationRequest::class, 'sort_class' => Transaction::class]
         ];
     }
 }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * BasicRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -31,9 +32,6 @@ class BasicRequest extends AggregateFormRequest
 {
     protected function getRequests(): array
     {
-        return [
-            [DateRangeRequest::class, 'required'],
-            CurrencyCodeRequest::class,
-        ];
+        return [[DateRangeRequest::class, 'required'], CurrencyCodeRequest::class];
     }
 }

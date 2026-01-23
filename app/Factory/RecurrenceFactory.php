@@ -42,7 +42,7 @@ class RecurrenceFactory
     use TransactionTypeTrait;
 
     private MessageBag $errors;
-    private User       $user;
+    private User $user;
 
     /**
      * Constructor.
@@ -100,22 +100,20 @@ class RecurrenceFactory
         }
         $repeatUntilString = $repeatUntil?->format('Y-m-d');
 
-        $recurrence        = new Recurrence(
-            [
-                'user_id'                => $this->user->id,
-                'user_group_id'          => $this->user->user_group_id,
-                'transaction_type_id'    => $type->id,
-                'title'                  => $title,
-                'description'            => $description,
-                'first_date'             => $firstDate?->format('Y-m-d'),
-                'first_date_tz'          => $firstDate?->format('e'),
-                'repeat_until'           => $repetitions > 0 ? null : $repeatUntilString,
-                'latest_date'            => null,
-                'repetitions'            => $repetitions,
-                'apply_rules'            => $applyRules,
-                'active'                 => $active,
-            ]
-        );
+        $recurrence = new Recurrence([
+            'user_id'             => $this->user->id,
+            'user_group_id'       => $this->user->user_group_id,
+            'transaction_type_id' => $type->id,
+            'title'               => $title,
+            'description'         => $description,
+            'first_date'          => $firstDate?->format('Y-m-d'),
+            'first_date_tz'       => $firstDate?->format('e'),
+            'repeat_until'        => $repetitions > 0 ? null : $repeatUntilString,
+            'latest_date'         => null,
+            'repetitions'         => $repetitions,
+            'apply_rules'         => $applyRules,
+            'active'              => $active
+        ]);
         $recurrence->save();
 
         if (array_key_exists('notes', $data['recurrence'])) {

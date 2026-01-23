@@ -53,15 +53,13 @@ class ExecutionController extends Controller
     {
         parent::__construct();
         $this->repository = app(AccountRepositoryInterface::class);
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,8 +71,8 @@ class ExecutionController extends Controller
     {
         Log::debug(sprintf('You have selected rule group #%d', $ruleGroup->id));
         // Get parameters specified by the user
-        $accounts  = $request->get('accounts');
-        $set       = new Collection();
+        $accounts = $request->get('accounts');
+        $set      = new Collection();
         if (is_array($accounts)) {
             $set = $this->repository->getAccountsById($accounts);
         }
@@ -94,8 +92,8 @@ class ExecutionController extends Controller
             $endDate = new Carbon($request->get('end'));
             $collector->setEnd($endDate);
         }
-        $final     = $collector->getGroups();
-        $ids       = $final->pluck('id')->toArray();
+        $final = $collector->getGroups();
+        $ids   = $final->pluck('id')->toArray();
         Log::debug(sprintf('Found %d groups collected from %d account(s)', $final->count(), $set->count()));
         foreach (array_chunk($ids, 1337) as $setOfIds) {
             Log::debug(sprintf('Now processing %d groups', count($setOfIds)));
@@ -109,7 +107,7 @@ class ExecutionController extends Controller
         }
 
         // Tell the user that the job is queued
-        session()->flash('success', (string)trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
+        session()->flash('success', (string) trans('firefly.applied_rule_group_selection', ['title' => $ruleGroup->title]));
 
         return redirect()->route('rules.index');
     }
@@ -121,8 +119,8 @@ class ExecutionController extends Controller
      */
     public function selectTransactions(RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
+        $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
+        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
     }
 }

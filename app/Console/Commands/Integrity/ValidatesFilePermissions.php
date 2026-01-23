@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * ValidatesFilePermissions.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -35,7 +36,7 @@ class ValidatesFilePermissions extends Command
      *
      * @var string
      */
-    protected $signature   = 'integrity:file-permissions';
+    protected $signature = 'integrity:file-permissions';
 
     /**
      * The console command description.

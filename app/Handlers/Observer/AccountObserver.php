@@ -55,18 +55,23 @@ class AccountObserver
         $userCurrency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         $repository   = app(AccountRepositoryInterface::class);
         $currency     = $repository->getAccountCurrency($account);
-        if (null !== $currency && $currency->id !== $userCurrency->id && '' !== (string) $account->virtual_balance && 0 !== bccomp($account->virtual_balance, '0')) {
-            $converter                       = new ExchangeRateConverter();
+        if (
+            null !== $currency
+            && $currency->id !== $userCurrency->id
+            && '' !== (string) $account->virtual_balance
+            && 0 !== bccomp($account->virtual_balance, '0')
+        ) {
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($account->user->userGroup);
             $converter->setIgnoreSettings(true);
             $account->native_virtual_balance = $converter->convert($currency, $userCurrency, today(), $account->virtual_balance);
-
         }
-        if ('' === (string) $account->virtual_balance || (0 === bccomp($account->virtual_balance, '0'))) {
-            $account->virtual_balance        = null;
+        if ('' === (string) $account->virtual_balance || 0 === bccomp($account->virtual_balance, '0')) {
+            $account->virtual_balance = null;
             $account->native_virtual_balance = null;
         }
         $account->saveQuietly();
+
         // Log::debug('Account primary currency virtual balance is updated.');
     }
 
@@ -87,8 +92,14 @@ class AccountObserver
             $repository->destroy($attachment);
         }
 
-        $journalIds = Transaction::where('account_id', $account->id)->get(['transactions.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $groupIds   = TransactionJournal::whereIn('id', $journalIds)->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray(); // @phpstan-ignore-line
+        $journalIds = Transaction::where('account_id', $account->id)
+            ->get(['transactions.transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray();
+        $groupIds   = TransactionJournal::whereIn('id', $journalIds)
+            ->get(['transaction_journals.transaction_group_id'])
+            ->pluck('transaction_group_id')
+            ->toArray(); // @phpstan-ignore-line
 
         if (count($journalIds) > 0) {
             Transaction::whereIn('transaction_journal_id', $journalIds)->delete();

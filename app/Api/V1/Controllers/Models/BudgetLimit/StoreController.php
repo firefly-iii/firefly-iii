@@ -47,16 +47,14 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user               = auth()->user();
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->blRepository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->blRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -67,27 +65,27 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request, Budget $budget): JsonResponse
     {
-        $data               = $request->getAll();
+        $data = $request->getAll();
         $data['start_date'] = $data['start'];
-        $data['end_date']   = $data['end'];
+        $data['end_date'] = $data['end'];
         $data['fire_webhooks'] ??= true;
-        $data['budget_id']  = $budget->id;
+        $data['budget_id'] = $budget->id;
 
-        $budgetLimit        = $this->blRepository->store($data);
-        $manager            = $this->getManager();
+        $budgetLimit = $this->blRepository->store($data);
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin              = auth()->user();
-        $enrichment         = new BudgetLimitEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
-        $budgetLimit        = $enrichment->enrichSingle($budgetLimit);
+        $budgetLimit = $enrichment->enrichSingle($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer        = app(BudgetLimitTransformer::class);
+        $transformer = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource           = new Item($budgetLimit, $transformer, 'budget_limits');
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class BillControllerTest
@@ -48,15 +48,14 @@ final class BillControllerTest extends TestCase
         for ($i = 1; $i <= $count; ++$i) {
             $bill = Bill::create([
                 'user_id'       => $user->id,
-                'name'          => 'Bill '.$i,
+                'name'          => 'Bill ' . $i,
                 'user_group_id' => $user->user_group_id,
                 'amount_min'    => random_int(1, 100), // random amount
-                'amount_max'    => random_int(101, 200), // random amount
-                'match'         => 'MIGRATED_TO_RULES',
-                'date'          => '2024-01-01',
-                'repeat_freq'   => 'monthly',
-                'automatch'     => 1,
-
+                'amount_max' => random_int(101, 200), // random amount
+                'match'       => 'MIGRATED_TO_RULES',
+                'date'        => '2024-01-01',
+                'repeat_freq' => 'monthly',
+                'automatch'   => 1
             ]);
         }
     }
@@ -73,7 +72,7 @@ final class BillControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
@@ -83,7 +82,7 @@ final class BillControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointThenReturnsBills(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(5, $user);
@@ -92,51 +91,31 @@ final class BillControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Bill 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointWithQueryThenReturnsBillsWithLimit(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.bills', [
-            'query' => 'Bill',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.bills', ['query' => 'Bill', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Bill 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointWithQueryThenReturnsBillsThatMatchQuery(): void
     {
-        $user     = $this->createAuthenticatedUser();
+        $user = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.bills', [
-            'query' => 'Bill 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.bills', ['query' => 'Bill 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

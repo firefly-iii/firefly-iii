@@ -48,16 +48,14 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(ObjectGroupRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
+            $this->repository = app(ObjectGroupRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -68,10 +66,10 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager      = $this->getManager();
+        $manager = $this->getManager();
 
         // types to get, page size:
-        $pageSize     = $this->parameters->get('limit');
+        $pageSize = $this->parameters->get('limit');
 
         $this->repository->resetOrder();
         $collection   = $this->repository->get();
@@ -79,14 +77,14 @@ class ShowController extends Controller
         $objectGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator    = new LengthAwarePaginator($objectGroups, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.object-groups.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($objectGroups, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.object-groups.index') . $this->buildParams());
 
         /** @var ObjectGroupTransformer $transformer */
-        $transformer  = app(ObjectGroupTransformer::class);
+        $transformer = app(ObjectGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource     = new FractalCollection($objectGroups, $transformer, 'object_groups');
+        $resource = new FractalCollection($objectGroups, $transformer, 'object_groups');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -100,14 +98,14 @@ class ShowController extends Controller
      */
     public function show(ObjectGroup $objectGroup): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         $this->repository->resetOrder();
         $objectGroup->refresh();
 
         /** @var ObjectGroupTransformer $transformer */
         $transformer = app(ObjectGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource    = new Item($objectGroup, $transformer, 'object_groups');
+        $resource = new Item($objectGroup, $transformer, 'object_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

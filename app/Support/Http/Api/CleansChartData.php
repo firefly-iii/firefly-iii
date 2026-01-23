@@ -47,7 +47,7 @@ trait CleansChartData
          * @var array $array
          */
         foreach ($data as $index => $array) {
-            $array    = $this->cleanSingleArray($index, $array);
+            $array = $this->cleanSingleArray($index, $array);
             $return[] = $array;
         }
 
@@ -57,15 +57,12 @@ trait CleansChartData
     private function cleanSingleArray(mixed $index, array $array): array
     {
         if (array_key_exists('currency_id', $array)) {
-            $array['currency_id'] = (string)$array['currency_id'];
+            $array['currency_id'] = (string) $array['currency_id'];
         }
         if (array_key_exists('primary_currency_id', $array)) {
-            $array['primary_currency_id'] = (string)$array['primary_currency_id'];
+            $array['primary_currency_id'] = (string) $array['primary_currency_id'];
         }
-        $required = [
-            'start_date', 'end_date', 'period', 'yAxisID', 'type', 'entries', 'pc_entries',
-            'currency_id', 'primary_currency_id',
-        ];
+        $required = ['start_date', 'end_date', 'period', 'yAxisID', 'type', 'entries', 'pc_entries', 'currency_id', 'primary_currency_id'];
         foreach ($required as $field) {
             if (!array_key_exists($field, $array)) {
                 throw new FireflyException(sprintf('Data-set "%s" is missing the "%s"-variable.', $index, $field));

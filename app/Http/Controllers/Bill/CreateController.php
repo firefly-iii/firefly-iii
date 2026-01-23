@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillStoreRequest;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Log;
 class CreateController extends Controller
 {
     private AttachmentHelperInterface $attachments;
-    private BillRepositoryInterface   $repository;
+    private BillRepositoryInterface $repository;
 
     /**
      * BillController constructor.
@@ -51,16 +51,14 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->repository  = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->repository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -68,14 +66,14 @@ class CreateController extends Controller
      */
     public function create(Request $request): Factory|View
     {
-        $periods     = [];
+        $periods = [];
 
         /** @var array $billPeriods */
         $billPeriods = config('firefly.bill_periods');
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string) trans('firefly.repeat_freq_'.$current);
+            $periods[$current] = (string) trans('firefly.repeat_freq_' . $current);
         }
-        $subTitle    = (string) trans('firefly.create_new_bill');
+        $subTitle = (string) trans('firefly.create_new_bill');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('bills.create.fromStore')) {
@@ -83,7 +81,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', ['periods' => $periods, 'subTitle' => $subTitle]);
+        return view('bills.create', ['periods'  => $periods, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -91,7 +89,7 @@ class CreateController extends Controller
      */
     public function store(BillStoreRequest $request): RedirectResponse
     {
-        $billData           = $request->getBillData();
+        $billData = $request->getBillData();
 
         $billData['active'] = true;
 
@@ -109,7 +107,7 @@ class CreateController extends Controller
         Preferences::mark();
 
         /** @var null|array $files */
-        $files              = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }

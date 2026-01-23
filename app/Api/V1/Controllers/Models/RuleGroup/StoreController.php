@@ -38,7 +38,7 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
     /**
@@ -47,20 +47,18 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-                $this->ruleGroupRepository->setUser($user);
+            $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+            $this->ruleGroupRepository->setUser($user);
 
-                $this->accountRepository   = app(AccountRepositoryInterface::class);
-                $this->accountRepository->setUser($user);
+            $this->accountRepository = app(AccountRepositoryInterface::class);
+            $this->accountRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -71,14 +69,14 @@ class StoreController extends Controller
      */
     public function store(StoreRequest $request): JsonResponse
     {
-        $ruleGroup   = $this->ruleGroupRepository->store($request->getAll());
-        $manager     = $this->getManager();
+        $ruleGroup = $this->ruleGroupRepository->store($request->getAll());
+        $manager   = $this->getManager();
 
         /** @var RuleGroupTransformer $transformer */
         $transformer = app(RuleGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($ruleGroup, $transformer, 'rule_groups');
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -34,6 +33,7 @@ use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -71,7 +71,7 @@ class UpdateRequest extends FormRequest
             'currency_code'           => ['currency_code', 'convertString'],
             'liability_direction'     => ['liability_direction', 'convertString'],
             'liability_amount'        => ['liability_amount', 'convertString'],
-            'liability_start_date'    => ['liability_start_date', 'date'],
+            'liability_start_date'    => ['liability_start_date', 'date']
         ];
         $data   = $this->getAllData($fields);
 
@@ -89,7 +89,7 @@ class UpdateRequest extends FormRequest
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
 
-        $rules          = [
+        $rules = [
             'name'                 => sprintf('min:1|max:1024|uniqueAccountForUser:%d', $account->id),
             'type'                 => sprintf('in:%s', $types),
             'iban'                 => ['iban', 'nullable', new UniqueIban($account, $this->convertString('type'))],
@@ -110,7 +110,7 @@ class UpdateRequest extends FormRequest
             'liability_direction'  => 'required_if:type,liability|in:credit,debit',
             'interest'             => 'required_if:type,liability|min:0|max:100|numeric',
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
-            'notes'                => 'min:0|max:32768',
+            'notes'                => 'min:0|max:32768'
         ];
 
         return Location::requestRules($rules);
@@ -121,28 +121,26 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate start before end only if both are there.
-                $data       = $validator->getData();
+        $validator->after(function (Validator $validator): void {
+            // validate start before end only if both are there.
+            $data = $validator->getData();
 
-                /** @var Account $account */
-                $account    = $this->route()->parameter('account');
+            /** @var Account $account */
+            $account = $this->route()->parameter('account');
 
-                /** @var AccountRepositoryInterface $repository */
-                $repository = app(AccountRepositoryInterface::class);
-                $currency   = $repository->getAccountCurrency($account);
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class);
+            $currency   = $repository->getAccountCurrency($account);
 
-                // how many piggies are attached?
-                $piggyBanks = $account->piggyBanks()->count();
-                if ($piggyBanks > 0 && array_key_exists('currency_code', $data) && $data['currency_code'] !== $currency->code) {
-                    $validator->errors()->add('currency_code', (string) trans('validation.piggy_no_change_currency'));
-                }
-                if ($piggyBanks > 0 && array_key_exists('currency_id', $data) && (int) $data['currency_id'] !== $currency->id) {
-                    $validator->errors()->add('currency_id', (string) trans('validation.piggy_no_change_currency'));
-                }
+            // how many piggies are attached?
+            $piggyBanks = $account->piggyBanks()->count();
+            if ($piggyBanks > 0 && array_key_exists('currency_code', $data) && $data['currency_code'] !== $currency->code) {
+                $validator->errors()->add('currency_code', (string) trans('validation.piggy_no_change_currency'));
             }
-        );
+            if ($piggyBanks > 0 && array_key_exists('currency_id', $data) && (int) $data['currency_id'] !== $currency->id) {
+                $validator->errors()->add('currency_id', (string) trans('validation.piggy_no_change_currency'));
+            }
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

@@ -45,14 +45,10 @@ class IsValidActionExpression implements ValidationRule
             return;
         }
         $value ??= '';
-        $expr = new ActionExpression($value);
+        $expr  = new ActionExpression($value);
 
         if (!$expr->isValid()) {
-            $fail('validation.rule_action_expression')->translate(
-                [
-                    'error' => $expr->getValidationError()->getMessage(),
-                ]
-            );
+            $fail('validation.rule_action_expression')->translate(['error' => $expr->getValidationError()->getMessage()]);
         }
     }
 }

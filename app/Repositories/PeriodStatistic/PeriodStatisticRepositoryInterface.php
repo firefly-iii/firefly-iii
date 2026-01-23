@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * PeriodStatisticRepositoryInterface.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -37,7 +38,15 @@ interface PeriodStatisticRepositoryInterface
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
 
-    public function savePrefixedStatistic(string $prefix, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
+    public function savePrefixedStatistic(
+        string $prefix,
+        int $currencyId,
+        Carbon $start,
+        Carbon $end,
+        string $type,
+        int $count,
+        string $amount
+    ): PeriodStatistic;
 
     public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection;
 

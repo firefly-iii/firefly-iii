@@ -38,7 +38,7 @@ class RemovesEmptyJournals extends Command
 
     protected $description = 'Delete empty and uneven transaction journals.';
 
-    protected $signature   = 'correction:empty-journals';
+    protected $signature = 'correction:empty-journals';
 
     /**
      * Execute the console command.
@@ -56,13 +56,16 @@ class RemovesEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        $set   = Transaction::whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([DB::raw('COUNT(transactions.transaction_journal_id) as the_count'), 'transaction_journal_id']);
+        $set   = Transaction::whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([
+            DB::raw('COUNT(transactions.transaction_journal_id) as the_count'),
+            'transaction_journal_id'
+        ]);
         $total = 0;
 
         /** @var Transaction $row */
         foreach ($set as $row) {
             $count = (int) $row->the_count;
-            if (1 === $count % 2) {
+            if (1 === ($count % 2)) {
                 // uneven number, delete journal and transactions:
                 try {
                     /** @var null|TransactionJournal $journal */
@@ -74,9 +77,10 @@ class RemovesEmptyJournals extends Command
                 }
 
                 Transaction::where('transaction_journal_id', $row->transaction_journal_id)->delete();
-                $this->friendlyWarning(
-                    sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id)
-                );
+                $this->friendlyWarning(sprintf(
+                    'Deleted transaction journal #%d because it had an uneven number of transactions.',
+                    $row->transaction_journal_id
+                ));
                 ++$total;
             }
         }
@@ -88,8 +92,7 @@ class RemovesEmptyJournals extends Command
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->groupBy('transaction_journals.id')
             ->whereNull('transactions.transaction_journal_id')
-            ->get(['transaction_journals.id'])
-        ;
+            ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
             try {

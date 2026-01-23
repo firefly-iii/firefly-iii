@@ -37,7 +37,9 @@ class AttachmentServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+    }
 
     /**
      * Register the application services.
@@ -45,17 +47,15 @@ class AttachmentServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): AttachmentRepositoryInterface {
-                /** @var AttachmentRepositoryInterface $repository */
-                $repository = app(AttachmentRepository::class);
-                // reference to auth is not understood by phpstan.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): AttachmentRepositoryInterface {
+            /** @var AttachmentRepositoryInterface $repository */
+            $repository = app(AttachmentRepository::class);
+            // reference to auth is not understood by phpstan.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

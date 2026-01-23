@@ -53,9 +53,9 @@ class GroupCloneService
 
     private function cloneJournal(TransactionJournal $journal, TransactionGroup $newGroup, int $originalGroup): void
     {
-        $newJournal                       = $journal->replicate();
+        $newJournal = $journal->replicate();
         $newJournal->transaction_group_id = $newGroup->id;
-        $newJournal->date                 = now();
+        $newJournal->date = now();
         $newJournal->save();
 
         foreach ($journal->transactions as $transaction) {
@@ -98,7 +98,7 @@ class GroupCloneService
         // add relation.
         // TODO clone ALL linked piggy banks
         /** @var null|PiggyBankEvent $event */
-        $event                            = $journal->piggyBankEvents()->first();
+        $event = $journal->piggyBankEvents()->first();
         if (null !== $event) {
             $piggyBank = $event->piggyBank;
             $factory   = app(PiggyBankEventFactory::class);
@@ -108,23 +108,26 @@ class GroupCloneService
 
     private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
     {
-        $newTransaction                         = $transaction->replicate();
+        $newTransaction = $transaction->replicate();
         $newTransaction->transaction_journal_id = $newJournal->id;
-        $newTransaction->reconciled             = false;
+        $newTransaction->reconciled = false;
         $newTransaction->save();
     }
 
     private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
     {
-        $newNote              = $note->replicate();
-        $newNote->text        = sprintf("%s\n\n%s", $newNote->text, trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId]));
+        $newNote = $note->replicate();
+        $newNote->text = sprintf("%s\n\n%s", $newNote->text, trans('firefly.clones_journal_x', [
+            'description' => $newJournal->description,
+            'id'          => $oldGroupId
+        ]));
         $newNote->noteable_id = $newJournal->id;
         $newNote->save();
     }
 
     private function cloneMeta(TransactionJournalMeta $meta, TransactionJournal $newJournal): void
     {
-        $newMeta                         = $meta->replicate();
+        $newMeta = $meta->replicate();
         $newMeta->transaction_journal_id = $newJournal->id;
         if ('recurrence_id' !== $newMeta->name) {
             $newMeta->save();

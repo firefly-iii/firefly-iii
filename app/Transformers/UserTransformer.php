@@ -49,12 +49,7 @@ class UserTransformer extends AbstractTransformer
             'blocked'      => 1 === (int) $user->blocked,
             'blocked_code' => '' === $user->blocked_code ? null : $user->blocked_code,
             'role'         => $this->repository->getRoleByUser($user),
-            'links'        => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/users/'.$user->id,
-                ],
-            ],
+            'links'        => [['rel' => 'self', 'uri' => '/users/' . $user->id]]
         ];
     }
 }

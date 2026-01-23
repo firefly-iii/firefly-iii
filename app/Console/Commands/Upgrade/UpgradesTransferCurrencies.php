@@ -32,28 +32,29 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesTransferCurrencies extends Command
 {
     use ShowsFriendlyMessages;
 
-    public const string CONFIG_NAME                      = '480_transfer_currencies';
-    protected $description                               = 'Updates transfer currency information.';
-    protected $signature                                 = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
-    private array                         $accountCurrencies;
-    private AccountRepositoryInterface    $accountRepos;
-    private JournalCLIRepositoryInterface $cliRepos;
-    private int                           $count;
+    public const string CONFIG_NAME = '480_transfer_currencies';
 
-    private ?Account             $destinationAccount     = null;
-    private ?TransactionCurrency $destinationCurrency    = null;
-    private ?Transaction         $destinationTransaction = null;
-    private ?Account             $sourceAccount          = null;
-    private ?TransactionCurrency $sourceCurrency         = null;
-    private ?Transaction         $sourceTransaction      = null;
+    protected $description = 'Updates transfer currency information.';
+    protected $signature   = 'upgrade:480-transfer-currencies {--F|force : Force the execution of this command.}';
+    private array $accountCurrencies;
+    private AccountRepositoryInterface $accountRepos;
+    private JournalCLIRepositoryInterface $cliRepos;
+    private int $count;
+
+    private null|Account             $destinationAccount     = null;
+    private null|TransactionCurrency $destinationCurrency    = null;
+    private null|Transaction         $destinationTransaction = null;
+    private null|Account             $sourceAccount          = null;
+    private null|TransactionCurrency $sourceCurrency         = null;
+    private null|Transaction         $sourceTransaction      = null;
 
     /**
      * Execute the console command.
@@ -84,9 +85,9 @@ class UpgradesTransferCurrencies extends Command
      */
     private function stupidLaravel(): void
     {
-        $this->count             = 0;
-        $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
+        $this->count = 0;
+        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->cliRepos = app(JournalCLIRepositoryInterface::class);
         $this->accountCurrencies = [];
         $this->resetInformation();
     }
@@ -96,20 +97,19 @@ class UpgradesTransferCurrencies extends Command
      */
     private function resetInformation(): void
     {
-        $this->sourceTransaction      = null;
-        $this->sourceAccount          = null;
-        $this->sourceCurrency         = null;
+        $this->sourceTransaction = null;
+        $this->sourceAccount = null;
+        $this->sourceCurrency = null;
         $this->destinationTransaction = null;
-        $this->destinationAccount     = null;
-        $this->destinationCurrency    = null;
+        $this->destinationAccount = null;
+        $this->destinationCurrency = null;
     }
 
     private function isExecuted(): bool
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     /**
@@ -154,9 +154,10 @@ class UpgradesTransferCurrencies extends Command
         // both accounts must have currency preference:
 
         if ($this->isNoCurrencyPresent()) {
-            $this->friendlyError(
-                sprintf('Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.', $transfer->id)
-            );
+            $this->friendlyError(sprintf(
+                'Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.',
+                $transfer->id
+            ));
 
             return;
         }
@@ -201,26 +202,26 @@ class UpgradesTransferCurrencies extends Command
     private function getSourceInformation(TransactionJournal $journal): void
     {
         $this->sourceTransaction = $this->getSourceTransaction($journal);
-        $this->sourceAccount     = $this->sourceTransaction?->account;
-        $this->sourceCurrency    = $this->sourceAccount instanceof Account ? $this->getCurrency($this->sourceAccount) : null;
+        $this->sourceAccount = $this->sourceTransaction?->account;
+        $this->sourceCurrency = $this->sourceAccount instanceof Account ? $this->getCurrency($this->sourceAccount) : null;
     }
 
-    private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
+    private function getSourceTransaction(TransactionJournal $transfer): null|Transaction
     {
         /** @var null|Transaction */
         return $transfer->transactions()->where('amount', '<', 0)->first();
     }
 
-    private function getCurrency(Account $account): ?TransactionCurrency
+    private function getCurrency(Account $account): null|TransactionCurrency
     {
-        $accountId                           = $account->id;
+        $accountId = $account->id;
         if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
             return null;
         }
         if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
         }
-        $currency                            = $this->accountRepos->getAccountCurrency($account);
+        $currency = $this->accountRepos->getAccountCurrency($account);
         if (!$currency instanceof TransactionCurrency) {
             $this->accountCurrencies[$accountId] = 0;
 
@@ -237,11 +238,11 @@ class UpgradesTransferCurrencies extends Command
     private function getDestinationInformation(TransactionJournal $journal): void
     {
         $this->destinationTransaction = $this->getDestinationTransaction($journal);
-        $this->destinationAccount     = $this->destinationTransaction?->account;
-        $this->destinationCurrency    = $this->destinationAccount instanceof Account ? $this->getCurrency($this->destinationAccount) : null;
+        $this->destinationAccount = $this->destinationTransaction?->account;
+        $this->destinationCurrency = $this->destinationAccount instanceof Account ? $this->getCurrency($this->destinationAccount) : null;
     }
 
-    private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
+    private function getDestinationTransaction(TransactionJournal $transfer): null|Transaction
     {
         /** @var null|Transaction */
         return $transfer->transactions()->where('amount', '>', 0)->first();
@@ -252,9 +253,12 @@ class UpgradesTransferCurrencies extends Command
      */
     private function isEmptyTransactions(): bool
     {
-        return !$this->sourceTransaction instanceof Transaction || !$this->destinationTransaction instanceof Transaction
-               || !$this->sourceAccount instanceof Account
-               || !$this->destinationAccount instanceof Account;
+        return (
+            !$this->sourceTransaction instanceof Transaction
+            || !$this->destinationTransaction instanceof Transaction
+            || !$this->sourceAccount instanceof Account
+            || !$this->destinationAccount instanceof Account
+        );
     }
 
     private function isNoCurrencyPresent(): bool
@@ -291,15 +295,8 @@ class UpgradesTransferCurrencies extends Command
     private function fixSourceNoCurrency(): void
     {
         if (null === $this->sourceTransaction->transaction_currency_id && $this->sourceCurrency instanceof TransactionCurrency) {
-            $this->sourceTransaction
-                ->transaction_currency_id
-                     = $this->sourceCurrency->id
-            ;
-            $message = sprintf(
-                'Transaction #%d has no currency setting, now set to %s.',
-                $this->sourceTransaction->id,
-                $this->sourceCurrency->code
-            );
+            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
+            $message = sprintf('Transaction #%d has no currency setting, now set to %s.', $this->sourceTransaction->id, $this->sourceCurrency->code);
             $this->friendlyInfo($message);
             ++$this->count;
             $this->sourceTransaction->save();
@@ -312,11 +309,12 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixSourceUnmatchedCurrency(): void
     {
-        if ($this->sourceCurrency instanceof TransactionCurrency
+        if (
+            $this->sourceCurrency instanceof TransactionCurrency
             && null === $this->sourceTransaction->foreign_amount
             && (int) $this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
         ) {
-            $message                                          = sprintf(
+            $message = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->sourceTransaction->id,
                 $this->sourceTransaction->transaction_currency_id,
@@ -337,15 +335,8 @@ class UpgradesTransferCurrencies extends Command
     private function fixDestNoCurrency(): void
     {
         if (null === $this->destinationTransaction->transaction_currency_id && $this->destinationCurrency instanceof TransactionCurrency) {
-            $this->destinationTransaction
-                ->transaction_currency_id
-                     = $this->destinationCurrency->id
-            ;
-            $message = sprintf(
-                'Transaction #%d has no currency setting, now set to %s.',
-                $this->destinationTransaction->id,
-                $this->destinationCurrency->code
-            );
+            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
+            $message = sprintf('Transaction #%d has no currency setting, now set to %s.', $this->destinationTransaction->id, $this->destinationCurrency->code);
             $this->friendlyInfo($message);
             ++$this->count;
             $this->destinationTransaction->save();
@@ -358,11 +349,12 @@ class UpgradesTransferCurrencies extends Command
      */
     private function fixDestinationUnmatchedCurrency(): void
     {
-        if ($this->destinationCurrency instanceof TransactionCurrency
+        if (
+            $this->destinationCurrency instanceof TransactionCurrency
             && null === $this->destinationTransaction->foreign_amount
             && (int) $this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
         ) {
-            $message                                               = sprintf(
+            $message = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->destinationTransaction->id,
                 $this->destinationTransaction->transaction_currency_id,
@@ -385,10 +377,10 @@ class UpgradesTransferCurrencies extends Command
     {
         if ($this->destinationCurrency->id === $this->sourceCurrency->id) {
             // update both transactions to match:
-            $this->sourceTransaction->foreign_amount           = null;
-            $this->sourceTransaction->foreign_currency_id      = null;
+            $this->sourceTransaction->foreign_amount = null;
+            $this->sourceTransaction->foreign_currency_id = null;
 
-            $this->destinationTransaction->foreign_amount      = null;
+            $this->destinationTransaction->foreign_amount = null;
             $this->destinationTransaction->foreign_currency_id = null;
 
             $this->sourceTransaction->save();
@@ -404,17 +396,19 @@ class UpgradesTransferCurrencies extends Command
     private function fixMismatchedForeignCurrency(): void
     {
         if ($this->sourceCurrency->id !== $this->destinationCurrency->id) {
-            $this->sourceTransaction->transaction_currency_id      = $this->sourceCurrency->id;
-            $this->sourceTransaction->foreign_currency_id          = $this->destinationCurrency->id;
+            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
+            $this->sourceTransaction->foreign_currency_id = $this->destinationCurrency->id;
             $this->destinationTransaction->transaction_currency_id = $this->sourceCurrency->id;
-            $this->destinationTransaction->foreign_currency_id     = $this->destinationCurrency->id;
+            $this->destinationTransaction->foreign_currency_id = $this->destinationCurrency->id;
 
             $this->sourceTransaction->save();
             $this->destinationTransaction->save();
             ++$this->count;
-            $this->friendlyInfo(
-                sprintf('Verified foreign currency ID of transaction #%d and #%d', $this->sourceTransaction->id, $this->destinationTransaction->id)
-            );
+            $this->friendlyInfo(sprintf(
+                'Verified foreign currency ID of transaction #%d and #%d',
+                $this->sourceTransaction->id,
+                $this->destinationTransaction->id
+            ));
         }
     }
 
@@ -428,13 +422,11 @@ class UpgradesTransferCurrencies extends Command
             $this->sourceTransaction->foreign_amount = bcmul($this->destinationTransaction->foreign_amount, '-1');
             $this->sourceTransaction->save();
             ++$this->count;
-            $this->friendlyInfo(
-                sprintf(
-                    'Restored foreign amount of source transaction #%d to %s',
-                    $this->sourceTransaction->id,
-                    $this->sourceTransaction->foreign_amount
-                )
-            );
+            $this->friendlyInfo(sprintf(
+                'Restored foreign amount of source transaction #%d to %s',
+                $this->sourceTransaction->id,
+                $this->sourceTransaction->foreign_amount
+            ));
         }
     }
 
@@ -448,13 +440,11 @@ class UpgradesTransferCurrencies extends Command
             $this->destinationTransaction->foreign_amount = bcmul($this->sourceTransaction->foreign_amount, '-1');
             $this->destinationTransaction->save();
             ++$this->count;
-            $this->friendlyInfo(
-                sprintf(
-                    'Restored foreign amount of destination transaction #%d to %s',
-                    $this->destinationTransaction->id,
-                    $this->destinationTransaction->foreign_amount
-                )
-            );
+            $this->friendlyInfo(sprintf(
+                'Restored foreign amount of destination transaction #%d to %s',
+                $this->destinationTransaction->id,
+                $this->destinationTransaction->foreign_amount
+            ));
         }
     }
 
@@ -464,9 +454,9 @@ class UpgradesTransferCurrencies extends Command
     private function fixTransactionJournalCurrency(TransactionJournal $journal): void
     {
         if ((int) $journal->transaction_currency_id !== $this->sourceCurrency->id) {
-            $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
+            $oldCurrencyCode = $journal->transactionCurrency->code ?? '(nothing)';
             $journal->transaction_currency_id = $this->sourceCurrency->id;
-            $message                          = sprintf(
+            $message = sprintf(
                 'Transfer #%d ("%s") has been updated to use %s instead of %s.',
                 $journal->id,
                 $journal->description,

@@ -50,8 +50,22 @@ class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                     = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'title',
+        'description',
+        'first_date',
+        'first_date_tz',
+        'repeat_until',
+        'repeat_until_tz',
+        'latest_date',
+        'latest_date_tz',
+        'repetitions',
+        'apply_rules',
+        'active'
+    ];
 
     protected $table = 'recurrences';
 
@@ -63,13 +77,13 @@ class Recurrence extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
 
             /** @var User $user */
-            $user         = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence   = $user->recurrences()->find($recurrenceId);
+            $recurrence = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }
@@ -137,14 +151,12 @@ class Recurrence extends Model
             'active'        => 'bool',
             'apply_rules'   => 'bool',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer',
+            'user_group_id' => 'integer'
         ];
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

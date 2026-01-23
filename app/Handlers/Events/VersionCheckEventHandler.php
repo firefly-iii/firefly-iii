@@ -30,10 +30,10 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class VersionCheckEventHandler
@@ -55,8 +55,8 @@ class VersionCheckEventHandler
         Log::debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission    = FireflyConfig::get('permission_update_check', -1);
-        $value         = (int) $permission->data;
+        $permission = FireflyConfig::get('permission_update_check', -1);
+        $value      = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
@@ -65,8 +65,8 @@ class VersionCheckEventHandler
         }
 
         /** @var UserRepositoryInterface $repository */
-        $repository    = app(UserRepositoryInterface::class);
-        $user          = $event->user;
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -85,7 +85,7 @@ class VersionCheckEventHandler
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release       = $this->getLatestRelease();
+        $release = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
         FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
@@ -99,8 +99,8 @@ class VersionCheckEventHandler
     protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
     {
         /** @var UserRepositoryInterface $repository */
-        $repository    = app(UserRepositoryInterface::class);
-        $user          = $event->user;
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -112,8 +112,11 @@ class VersionCheckEventHandler
         $now           = Carbon::now()->getTimestamp();
         $diff          = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
-        if ($diff < 604800 * 4) {
-            Log::debug(sprintf('Warned about updates less than four weeks ago (on %s).', Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')));
+        if ($diff < (604800 * 4)) {
+            Log::debug(sprintf(
+                'Warned about updates less than four weeks ago (on %s).',
+                Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
+            ));
 
             return;
         }

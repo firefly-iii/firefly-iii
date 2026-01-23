@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * ShowRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -37,7 +38,7 @@ class ShowRequest extends AggregateFormRequest
             [PaginationRequest::class, 'sort_class' => Account::class],
             DateRangeRequest::class,
             DateRequest::class,
-            AccountTypeApiRequest::class,
+            AccountTypeApiRequest::class
             // [ObjectTypeApiRequest::class, 'object_type' => Account::class],
         ];
     }

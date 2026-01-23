@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -33,6 +32,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -50,13 +50,11 @@ class BalanceController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(BudgetRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(BudgetRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -68,54 +66,49 @@ class BalanceController extends Controller
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
-        $report  = [
-            'budgets'  => [],
-            'accounts' => [],
-        ];
+        $report = ['budgets'  => [], 'accounts' => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $report['accounts'][$account->id] = [
-                'id'   => $account->id,
-                'name' => $account->name,
-                'iban' => $account->iban,
-                'sum'  => '0',
-            ];
+            $report['accounts'][$account->id] = ['id'   => $account->id, 'name' => $account->name, 'iban' => $account->iban, 'sum'  => '0'];
         }
 
         $budgets = $this->repository->getBudgets();
 
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
-            $budgetId                              = $budget->id;
-            $report['budgets'][$budgetId]          = [
+            $budgetId = $budget->id;
+            $report['budgets'][$budgetId] = [
                 'budget_id'   => $budgetId,
                 'budget_name' => $budget->name,
                 'spent'       => [], // per account
-                'sums'        => [], // per currency
+                'sums' => [] // per currency
             ];
-            $spent                                 = [];
+            $spent = [];
 
             /** @var GroupCollectorInterface $collector */
-            $collector                             = app(GroupCollectorInterface::class);
-            $journals                              = $collector->setRange($start, $end)->setSourceAccounts($accounts)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setBudget($budget)
-                ->getExtractedJournals()
-            ;
+            $collector = app(GroupCollectorInterface::class);
+            $journals  = $collector
+                ->setRange($start, $end)
+                ->setSourceAccounts($accounts)
+                ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
+                ->setBudget($budget)
+                ->getExtractedJournals();
 
             /** @var array $journal */
             foreach ($journals as $journal) {
-                $sourceAccount                                                 = $journal['source_account_id'];
-                $currencyId                                                    = $journal['currency_id'];
-                $spent[$sourceAccount]                  ??= [
+                $sourceAccount = $journal['source_account_id'];
+                $currencyId    = $journal['currency_id'];
+                $spent[$sourceAccount] ??= [
                     'source_account_id'       => $sourceAccount,
                     'currency_id'             => $journal['currency_id'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
-                    'spent'                   => '0',
+                    'spent'                   => '0'
                 ];
-                $spent[$sourceAccount]['spent']                                = bcadd($spent[$sourceAccount]['spent'], (string) $journal['amount']);
+                $spent[$sourceAccount]['spent'] = bcadd($spent[$sourceAccount]['spent'], (string) $journal['amount']);
 
                 // also fix sum:
                 $report['sums'][$budgetId][$currencyId] ??= [
@@ -124,19 +117,20 @@ class BalanceController extends Controller
                     'currency_code'           => $journal['currency_code'],
                     'currency_name'           => $journal['currency_name'],
                     'currency_symbol'         => $journal['currency_symbol'],
-                    'currency_decimal_places' => $journal['currency_decimal_places'],
+                    'currency_decimal_places' => $journal['currency_decimal_places']
                 ];
-                $report['sums'][$budgetId][$currencyId]['sum']                 = bcadd($report['sums'][$budgetId][$currencyId]['sum'], (string) $journal['amount']);
-                $report['accounts'][$sourceAccount]['sum']                     = bcadd($report['accounts'][$sourceAccount]['sum'], (string) $journal['amount']);
+                $report['sums'][$budgetId][$currencyId]['sum'] = bcadd($report['sums'][$budgetId][$currencyId]['sum'], (string) $journal['amount']);
+                $report['accounts'][$sourceAccount]['sum'] = bcadd($report['accounts'][$sourceAccount]['sum'], (string) $journal['amount']);
 
                 // add currency info for account sum
-                $report['accounts'][$sourceAccount]['currency_id']             = $journal['currency_id'];
-                $report['accounts'][$sourceAccount]['currency_code']           = $journal['currency_code'];
-                $report['accounts'][$sourceAccount]['currency_name']           = $journal['currency_name'];
-                $report['accounts'][$sourceAccount]['currency_symbol']         = $journal['currency_symbol'];
+                $report['accounts'][$sourceAccount]['currency_id'] = $journal['currency_id'];
+                $report['accounts'][$sourceAccount]['currency_code'] = $journal['currency_code'];
+                $report['accounts'][$sourceAccount]['currency_name'] = $journal['currency_name'];
+                $report['accounts'][$sourceAccount]['currency_symbol'] = $journal['currency_symbol'];
                 $report['accounts'][$sourceAccount]['currency_decimal_places'] = $journal['currency_decimal_places'];
             }
             $report['budgets'][$budgetId]['spent'] = $spent;
+
             // get transactions in budget
         }
 

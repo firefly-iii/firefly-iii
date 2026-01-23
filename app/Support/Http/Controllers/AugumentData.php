@@ -56,10 +56,10 @@ trait AugumentData
 
         /** @var Account $expenseAccount */
         foreach ($accounts as $expenseAccount) {
-            $collection                      = new Collection();
+            $collection = new Collection();
             $collection->push($expenseAccount);
 
-            $revenue                         = $repository->findByName($expenseAccount->name, [AccountTypeEnum::REVENUE->value]);
+            $revenue = $repository->findByName($expenseAccount->name, [AccountTypeEnum::REVENUE->value]);
             if (null !== $revenue) {
                 $collection->push($revenue);
             }
@@ -106,17 +106,25 @@ trait AugumentData
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value]);
+        $accounts   = $repository->getAccountsByType([
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::CASH->value
+        ]);
         $grouped    = $accounts->groupBy('id')->toArray();
         $return     = [];
         foreach ($accountIds as $combinedId) {
-            $parts     = explode('-', (string)$combinedId);
-            $accountId = (int)$parts[0];
+            $parts     = explode('-', (string) $combinedId);
+            $accountId = (int) $parts[0];
             if (array_key_exists($accountId, $grouped)) {
                 $return[$accountId] = $grouped[$accountId][0]['name'];
             }
         }
-        $return[0]  = '(no name)';
+        $return[0] = '(no name)';
 
         return $return;
     }
@@ -136,7 +144,7 @@ trait AugumentData
                 $return[$budgetId] = $grouped[$budgetId][0]['name'];
             }
         }
-        $return[0]  = (string)trans('firefly.no_budget');
+        $return[0] = (string) trans('firefly.no_budget');
 
         return $return;
     }
@@ -152,13 +160,13 @@ trait AugumentData
         $grouped    = $categories->groupBy('id')->toArray();
         $return     = [];
         foreach ($categoryIds as $combinedId) {
-            $parts      = explode('-', (string)$combinedId);
-            $categoryId = (int)$parts[0];
+            $parts      = explode('-', (string) $combinedId);
+            $categoryId = (int) $parts[0];
             if (array_key_exists($categoryId, $grouped)) {
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0]  = (string)trans('firefly.no_category');
+        $return[0] = (string) trans('firefly.no_category');
 
         return $return;
     }
@@ -166,19 +174,19 @@ trait AugumentData
     /**
      * Gets all budget limits for a budget.
      */
-    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
-    {
+    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection
+    { // get data + augment with info
         Log::debug('In getLimits');
 
         /** @var OperationsRepositoryInterface $opsRepository */
-        $opsRepository    = app(OperationsRepositoryInterface::class);
+        $opsRepository = app(OperationsRepositoryInterface::class);
 
         /** @var BudgetLimitRepositoryInterface $blRepository */
-        $blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $blRepository = app(BudgetLimitRepositoryInterface::class);
 
         $end->endOfMonth();
         // properties for cache
-        $cache            = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($budget->id);
@@ -189,39 +197,39 @@ trait AugumentData
             return $cache->get();
         }
 
-        $set              = $blRepository->getBudgetLimits($budget, $start, $end);
+        $set = $blRepository->getBudgetLimits($budget, $start, $end);
 
         $budgetCollection = new Collection()->push($budget);
 
         // merge sets based on a key, in case of convert to primary currency
-        $limits           = new Collection();
+        $limits = new Collection();
 
         /** @var BudgetLimit $entry */
         foreach ($set as $entry) {
             Log::debug(sprintf('Now at budget limit #%d', $entry->id));
-            $currency        = $entry->transactionCurrency;
+            $currency = $entry->transactionCurrency;
             if ($this->convertToPrimary) {
                 // the sumExpenses method already handles this.
                 $currency = $this->primaryCurrency;
             }
 
             // clone because these objects change each other.
-            $currentStart    = clone $entry->start_date;
-            $currentEnd      = null === $entry->end_date ? null : clone $entry->end_date;
+            $currentStart = clone $entry->start_date;
+            $currentEnd   = null === $entry->end_date ? null : clone $entry->end_date;
 
             if (null === $currentEnd) {
                 $currentEnd = clone $currentStart;
                 $currentEnd->addMonth();
             }
             // primary currency amount.
-            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToPrimary);
-            $spent           = $expenses[$currency->id]['sum'] ?? '0';
+            $expenses = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency, $this->convertToPrimary);
+            $spent    = $expenses[$currency->id]['sum'] ?? '0';
             $entry->pc_spent = $spent;
 
             // normal amount:
-            $expenses        = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency);
-            $spent           = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
-            $entry->spent    = $spent;
+            $expenses = $opsRepository->sumExpenses($currentStart, $currentEnd, null, $budgetCollection, $entry->transactionCurrency);
+            $spent    = $expenses[$entry->transactionCurrency->id]['sum'] ?? '0';
+            $entry->spent = $spent;
 
             $limits->push($entry);
         }
@@ -240,7 +248,7 @@ trait AugumentData
 
         /** @var array $journal */
         foreach ($array as $journal) {
-            $name           = '(no name)';
+            $name = '(no name)';
             if (TransactionTypeEnum::WITHDRAWAL->value === $journal['transaction_type_type']) {
                 $name = $journal['destination_account_name'];
             }
@@ -249,7 +257,7 @@ trait AugumentData
             }
 
             $grouped[$name] ??= '0';
-            $grouped[$name] = bcadd((string)$journal['amount'], $grouped[$name]);
+            $grouped[$name] = bcadd((string) $journal['amount'], $grouped[$name]);
         }
 
         return $grouped;
@@ -258,21 +266,18 @@ trait AugumentData
     /**
      * Spent in a period.
      */
-    protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
-    {
+    protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    { // get data + augment with info
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $total     = $assets->merge($opposing);
+        $total = $assets->merge($opposing);
         $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setAccounts($total);
-        $journals  = $collector->getExtractedJournals();
-        $sum       = [
-            'grand_sum'    => '0',
-            'per_currency' => [],
-        ];
+        $journals = $collector->getExtractedJournals();
+        $sum      = ['grand_sum'    => '0', 'per_currency' => []];
         // loop to support multi currency
         foreach ($journals as $journal) {
-            $currencyId                              = (int)$journal['currency_id'];
+            $currencyId = (int) $journal['currency_id'];
 
             // if not set, set to zero:
             if (!array_key_exists($currencyId, $sum['per_currency'])) {
@@ -281,14 +286,14 @@ trait AugumentData
                     'currency' => [
                         'name'           => $journal['currency_name'],
                         'symbol'         => $journal['currency_symbol'],
-                        'decimal_places' => $journal['currency_decimal_places'],
-                    ],
+                        'decimal_places' => $journal['currency_decimal_places']
+                    ]
                 ];
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string)$journal['amount']);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], (string)$journal['amount']);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], (string) $journal['amount']);
+            $sum['grand_sum'] = bcadd($sum['grand_sum'], (string) $journal['amount']);
         }
 
         return $sum;

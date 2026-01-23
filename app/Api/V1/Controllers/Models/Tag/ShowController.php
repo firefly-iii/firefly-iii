@@ -48,17 +48,15 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user = auth()->user();
 
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -69,24 +67,24 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
         // types to get, page size:
-        $pageSize    = $this->parameters->get('limit');
+        $pageSize = $this->parameters->get('limit');
 
         // get list of budgets. Count it and split it.
-        $collection  = $this->repository->get();
-        $count       = $collection->count();
-        $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection = $this->repository->get();
+        $count      = $collection->count();
+        $rules      = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.tags.index').$this->buildParams());
+        $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.tags.index') . $this->buildParams());
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new FractalCollection($rules, $transformer, 'tags');
+        $resource = new FractalCollection($rules, $transformer, 'tags');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -100,13 +98,13 @@ class ShowController extends Controller
      */
     public function show(Tag $tag): JsonResponse
     {
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         /** @var TagTransformer $transformer */
         $transformer = app(TagTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($tag, $transformer, 'tags');
+        $resource = new Item($tag, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -39,14 +39,10 @@ class TriggerRequest extends FormRequest
 
     public function getTriggerParameters(): array
     {
-        return [
-            'start'    => $this->getDate('start'),
-            'end'      => $this->getDate('end'),
-            'accounts' => $this->getAccounts(),
-        ];
+        return ['start'    => $this->getDate('start'), 'end'      => $this->getDate('end'), 'accounts' => $this->getAccounts()];
     }
 
-    private function getDate(string $field): ?Carbon
+    private function getDate(string $field): null|Carbon
     {
         $value = $this->query($field);
         if (is_array($value)) {
@@ -68,7 +64,7 @@ class TriggerRequest extends FormRequest
             'start'      => 'date|after:1970-01-02|before:2038-01-17',
             'end'        => 'date|after_or_equal:start|after:1970-01-02|before:2038-01-17',
             'accounts'   => '',
-            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts',
+            'accounts.*' => 'exists:accounts,id|belongsToUser:accounts'
         ];
     }
 }

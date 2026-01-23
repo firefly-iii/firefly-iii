@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -38,7 +39,6 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\parse_url;
 
@@ -56,15 +56,13 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
-                $this->repository = app(TransactionGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
+            $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function cloneGroup(Request $request): JsonResponse
@@ -82,8 +80,8 @@ class CreateController extends Controller
 
                 Preferences::mark();
 
-                $title    = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
-                $link     = route('transactions.show', [$newGroup->id]);
+                $title = $newGroup->title ?? $newGroup->transactionJournals->first()->description;
+                $link  = route('transactions.show', [$newGroup->id]);
                 session()->flash('success', trans('firefly.stored_journal', ['description' => $title]));
                 session()->flash('success_url', $link);
 
@@ -105,51 +103,68 @@ class CreateController extends Controller
      * @throws NotFoundExceptionInterface
      * @throws UrlException
      */
-    public function create(?string $objectType): Factory|View
+    public function create(null|string $objectType): Factory|View
     {
         Preferences::mark();
 
-        $sourceId                   = (int) request()->get('source');
-        $destinationId              = (int) request()->get('destination');
+        $sourceId      = (int) request()->get('source');
+        $destinationId = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository          = app(AccountRepositoryInterface::class);
-        $cash                       = $accountRepository->getCashAccount();
-        $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
-        $subTitleIcon               = 'fa-plus';
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $cash              = $accountRepository->getCashAccount();
+        $preFilled         = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle          = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
+        $subTitleIcon      = 'fa-plus';
 
         /** @var null|array $optionalFields */
-        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
-        $accountToTypes             = config('firefly.account_to_transaction');
-        $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                      = parse_url((string) $previousUrl);
-        $search                     = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl                = str_replace($search, '', $previousUrl);
+        $optionalFields       = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
+        $accountToTypes       = config('firefly.account_to_transaction');
+        $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
+        $parts                = parse_url((string) $previousUrl);
+        $search               = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl          = str_replace($search, '', $previousUrl);
         if (!is_array($optionalFields)) {
             $optionalFields = [];
         }
         // not really a fan of this, but meh.
-        $optionalDateFields         = [
+        $optionalDateFields = [
             'interest_date' => $optionalFields['interest_date'] ?? false,
             'book_date'     => $optionalFields['book_date'] ?? false,
             'process_date'  => $optionalFields['process_date'] ?? false,
             'due_date'      => $optionalFields['due_date'] ?? false,
             'payment_date'  => $optionalFields['payment_date'] ?? false,
-            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
+            'invoice_date'  => $optionalFields['invoice_date'] ?? false
         ];
         $optionalFields['external_url'] ??= false;
-        $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location'] ??= false;
+        $optionalFields['location'] =
+            $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
-        $longitude                  = config('firefly.default_location.longitude');
-        $latitude                   = config('firefly.default_location.latitude');
-        $zoomLevel                  = config('firefly.default_location.zoom_level');
+        $longitude = config('firefly.default_location.longitude');
+        $latitude  = config('firefly.default_location.latitude');
+        $zoomLevel = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 
-        return view('transactions.create', ['subTitleIcon' => $subTitleIcon, 'cash' => $cash, 'longitude' => $longitude, 'latitude' => $latitude, 'zoomLevel' => $zoomLevel, 'objectType' => $objectType, 'optionalDateFields' => $optionalDateFields, 'subTitle' => $subTitle, 'previousUrl' => $previousUrl, 'optionalFields' => $optionalFields, 'preFilled' => $preFilled, 'allowedOpposingTypes' => $allowedOpposingTypes, 'accountToTypes' => $accountToTypes, 'sourceId' => $sourceId, 'destinationId' => $destinationId]);
+        return view('transactions.create', [
+            'subTitleIcon'         => $subTitleIcon,
+            'cash'                 => $cash,
+            'longitude'            => $longitude,
+            'latitude'             => $latitude,
+            'zoomLevel'            => $zoomLevel,
+            'objectType'           => $objectType,
+            'optionalDateFields'   => $optionalDateFields,
+            'subTitle'             => $subTitle,
+            'previousUrl'          => $previousUrl,
+            'optionalFields'       => $optionalFields,
+            'preFilled'            => $preFilled,
+            'allowedOpposingTypes' => $allowedOpposingTypes,
+            'accountToTypes'       => $accountToTypes,
+            'sourceId'             => $sourceId,
+            'destinationId'        => $destinationId
+        ]);
     }
 }

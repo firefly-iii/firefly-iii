@@ -39,17 +39,16 @@ class RecurrenceTransaction extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                     = [
-            'recurrence_id',
-            'transaction_currency_id',
-            'foreign_currency_id',
-            'source_id',
-            'destination_id',
-            'amount',
-            'foreign_amount',
-            'description',
-        ];
+    protected $fillable = [
+        'recurrence_id',
+        'transaction_currency_id',
+        'foreign_currency_id',
+        'source_id',
+        'destination_id',
+        'amount',
+        'foreign_amount',
+        'description'
+    ];
 
     protected $table = 'recurrences_transactions';
 
@@ -90,9 +89,7 @@ class RecurrenceTransaction extends Model
 
     protected function amount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     protected function casts(): array
@@ -103,49 +100,37 @@ class RecurrenceTransaction extends Model
             'deleted_at'     => 'datetime',
             'amount'         => 'string',
             'foreign_amount' => 'string',
-            'description'    => 'string',
+            'description'    => 'string'
         ];
     }
 
     protected function destinationId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function foreignAmount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn($value): string => (string) $value);
     }
 
     protected function recurrenceId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function sourceId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function userId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

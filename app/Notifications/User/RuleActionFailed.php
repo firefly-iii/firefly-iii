@@ -47,11 +47,11 @@ class RuleActionFailed extends Notification
     public function __construct(array $params)
     {
         [$mainMessage, $groupTitle, $groupLink, $ruleTitle, $ruleLink] = $params;
-        $this->message                                                 = $mainMessage;
-        $this->groupTitle                                              = $groupTitle;
-        $this->groupLink                                               = $groupLink;
-        $this->ruleTitle                                               = $ruleTitle;
-        $this->ruleLink                                                = $ruleLink;
+        $this->message = $mainMessage;
+        $this->groupTitle = $groupTitle;
+        $this->groupLink = $groupLink;
+        $this->ruleTitle = $ruleTitle;
+        $this->ruleLink = $ruleLink;
     }
 
     /**
@@ -59,8 +59,7 @@ class RuleActionFailed extends Notification
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     //    public function toNtfy(User $notifiable): Message
@@ -91,11 +90,14 @@ class RuleActionFailed extends Notification
         $ruleTitle  = $this->ruleTitle;
         $ruleLink   = $this->ruleLink;
 
-        return new SlackMessage()->content($this->message)->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
-            $attachment->title((string) trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
-        })->attachment(static function ($attachment) use ($ruleTitle, $ruleLink): void {
-            $attachment->title((string) trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
-        });
+        return new SlackMessage()
+            ->content($this->message)
+            ->attachment(static function ($attachment) use ($groupTitle, $groupLink): void {
+                $attachment->title((string) trans('rules.inspect_transaction', ['title' => $groupTitle]), $groupLink);
+            })
+            ->attachment(static function ($attachment) use ($ruleTitle, $ruleLink): void {
+                $attachment->title((string) trans('rules.inspect_rule', ['title' => $ruleTitle]), $ruleLink);
+            });
     }
 
     /**

@@ -40,7 +40,7 @@ class ForcesMigrations extends Command
 
     protected $description = 'This command will force-run all database migrations.';
 
-    protected $signature   = 'firefly-iii:force-migrations
+    protected $signature = 'firefly-iii:force-migrations
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';
 
@@ -78,7 +78,7 @@ class ForcesMigrations extends Command
         sleep(2);
         Schema::dropIfExists('migrations');
         $this->friendlyLine('Re-run all migrations...');
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        Artisan::call('migrate', ['--seed'  => true, '--force' => true]);
         sleep(2);
         $this->friendlyLine('');
         $this->friendlyWarning('There is a good chance you just saw a lot of error messages.');

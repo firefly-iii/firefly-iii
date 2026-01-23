@@ -42,21 +42,13 @@ class AmountFormat extends AbstractExtension
     #[Override]
     public function getFilters(): array
     {
-        return [
-            $this->formatAmount(),
-            $this->formatAmountPlain(),
-        ];
+        return [$this->formatAmount(), $this->formatAmountPlain()];
     }
 
     #[Override]
     public function getFunctions(): array
     {
-        return [
-            $this->formatAmountByAccount(),
-            $this->formatAmountBySymbol(),
-            $this->formatAmountByCurrency(),
-            $this->formatAmountByCode(),
-        ];
+        return [$this->formatAmountByAccount(), $this->formatAmountBySymbol(), $this->formatAmountByCurrency(), $this->formatAmountByCode()];
     }
 
     protected function formatAmount(): TwigFilter
@@ -81,7 +73,7 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountByAccount',
-            static function (AccountModel $account, string $amount, ?bool $coloured = null): string {
+            static function (AccountModel $account, string $amount, null|bool $coloured = null): string {
                 $coloured ??= true;
 
                 /** @var AccountRepositoryInterface $accountRepos */
@@ -102,7 +94,7 @@ class AmountFormat extends AbstractExtension
         // formatAmountByCode
         return new TwigFunction(
             'formatAmountByCode',
-            static function (string $amount, string $code, ?bool $coloured = null): string {
+            static function (string $amount, string $code, null|bool $coloured = null): string {
                 $coloured ??= true;
 
                 try {
@@ -126,7 +118,7 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountByCurrency',
-            static function (TransactionCurrency $currency, string $amount, ?bool $coloured = null): string {
+            static function (TransactionCurrency $currency, string $amount, null|bool $coloured = null): string {
                 $coloured ??= true;
 
                 return Amount::formatAnything($currency, $amount, $coloured);
@@ -142,18 +134,23 @@ class AmountFormat extends AbstractExtension
     {
         return new TwigFunction(
             'formatAmountBySymbol',
-            static function (string $amount, ?string $symbol = null, ?int $decimalPlaces = null, ?bool $coloured = null): string {
-
+            static function (string $amount, null|string $symbol = null, null|int $decimalPlaces = null, null|bool $coloured = null): string {
                 if (null === $symbol) {
-                    $message  = sprintf('formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.', $amount, var_export($symbol, true), $decimalPlaces, var_export($coloured, true));
+                    $message = sprintf(
+                        'formatAmountBySymbol("%s", %s, %d, %s) was called without a symbol. Please browse to /flush to clear your cache.',
+                        $amount,
+                        var_export($symbol, true),
+                        $decimalPlaces,
+                        var_export($coloured, true)
+                    );
                     Log::error($message);
                     $currency = Amount::getPrimaryCurrency();
                 }
                 if (null !== $symbol) {
                     $decimalPlaces ??= 2;
                     $coloured      ??= true;
-                    $currency                 = new TransactionCurrency();
-                    $currency->symbol         = $symbol;
+                    $currency      = new TransactionCurrency();
+                    $currency->symbol = $symbol;
                     $currency->decimal_places = $decimalPlaces;
                 }
 

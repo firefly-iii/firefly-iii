@@ -31,6 +31,7 @@ class SystemFoundNewVersionOnline extends Event
 {
     use SerializesModels;
 
-    public function __construct(public string $message) {}
+    public function __construct(
+        public string $message
+    ) {}
 }
-

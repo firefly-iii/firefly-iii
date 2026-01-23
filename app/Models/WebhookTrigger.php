@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * WebhookTrigger.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -40,8 +39,6 @@ class WebhookTrigger extends Model
      */
     protected function key(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 
-use FireflyIII\Support\Calendar\Periodicity\Fortnightly;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Fortnightly;
 
 /**
  * @group unit-test
@@ -49,7 +49,7 @@ final class FortnightlyTest extends IntervalTestCase
     {
         return [
             new IntervalProvider(Carbon::now(), Carbon::now()->addWeeks(2)),
-            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-14')),
+            new IntervalProvider(Carbon::parse('2023-01-31'), Carbon::parse('2023-02-14'))
         ];
     }
 }

@@ -51,7 +51,7 @@ class BudgetObserver
 
         if (true === $singleton->getPreference('fire_webhooks_budget_create')) {
             // fire event.
-            $user   = $budget->user;
+            $user = $budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);
@@ -72,7 +72,7 @@ class BudgetObserver
         $singleton = PreferencesSingleton::getInstance();
 
         if (true === $singleton->getPreference('fire_webhooks_budget_update')) {
-            $user   = $budget->user;
+            $user = $budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);
@@ -89,10 +89,10 @@ class BudgetObserver
     {
         Log::debug('Observe "deleting" of a budget.');
 
-        $user         = $budget->user;
+        $user = $budget->user;
 
         /** @var MessageGeneratorInterface $engine */
-        $engine       = app(MessageGeneratorInterface::class);
+        $engine = app(MessageGeneratorInterface::class);
         $engine->setUser($user);
         $engine->setObjects(new Collection()->push($budget));
         $engine->setTrigger(WebhookTrigger::DESTROY_BUDGET);
@@ -100,7 +100,7 @@ class BudgetObserver
         Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
         event(new RequestedSendWebhookMessages());
 
-        $repository   = app(AttachmentRepositoryInterface::class);
+        $repository = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);
 
         /** @var Attachment $attachment */
@@ -112,7 +112,7 @@ class BudgetObserver
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             // this loop exists so several events are fired.
-            $copy     = clone $budgetLimit;
+            $copy = clone $budgetLimit;
             $copy->id = 0;
             $this->updateAvailableBudget($copy);
             $budgetLimit->deleteQuietly(); // delete is quietly when in a loop.

@@ -28,9 +28,9 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesAttachments extends Command
 {
@@ -38,9 +38,9 @@ class UpgradesAttachments extends Command
 
     public const string CONFIG_NAME = '480_migrate_attachments';
 
-    protected $description          = 'Migrates attachment meta-data.';
+    protected $description = 'Migrates attachment meta-data.';
 
-    protected $signature            = 'upgrade:480-attachments {--F|force : Force the execution of this command.}';
+    protected $signature = 'upgrade:480-attachments {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -49,7 +49,7 @@ class UpgradesAttachments extends Command
      */
     public function handle(): int
     {
-        $start       = microtime(true);
+        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->friendlyInfo('This command has already been executed.');
 
@@ -65,12 +65,12 @@ class UpgradesAttachments extends Command
             $attDescription = (string) $att->description;
             if ('' !== $attDescription) {
                 // find or create note:
-                $note             = $att->notes()->first();
+                $note = $att->notes()->first();
                 if (null === $note) {
                     $note = new Note();
                     $note->noteable()->associate($att);
                 }
-                $note->text       = $attDescription;
+                $note->text = $attDescription;
                 $note->save();
 
                 // clear description:
@@ -84,7 +84,7 @@ class UpgradesAttachments extends Command
         if (0 !== $count) {
             $this->friendlyInfo(sprintf('Updated %d attachment(s).', $count));
         }
-        $end         = round(microtime(true) - $start, 2);
+        $end = round(microtime(true) - $start, 2);
         $this->friendlyInfo(sprintf('Migrated attachment notes in %s seconds.', $end));
         $this->markAsExecuted();
 
@@ -95,8 +95,7 @@ class UpgradesAttachments extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

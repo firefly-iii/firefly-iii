@@ -43,7 +43,7 @@ class IndexController extends Controller
     use RuleManagement;
 
     private RuleGroupRepositoryInterface $ruleGroupRepos;
-    private RuleRepositoryInterface      $ruleRepos;
+    private RuleRepositoryInterface $ruleRepos;
 
     /**
      * RuleController constructor.
@@ -51,16 +51,14 @@ class IndexController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
-                $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
-                $this->ruleRepos      = app(RuleRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
+            $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
+            $this->ruleRepos = app(RuleRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -89,7 +87,7 @@ class IndexController extends Controller
     {
         $route = route('search.index');
         $query = $this->ruleRepos->getSearchQuery($rule);
-        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
+        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule'   => $rule->id]));
 
         return redirect($route);
     }

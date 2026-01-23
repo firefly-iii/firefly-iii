@@ -68,10 +68,10 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * @throws JsonException
      */
-    public function currencyInUseAt(TransactionCurrency $currency): ?string
+    public function currencyInUseAt(TransactionCurrency $currency): null|string
     {
         Log::debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
-        $countJournals    = $this->countJournals($currency);
+        $countJournals = $this->countJournals($currency);
         if ($countJournals > 0) {
             Log::info(sprintf('Count journals is %d, return true.', $countJournals));
 
@@ -86,7 +86,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts:
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string)$currency->id))->count();
+        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -94,7 +94,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // second search using integer check.
-        $meta             = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int)$currency->id))->count();
+        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((int) $currency->id))->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -102,7 +102,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in bills:
-        $bills            = Bill::where('transaction_currency_id', $currency->id)->count();
+        $bills = Bill::where('transaction_currency_id', $currency->id)->count();
         if ($bills > 0) {
             Log::info(sprintf('Used in %d bills as currency, return true. ', $bills));
 
@@ -120,10 +120,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in accounts (as integer)
-        $meta             = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+        $meta = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->whereNull('accounts.deleted_at')
-            ->where('account_meta.name', 'currency_id')->where('account_meta.data', json_encode($currency->id))->count()
-        ;
+            ->where('account_meta.name', 'currency_id')
+            ->where('account_meta.data', json_encode($currency->id))
+            ->count();
         if ($meta > 0) {
             Log::info(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
 
@@ -139,7 +140,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is being used in budget limits
-        $budgetLimit      = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
+        $budgetLimit = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
         if ($budgetLimit > 0) {
             Log::info(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
 
@@ -147,7 +148,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is the default currency for the user or the system
-        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
+        $count = $this->userGroup
+            ->currencies()
+            ->where('transaction_currencies.id', $currency->id)
+            ->wherePivot('group_default', 1)
+            ->count();
         if ($count > 0) {
             Log::info('Is the default currency of the user, return true.');
 
@@ -155,7 +160,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         }
 
         // is the default currency for the user or the system
-        $count            = $this->userGroup->currencies()->where('transaction_currencies.id', $currency->id)->wherePivot('group_default', 1)->count();
+        $count = $this->userGroup
+            ->currencies()
+            ->where('transaction_currencies.id', $currency->id)
+            ->wherePivot('group_default', 1)
+            ->count();
         if ($count > 0) {
             Log::info('Is the default currency of the user group, return true.');
 
@@ -184,10 +193,12 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $local = $this->get();
 
         return $all->map(static function (TransactionCurrency $current) use ($local): TransactionCurrency {
-            $hasId                     = $local->contains(static fn (TransactionCurrency $entry): bool => $entry->id === $current->id);
-            $isPrimary                 = $local->contains(static fn (TransactionCurrency $entry): bool => 1 === (int)$entry->pivot->group_default && $entry->id === $current->id);
+            $hasId     = $local->contains(static fn(TransactionCurrency $entry): bool => $entry->id === $current->id);
+            $isPrimary = $local->contains(
+                static fn(TransactionCurrency $entry): bool => 1 === (int) $entry->pivot->group_default && $entry->id === $current->id
+            );
             $current->userGroupEnabled = $hasId;
-            $current->userGroupNative  = $isPrimary;
+            $current->userGroupNative = $isPrimary;
 
             return $current;
         });
@@ -195,10 +206,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
 
     public function get(): Collection
     {
-        $all = $this->userGroup->currencies()->orderBy('code', 'ASC')->withPivot(['group_default'])->get();
+        $all = $this->userGroup
+            ->currencies()
+            ->orderBy('code', 'ASC')
+            ->withPivot(['group_default'])
+            ->get();
         $all->map(static function (TransactionCurrency $current): TransactionCurrency { // @phpstan-ignore-line
             $current->userGroupEnabled = true;
-            $current->userGroupNative  = 1 === (int)$current->pivot->group_default;
+            $current->userGroupNative = 1 === (int) $current->pivot->group_default;
 
             return $current;
         });
@@ -226,7 +241,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
         $currency->save();
     }
 
-    public function findByName(string $name): ?TransactionCurrency
+    public function findByName(string $name): null|TransactionCurrency
     {
         return TransactionCurrency::where('name', $name)->first();
     }
@@ -234,7 +249,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by object, ID or code. Returns user default or system default.
      */
-    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
+    public function findCurrency(null|int $currencyId, null|string $currencyCode): TransactionCurrency
     {
         $result = $this->findCurrencyNull($currencyId, $currencyCode);
 
@@ -257,11 +272,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      */
-    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
+    public function findCurrencyNull(null|int $currencyId, null|string $currencyCode): null|TransactionCurrency
     {
         Log::debug(sprintf('Now in findCurrencyNull(%s, "%s")', var_export($currencyId, true), $currencyCode));
         if (null !== $currencyId && 0 !== $currencyId) {
-            $result = $this->find((int)$currencyId);
+            $result = $this->find((int) $currencyId);
             if ($result instanceof TransactionCurrency) {
                 Log::debug(sprintf('Found currency by ID: %s', $result->code));
 
@@ -285,7 +300,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     }
 
     #[Override]
-    public function find(int $currencyId): ?TransactionCurrency
+    public function find(int $currencyId): null|TransactionCurrency
     {
         try {
             $result = Amount::getTransactionCurrencyById($currencyId);
@@ -299,7 +314,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Find by currency code, return NULL if unfound.
      */
-    public function findByCode(string $currencyCode): ?TransactionCurrency
+    public function findByCode(string $currencyCode): null|TransactionCurrency
     {
         try {
             $result = Amount::getTransactionCurrencyByCode($currencyCode);
@@ -329,22 +344,23 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
     /**
      * Get currency exchange rate.
      */
-    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate
+    public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): null|CurrencyExchangeRate
     {
         if ($fromCurrency->id === $toCurrency->id) {
-            $rate       = new CurrencyExchangeRate();
+            $rate = new CurrencyExchangeRate();
             $rate->rate = '1';
-            $rate->id   = 0;
+            $rate->id = 0;
 
             return $rate;
         }
 
         /** @var null|CurrencyExchangeRate $rate */
-        $rate = $this->user->currencyExchangeRates()
+        $rate = $this->user
+            ->currencyExchangeRates()
             ->where('from_currency_id', $fromCurrency->id)
             ->where('to_currency_id', $toCurrency->id)
-            ->where('date', $date->format('Y-m-d'))->first()
-        ;
+            ->where('date', $date->format('Y-m-d'))
+            ->first();
         if (null !== $rate) {
             Log::debug(sprintf('Found cached exchange rate in database for %s to %s on %s', $fromCurrency->code, $toCurrency->code, $date->format('Y-m-d')));
 
@@ -374,17 +390,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
      */
     public function setExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date, float $rate): CurrencyExchangeRate
     {
-        return CurrencyExchangeRate::create(
-            [
-                'user_id'          => $this->user->id,
-                'user_group_id'    => $this->userGroup->id,
-                'from_currency_id' => $fromCurrency->id,
-                'to_currency_id'   => $toCurrency->id,
-                'date'             => $date,
-                'date_tz'          => $date->format('e'),
-                'rate'             => $rate,
-            ]
-        );
+        return CurrencyExchangeRate::create([
+            'user_id'          => $this->user->id,
+            'user_group_id'    => $this->userGroup->id,
+            'from_currency_id' => $fromCurrency->id,
+            'to_currency_id'   => $toCurrency->id,
+            'date'             => $date,
+            'date_tz'          => $date->format('e'),
+            'rate'             => $rate
+        ]);
     }
 
     /**

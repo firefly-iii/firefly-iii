@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * Node.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -43,7 +42,11 @@ abstract class Node
         }
         if ($compare instanceof NodeGroup && $this instanceof NodeGroup) {
             if (count($compare->getNodes()) !== count($this->getNodes())) {
-                Log::debug(sprintf('Return false because node count is different. Original is %d, compare is %d', count($this->getNodes()), count($compare->getNodes())));
+                Log::debug(sprintf(
+                    'Return false because node count is different. Original is %d, compare is %d',
+                    count($this->getNodes()),
+                    count($compare->getNodes())
+                ));
 
                 return false;
             }
@@ -85,6 +88,5 @@ abstract class Node
 
         // Log::debug(sprintf('This %s is (not flipped) now prohibited: %s',get_class($this), var_export($this->prohibited, true)));
         return $this->prohibited;
-
     }
 }

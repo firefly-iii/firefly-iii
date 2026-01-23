@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -39,6 +38,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -56,14 +56,12 @@ class SelectController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,8 +71,8 @@ class SelectController extends Controller
     {
         // Get parameters specified by the user
         /** @var User $user */
-        $user          = auth()->user();
-        $accounts      = implode(',', $request->get('accounts'));
+        $user     = auth()->user();
+        $accounts = implode(',', $request->get('accounts'));
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
@@ -82,20 +80,20 @@ class SelectController extends Controller
         // add date operators.
         if (null !== $request->get('start')) {
             $startDate = new Carbon($request->get('start'));
-            $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type'  => 'date_after', 'value' => $startDate->format('Y-m-d')]);
         }
         if (null !== $request->get('end')) {
             $endDate = new Carbon($request->get('end'));
-            $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type'  => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         }
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
+        $newRuleEngine->addOperator(['type'  => 'account_id', 'value' => $accounts]);
 
         // set rules:
         $newRuleEngine->setRules(new Collection()->push($rule));
         $newRuleEngine->fire();
-        $resultCount   = $newRuleEngine->getResults();
+        $resultCount = $newRuleEngine->getResults();
 
         session()->flash('success', trans_choice('firefly.applied_rule_selection', $resultCount, ['title' => $rule->title]));
 
@@ -113,9 +111,9 @@ class SelectController extends Controller
             return redirect(route('rules.index'));
         }
         // does the user have shared accounts?
-        $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
+        $subTitle = (string) trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
-        return view('rules.rule.select-transactions', ['rule' => $rule, 'subTitle' => $subTitle]);
+        return view('rules.rule.select-transactions', ['rule'     => $rule, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -127,25 +125,25 @@ class SelectController extends Controller
     public function testTriggers(TestRuleFormRequest $request): JsonResponse
     {
         // build fake rule
-        $rule               = new Rule();
+        $rule = new Rule();
 
         /** @var \Illuminate\Database\Eloquent\Collection<int, RuleTrigger> $triggers */
-        $triggers           = new Collection();
-        $rule->strict       = '1' === $request->get('strict');
+        $triggers = new Collection();
+        $rule->strict = '1' === $request->get('strict');
 
         // build trigger array from response
-        $textTriggers       = $this->getValidTriggerList($request);
+        $textTriggers = $this->getValidTriggerList($request);
 
         // warn if nothing.
         if (0 === count($textTriggers)) {
-            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html'    => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
         }
 
         foreach ($textTriggers as $textTrigger) {
-            $needsContext             = config(sprintf('search.operators.%s.needs_context', $textTrigger['type'])) ?? true;
-            $trigger                  = new RuleTrigger();
-            $trigger->trigger_type    = $textTrigger['type'];
-            $trigger->trigger_value   = $textTrigger['value'];
+            $needsContext = config(sprintf('search.operators.%s.needs_context', $textTrigger['type'])) ?? true;
+            $trigger      = new RuleTrigger();
+            $trigger->trigger_type = $textTrigger['type'];
+            $trigger->trigger_value = $textTrigger['value'];
             if (false === $needsContext) {
                 $trigger->trigger_value = 'true';
             }
@@ -160,22 +158,22 @@ class SelectController extends Controller
 
         // create new rule engine:
         /** @var RuleEngineInterface $newRuleEngine */
-        $newRuleEngine      = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
 
         // set rules:
         $newRuleEngine->setRules(new Collection()->push($rule));
         $newRuleEngine->setRefreshTriggers(false);
-        $collection         = $newRuleEngine->find();
-        $collection         = $collection->slice(0, 20);
+        $collection = $newRuleEngine->find();
+        $collection = $collection->slice(0, 20);
 
         // Warn the user if only a subset of transactions is returned
-        $warning            = '';
+        $warning = '';
         if (0 === count($collection)) {
-            $warning = (string)trans('firefly.warning_no_matching_transactions');
+            $warning = (string) trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
-        $view               = 'ERROR, see logs.';
+        $view = 'ERROR, see logs.';
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
@@ -187,7 +185,7 @@ class SelectController extends Controller
             throw new FireflyException($view, 0, $exception);
         }
 
-        return response()->json(['html' => $view, 'warning' => $warning]);
+        return response()->json(['html'    => $view, 'warning' => $warning]);
     }
 
     /**
@@ -198,26 +196,26 @@ class SelectController extends Controller
      */
     public function testTriggersByRule(Rule $rule): JsonResponse
     {
-        $triggers      = $rule->ruleTriggers;
+        $triggers = $rule->ruleTriggers;
 
         if (0 === count($triggers)) {
-            return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]);
+            return response()->json(['html'    => '', 'warning' => (string) trans('firefly.warning_no_valid_triggers')]);
         }
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
 
         // set rules:
         $newRuleEngine->setRules(new Collection()->push($rule));
-        $collection    = $newRuleEngine->find();
-        $collection    = $collection->slice(0, 20);
+        $collection = $newRuleEngine->find();
+        $collection = $collection->slice(0, 20);
 
-        $warning       = '';
+        $warning = '';
         if (0 === count($collection)) {
-            $warning = (string)trans('firefly.warning_no_matching_transactions');
+            $warning = (string) trans('firefly.warning_no_matching_transactions');
         }
 
         // Return json response
-        $view          = 'ERROR, see logs.';
+        $view = 'ERROR, see logs.';
 
         try {
             $view = view('list.journals-array-tiny', ['groups' => $collection])->render();
@@ -229,6 +227,6 @@ class SelectController extends Controller
             throw new FireflyException($message, 0, $exception);
         }
 
-        return response()->json(['html' => $view, 'warning' => $warning]);
+        return response()->json(['html'    => $view, 'warning' => $warning]);
     }
 }

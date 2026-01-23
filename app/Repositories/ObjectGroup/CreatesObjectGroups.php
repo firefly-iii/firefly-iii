@@ -31,25 +31,26 @@ use FireflyIII\Models\ObjectGroup;
  */
 trait CreatesObjectGroups
 {
-    protected function findObjectGroupById(int $groupId): ?ObjectGroup
+    protected function findObjectGroupById(int $groupId): null|ObjectGroup
     {
         /** @var null|ObjectGroup */
-        return $this->user->objectGroups()->where('id', $groupId)->first();
+        return $this->user
+            ->objectGroups()
+            ->where('id', $groupId)
+            ->first();
     }
 
-    protected function findOrCreateObjectGroup(string $title): ?ObjectGroup
+    protected function findOrCreateObjectGroup(string $title): null|ObjectGroup
     {
         $title    = substr($title, 0, 255);
         $maxOrder = $this->getObjectGroupMaxOrder();
         if (!$this->hasObjectGroup($title)) {
-            return ObjectGroup::create(
-                [
-                    'user_id'       => $this->user->id,
-                    'user_group_id' => $this->user->user_group_id,
-                    'title'         => $title,
-                    'order'         => $maxOrder + 1,
-                ]
-            );
+            return ObjectGroup::create([
+                'user_id'       => $this->user->id,
+                'user_group_id' => $this->user->user_group_id,
+                'title'         => $title,
+                'order'         => $maxOrder + 1
+            ]);
         }
 
         return $this->findObjectGroup($title);
@@ -62,12 +63,18 @@ trait CreatesObjectGroups
 
     protected function hasObjectGroup(string $title): bool
     {
-        return 1 === $this->user->objectGroups()->where('title', $title)->count();
+        return 1 === $this->user
+            ->objectGroups()
+            ->where('title', $title)
+            ->count();
     }
 
-    protected function findObjectGroup(string $title): ?ObjectGroup
+    protected function findObjectGroup(string $title): null|ObjectGroup
     {
         /** @var null|ObjectGroup */
-        return $this->user->objectGroups()->where('title', $title)->first();
+        return $this->user
+            ->objectGroups()
+            ->where('title', $title)
+            ->first();
     }
 }

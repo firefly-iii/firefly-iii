@@ -52,14 +52,12 @@ class ListController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(RecurringRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -70,21 +68,21 @@ class ListController extends Controller
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {
-        $pageSize     = $this->parameters->get('limit');
-        $type         = $request->get('type') ?? 'default';
+        $pageSize = $this->parameters->get('limit');
+        $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types        = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager      = $this->getManager();
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = $this->getManager();
         // whatever is returned by the query, it must be part of these journals:
-        $journalIds   = $this->repository->getJournalIds($recurrence);
+        $journalIds = $this->repository->getJournalIds($recurrence);
 
         /** @var User $admin */
-        $admin        = auth()->user();
+        $admin = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector    = app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on journal IDs.
@@ -96,8 +94,7 @@ class ListController extends Controller
             // set page to retrieve
             ->setPage($this->parameters->get('page'))
             // set types of transactions to return.
-            ->setTypes($types)
-        ;
+            ->setTypes($types);
 
         if (null !== $this->parameters->get('start')) {
             $collector->setStart($this->parameters->get('start'));
@@ -106,19 +103,19 @@ class ListController extends Controller
             $collector->setEnd($this->parameters->get('end'));
         }
 
-        $paginator    = $collector->getPaginatedGroups();
-        $paginator->setPath(route('api.v1.transactions.index').$this->buildParams());
+        $paginator = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
 
         // enrich
-        $enrichment   = new TransactionGroupEnrichment();
+        $enrichment = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer  = app(TransactionGroupTransformer::class);
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

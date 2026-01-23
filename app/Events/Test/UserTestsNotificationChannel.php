@@ -37,8 +37,10 @@ class UserTestsNotificationChannel
     /**
      * Create a new event instance.
      */
-    public function __construct(string $channel, public User $user)
-    {
+    public function __construct(
+        string $channel,
+        public User $user
+    ) {
         Log::debug(sprintf('Triggered UserTestNotificationChannel("%s")', $channel));
         $this->channel = $channel;
     }

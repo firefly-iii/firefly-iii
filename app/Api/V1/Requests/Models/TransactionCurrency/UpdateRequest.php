@@ -50,7 +50,7 @@ class UpdateRequest extends FormRequest
             'symbol'         => ['symbol', 'convertString'],
             'decimal_places' => ['decimal_places', 'convertInteger'],
             'default'        => ['default', 'boolean'],
-            'enabled'        => ['enabled', 'boolean'],
+            'enabled'        => ['enabled', 'boolean']
         ];
 
         return $this->getAllData($fields);
@@ -70,7 +70,7 @@ class UpdateRequest extends FormRequest
             'symbol'         => sprintf('min:1|max:32|unique:transaction_currencies,symbol,%d', $currency->id),
             'decimal_places' => 'numeric|min:0|max:12',
             'enabled'        => [new IsBoolean()],
-            'default'        => [new IsBoolean()],
+            'default'        => [new IsBoolean()]
         ];
     }
 }

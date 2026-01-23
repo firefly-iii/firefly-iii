@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Collection;
 
 /**
@@ -56,16 +56,14 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $report     = [
-            'bills' => [],
-        ];
+        $report     = ['bills'     => []];
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {
-            $expectedDates            = $repository->getPayDatesInRange($bill, $start, $end);
-            $billId                   = $bill->id;
-            $currency                 = $bill->transactionCurrency;
-            $current                  = [
+            $expectedDates = $repository->getPayDatesInRange($bill, $start, $end);
+            $billId        = $bill->id;
+            $currency      = $bill->transactionCurrency;
+            $current       = [
                 'id'                      => $bill->id,
                 'name'                    => $bill->name,
                 'active'                  => $bill->active,
@@ -77,16 +75,16 @@ class ReportHelper implements ReportHelperInterface
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
                 'expected_dates'          => $expectedDates->toArray(),
-                'paid_moments'            => [],
+                'paid_moments'            => []
             ];
 
             /** @var Carbon $expectedStart */
             foreach ($expectedDates as $expectedStart) {
-                $expectedEnd               = Navigation::endOfX($expectedStart, $bill->repeat_freq, null);
+                $expectedEnd = Navigation::endOfX($expectedStart, $bill->repeat_freq, null);
 
                 // is paid in this period maybe?
                 /** @var GroupCollectorInterface $collector */
-                $collector                 = app(GroupCollectorInterface::class);
+                $collector = app(GroupCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($expectedStart, $expectedEnd)->setBill($bill);
                 $current['paid_moments'][] = $collector->getExtractedJournals();
             }
@@ -107,33 +105,33 @@ class ReportHelper implements ReportHelperInterface
         $fiscalHelper = app(FiscalHelperInterface::class);
         $start        = clone $date;
         $start->startOfMonth();
-        $end          = today(config('app.timezone'));
+        $end = today(config('app.timezone'));
         $end->endOfMonth();
-        $months       = [];
+        $months = [];
 
         while ($start <= $end) {
-            $year                      = $fiscalHelper->endOfFiscalYear($start)->year; // current year
+            $year = $fiscalHelper->endOfFiscalYear($start)->year; // current year
             if (!array_key_exists($year, $months)) {
                 $months[$year] = [
                     'fiscal_start' => $fiscalHelper->startOfFiscalYear($start)->format('Y-m-d'),
                     'fiscal_end'   => $fiscalHelper->endOfFiscalYear($start)->format('Y-m-d'),
                     'start'        => Carbon::createFromDate($year, 1, 1)->format('Y-m-d'),
                     'end'          => Carbon::createFromDate($year, 12, 31)->format('Y-m-d'),
-                    'months'       => [],
+                    'months'       => []
                 ];
             }
 
-            $currentEnd                = clone $start;
+            $currentEnd = clone $start;
             $currentEnd->endOfMonth();
             $months[$year]['months'][] = [
                 'formatted' => $start->isoFormat((string) trans('config.month_js')),
                 'start'     => $start->format('Y-m-d'),
                 'end'       => $currentEnd->format('Y-m-d'),
                 'month'     => $start->month,
-                'year'      => $year,
+                'year'      => $year
             ];
 
-            $start                     = clone $currentEnd; // to make the hop to the next month properly
+            $start = clone $currentEnd; // to make the hop to the next month properly
             $start->addDay();
         }
 

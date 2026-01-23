@@ -55,7 +55,7 @@ class StoreRequest extends FormRequest
             'title'       => $this->convertString('title'),
             'description' => $this->convertString('description'),
             'active'      => $active,
-            'order'       => $order,
+            'order'       => $order
         ];
     }
 
@@ -67,7 +67,7 @@ class StoreRequest extends FormRequest
         return [
             'title'       => 'required|min:1|max:100|uniqueObjectForUser:rule_groups,title',
             'description' => 'min:1|max:32768|nullable',
-            'active'      => [new IsBoolean()],
+            'active'      => [new IsBoolean()]
         ];
     }
 }

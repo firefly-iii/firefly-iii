@@ -58,20 +58,19 @@ class TransactionJournal extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                      = [
-            'user_id',
-            'user_group_id',
-            'transaction_type_id',
-            'bill_id',
-            'tag_count',
-            'transaction_currency_id',
-            'description',
-            'completed',
-            'order',
-            'date',
-            'date_tz',
-        ];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'bill_id',
+        'tag_count',
+        'transaction_currency_id',
+        'description',
+        'completed',
+        'order',
+        'date',
+        'date_tz'
+    ];
 
     protected $hidden = ['encrypted'];
 
@@ -83,13 +82,13 @@ class TransactionJournal extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $journalId = (int)$value;
+            $journalId = (int) $value;
 
             /** @var User $user */
-            $user      = auth()->user();
+            $user = auth()->user();
 
             /** @var null|TransactionJournal $journal */
-            $journal   = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
+            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -225,22 +224,18 @@ class TransactionJournal extends Model
             'encrypted'     => 'boolean',
             'completed'     => 'boolean',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer',
+            'user_group_id' => 'integer'
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     #[Scope]

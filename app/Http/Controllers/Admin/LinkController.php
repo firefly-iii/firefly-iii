@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\LinkTypeFormRequest;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,15 +50,13 @@ class LinkController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.system_settings'));
-                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
-                $this->repository = app(LinkTypeRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.system_settings'));
+            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+            $this->repository = app(LinkTypeRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $this->middleware(IsDemoUser::class)->except(['index', 'show']);
     }
 
@@ -79,7 +77,7 @@ class LinkController extends Controller
             $this->rememberPreviousUrl('link-types.create.url');
         }
 
-        return view('settings.link.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('settings.link.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -96,11 +94,11 @@ class LinkController extends Controller
         }
 
         Log::channel('audit')->info(sprintf('User wants to delete link type #%d', $linkType->id));
-        $subTitle   = (string) trans('firefly.delete_link_type', ['name' => $linkType->name]);
+        $subTitle   = (string) trans('firefly.delete_link_type', ['name'   => $linkType->name]);
         $otherTypes = $this->repository->get();
         $count      = $this->repository->countJournals($linkType);
         $moveTo     = [];
-        $moveTo[0]  = (string) trans('firefly.do_not_save_connection');
+        $moveTo[0] = (string) trans('firefly.do_not_save_connection');
 
         /** @var LinkType $otherType */
         foreach ($otherTypes as $otherType) {
@@ -112,7 +110,7 @@ class LinkController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('link-types.delete.url');
 
-        return view('settings.link.delete', ['linkType' => $linkType, 'subTitle' => $subTitle, 'moveTo' => $moveTo, 'count' => $count]);
+        return view('settings.link.delete', ['linkType' => $linkType, 'subTitle' => $subTitle, 'moveTo'   => $moveTo, 'count'    => $count]);
     }
 
     /**
@@ -143,7 +141,7 @@ class LinkController extends Controller
 
             return redirect(route('settings.links.index'));
         }
-        $subTitle     = (string) trans('firefly.edit_link_type', ['name' => $linkType->name]);
+        $subTitle     = (string) trans('firefly.edit_link_type', ['name'     => $linkType->name]);
         $subTitleIcon = 'fa-link';
 
         Log::channel('audit')->info(sprintf('User wants to edit link type #%d', $linkType->id));
@@ -154,7 +152,7 @@ class LinkController extends Controller
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 
-        return view('settings.link.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType' => $linkType]);
+        return view('settings.link.edit', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType'     => $linkType]);
     }
 
     /**
@@ -169,13 +167,11 @@ class LinkController extends Controller
         $linkTypes    = $this->repository->get();
 
         Log::channel('audit')->info('User on index of link types in admin.');
-        $linkTypes->each(
-            function (LinkType $linkType): void {
-                $linkType->journalCount = $this->repository->countJournals($linkType);
-            }
-        );
+        $linkTypes->each(function (LinkType $linkType): void {
+            $linkType->journalCount = $this->repository->countJournals($linkType);
+        });
 
-        return view('settings.link.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkTypes' => $linkTypes]);
+        return view('settings.link.index', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkTypes'    => $linkTypes]);
     }
 
     /**
@@ -185,13 +181,18 @@ class LinkController extends Controller
      */
     public function show(LinkType $linkType): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string) trans('firefly.overview_for_link', ['name' => $linkType->name]);
+        $subTitle     = (string) trans('firefly.overview_for_link', ['name'     => $linkType->name]);
         $subTitleIcon = 'fa-link';
         $links        = $this->repository->getJournalLinks($linkType);
 
         Log::channel('audit')->info(sprintf('User viewing link type #%d', $linkType->id));
 
-        return view('settings.link.show', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType' => $linkType, 'links' => $links]);
+        return view('settings.link.show', [
+            'subTitle'     => $subTitle,
+            'subTitleIcon' => $subTitleIcon,
+            'linkType'     => $linkType,
+            'links'        => $links
+        ]);
     }
 
     /**
@@ -204,7 +205,7 @@ class LinkController extends Controller
         $data     = [
             'name'    => $request->convertString('name'),
             'inward'  => $request->convertString('inward'),
-            'outward' => $request->convertString('outward'),
+            'outward' => $request->convertString('outward')
         ];
         $linkType = $this->repository->store($data);
 
@@ -236,11 +237,7 @@ class LinkController extends Controller
             return redirect(route('settings.links.index'));
         }
 
-        $data     = [
-            'name'    => $request->convertString('name'),
-            'inward'  => $request->convertString('inward'),
-            'outward' => $request->convertString('outward'),
-        ];
+        $data = ['name'    => $request->convertString('name'), 'inward'  => $request->convertString('inward'), 'outward' => $request->convertString('outward')];
         $this->repository->update($linkType, $data);
 
         Log::channel('audit')->info(sprintf('User update link type #%d.', $linkType->id), $data);

@@ -49,8 +49,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereIn('transaction_types.type', $types)
             ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-            ->get(['transaction_journals.*'])
-        ;
+            ->get(['transaction_journals.*']);
     }
 
     /**
@@ -58,7 +57,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getJournalBudgetId(TransactionJournal $journal): int
     {
-        $budget      = $journal->budgets()->first();
+        $budget = $journal->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
         }
@@ -78,7 +77,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getJournalCategoryId(TransactionJournal $journal): int
     {
-        $category    = $journal->categories()->first();
+        $category = $journal->categories()->first();
         if (null !== $category) {
             return $category->id;
         }
@@ -104,7 +103,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return Carbon value of a meta field (or NULL).
      */
-    public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon
+    public function getMetaDate(TransactionJournal $journal, string $field): null|Carbon
     {
         $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
@@ -128,9 +127,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return value of a meta field (or NULL) as a string.
      */
-    public function getMetaField(TransactionJournal $journal, string $field): ?string
+    public function getMetaField(TransactionJournal $journal, string $field): null|string
     {
-        $cache  = new CacheProperties();
+        $cache = new CacheProperties();
         $cache->addProperty('journal-meta-updated');
         $cache->addProperty($journal->id);
         $cache->addProperty($field);
@@ -139,12 +138,12 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
             return $cache->get();
         }
 
-        $entry  = $journal->transactionJournalMeta()->where('name', $field)->first();
+        $entry = $journal->transactionJournalMeta()->where('name', $field)->first();
         if (null === $entry) {
             return null;
         }
 
-        $value  = $entry->data;
+        $value = $entry->data;
 
         if (is_array($value)) {
             $return = implode(',', $value);
@@ -163,12 +162,11 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
     /**
      * Return text of a note attached to journal, or NULL
      */
-    public function getNoteText(TransactionJournal $journal): ?string
+    public function getNoteText(TransactionJournal $journal): null|string
     {
         $note = $journal->notes()->first();
 
         return $note?->text;
-
     }
 
     /**
@@ -177,9 +175,9 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
      */
     public function getSplitJournals(): Collection
     {
-        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->groupBy('transaction_journals.id')
-        ;
+        $query      = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->groupBy(
+            'transaction_journals.id'
+        );
         $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
         $journalIds = [];
 
@@ -191,9 +189,7 @@ class JournalCLIRepository implements JournalCLIRepositoryInterface, UserGroupIn
         }
         $journalIds = array_unique($journalIds);
 
-        return TransactionJournal::with(['transactions'])
-            ->whereIn('id', $journalIds)->get()
-        ;
+        return TransactionJournal::with(['transactions'])->whereIn('id', $journalIds)->get();
     }
 
     /**

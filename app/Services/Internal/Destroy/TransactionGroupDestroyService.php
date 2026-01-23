@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionGroupDestroyService

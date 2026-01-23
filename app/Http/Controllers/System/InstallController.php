@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use FireflyIII\Support\Facades\Preferences;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
@@ -52,16 +52,17 @@ class InstallController extends Controller
     public const string BASEDIR_ERROR   = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
-    private string $lastError           = '';
+
+    private string $lastError = '';
     // empty on purpose.
-    private array  $upgradeCommands     = [
+    private array $upgradeCommands = [
         // there are 5 initial commands
         // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
-        'migrate'                            => ['--seed' => true, '--force' => true],
-        'generate-keys'                      => [], // an exception :(
+        'migrate'       => ['--seed'  => true, '--force' => true],
+        'generate-keys' => [], // an exception :(
         'firefly-iii:upgrade-database'       => [],
-        'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
-        'firefly-iii:verify-security-alerts' => [],
+        'firefly-iii:set-latest-version'     => ['--james-is-cool'     => true],
+        'firefly-iii:verify-security-alerts' => []
     ];
 
     /**
@@ -91,19 +92,13 @@ class InstallController extends Controller
     public function runCommand(Request $request): JsonResponse
     {
         $requestIndex = (int) $request->get('index');
-        $response     = [
-            'hasNextCommand' => false,
-            'done'           => true,
-            'previous'       => null,
-            'error'          => false,
-            'errorMessage'   => null,
-        ];
+        $response     = ['hasNextCommand' => false, 'done'           => true, 'previous'       => null, 'error'          => false, 'errorMessage'   => null];
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $indexes      = array_keys($this->upgradeCommands);
+        $indexes = array_keys($this->upgradeCommands);
         if (array_key_exists($requestIndex, $indexes)) {
-            $command                    = $indexes[$requestIndex];
-            $parameters                 = $this->upgradeCommands[$command];
+            $command    = $indexes[$requestIndex];
+            $parameters = $this->upgradeCommands[$command];
             Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
 
             try {
@@ -114,17 +109,17 @@ class InstallController extends Controller
                 if (str_contains($e->getMessage(), 'open_basedir restriction in effect')) {
                     $this->lastError = self::BASEDIR_ERROR;
                 }
-                $result          = false;
+                $result = false;
                 $this->lastError = sprintf('%s %s', self::OTHER_ERROR, $e->getMessage());
             }
             if (false === $result) {
                 $response['errorMessage'] = $this->lastError;
-                $response['error']        = true;
+                $response['error'] = true;
 
                 return response()->json($response);
             }
             $response['hasNextCommand'] = array_key_exists($requestIndex + 1, $indexes);
-            $response['previous']       = $command;
+            $response['previous'] = $command;
         }
 
         return response()->json($response);
@@ -160,12 +155,9 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        $key                      = RSA::createKey(4096);
+        $key = RSA::createKey(4096);
 
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
+        [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
 
         if (file_exists($publicKey) || file_exists($privateKey)) {
             return;

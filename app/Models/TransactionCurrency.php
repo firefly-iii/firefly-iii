@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,17 +32,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\Amount;
 
 class TransactionCurrency extends Model
 {
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public ?bool $userGroupEnabled = null;
-    public ?bool $userGroupNative  = null;
+    public null|bool $userGroupEnabled = null;
+    public null|bool $userGroupNative  = null;
 
-    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -51,7 +51,7 @@ class TransactionCurrency extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $currencyId = (int)$value;
+            $currencyId = (int) $value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
@@ -65,9 +65,9 @@ class TransactionCurrency extends Model
 
     public function refreshForUser(User $user): void
     {
-        $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
-        $this->userGroupNative  = $native->id === $this->id;
+        $current = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $native  = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->userGroupNative = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
     }
 
@@ -109,14 +109,12 @@ class TransactionCurrency extends Model
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
-            'enabled'        => 'bool',
+            'enabled'        => 'bool'
         ];
     }
 
     protected function decimalPlaces(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Export;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Export\ExportRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Export\ExportDataGenerator;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response as LaravelResponse;
 use Safe\Exceptions\DatetimeException;
 
@@ -49,16 +49,14 @@ class ExportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->exporter = app(ExportDataGenerator::class);
-                $this->exporter->setUserGroup($this->userGroup);
-                $this->exporter->setUser($this->user);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->exporter = app(ExportDataGenerator::class);
+            $this->exporter->setUserGroup($this->userGroup);
+            $this->exporter->setUser($this->user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -89,14 +87,13 @@ class ExportController extends Controller
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename='.$fileName)
+            ->header('Content-Disposition', 'attachment; filename=' . $fileName)
             ->header('Content-Transfer-Encoding', 'binary')
             ->header('Connection', 'Keep-Alive')
             ->header('Expires', '0')
             ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
             ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen((string) $data[$key]))
-        ;
+            ->header('Content-Length', (string) strlen((string) $data[$key]));
 
         return $response;
     }

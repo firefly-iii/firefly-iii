@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -47,7 +47,7 @@ class CreateController extends Controller
 {
     use ModelInformation;
 
-    private AttachmentHelperInterface  $attachments;
+    private AttachmentHelperInterface $attachments;
     private AccountRepositoryInterface $repository;
 
     /**
@@ -58,17 +58,15 @@ class CreateController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository  = app(AccountRepositoryInterface::class);
-                $this->attachments = app(AttachmentHelperInterface::class);
+            $this->repository = app(AccountRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -83,35 +81,27 @@ class CreateController extends Controller
         $roles               = $this->getRoles();
         $liabilityTypes      = $this->getLiabilityTypes();
         $hasOldInput         = null !== $request->old('_token');
-        $locations           = [
-            'location' => [
-                'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
-                'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
-                'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
-                'has_location' => $hasOldInput && 'true' === old('location_has_location'),
-            ],
-        ];
-        $liabilityDirections = [
-            'debit'  => trans('firefly.liability_direction_debit'),
-            'credit' => trans('firefly.liability_direction_credit'),
-        ];
+        $locations           = ['location'           => [
+            'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
+            'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
+            'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
+            'has_location' => $hasOldInput && 'true' === old('location_has_location')
+        ]];
+        $liabilityDirections = ['debit'  => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
-        $interestPeriods     = [];
+        $interestPeriods = [];
         foreach (config('firefly.interest_periods') as $period) {
             $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
 
         // pre fill some data
-        $request->session()->flash(
-            'preFilled',
-            [
-                'currency_id'       => $this->primaryCurrency->id,
-                'include_net_worth' => !$hasOldInput || (bool)$request->old('include_net_worth'),
-            ]
-        );
+        $request->session()->flash('preFilled', [
+            'currency_id'       => $this->primaryCurrency->id,
+            'include_net_worth' => !$hasOldInput || (bool) $request->old('include_net_worth')
+        ]);
         // issue #8321
-        $showNetWorth        = true;
+        $showNetWorth = true;
         if ('liabilities' !== $objectType && 'asset' !== $objectType) {
             $showNetWorth = false;
         }
@@ -123,10 +113,17 @@ class CreateController extends Controller
         $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Creating new account.');
 
-        return view(
-            'accounts.create',
-            ['subTitleIcon' => $subTitleIcon, 'liabilityDirections' => $liabilityDirections, 'showNetWorth' => $showNetWorth, 'locations' => $locations, 'objectType' => $objectType, 'interestPeriods' => $interestPeriods, 'subTitle' => $subTitle, 'roles' => $roles, 'liabilityTypes' => $liabilityTypes]
-        );
+        return view('accounts.create', [
+            'subTitleIcon'        => $subTitleIcon,
+            'liabilityDirections' => $liabilityDirections,
+            'showNetWorth'        => $showNetWorth,
+            'locations'           => $locations,
+            'objectType'          => $objectType,
+            'interestPeriods'     => $interestPeriods,
+            'subTitle'            => $subTitle,
+            'roles'               => $roles,
+            'liabilityTypes'      => $liabilityTypes
+        ]);
     }
 
     /**
@@ -139,8 +136,8 @@ class CreateController extends Controller
      */
     public function store(AccountFormRequest $request)
     {
-        $data      = $request->getAccountData();
-        $account   = $this->repository->store($data);
+        $data    = $request->getAccountData();
+        $account = $this->repository->store($data);
         $request->session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
         Preferences::mark();
 
@@ -158,7 +155,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
@@ -172,7 +169,7 @@ class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect  = redirect($this->getPreviousUrl('accounts.create.url'));
+        $redirect = redirect($this->getPreviousUrl('accounts.create.url'));
         if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);

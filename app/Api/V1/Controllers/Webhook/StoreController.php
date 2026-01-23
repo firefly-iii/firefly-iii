@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -34,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class StoreController
@@ -42,19 +42,18 @@ use FireflyIII\Support\Facades\FireflyConfig;
 class StoreController extends Controller
 {
     public const string RESOURCE_KEY = 'webhooks';
+
     private WebhookRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(WebhookRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -63,24 +62,23 @@ class StoreController extends Controller
      */
     public function store(CreateRequest $request): JsonResponse
     {
-        $data        = $request->getData();
+        $data = $request->getData();
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info('User tries to store new webhook, but webhooks are DISABLED.', $data);
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
-        $webhook     = $this->repository->store($data);
+        $webhook = $this->repository->store($data);
 
         // enrich
         /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new WebhookEnrichment();
+        $admin      = auth()->user();
+        $enrichment = new WebhookEnrichment();
         $enrichment->setUser($admin);
-        $webhook     = $enrichment->enrichSingle($webhook);
+        $webhook = $enrichment->enrichSingle($webhook);
 
-
-        $manager     = $this->getManager();
+        $manager = $this->getManager();
 
         Log::channel('audit')->info('User stores new webhook', $data);
 
@@ -88,7 +86,7 @@ class StoreController extends Controller
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource    = new Item($webhook, $transformer, 'webhooks');
+        $resource = new Item($webhook, $transformer, 'webhooks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

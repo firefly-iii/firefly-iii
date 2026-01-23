@@ -49,7 +49,7 @@ class ReportGeneratorFactory
             $period = 'MultiYear';
         }
 
-        $class  = sprintf('FireflyIII\Generator\Report\%s\%sReportGenerator', $type, $period);
+        $class = sprintf('FireflyIII\Generator\Report\%s\%sReportGenerator', $type, $period);
         if (class_exists($class)) {
             /** @var ReportGeneratorInterface $obj */
             $obj = app($class);

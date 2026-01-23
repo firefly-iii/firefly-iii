@@ -42,10 +42,10 @@ class AutoBudgetObserver
         if (!Amount::convertToPrimary($autoBudget->budget->user)) {
             return;
         }
-        $userCurrency              = Amount::getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
+        $userCurrency = Amount::getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
         $autoBudget->native_amount = null;
         if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
-            $converter                 = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($autoBudget->budget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $autoBudget->native_amount = $converter->convert($autoBudget->transactionCurrency, $userCurrency, today(), $autoBudget->amount);

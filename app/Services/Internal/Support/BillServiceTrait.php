@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait BillServiceTrait
@@ -42,8 +42,8 @@ trait BillServiceTrait
         $ruleIds = $bill->user->rules()->get(['id'])->pluck('id')->toArray();
         $set     = RuleAction::whereIn('rule_id', $ruleIds)
             ->where('action_type', 'link_to_bill')
-            ->where('action_value', $oldName)->get()
-        ;
+            ->where('action_value', $oldName)
+            ->get();
 
         /** @var RuleAction $ruleAction */
         foreach ($set as $ruleAction) {
@@ -61,7 +61,7 @@ trait BillServiceTrait
 
             return true;
         }
-        $dbNote       = $bill->notes()->first();
+        $dbNote = $bill->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($bill);

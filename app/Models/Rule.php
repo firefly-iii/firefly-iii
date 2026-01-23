@@ -55,13 +55,13 @@ class Rule extends Model
     public static function routeBinder(string $value): self
     {
         if (auth()->check()) {
-            $ruleId = (int)$value;
+            $ruleId = (int) $value;
 
             /** @var User $user */
-            $user   = auth()->user();
+            $user = auth()->user();
 
             /** @var null|Rule $rule */
-            $rule   = $user->rules()->find($ruleId);
+            $rule = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }
@@ -107,26 +107,22 @@ class Rule extends Model
             'id'              => 'int',
             'strict'          => 'boolean',
             'user_id'         => 'integer',
-            'user_group_id'   => 'integer',
+            'user_group_id'   => 'integer'
         ];
     }
 
     protected function description(): Attribute
     {
-        return Attribute::make(set: static fn ($value): array => ['description' => e($value)]);
+        return Attribute::make(set: static fn($value): array => ['description' => e($value)]);
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 
     protected function ruleGroupId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn($value): int => (int) $value);
     }
 }

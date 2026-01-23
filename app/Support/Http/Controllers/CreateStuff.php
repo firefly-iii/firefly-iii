@@ -43,8 +43,8 @@ trait CreateStuff
     /**
      * Creates an asset account.
      */
-    protected function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool // create stuff
-    {
+    protected function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool
+    { // create stuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
@@ -57,7 +57,7 @@ trait CreateStuff
             'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
             'opening_balance_date' => new Carbon(),
-            'currency_id'          => $currency->id,
+            'currency_id'          => $currency->id
         ];
 
         $repository->store($assetAccount);
@@ -68,12 +68,12 @@ trait CreateStuff
     /**
      * Creates a cash wallet.
      */
-    protected function createCashWalletAccount(TransactionCurrency $currency, string $language): bool // create stuff
-    {
+    protected function createCashWalletAccount(TransactionCurrency $currency, string $language): bool
+    { // create stuff
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         $assetAccount = [
-            'name'                 => (string)trans('firefly.cash_wallet', [], $language),
+            'name'                 => (string) trans('firefly.cash_wallet', [], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'virtual_balance'      => 0,
@@ -82,7 +82,7 @@ trait CreateStuff
             'account_role'         => 'cashWalletAsset',
             'opening_balance'      => null,
             'opening_balance_date' => null,
-            'currency_id'          => $currency->id,
+            'currency_id'          => $currency->id
         ];
 
         $repository->store($assetAccount);
@@ -95,32 +95,29 @@ trait CreateStuff
      */
     protected function createOAuthKeys(): void // create stuff
     {
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
+        [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
 
         if (file_exists($publicKey) || file_exists($privateKey)) {
             return;
         }
 
-        $key                      = RSA::createKey(4096);
+        $key = RSA::createKey(4096);
 
         Log::alert('NO OAuth keys were found. They have been created.');
 
-        file_put_contents($publicKey, (string)$key->getPublicKey());
+        file_put_contents($publicKey, (string) $key->getPublicKey());
         file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
     /**
      * Create a savings account.
      */
-    protected function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool // create stuff
-    {
+    protected function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool
+    { // create stuff
         /** @var AccountRepositoryInterface $repository */
         $repository     = app(AccountRepositoryInterface::class);
         $savingsAccount = [
-            'name'                 => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
+            'name'                 => (string) trans('firefly.new_savings_account', ['bank_name'                 => $request->get('bank_name')], $language),
             'iban'                 => null,
             'account_type_name'    => 'asset',
             'account_type_id'      => null,
@@ -129,7 +126,7 @@ trait CreateStuff
             'account_role'         => 'savingAsset',
             'opening_balance'      => $request->input('savings_balance'),
             'opening_balance_date' => new Carbon(),
-            'currency_id'          => $currency->id,
+            'currency_id'          => $currency->id
         ];
         $repository->store($savingsAccount);
 
@@ -141,11 +138,6 @@ trait CreateStuff
      */
     protected function createUser(array $data): User // create object
     {
-        return User::create(
-            [
-                'email'    => $data['email'],
-                'password' => bcrypt($data['password']),
-            ]
-        );
+        return User::create(['email'    => $data['email'], 'password' => bcrypt($data['password'])]);
     }
 }

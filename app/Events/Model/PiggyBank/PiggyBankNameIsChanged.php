@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * PiggyBankNameIsChanged.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -34,5 +35,9 @@ class PiggyBankNameIsChanged extends Event
 {
     use SerializesModels;
 
-    public function __construct(public PiggyBank $piggyBank, public string $oldName, public string $newName) {}
+    public function __construct(
+        public PiggyBank $piggyBank,
+        public string $oldName,
+        public string $newName
+    ) {}
 }

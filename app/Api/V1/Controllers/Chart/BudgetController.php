@@ -56,7 +56,7 @@ class BudgetController extends Controller
 
     protected OperationsRepositoryInterface $opsRepository;
     private BudgetLimitRepositoryInterface $blRepository;
-    private array $currencies      = [];
+    private array $currencies = [];
     private BudgetRepositoryInterface $repository;
 
     public function __construct()
@@ -64,8 +64,8 @@ class BudgetController extends Controller
         parent::__construct();
         $this->middleware(function (Request $request, $next) {
             $this->validateUserGroup($request);
-            $this->repository    = app(BudgetRepositoryInterface::class);
-            $this->blRepository  = app(BudgetLimitRepositoryInterface::class);
+            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
             $this->opsRepository = app(OperationsRepositoryInterface::class);
             $this->repository->setUserGroup($this->userGroup);
             $this->opsRepository->setUserGroup($this->userGroup);
@@ -86,10 +86,10 @@ class BudgetController extends Controller
     public function overview(DateRangeRequest $request): JsonResponse
     {
         /** @var Carbon $start */
-        $start   = $request->attributes->get('start');
+        $start = $request->attributes->get('start');
 
         /** @var Carbon $end */
-        $end     = $request->attributes->get('end');
+        $end = $request->attributes->get('end');
 
         // code from FrontpageChartGenerator, but not in separate class
         $budgets = $this->repository->getActiveBudgets();
@@ -123,48 +123,48 @@ class BudgetController extends Controller
          */
         foreach ($expenses as $currencyId => $row) {
             // budgeted, left and overspent are now 0.
-            $limit               = $this->filterLimit($currencyId, $limits);
+            $limit = $this->filterLimit($currencyId, $limits);
 
             // primary currency entries
-            $row['pc_budgeted']  = '0';
-            $row['pc_spent']     = '0';
-            $row['pc_left']      = '0';
+            $row['pc_budgeted'] = '0';
+            $row['pc_spent'] = '0';
+            $row['pc_left'] = '0';
             $row['pc_overspent'] = '0';
 
             if ($limit instanceof BudgetLimit) {
-                $row['budgeted']  = $limit->amount;
-                $row['left']      = bcsub((string) $row['budgeted'], bcmul((string) $row['spent'], '-1'));
+                $row['budgeted'] = $limit->amount;
+                $row['left'] = bcsub((string) $row['budgeted'], bcmul((string) $row['spent'], '-1'));
                 $row['overspent'] = bcmul($row['left'], '-1');
-                $row['left']      = 1 === bccomp($row['left'], '0') ? $row['left'] : '0';
+                $row['left'] = 1 === bccomp($row['left'], '0') ? $row['left'] : '0';
                 $row['overspent'] = 1 === bccomp($row['overspent'], '0') ? $row['overspent'] : '0';
             }
 
             // convert data if necessary.
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id) {
                 $currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
-                $row['pc_budgeted']  = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['budgeted']);
-                $row['pc_spent']     = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['spent']);
-                $row['pc_left']      = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['left']);
+                $row['pc_budgeted'] = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['budgeted']);
+                $row['pc_spent'] = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['spent']);
+                $row['pc_left'] = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['left']);
                 $row['pc_overspent'] = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $row['overspent']);
             }
             if ($this->convertToPrimary && $currencyId === $this->primaryCurrency->id) {
-                $row['pc_budgeted']  = $row['budgeted'];
-                $row['pc_spent']     = $row['spent'];
-                $row['pc_left']      = $row['left'];
+                $row['pc_budgeted'] = $row['budgeted'];
+                $row['pc_spent'] = $row['spent'];
+                $row['pc_left'] = $row['left'];
                 $row['pc_overspent'] = $row['overspent'];
             }
-            $rows[]              = $row;
+            $rows[] = $row;
         }
 
         // is always an array
-        $return     = [];
+        $return = [];
         foreach ($rows as $row) {
-            $current  = [
-                'label'                           => $budget->name,
-                'currency_id'                     => (string) $row['currency_id'],
-                'currency_name'                   => $row['currency_name'],
-                'currency_code'                   => $row['currency_code'],
-                'currency_decimal_places'         => $row['currency_decimal_places'],
+            $current = [
+                'label'                   => $budget->name,
+                'currency_id'             => (string) $row['currency_id'],
+                'currency_name'           => $row['currency_name'],
+                'currency_code'           => $row['currency_code'],
+                'currency_decimal_places' => $row['currency_decimal_places'],
 
                 'primary_currency_id'             => (string) $this->primaryCurrency->id,
                 'primary_currency_name'           => $this->primaryCurrency->name,
@@ -172,19 +172,19 @@ class BudgetController extends Controller
                 'primary_currency_symbol'         => $this->primaryCurrency->symbol,
                 'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
 
-                'period'                          => null,
-                'date'                            => $row['start'],
-                'start_date'                      => $row['start'],
-                'end_date'                        => $row['end'],
-                'yAxisID'                         => 0,
-                'type'                            => 'bar',
-                'entries'                         => ['budgeted'  => $row['budgeted'], 'spent'     => $row['spent'], 'left'      => $row['left'], 'overspent' => $row['overspent']],
-                'pc_entries'                      => [
+                'period'     => null,
+                'date'       => $row['start'],
+                'start_date' => $row['start'],
+                'end_date'   => $row['end'],
+                'yAxisID'    => 0,
+                'type'       => 'bar',
+                'entries'    => ['budgeted'  => $row['budgeted'], 'spent'     => $row['spent'], 'left'      => $row['left'], 'overspent' => $row['overspent']],
+                'pc_entries' => [
                     'budgeted'  => $row['pc_budgeted'],
                     'spent'     => $row['pc_spent'],
                     'left'      => $row['pc_left'],
-                    'overspent' => $row['pc_overspent'],
-                ],
+                    'overspent' => $row['pc_overspent']
+                ]
             ];
             $return[] = $current;
         }
@@ -224,7 +224,7 @@ class BudgetController extends Controller
          */
         foreach ($spent as $currencyId => $block) {
             $this->currencies[$currencyId] ??= Amount::getTransactionCurrencyById($currencyId);
-            $return[$currencyId]           ??= [
+            $return[$currencyId] ??= [
                 'currency_id'             => (string) $currencyId,
                 'currency_code'           => $block['currency_code'],
                 'currency_name'           => $block['currency_name'],
@@ -235,7 +235,7 @@ class BudgetController extends Controller
                 'budgeted'                => '0',
                 'spent'                   => '0',
                 'left'                    => '0',
-                'overspent'               => '0',
+                'overspent'               => '0'
             ];
             $currentBudgetArray = $block['budgets'][$budgetId];
 
@@ -243,7 +243,7 @@ class BudgetController extends Controller
             /** @var array $journal */
             foreach ($currentBudgetArray['transaction_journals'] as $journal) {
                 /** @var numeric-string $amount */
-                $amount                       = (string) $journal['amount'];
+                $amount = (string) $journal['amount'];
                 $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $amount);
             }
         }
@@ -251,7 +251,7 @@ class BudgetController extends Controller
         return $return;
     }
 
-    private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
+    private function filterLimit(int $currencyId, Collection $limits): null|BudgetLimit
     {
         $amount    = '0';
         $limit     = null;

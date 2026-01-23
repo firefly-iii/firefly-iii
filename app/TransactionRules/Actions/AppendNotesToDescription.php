@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
@@ -32,6 +31,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AppendNotesToDescription
@@ -45,7 +45,9 @@ class AppendNotesToDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action) {}
+    public function __construct(
+        private RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -60,16 +62,16 @@ class AppendNotesToDescription implements ActionInterface
 
             return false;
         }
-        $note   = $object->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             Log::debug('Journal has no notes.');
-            $note       = new Note();
+            $note = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
         // only append if there is something to append
         if ('' !== $note->text) {
-            $before              = $object->description;
+            $before = $object->description;
             $object->description = trim(sprintf('%s %s', $object->description, (string) $this->clearString($note->text)));
             $object->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $object->description));

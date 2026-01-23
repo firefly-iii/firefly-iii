@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -33,6 +32,7 @@ use FireflyIII\Repositories\Account\OperationsRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -43,7 +43,7 @@ class DoubleController extends Controller
 {
     use AugumentData;
 
-    protected AccountRepositoryInterface  $accountRepository;
+    protected AccountRepositoryInterface $accountRepository;
     private OperationsRepositoryInterface $opsRepository;
 
     /**
@@ -54,14 +54,12 @@ class DoubleController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                $this->accountRepository = app(AccountRepositoryInterface::class);
-                $this->opsRepository     = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->accountRepository = app(AccountRepositoryInterface::class);
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -77,8 +75,8 @@ class DoubleController extends Controller
         $result   = [];
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $sourceId                  = $journal['source_account_id'];
-                $key                       = sprintf('%d-%d', $sourceId, $currency['currency_id']);
+                $sourceId = $journal['source_account_id'];
+                $key      = sprintf('%d-%d', $sourceId, $currency['currency_id']);
                 $result[$key] ??= [
                     'transactions'            => 0,
                     'sum'                     => '0',
@@ -89,17 +87,17 @@ class DoubleController extends Controller
                     'currency_id'             => $currency['currency_id'],
                     'currency_name'           => $currency['currency_name'],
                     'currency_symbol'         => $currency['currency_symbol'],
-                    'currency_decimal_places' => $currency['currency_decimal_places'],
+                    'currency_decimal_places' => $currency['currency_decimal_places']
                 ];
                 ++$result[$key]['transactions'];
-                $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
-                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
+                $result[$key]['sum'] = bcadd((string) $journal['amount'], $result[$key]['sum']);
+                $result[$key]['avg'] = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float) $result[$key]['avg'];
             }
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'avg_float');
+        $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
@@ -127,8 +125,8 @@ class DoubleController extends Controller
         $result   = [];
         foreach ($spent as $currency) {
             foreach ($currency['transaction_journals'] as $journal) {
-                $destinationId             = $journal['destination_account_id'];
-                $key                       = sprintf('%d-%d', $destinationId, $currency['currency_id']);
+                $destinationId = $journal['destination_account_id'];
+                $key           = sprintf('%d-%d', $destinationId, $currency['currency_id']);
                 $result[$key] ??= [
                     'transactions'             => 0,
                     'sum'                      => '0',
@@ -139,17 +137,17 @@ class DoubleController extends Controller
                     'currency_id'              => $currency['currency_id'],
                     'currency_name'            => $currency['currency_name'],
                     'currency_symbol'          => $currency['currency_symbol'],
-                    'currency_decimal_places'  => $currency['currency_decimal_places'],
+                    'currency_decimal_places'  => $currency['currency_decimal_places']
                 ];
                 ++$result[$key]['transactions'];
-                $result[$key]['sum']       = bcadd((string) $journal['amount'], $result[$key]['sum']);
-                $result[$key]['avg']       = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
+                $result[$key]['sum'] = bcadd((string) $journal['amount'], $result[$key]['sum']);
+                $result[$key]['avg'] = bcdiv($result[$key]['sum'], (string) $result[$key]['transactions']);
                 $result[$key]['avg_float'] = (float) $result[$key]['avg'];
             }
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'avg_float');
+        $amounts = array_column($result, 'avg_float');
         array_multisort($amounts, SORT_DESC, $result);
 
         try {
@@ -176,8 +174,8 @@ class DoubleController extends Controller
         $report          = [];
         $sums            = [];
         // see what happens when we collect transactions.
-        $spent           = $this->opsRepository->listExpenses($start, $end, $together);
-        $earned          = $this->opsRepository->listIncome($start, $end, $together);
+        $spent  = $this->opsRepository->listExpenses($start, $end, $together);
+        $earned = $this->opsRepository->listIncome($start, $end, $together);
         // group and list per account name (as long as its not in accounts, only in double)
 
         /** @var array $currency */
@@ -192,16 +190,16 @@ class DoubleController extends Controller
                 'currency_name'           => $currency['currency_name'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'currency_decimal_places' => $currency['currency_decimal_places']
             ];
 
             /** @var array $journal */
             foreach ($currency['transaction_journals'] as $journal) {
-                $destId                           = $journal['destination_account_id'];
-                $destName                         = $journal['destination_account_name'];
-                $destIban                         = $journal['destination_account_iban'];
-                $genericName                      = $this->getCounterpartName($withCounterpart, $destId, $destName, $destIban);
-                $objectName                       = sprintf('%s (%s)', $genericName, $currency['currency_name']);
+                $destId      = $journal['destination_account_id'];
+                $destName    = $journal['destination_account_name'];
+                $destIban    = $journal['destination_account_iban'];
+                $genericName = $this->getCounterpartName($withCounterpart, $destId, $destName, $destIban);
+                $objectName  = sprintf('%s (%s)', $genericName, $currency['currency_name']);
                 $report[$objectName] ??= [
                     'dest_name'               => '',
                     'dest_iban'               => '',
@@ -214,17 +212,17 @@ class DoubleController extends Controller
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                     'spent'                   => '0',
                     'earned'                  => '0',
-                    'sum'                     => '0',
+                    'sum'                     => '0'
                 ];
                 // set name
                 $report[$objectName]['dest_name'] = $destName;
                 $report[$objectName]['dest_iban'] = $destIban;
 
                 // add amounts:
-                $report[$objectName]['spent']     = bcadd($report[$objectName]['spent'], (string) $journal['amount']);
-                $report[$objectName]['sum']       = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
-                $sums[$currencyId]['spent']       = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
-                $sums[$currencyId]['sum']         = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
+                $report[$objectName]['spent'] = bcadd($report[$objectName]['spent'], (string) $journal['amount']);
+                $report[$objectName]['sum'] = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['spent'] = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
+                $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
@@ -240,16 +238,16 @@ class DoubleController extends Controller
                 'currency_name'           => $currency['currency_name'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'currency_decimal_places' => $currency['currency_decimal_places']
             ];
 
             /** @var array $journal */
             foreach ($currency['transaction_journals'] as $journal) {
-                $sourceId                           = $journal['source_account_id'];
-                $sourceName                         = $journal['source_account_name'];
-                $sourceIban                         = $journal['source_account_iban'];
-                $genericName                        = $this->getCounterpartName($withCounterpart, $sourceId, $sourceName, $sourceIban);
-                $objectName                         = sprintf('%s (%s)', $genericName, $currency['currency_name']);
+                $sourceId    = $journal['source_account_id'];
+                $sourceName  = $journal['source_account_name'];
+                $sourceIban  = $journal['source_account_iban'];
+                $genericName = $this->getCounterpartName($withCounterpart, $sourceId, $sourceName, $sourceIban);
+                $objectName  = sprintf('%s (%s)', $genericName, $currency['currency_name']);
                 $report[$objectName] ??= [
                     'dest_name'               => '',
                     'dest_iban'               => '',
@@ -262,7 +260,7 @@ class DoubleController extends Controller
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                     'spent'                   => '0',
                     'earned'                  => '0',
-                    'sum'                     => '0',
+                    'sum'                     => '0'
                 ];
 
                 // set name
@@ -270,20 +268,20 @@ class DoubleController extends Controller
                 $report[$objectName]['source_iban'] = $sourceIban;
 
                 // add amounts:
-                $report[$objectName]['earned']      = bcadd($report[$objectName]['earned'], (string) $journal['amount']);
-                $report[$objectName]['sum']         = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
-                $sums[$currencyId]['earned']        = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
-                $sums[$currencyId]['sum']           = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
+                $report[$objectName]['earned'] = bcadd($report[$objectName]['earned'], (string) $journal['amount']);
+                $report[$objectName]['sum'] = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['earned'] = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
+                $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
-        return view('reports.double.partials.accounts', ['sums' => $sums, 'report' => $report]);
+        return view('reports.double.partials.accounts', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**
      * TODO this method is duplicated.
      */
-    private function getCounterpartName(Collection $accounts, int $id, string $name, ?string $iban): string
+    private function getCounterpartName(Collection $accounts, int $id, string $name, null|string $iban): string
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -308,8 +306,8 @@ class DoubleController extends Controller
         $report          = [];
         $sums            = [];
         // see what happens when we collect transactions.
-        $spent           = $this->opsRepository->listExpenses($start, $end, $together);
-        $earned          = $this->opsRepository->listIncome($start, $end, $together);
+        $spent  = $this->opsRepository->listExpenses($start, $end, $together);
+        $earned = $this->opsRepository->listIncome($start, $end, $together);
         // group and list per account name (as long as its not in accounts, only in double)
 
         /** @var array $currency */
@@ -324,12 +322,12 @@ class DoubleController extends Controller
                 'currency_name'           => $currency['currency_name'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'currency_decimal_places' => $currency['currency_decimal_places']
             ];
 
             /** @var array $journal */
             foreach ($currency['transaction_journals'] as $journal) {
-                $objectName                   = sprintf('%s (%s)', $journal['source_account_name'], $currency['currency_name']);
+                $objectName = sprintf('%s (%s)', $journal['source_account_name'], $currency['currency_name']);
                 $report[$objectName] ??= [
                     'account_id'              => $journal['source_account_id'],
                     'account_name'            => $objectName,
@@ -340,14 +338,14 @@ class DoubleController extends Controller
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                     'spent'                   => '0',
                     'earned'                  => '0',
-                    'sum'                     => '0',
+                    'sum'                     => '0'
                 ];
                 // set name
                 // add amounts:
                 $report[$objectName]['spent'] = bcadd($report[$objectName]['spent'], (string) $journal['amount']);
-                $report[$objectName]['sum']   = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
-                $sums[$currencyId]['spent']   = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
-                $sums[$currencyId]['sum']     = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
+                $report[$objectName]['sum'] = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['spent'] = bcadd($sums[$currencyId]['spent'], (string) $journal['amount']);
+                $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
@@ -363,12 +361,12 @@ class DoubleController extends Controller
                 'currency_name'           => $currency['currency_name'],
                 'currency_symbol'         => $currency['currency_symbol'],
                 'currency_code'           => $currency['currency_code'],
-                'currency_decimal_places' => $currency['currency_decimal_places'],
+                'currency_decimal_places' => $currency['currency_decimal_places']
             ];
 
             /** @var array $journal */
             foreach ($currency['transaction_journals'] as $journal) {
-                $objectName                    = sprintf('%s (%s)', $journal['destination_account_name'], $currency['currency_name']);
+                $objectName = sprintf('%s (%s)', $journal['destination_account_name'], $currency['currency_name']);
                 $report[$objectName] ??= [
                     'account_id'              => $journal['destination_account_id'],
                     'account_name'            => $objectName,
@@ -379,18 +377,18 @@ class DoubleController extends Controller
                     'currency_decimal_places' => $currency['currency_decimal_places'],
                     'spent'                   => '0',
                     'earned'                  => '0',
-                    'sum'                     => '0',
+                    'sum'                     => '0'
                 ];
 
                 // add amounts:
                 $report[$objectName]['earned'] = bcadd($report[$objectName]['earned'], (string) $journal['amount']);
-                $report[$objectName]['sum']    = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
-                $sums[$currencyId]['earned']   = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
-                $sums[$currencyId]['sum']      = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
+                $report[$objectName]['sum'] = bcadd($report[$objectName]['sum'], (string) $journal['amount']);
+                $sums[$currencyId]['earned'] = bcadd($sums[$currencyId]['earned'], (string) $journal['amount']);
+                $sums[$currencyId]['sum'] = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
             }
         }
 
-        return view('reports.double.partials.accounts-per-asset', ['sums' => $sums, 'report' => $report]);
+        return view('reports.double.partials.accounts-per-asset', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**
@@ -420,13 +418,13 @@ class DoubleController extends Controller
                     'currency_symbol'          => $currency['currency_symbol'],
                     'currency_decimal_places'  => $currency['currency_decimal_places'],
                     'source_account_name'      => $journal['source_account_name'],
-                    'source_account_id'        => $journal['source_account_id'],
+                    'source_account_id'        => $journal['source_account_id']
                 ];
             }
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'amount_float');
+        $amounts = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_ASC, $result);
 
         try {
@@ -468,13 +466,13 @@ class DoubleController extends Controller
                     'currency_symbol'          => $currency['currency_symbol'],
                     'currency_decimal_places'  => $currency['currency_decimal_places'],
                     'source_account_name'      => $journal['source_account_name'],
-                    'source_account_id'        => $journal['source_account_id'],
+                    'source_account_id'        => $journal['source_account_id']
                 ];
             }
         }
         // sort by amount_float
         // sort temp array by amount.
-        $amounts  = array_column($result, 'amount_float');
+        $amounts = array_column($result, 'amount_float');
         array_multisort($amounts, SORT_DESC, $result);
 
         try {

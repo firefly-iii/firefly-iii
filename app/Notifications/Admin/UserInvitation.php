@@ -43,15 +43,16 @@ class UserInvitation extends Notification
 {
     use Queueable;
 
-    public function __construct(private InvitedUser $invitee) {}
+    public function __construct(
+        private InvitedUser $invitee
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -64,11 +65,16 @@ class UserInvitation extends Notification
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
-
         return new MailMessage()
-            ->markdown('emails.invitation-created', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
-            ->subject((string) trans('email.invitation_created_subject'))
-        ;
+            ->markdown('emails.invitation-created', [
+                'email'     => $this->invitee->user->email,
+                'invitee'   => $this->invitee->email,
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time
+            ])
+            ->subject((string) trans('email.invitation_created_subject'));
     }
 
     //    /**
@@ -93,9 +99,10 @@ class UserInvitation extends Notification
     {
         Log::debug('Now in toPushover() for UserInvitation');
 
-        return PushoverMessage::create((string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email]))
-            ->title((string) trans('email.invitation_created_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.invitation_created_body', [
+            'email'   => $this->invitee->user->email,
+            'invitee' => $this->invitee->email
+        ]))->title((string) trans('email.invitation_created_subject'));
     }
 
     /**
@@ -103,9 +110,10 @@ class UserInvitation extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
-        return new SlackMessage()->content(
-            (string) trans('email.invitation_created_body', ['email' => $this->invitee->user->email, 'invitee' => $this->invitee->email])
-        );
+        return new SlackMessage()->content((string) trans('email.invitation_created_body', [
+            'email'   => $this->invitee->user->email,
+            'invitee' => $this->invitee->email
+        ]));
     }
 
     /**

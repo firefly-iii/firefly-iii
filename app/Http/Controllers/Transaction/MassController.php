@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -37,13 +36,14 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class MassController.
@@ -59,15 +59,13 @@ class MassController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
-                $this->repository = app(JournalRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
+            $this->repository = app(JournalRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -124,33 +122,38 @@ class MassController extends Controller
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle            = (string) trans('firefly.mass_edit_journals');
+        $subTitle = (string) trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository   = app(AccountRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
 
         // valid withdrawal sources:
-        $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
-        $withdrawalSources   = $accountRepository->getAccountsByType($array);
+        $array             = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
+        $withdrawalSources = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:
         $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionTypeEnum::DEPOSIT->value, AccountTypeEnum::REVENUE->value));
         $depositDestinations = $accountRepository->getAccountsByType($array);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository    = app(BudgetRepositoryInterface::class);
-        $budgets             = $budgetRepository->getBudgets();
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+        $budgets          = $budgetRepository->getBudgets();
 
         // reverse amounts
         foreach ($journals as $index => $journal) {
-            $journals[$index]['amount']         = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
-            $journals[$index]['foreign_amount'] = null === $journal['foreign_amount']
-                ? null : Steam::positive($journal['foreign_amount']);
+            $journals[$index]['amount'] = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
+            $journals[$index]['foreign_amount'] = null === $journal['foreign_amount'] ? null : Steam::positive($journal['foreign_amount']);
         }
 
         $this->rememberPreviousUrl('transactions.mass-edit.url');
 
-        return view('transactions.mass.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'withdrawalSources' => $withdrawalSources, 'depositDestinations' => $depositDestinations, 'budgets' => $budgets]);
+        return view('transactions.mass.edit', [
+            'journals'            => $journals,
+            'subTitle'            => $subTitle,
+            'withdrawalSources'   => $withdrawalSources,
+            'depositDestinations' => $depositDestinations,
+            'budgets'             => $budgets
+        ]);
     }
 
     /**
@@ -165,7 +168,7 @@ class MassController extends Controller
             // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
         }
-        $count      = 0;
+        $count = 0;
 
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
@@ -191,15 +194,15 @@ class MassController extends Controller
      */
     private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
-        $journal           = $this->repository->find($journalId);
+        $journal = $this->repository->find($journalId);
         if (!$journal instanceof TransactionJournal) {
             throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
-        $service           = app(JournalUpdateService::class);
+        $service = app(JournalUpdateService::class);
         // for each field, call the update service.
         $service->setTransactionJournal($journal);
 
-        $data              = [
+        $data = [
             'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
             'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
             'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),
@@ -209,7 +212,7 @@ class MassController extends Controller
             'budget_id'        => $this->getIntFromRequest($request, $journal->id, 'budget_id'),
             'category_name'    => $this->getStringFromRequest($request, $journal->id, 'category'),
             'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
-            'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
+            'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount')
         ];
         Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
 
@@ -221,7 +224,7 @@ class MassController extends Controller
         event(new UpdatedTransactionGroup($journal->transactionGroup, true, true, $runRecalculations));
     }
 
-    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
+    private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): null|Carbon
     {
         $value = $request->get($key);
         if (!is_array($value)) {
@@ -243,7 +246,7 @@ class MassController extends Controller
         return $carbon;
     }
 
-    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
+    private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): null|string
     {
         $value = $request->get($string);
         if (!is_array($value)) {
@@ -256,7 +259,7 @@ class MassController extends Controller
         return (string) $value[$journalId];
     }
 
-    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
+    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): null|int
     {
         $value = $request->get($string);
         if (!is_array($value)) {

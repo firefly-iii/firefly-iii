@@ -68,27 +68,27 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function __construct()
     {
-        $this->sorting              = [];
-        $this->postFilters          = [];
-        $this->tags                 = [];
-        $this->user                 = null;
-        $this->userGroup            = null;
-        $this->limit                = null;
-        $this->page                 = null;
-        $this->startRow             = null;
-        $this->endRow               = null;
+        $this->sorting = [];
+        $this->postFilters = [];
+        $this->tags = [];
+        $this->user = null;
+        $this->userGroup = null;
+        $this->limit = null;
+        $this->page = null;
+        $this->startRow = null;
+        $this->endRow = null;
 
-        $this->hasAccountInfo       = false;
-        $this->hasCatInformation    = false;
+        $this->hasAccountInfo = false;
+        $this->hasCatInformation = false;
         $this->hasBudgetInformation = false;
-        $this->hasBillInformation   = false;
-        $this->hasNotesInformation  = false;
-        $this->hasJoinedTagTables   = false;
-        $this->hasJoinedAttTables   = false;
-        $this->expandGroupSearch    = false;
-        $this->hasJoinedMetaTables  = false;
-        $this->booleanFields        = ['source_balance_dirty', 'destination_balance_dirty'];
-        $this->integerFields        = [
+        $this->hasBillInformation = false;
+        $this->hasNotesInformation = false;
+        $this->hasJoinedTagTables = false;
+        $this->hasJoinedAttTables = false;
+        $this->expandGroupSearch = false;
+        $this->hasJoinedMetaTables = false;
+        $this->booleanFields = ['source_balance_dirty', 'destination_balance_dirty'];
+        $this->integerFields = [
             'transaction_group_id',
             'user_id',
             'user_group_id',
@@ -104,11 +104,11 @@ class GroupCollector implements GroupCollectorInterface
             'destination_transaction_id',
             'destination_account_id',
             'category_id',
-            'budget_id',
+            'budget_id'
         ];
-        $this->stringFields         = ['amount', 'foreign_amount', 'pc_amount', 'pc_foreign_amount', 'source_balance_after', 'destination_balance_after'];
-        $this->total                = 0;
-        $this->fields               = [
+        $this->stringFields = ['amount', 'foreign_amount', 'pc_amount', 'pc_foreign_amount', 'source_balance_after', 'destination_balance_after'];
+        $this->total = 0;
+        $this->fields = [
             // group
             'transaction_groups.id as transaction_group_id',
             'transaction_groups.user_id as user_id',
@@ -158,141 +158,111 @@ class GroupCollector implements GroupCollectorInterface
             // destination account info (always present)
             'destination.account_id as destination_account_id',
             'destination.balance_after as destination_balance_after',
-            'destination.balance_dirty as destination_balance_dirty',
+            'destination.balance_dirty as destination_balance_dirty'
         ];
     }
 
     public function descriptionDoesNotEnd(array $array): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s', $word);
-                            $q1->whereNotLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->where(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s', $word);
-                            $q2->whereNotLike('transaction_groups.title', $keyword);
-                            $q2->orWhereNull('transaction_groups.title');
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s', $word);
+                    $q1->whereNotLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->where(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s', $word);
+                    $q2->whereNotLike('transaction_groups.title', $keyword);
+                    $q2->orWhereNull('transaction_groups.title');
+                }
+            });
+        });
 
         return $this;
     }
 
     public function descriptionDoesNotStart(array $array): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%s%%', $word);
-                            $q1->whereNotLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->where(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%s%%', $word);
-                            $q2->whereNotLike('transaction_groups.title', $keyword);
-                            $q2->orWhereNull('transaction_groups.title');
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%s%%', $word);
+                    $q1->whereNotLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->where(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%s%%', $word);
+                    $q2->whereNotLike('transaction_groups.title', $keyword);
+                    $q2->orWhereNull('transaction_groups.title');
+                }
+            });
+        });
 
         return $this;
     }
 
     public function descriptionEnds(array $array): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s', $word);
-                            $q1->whereLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s', $word);
-                            $q2->whereLike('transaction_groups.title', $keyword);
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s', $word);
+                    $q1->whereLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->orWhere(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s', $word);
+                    $q2->whereLike('transaction_groups.title', $keyword);
+                }
+            });
+        });
 
         return $this;
     }
 
     public function descriptionIs(string $value): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($value): void {
-                $q->where('transaction_journals.description', '=', $value);
-                $q->orWhere('transaction_groups.title', '=', $value);
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void {
+            $q->where('transaction_journals.description', '=', $value);
+            $q->orWhere('transaction_groups.title', '=', $value);
+        });
 
         return $this;
     }
 
     public function descriptionIsNot(string $value): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($value): void {
-                $q->where('transaction_journals.description', '!=', $value);
-                $q->where(
-                    static function (EloquentBuilder $q2) use ($value): void {
-                        $q2->where('transaction_groups.title', '!=', $value);
-                        $q2->orWhereNull('transaction_groups.title');
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($value): void {
+            $q->where('transaction_journals.description', '!=', $value);
+            $q->where(static function (EloquentBuilder $q2) use ($value): void {
+                $q2->where('transaction_groups.title', '!=', $value);
+                $q2->orWhereNull('transaction_groups.title');
+            });
+        });
 
         return $this;
     }
 
     public function descriptionStarts(array $array): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%s%%', $word);
-                            $q1->whereLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%s%%', $word);
-                            $q2->whereLike('transaction_groups.title', $keyword);
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%s%%', $word);
+                    $q1->whereLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->orWhere(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%s%%', $word);
+                    $q2->whereLike('transaction_groups.title', $keyword);
+                }
+            });
+        });
 
         return $this;
     }
@@ -304,9 +274,9 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($params as $param) {
             $replace = sprintf('"%s"', $param);
             if (is_int($param)) {
-                $replace = (string)$param;
+                $replace = (string) $param;
             }
-            $pos     = strpos($query, '?');
+            $pos = strpos($query, '?');
             if (false !== $pos) {
                 $query = substr_replace($query, $replace, $pos, 1);
             }
@@ -329,17 +299,13 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function excludeCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($currency): void {
-                $q->where('source.transaction_currency_id', '!=', $currency->id);
-                $q->where(
-                    static function (EloquentBuilder $q2) use ($currency): void {
-                        $q2->where('source.foreign_currency_id', '!=', $currency->id);
-                        $q2->orWhereNull('source.foreign_currency_id');
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($currency): void {
+            $q->where('source.transaction_currency_id', '!=', $currency->id);
+            $q->where(static function (EloquentBuilder $q2) use ($currency): void {
+                $q2->where('source.foreign_currency_id', '!=', $currency->id);
+                $q2->orWhereNull('source.foreign_currency_id');
+            });
+        });
 
         return $this;
     }
@@ -390,27 +356,21 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         Log::debug(sprintf('%d excluded search words provided.', count($array)));
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q1->whereNotLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->where(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q2->whereNotLike('transaction_groups.title', $keyword);
-                            $q2->orWhereNull('transaction_groups.title');
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s%%', $word);
+                    $q1->whereNotLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->where(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s%%', $word);
+                    $q2->whereNotLike('transaction_groups.title', $keyword);
+                    $q2->orWhereNull('transaction_groups.title');
+                }
+            });
+        });
 
         return $this;
     }
@@ -425,10 +385,11 @@ class GroupCollector implements GroupCollectorInterface
     public function exists(): GroupCollectorInterface
     {
         $this->query->whereNull('transaction_groups.deleted_at');
-        $this->query->whereNotIn(
-            'transaction_types.type',
-            [TransactionTypeEnum::LIABILITY_CREDIT->value, TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::RECONCILIATION->value]
-        );
+        $this->query->whereNotIn('transaction_types.type', [
+            TransactionTypeEnum::LIABILITY_CREDIT->value,
+            TransactionTypeEnum::OPENING_BALANCE->value,
+            TransactionTypeEnum::RECONCILIATION->value
+        ]);
 
         return $this;
     }
@@ -458,9 +419,9 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($selection as $group) {
             $count = count($group['transactions']);
             foreach ($group['transactions'] as $journalId => $journal) {
-                $journal['group_title']       = $group['title'];
+                $journal['group_title'] = $group['title'];
                 $journal['journals_in_group'] = $count;
-                $return[$journalId]           = $journal;
+                $return[$journalId] = $journal;
             }
         }
 
@@ -478,15 +439,15 @@ class GroupCollector implements GroupCollectorInterface
             // add to query:
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
-        $result      = $this->query->get($this->fields);
+        $result = $this->query->get($this->fields);
         // now to parse this into an array.
-        $collection  = $this->parseArray($result);
+        $collection = $this->parseArray($result);
 
         // filter the array using all available post filters:
-        $collection  = $this->postFilterCollection($collection);
+        $collection = $this->postFilterCollection($collection);
 
         // sort the collection, if sort instructions are present.
-        $collection  = $this->sortCollection($collection);
+        $collection = $this->sortCollection($collection);
 
         // count it and continue:
         $this->total = $collection->count();
@@ -507,7 +468,10 @@ class GroupCollector implements GroupCollectorInterface
 
     private function getCollectedGroupIds(): array
     {
-        return $this->query->get(['transaction_journals.transaction_group_id'])->pluck('transaction_group_id')->toArray();
+        return $this->query
+            ->get(['transaction_journals.transaction_group_id'])
+            ->pluck('transaction_group_id')
+            ->toArray();
     }
 
     /**
@@ -519,15 +483,15 @@ class GroupCollector implements GroupCollectorInterface
 
         /** @var TransactionJournal $augumentedJournal */
         foreach ($collection as $augumentedJournal) {
-            $groupId   = (int)$augumentedJournal->transaction_group_id;
+            $groupId = (int) $augumentedJournal->transaction_group_id;
 
             if (!array_key_exists($groupId, $groups)) {
                 // make new array
-                $parsedGroup                            = $this->parseAugmentedJournal($augumentedJournal);
-                $groupArray                             = [
-                    'id'               => (int)$augumentedJournal->transaction_group_id,
-                    'user_id'          => $augumentedJournal->user_id,
-                    'user_group_id'    => $augumentedJournal->user_group_id,
+                $parsedGroup = $this->parseAugmentedJournal($augumentedJournal);
+                $groupArray  = [
+                    'id'            => (int) $augumentedJournal->transaction_group_id,
+                    'user_id'       => $augumentedJournal->user_id,
+                    'user_group_id' => $augumentedJournal->user_group_id,
                     // Field transaction_group_title was added by the query.
                     'title'            => $augumentedJournal->transaction_group_title,
                     'created_at'       => new Carbon($augumentedJournal->group_created_at, config('app.timezone')),
@@ -535,18 +499,18 @@ class GroupCollector implements GroupCollectorInterface
                     'transaction_type' => $parsedGroup['transaction_type_type'],
                     'count'            => 1,
                     'sums'             => [],
-                    'transactions'     => [],
+                    'transactions'     => []
                 ];
                 // Field transaction_journal_id was added by the query.
-                $journalId                              = (int)$augumentedJournal->transaction_journal_id;
+                $journalId = (int) $augumentedJournal->transaction_journal_id;
                 $groupArray['transactions'][$journalId] = $parsedGroup;
-                $groups[$groupId]                       = $groupArray;
+                $groups[$groupId] = $groupArray;
 
                 continue;
             }
             // or parse the rest.
             // Field transaction_journal_id was added by the query.
-            $journalId = (int)$augumentedJournal->transaction_journal_id;
+            $journalId = (int) $augumentedJournal->transaction_journal_id;
             if (array_key_exists($journalId, $groups[$groupId]['transactions'])) {
                 // append data to existing group + journal (for multiple tags or multiple attachments)
                 $groups[$groupId]['transactions'][$journalId] = $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augumentedJournal);
@@ -570,18 +534,18 @@ class GroupCollector implements GroupCollectorInterface
      */
     private function parseAugmentedJournal(TransactionJournal $augumentedJournal): array
     {
-        $result                  = $augumentedJournal->toArray();
-        $result['tags']          = [];
-        $result['attachments']   = [];
+        $result = $augumentedJournal->toArray();
+        $result['tags'] = [];
+        $result['attachments'] = [];
         $result['interest_date'] = null;
-        $result['payment_date']  = null;
-        $result['invoice_date']  = null;
-        $result['book_date']     = null;
-        $result['due_date']      = null;
-        $result['process_date']  = null;
+        $result['payment_date'] = null;
+        $result['invoice_date'] = null;
+        $result['book_date'] = null;
+        $result['due_date'] = null;
+        $result['process_date'] = null;
 
         try {
-            $result['date']       = new Carbon($result['date'], 'UTC');
+            $result['date'] = new Carbon($result['date'], 'UTC');
             $result['created_at'] = new Carbon($result['created_at'], 'UTC');
             $result['updated_at'] = new Carbon($result['updated_at'], 'UTC');
 
@@ -596,27 +560,27 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         // try to process meta date value (if present)
-        $dates                   = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
+        $dates = ['interest_date', 'payment_date', 'invoice_date', 'book_date', 'due_date', 'process_date'];
         if (array_key_exists('meta_name', $result) && in_array($result['meta_name'], $dates, true)) {
             $name = $result['meta_name'];
-            if (array_key_exists('meta_data', $result) && '' !== (string)$result['meta_data']) {
-                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string)json_decode((string)$result['meta_data']), 0, 10));
+            if (array_key_exists('meta_data', $result) && '' !== (string) $result['meta_data']) {
+                $result[$name] = Carbon::createFromFormat('!Y-m-d', substr((string) json_decode((string) $result['meta_data']), 0, 10));
             }
         }
 
         // convert values to integers:
-        $result                  = $this->convertToInteger($result);
+        $result = $this->convertToInteger($result);
 
         // convert to boolean
-        $result                  = $this->convertToBoolean($result);
+        $result = $this->convertToBoolean($result);
 
         // convert back to strings because SQLite is dumb like that.
-        $result                  = $this->convertToStrings($result);
+        $result = $this->convertToStrings($result);
 
-        $result['reconciled']    = 1 === (int)$result['reconciled'];
+        $result['reconciled'] = 1 === (int) $result['reconciled'];
         if (array_key_exists('tag_id', $result) && null !== $result['tag_id']) { // assume the other fields are present as well.
-            $tagId                  = (int)$augumentedJournal['tag_id'];
-            $tagDate                = null;
+            $tagId   = (int) $augumentedJournal['tag_id'];
+            $tagDate = null;
 
             try {
                 $tagDate = Carbon::parse($augumentedJournal['tag_date']);
@@ -625,32 +589,39 @@ class GroupCollector implements GroupCollectorInterface
             }
 
             $result['tags'][$tagId] = [
-                'id'          => (int)$result['tag_id'],
+                'id'          => (int) $result['tag_id'],
                 'name'        => $result['tag_name'],
                 'date'        => $tagDate,
-                'description' => $result['tag_description'],
+                'description' => $result['tag_description']
             ];
         }
 
         // also merge attachments:
         if (array_key_exists('attachment_id', $result) && null !== $result['attachment_id']) {
-            $uploaded     = 1 === (int)$result['attachment_uploaded'];
-            $attachmentId = (int)$augumentedJournal['attachment_id'];
+            $uploaded     = 1 === (int) $result['attachment_uploaded'];
+            $attachmentId = (int) $augumentedJournal['attachment_id'];
             $deleted      = null !== $result['attachment_deleted_at'];
             if (0 !== $attachmentId && $uploaded && !$deleted) {
                 $result['attachments'][$attachmentId] = [
                     'id'       => $attachmentId,
                     'filename' => $augumentedJournal['attachment_filename'],
-                    'title'    => $augumentedJournal['attachment_title'],
+                    'title'    => $augumentedJournal['attachment_title']
                 ];
             }
         }
         // unset various fields:
         unset(
-            $result['tag_id'], $result['meta_data'], $result['meta_name'],
-            $result['tag_name'], $result['tag_date'], $result['tag_description'],
-            $result['tag_latitude'], $result['tag_longitude'], $result['tag_zoom_level'],
-            $result['attachment_filename'], $result['attachment_id']
+            $result['tag_id'],
+            $result['meta_data'],
+            $result['meta_name'],
+            $result['tag_name'],
+            $result['tag_date'],
+            $result['tag_description'],
+            $result['tag_latitude'],
+            $result['tag_longitude'],
+            $result['tag_zoom_level'],
+            $result['attachment_filename'],
+            $result['attachment_id']
         );
 
         return $result;
@@ -662,7 +633,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToInteger(array $array): array
     {
         foreach ($this->integerFields as $field) {
-            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (int)$array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (int) $array[$field] : null;
         }
 
         return $array;
@@ -671,7 +642,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToBoolean(array $array): array
     {
         foreach ($this->booleanFields as $field) {
-            $array[$field] = array_key_exists($field, $array) ? (bool)$array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) ? (bool) $array[$field] : null;
         }
 
         return $array;
@@ -680,7 +651,7 @@ class GroupCollector implements GroupCollectorInterface
     private function convertToStrings(array $array): array
     {
         foreach ($this->stringFields as $field) {
-            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (string)$array[$field] : null;
+            $array[$field] = array_key_exists($field, $array) && null !== $array[$field] ? (string) $array[$field] : null;
         }
 
         return $array;
@@ -690,9 +661,9 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('tag_id', $newArray)) { // assume the other fields are present as well.
-            $tagId                           = (int)$newJournal['tag_id'];
+            $tagId = (int) $newJournal['tag_id'];
 
-            $tagDate                         = null;
+            $tagDate = null;
 
             try {
                 $tagDate = Carbon::parse($newArray['tag_date']);
@@ -701,10 +672,10 @@ class GroupCollector implements GroupCollectorInterface
             }
 
             $existingJournal['tags'][$tagId] = [
-                'id'          => (int)$newArray['tag_id'],
+                'id'          => (int) $newArray['tag_id'],
                 'name'        => $newArray['tag_name'],
                 'date'        => $tagDate,
-                'description' => $newArray['tag_description'],
+                'description' => $newArray['tag_description']
             ];
         }
 
@@ -715,11 +686,9 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('attachment_id', $newArray)) {
-            $attachmentId                                  = (int)$newJournal['attachment_id'];
+            $attachmentId = (int) $newJournal['attachment_id'];
 
-            $existingJournal['attachments'][$attachmentId] = [
-                'id' => $attachmentId,
-            ];
+            $existingJournal['attachments'][$attachmentId] = ['id' => $attachmentId];
         }
 
         return $existingJournal;
@@ -734,39 +703,39 @@ class GroupCollector implements GroupCollectorInterface
         foreach ($groups as $groudId => $group) {
             /** @var array $transaction */
             foreach ($group['transactions'] as $transaction) {
-                $currencyId                                         = (int)$transaction['currency_id'];
+                $currencyId = (int) $transaction['currency_id'];
                 if (null === $transaction['amount']) {
                     throw new FireflyException(sprintf('Amount is NULL for a transaction in group #%d, please investigate.', $groudId));
                 }
-                $pcAmount                                           = (string)('' === $transaction['pc_amount'] ? '0' : $transaction['pc_amount']);
-                $pcForeignAmount                                    = (string)('' === $transaction['pc_foreign_amount'] ? '0' : $transaction['pc_foreign_amount']);
-                $foreignAmount                                      = (string)('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
+                $pcAmount        = (string) ('' === $transaction['pc_amount'] ? '0' : $transaction['pc_amount']);
+                $pcForeignAmount = (string) ('' === $transaction['pc_foreign_amount'] ? '0' : $transaction['pc_foreign_amount']);
+                $foreignAmount   = (string) ('' === $transaction['foreign_amount'] ? '0' : $transaction['foreign_amount']);
 
                 // set default:
                 if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
-                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
-                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_id'] = $currencyId;
+                    $groups[$groudId]['sums'][$currencyId]['currency_code'] = $transaction['currency_code'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_symbol'] = $transaction['currency_symbol'];
                     $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
-                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                    $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = '0';
+                    $groups[$groudId]['sums'][$currencyId]['pc_amount'] = '0';
                 }
-                $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string)$groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-                $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd((string)$groups[$groudId]['sums'][$currencyId]['pc_amount'], $pcAmount);
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+                $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['pc_amount'], $pcAmount);
 
                 if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId                                         = (int)$transaction['foreign_currency_id'];
+                    $currencyId = (int) $transaction['foreign_currency_id'];
 
                     // set default:
                     if (!array_key_exists($currencyId, $groups[$groudId]['sums'])) {
-                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_id'] = $currencyId;
+                        $groups[$groudId]['sums'][$currencyId]['currency_code'] = $transaction['foreign_currency_code'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_symbol'] = $transaction['foreign_currency_symbol'];
                         $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
-                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                        $groups[$groudId]['sums'][$currencyId]['pc_amount']               = '0';
+                        $groups[$groudId]['sums'][$currencyId]['amount'] = '0';
+                        $groups[$groudId]['sums'][$currencyId]['pc_amount'] = '0';
                     }
-                    $groups[$groudId]['sums'][$currencyId]['amount']    = bcadd((string)$groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd((string) $groups[$groudId]['sums'][$currencyId]['amount'], $foreignAmount);
                     $groups[$groudId]['sums'][$currencyId]['pc_amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $pcForeignAmount);
                 }
             }
@@ -782,14 +751,18 @@ class GroupCollector implements GroupCollectorInterface
         if (0 === $countFilters) {
             return $currentCollection;
         }
-        Log::debug(sprintf('GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).', count($this->postFilters), count($currentCollection)));
+        Log::debug(sprintf(
+            'GroupCollector: postFilterCollection has %d filter(s) and %d transaction(s).',
+            count($this->postFilters),
+            count($currentCollection)
+        ));
 
         /**
          * @var Closure $function
          */
         foreach ($this->postFilters as $function) {
             Log::debug('Applying filter...');
-            $nextCollection    = new Collection();
+            $nextCollection = new Collection();
 
             // loop everything in the current collection
             // and save it (or not) in the new collection.
@@ -853,7 +826,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getPaginatedGroups(): LengthAwarePaginator
     {
-        $set   = $this->getGroups();
+        $set = $this->getGroups();
         if (0 === $this->limit) {
             $this->setLimit(50);
         }
@@ -898,12 +871,10 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($currency): void {
-                $q->where('source.transaction_currency_id', $currency->id);
-                $q->orWhere('source.foreign_currency_id', $currency->id);
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($currency): void {
+            $q->where('source.transaction_currency_id', $currency->id);
+            $q->orWhere('source.foreign_currency_id', $currency->id);
+        });
 
         return $this;
     }
@@ -970,7 +941,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setPage(int $page): GroupCollectorInterface
     {
-        $page       = 0 === $page ? 1 : $page;
+        $page = 0 === $page ? 1 : $page;
         $this->page = $page;
         // Log::debug(sprintf('GroupCollector: page is now %d', $page));
 
@@ -988,26 +959,20 @@ class GroupCollector implements GroupCollectorInterface
             return $this;
         }
         Log::debug(sprintf('%d word(s) in array', count($array)));
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($array): void {
-                $q->where(
-                    static function (EloquentBuilder $q1) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q1->whereLike('transaction_journals.description', $keyword);
-                        }
-                    }
-                );
-                $q->orWhere(
-                    static function (EloquentBuilder $q2) use ($array): void {
-                        foreach ($array as $word) {
-                            $keyword = sprintf('%%%s%%', $word);
-                            $q2->whereLike('transaction_groups.title', $keyword);
-                        }
-                    }
-                );
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($array): void {
+            $q->where(static function (EloquentBuilder $q1) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s%%', $word);
+                    $q1->whereLike('transaction_journals.description', $keyword);
+                }
+            });
+            $q->orWhere(static function (EloquentBuilder $q2) use ($array): void {
+                foreach ($array as $word) {
+                    $keyword = sprintf('%%%s%%', $word);
+                    $q2->whereLike('transaction_groups.title', $keyword);
+                }
+            });
+        });
 
         return $this;
     }
@@ -1071,25 +1036,14 @@ class GroupCollector implements GroupCollectorInterface
             // ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             ->transactionJournals()
             ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
-
             // join source transaction.
-            ->leftJoin(
-                'transactions as source',
-                static function (JoinClause $join): void {
-                    $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->where('source.amount', '<', 0)
-                    ;
-                }
-            )
+            ->leftJoin('transactions as source', static function (JoinClause $join): void {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            })
             // join destination transaction
-            ->leftJoin(
-                'transactions as destination',
-                static function (JoinClause $join): void {
-                    $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->where('destination.amount', '>', 0)
-                    ;
-                }
-            )
+            ->leftJoin('transactions as destination', static function (JoinClause $join): void {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            })
             // left join transaction type.
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
@@ -1103,8 +1057,7 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC')
-        ;
+            ->orderBy('source.amount', 'DESC');
     }
 
     /**
@@ -1129,25 +1082,14 @@ class GroupCollector implements GroupCollectorInterface
         $this->query = $this->userGroup
             ->transactionJournals()
             ->leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
-
             // join source transaction.
-            ->leftJoin(
-                'transactions as source',
-                static function (JoinClause $join): void {
-                    $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->where('source.amount', '<', 0)
-                    ;
-                }
-            )
+            ->leftJoin('transactions as source', static function (JoinClause $join): void {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')->where('source.amount', '<', 0);
+            })
             // join destination transaction
-            ->leftJoin(
-                'transactions as destination',
-                static function (JoinClause $join): void {
-                    $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                        ->where('destination.amount', '>', 0)
-                    ;
-                }
-            )
+            ->leftJoin('transactions as destination', static function (JoinClause $join): void {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')->where('destination.amount', '>', 0);
+            })
             // left join transaction type.
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
@@ -1160,8 +1102,7 @@ class GroupCollector implements GroupCollectorInterface
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC')
-        ;
+            ->orderBy('source.amount', 'DESC');
     }
 
     /**
@@ -1170,14 +1111,14 @@ class GroupCollector implements GroupCollectorInterface
     public function withAPIInformation(): GroupCollectorInterface
     {
         // include source + destination account name and type.
-        $this->withAccountInformation()
+        $this
+            ->withAccountInformation()
             // include category ID + name (if any)
             ->withCategoryInformation()
             // include budget ID + name (if any)
             ->withBudgetInformation()
             // include bill ID + name (if any)
-            ->withBillInformation()
-        ;
+            ->withBillInformation();
 
         return $this;
     }

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -31,6 +30,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetBudget.
@@ -40,38 +40,39 @@ class SetBudget implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user          = User::find($journal['user_id']);
-        $search        = $this->action->getValue($journal);
+        $user   = User::find($journal['user_id']);
+        $search = $this->action->getValue($journal);
 
-        $budget        = $user->budgets()->where('name', $search)->first();
+        $budget = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
-            Log::debug(
-                sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
-                    $journal['transaction_journal_id'],
-                    $search
-                )
-            );
+            Log::debug(sprintf(
+                'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
+                $journal['transaction_journal_id'],
+                $search
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_budget', ['name' => $search])));
 
             return false;
         }
 
         if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
-            Log::debug(
-                sprintf(
-                    'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
-                    $journal['transaction_journal_id'],
-                    $search,
-                    $journal['transaction_type_type']
-                )
-            );
-            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_set_budget', ['type' => $journal['transaction_type_type'], 'name' => $search])));
+            Log::debug(sprintf(
+                'RuleAction SetBudget could not set budget of journal #%d to "%s" because journal is a %s.',
+                $journal['transaction_journal_id'],
+                $search,
+                $journal['transaction_type_type']
+            ));
+            event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_set_budget', [
+                'type' => $journal['transaction_type_type'],
+                'name' => $search
+            ])));
 
             return false;
         }
@@ -87,15 +88,21 @@ class SetBudget implements ActionInterface
             return false;
         }
 
-        Log::debug(
-            sprintf('RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").', $journal['transaction_journal_id'], $budget->id, $budget->name)
-        );
+        Log::debug(sprintf(
+            'RuleAction SetBudget set the budget of journal #%d to budget #%d ("%s").',
+            $journal['transaction_journal_id'],
+            $budget->id,
+            $budget->name
+        ));
 
         DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
-        DB::table('budget_transaction_journal')->insert(['transaction_journal_id' => $journal['transaction_journal_id'], 'budget_id' => $budget->id]);
+        DB::table('budget_transaction_journal')->insert([
+            'transaction_journal_id' => $journal['transaction_journal_id'],
+            'budget_id'              => $budget->id
+        ]);
 
         /** @var TransactionJournal $object */
-        $object        = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', $oldBudgetName, $budget->name));
 
         return true;
