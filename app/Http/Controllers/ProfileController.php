@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\Security\User\UserChangedEmailAddress;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 use Exception;
-use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -226,7 +226,7 @@ class ProfileController extends Controller
         // now actually update user:
         $repository->changeEmail($user, $newEmail);
 
-        event(new UserChangedEmail($user, $newEmail, $oldEmail));
+        event(new UserChangedEmailAddress($user, $newEmail, $oldEmail));
 
         // force user logout.
         Auth::guard()->logout();

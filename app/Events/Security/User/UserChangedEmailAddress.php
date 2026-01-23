@@ -1,8 +1,7 @@
 <?php
-
-/**
- * UserChangedEmail.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * UserChangedEmailAddress.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,17 +19,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\User;
 
-namespace FireflyIII\Events;
-
+use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * Class UserChangedEmail.
- */
-class UserChangedEmail extends Event
+class UserChangedEmailAddress extends Event
 {
     use SerializesModels;
 

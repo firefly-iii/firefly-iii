@@ -1,8 +1,7 @@
 <?php
-
-/**
- * RequestedNewPassword.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * UserRequestedNewPassword.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,37 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Security\User;
 
-namespace FireflyIII\Events;
-
+use FireflyIII\Events\Event;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 use SensitiveParameter;
 
-/**
- * Class RequestedNewPassword.
- */
-class RequestedNewPassword extends Event
+class UserRequestedNewPassword extends Event
 {
     use SerializesModels;
 
-    /** @var string The users IP address */
-    public $ipAddress;
-
-    /** @var string The token */
-    public $token;
-
-    /** @var User The user */
-    public $user;
-
-    /**
-     * Create a new event instance. This event is triggered when a users tries to reset his or her password.
-     */
-    public function __construct(User $user, #[SensitiveParameter] string $token, string $ipAddress)
-    {
-        $this->user      = $user;
-        $this->token     = $token;
-        $this->ipAddress = $ipAddress;
-    }
+    public function __construct(public User $user, #[SensitiveParameter] public string $token, public string $ipAddress) {}
 }

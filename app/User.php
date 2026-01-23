@@ -27,7 +27,7 @@ namespace FireflyIII;
 use Deprecated;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\Security\User\UserRequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
@@ -463,7 +463,7 @@ class User extends Authenticatable
     {
         $ipAddress = Request::ip();
 
-        event(new RequestedNewPassword($this, $token, $ipAddress));
+        event(new UserRequestedNewPassword($this, $token, $ipAddress));
     }
 
     /**

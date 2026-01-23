@@ -25,20 +25,14 @@ namespace FireflyIII\Handlers\Events;
 
 use Exception;
 use FireflyIII\Events\Admin\InvitationCreated;
-use FireflyIII\Events\RequestedNewPassword;
-use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\InvitationMail;
-use FireflyIII\Mail\UndoEmailChangeMail;
-use FireflyIII\Notifications\User\UserNewPassword;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 
 /**
  * Class UserEventHandler.
@@ -99,79 +93,6 @@ class UserEventHandler
         }
     }
 
-
-    /**
-     * Send email to confirm email change. Will not be made into a notification, because
-     * this requires some custom fields from the user and not just the "user" object.
-     *
-     * @throws FireflyException
-     */
-    public function sendEmailChangeConfirmMail(UserChangedEmail $event): void
-    {
-        $newEmail = $event->newEmail;
-        $oldEmail = $event->oldEmail;
-        $user     = $event->user;
-        $token    = Preferences::getForUser($user, 'email_change_confirm_token', 'invalid');
-        $url      = route('profile.confirm-email-change', [$token->data]);
-
-        try {
-            Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-    }
-
-    /**
-     * Send email to be able to undo email change. Will not be made into a notification, because
-     * this requires some custom fields from the user and not just the "user" object.
-     *
-     * @throws FireflyException
-     */
-    public function sendEmailChangeUndoMail(UserChangedEmail $event): void
-    {
-        $newEmail = $event->newEmail;
-        $oldEmail = $event->oldEmail;
-        $user     = $event->user;
-        $token    = Preferences::getForUser($user, 'email_change_undo_token', 'invalid');
-        $hashed   = hash('sha256', sprintf('%s%s', (string)config('app.key'), $oldEmail));
-        $url      = route('profile.undo-email-change', [$token->data, $hashed]);
-
-        try {
-            Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $url));
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-    }
-
-    /**
-     * Send a new password to the user.
-     */
-    public function sendNewPassword(RequestedNewPassword $event): void
-    {
-        try {
-            Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
-    }
 
     /**
      * @throws FireflyException

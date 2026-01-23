@@ -27,7 +27,6 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
@@ -36,7 +35,6 @@ use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Events\UserChangedEmail;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
@@ -52,9 +50,9 @@ class EventServiceProvider extends ServiceProvider
     protected $listen
         = [
             // is a User related event.
-//            RegisteredUser::class                  => [
-//                'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
-//            ],
+            //            RegisteredUser::class                  => [
+            //                'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
+            //            ],
             //            UserAttemptedLogin::class              => [
             //                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
             //            ],
@@ -74,17 +72,6 @@ class EventServiceProvider extends ServiceProvider
             ],
 
             // is a User related event.
-            RequestedNewPassword::class            => [
-                'FireflyIII\Handlers\Events\UserEventHandler@sendNewPassword',
-            ],
-            //            UserTestsNotificationChannel::class => [
-            //                'FireflyIII\Handlers\Events\UserEventHandler@sendTestNotification',
-            //            ],
-            // is a User related event.
-            UserChangedEmail::class                => [
-                'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeConfirmMail',
-                'FireflyIII\Handlers\Events\UserEventHandler@sendEmailChangeUndoMail',
-            ],
             InvitationCreated::class               => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
