@@ -99,10 +99,7 @@ class LoginController extends Controller
             // basic validation exception.
             // report the failed login to the user if the count is 2 or 5.
             // TODO here be warning.
-            return redirect(route('login'))
-                ->withErrors([$this->username => trans('auth.failed')])
-                ->onlyInput($this->username)
-            ;
+            return redirect(route('login'))->withErrors([$this->username => trans('auth.failed')])->onlyInput($this->username);
         }
         Log::debug('Login data is present.');
 

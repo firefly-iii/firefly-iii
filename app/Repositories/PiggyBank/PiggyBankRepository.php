@@ -322,12 +322,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             $query->where('accounts.user_id', $this->user->id);
         }
 
-        return $query
-            ->with(['objectGroups'])
-            ->orderBy('piggy_banks.order', 'ASC')
-            ->distinct()
-            ->get(['piggy_banks.*'])
-        ;
+        return $query->with(['objectGroups'])->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*']);
     }
 
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition

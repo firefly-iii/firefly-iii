@@ -240,8 +240,8 @@ class BasicController extends Controller
                 'value_parsed'            => Amount::formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => Amount::formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
-                .' + '
-                .Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
+                    .' + '
+                    .Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
