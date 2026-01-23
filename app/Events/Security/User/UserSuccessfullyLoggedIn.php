@@ -42,6 +42,6 @@ class UserSuccessfullyLoggedIn extends Event
             $this->user = $user;
         }
 
-        throw new InvalidArgumentException('User must be an instance of User.');
+        throw new InvalidArgumentException(sprintf('User cannot be an instance of %s.', get_class($user)));
     }
 }

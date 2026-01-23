@@ -44,6 +44,6 @@ class UserHasGeneratedNewBackupCodes extends Event
             return;
         }
 
-        throw new InvalidArgumentException('User must be an instance of User.');
+        throw new InvalidArgumentException(sprintf('User cannot be an instance of %s.', get_class($user)));
     }
 }

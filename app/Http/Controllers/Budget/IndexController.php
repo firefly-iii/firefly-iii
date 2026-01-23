@@ -51,7 +51,7 @@ use Illuminate\View\View;
 /**
  * Class IndexController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     use DateCalculation;
 

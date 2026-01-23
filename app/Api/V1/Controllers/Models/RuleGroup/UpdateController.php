@@ -36,7 +36,7 @@ use League\Fractal\Resource\Item;
 /**
  * Class UpdateController
  */
-class UpdateController extends Controller
+final class UpdateController extends Controller
 {
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
