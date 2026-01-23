@@ -44,7 +44,7 @@ class PreferenceTransformer extends AbstractTransformer
             'updated_at'    => $preference->updated_at->toAtomString(),
             'user_group_id' => $userGroupId,
             'name'          => $preference->name,
-            'data'          => $preference->data
+            'data'          => $preference->data,
         ];
     }
 }

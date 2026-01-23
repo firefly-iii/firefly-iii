@@ -50,9 +50,9 @@ class BudgetController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             $this->opsRepository = app(OperationsRepositoryInterface::class);
-            $this->repository = app(BudgetRepositoryInterface::class);
-            $this->noRepository = app(NoBudgetRepositoryInterface::class);
-            $user = auth()->user();
+            $this->repository    = app(BudgetRepositoryInterface::class);
+            $this->noRepository  = app(NoBudgetRepositoryInterface::class);
+            $user                = auth()->user();
             $this->opsRepository->setUser($user);
             $this->repository->setUser($user);
             $this->noRepository->setUser($user);
@@ -83,8 +83,8 @@ class BudgetController extends Controller
                     'name'             => $budget->name,
                     'difference'       => $expense['sum'],
                     'difference_float' => (float) $expense['sum'], // intentional float
-                    'currency_id'   => (string) $expense['currency_id'],
-                    'currency_code' => $expense['currency_code']
+                    'currency_id'      => (string) $expense['currency_id'],
+                    'currency_code'    => $expense['currency_code'],
                 ];
             }
         }
@@ -105,8 +105,8 @@ class BudgetController extends Controller
             $result[] = [
                 'difference'       => $expense['sum'],
                 'difference_float' => (float) $expense['sum'], // intentional float
-                'currency_id'   => (string) $expense['currency_id'],
-                'currency_code' => $expense['currency_code']
+                'currency_id'      => (string) $expense['currency_id'],
+                'currency_code'    => $expense['currency_code'],
             ];
         }
 

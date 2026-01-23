@@ -40,13 +40,13 @@ class TransactionCurrencyFactory
      */
     public function create(array $data): TransactionCurrency
     {
-        $data['code'] = e($data['code']);
-        $data['symbol'] = e($data['symbol']);
-        $data['name'] = e($data['name']);
+        $data['code']           = e($data['code']);
+        $data['symbol']         = e($data['symbol']);
+        $data['name']           = e($data['name']);
         $data['decimal_places'] = (int) $data['decimal_places'];
         // if the code already exists (deleted)
         // force delete it and then create the transaction:
-        $count = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
+        $count                  = TransactionCurrency::withTrashed()->whereCode($data['code'])->count();
         if (1 === $count) {
             $old = TransactionCurrency::withTrashed()->whereCode($data['code'])->first();
             $old->forceDelete();
@@ -60,7 +60,7 @@ class TransactionCurrencyFactory
                 'code'           => $data['code'],
                 'symbol'         => $data['symbol'],
                 'decimal_places' => $data['decimal_places'],
-                'enabled'        => false
+                'enabled'        => false,
             ]);
         } catch (QueryException $e) {
             $result = null;
@@ -73,7 +73,7 @@ class TransactionCurrencyFactory
         return $result;
     }
 
-    public function find(null|int $currencyId, null|string $currencyCode): null|TransactionCurrency
+    public function find(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
     {
         $currencyCode = e($currencyCode);
         $currencyId   = (int) $currencyId;

@@ -48,7 +48,7 @@ class InvitedUser extends Model
             $attemptId = (int) $value;
 
             /** @var null|InvitedUser $attempt */
-            $attempt = self::find($attemptId);
+            $attempt   = self::find($attemptId);
             if (null !== $attempt) {
                 return $attempt;
             }

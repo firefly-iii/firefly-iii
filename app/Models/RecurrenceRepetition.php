@@ -38,7 +38,7 @@ class RecurrenceRepetition extends Model
 
     /** @deprecated */
     #[Deprecated]
-    public const int WEEKEND_DO_NOTHING = 1;
+    public const int WEEKEND_DO_NOTHING    = 1;
 
     /** @deprecated */
     #[Deprecated]
@@ -46,25 +46,25 @@ class RecurrenceRepetition extends Model
 
     /** @deprecated */
     #[Deprecated]
-    public const int WEEKEND_TO_FRIDAY = 3;
+    public const int WEEKEND_TO_FRIDAY     = 3;
 
     /** @deprecated */
     #[Deprecated]
-    public const int WEEKEND_TO_MONDAY = 4;
+    public const int WEEKEND_TO_MONDAY     = 4;
 
-    protected $casts = [
+    protected $casts                       = [
         'created_at'        => 'datetime',
         'updated_at'        => 'datetime',
         'deleted_at'        => 'datetime',
         'repetition_type'   => 'string',
         'repetition_moment' => 'string',
         'repetition_skip'   => 'int',
-        'weekend'           => 'int'
+        'weekend'           => 'int',
     ];
 
-    protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
+    protected $fillable                    = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
 
-    protected $table = 'recurrences_repetitions';
+    protected $table                       = 'recurrences_repetitions';
 
     public function recurrence(): BelongsTo
     {
@@ -80,16 +80,16 @@ class RecurrenceRepetition extends Model
 
     protected function recurrenceId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function repetitionSkip(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function weekend(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

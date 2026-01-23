@@ -48,14 +48,14 @@ final class BillControllerTest extends TestCase
         for ($i = 1; $i <= $count; ++$i) {
             $bill = Bill::create([
                 'user_id'       => $user->id,
-                'name'          => 'Bill ' . $i,
+                'name'          => 'Bill '.$i,
                 'user_group_id' => $user->user_group_id,
                 'amount_min'    => random_int(1, 100), // random amount
-                'amount_max' => random_int(101, 200), // random amount
-                'match'       => 'MIGRATED_TO_RULES',
-                'date'        => '2024-01-01',
-                'repeat_freq' => 'monthly',
-                'automatch'   => 1
+                'amount_max'    => random_int(101, 200), // random amount
+                'match'         => 'MIGRATED_TO_RULES',
+                'date'          => '2024-01-01',
+                'repeat_freq'   => 'monthly',
+                'automatch'     => 1,
             ]);
         }
     }
@@ -72,7 +72,7 @@ final class BillControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.bills'), ['Accept' => 'application/json']);
@@ -82,7 +82,7 @@ final class BillControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointThenReturnsBills(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(5, $user);
@@ -96,7 +96,7 @@ final class BillControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointWithQueryThenReturnsBillsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(5, $user);
@@ -111,7 +111,7 @@ final class BillControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBillsEndpointWithQueryThenReturnsBillsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBills(20, $user);

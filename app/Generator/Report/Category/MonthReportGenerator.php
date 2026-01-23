@@ -63,7 +63,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('end', $this->end)
                 ->with('categories', $this->categories)
                 ->with('accounts', $this->accounts)
-                ->render();
+                ->render()
+            ;
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -129,15 +130,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts($this->accounts)
             ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($this->categories)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
-        $transactions = $collector->getExtractedJournals();
+        $transactions   = $collector->getExtractedJournals();
         $this->expenses = $transactions;
 
         return $transactions;
@@ -173,14 +175,15 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
 
         $collector
             ->setAccounts($this->accounts)
             ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($this->categories)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         $transactions = $collector->getExtractedJournals();
         $this->income = $transactions;

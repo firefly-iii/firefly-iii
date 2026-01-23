@@ -44,7 +44,7 @@ class BudgetList implements BinderInterface
                 return auth()->user()->budgets()->where('active', true)->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
             }
 
-            $list = array_unique(array_map(\intval(...), explode(',', $value)));
+            $list       = array_unique(array_map(\intval(...), explode(',', $value)));
 
             if (0 === count($list)) { // @phpstan-ignore-line
                 Log::warning('Budget list count is zero, return 404.');

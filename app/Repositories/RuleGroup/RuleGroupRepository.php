@@ -48,7 +48,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->orderBy('order', 'ASC')
             ->orderBy('active', 'DESC')
             ->orderBy('title', 'ASC')
-            ->get(['rule_groups.id']);
+            ->get(['rule_groups.id'])
+        ;
         $index = 1;
 
         /** @var RuleGroup $ruleGroup */
@@ -66,7 +67,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return $this->user
             ->ruleGroups()
             ->orderBy('order', 'ASC')
-            ->get();
+            ->get()
+        ;
     }
 
     public function count(): int
@@ -77,7 +79,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
     /**
      * @throws Exception
      */
-    public function destroy(RuleGroup $ruleGroup, null|RuleGroup $moveTo): bool
+    public function destroy(RuleGroup $ruleGroup, ?RuleGroup $moveTo): bool
     {
         /** @var Rule $rule */
         foreach ($ruleGroup->rules as $rule) {
@@ -108,7 +110,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->whereNull('deleted_at')
             ->orderBy('order', 'ASC')
             ->orderBy('title', 'DESC')
-            ->get();
+            ->get()
+        ;
         $count = 1;
 
         /** @var RuleGroup $entry */
@@ -193,19 +196,20 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         }
     }
 
-    public function find(int $ruleGroupId): null|RuleGroup
+    public function find(int $ruleGroupId): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user->ruleGroups()->find($ruleGroupId);
     }
 
-    public function findByTitle(string $title): null|RuleGroup
+    public function findByTitle(string $title): ?RuleGroup
     {
         /** @var null|RuleGroup */
         return $this->user
             ->ruleGroups()
             ->where('title', $title)
-            ->first();
+            ->first()
+        ;
     }
 
     public function getActiveGroups(): Collection
@@ -215,7 +219,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->with(['rules'])
             ->where('rule_groups.active', true)
             ->orderBy('order', 'ASC')
-            ->get(['rule_groups.*']);
+            ->get(['rule_groups.*'])
+        ;
     }
 
     public function getActiveRules(RuleGroup $group): Collection
@@ -232,7 +237,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->where('rule_triggers.trigger_type', 'user_action')
             ->where('rule_triggers.trigger_value', 'store-journal')
             ->where('rules.active', true)
-            ->get(['rules.*']);
+            ->get(['rules.*'])
+        ;
     }
 
     public function getActiveUpdateRules(RuleGroup $group): Collection
@@ -243,10 +249,11 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->where('rule_triggers.trigger_type', 'user_action')
             ->where('rule_triggers.trigger_value', 'update-journal')
             ->where('rules.active', true)
-            ->get(['rules.*']);
+            ->get(['rules.*'])
+        ;
     }
 
-    public function getAllRuleGroupsWithRules(null|string $filter): Collection
+    public function getAllRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user
             ->ruleGroups()
@@ -262,9 +269,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 },
                 'rules.ruleActions'  => static function (HasMany $query): void {
                     $query->orderBy('order', 'ASC');
-                }
+                },
             ])
-            ->get();
+            ->get()
+        ;
         if (null === $filter) {
             return $groups;
         }
@@ -298,7 +306,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return (int) $entry;
     }
 
-    public function getRuleGroupsWithRules(null|string $filter): Collection
+    public function getRuleGroupsWithRules(?string $filter): Collection
     {
         $groups = $this->user
             ->ruleGroups()
@@ -314,9 +322,10 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 },
                 'rules.ruleActions'  => static function (HasMany $query): void {
                     $query->orderBy('order', 'ASC');
-                }
+                },
             ])
-            ->get();
+            ->get()
+        ;
         if (null === $filter) {
             return $groups;
         }
@@ -353,7 +362,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
         return (int) $this->user
             ->ruleGroups()
             ->where('active', true)
-            ->max('order');
+            ->max('order')
+        ;
     }
 
     public function searchRuleGroup(string $query, int $limit): Collection
@@ -375,7 +385,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             'title'         => $data['title'],
             'description'   => $data['description'],
             'order'         => 31337,
-            'active'        => array_key_exists('active', $data) ? $data['active'] : true
+            'active'        => array_key_exists('active', $data) ? $data['active'] : true,
         ]);
         $newRuleGroup->save();
         $this->resetOrder();
@@ -388,7 +398,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function setOrder(RuleGroup $ruleGroup, int $newOrder): void
     {
-        $oldOrder = $ruleGroup->order;
+        $oldOrder         = $ruleGroup->order;
 
         if ($newOrder > $oldOrder) {
             $this->user
@@ -396,7 +406,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
                 ->where('rule_groups.order', '<=', $newOrder)
                 ->where('rule_groups.order', '>', $oldOrder)
                 ->where('rule_groups.id', '!=', $ruleGroup->id)
-                ->decrement('order');
+                ->decrement('order')
+            ;
             $ruleGroup->order = $newOrder;
             Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
             $ruleGroup->save();
@@ -409,7 +420,8 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
             ->where('rule_groups.order', '>=', $newOrder)
             ->where('rule_groups.order', '<', $oldOrder)
             ->where('rule_groups.id', '!=', $ruleGroup->id)
-            ->increment('order');
+            ->increment('order')
+        ;
         $ruleGroup->order = $newOrder;
         Log::debug(sprintf('Order of group #%d ("%s") is now %d', $ruleGroup->id, $ruleGroup->title, $newOrder));
         $ruleGroup->save();

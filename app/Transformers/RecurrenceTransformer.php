@@ -60,7 +60,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'notes'             => $recurrence->meta['notes'],
             'repetitions'       => $recurrence->meta['repetitions'],
             'transactions'      => $recurrence->meta['transactions'],
-            'links'             => [['rel' => 'self', 'uri' => '/recurring/' . $recurrence->id]]
+            'links'             => [['rel' => 'self', 'uri' => '/recurring/'.$recurrence->id]],
         ];
     }
 }

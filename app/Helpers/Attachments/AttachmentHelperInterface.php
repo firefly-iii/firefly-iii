@@ -65,5 +65,5 @@ interface AttachmentHelperInterface
     /**
      * Save attachments that got uploaded.
      */
-    public function saveAttachmentsForModel(object $model, null|array $files): bool;
+    public function saveAttachmentsForModel(object $model, ?array $files): bool;
 }

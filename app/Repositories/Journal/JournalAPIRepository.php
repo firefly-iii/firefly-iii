@@ -44,12 +44,13 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     /**
      * Returns transaction by ID. Used to validate attachments.
      */
-    public function findTransaction(int $transactionId): null|Transaction
+    public function findTransaction(int $transactionId): ?Transaction
     {
         return Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('transactions.id', $transactionId)
-            ->first(['transactions.*']);
+            ->first(['transactions.*'])
+        ;
     }
 
     /**
@@ -59,14 +60,14 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
      */
     public function getAttachments(TransactionJournal $journal): Collection
     {
-        $set = $journal->attachments;
+        $set  = $journal->attachments;
 
         $disk = Storage::disk('upload');
 
         return $set->each(static function (Attachment $attachment) use ($disk): Attachment {
-            $notes = $attachment->notes()->first();
+            $notes                   = $attachment->notes()->first();
             $attachment->file_exists = $disk->exists($attachment->fileName());
-            $attachment->notes_text = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.
+            $attachment->notes_text  = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.
 
             return $attachment;
         });

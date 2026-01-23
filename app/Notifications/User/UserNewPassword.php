@@ -69,9 +69,10 @@ class UserNewPassword extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject((string) trans('email.reset_pw_subject'));
+            ->subject((string) trans('email.reset_pw_subject'))
+        ;
     }
 
     //    public function toNtfy(User $notifiable): Message

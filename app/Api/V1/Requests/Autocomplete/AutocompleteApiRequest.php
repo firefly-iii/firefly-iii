@@ -41,7 +41,7 @@ class AutocompleteApiRequest extends AggregateFormRequest
             DateRequest::class,
             [PaginationRequest::class, 'sort_class' => Account::class],
             [ObjectTypeApiRequest::class, 'object_type' => Account::class],
-            QueryRequest::class
+            QueryRequest::class,
         ];
     }
 }

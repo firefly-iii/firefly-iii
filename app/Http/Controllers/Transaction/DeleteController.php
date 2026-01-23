@@ -76,12 +76,12 @@ class DeleteController extends Controller
 
         Log::debug(sprintf('Start of delete view for group #%d', $group->id));
 
-        $journal = $group->transactionJournals->first();
+        $journal    = $group->transactionJournals->first();
         if (null === $journal) {
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle   = (string) trans('firefly.delete_' . $objectType, ['description'   => $group->title ?? $journal->description]);
+        $subTitle   = (string) trans('firefly.delete_'.$objectType, ['description'   => $group->title ?? $journal->description]);
         $previous   = Steam::getSafePreviousUrl();
         // put previous url in session
         Log::debug('Will try to remember previous URL');
@@ -92,7 +92,7 @@ class DeleteController extends Controller
             'journal'    => $journal,
             'subTitle'   => $subTitle,
             'objectType' => $objectType,
-            'previous'   => $previous
+            'previous'   => $previous,
         ]);
     }
 
@@ -106,15 +106,15 @@ class DeleteController extends Controller
             return $this->redirectGroupToAccount($group);
         }
 
-        $journal = $group->transactionJournals->first();
+        $journal    = $group->transactionJournals->first();
         if (null === $journal) {
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        session()->flash('success', (string) trans('firefly.deleted_' . strtolower($objectType), ['description' => $group->title ?? $journal->description]));
+        session()->flash('success', (string) trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
 
         // grab asset account(s) from group:
-        $accounts = [];
+        $accounts   = [];
 
         /** @var TransactionJournal $currentJournal */
         foreach ($group->transactionJournals as $currentJournal) {

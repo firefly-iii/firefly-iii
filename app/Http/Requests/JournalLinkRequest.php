@@ -43,13 +43,13 @@ class JournalLinkRequest extends FormRequest
      */
     public function getLinkInfo(): array
     {
-        $return   = [];
-        $linkType = $this->get('link_type');
-        $parts    = explode('_', (string) $linkType);
-        $return['link_type_id'] = (int) $parts[0];
+        $return                           = [];
+        $linkType                         = $this->get('link_type');
+        $parts                            = explode('_', (string) $linkType);
+        $return['link_type_id']           = (int) $parts[0];
         $return['transaction_journal_id'] = $this->convertInteger('opposing');
-        $return['notes'] = $this->convertString('notes');
-        $return['direction'] = $parts[1];
+        $return['notes']                  = $this->convertString('notes');
+        $return['direction']              = $parts[1];
 
         return $return;
     }
@@ -68,7 +68,7 @@ class JournalLinkRequest extends FormRequest
             $combinations[] = sprintf('%d_inward', $type->id);
             $combinations[] = sprintf('%d_outward', $type->id);
         }
-        $string = implode(',', $combinations);
+        $string       = implode(',', $combinations);
 
         // fixed
         return ['link_type' => sprintf('required|in:%s', $string), 'opposing'  => 'belongsToUser:transaction_journals'];

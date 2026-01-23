@@ -42,7 +42,7 @@ class IndexController extends Controller
 
     public const string RESOURCE_KEY = 'exchange-rates';
 
-    protected array $acceptedRoles = [UserRoleEnum::OWNER];
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()

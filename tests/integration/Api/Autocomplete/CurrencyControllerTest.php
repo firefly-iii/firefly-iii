@@ -46,11 +46,11 @@ final class CurrencyControllerTest extends TestCase
     {
         for ($i = 1; $i <= $count; ++$i) {
             $currency = TransactionCurrency::create([
-                'name'           => 'Currency ' . $i,
-                'code'           => 'CUR' . $i,
-                'symbol'         => 'C' . $i,
+                'name'           => 'Currency '.$i,
+                'code'           => 'CUR'.$i,
+                'symbol'         => 'C'.$i,
                 'decimal_places' => $i,
-                'enabled'        => $enabled
+                'enabled'        => $enabled,
             ]);
         }
     }
@@ -67,7 +67,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // test API
@@ -79,7 +79,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturnsACollectionOfEnabledCurrencies(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -99,7 +99,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointDoesNotReturnDisabledCurrencies(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -115,7 +115,7 @@ final class CurrencyControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesWithLimit(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // create test data
@@ -133,7 +133,7 @@ final class CurrencyControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestCurrencies(20, true);

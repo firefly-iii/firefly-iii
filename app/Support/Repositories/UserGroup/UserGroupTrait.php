@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait UserGroupTrait
 {
-    protected null|User      $user      = null;
-    protected null|UserGroup $userGroup = null;
+    protected ?User      $user      = null;
+    protected ?UserGroup $userGroup = null;
 
     public function checkUserGroupAccess(UserRoleEnum $role): bool
     {
@@ -53,7 +53,7 @@ trait UserGroupTrait
         return false;
     }
 
-    public function getUser(): null|User
+    public function getUser(): ?User
     {
         return $this->user;
     }
@@ -64,7 +64,7 @@ trait UserGroupTrait
     public function setUser(Authenticatable|User|null $user): void
     {
         if ($user instanceof User) {
-            $this->user = $user;
+            $this->user      = $user;
             if (null === $user->userGroup) {
                 throw new FireflyException(sprintf('User #%d ("%s") has no user group.', $user->id, $user->email));
             }
@@ -77,7 +77,7 @@ trait UserGroupTrait
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }
 
-    public function getUserGroup(): null|UserGroup
+    public function getUserGroup(): ?UserGroup
     {
         return $this->userGroup;
     }
@@ -104,7 +104,7 @@ trait UserGroupTrait
         }
 
         /** @var null|UserGroup $userGroup */
-        $userGroup = UserGroup::find($userGroupId);
+        $userGroup   = UserGroup::find($userGroupId);
         if (null === $userGroup) {
             throw new FireflyException(sprintf('Cannot find administration for user #%d', $this->user->id));
         }

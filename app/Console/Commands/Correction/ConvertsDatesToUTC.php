@@ -91,9 +91,9 @@ class ConvertsDatesToUTC extends Command
         }
         $this->friendlyInfo(sprintf('Converting field "%s" of model "%s" to UTC.', $field, $shortModel));
         $items->each(static function ($item) use ($field, $timezoneField): void {
-            $date = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
+            $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
             $date->setTimezone('UTC');
-            $item->{$field} = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
+            $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
             $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
             $item->save();
         });

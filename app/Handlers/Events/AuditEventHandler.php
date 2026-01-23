@@ -36,12 +36,12 @@ class AuditEventHandler
 {
     public function storeAuditEvent(TriggeredAuditLog $event): void
     {
-        $array = [
+        $array      = [
             'auditable' => $event->auditable,
             'changer'   => $event->changer,
             'action'    => $event->field,
             'before'    => $event->before,
-            'after'     => $event->after
+            'after'     => $event->after,
         ];
 
         if ($event->before === $event->after) {
@@ -56,7 +56,7 @@ class AuditEventHandler
         }
         if ($event->before instanceof Carbon && $event->after instanceof Carbon) {
             $array['before'] = $event->before->toIso8601String();
-            $array['after'] = $event->after->toIso8601String();
+            $array['after']  = $event->after->toIso8601String();
             Log::debug(sprintf('Converted "before" to "%s".', $event->before));
             Log::debug(sprintf('Converted "after" to "%s".', $event->after));
         }

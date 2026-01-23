@@ -51,7 +51,7 @@ class NewUserFormRequest extends FormRequest
             'credit_card_limit'                    => ['nullable', new IsValidAmount()],
             'amount_currency_id_bank_balance'      => 'exists:transaction_currencies,id',
             'amount_currency_id_savings_balance'   => 'exists:transaction_currencies,id',
-            'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id'
+            'amount_currency_id_credit_card_limit' => 'exists:transaction_currencies,id',
         ];
     }
 

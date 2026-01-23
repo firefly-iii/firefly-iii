@@ -39,17 +39,17 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetEnrichment implements EnrichmentInterface
 {
-    private array $autoBudgets = [];
+    private array $autoBudgets     = [];
     private Collection $collection;
     private array   $currencies    = [];
-    private null|Carbon $end           = null;
+    private ?Carbon $end           = null;
     private array   $ids           = [];
     private array   $mappedObjects = [];
     private array   $notes         = [];
     private array   $objectGroups  = [];
     private array   $pcSpent       = [];
     private array   $spent         = [];
-    private null|Carbon $start         = null;
+    private ?Carbon $start         = null;
     private User $user;
     private UserGroup $userGroup;
 
@@ -76,12 +76,12 @@ class BudgetEnrichment implements EnrichmentInterface
         return $collection->first();
     }
 
-    public function setEnd(null|Carbon $end): void
+    public function setEnd(?Carbon $end): void
     {
         $this->end = $end;
     }
 
-    public function setStart(null|Carbon $start): void
+    public function setStart(?Carbon $start): void
     {
         $this->start = $start;
     }
@@ -100,8 +100,8 @@ class BudgetEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Budget $item): Budget {
-            $id   = (int) $item->id;
-            $meta = [
+            $id         = (int) $item->id;
+            $meta       = [
                 'object_group_id'    => null,
                 'object_group_order' => null,
                 'object_group_title' => null,
@@ -109,13 +109,13 @@ class BudgetEnrichment implements EnrichmentInterface
                 'currency'           => $this->currencies[$id] ?? null,
                 'auto_budget'        => $this->autoBudgets[$id] ?? null,
                 'spent'              => $this->spent[$id] ?? null,
-                'pc_spent'           => $this->pcSpent[$id] ?? null
+                'pc_spent'           => $this->pcSpent[$id] ?? null,
             ];
 
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
-                $key = $this->mappedObjects[$id];
-                $meta['object_group_id'] = (string) $this->objectGroups[$key]['id'];
+                $key                        = $this->mappedObjects[$id];
+                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
@@ -132,13 +132,13 @@ class BudgetEnrichment implements EnrichmentInterface
 
         /** @var AutoBudget $autoBudget */
         foreach ($set as $autoBudget) {
-            $budgetId = (int) $autoBudget->budget_id;
-            $this->currencies[$budgetId] = $autoBudget->transactionCurrency;
+            $budgetId                     = (int) $autoBudget->budget_id;
+            $this->currencies[$budgetId]  = $autoBudget->transactionCurrency;
             $this->autoBudgets[$budgetId] = [
                 'type'      => (int) $autoBudget->auto_budget_type,
                 'period'    => $autoBudget->period,
                 'amount'    => $autoBudget->amount,
-                'pc_amount' => $autoBudget->native_amount
+                'pc_amount' => $autoBudget->native_amount,
             ];
         }
     }
@@ -152,10 +152,10 @@ class BudgetEnrichment implements EnrichmentInterface
             $opsRepository->setUserGroup($this->userGroup);
             // $spent = $this->beautify();
             // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget))
-            $expenses = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
+            $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
-                $id = (int) $item->id;
-                $this->spent[$id] = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item));
+                $id                 = (int) $item->id;
+                $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item));
                 $this->pcSpent[$id] = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, true));
             }
         }
@@ -178,7 +178,8 @@ class BudgetEnrichment implements EnrichmentInterface
             ->where('notes.text', '!=', '')
             ->where('noteable_type', Budget::class)
             ->get(['notes.noteable_id', 'notes.text'])
-            ->toArray();
+            ->toArray()
+        ;
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
@@ -187,12 +188,13 @@ class BudgetEnrichment implements EnrichmentInterface
 
     private function collectObjectGroups(): void
     {
-        $set = DB::table('object_groupables')
+        $set    = DB::table('object_groupables')
             ->whereIn('object_groupable_id', $this->ids)
             ->where('object_groupable_type', Budget::class)
-            ->get(['object_groupable_id', 'object_group_id']);
+            ->get(['object_groupable_id', 'object_group_id'])
+        ;
 
-        $ids = array_unique($set->pluck('object_group_id')->toArray());
+        $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
             $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
@@ -200,8 +202,8 @@ class BudgetEnrichment implements EnrichmentInterface
 
         $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
-            $group['id'] = (int) $group['id'];
-            $group['order'] = (int) $group['order'];
+            $group['id']                            = (int) $group['id'];
+            $group['order']                         = (int) $group['order'];
             $this->objectGroups[(int) $group['id']] = $group;
         }
     }

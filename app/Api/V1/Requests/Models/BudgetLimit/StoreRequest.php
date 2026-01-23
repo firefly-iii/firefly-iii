@@ -57,7 +57,7 @@ class StoreRequest extends FormRequest
             'notes'         => $this->stringWithNewlines('notes'),
 
             // for webhooks:
-            'fire_webhooks' => $this->boolean('fire_webhooks', true)
+            'fire_webhooks' => $this->boolean('fire_webhooks', true),
         ];
     }
 
@@ -75,7 +75,7 @@ class StoreRequest extends FormRequest
             'notes'         => 'nullable|min:0|max:32768',
 
             // webhooks
-            'fire_webhooks' => [new IsBoolean()]
+            'fire_webhooks' => [new IsBoolean()],
         ];
     }
 
@@ -89,12 +89,12 @@ class StoreRequest extends FormRequest
             if (0 !== count($validator->failed())) {
                 return;
             }
-            $data = $validator->getData();
+            $data              = $validator->getData();
 
             // if no currency has been provided, use the user's default currency:
             /** @var TransactionCurrencyFactory $factory */
-            $factory  = app(TransactionCurrencyFactory::class);
-            $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+            $factory           = app(TransactionCurrencyFactory::class);
+            $currency          = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
             if (null === $currency) {
                 $currency = Amount::getPrimaryCurrency();
             }
@@ -102,16 +102,17 @@ class StoreRequest extends FormRequest
             $currency->save();
 
             // validator already concluded start and end are valid dates:
-            $start = Carbon::parse($data['start'], config('app.timezone'));
-            $end   = Carbon::parse($data['end'], config('app.timezone'));
+            $start             = Carbon::parse($data['start'], config('app.timezone'));
+            $end               = Carbon::parse($data['end'], config('app.timezone'));
 
             // find limit with same date range and currency.
-            $limit = $budget
+            $limit             = $budget
                 ->budgetlimits()
                 ->where('budget_limits.start_date', $start->format('Y-m-d'))
                 ->where('budget_limits.end_date', $end->format('Y-m-d'))
                 ->where('budget_limits.transaction_currency_id', $currency->id)
-                ->first(['budget_limits.*']);
+                ->first(['budget_limits.*'])
+            ;
             if (null !== $limit) {
                 $validator->errors()->add('start', trans('validation.limit_exists'));
             }

@@ -48,23 +48,24 @@ class LinkToBill implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user       = User::find($journal['user_id']);
 
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $repository->setUser($user);
-        $billName = $this->action->getValue($journal);
-        $bill     = $repository->findByName($billName);
+        $billName   = $this->action->getValue($journal);
+        $bill       = $repository->findByName($billName);
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
-        $type   = $object->transactionType->type;
+        $object     = TransactionJournal::with('transactionType')->find($journal['transaction_journal_id']);
+        $type       = $object->transactionType->type;
 
         if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            $count = DB::table('transaction_journals')
+            $count  = DB::table('transaction_journals')
                 ->where('id', '=', $journal['transaction_journal_id'])
                 ->where('bill_id', $bill->id)
-                ->count();
+                ->count()
+            ;
             if (0 !== $count) {
                 Log::error(sprintf(
                     'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',

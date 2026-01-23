@@ -60,7 +60,7 @@ interface OperationsRepositoryInterface
      * which have the specified budget set to them. It's grouped per currency, with as few details in the array
      * as possible. Amounts are always negative.
      */
-    public function listExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|Collection $budgets = null): array;
+    public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
 
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
@@ -68,9 +68,9 @@ interface OperationsRepositoryInterface
     public function sumExpenses(
         Carbon $start,
         Carbon $end,
-        null|Collection $accounts = null,
-        null|Collection $budgets = null,
-        null|TransactionCurrency $currency = null,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null,
         bool $convertToPrimary = false
     ): array;
 
@@ -87,8 +87,8 @@ interface OperationsRepositoryInterface
     public function collectExpenses(
         Carbon $start,
         Carbon $end,
-        null|Collection $accounts = null,
-        null|Collection $budgets = null,
-        null|TransactionCurrency $currency = null
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
     ): array;
 }

@@ -47,14 +47,14 @@ class PeriodController extends Controller
         $primary          = Amount::getPrimaryCurrency();
 
         // collect all expenses in this period (regardless of type)
-        $collector = app(GroupCollectorInterface::class);
+        $collector        = app(GroupCollectorInterface::class);
         $collector->setTypes([TransactionTypeEnum::TRANSFER->value])->setRange($start, $end)->setDestinationAccounts($accounts);
-        $genericSet = $collector->getExtractedJournals();
+        $genericSet       = $collector->getExtractedJournals();
         foreach ($genericSet as $journal) {
             // currency
-            $currencyId   = $journal['currency_id'];
-            $currencyCode = $journal['currency_code'];
-            $field        = $convertToPrimary && $currencyId !== $primary->id ? 'pc_amount' : 'amount';
+            $currencyId                                = $journal['currency_id'];
+            $currencyCode                              = $journal['currency_code'];
+            $field                                     = $convertToPrimary && $currencyId !== $primary->id ? 'pc_amount' : 'amount';
 
             // perhaps use default currency instead?
             if ($convertToPrimary && $journal['currency_id'] !== $primary->id) {
@@ -70,9 +70,9 @@ class PeriodController extends Controller
                 'difference'       => '0',
                 'difference_float' => 0,
                 'currency_id'      => (string) $currencyId,
-                'currency_code'    => $currencyCode
+                'currency_code'    => $currencyCode,
             ];
-            $response[$currencyId]['difference'] = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
+            $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
         }
 

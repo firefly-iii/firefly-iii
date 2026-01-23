@@ -46,6 +46,7 @@ class CategoryDestroyService
         DB::table('rt_meta')
             ->where('name', 'category_id')
             ->where('value', $category->id)
-            ->delete();
+            ->delete()
+        ;
     }
 }

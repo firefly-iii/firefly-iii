@@ -62,12 +62,12 @@ use function Safe\parse_url;
  */
 class Handler extends ExceptionHandler
 {
-    public static null|Throwable $lastError = null;
+    public static ?Throwable $lastError = null;
 
     /**
      * @var array<int, class-string<Throwable>>
      */
-    protected $dontReport = [
+    protected $dontReport               = [
         AuthenticationException::class,
         LaravelValidationException::class,
         NotFoundHttpException::class,
@@ -77,16 +77,14 @@ class Handler extends ExceptionHandler
         TokenMismatchException::class,
         HttpException::class,
         SuspiciousOperationException::class,
-        BadHttpHeaderException::class
+        BadHttpHeaderException::class,
     ];
 
     /**
      * Register the exception handling callbacks for the application.
      */
     #[Override]
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     /**
      * Render an exception into an HTTP response. It's complex but lucky for us, we never use it because
@@ -157,7 +155,7 @@ class Handler extends ExceptionHandler
 
             return response()->json([
                 'message' => sprintf('Validation exception: %s', $e->getMessage()),
-                'errors'  => ['field'  => 'Field is invalid']
+                'errors'  => ['field'  => 'Field is invalid'],
             ], $errorCode);
         }
 
@@ -165,7 +163,7 @@ class Handler extends ExceptionHandler
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug = (bool) config('app.debug', false);
+            $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
                 Log::debug(sprintf('Return JSON %s with debug.', $e::class));
 
@@ -174,14 +172,14 @@ class Handler extends ExceptionHandler
                     'exception' => $e::class,
                     'line'      => $e->getLine(),
                     'file'      => $e->getFile(),
-                    'trace'     => $e->getTrace()
+                    'trace'     => $e->getTrace(),
                 ], $errorCode);
             }
             Log::debug(sprintf('Return JSON %s.', $e::class));
 
             return response()->json([
                 'message'   => sprintf('Internal Firefly III Exception: %s', $e->getMessage()),
-                'exception' => 'UndisclosedException'
+                'exception' => 'UndisclosedException',
             ], $errorCode);
         }
 
@@ -221,21 +219,21 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e): void
     {
         self::$lastError = $e;
-        $doMailError = (bool) config('firefly.send_error_message');
+        $doMailError     = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
             return;
         }
-        $userData = ['id'    => 0, 'email' => 'unknown@example.com'];
+        $userData        = ['id'    => 0, 'email' => 'unknown@example.com'];
         if (auth()->check()) {
-            $userData['id'] = auth()->user()->id;
+            $userData['id']    = auth()->user()->id;
             $userData['email'] = auth()->user()->email;
         }
 
-        $headers = request()->headers->all();
+        $headers         = request()->headers->all();
 
-        $data = [
+        $data            = [
             'class'        => $e::class,
             'errorMessage' => $e->getMessage(),
             'time'         => Carbon::now()->format('r'),
@@ -249,12 +247,12 @@ class Handler extends ExceptionHandler
             'json'         => request()->acceptsJson(),
             'method'       => request()->method(),
             'headers'      => $headers,
-            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : ''
+            'post'         => 'POST' === request()->method() ? json_encode(request()->all()) : '',
         ];
 
         // create job that will mail.
-        $ipAddress = request()->ip() ?? '0.0.0.0';
-        $job       = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
+        $ipAddress       = request()->ip() ?? '0.0.0.0';
+        $job             = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
@@ -262,7 +260,7 @@ class Handler extends ExceptionHandler
 
     private function shouldntReportLocal(Throwable $e): bool
     {
-        return null !== Arr::first($this->dontReport, static fn($type): bool => $e instanceof $type);
+        return null !== Arr::first($this->dontReport, static fn ($type): bool => $e instanceof $type);
     }
 
     /**
@@ -279,13 +277,14 @@ class Handler extends ExceptionHandler
 
         return redirect($redirect ?? $previous)
             ->withInput(Arr::except($request->input(), $this->dontFlash))
-            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag));
+            ->withErrors($exception->errors(), $request->input('_error_bag', $exception->errorBag))
+        ;
     }
 
     /**
      * Only return the redirectTo property from the exception if it is a valid URL. Return NULL otherwise.
      */
-    private function getRedirectUrl(LaravelValidationException $exception): null|string
+    private function getRedirectUrl(LaravelValidationException $exception): ?string
     {
         if (null === $exception->redirectTo) {
             return null;

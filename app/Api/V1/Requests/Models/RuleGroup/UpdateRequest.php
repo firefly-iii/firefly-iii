@@ -48,7 +48,7 @@ class UpdateRequest extends FormRequest
             'title'       => ['title', 'convertString'],
             'description' => ['description', 'stringWithNewlines'],
             'active'      => ['active', 'boolean'],
-            'order'       => ['order', 'convertInteger']
+            'order'       => ['order', 'convertInteger'],
         ];
 
         return $this->getAllData($fields);
@@ -63,9 +63,9 @@ class UpdateRequest extends FormRequest
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         return [
-            'title'       => 'min:1|max:100|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id,
+            'title'       => 'min:1|max:100|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id,
             'description' => 'min:1|max:32768|nullable',
-            'active'      => [new IsBoolean()]
+            'active'      => [new IsBoolean()],
         ];
     }
 }

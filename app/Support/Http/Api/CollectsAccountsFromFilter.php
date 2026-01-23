@@ -56,7 +56,8 @@ trait CollectsAccountsFromFilter
             $defaultSet = $this->repository
                 ->getAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value])
                 ->pluck('id')
-                ->toArray();
+                ->toArray()
+            ;
             $frontpage  = Preferences::get('frontpageAccounts', $defaultSet);
 
             if (!(is_array($frontpage->data) && count($frontpage->data) > 0)) {
@@ -74,7 +75,7 @@ trait CollectsAccountsFromFilter
                 AccountTypeEnum::DEFAULT->value,
                 AccountTypeEnum::LOAN->value,
                 AccountTypeEnum::DEBT->value,
-                AccountTypeEnum::MORTGAGE->value
+                AccountTypeEnum::MORTGAGE->value,
             ]);
         }
         if ('assets' === $queryParameters['preselected'] || 'Asset account' === $queryParameters['preselected']) {

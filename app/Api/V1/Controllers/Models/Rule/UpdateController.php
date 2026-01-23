@@ -48,7 +48,7 @@ class UpdateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user                 = auth()->user();
 
             $this->ruleRepository = app(RuleRepositoryInterface::class);
             $this->ruleRepository->setUser($user);
@@ -65,15 +65,15 @@ class UpdateController extends Controller
      */
     public function update(UpdateRequest $request, Rule $rule): JsonResponse
     {
-        $data    = $request->getAll();
-        $rule    = $this->ruleRepository->update($rule, $data);
-        $manager = $this->getManager();
+        $data        = $request->getAll();
+        $rule        = $this->ruleRepository->update($rule, $data);
+        $manager     = $this->getManager();
 
         /** @var RuleTransformer $transformer */
         $transformer = app(RuleTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($rule, $transformer, 'rules');
+        $resource    = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

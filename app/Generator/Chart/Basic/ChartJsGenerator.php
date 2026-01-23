@@ -40,22 +40,22 @@ class ChartJsGenerator implements GeneratorInterface
     {
         $chartData = ['datasets' => [0 => []], 'labels'   => []];
 
-        $amounts  = array_column($data, 'amount');
-        $next     = next($amounts);
-        $sortFlag = SORT_ASC;
+        $amounts   = array_column($data, 'amount');
+        $next      = next($amounts);
+        $sortFlag  = SORT_ASC;
         if (!is_bool($next) && 1 === bccomp((string) $next, '0')) {
             $sortFlag = SORT_DESC;
         }
         array_multisort($amounts, $sortFlag, $data);
         unset($next, $sortFlag, $amounts);
 
-        $index = 0;
+        $index     = 0;
         foreach ($data as $key => $valueArray) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][] = Steam::positive((string) $valueArray['amount']);
+            $chartData['datasets'][0]['data'][]            = Steam::positive((string) $valueArray['amount']);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
             $chartData['datasets'][0]['currency_symbol'][] = $valueArray['currency_symbol'];
-            $chartData['labels'][] = $key;
+            $chartData['labels'][]                         = $key;
             ++$index;
         }
 
@@ -95,21 +95,21 @@ class ChartJsGenerator implements GeneratorInterface
     public function multiSet(array $data): array
     {
         reset($data);
-        $first = current($data);
+        $first     = current($data);
         if (!is_array($first)) {
             return [];
         }
-        $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
+        $labels    = is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
-            'count'  => count($data),
-            'labels' => $labels, // take ALL labels from the first set.
-            'datasets' => []
+            'count'    => count($data),
+            'labels'   => $labels, // take ALL labels from the first set.
+            'datasets' => [],
         ];
         unset($first, $labels);
 
         foreach ($data as $set) {
-            $currentSet = ['label' => $set['label'] ?? '(no label)', 'type'  => $set['type'] ?? 'line', 'data'  => array_values($set['entries'])];
+            $currentSet              = ['label' => $set['label'] ?? '(no label)', 'type'  => $set['type'] ?? 'line', 'data'  => array_values($set['entries'])];
             if (array_key_exists('yAxisID', $set)) {
                 $currentSet['yAxisID'] = $set['yAxisID'];
             }
@@ -140,20 +140,20 @@ class ChartJsGenerator implements GeneratorInterface
         // sort by value, keep keys.
         // different sort when values are positive and when they're negative.
         asort($data);
-        $next = next($data);
+        $next      = next($data);
         if (!is_bool($next) && 1 === bccomp((string) $next, '0')) {
             // next is positive, sort other way around.
             arsort($data);
         }
         unset($next);
 
-        $index = 0;
+        $index     = 0;
         foreach ($data as $key => $value) {
             // make larger than 0
-            $chartData['datasets'][0]['data'][] = Steam::positive((string) $value);
+            $chartData['datasets'][0]['data'][]            = Steam::positive((string) $value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
 
-            $chartData['labels'][] = $key;
+            $chartData['labels'][]                         = $key;
             ++$index;
         }
 
@@ -168,9 +168,9 @@ class ChartJsGenerator implements GeneratorInterface
     public function singleSet(string $setLabel, array $data): array
     {
         return [
-            'count'  => 1,
-            'labels' => array_keys($data), // take ALL labels from the first set.
-            'datasets' => [['label' => $setLabel, 'data'  => array_values($data)]]
+            'count'    => 1,
+            'labels'   => array_keys($data), // take ALL labels from the first set.
+            'datasets' => [['label' => $setLabel, 'data'  => array_values($data)]],
         ];
     }
 }

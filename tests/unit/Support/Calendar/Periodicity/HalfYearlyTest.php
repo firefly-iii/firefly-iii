@@ -57,7 +57,7 @@ final class HalfYearlyTest extends IntervalTestCase
             new IntervalProvider(Carbon::parse('2019-08-30'), Carbon::parse('2020-02-29')),
             new IntervalProvider(Carbon::parse('2019-08-31'), Carbon::parse('2020-02-29')),
             new IntervalProvider(Carbon::parse('2020-08-29'), Carbon::parse('2021-02-28')),
-            new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28'))
+            new IntervalProvider(Carbon::parse('2020-08-30'), Carbon::parse('2021-02-28')),
         ];
     }
 }

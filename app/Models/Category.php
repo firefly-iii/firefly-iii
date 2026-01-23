@@ -45,7 +45,7 @@ class Category extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'name'];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -58,10 +58,10 @@ class Category extends Model
             $categoryId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user       = auth()->user();
 
             /** @var null|Category $category */
-            $category = $user->categories()->find($categoryId);
+            $category   = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }
@@ -106,7 +106,7 @@ class Category extends Model
             'deleted_at'    => 'datetime',
             'encrypted'     => 'boolean',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 

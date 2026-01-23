@@ -65,7 +65,7 @@ class ReportController extends Controller
             app('view')->share('title', (string) trans('firefly.reports'));
             app('view')->share('mainTitleIcon', 'fa-bar-chart');
             app('view')->share('subTitleIcon', 'fa-calendar');
-            $this->helper = app(ReportHelperInterface::class);
+            $this->helper     = app(ReportHelperInterface::class);
             $this->repository = app(BudgetRepositoryInterface::class);
 
             return $next($request);
@@ -90,7 +90,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_audit', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
@@ -117,7 +117,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_budget', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
@@ -145,7 +145,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_category', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
@@ -174,7 +174,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_default', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
@@ -200,7 +200,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_double', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Account', $start, $end);
@@ -229,16 +229,16 @@ class ReportController extends Controller
             AccountTypeEnum::ASSET->value,
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::LOAN->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ]);
 
         // group accounts by role:
-        $groupedAccounts = [];
+        $groupedAccounts  = [];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $type = $account->accountType->type;
-            $role = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
+            $type                                                                        = $account->accountType->type;
+            $role                                                                        = sprintf('opt_group_%s', $repository->getMetaValue($account, 'account_role'));
 
             if (in_array($type, [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value], true)) {
                 $role = sprintf('opt_group_l_%s', $type);
@@ -251,7 +251,7 @@ class ReportController extends Controller
         }
         ksort($groupedAccounts);
 
-        $accountList = implode(',', $accounts->pluck('id')->toArray());
+        $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
         return view('reports.index', [
@@ -260,7 +260,7 @@ class ReportController extends Controller
             'start'            => $start,
             'accountList'      => $accountList,
             'groupedAccounts'  => $groupedAccounts,
-            'customFiscalYear' => $customFiscalYear
+            'customFiscalYear' => $customFiscalYear,
         ]);
     }
 
@@ -274,11 +274,11 @@ class ReportController extends Controller
     public function options(string $reportType)
     {
         $result = match ($reportType) {
-            default => $this->noReportOptions(),
+            default    => $this->noReportOptions(),
             'category' => $this->categoryReportOptions(),
-            'budget' => $this->budgetReportOptions(),
-            'tag' => $this->tagReportOptions(),
-            'double' => $this->doubleReportOptions()
+            'budget'   => $this->budgetReportOptions(),
+            'tag'      => $this->tagReportOptions(),
+            'double'   => $this->doubleReportOptions()
         };
 
         return response()->json(['html' => $result]);
@@ -336,13 +336,13 @@ class ReportController extends Controller
             return view('errors.error')->with('message', (string) trans('firefly.end_after_start_date'));
         }
 
-        $url = match ($reportType) {
-            default => route('reports.report.default', [$accounts, $start, $end]),
+        $url        = match ($reportType) {
+            default    => route('reports.report.default', [$accounts, $start, $end]),
             'category' => route('reports.report.category', [$accounts, $categories, $start, $end]),
-            'audit' => route('reports.report.audit', [$accounts, $start, $end]),
-            'budget' => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
-            'tag' => route('reports.report.tag', [$accounts, $tags, $start, $end]),
-            'double' => route('reports.report.double', [$accounts, $double, $start, $end])
+            'audit'    => route('reports.report.audit', [$accounts, $start, $end]),
+            'budget'   => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
+            'tag'      => route('reports.report.tag', [$accounts, $tags, $start, $end]),
+            'double'   => route('reports.report.double', [$accounts, $double, $start, $end])
         };
 
         return redirect($url);
@@ -366,7 +366,7 @@ class ReportController extends Controller
 
         app('view')->share('subTitle', trans('firefly.report_tag', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);

@@ -49,17 +49,17 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
 
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $collector->withoutBudget();
-        $journals = $collector->getExtractedJournals();
-        $data     = [];
+        $journals     = $collector->getExtractedJournals();
+        $data         = [];
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                          = (int) $journal['currency_id'];
 
             $data[$currencyId] ??= [
                 'id'                      => 0,
@@ -70,9 +70,9 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
                 'currency_name'           => $journal['currency_name'],
                 'currency_symbol'         => $journal['currency_symbol'],
                 'currency_decimal_places' => $journal['currency_decimal_places'],
-                'entries'                 => []
+                'entries'                 => [],
             ];
-            $date = $journal['date']->format($carbonFormat);
+            $date                                = $journal['date']->format($carbonFormat);
 
             if (!array_key_exists($date, $data[$currencyId]['entries'])) {
                 $data[$currencyId]['entries'][$date] = '0';
@@ -83,10 +83,10 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
         return $data;
     }
 
-    public function sumExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|TransactionCurrency $currency = null): array
+    public function sumExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
@@ -104,7 +104,7 @@ class NoBudgetRepository implements NoBudgetRepositoryInterface, UserGroupInterf
     }
 
     #[Override]
-    public function collectExpenses(Carbon $start, Carbon $end, null|Collection $accounts = null, null|TransactionCurrency $currency = null): array
+    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?TransactionCurrency $currency = null): array
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

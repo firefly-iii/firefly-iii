@@ -54,9 +54,9 @@ class BillController extends Controller
      */
     public function frontpage(BillRepositoryInterface $repository): JsonResponse
     {
-        $start = session('start', today(config('app.timezone'))->startOfMonth());
-        $end   = session('end', today(config('app.timezone'))->endOfMonth());
-        $cache = new CacheProperties();
+        $start     = session('start', today(config('app.timezone'))->startOfMonth());
+        $end       = session('end', today(config('app.timezone'))->endOfMonth());
+        $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
@@ -72,8 +72,8 @@ class BillController extends Controller
          * @var array $info
          */
         foreach ($paid as $info) {
-            $amount = $info['sum'];
-            $label  = (string) trans('firefly.paid_in_currency', ['currency'  => $info['name']]);
+            $amount            = $info['sum'];
+            $label             = (string) trans('firefly.paid_in_currency', ['currency'  => $info['name']]);
             $chartData[$label] = ['amount'          => $amount, 'currency_symbol' => $info['symbol'], 'currency_code'   => $info['code']];
         }
 
@@ -81,12 +81,12 @@ class BillController extends Controller
          * @var array $info
          */
         foreach ($unpaid as $info) {
-            $amount = $info['sum'];
-            $label  = (string) trans('firefly.unpaid_in_currency', ['currency'  => $info['name']]);
+            $amount            = $info['sum'];
+            $label             = (string) trans('firefly.unpaid_in_currency', ['currency'  => $info['name']]);
             $chartData[$label] = ['amount'          => $amount, 'currency_symbol' => $info['symbol'], 'currency_code'   => $info['code']];
         }
 
-        $data = $this->generator->multiCurrencyPieChart($chartData);
+        $data      = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -99,18 +99,18 @@ class BillController extends Controller
      */
     public function single(Bill $bill): JsonResponse
     {
-        $cache = new CacheProperties();
+        $cache      = new CacheProperties();
         $cache->addProperty('chart.bill.single');
         $cache->addProperty($bill->id);
         $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $locale = Steam::getLocale();
+        $locale     = Steam::getLocale();
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $journals  = $collector->setBill($bill)->getExtractedJournals();
+        $collector  = app(GroupCollectorInterface::class);
+        $journals   = $collector->setBill($bill)->getExtractedJournals();
 
         // sort the other way around:
         usort($journals, static function (array $left, array $right): int {
@@ -123,7 +123,7 @@ class BillController extends Controller
 
             return 0;
         });
-        $currency = $bill->transactionCurrency;
+        $currency   = $bill->transactionCurrency;
         if ($this->convertToPrimary) {
             $currency = $this->primaryCurrency;
         }
@@ -134,22 +134,22 @@ class BillController extends Controller
                 'label'           => (string) trans('firefly.min-amount'),
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
-                'entries'         => []
+                'entries'         => [],
             ],
             [
                 'type'            => 'line',
                 'label'           => (string) trans('firefly.max-amount'),
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
-                'entries'         => []
+                'entries'         => [],
             ],
             [
                 'type'            => 'bar',
                 'label'           => (string) trans('firefly.journal-amount'),
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
-                'entries'         => []
-            ]
+                'entries'         => [],
+            ],
         ];
         $currencyId = $bill->transaction_currency_id;
         $amountMin  = $bill->amount_min;
@@ -159,7 +159,7 @@ class BillController extends Controller
             $amountMax = $bill->native_amount_max;
         }
         foreach ($journals as $journal) {
-            $date = $journal['date']->isoFormat((string) trans('config.month_and_day_js', [], $locale));
+            $date                           = $journal['date']->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[0]['entries'][$date] = $amountMin; // minimum amount of bill
             $chartData[1]['entries'][$date] = $amountMax; // maximum amount of bill
 
@@ -167,7 +167,7 @@ class BillController extends Controller
             if (!array_key_exists($date, $chartData[2]['entries'])) {
                 $chartData[2]['entries'][$date] = '0';
             }
-            $amount = bcmul((string) $journal['amount'], '-1');
+            $amount                         = bcmul((string) $journal['amount'], '-1');
             if ($this->convertToPrimary && $currencyId !== $journal['currency_id']) {
                 $amount = bcmul($journal['pc_amount'] ?? '0', '-1');
             }
@@ -178,7 +178,7 @@ class BillController extends Controller
             $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount); // amount of journal
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data       = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

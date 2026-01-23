@@ -57,16 +57,16 @@ class JavascriptController extends Controller
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::MORTGAGE->value,
-            AccountTypeEnum::CREDITCARD->value
+            AccountTypeEnum::CREDITCARD->value,
         ]);
         $data     = ['accounts'     => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountId = $account->id;
-            $currency  = (int) $repository->getMetaValue($account, 'currency_id');
-            $currency  = 0 === $currency ? $this->primaryCurrency->id : $currency;
-            $entry     = ['preferredCurrency' => $currency, 'name'              => $account->name];
+            $accountId                    = $account->id;
+            $currency                     = (int) $repository->getMetaValue($account, 'currency_id');
+            $currency                     = 0 === $currency ? $this->primaryCurrency->id : $currency;
+            $entry                        = ['preferredCurrency' => $currency, 'name'              => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
 
@@ -83,8 +83,8 @@ class JavascriptController extends Controller
 
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
-            $currencyId = $currency->id;
-            $entry      = ['name'   => $currency->name, 'code'   => $currency->code, 'symbol' => $currency->symbol];
+            $currencyId                      = $currency->id;
+            $entry                           = ['name'   => $currency->name, 'code'   => $currency->code, 'symbol' => $currency->symbol];
             $data['currencies'][$currencyId] = $entry;
         }
 
@@ -100,19 +100,19 @@ class JavascriptController extends Controller
      */
     public function variables(Request $request, AccountRepositoryInterface $repository): Response
     {
-        $account  = $repository->find((int) $request->get('account'));
-        $currency = $this->primaryCurrency;
+        $account                   = $repository->find((int) $request->get('account'));
+        $currency                  = $this->primaryCurrency;
         if ($account instanceof Account) {
             $currency = $repository->getAccountCurrency($account) ?? $this->primaryCurrency;
         }
-        $locale     = Steam::getLocale();
-        $accounting = Amount::getJsConfig();
+        $locale                    = Steam::getLocale();
+        $accounting                = Amount::getJsConfig();
         $accounting['frac_digits'] = $currency->decimal_places;
-        $pref      = Preferences::get('language', config('firefly.default_language', 'en_US'));
-        $lang      = $pref->data;
-        $dateRange = $this->getDateRangeConfig();
-        $uid       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
-        $data      = [
+        $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        $lang                      = $pref->data;
+        $dateRange                 = $this->getDateRangeConfig();
+        $uid                       = substr(hash('sha256', sprintf('%s-%s-%s', (string) config('app.key'), auth()->user()->id, auth()->user()->email)), 0, 12);
+        $data                      = [
             'currencyCode'         => $currency->code,
             'currencySymbol'       => $currency->symbol,
             'accountingLocaleInfo' => $accounting,
@@ -121,7 +121,7 @@ class JavascriptController extends Controller
             'dateRangeTitle'       => $dateRange['title'],
             'locale'               => $locale,
             'dateRangeConfig'      => $dateRange['configuration'],
-            'uid'                  => $uid
+            'uid'                  => $uid,
         ];
         $request->session()->keep(['two-factor-secret']);
 
@@ -137,9 +137,9 @@ class JavascriptController extends Controller
         $start = clone session('start', today(config('app.timezone'))->startOfMonth());
 
         /** @var Carbon $end */
-        $end = clone session('end', today(config('app.timezone'))->endOfMonth());
+        $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $data = ['start' => $start->format('Y-m-d'), 'end'   => $end->format('Y-m-d')];
+        $data  = ['start' => $start->format('Y-m-d'), 'end'   => $end->format('Y-m-d')];
 
         return response()->view('v2.javascript.variables', $data)->header('Content-Type', 'text/javascript');
     }

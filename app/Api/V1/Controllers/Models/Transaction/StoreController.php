@@ -65,8 +65,8 @@ class StoreController extends Controller
         parent::__construct();
         $this->middleware(function (Request $request, $next) {
             /** @var User $admin */
-            $admin     = auth()->user();
-            $userGroup = $this->validateUserGroup($request);
+            $admin                 = auth()->user();
+            $userGroup             = $this->validateUserGroup($request);
 
             $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
             $this->groupRepository->setUser($admin);
@@ -87,8 +87,8 @@ class StoreController extends Controller
     public function store(StoreRequest $request): JsonResponse
     {
         Log::debug('Now in API StoreController::store()');
-        $data = $request->getAll();
-        $data['user'] = auth()->user();
+        $data               = $request->getAll();
+        $data['user']       = auth()->user();
         $data['user_group'] = $this->userGroup;
 
         Log::channel('audit')->info('Store new transaction over API.', $data);
@@ -97,8 +97,7 @@ class StoreController extends Controller
             $transactionGroup = $this->groupRepository->store($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Caught a duplicate transaction. Return error message.');
-            $validator = Validator::make(['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' =>
-                new IsDuplicateTransaction()]);
+            $validator = Validator::make(['transactions' => [['description' => $e->getMessage()]]], ['transactions.0.description' => new IsDuplicateTransaction()]);
 
             throw new ValidationException($validator);
         } catch (FireflyException $e) {
@@ -110,40 +109,41 @@ class StoreController extends Controller
             throw new ValidationException($validator);
         }
         Preferences::mark();
-        $applyRules   = $data['apply_rules'] ?? true;
-        $fireWebhooks = $data['fire_webhooks'] ?? true;
+        $applyRules         = $data['apply_rules'] ?? true;
+        $fireWebhooks       = $data['fire_webhooks'] ?? true;
         event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
-        $manager = $this->getManager();
+        $manager            = $this->getManager();
 
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin              = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector          = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             ->setUserGroup($this->userGroup)
             // filter on transaction group.
             ->setTransactionGroup($transactionGroup)
             // all info needed for the API:
-            ->withAPIInformation();
+            ->withAPIInformation()
+        ;
 
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup      = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw HttpException::fromStatusCode(410, '200032: Cannot find transaction. Possibly, a rule deleted this transaction after its creation.');
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment         = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup      = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer        = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource = new Item($selectedGroup, $transformer, 'transactions');
+        $resource           = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

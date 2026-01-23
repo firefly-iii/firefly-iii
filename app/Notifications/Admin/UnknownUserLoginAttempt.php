@@ -67,9 +67,10 @@ class UnknownUserLoginAttempt extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject((string) trans('email.unknown_user_subject'));
+            ->subject((string) trans('email.unknown_user_subject'))
+        ;
     }
 
     //    /**

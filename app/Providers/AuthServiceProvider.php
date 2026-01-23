@@ -45,11 +45,11 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Auth::provider('remote_user_provider', static fn($app, array $config): RemoteUserProvider => new RemoteUserProvider());
+        Auth::provider('remote_user_provider', static fn ($app, array $config): RemoteUserProvider => new RemoteUserProvider());
 
         Auth::extend(
             'remote_user_guard',
-            static fn($app, string $name, array $config): RemoteUserGuard => new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app)
+            static fn ($app, string $name, array $config): RemoteUserGuard => new RemoteUserGuard(Auth::createUserProvider($config['provider']), $app)
         );
 
         Passport::tokensExpireIn(now()->addDays(14));

@@ -61,24 +61,24 @@ class UpdateController extends Controller
      */
     public function update(Webhook $webhook, UpdateRequest $request): JsonResponse
     {
-        $data = $request->getData();
+        $data        = $request->getData();
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::channel('audit')->info(sprintf('User tries to update webhook #%d, but webhooks are DISABLED.', $webhook->id), $data);
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }
 
-        $webhook = $this->repository->update($webhook, $data);
-        $manager = $this->getManager();
+        $webhook     = $this->repository->update($webhook, $data);
+        $manager     = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new WebhookEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new WebhookEnrichment();
         $enrichment->setUser($admin);
 
         /** @var Webhook $webhook */
-        $webhook = $enrichment->enrichSingle($webhook);
+        $webhook     = $enrichment->enrichSingle($webhook);
 
         Log::channel('audit')->info(sprintf('User updates webhook #%d', $webhook->id), $data);
 
@@ -86,7 +86,7 @@ class UpdateController extends Controller
         $transformer = app(WebhookTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($webhook, $transformer, 'webhooks');
+        $resource    = new Item($webhook, $transformer, 'webhooks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

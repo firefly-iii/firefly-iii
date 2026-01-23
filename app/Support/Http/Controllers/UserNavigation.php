@@ -68,7 +68,7 @@ trait UserNavigation
             AccountTypeEnum::ASSET->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::DEBT->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ];
         $type     = $account->accountType->type;
 
@@ -78,7 +78,7 @@ trait UserNavigation
     final protected function isEditableGroup(TransactionGroup $group): bool
     {
         /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
+        $journal  = $group->transactionJournals()->first();
         if (null === $journal) {
             return false;
         }
@@ -87,7 +87,7 @@ trait UserNavigation
             TransactionTypeEnum::WITHDRAWAL->value,
             TransactionTypeEnum::TRANSFER->value,
             TransactionTypeEnum::DEPOSIT->value,
-            TransactionTypeEnum::RECONCILIATION->value
+            TransactionTypeEnum::RECONCILIATION->value,
         ];
 
         return in_array($type, $editable, true);
@@ -111,10 +111,10 @@ trait UserNavigation
 
                 return redirect(route('index'));
             }
-            $journal = $transaction->transactionJournal;
+            $journal     = $transaction->transactionJournal;
 
             /** @var null|Transaction $other */
-            $other = $journal->transactions()->where('id', '!=', $transaction->id)->first();
+            $other       = $journal->transactions()->where('id', '!=', $transaction->id)->first();
             if (null === $other) {
                 Log::error(sprintf('Account #%d has no valid journals. Dont know where it belongs.', $account->id));
                 session()->flash('error', trans('firefly.cant_find_redirect_account'));
@@ -131,7 +131,7 @@ trait UserNavigation
     final protected function redirectGroupToAccount(TransactionGroup $group): Redirector|RedirectResponse
     {
         /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
+        $journal      = $group->transactionJournals()->first();
         if (null === $journal) {
             Log::error(sprintf('No journals in group #%d', $group->id));
 
@@ -143,7 +143,7 @@ trait UserNavigation
             AccountTypeEnum::REVENUE->value,
             AccountTypeEnum::EXPENSE->value,
             AccountTypeEnum::RECONCILIATION->value,
-            AccountTypeEnum::INITIAL_BALANCE->value
+            AccountTypeEnum::INITIAL_BALANCE->value,
         ];
 
         /** @var Transaction $transaction */
@@ -157,7 +157,7 @@ trait UserNavigation
         return redirect(route('index'));
     }
 
-    final protected function rememberPreviousUrl(string $identifier): null|string
+    final protected function rememberPreviousUrl(string $identifier): ?string
     {
         $return = Steam::getSafePreviousUrl();
         session()->put($identifier, $return);

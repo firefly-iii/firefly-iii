@@ -65,7 +65,7 @@ class ShowController extends Controller
             app('view')->share('title', (string) trans('firefly.budgets'));
             app('view')->share('mainTitleIcon', 'fa-pie-chart');
             $this->journalRepos = app(JournalRepositoryInterface::class);
-            $this->repository = app(BudgetRepositoryInterface::class);
+            $this->repository   = app(BudgetRepositoryInterface::class);
 
             return $next($request);
         });
@@ -80,16 +80,16 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function noBudget(Request $request, null|Carbon $start = null, null|Carbon $end = null): Factory|\Illuminate\Contracts\View\View
+    public function noBudget(Request $request, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View
     {
         $start ??= session('start');
         $end   ??= session('end');
 
         /** @var Carbon $start */
         /** @var Carbon $end */
-        $subTitle = trans('firefly.without_budget_between', [
+        $subTitle  = trans('firefly.without_budget_between', [
             'start' => $start->isoFormat($this->monthAndDayFormat),
-            'end'   => $end->isoFormat($this->monthAndDayFormat)
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
         ]);
 
         // get first journal ever to set off the budget period overview.
@@ -108,8 +108,9 @@ class ShowController extends Controller
             ->setPage($page)
             ->withoutBudget()
             ->withAccountInformation()
-            ->withCategoryInformation();
-        $groups = $collector->getPaginatedGroups();
+            ->withCategoryInformation()
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget'));
 
         return view('budgets.no-budget', ['groups'   => $groups, 'subTitle' => $subTitle, 'periods'  => $periods, 'start'    => $start, 'end'      => $end]);
@@ -125,12 +126,12 @@ class ShowController extends Controller
      */
     public function noBudgetAll(Request $request): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string) trans('firefly.all_journals_without_budget');
-        $first    = $this->journalRepos->firstNull();
-        $start    = $first instanceof TransactionJournal ? $first->date : new Carbon();
-        $end      = today(config('app.timezone'));
-        $page     = (int) $request->get('page');
-        $pageSize = (int) Preferences::get('listPageSize', 50)->data;
+        $subTitle  = (string) trans('firefly.all_journals_without_budget');
+        $first     = $this->journalRepos->firstNull();
+        $start     = $first instanceof TransactionJournal ? $first->date : new Carbon();
+        $end       = today(config('app.timezone'));
+        $page      = (int) $request->get('page');
+        $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -141,8 +142,9 @@ class ShowController extends Controller
             ->setPage($page)
             ->withoutBudget()
             ->withAccountInformation()
-            ->withCategoryInformation();
-        $groups = $collector->getPaginatedGroups();
+            ->withCategoryInformation()
+        ;
+        $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.no-budget-all'));
 
         return view('budgets.no-budget', ['groups'   => $groups, 'subTitle' => $subTitle, 'start'    => $start, 'end'      => $end]);
@@ -169,7 +171,7 @@ class ShowController extends Controller
 
         // collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector   = app(GroupCollectorInterface::class);
         $collector
             ->setRange($allStart, $allEnd)
             ->setBudget($budget)
@@ -177,11 +179,12 @@ class ShowController extends Controller
             ->setLimit($pageSize)
             ->setPage($page)
             ->withBudgetInformation()
-            ->withCategoryInformation();
-        $groups = $collector->getPaginatedGroups();
+            ->withCategoryInformation()
+        ;
+        $groups      = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show', [$budget->id]));
 
-        $subTitle = (string) trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
+        $subTitle    = (string) trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
 
         return view('budgets.show', [
             'limits'      => $limits,
@@ -189,7 +192,7 @@ class ShowController extends Controller
             'budget'      => $budget,
             'repetition'  => $repetition,
             'groups'      => $groups,
-            'subTitle'    => $subTitle
+            'subTitle'    => $subTitle,
         ]);
     }
 
@@ -215,7 +218,7 @@ class ShowController extends Controller
             'name'     => $budget->name,
             'start'    => $budgetLimit->start_date->isoFormat($this->monthAndDayFormat),
             'end'      => $budgetLimit->end_date->isoFormat($this->monthAndDayFormat),
-            'currency' => $budgetLimit->transactionCurrency->name
+            'currency' => $budgetLimit->transactionCurrency->name,
         ]);
         if ($this->convertToPrimary) {
             $currencySymbol = $this->primaryCurrency->symbol;
@@ -223,7 +226,7 @@ class ShowController extends Controller
 
         // collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector      = app(GroupCollectorInterface::class);
 
         $collector
             ->setRange($budgetLimit->start_date, $budgetLimit->end_date)
@@ -232,15 +235,16 @@ class ShowController extends Controller
             ->setLimit($pageSize)
             ->setPage($page)
             ->withBudgetInformation()
-            ->withCategoryInformation();
-        $groups = $collector->getPaginatedGroups();
+            ->withCategoryInformation()
+        ;
+        $groups         = $collector->getPaginatedGroups();
         $groups->setPath(route('budgets.show.limit', [$budget->id, $budgetLimit->id]));
 
         /** @var Carbon $start */
-        $start       = session('first', today(config('app.timezone'))->startOfYear());
-        $end         = today(config('app.timezone'));
-        $attachments = $this->repository->getAttachments($budget);
-        $limits      = $this->getLimits($budget, $start, $end);
+        $start          = session('first', today(config('app.timezone'))->startOfYear());
+        $end            = today(config('app.timezone'));
+        $attachments    = $this->repository->getAttachments($budget);
+        $limits         = $this->getLimits($budget, $start, $end);
 
         return view('budgets.show', [
             'limits'         => $limits,
@@ -249,7 +253,7 @@ class ShowController extends Controller
             'budgetLimit'    => $budgetLimit,
             'groups'         => $groups,
             'subTitle'       => $subTitle,
-            'currencySymbol' => $currencySymbol
+            'currencySymbol' => $currencySymbol,
         ]);
     }
 }

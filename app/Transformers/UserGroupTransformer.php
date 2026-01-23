@@ -49,9 +49,9 @@ class UserGroupTransformer extends AbstractTransformer
 
             /** @var UserGroup $userGroup */
             foreach ($objects as $userGroup) {
-                $userGroupId = $userGroup->id;
-                $this->inUse[$userGroupId] = $user->user_group_id === $userGroupId;
-                $access = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
+                $userGroupId                            = $userGroup->id;
+                $this->inUse[$userGroupId]              = $user->user_group_id === $userGroupId;
+                $access                                 = $user->hasRoleInGroupOrOwner($userGroup, UserRoleEnum::VIEW_MEMBERSHIPS) || $user->hasRole('owner');
                 $this->membershipsVisible[$userGroupId] = $access;
                 if ($access) {
                     $groupMemberships = $userGroup->groupMemberships()->get();
@@ -62,7 +62,7 @@ class UserGroupTransformer extends AbstractTransformer
                             'user_id'    => (string) $groupMembership->user_id,
                             'user_email' => $groupMembership->user->email,
                             'role'       => $groupMembership->userRole->title,
-                            'you'        => $groupMembership->user_id === $user->id
+                            'you'        => $groupMembership->user_id === $user->id,
                         ];
                     }
                 }
@@ -75,17 +75,17 @@ class UserGroupTransformer extends AbstractTransformer
 
     private function mergeMemberships(): void
     {
-        $new = [];
+        $new               = [];
         foreach ($this->memberships as $groupId => $members) {
             $new[$groupId] ??= [];
 
             foreach ($members as $member) {
-                $mail = $member['user_email'];
+                $mail                            = $member['user_email'];
                 $new[$groupId][$mail] ??= [
                     'user_id'    => (string) $member['user_id'],
                     'user_email' => $member['user_email'],
                     'you'        => $member['you'],
-                    'roles'      => []
+                    'roles'      => [],
                 ];
                 $new[$groupId][$mail]['roles'][] = $member['role'];
             }
@@ -112,7 +112,7 @@ class UserGroupTransformer extends AbstractTransformer
             'primary_currency_code'           => $currency->code,
             'primary_currency_symbol'         => $currency->symbol,
             'primary_currency_decimal_places' => $currency->decimal_places,
-            'members'                         => array_values($this->memberships[$userGroup->id] ?? [])
+            'members'                         => array_values($this->memberships[$userGroup->id] ?? []),
         ];
 
         // if the user has a specific role in this group, then collect the memberships.

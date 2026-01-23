@@ -58,14 +58,14 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Find existing AB.
      */
-    public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): null|AvailableBudget;
+    public function find(TransactionCurrency $currency, Carbon $start, Carbon $end): ?AvailableBudget;
 
-    public function findById(int $id): null|AvailableBudget;
+    public function findById(int $id): ?AvailableBudget;
 
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      */
-    public function get(null|Carbon $start = null, null|Carbon $end = null): Collection;
+    public function get(?Carbon $start = null, ?Carbon $end = null): Collection;
 
     #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
@@ -80,19 +80,19 @@ interface AvailableBudgetRepositoryInterface
     /**
      * Returns all available budget objects.
      */
-    public function getAvailableBudgetsByDate(null|Carbon $start, null|Carbon $end): Collection;
+    public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
 
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection;
 
     /**
      * Get by transaction currency and date. Should always result in one entry or NULL.
      */
-    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): null|AvailableBudget;
+    public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
     #[Deprecated]
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
-    public function store(array $data): null|AvailableBudget;
+    public function store(array $data): ?AvailableBudget;
 
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget;
 

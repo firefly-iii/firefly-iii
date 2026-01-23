@@ -64,7 +64,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Find a transaction group by its ID.
      */
-    public function find(int $groupId): null|TransactionGroup;
+    public function find(int $groupId): ?TransactionGroup;
 
     /**
      * Return all attachments for all journals in the group.
@@ -79,7 +79,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the location of a journal or NULL.
      */
-    public function getLocation(int $journalId): null|Location;
+    public function getLocation(int $journalId): ?Location;
 
     /**
      * Return object with all found meta field things as Carbon objects.
@@ -94,7 +94,7 @@ interface TransactionGroupRepositoryInterface
     /**
      * Get the note text for a journal (by ID).
      */
-    public function getNoteText(int $journalId): null|string;
+    public function getNoteText(int $journalId): ?string;
 
     /**
      * Return all piggy bank events for all journals in the group.

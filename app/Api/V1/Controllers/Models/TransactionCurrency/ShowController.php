@@ -69,21 +69,21 @@ class ShowController extends Controller
      */
     public function index(): JsonResponse
     {
-        $pageSize   = $this->parameters->get('limit');
-        $collection = $this->repository->getAll();
-        $count      = $collection->count();
+        $pageSize    = $this->parameters->get('limit');
+        $collection  = $this->repository->getAll();
+        $count       = $collection->count();
 
         // slice them:
-        $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
-        $paginator  = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.currencies.index') . $this->buildParams());
-        $manager = $this->getManager();
+        $currencies  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator   = new LengthAwarePaginator($currencies, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.currencies.index').$this->buildParams());
+        $manager     = $this->getManager();
 
         /** @var CurrencyTransformer $transformer */
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($currencies, $transformer, 'currencies');
+        $resource    = new FractalCollection($currencies, $transformer, 'currencies');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -98,8 +98,8 @@ class ShowController extends Controller
     public function show(TransactionCurrency $currency): JsonResponse
     {
         /** @var User $user */
-        $user    = auth()->user();
-        $manager = $this->getManager();
+        $user        = auth()->user();
+        $manager     = $this->getManager();
         $this->parameters->set('primaryCurrency', $this->primaryCurrency);
 
         // update fields with user info.
@@ -109,7 +109,7 @@ class ShowController extends Controller
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($currency, $transformer, 'currencies');
+        $resource    = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -120,9 +120,9 @@ class ShowController extends Controller
     public function showPrimary(): JsonResponse
     {
         /** @var User $user */
-        $user     = auth()->user();
-        $manager  = $this->getManager();
-        $currency = $this->primaryCurrency;
+        $user        = auth()->user();
+        $manager     = $this->getManager();
+        $currency    = $this->primaryCurrency;
 
         // update fields with user info.
         $currency->refreshForUser($user);
@@ -131,7 +131,7 @@ class ShowController extends Controller
         $transformer = app(CurrencyTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($currency, $transformer, 'currencies');
+        $resource    = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

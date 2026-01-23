@@ -51,7 +51,7 @@ class MoveTransactionsRequest extends FormRequest
     {
         return [
             'original_account'    => 'required|different:destination_account|belongsToUser:accounts,id',
-            'destination_account' => 'required|different:original_account|belongsToUser:accounts,id'
+            'destination_account' => 'required|different:original_account|belongsToUser:accounts,id',
         ];
     }
 
@@ -75,11 +75,11 @@ class MoveTransactionsRequest extends FormRequest
 
     private function validateMove(Validator $validator): void
     {
-        $data       = $validator->getData();
-        $repository = app(AccountRepositoryInterface::class);
+        $data                = $validator->getData();
+        $repository          = app(AccountRepositoryInterface::class);
         $repository->setUser(auth()->user());
-        $original    = $repository->find((int) $data['original_account']);
-        $destination = $repository->find((int) $data['destination_account']);
+        $original            = $repository->find((int) $data['original_account']);
+        $destination         = $repository->find((int) $data['destination_account']);
 
         // not the same type:
         if ($original->accountType->type !== $destination->accountType->type) {

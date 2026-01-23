@@ -52,8 +52,8 @@ class AccountValidator
 
     public bool     $createMode  = false;
     public string   $destError   = 'No error yet.';
-    public null|Account $destination = null;
-    public null|Account $source      = null;
+    public ?Account $destination = null;
+    public ?Account $source      = null;
     public string   $sourceError = 'No error yet.';
     private AccountRepositoryInterface $accountRepository;
     private array $combinations;
@@ -64,16 +64,16 @@ class AccountValidator
      */
     public function __construct()
     {
-        $this->combinations = config('firefly.source_dests');
+        $this->combinations      = config('firefly.source_dests');
         $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
-    public function getSource(): null|Account
+    public function getSource(): ?Account
     {
         return $this->source;
     }
 
-    public function setSource(null|Account $account): void
+    public function setSource(?Account $account): void
     {
         if (!$account instanceof Account) {
             Log::debug('AccountValidator source is set to NULL');
@@ -84,7 +84,7 @@ class AccountValidator
         $this->source = $account;
     }
 
-    public function setDestination(null|Account $account): void
+    public function setDestination(?Account $account): void
     {
         if (!$account instanceof Account) {
             Log::debug('AccountValidator destination is set to NULL');
@@ -126,37 +126,37 @@ class AccountValidator
                 $this->destError = sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType);
                 Log::error(sprintf('AccountValidator::validateDestination cannot handle "%s", so it will always return false.', $this->transactionType));
 
-                $result = false;
+                $result          = false;
 
                 break;
 
             case TransactionTypeEnum::WITHDRAWAL->value:
-                $result = $this->validateWithdrawalDestination($array);
+                $result          = $this->validateWithdrawalDestination($array);
 
                 break;
 
             case TransactionTypeEnum::DEPOSIT->value:
-                $result = $this->validateDepositDestination($array);
+                $result          = $this->validateDepositDestination($array);
 
                 break;
 
             case TransactionTypeEnum::TRANSFER->value:
-                $result = $this->validateTransferDestination($array);
+                $result          = $this->validateTransferDestination($array);
 
                 break;
 
             case TransactionTypeEnum::OPENING_BALANCE->value:
-                $result = $this->validateOBDestination($array);
+                $result          = $this->validateOBDestination($array);
 
                 break;
 
             case TransactionTypeEnum::LIABILITY_CREDIT->value:
-                $result = $this->validateLCDestination($array);
+                $result          = $this->validateLCDestination($array);
 
                 break;
 
             case TransactionTypeEnum::RECONCILIATION->value:
-                $result = $this->validateReconciliationDestination($array);
+                $result          = $this->validateReconciliationDestination($array);
 
                 break;
         }
@@ -233,7 +233,7 @@ class AccountValidator
             AccountTypeEnum::EXPENSE->value,
             AccountTypeEnum::REVENUE->value,
             AccountTypeEnum::INITIAL_BALANCE->value,
-            AccountTypeEnum::LIABILITY_CREDIT->value
+            AccountTypeEnum::LIABILITY_CREDIT->value,
         ];
 
         return in_array($accountType, $canCreate, true);
@@ -246,7 +246,7 @@ class AccountValidator
      * @SuppressWarnings("PHPMD.BooleanArgumentFlag")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): null|Account
+    protected function findExistingAccount(array $validTypes, array $data, bool $inverse = false): ?Account
     {
         Log::debug('Now in findExistingAccount', [$validTypes, $data]);
         Log::debug('The search will be reversed!');

@@ -64,10 +64,10 @@ class Recurrence extends Model
         'latest_date_tz',
         'repetitions',
         'apply_rules',
-        'active'
+        'active',
     ];
 
-    protected $table = 'recurrences';
+    protected $table    = 'recurrences';
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -80,10 +80,10 @@ class Recurrence extends Model
             $recurrenceId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence = $user->recurrences()->find($recurrenceId);
+            $recurrence   = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }
@@ -151,12 +151,12 @@ class Recurrence extends Model
             'active'        => 'bool',
             'apply_rules'   => 'bool',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

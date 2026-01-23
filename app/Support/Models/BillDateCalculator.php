@@ -40,7 +40,7 @@ class BillDateCalculator
      *
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
-    public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, null|Carbon $lastPaid): array
+    public function getPayDates(Carbon $earliest, Carbon $latest, Carbon $billStart, string $period, int $skip, ?Carbon $lastPaid): array
     {
         $this->diffInMonths = 0;
         $earliest->startOfDay();
@@ -56,15 +56,15 @@ class BillDateCalculator
             $lastPaid?->format('Y-m-d')
         ));
 
-        $daysUntilEOM = Navigation::daysUntilEndOfMonth($billStart);
+        $daysUntilEOM       = Navigation::daysUntilEndOfMonth($billStart);
         Log::debug(sprintf('For bill start, days until end of month is %d', $daysUntilEOM));
 
-        $set          = new Collection();
-        $currentStart = clone $earliest;
+        $set                = new Collection();
+        $currentStart       = clone $earliest;
 
         // 2023-06-23 subDay to fix 7655
         $currentStart->subDay();
-        $loop = 0;
+        $loop               = 0;
 
         Log::debug('Start of loop');
         while ($currentStart <= $latest) {
@@ -118,7 +118,7 @@ class BillDateCalculator
             // for the next loop, go to end of period, THEN add day.
             Log::debug('Add one day to nextExpectedMatch/currentStart.');
             $nextExpectedMatch->addDay();
-            $currentStart = clone $nextExpectedMatch;
+            $currentStart      = clone $nextExpectedMatch;
 
             ++$loop;
             if ($loop > 31) {
@@ -128,8 +128,8 @@ class BillDateCalculator
             }
         }
         Log::debug('end of loop');
-        $simple = $set->map( // @phpstan-ignore-line
-            static fn(Carbon $date) => $date->format('Y-m-d')
+        $simple             = $set->map( // @phpstan-ignore-line
+            static fn (Carbon $date) => $date->format('Y-m-d')
         );
         Log::debug(sprintf('Found %d pay dates', $set->count()), $simple->toArray());
 
@@ -151,13 +151,13 @@ class BillDateCalculator
             return $billStartDate;
         }
 
-        $steps = Navigation::diffInPeriods($period, $skip, $earliest, $billStartDate);
+        $steps              = Navigation::diffInPeriods($period, $skip, $earliest, $billStartDate);
         if ($steps === $this->diffInMonths) {
             Log::debug(sprintf('Steps is %d, which is the same as diffInMonths (%d), so we add another 1.', $steps, $this->diffInMonths));
             ++$steps;
         }
         $this->diffInMonths = $steps;
-        $result = clone $billStartDate;
+        $result             = clone $billStartDate;
         if ($steps > 0) {
             --$steps;
             Log::debug(sprintf('Steps is %d, because addPeriod already adds 1.', $steps));

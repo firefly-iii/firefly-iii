@@ -37,7 +37,7 @@ class CorrectsIbans extends Command
 
     protected $description = 'Removes spaces from IBANs';
     protected $signature   = 'correction:ibans';
-    private int $count = 0;
+    private int $count     = 0;
 
     /**
      * Execute the console command.
@@ -55,8 +55,8 @@ class CorrectsIbans extends Command
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $iban    = (string) $account->iban;
-            $newIban = Steam::filterSpaces($iban);
+            $iban          = (string) $account->iban;
+            $newIban       = Steam::filterSpaces($iban);
             if ('' !== $iban && $iban !== $newIban) {
                 $account->iban = $newIban;
                 $account->save();
@@ -86,11 +86,11 @@ class CorrectsIbans extends Command
         foreach ($accounts as $account) {
             $userId = $account->user_id;
             $set[$userId] ??= [];
-            $iban = (string) $account->iban;
+            $iban   = (string) $account->iban;
             if ('' === $iban) {
                 continue;
             }
-            $type = $account->accountType->type;
+            $type   = $account->accountType->type;
             if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
                 $type = 'liabilities';
             }

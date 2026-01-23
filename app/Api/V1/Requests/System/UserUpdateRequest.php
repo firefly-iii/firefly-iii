@@ -62,7 +62,7 @@ class UserUpdateRequest extends FormRequest
             'email'        => $this->convertString('email'),
             'blocked'      => $blocked,
             'blocked_code' => $this->convertString('blocked_code'),
-            'role'         => $this->convertString('role')
+            'role'         => $this->convertString('role'),
         ];
     }
 
@@ -78,7 +78,7 @@ class UserUpdateRequest extends FormRequest
             'email'        => sprintf('email|unique:users,email,%d', $user->id),
             'blocked'      => [new IsBoolean()],
             'blocked_code' => 'in:email_changed',
-            'role'         => 'in:owner,demo,'
+            'role'         => 'in:owner,demo,',
         ];
     }
 

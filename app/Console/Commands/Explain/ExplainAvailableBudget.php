@@ -40,7 +40,7 @@ class ExplainAvailableBudget extends Command
      *
      * @var string
      */
-    protected $signature = 'explain:available-budget
+    protected $signature   = 'explain:available-budget
                                 {--date=now : A date formatted YYYY-MM-DD or the word "now"}
                                 {--user=1 : The user ID.}
                                 {--token= : The user\'s access token.}

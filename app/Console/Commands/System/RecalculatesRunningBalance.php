@@ -45,7 +45,7 @@ class RecalculatesRunningBalance extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
+    protected $signature   = 'firefly-iii:refresh-running-balance {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.

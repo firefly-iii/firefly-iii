@@ -54,7 +54,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
 
-        $path = $helper->getAttachmentLocation($attachment);
+        $path   = $helper->getAttachmentLocation($attachment);
 
         try {
             Storage::disk('upload')->delete($path);
@@ -103,7 +103,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
     /**
      * Get attachment note text or empty string.
      */
-    public function getNoteText(Attachment $attachment): null|string
+    public function getNoteText(Attachment $attachment): ?string
     {
         $note = $attachment->notes()->first();
         if (null !== $note) {
@@ -121,7 +121,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         /** @var AttachmentFactory $factory */
         $factory = app(AttachmentFactory::class);
         $factory->setUser($this->user);
-        $result = $factory->create($data);
+        $result  = $factory->create($data);
         if (null === $result) {
             throw new FireflyException('Could not store attachment.');
         }
@@ -141,7 +141,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         // update model (move attachment)
         // should be validated already:
         if (array_key_exists('attachable_type', $data) && array_key_exists('attachable_id', $data)) {
-            $attachment->attachable_id = (int) $data['attachable_id'];
+            $attachment->attachable_id   = (int) $data['attachable_id'];
             $attachment->attachable_type = sprintf('FireflyIII\Models\%s', $data['attachable_type']);
         }
 
@@ -168,7 +168,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
 
             return true;
         }
-        $dbNote = $attachment->notes()->first();
+        $dbNote       = $attachment->notes()->first();
         if (null === $dbNote) {
             $dbNote = new Note();
             $dbNote->noteable()->associate($attachment);

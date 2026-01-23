@@ -39,7 +39,7 @@ trait TransactionCalculation
      */
     protected function getExpensesForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
-        $total = $accounts->merge($opposing);
+        $total     = $accounts->merge($opposing);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -61,7 +61,8 @@ trait TransactionCalculation
             ->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setTags($tags)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }
@@ -78,7 +79,8 @@ trait TransactionCalculation
             ->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setBudgets($budgets)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }
@@ -95,7 +97,8 @@ trait TransactionCalculation
             ->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($categories)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }
@@ -112,7 +115,8 @@ trait TransactionCalculation
             ->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
             ->setCategories($categories)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }
@@ -122,7 +126,7 @@ trait TransactionCalculation
      */
     protected function getIncomeForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
-        $total = $accounts->merge($opposing);
+        $total     = $accounts->merge($opposing);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -143,7 +147,8 @@ trait TransactionCalculation
             ->setRange($start, $end)
             ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
             ->setTags($tags)
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }

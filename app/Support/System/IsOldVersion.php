@@ -44,8 +44,8 @@ trait IsOldVersion
             return 0;
         }
 
-        $currentDate = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
-        $latestDate  = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
+        $currentDate  = Carbon::createFromFormat('!Y-m-d', $currentParts[1]);
+        $latestDate   = Carbon::createFromFormat('!Y-m-d', $latestParts[1]);
 
         if ($currentDate->lt($latestDate)) {
             Log::debug(sprintf('This current version is older, current = %s, latest version %s.', $current, $latest));

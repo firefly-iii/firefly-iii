@@ -61,10 +61,10 @@ abstract class Controller extends BaseController
     public protected(set) string $name;
     protected bool $convertToPrimary = false;
     protected string $dateTimeFormat;
-    protected null|TransactionCurrency $primaryCurrency;
+    protected ?TransactionCurrency $primaryCurrency;
     protected string $monthAndDayFormat;
     protected string $monthFormat;
-    protected string $redirectUrl = '/';
+    protected string $redirectUrl    = '/';
 
     /**
      * Controller constructor.
@@ -87,8 +87,8 @@ abstract class Controller extends BaseController
         );
 
         // share custom auth guard info.
-        $authGuard = config('firefly.authentication_guard');
-        $logoutUrl = config('firefly.custom_logout_url');
+        $authGuard        = config('firefly.authentication_guard');
+        $logoutUrl        = config('firefly.custom_logout_url');
 
         // overrule v2 layout back to v1.
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
@@ -101,15 +101,15 @@ abstract class Controller extends BaseController
         View::share('logoutUrl', $logoutUrl);
 
         // upload size
-        $maxFileSize = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize = Steam::phpBytes(ini_get('post_max_size'));
-        $uploadSize  = min($maxFileSize, $maxPostSize);
+        $maxFileSize      = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize      = Steam::phpBytes(ini_get('post_max_size'));
+        $uploadSize       = min($maxFileSize, $maxPostSize);
         View::share('uploadSize', $uploadSize);
 
         // share is alpha, is beta
-        $isAlpha   = false;
-        $isBeta    = false;
-        $isDevelop = false;
+        $isAlpha          = false;
+        $isBeta           = false;
+        $isDevelop        = false;
         if (str_contains((string) config('firefly.version'), 'alpha')) {
             $isAlpha = true;
         }
@@ -126,23 +126,23 @@ abstract class Controller extends BaseController
         View::share('FF_IS_DEVELOP', $isDevelop);
 
         $this->middleware(function ($request, $next): mixed {
-            $locale = Steam::getLocale();
+            $locale                  = Steam::getLocale();
             // translations for specific strings:
-            $this->monthFormat = (string) trans('config.month_js', [], $locale);
+            $this->monthFormat       = (string) trans('config.month_js', [], $locale);
             $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
-            $this->dateTimeFormat = (string) trans('config.date_time_js', [], $locale);
-            $darkMode = 'browser';
-            $this->primaryCurrency = null;
+            $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+            $darkMode                = 'browser';
+            $this->primaryCurrency   = null;
             // get shown-intro-preference:
             if (auth()->check()) {
                 View::share('anonymous', Steam::anonymous());
-                $this->primaryCurrency = Amount::getPrimaryCurrency();
-                $language = Steam::getLanguage();
-                $locale   = Steam::getLocale();
-                $darkMode = Preferences::get('darkMode', 'browser')->data;
+                $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                $language               = Steam::getLanguage();
+                $locale                 = Steam::getLocale();
+                $darkMode               = Preferences::get('darkMode', 'browser')->data;
                 $this->convertToPrimary = Amount::convertToPrimary();
-                $page      = $this->getPageName();
-                $shownDemo = $this->hasSeenDemo();
+                $page                   = $this->getPageName();
+                $shownDemo              = $this->hasSeenDemo();
                 View::share('language', $language);
                 View::share('locale', $locale);
                 View::share('convertToPrimary', $this->convertToPrimary);

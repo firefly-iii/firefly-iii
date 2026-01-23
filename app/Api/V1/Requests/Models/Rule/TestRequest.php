@@ -47,7 +47,7 @@ class TestRequest extends FormRequest
         return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
     }
 
-    private function getDate(string $field): null|Carbon
+    private function getDate(string $field): ?Carbon
     {
         $value = $this->query($field);
         if (is_array($value)) {
@@ -69,7 +69,7 @@ class TestRequest extends FormRequest
             'start'      => 'date|after:1970-01-02|before:2038-01-17',
             'end'        => 'date|after_or_equal:start|after:1970-01-02|before:2038-01-17',
             'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts'
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
         ];
     }
 }

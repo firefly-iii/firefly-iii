@@ -70,19 +70,19 @@ class ShowController extends Controller
     public function show(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $end */
-        $end = session('end', today(config('app.timezone'))->endOfMonth());
+        $end         = session('end', today(config('app.timezone'))->endOfMonth());
         // transform piggies using the transformer:
-        $parameters = new ParameterBag();
+        $parameters  = new ParameterBag();
         $parameters->set('end', $end);
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new PiggyBankEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
         $enrichment->setUser($admin);
 
         /** @var PiggyBank $piggyBank */
-        $piggyBank = $enrichment->enrichSingle($piggyBank);
+        $piggyBank   = $enrichment->enrichSingle($piggyBank);
 
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
@@ -97,7 +97,7 @@ class ShowController extends Controller
             'events'      => $events,
             'subTitle'    => $subTitle,
             'piggy'       => $piggy,
-            'attachments' => $attachments
+            'attachments' => $attachments,
         ]);
     }
 }

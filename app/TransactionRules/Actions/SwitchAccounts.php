@@ -48,14 +48,14 @@ class SwitchAccounts implements ActionInterface
     {
         // make object from array (so the data is fresh).
         /** @var null|TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object                        = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('Cannot find journal #%d, cannot switch accounts.', $journal['transaction_journal_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_such_journal')));
 
             return false;
         }
-        $groupCount = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $groupCount                    = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
         if ($groupCount > 1) {
             Log::error(sprintf('Group #%d has more than one transaction in it, cannot switch accounts.', $journal['transaction_group_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.split_group')));
@@ -63,7 +63,7 @@ class SwitchAccounts implements ActionInterface
             return false;
         }
 
-        $type = $object->transactionType->type;
+        $type                          = $object->transactionType->type;
         if (TransactionTypeEnum::TRANSFER->value !== $type) {
             Log::error(sprintf(
                 'Journal #%d is NOT a transfer (rule #%d), cannot switch accounts.',
@@ -76,10 +76,10 @@ class SwitchAccounts implements ActionInterface
         }
 
         /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction = $object->transactions()->where('amount', '<', 0)->first();
+        $sourceTransaction             = $object->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $destTransaction */
-        $destTransaction = $object->transactions()->where('amount', '>', 0)->first();
+        $destTransaction               = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $sourceTransaction || null === $destTransaction) {
             Log::error(sprintf(
                 'Journal #%d has no source or destination transaction (rule #%d), cannot switch accounts.',
@@ -90,10 +90,10 @@ class SwitchAccounts implements ActionInterface
 
             return false;
         }
-        $sourceAccountId      = $sourceTransaction->account_id;
-        $destinationAccountId = $destTransaction->account_id;
+        $sourceAccountId               = $sourceTransaction->account_id;
+        $destinationAccountId          = $destTransaction->account_id;
         $sourceTransaction->account_id = $destinationAccountId;
-        $destTransaction->account_id = $sourceAccountId;
+        $destTransaction->account_id   = $sourceAccountId;
         $sourceTransaction->save();
         $destTransaction->save();
 

@@ -87,14 +87,15 @@ class CorrectsAmounts extends Command
             ->whereNotNull('transactions.foreign_amount')
             ->where('transaction_journals.transaction_type_id', $type->id)
             ->distinct()
-            ->get(['transaction_journals.*']);
+            ->get(['transaction_journals.*'])
+        ;
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $repository->setUser($journal->user);
-            $primary = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
+            $primary        = Amount::getPrimaryCurrencyByUserGroup($journal->userGroup);
 
-            $valid = $this->validateJournal($journal);
+            $valid          = $this->validateJournal($journal);
             if (false === $valid) {
                 // Log::debug(sprintf('Journal #%d does not need to be fixed or is invalid (see previous messages)', $journal->id));
 
@@ -112,11 +113,11 @@ class CorrectsAmounts extends Command
 
             if ($sourceCurrency->id === $destCurrency->id) {
                 Log::debug('Both accounts have the same currency. Removing foreign currency info.');
-                $source->foreign_currency_id = null;
-                $source->foreign_amount = null;
+                $source->foreign_currency_id      = null;
+                $source->foreign_amount           = null;
                 $source->save();
                 $destination->foreign_currency_id = null;
-                $destination->foreign_amount = null;
+                $destination->foreign_amount      = null;
                 $destination->save();
 
                 continue;
@@ -297,8 +298,8 @@ class CorrectsAmounts extends Command
 
     private function validateJournal(TransactionJournal $journal): bool
     {
-        $countSource = $journal->transactions()->where('amount', '<', 0)->count();
-        $countDest   = $journal->transactions()->where('amount', '>', 0)->count();
+        $countSource   = $journal->transactions()->where('amount', '<', 0)->count();
+        $countDest     = $journal->transactions()->where('amount', '>', 0)->count();
 
         if (1 !== $countSource || 1 !== $countDest) {
             $this->friendlyError(sprintf('Transaction journal #%d has bad transaction information. Will delete.', $journal->id));
@@ -309,10 +310,10 @@ class CorrectsAmounts extends Command
         }
 
         /** @var null|Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source        = $journal->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination   = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $source || null === $destination) {
             $this->friendlyError(sprintf('Could not find source OR destination for journal #%d .', $journal->id));
@@ -328,7 +329,7 @@ class CorrectsAmounts extends Command
         }
         if (null === $source->foreign_amount || null === $destination->foreign_amount) {
             $this->friendlyError(sprintf('Transactions of journal #%d have no foreign amount, but have foreign currency info. Will reset this.', $journal->id));
-            $source->foreign_currency_id = null;
+            $source->foreign_currency_id      = null;
             $source->save();
             $destination->foreign_currency_id = null;
             $source->save();

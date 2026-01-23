@@ -42,7 +42,7 @@ class OwnerNotifiable
      */
     public function routeNotificationFor($driver, $notification = null)
     {
-        $method = 'routeNotificationFor' . Str::studly($driver);
+        $method = 'routeNotificationFor'.Str::studly($driver);
         if (method_exists($this, $method)) {
             Log::debug(sprintf('Redirect for settings to "%s".', $method));
 
@@ -51,7 +51,7 @@ class OwnerNotifiable
         Log::debug(sprintf('No method "%s" found, return generic settings.', $method));
 
         return match ($driver) {
-            'mail' => (string) config('firefly.site_owner'),
+            'mail'  => (string) config('firefly.site_owner'),
             default => null
         };
     }

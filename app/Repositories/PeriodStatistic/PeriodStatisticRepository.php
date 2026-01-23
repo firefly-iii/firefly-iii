@@ -50,17 +50,17 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat = new PeriodStatistic();
+        $stat                          = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
-        $stat->user_group_id = $this->getUserGroup()->id;
-        $stat->start = $start;
-        $stat->start_tz = $start->format('e');
-        $stat->end = $end;
-        $stat->end_tz = $end->format('e');
-        $stat->amount = $amount;
-        $stat->count = $count;
-        $stat->type = $type;
+        $stat->user_group_id           = $this->getUserGroup()->id;
+        $stat->start                   = $start;
+        $stat->start_tz                = $start->format('e');
+        $stat->end                     = $end;
+        $stat->end_tz                  = $end->format('e');
+        $stat->amount                  = $amount;
+        $stat->count                   = $count;
+        $stat->type                    = $type;
         $stat->save();
 
         Log::debug(sprintf(
@@ -96,7 +96,8 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
             ->where('start', '>=', $start)
             ->where('end', '<=', $end)
-            ->get();
+            ->get()
+        ;
     }
 
     #[Override]
@@ -109,16 +110,16 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         int $count,
         string $amount
     ): PeriodStatistic {
-        $stat = new PeriodStatistic();
+        $stat                          = new PeriodStatistic();
         $stat->transaction_currency_id = $currencyId;
-        $stat->user_group_id = $this->getUserGroup()->id;
-        $stat->start = $start;
-        $stat->start_tz = $start->format('e');
-        $stat->end = $end;
-        $stat->end_tz = $end->format('e');
-        $stat->amount = $amount;
-        $stat->count = $count;
-        $stat->type = sprintf('%s_%s', $prefix, $type);
+        $stat->user_group_id           = $this->getUserGroup()->id;
+        $stat->start                   = $start;
+        $stat->start_tz                = $start->format('e');
+        $stat->end                     = $end;
+        $stat->end_tz                  = $end->format('e');
+        $stat->amount                  = $amount;
+        $stat->count                   = $count;
+        $stat->type                    = sprintf('%s_%s', $prefix, $type);
         $stat->save();
 
         Log::debug(sprintf(

@@ -47,7 +47,7 @@ class CategoryReportGenerator
      */
     public function __construct()
     {
-        $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->opsRepository   = app(OperationsRepositoryInterface::class);
         $this->noCatRepository = app(NoCategoryRepositoryInterface::class);
     }
 
@@ -62,17 +62,17 @@ class CategoryReportGenerator
      */
     public function operations(): void
     {
-        $earnedWith = $this->opsRepository->listIncome($this->start, $this->end, $this->accounts);
-        $spentWith  = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts);
+        $earnedWith     = $this->opsRepository->listIncome($this->start, $this->end, $this->accounts);
+        $spentWith      = $this->opsRepository->listExpenses($this->start, $this->end, $this->accounts);
 
         // also transferred out and transferred into these accounts in this category:
         $transferredIn  = $this->opsRepository->listTransferredIn($this->start, $this->end, $this->accounts);
         $transferredOut = $this->opsRepository->listTransferredOut($this->start, $this->end, $this->accounts);
 
-        $earnedWithout = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
-        $spentWithout  = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
+        $earnedWithout  = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
+        $spentWithout   = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
 
-        $this->report = ['categories' => [], 'sums'       => []];
+        $this->report   = ['categories' => [], 'sums'       => []];
 
         // needs four for-each loops.
         foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout, $transferredIn, $transferredOut] as $data) {
@@ -114,14 +114,14 @@ class CategoryReportGenerator
             'currency_decimal_places' => $currencyRow['currency_decimal_places'],
             'spent'                   => '0',
             'earned'                  => '0',
-            'sum'                     => '0'
+            'sum'                     => '0',
         ];
         // loop journals:
         foreach ($categoryRow['transaction_journals'] as $journal) {
             // sum of sums
-            $this->report['sums'][$currencyId]['sum'] = bcadd((string) $this->report['sums'][$currencyId]['sum'], (string) $journal['amount']);
+            $this->report['sums'][$currencyId]['sum']    = bcadd((string) $this->report['sums'][$currencyId]['sum'], (string) $journal['amount']);
             // sum of spent:
-            $this->report['sums'][$currencyId]['spent'] = -1 === bccomp((string) $journal['amount'], '0')
+            $this->report['sums'][$currencyId]['spent']  = -1 === bccomp((string) $journal['amount'], '0')
                 ? bcadd((string) $this->report['sums'][$currencyId]['spent'], (string) $journal['amount'])
                 : $this->report['sums'][$currencyId]['spent'];
             // sum of earned
@@ -130,13 +130,13 @@ class CategoryReportGenerator
                 : $this->report['sums'][$currencyId]['earned'];
 
             // sum of category
-            $this->report['categories'][$key]['sum'] = bcadd((string) $this->report['categories'][$key]['sum'], (string) $journal['amount']);
+            $this->report['categories'][$key]['sum']     = bcadd((string) $this->report['categories'][$key]['sum'], (string) $journal['amount']);
             // total spent in category
-            $this->report['categories'][$key]['spent'] = -1 === bccomp((string) $journal['amount'], '0')
+            $this->report['categories'][$key]['spent']   = -1 === bccomp((string) $journal['amount'], '0')
                 ? bcadd((string) $this->report['categories'][$key]['spent'], (string) $journal['amount'])
                 : $this->report['categories'][$key]['spent'];
             // total earned in category
-            $this->report['categories'][$key]['earned'] = 1 === bccomp((string) $journal['amount'], '0')
+            $this->report['categories'][$key]['earned']  = 1 === bccomp((string) $journal['amount'], '0')
                 ? bcadd((string) $this->report['categories'][$key]['earned'], (string) $journal['amount'])
                 : $this->report['categories'][$key]['earned'];
         }
@@ -152,7 +152,7 @@ class CategoryReportGenerator
             'currency_symbol'         => $currencyRow['currency_symbol'],
             'currency_name'           => $currencyRow['currency_name'],
             'currency_code'           => $currencyRow['currency_code'],
-            'currency_decimal_places' => $currencyRow['currency_decimal_places']
+            'currency_decimal_places' => $currencyRow['currency_decimal_places'],
         ];
 
         /**

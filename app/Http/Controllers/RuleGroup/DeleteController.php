@@ -79,7 +79,7 @@ class DeleteController extends Controller
      */
     public function destroy(Request $request, RuleGroup $ruleGroup): Redirector|RedirectResponse
     {
-        $title = $ruleGroup->title;
+        $title  = $ruleGroup->title;
 
         /** @var RuleGroup $moveTo */
         $moveTo = $this->repository->find((int) $request->get('move_rules_before_delete'));

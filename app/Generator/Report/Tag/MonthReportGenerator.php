@@ -46,7 +46,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function __construct()
     {
-        $this->tags = new Collection();
+        $this->tags     = new Collection();
         $this->accounts = new Collection();
     }
 
@@ -68,7 +68,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->with('end', $this->end)
                 ->with('tags', $this->tags)
                 ->with('accounts', $this->accounts)
-                ->render();
+                ->render()
+            ;
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.tag.month: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

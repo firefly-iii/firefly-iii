@@ -48,7 +48,8 @@ class PrependDescription implements ActionInterface
         DB::table('transaction_journals')
             ->where('id', $journal['transaction_journal_id'])
             ->limit(1)
-            ->update(['description' => $after]);
+            ->update(['description' => $after])
+        ;
 
         // journal
         /** @var TransactionJournal $object */

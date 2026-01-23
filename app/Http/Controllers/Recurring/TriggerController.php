@@ -62,26 +62,26 @@ class TriggerController extends Controller
 
     public function trigger(Recurrence $recurrence, TriggerRecurrenceRequest $request): RedirectResponse
     {
-        $all  = $request->getAll();
-        $date = $all['date'];
+        $all                        = $request->getAll();
+        $date                       = $all['date'];
 
         // grab the date from the last time the recurrence fired:
-        $backupDate = $recurrence->latest_date;
+        $backupDate                 = $recurrence->latest_date;
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
         Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));
 
         /** @var CreateRecurringTransactions $job */
-        $job = app(CreateRecurringTransactions::class);
+        $job                        = app(CreateRecurringTransactions::class);
         $job->setRecurrences(new Collection()->push($recurrence));
         $job->setDate($date);
         $job->setForce(false);
         $job->handle();
         Log::debug('Done with recurrence.');
 
-        $groups = $job->getGroups();
+        $groups                     = $job->getGroups();
         $this->repository->markGroupsAsNow($groups);
-        $recurrence->latest_date = $backupDate;
+        $recurrence->latest_date    = $backupDate;
         $recurrence->latest_date_tz = $backupDate?->format('e');
         $recurrence->save();
         Preferences::mark();

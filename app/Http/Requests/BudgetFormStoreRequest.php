@@ -51,7 +51,7 @@ class BudgetFormStoreRequest extends FormRequest
             'auto_budget_type'   => $this->convertInteger('auto_budget_type'),
             'currency_id'        => $this->convertInteger('auto_budget_currency_id'),
             'auto_budget_amount' => $this->convertString('auto_budget_amount'),
-            'auto_budget_period' => $this->convertString('auto_budget_period')
+            'auto_budget_period' => $this->convertString('auto_budget_period'),
         ];
     }
 
@@ -67,7 +67,7 @@ class BudgetFormStoreRequest extends FormRequest
             'auto_budget_currency_id' => 'exists:transaction_currencies,id',
             'auto_budget_amount'      => ['required_if:auto_budget_type,1', 'required_if:auto_budget_type,2', new IsValidPositiveAmount()],
             'auto_budget_period'      => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
-            'notes'                   => 'min:1|max:32768|nullable'
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 

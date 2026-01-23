@@ -48,7 +48,7 @@ class Sha3SignatureGenerator implements SignatureGeneratorInterface
         if (null === $message->webhook) {
             throw new FireflyException('Part of a deleted webhook.');
         }
-        $json = '';
+        $json      = '';
 
         try {
             $json = json_encode($message->message, JSON_THROW_ON_ERROR);

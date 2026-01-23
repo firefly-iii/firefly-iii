@@ -41,9 +41,9 @@ class UpgradesCurrencyPreferences extends Command
 
     public const string CONFIG_NAME = '610_upgrade_currency_prefs';
 
-    protected $description = 'Upgrade user currency preferences';
+    protected $description          = 'Upgrade user currency preferences';
 
-    protected $signature = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:610-currency-preferences {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -80,7 +80,7 @@ class UpgradesCurrencyPreferences extends Command
             $this->upgradeGroupPreferences($group);
         }
 
-        $users = User::get();
+        $users  = User::get();
 
         /** @var User $user */
         foreach ($users as $user) {
@@ -131,7 +131,8 @@ class UpgradesCurrencyPreferences extends Command
     {
         $preference = Preference::where('user_id', $user->id)
             ->where('name', 'currencyPreference')
-            ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at']);
+            ->first(['id', 'user_id', 'name', 'data', 'updated_at', 'created_at'])
+        ;
 
         if (null === $preference) {
             return 'EUR';

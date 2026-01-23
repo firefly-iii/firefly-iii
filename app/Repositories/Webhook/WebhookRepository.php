@@ -51,7 +51,8 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
             ->where('delivery', 1)
             ->where('response', 1)
             ->where('trigger', 1)
-            ->get();
+            ->get()
+        ;
     }
 
     public function destroy(Webhook $webhook): void
@@ -89,14 +90,15 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
             ->where('webhook_messages.sent', 0)
             ->where('webhook_messages.errored', 0)
             ->get(['webhook_messages.*'])
-            ->filter(static fn(WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2) // @phpstan-ignore-line
-            ->splice(0, 3);
+            ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2) // @phpstan-ignore-line
+            ->splice(0, 3)
+        ;
     }
 
     public function store(array $data): Webhook
     {
-        $secret   = Str::random(24);
-        $fullData = [
+        $secret     = Str::random(24);
+        $fullData   = [
             'user_id'       => $this->user->id,
             'user_group_id' => $this->user->user_group_id,
             'active'        => $data['active'] ?? false,
@@ -104,11 +106,11 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
             //            'trigger'       => $data['trigger'],
             //            'response'      => $data['response'],
             //            'delivery'      => $data['delivery'],
-            'trigger'  => 1,
-            'response' => 1,
-            'delivery' => 1,
-            'secret'   => $secret,
-            'url'      => $data['url']
+            'trigger'       => 1,
+            'response'      => 1,
+            'delivery'      => 1,
+            'secret'        => $secret,
+            'url'           => $data['url'],
         ];
 
         /** @var Webhook $webhook */
@@ -153,19 +155,19 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
     public function update(Webhook $webhook, array $data): Webhook
     {
         $webhook->active = $data['active'] ?? $webhook->active;
-        $webhook->title = $data['title'] ?? $webhook->title;
-        $webhook->url = $data['url'] ?? $webhook->url;
+        $webhook->title  = $data['title'] ?? $webhook->title;
+        $webhook->url    = $data['url'] ?? $webhook->url;
 
         if (array_key_exists('secret', $data) && true === $data['secret']) {
-            $secret = Str::random(24);
+            $secret          = Str::random(24);
             $webhook->secret = $secret;
         }
 
         $webhook->save();
 
-        $triggers   = new Collection();
-        $responses  = new Collection();
-        $deliveries = new Collection();
+        $triggers        = new Collection();
+        $responses       = new Collection();
+        $deliveries      = new Collection();
 
         foreach ($data['triggers'] as $trigger) {
             // get the relevant ID:

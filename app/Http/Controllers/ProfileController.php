@@ -78,7 +78,7 @@ class ProfileController extends Controller
 
             return $next($request);
         });
-        $authGuard = config('firefly.authentication_guard');
+        $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
@@ -152,7 +152,8 @@ class ProfileController extends Controller
         $count          = DB::table('oauth_clients')
             ->where('personal_access_client', true)
             ->whereNull('user_id')
-            ->count();
+            ->count()
+        ;
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
@@ -170,7 +171,7 @@ class ProfileController extends Controller
             $repository->createPersonalAccessClient(null, $name, 'http://localhost');
         }
 
-        $accessToken = Preferences::get('access_token');
+        $accessToken    = Preferences::get('access_token');
         if (null === $accessToken) {
             $token       = $user->generateAccessToken();
             $accessToken = Preferences::set('access_token', $token);
@@ -182,7 +183,7 @@ class ProfileController extends Controller
             'userId'         => $userId,
             'accessToken'    => $accessToken,
             'enabled2FA'     => $enabled2FA,
-            'isInternalAuth' => $isInternalAuth
+            'isInternalAuth' => $isInternalAuth,
         ]);
     }
 
@@ -276,7 +277,7 @@ class ProfileController extends Controller
         $new     = $request->get('new_password');
 
         /** @var User $user */
-        $user = auth()->user();
+        $user    = auth()->user();
 
         try {
             $this->validatePassword($user, $current, $new);
@@ -398,8 +399,8 @@ class ProfileController extends Controller
         }
 
         // find preference with this token value.
-        $set  = Preferences::findByName('email_change_undo_token');
-        $user = null;
+        $set   = Preferences::findByName('email_change_undo_token');
+        $user  = null;
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
@@ -412,7 +413,7 @@ class ProfileController extends Controller
         }
 
         // found user.which email address to return to?
-        $set = Preferences::beginsWith($user, 'previous_email_');
+        $set   = Preferences::beginsWith($user, 'previous_email_');
 
         /** @var null|string $match */
         $match = null;

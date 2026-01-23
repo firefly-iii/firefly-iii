@@ -44,8 +44,8 @@ class UpgradesAccountCurrencies extends Command
 
     public const string CONFIG_NAME = '480_account_currencies';
 
-    protected $description = 'Give all accounts proper currency info.';
-    protected $signature   = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
+    protected $description          = 'Give all accounts proper currency info.';
+    protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
     private int $count;
     private UserRepositoryInterface $userRepos;
@@ -81,8 +81,8 @@ class UpgradesAccountCurrencies extends Command
     private function stupidLaravel(): void
     {
         $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->userRepos = app(UserRepositoryInterface::class);
-        $this->count = 0;
+        $this->userRepos    = app(UserRepositoryInterface::class);
+        $this->count        = 0;
     }
 
     private function isExecuted(): bool
@@ -103,7 +103,7 @@ class UpgradesAccountCurrencies extends Command
     private function updateCurrenciesForUser(User $user): void
     {
         $this->accountRepos->setUser($user);
-        $accounts = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
+        $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
 
         // get user's currency preference:
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);

@@ -41,7 +41,7 @@ class IsAssetAccountId implements ValidationRule
         $accountId = (int) $value;
 
         /** @var null|Account $account */
-        $account = Account::with('accountType')->find($accountId);
+        $account   = Account::with('accountType')->find($accountId);
         if (null === $account) {
             $fail('validation.no_asset_account')->translate();
 

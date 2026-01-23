@@ -41,6 +41,7 @@ class UserSuccessfullyLoggedIn extends Event
         if ($user instanceof User) {
             $this->user = $user;
         }
+
         throw new InvalidArgumentException('User must be an instance of User.');
     }
 }

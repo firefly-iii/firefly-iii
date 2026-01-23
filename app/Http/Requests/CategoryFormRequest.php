@@ -57,7 +57,7 @@ class CategoryFormRequest extends FormRequest
         $category = $this->route()->parameter('category');
 
         if (null !== $category) {
-            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,' . $category->id;
+            $nameRule = 'required|min:1|max:255|uniqueObjectForUser:categories,name,'.$category->id;
         }
 
         // fixed

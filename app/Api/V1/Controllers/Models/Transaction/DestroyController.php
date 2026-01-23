@@ -53,9 +53,9 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $admin */
-            $admin = auth()->user();
+            $admin                 = auth()->user();
 
-            $this->repository = app(JournalRepositoryInterface::class);
+            $this->repository      = app(JournalRepositoryInterface::class);
             $this->repository->setUser($admin);
 
             $this->groupRepository = app(TransactionGroupRepository::class);

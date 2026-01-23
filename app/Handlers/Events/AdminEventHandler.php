@@ -62,7 +62,5 @@ class AdminEventHandler
         }
     }
 
-    /**
-     * Send new version message to admin.
-     */
+    // Send new version message to admin.
 }

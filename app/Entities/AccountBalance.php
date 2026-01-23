@@ -34,10 +34,10 @@ class AccountBalance
 
     public static function fromArray(): self
     {
-        $balance = new self();
-        $balance->id = (string) random_int(1, 1000);
+        $balance             = new self();
+        $balance->id         = (string) random_int(1, 1000);
         // $balance->name       = (string) random_int(1, 1000);
-        $balance->amount = (string) random_int(1, 1000);
+        $balance->amount     = (string) random_int(1, 1000);
         $balance->currencyId = '1';
 
         return $balance;

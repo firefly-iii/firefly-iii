@@ -59,7 +59,8 @@ class VersionCheckResult extends Notification
     {
         return new MailMessage()
             ->markdown('emails.new-version', ['message' => $this->message])
-            ->subject((string) trans('email.new_version_email_subject'));
+            ->subject((string) trans('email.new_version_email_subject'))
+        ;
     }
 
     //    /**
@@ -96,7 +97,8 @@ class VersionCheckResult extends Notification
             ->content($this->message)
             ->attachment(static function ($attachment): void {
                 $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
-            });
+            })
+        ;
     }
 
     /**

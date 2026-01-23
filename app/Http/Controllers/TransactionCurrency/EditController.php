@@ -54,7 +54,7 @@ class EditController extends Controller
         $this->middleware(function ($request, $next) {
             app('view')->share('title', (string) trans('firefly.currencies'));
             app('view')->share('mainTitleIcon', 'fa-usd');
-            $this->repository = app(CurrencyRepositoryInterface::class);
+            $this->repository     = app(CurrencyRepositoryInterface::class);
             $this->userRepository = app(UserRepositoryInterface::class);
 
             return $next($request);
@@ -69,7 +69,7 @@ class EditController extends Controller
     public function edit(Request $request, TransactionCurrency $currency): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         /** @var User $user */
-        $user = auth()->user();
+        $user             = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             $request->session()->flash('error', (string) trans('firefly.ask_site_owner', ['owner' => e(config('firefly.site_owner'))]));
             Log::channel('audit')->warning(sprintf('Tried to edit currency %s but is not owner.', $currency->code));
@@ -77,20 +77,21 @@ class EditController extends Controller
             return redirect(route('currencies.index'));
         }
 
-        $subTitleIcon = 'fa-pencil';
-        $subTitle     = (string) trans('breadcrumbs.edit_currency', ['name'     => $currency->name]);
+        $subTitleIcon     = 'fa-pencil';
+        $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name'     => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
         // is currently enabled (for this user?)
-        $userCurrencies = $this->repository
+        $userCurrencies   = $this->repository
             ->get()
             ->pluck('id')
-            ->toArray();
-        $enabled        = in_array($currency->id, $userCurrencies, true);
+            ->toArray()
+        ;
+        $enabled          = in_array($currency->id, $userCurrencies, true);
 
         // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
-        $preFilled   = ['enabled'   => $hasOldInput ? (bool) $request->old('enabled') : $enabled];
+        $hasOldInput      = null !== $request->old('_token');
+        $preFilled        = ['enabled'   => $hasOldInput ? (bool) $request->old('enabled') : $enabled];
 
         $request->session()->flash('preFilled', $preFilled);
         Log::channel('audit')->info('Edit currency.', $currency->toArray());
@@ -112,8 +113,8 @@ class EditController extends Controller
     public function update(CurrencyFormRequest $request, TransactionCurrency $currency): Redirector|RedirectResponse
     {
         /** @var User $user */
-        $user = auth()->user();
-        $data = $request->getCurrencyData();
+        $user     = auth()->user();
+        $data     = $request->getCurrencyData();
 
         if (false === $data['enabled'] && $this->repository->currencyInUse($currency)) {
             $data['enabled'] = true;

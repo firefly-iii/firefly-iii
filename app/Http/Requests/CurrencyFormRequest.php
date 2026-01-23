@@ -48,7 +48,7 @@ class CurrencyFormRequest extends FormRequest
             'code'           => $this->convertString('code'),
             'symbol'         => $this->convertString('symbol'),
             'decimal_places' => $this->convertInteger('decimal_places'),
-            'enabled'        => $this->boolean('enabled')
+            'enabled'        => $this->boolean('enabled'),
         ];
     }
 
@@ -58,12 +58,12 @@ class CurrencyFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        $rules = [
+        $rules    = [
             'name'           => 'required|max:48|min:1|uniqueCurrencyName',
             'code'           => 'required|min:3|max:51|uniqueCurrencyCode',
             'symbol'         => 'required|min:1|max:51|uniqueCurrencySymbol',
             'decimal_places' => 'required|min:0|max:12|numeric',
-            'enabled'        => 'in:0,1'
+            'enabled'        => 'in:0,1',
         ];
 
         /** @var null|TransactionCurrency $currency */
@@ -75,7 +75,7 @@ class CurrencyFormRequest extends FormRequest
                 'code'           => 'required|min:3|max:51',
                 'symbol'         => 'required|min:1|max:51',
                 'decimal_places' => 'required|min:0|max:12|numeric',
-                'enabled'        => 'in:0,1'
+                'enabled'        => 'in:0,1',
             ];
         }
 

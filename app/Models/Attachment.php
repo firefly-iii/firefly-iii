@@ -54,7 +54,7 @@ class Attachment extends Model
         'title',
         'description',
         'size',
-        'uploaded'
+        'uploaded',
     ];
 
     /**
@@ -68,10 +68,10 @@ class Attachment extends Model
             $attachmentId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Attachment $attachment */
-            $attachment = $user->attachments()->find($attachmentId);
+            $attachment   = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
             }
@@ -111,7 +111,7 @@ class Attachment extends Model
 
     protected function attachableId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -122,7 +122,7 @@ class Attachment extends Model
             'deleted_at'    => 'datetime',
             'uploaded'      => 'boolean',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 }

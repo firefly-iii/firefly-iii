@@ -41,7 +41,7 @@ final class AboutControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    private null|User $user = null;
+    private ?User $user = null;
 
     #[Override]
     protected function setUp(): void
@@ -67,7 +67,7 @@ final class AboutControllerTest extends TestCase
         $response = $this->getJson(route('api.v1.about.user'));
 
         $response->assertOk();
-        $response->assertJson(fn(AssertableJson $json): AssertableJson => $json->where('data.attributes.email', $this->user->email)->where(
+        $response->assertJson(fn (AssertableJson $json): AssertableJson => $json->where('data.attributes.email', $this->user->email)->where(
             'data.attributes.role',
             $this->user->role
         ));

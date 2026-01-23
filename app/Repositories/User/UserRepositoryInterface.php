@@ -82,20 +82,20 @@ interface UserRepositoryInterface
 
     public function destroy(User $user): bool;
 
-    public function find(int $userId): null|User;
+    public function find(int $userId): ?User;
 
-    public function findByEmail(string $email): null|User;
+    public function findByEmail(string $email): ?User;
 
     /**
      * Returns the first user in the DB. Generally only works when there is just one.
      */
-    public function first(): null|User;
+    public function first(): ?User;
 
     public function getInvitedUsers(): Collection;
 
-    public function getRole(string $role): null|Role;
+    public function getRole(string $role): ?Role;
 
-    public function getRoleByUser(User $user): null|string;
+    public function getRoleByUser(User $user): ?string;
 
     public function getRolesInGroup(User $user, int $groupId): array;
 
@@ -120,7 +120,7 @@ interface UserRepositoryInterface
     /**
      * Set MFA code.
      */
-    public function setMFACode(User $user, null|string $code): void;
+    public function setMFACode(User $user, ?string $code): void;
 
     public function store(array $data): User;
 

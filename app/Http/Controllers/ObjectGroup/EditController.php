@@ -88,7 +88,7 @@ class EditController extends Controller
         session()->flash('success', (string) trans('firefly.updated_object_group', ['title' => $objectGroup->title]));
         Preferences::mark();
 
-        $redirect = redirect($this->getPreviousUrl('object-groups.edit.url'));
+        $redirect  = redirect($this->getPreviousUrl('object-groups.edit.url'));
 
         if (1 === (int) $request->get('return_to_edit')) {
             session()->put('object-groups.edit.fromUpdate', true);

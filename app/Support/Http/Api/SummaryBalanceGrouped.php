@@ -31,13 +31,13 @@ use Illuminate\Support\Facades\Log;
 
 class SummaryBalanceGrouped
 {
-    private const string SUM = 'sum';
+    private const string SUM  = 'sum';
 
     private array $amounts    = [];
     private array $currencies = [];
     private readonly CurrencyRepositoryInterface $currencyRepository;
     private TransactionCurrency $default;
-    private array $keys = [self::SUM];
+    private array $keys       = [self::SUM];
 
     public function __construct()
     {
@@ -47,13 +47,13 @@ class SummaryBalanceGrouped
     public function groupData(): array
     {
         Log::debug('Now going to group data.');
-        $return = [];
+        $return      = [];
         foreach ($this->keys as $key) {
-            $title = match ($key) {
-                'sum' => 'balance',
+            $title    = match ($key) {
+                'sum'     => 'balance',
                 'expense' => 'spent',
-                'income' => 'earned',
-                default => 'something'
+                'income'  => 'earned',
+                default   => 'something'
             };
 
             $return[] = [
@@ -62,7 +62,7 @@ class SummaryBalanceGrouped
                 'currency_id'             => (string) $this->default->id,
                 'currency_code'           => $this->default->code,
                 'currency_symbol'         => $this->default->symbol,
-                'currency_decimal_places' => $this->default->decimal_places
+                'currency_decimal_places' => $this->default->decimal_places,
             ];
         }
         // loop 3: format amounts:
@@ -72,16 +72,16 @@ class SummaryBalanceGrouped
                 // skip primary entries.
                 continue;
             }
-            $currencyId = (int) $currencyId;
-            $currency   = $this->currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
+            $currencyId                    = (int) $currencyId;
+            $currency                      = $this->currencies[$currencyId] ?? $this->currencyRepository->find($currencyId);
             $this->currencies[$currencyId] = $currency;
             // create objects for big array.
             foreach ($this->keys as $key) {
-                $title = match ($key) {
-                    'sum' => 'balance',
+                $title    = match ($key) {
+                    'sum'     => 'balance',
                     'expense' => 'spent',
-                    'income' => 'earned',
-                    default => 'something'
+                    'income'  => 'earned',
+                    default   => 'something'
                 };
                 $return[] = [
                     'key'                     => sprintf('%s-in-%s', $title, $currency->code),
@@ -89,7 +89,7 @@ class SummaryBalanceGrouped
                     'currency_id'             => (string) $currency->id,
                     'currency_code'           => $currency->code,
                     'currency_symbol'         => $currency->symbol,
-                    'currency_decimal_places' => $currency->decimal_places
+                    'currency_decimal_places' => $currency->decimal_places,
                 ];
             }
         }
@@ -101,34 +101,34 @@ class SummaryBalanceGrouped
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
         Log::debug(sprintf('Now in groupTransactions with key "%s" and %d journal(s)', $key, count($journals)));
-        $converter = new ExchangeRateConverter();
+        $converter    = new ExchangeRateConverter();
         $this->keys[] = $key;
-        $multiplier = 'income' === $key ? '-1' : '1';
+        $multiplier   = 'income' === $key ? '-1' : '1';
 
         /** @var array $journal */
         foreach ($journals as $journal) {
             // transaction info:
-            $currencyId = (int) $journal['currency_id'];
-            $amount     = bcmul((string) $journal['amount'], $multiplier);
-            $currency   = $this->currencies[$currencyId] ?? Amount::getTransactionCurrencyById($currencyId);
-            $this->currencies[$currencyId] = $currency;
-            $pcAmount = $converter->convert($currency, $this->default, $journal['date'], $amount);
+            $currencyId                            = (int) $journal['currency_id'];
+            $amount                                = bcmul((string) $journal['amount'], $multiplier);
+            $currency                              = $this->currencies[$currencyId] ?? Amount::getTransactionCurrencyById($currencyId);
+            $this->currencies[$currencyId]         = $currency;
+            $pcAmount                              = $converter->convert($currency, $this->default, $journal['date'], $amount);
             if ((int) $journal['foreign_currency_id'] === $this->default->id) {
                 // use foreign amount instead
                 $pcAmount = $journal['foreign_amount'];
             }
             // prep the arrays
-            $this->amounts[$key] ??= [];
-            $this->amounts[$key][$currencyId] ??= '0';
-            $this->amounts[$key]['primary'] ??= '0';
+            $this->amounts[$key]                   ??= [];
+            $this->amounts[$key][$currencyId]      ??= '0';
+            $this->amounts[$key]['primary']        ??= '0';
             $this->amounts[self::SUM][$currencyId] ??= '0';
-            $this->amounts[self::SUM]['primary'] ??= '0';
+            $this->amounts[self::SUM]['primary']   ??= '0';
 
             // add values:
-            $this->amounts[$key][$currencyId] = bcadd((string) $this->amounts[$key][$currencyId], $amount);
+            $this->amounts[$key][$currencyId]      = bcadd((string) $this->amounts[$key][$currencyId], $amount);
             $this->amounts[self::SUM][$currencyId] = bcadd((string) $this->amounts[self::SUM][$currencyId], $amount);
-            $this->amounts[$key]['primary'] = bcadd((string) $this->amounts[$key]['primary'], (string) $pcAmount);
-            $this->amounts[self::SUM]['primary'] = bcadd((string) $this->amounts[self::SUM]['primary'], (string) $pcAmount);
+            $this->amounts[$key]['primary']        = bcadd((string) $this->amounts[$key]['primary'], (string) $pcAmount);
+            $this->amounts[self::SUM]['primary']   = bcadd((string) $this->amounts[self::SUM]['primary'], (string) $pcAmount);
         }
         $converter->summarize();
     }

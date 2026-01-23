@@ -38,7 +38,7 @@ class RemovesEmptyJournals extends Command
 
     protected $description = 'Delete empty and uneven transaction journals.';
 
-    protected $signature = 'correction:empty-journals';
+    protected $signature   = 'correction:empty-journals';
 
     /**
      * Execute the console command.
@@ -58,7 +58,7 @@ class RemovesEmptyJournals extends Command
     {
         $set   = Transaction::whereNull('deleted_at')->groupBy('transactions.transaction_journal_id')->get([
             DB::raw('COUNT(transactions.transaction_journal_id) as the_count'),
-            'transaction_journal_id'
+            'transaction_journal_id',
         ]);
         $total = 0;
 
@@ -92,7 +92,8 @@ class RemovesEmptyJournals extends Command
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->groupBy('transaction_journals.id')
             ->whereNull('transactions.transaction_journal_id')
-            ->get(['transaction_journals.id']);
+            ->get(['transaction_journals.id'])
+        ;
 
         foreach ($set as $entry) {
             try {

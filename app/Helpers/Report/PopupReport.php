@@ -51,7 +51,8 @@ class PopupReport implements PopupReportInterface
             ->withBudgetInformation()
             ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->setBudget($budget);
+            ->setBudget($budget)
+        ;
 
         return $collector->getExtractedJournals();
     }
@@ -71,14 +72,15 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts(new Collection()->push($account))
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->withAccountInformation()
             ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->withoutBudget();
+            ->withoutBudget()
+        ;
 
         if (null !== $currency) {
             $collector->setCurrency($currency);
@@ -102,13 +104,14 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setAccounts($attributes['accounts'])
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->setRange($attributes['startDate'], $attributes['endDate']);
+            ->setRange($attributes['startDate'], $attributes['endDate'])
+        ;
 
         if (null !== $currency) {
             $collector->setCurrency($currency);
@@ -126,7 +129,7 @@ class PopupReport implements PopupReportInterface
     /**
      * Collect journals by a category.
      */
-    public function byCategory(null|Category $category, array $attributes): array
+    public function byCategory(?Category $category, array $attributes): array
     {
         // filter by currency, if set.
         $currencyId = $attributes['currencyId'] ?? null;
@@ -138,7 +141,7 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
 
         $collector
             ->setAccounts($attributes['accounts'])
@@ -147,7 +150,8 @@ class PopupReport implements PopupReportInterface
             ->withBudgetInformation()
             ->withCategoryInformation()
             ->setRange($attributes['startDate'], $attributes['endDate'])
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         if ($category instanceof Category) {
             $collector->setCategory($category);
@@ -169,8 +173,8 @@ class PopupReport implements PopupReportInterface
     public function byExpenses(Account $account, array $attributes): array
     {
         // filter by currency, if set.
-        $currencyId = $attributes['currencyId'] ?? null;
-        $currency   = null;
+        $currencyId        = $attributes['currencyId'] ?? null;
+        $currency          = null;
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
@@ -178,17 +182,17 @@ class PopupReport implements PopupReportInterface
         }
 
         /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
+        $repository        = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
 
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector         = app(GroupCollectorInterface::class);
 
         // the source account must be in the set.
-        $set = $attributes['accounts'] ?? new Collection();
+        $set               = $attributes['accounts'] ?? new Collection();
 
         $collector
             ->setDestinationAccounts(new Collection()->push($account))
@@ -197,7 +201,8 @@ class PopupReport implements PopupReportInterface
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value]);
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
+        ;
 
         if (null !== $currency) {
             $collector->setCurrency($currency);
@@ -216,7 +221,7 @@ class PopupReport implements PopupReportInterface
         $repository->setUser($account->user);
 
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector  = app(GroupCollectorInterface::class);
         $collector
             ->setSourceAccounts(new Collection()->push($account))
             ->setDestinationAccounts($attributes['accounts'])
@@ -225,7 +230,8 @@ class PopupReport implements PopupReportInterface
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->withAccountInformation();
+            ->withAccountInformation()
+        ;
 
         return $collector->getExtractedJournals();
     }

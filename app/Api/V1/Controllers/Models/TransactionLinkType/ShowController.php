@@ -53,7 +53,7 @@ class ShowController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user             = auth()->user();
             $this->repository = app(LinkTypeRepositoryInterface::class);
             $this->repository->setUser($user);
 
@@ -68,23 +68,23 @@ class ShowController extends Controller
     public function index(): JsonResponse
     {
         // create some objects:
-        $manager  = $this->getManager();
-        $pageSize = $this->parameters->get('limit');
+        $manager     = $this->getManager();
+        $pageSize    = $this->parameters->get('limit');
 
         // get list of accounts. Count it and split it.
-        $collection = $this->repository->get();
-        $count      = $collection->count();
-        $linkTypes  = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $collection  = $this->repository->get();
+        $count       = $collection->count();
+        $linkTypes   = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
-        $paginator = new LengthAwarePaginator($linkTypes, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.link-types.index') . $this->buildParams());
+        $paginator   = new LengthAwarePaginator($linkTypes, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.link-types.index').$this->buildParams());
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($linkTypes, $transformer, 'link_types');
+        $resource    = new FractalCollection($linkTypes, $transformer, 'link_types');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -98,13 +98,13 @@ class ShowController extends Controller
      */
     public function show(LinkType $linkType): JsonResponse
     {
-        $manager = $this->getManager();
+        $manager     = $this->getManager();
 
         /** @var LinkTypeTransformer $transformer */
         $transformer = app(LinkTypeTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($linkType, $transformer, 'link_types');
+        $resource    = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

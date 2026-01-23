@@ -54,7 +54,7 @@ class SetDescription implements ActionInterface
         $after  = $this->action->getValue($journal);
 
         // replace newlines.
-        $after = trim(str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after));
+        $after  = trim(str_replace(["\r", "\n", "\t", "\036", "\025"], '', $after));
 
         if ('' === $after) {
             Log::warning('Action resulted in an empty description, reset to default value.');

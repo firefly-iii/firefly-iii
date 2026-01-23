@@ -45,7 +45,7 @@ class Tag extends Model
 
     protected $fillable = ['user_id', 'user_group_id', 'tag', 'date', 'date_tz', 'description', 'tag_mode'];
 
-    protected $hidden = ['zoomLevel', 'zoom_level', 'latitude', 'longitude'];
+    protected $hidden   = ['zoomLevel', 'zoom_level', 'latitude', 'longitude'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -58,10 +58,10 @@ class Tag extends Model
             $tagId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user  = auth()->user();
 
             /** @var null|Tag $tag */
-            $tag = $user->tags()->find($tagId);
+            $tag   = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;
             }
@@ -101,7 +101,7 @@ class Tag extends Model
             'latitude'      => 'float',
             'longitude'     => 'float',
             'user_id'       => 'integer',
-            'user_group_id' => 'integer'
+            'user_group_id' => 'integer',
         ];
     }
 

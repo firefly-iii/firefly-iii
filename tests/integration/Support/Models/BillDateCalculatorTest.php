@@ -58,7 +58,7 @@ final class BillDateCalculatorTest extends TestCase
         Carbon $billStart,
         string $period,
         int $skip,
-        null|Carbon $lastPaid,
+        ?Carbon $lastPaid,
         array $expected
     ): void {
         $result = $this->calculator->getPayDates($earliest, $latest, $billStart, $period, $skip, $lastPaid);
@@ -79,7 +79,7 @@ final class BillDateCalculatorTest extends TestCase
             'monthly',
             0,
             Carbon::parse('2023-11-01'),
-            ['2023-12-01']
+            ['2023-12-01'],
         ];
 
         // already paid on the 12th, expect it next month.
@@ -90,7 +90,7 @@ final class BillDateCalculatorTest extends TestCase
             'monthly',
             0,
             Carbon::parse('2023-11-12'),
-            ['2023-12-01']
+            ['2023-12-01'],
         ];
 
         // every month, start on 2024-01-30, view is quarterly
@@ -101,7 +101,7 @@ final class BillDateCalculatorTest extends TestCase
             'monthly',
             0,
             null,
-            ['2023-01-29', '2023-02-28', '2023-03-29']
+            ['2023-01-29', '2023-02-28', '2023-03-29'],
         ];
 
         // every month, start on 2024-01-30, view is quarterly
@@ -112,7 +112,7 @@ final class BillDateCalculatorTest extends TestCase
             'monthly',
             0,
             null,
-            ['2024-01-30', '2024-02-29', '2024-03-30']
+            ['2024-01-30', '2024-02-29', '2024-03-30'],
         ];
 
         // yearly not due this month. Should jump to next year.
@@ -123,7 +123,7 @@ final class BillDateCalculatorTest extends TestCase
             'yearly',
             0,
             Carbon::parse('2023-05-02'),
-            ['2024-05-01']
+            ['2024-05-01'],
         ];
     }
 }

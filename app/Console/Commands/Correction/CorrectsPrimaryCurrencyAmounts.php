@@ -55,7 +55,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
 
     protected $description = 'Recalculate primary currency amounts for all objects.';
 
-    protected $signature = 'correction:recalculate-pc-amounts';
+    protected $signature   = 'correction:recalculate-pc-amounts';
 
     /**
      * Execute the console command.
@@ -114,7 +114,8 @@ class CorrectsPrimaryCurrencyAmounts extends Command
                     $q->orWhere('virtual_balance', '!=', '');
                 }
             })
-            ->get();
+            ->get()
+        ;
 
         /** @var Account $account */
         foreach ($set as $account) {
@@ -125,13 +126,13 @@ class CorrectsPrimaryCurrencyAmounts extends Command
 
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        $converter = new ExchangeRateConverter();
+        $converter  = new ExchangeRateConverter();
         $converter->setUserGroup($userGroup);
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getPiggyBanks();
-        $set = $set->filter(static fn(PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;
             $piggyBank->save();
@@ -224,7 +225,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
     private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         // custom query because of the potential size of this update.
-        $set = DB::table('transactions')
+        $set                              = DB::table('transactions')
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
             ->where(static function (DatabaseBuilder $q1) use ($currency): void {
@@ -239,7 +240,8 @@ class CorrectsPrimaryCurrencyAmounts extends Command
             //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
             //                ;
             //            })
-            ->get(['transactions.id']);
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.

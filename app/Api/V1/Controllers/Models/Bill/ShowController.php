@@ -70,25 +70,25 @@ class ShowController extends Controller
         ['limit'  => $limit, 'offset' => $offset, 'start'  => $start, 'end'    => $end, 'page'   => $page] = $request->attributes->all();
 
         $this->repository->correctOrder();
-        $bills     = $this->repository->getBills();
-        $manager   = $this->getManager();
-        $count     = $bills->count();
-        $bills     = $bills->slice($offset, $limit);
-        $paginator = new LengthAwarePaginator($bills, $count, $limit, $page);
+        $bills                                                                                             = $this->repository->getBills();
+        $manager                                                                                           = $this->getManager();
+        $count                                                                                             = $bills->count();
+        $bills                                                                                             = $bills->slice($offset, $limit);
+        $paginator                                                                                         = new LengthAwarePaginator($bills, $count, $limit, $page);
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new SubscriptionEnrichment();
+        $admin                                                                                             = auth()->user();
+        $enrichment                                                                                        = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
-        $bills = $enrichment->enrich($bills);
+        $bills                                                                                             = $enrichment->enrich($bills);
 
         /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
+        $transformer                                                                                       = app(BillTransformer::class);
 
-        $resource = new FractalCollection($bills, $transformer, 'bills');
+        $resource                                                                                          = new FractalCollection($bills, $transformer, 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -104,21 +104,21 @@ class ShowController extends Controller
     {
         ['start' => $start, 'end'   => $end] = $request->attributes->all();
 
-        $manager = $this->getManager();
+        $manager                             = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new SubscriptionEnrichment();
+        $admin                               = auth()->user();
+        $enrichment                          = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start);
         $enrichment->setEnd($end);
-        $bill = $enrichment->enrichSingle($bill);
+        $bill                                = $enrichment->enrichSingle($bill);
 
         /** @var BillTransformer $transformer */
-        $transformer = app(BillTransformer::class);
+        $transformer                         = app(BillTransformer::class);
 
-        $resource = new Item($bill, $transformer, 'bills');
+        $resource                            = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

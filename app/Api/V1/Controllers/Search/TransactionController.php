@@ -44,31 +44,31 @@ class TransactionController extends Controller
      */
     public function search(TransactionSearchRequest $request, SearchInterface $searcher): JsonResponse
     {
-        $manager   = $this->getManager();
-        $fullQuery = (string) $request->attributes->get('query');
-        $page      = $request->attributes->get('page');
-        $pageSize  = $request->attributes->get('limit');
+        $manager      = $this->getManager();
+        $fullQuery    = (string) $request->attributes->get('query');
+        $page         = $request->attributes->get('page');
+        $pageSize     = $request->attributes->get('limit');
         $searcher->parseQuery($fullQuery);
         $searcher->setPage($page);
         $searcher->setLimit($pageSize);
-        $groups     = $searcher->searchTransactions();
-        $parameters = ['search' => $fullQuery];
-        $url        = route('api.v1.search.transactions') . '?' . http_build_query($parameters);
+        $groups       = $searcher->searchTransactions();
+        $parameters   = ['search' => $fullQuery];
+        $url          = route('api.v1.search.transactions').'?'.http_build_query($parameters);
         $groups->setPath($url);
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser(auth()->user());
         $transactions = $enrichment->enrich($groups->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Collection($transactions, $transformer, 'transactions');
+        $resource     = new Collection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($groups));
 
-        $array = $manager->createData($resource)->toArray();
+        $array        = $manager->createData($resource)->toArray();
 
         return response()->json($array)->header('Content-Type', self::CONTENT_TYPE);
     }

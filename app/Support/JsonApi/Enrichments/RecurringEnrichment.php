@@ -55,18 +55,18 @@ use function Safe\json_decode;
 
 class RecurringEnrichment implements EnrichmentInterface
 {
-    private array $accounts = [];
+    private array $accounts                = [];
     private Collection $collection;
     //    private array               $transactionTypeIds    = [];
     // private array               $transactionTypes      = [];
     private readonly bool $convertToPrimary;
-    private array  $currencies            = [];
-    private array  $currencyIds           = [];
-    private array  $destinationAccountIds = [];
-    private array  $foreignCurrencyIds    = [];
-    private array  $ids                   = [];
-    private string $language              = 'en_US';
-    private array  $notes                 = [];
+    private array  $currencies             = [];
+    private array  $currencyIds            = [];
+    private array  $destinationAccountIds  = [];
+    private array  $foreignCurrencyIds     = [];
+    private array  $ids                    = [];
+    private string $language               = 'en_US';
+    private array  $notes                  = [];
     private readonly TransactionCurrency $primaryCurrency;
     private array $recurrenceByTransaction = [];
     private array $repetitions             = [];
@@ -77,7 +77,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
     public function __construct()
     {
-        $this->primaryCurrency = Amount::getPrimaryCurrency();
+        $this->primaryCurrency  = Amount::getPrimaryCurrency();
         $this->convertToPrimary = Amount::convertToPrimary();
     }
 
@@ -144,7 +144,7 @@ class RecurringEnrichment implements EnrichmentInterface
             );
         }
         if ('ndom' === $repetition->repetition_type) {
-            $parts = explode(',', $repetition->repetition_moment);
+            $parts     = explode(',', $repetition->repetition_moment);
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $this->language);
             if ($repetition->repetition_skip > 0) {
@@ -165,7 +165,7 @@ class RecurringEnrichment implements EnrichmentInterface
             }
             // $diffInYears = (int)$today->diffInYears($repDate, true);
             // $repDate->addYears($diffInYears); // technically not necessary.
-            $string = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
+            $string  = $repDate->isoFormat((string) trans('config.month_and_day_no_year_js'));
 
             return (string) trans('firefly.recurring_yearly', ['date' => $string], $this->language);
         }
@@ -188,11 +188,11 @@ class RecurringEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Recurrence $item): Recurrence {
-            $id   = (int) $item->id;
-            $meta = [
+            $id         = (int) $item->id;
+            $meta       = [
                 'notes'        => $this->notes[$id] ?? null,
                 'repetitions'  => array_values($this->repetitions[$id] ?? []),
-                'transactions' => $this->processTransactions(array_values($this->transactions[$id] ?? []))
+                'transactions' => $this->processTransactions(array_values($this->transactions[$id] ?? [])),
             ];
 
             $item->meta = $meta;
@@ -208,7 +208,7 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $id = (int) $account->id;
+            $id                  = (int) $account->id;
             $this->accounts[$id] = $account;
             Log::debug(sprintf('Collected account #%d', $id));
         }
@@ -226,8 +226,8 @@ class RecurringEnrichment implements EnrichmentInterface
             $mapped[(int) $bill->id] = $bill;
         }
         foreach ($billIds as $info) {
-            $recurrenceId  = $info['recurrence_id'];
-            $transactionId = $info['transaction_id'];
+            $recurrenceId                                                           = $info['recurrence_id'];
+            $transactionId                                                          = $info['transaction_id'];
             $this->transactions[$recurrenceId][$transactionId]['subscription_name'] = $mapped[$info['bill_id']]->name ?? '';
         }
     }
@@ -244,8 +244,8 @@ class RecurringEnrichment implements EnrichmentInterface
             $mapped[(int) $category->id] = $category;
         }
         foreach ($budgetIds as $info) {
-            $recurrenceId  = $info['recurrence_id'];
-            $transactionId = $info['transaction_id'];
+            $recurrenceId                                                     = $info['recurrence_id'];
+            $transactionId                                                    = $info['transaction_id'];
             $this->transactions[$recurrenceId][$transactionId]['budget_name'] = $mapped[$info['budget_id']]->name ?? '';
         }
     }
@@ -262,8 +262,8 @@ class RecurringEnrichment implements EnrichmentInterface
             $mapped[(int) $category->id] = $category;
         }
         foreach ($categoryIds as $info) {
-            $recurrenceId  = $info['recurrence_id'];
-            $transactionId = $info['transaction_id'];
+            $recurrenceId                                                       = $info['recurrence_id'];
+            $transactionId                                                      = $info['transaction_id'];
             $this->transactions[$recurrenceId][$transactionId]['category_name'] = $mapped[$info['category_id']]->name ?? '';
         }
     }
@@ -283,7 +283,7 @@ class RecurringEnrichment implements EnrichmentInterface
             $transactionId = $info['transaction_id'];
             $category      = $factory->findOrCreate(null, $info['category_name']);
             if (null !== $category) {
-                $this->transactions[$recurrenceId][$transactionId]['category_id'] = (string) $category->id;
+                $this->transactions[$recurrenceId][$transactionId]['category_id']   = (string) $category->id;
                 $this->transactions[$recurrenceId][$transactionId]['category_name'] = $category->name;
             }
         }
@@ -294,7 +294,7 @@ class RecurringEnrichment implements EnrichmentInterface
         $all        = array_merge(array_unique($this->currencyIds), array_unique($this->foreignCurrencyIds));
         $currencies = TransactionCurrency::whereIn('id', array_unique($all))->get();
         foreach ($currencies as $currency) {
-            $id = (int) $currency->id;
+            $id                    = (int) $currency->id;
             $this->currencies[$id] = $currency;
             Log::debug(sprintf('Collected currency #%d', $id));
         }
@@ -304,7 +304,7 @@ class RecurringEnrichment implements EnrichmentInterface
     {
         /** @var Recurrence $recurrence */
         foreach ($this->collection as $recurrence) {
-            $id = (int) $recurrence->id;
+            $id          = (int) $recurrence->id;
             $this->ids[] = $id;
             Log::debug(sprintf('Collected recurrence id #%d', $id));
         }
@@ -320,9 +320,10 @@ class RecurringEnrichment implements EnrichmentInterface
             ->where('notes.text', '!=', '')
             ->where('noteable_type', Recurrence::class)
             ->get(['notes.id', 'notes.noteable_id', 'notes.text'])
-            ->toArray();
+            ->toArray()
+        ;
         foreach ($notes as $note) {
-            $notableId = (int) $note['noteable_id'];
+            $notableId               = (int) $note['noteable_id'];
             $this->notes[$notableId] = (string) $note['text'];
             Log::debug(sprintf('Collected note #%d for recurrence #%d', $note['id'], $notableId));
         }
@@ -341,8 +342,8 @@ class RecurringEnrichment implements EnrichmentInterface
             $mapped[(int) $piggyBank->id] = $piggyBank;
         }
         foreach ($piggyBankIds as $info) {
-            $recurrenceId  = $info['recurrence_id'];
-            $transactionId = $info['transaction_id'];
+            $recurrenceId                                                         = $info['recurrence_id'];
+            $transactionId                                                        = $info['transaction_id'];
             $this->transactions[$recurrenceId][$transactionId]['piggy_bank_name'] = $mapped[$info['piggy_bank_id']]->name ?? '';
         }
     }
@@ -352,21 +353,21 @@ class RecurringEnrichment implements EnrichmentInterface
         Log::debug('Start of enrichment: collectRepetitions()');
         $repository = app(RecurringRepositoryInterface::class);
         $repository->setUserGroup($this->userGroup);
-        $set = RecurrenceRepetition::whereIn('recurrence_id', $this->ids)->get();
+        $set        = RecurrenceRepetition::whereIn('recurrence_id', $this->ids)->get();
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence   = $this->collection->filter(static fn(Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)->first();
-            $fromDate     = clone ($recurrence->latest_date ?? $recurrence->first_date);
-            $recurrenceId = (int) $repetition->recurrence_id;
-            $repId        = (int) $repetition->id;
+            $recurrence                               = $this->collection->filter(static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)->first();
+            $fromDate                                 = clone ($recurrence->latest_date ?? $recurrence->first_date);
+            $recurrenceId                             = (int) $repetition->recurrence_id;
+            $repId                                    = (int) $repetition->id;
             $this->repetitions[$recurrenceId] ??= [];
             Log::debug(sprintf('Collected repetition #%d of recurrence #%d.', $repId, $recurrenceId));
 
             // get the (future) occurrences for this specific type of repetition:
-            $amount      = 'daily' === $repetition->repetition_type ? 9 : 5;
-            $set         = $repository->getXOccurrencesSince($repetition, $fromDate, now(config('app.timezone')), $amount);
-            $occurrences = [];
+            $amount                                   = 'daily' === $repetition->repetition_type ? 9 : 5;
+            $set                                      = $repository->getXOccurrencesSince($repetition, $fromDate, now(config('app.timezone')), $amount);
+            $occurrences                              = [];
 
             /** @var Carbon $carbon */
             foreach ($set as $carbon) {
@@ -381,7 +382,7 @@ class RecurringEnrichment implements EnrichmentInterface
                 'skip'        => (int) $repetition->repetition_skip,
                 'weekend'     => RecurrenceRepetitionWeekend::from((int) $repetition->weekend)->value,
                 'description' => $this->getRepetitionDescription($repetition),
-                'occurrences' => $occurrences
+                'occurrences' => $occurrences,
             ];
         }
         Log::debug('End of enrichment: collectRepetitions()');
@@ -389,11 +390,11 @@ class RecurringEnrichment implements EnrichmentInterface
 
     private function collectTransactionMetaData(): void
     {
-        $rtIds = [];
+        $rtIds         = [];
         foreach ($this->ids as $recurrenceId) {
             $rtIds = array_merge($rtIds, array_keys($this->transactions[$recurrenceId]));
         }
-        $meta = RecurrenceTransactionMeta::whereNull('deleted_at')->whereIn('rt_id', $rtIds)->get();
+        $meta          = RecurrenceTransactionMeta::whereNull('deleted_at')->whereIn('rt_id', $rtIds)->get();
         // other meta-data to be collected:
         $billIds       = [];
         $piggyBankIds  = [];
@@ -405,9 +406,9 @@ class RecurringEnrichment implements EnrichmentInterface
             $transactionId = (int) $entry->rt_id;
 
             // this should refer to another array, were rtIds can be used to find the recurrence.
-            $recurrenceId = $this->recurrenceByTransaction[$transactionId] ?? 0;
+            $recurrenceId  = $this->recurrenceByTransaction[$transactionId] ?? 0;
             Log::debug(sprintf('Collecting meta data entry #%d for recurrence transaction #%d, for recurrence #%d ', $id, $transactionId, $recurrenceId));
-            $name = (string) ($entry->name ?? '');
+            $name          = (string) ($entry->name ?? '');
             if (0 === $recurrenceId) {
                 Log::error(sprintf('Could not find recurrence ID for recurrence transaction ID #%d', $transactionId));
 
@@ -440,7 +441,7 @@ class RecurringEnrichment implements EnrichmentInterface
                             $piggyBankIds[$id] = [
                                 'recurrence_id'  => $recurrenceId,
                                 'transaction_id' => $transactionId,
-                                'piggy_bank_id'  => (int) $entry->value
+                                'piggy_bank_id'  => (int) $entry->value,
                             ];
                         }
                     }
@@ -454,7 +455,7 @@ class RecurringEnrichment implements EnrichmentInterface
                             $categoryIds[$id] = [
                                 'recurrence_id'  => $recurrenceId,
                                 'transaction_id' => $transactionId,
-                                'category_id'    => (int) $entry->value
+                                'category_id'    => (int) $entry->value,
                             ];
                         }
                     }
@@ -495,12 +496,12 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceTransaction $transaction */
         foreach ($set as $transaction) {
-            $recurrenceId  = (int) $transaction->recurrence_id;
-            $transactionId = (int) $transaction->id;
-            $this->recurrenceByTransaction[$transactionId] = $recurrenceId;
+            $recurrenceId                                      = (int) $transaction->recurrence_id;
+            $transactionId                                     = (int) $transaction->id;
+            $this->recurrenceByTransaction[$transactionId]     = $recurrenceId;
             $this->transactions[$recurrenceId] ??= [];
-            $amount        = $transaction->amount;
-            $foreignAmount = $transaction->foreign_amount;
+            $amount                                            = $transaction->amount;
+            $foreignAmount                                     = $transaction->foreign_amount;
             Log::debug(sprintf('Collected transaction #%d of recurrence #%d', $transactionId, $recurrenceId));
 
             $this->transactions[$recurrenceId][$transactionId] = [
@@ -523,12 +524,12 @@ class RecurringEnrichment implements EnrichmentInterface
                 'piggy_bank_id'               => null,
                 'piggy_bank_name'             => null,
                 'subscription_id'             => null,
-                'subscription_name'           => null
+                'subscription_name'           => null,
             ];
             // collect all kinds of meta-data to be collected later.
-            $this->currencyIds[$transactionId] = (int) $transaction->transaction_currency_id;
-            $this->sourceAccountIds[$transactionId] = (int) $transaction->source_id;
-            $this->destinationAccountIds[$transactionId] = (int) $transaction->destination_id;
+            $this->currencyIds[$transactionId]                 = (int) $transaction->transaction_currency_id;
+            $this->sourceAccountIds[$transactionId]            = (int) $transaction->source_id;
+            $this->destinationAccountIds[$transactionId]       = (int) $transaction->destination_id;
             if (null !== $transaction->foreign_currency_id) {
                 $this->foreignCurrencyIds[$transactionId] = (int) $transaction->foreign_currency_id;
             }
@@ -538,12 +539,12 @@ class RecurringEnrichment implements EnrichmentInterface
     private function getLanguage(): void
     {
         /** @var Preference $preference */
-        $preference = Preferences::getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
-        $language   = $preference->data;
+        $preference     = Preferences::getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
+        $language       = $preference->data;
         if (is_array($language)) {
             $language = 'en_US';
         }
-        $language = (string) $language;
+        $language       = (string) $language;
         $this->language = $language;
     }
 
@@ -552,9 +553,9 @@ class RecurringEnrichment implements EnrichmentInterface
         $return    = [];
         $converter = new ExchangeRateConverter();
         foreach ($transactions as $transaction) {
-            $currencyId      = $transaction['transaction_currency_id'];
-            $pcAmount        = null;
-            $pcForeignAmount = null;
+            $currencyId                                     = $transaction['transaction_currency_id'];
+            $pcAmount                                       = null;
+            $pcForeignAmount                                = null;
             // set the same amount in the primary currency, if both are the same anyway.
             if ($this->convertToPrimary && $currencyId === (int) $this->primaryCurrency->id) {
                 $pcAmount = $transaction['amount'];
@@ -575,48 +576,48 @@ class RecurringEnrichment implements EnrichmentInterface
                 }
             }
 
-            $transaction['pc_amount'] = $pcAmount;
-            $transaction['pc_foreign_amount'] = $pcForeignAmount;
+            $transaction['pc_amount']                       = $pcAmount;
+            $transaction['pc_foreign_amount']               = $pcForeignAmount;
 
-            $sourceId = $transaction['source_id'];
-            $transaction['source_name'] = $this->accounts[$sourceId]->name;
-            $transaction['source_iban'] = $this->accounts[$sourceId]->iban;
-            $transaction['source_type'] = $this->accounts[$sourceId]->accountType->type;
-            $transaction['source_id'] = (string) $transaction['source_id'];
+            $sourceId                                       = $transaction['source_id'];
+            $transaction['source_name']                     = $this->accounts[$sourceId]->name;
+            $transaction['source_iban']                     = $this->accounts[$sourceId]->iban;
+            $transaction['source_type']                     = $this->accounts[$sourceId]->accountType->type;
+            $transaction['source_id']                       = (string) $transaction['source_id'];
 
-            $destId = $transaction['destination_id'];
-            $transaction['destination_name'] = $this->accounts[$destId]->name;
-            $transaction['destination_iban'] = $this->accounts[$destId]->iban;
-            $transaction['destination_type'] = $this->accounts[$destId]->accountType->type;
-            $transaction['destination_id'] = (string) $transaction['destination_id'];
+            $destId                                         = $transaction['destination_id'];
+            $transaction['destination_name']                = $this->accounts[$destId]->name;
+            $transaction['destination_iban']                = $this->accounts[$destId]->iban;
+            $transaction['destination_type']                = $this->accounts[$destId]->accountType->type;
+            $transaction['destination_id']                  = (string) $transaction['destination_id'];
 
-            $transaction['currency_id'] = (string) $currencyId;
-            $transaction['currency_name'] = $this->currencies[$currencyId]->name;
-            $transaction['currency_code'] = $this->currencies[$currencyId]->code;
-            $transaction['currency_symbol'] = $this->currencies[$currencyId]->symbol;
-            $transaction['currency_decimal_places'] = $this->currencies[$currencyId]->decimal_places;
+            $transaction['currency_id']                     = (string) $currencyId;
+            $transaction['currency_name']                   = $this->currencies[$currencyId]->name;
+            $transaction['currency_code']                   = $this->currencies[$currencyId]->code;
+            $transaction['currency_symbol']                 = $this->currencies[$currencyId]->symbol;
+            $transaction['currency_decimal_places']         = $this->currencies[$currencyId]->decimal_places;
 
-            $transaction['primary_currency_id'] = (string) $this->primaryCurrency->id;
-            $transaction['primary_currency_name'] = $this->primaryCurrency->name;
-            $transaction['primary_currency_code'] = $this->primaryCurrency->code;
-            $transaction['primary_currency_symbol'] = $this->primaryCurrency->symbol;
+            $transaction['primary_currency_id']             = (string) $this->primaryCurrency->id;
+            $transaction['primary_currency_name']           = $this->primaryCurrency->name;
+            $transaction['primary_currency_code']           = $this->primaryCurrency->code;
+            $transaction['primary_currency_symbol']         = $this->primaryCurrency->symbol;
             $transaction['primary_currency_decimal_places'] = $this->primaryCurrency->decimal_places;
 
             // $transaction['foreign_currency_id'] = null;
-            $transaction['foreign_currency_name'] = null;
-            $transaction['foreign_currency_code'] = null;
-            $transaction['foreign_currency_symbol'] = null;
+            $transaction['foreign_currency_name']           = null;
+            $transaction['foreign_currency_code']           = null;
+            $transaction['foreign_currency_symbol']         = null;
             $transaction['foreign_currency_decimal_places'] = null;
             if (null !== $transaction['foreign_currency_id']) {
-                $currencyId = $transaction['foreign_currency_id'];
-                $transaction['foreign_currency_id'] = (string) $currencyId;
-                $transaction['foreign_currency_name'] = $this->currencies[$currencyId]->name;
-                $transaction['foreign_currency_code'] = $this->currencies[$currencyId]->code;
-                $transaction['foreign_currency_symbol'] = $this->currencies[$currencyId]->symbol;
+                $currencyId                                     = $transaction['foreign_currency_id'];
+                $transaction['foreign_currency_id']             = (string) $currencyId;
+                $transaction['foreign_currency_name']           = $this->currencies[$currencyId]->name;
+                $transaction['foreign_currency_code']           = $this->currencies[$currencyId]->code;
+                $transaction['foreign_currency_symbol']         = $this->currencies[$currencyId]->symbol;
                 $transaction['foreign_currency_decimal_places'] = $this->currencies[$currencyId]->decimal_places;
             }
             unset($transaction['transaction_currency_id']);
-            $return[] = $transaction;
+            $return[]                                       = $transaction;
         }
 
         return $return;

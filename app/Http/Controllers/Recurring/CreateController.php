@@ -65,9 +65,9 @@ class CreateController extends Controller
             app('view')->share('title', (string) trans('firefly.recurrences'));
             app('view')->share('subTitle', (string) trans('firefly.create_new_recurrence'));
 
-            $this->repository = app(RecurringRepositoryInterface::class);
-            $this->budgetRepos = app(BudgetRepositoryInterface::class);
-            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->repository     = app(RecurringRepositoryInterface::class);
+            $this->budgetRepos    = app(BudgetRepositoryInterface::class);
+            $this->attachments    = app(AttachmentHelperInterface::class);
             $this->billRepository = app(BillRepositoryInterface::class);
 
             return $next($request);
@@ -92,23 +92,23 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string) trans('firefly.repeat_forever'),
             'until_date' => (string) trans('firefly.repeat_until_date'),
-            'times'      => (string) trans('firefly.repeat_times')
+            'times'      => (string) trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetitionWeekend::WEEKEND_DO_NOTHING->value    => (string) trans('firefly.do_nothing'),
             RecurrenceRepetitionWeekend::WEEKEND_SKIP_CREATION->value => (string) trans('firefly.skip_transaction'),
             RecurrenceRepetitionWeekend::WEEKEND_TO_FRIDAY->value     => (string) trans('firefly.jump_to_friday'),
-            RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value     => (string) trans('firefly.jump_to_monday')
+            RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value     => (string) trans('firefly.jump_to_monday'),
         ];
-        $hasOldInput      = null !== $request->old('_token'); // flash some data
-        $preFilled = [
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
             'active'           => $hasOldInput ? (bool) $request->old('active') : true,
-            'apply_rules'      => $hasOldInput ? (bool) $request->old('apply_rules') : true
+            'apply_rules'      => $hasOldInput ? (bool) $request->old('apply_rules') : true,
         ];
         $request->session()->flash('preFilled', $preFilled);
 
@@ -119,7 +119,7 @@ class CreateController extends Controller
             'weekendResponses'  => $weekendResponses,
             'preFilled'         => $preFilled,
             'repetitionEnds'    => $repetitionEnds,
-            'budgets'           => $budgets
+            'budgets'           => $budgets,
         ]);
     }
 
@@ -139,31 +139,31 @@ class CreateController extends Controller
             $this->rememberPreviousUrl('recurring.create.url');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds   = [
+        $repetitionEnds    = [
             'forever'    => (string) trans('firefly.repeat_forever'),
             'until_date' => (string) trans('firefly.repeat_until_date'),
-            'times'      => (string) trans('firefly.repeat_times')
+            'times'      => (string) trans('firefly.repeat_times'),
         ];
-        $weekendResponses = [
+        $weekendResponses  = [
             RecurrenceRepetitionWeekend::WEEKEND_DO_NOTHING->value    => (string) trans('firefly.do_nothing'),
             RecurrenceRepetitionWeekend::WEEKEND_SKIP_CREATION->value => (string) trans('firefly.skip_transaction'),
             RecurrenceRepetitionWeekend::WEEKEND_TO_FRIDAY->value     => (string) trans('firefly.jump_to_friday'),
-            RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value     => (string) trans('firefly.jump_to_monday')
+            RecurrenceRepetitionWeekend::WEEKEND_TO_MONDAY->value     => (string) trans('firefly.jump_to_monday'),
         ];
 
         // fill prefilled with journal info
-        $type = strtolower((string) $journal->transactionType->type);
+        $type              = strtolower((string) $journal->transactionType->type);
 
         /** @var Transaction $source */
-        $source = $journal->transactions()->where('amount', '<', 0)->first();
+        $source            = $journal->transactions()->where('amount', '<', 0)->first();
 
         /** @var Transaction $dest */
-        $dest        = $journal->transactions()->where('amount', '>', 0)->first();
-        $category    = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
-        $budget      = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
-        $bill        = null !== $journal->bill ? $journal->bill->id : 0;
-        $hasOldInput = null !== $request->old('_token'); // flash some data
-        $preFilled = [];
+        $dest              = $journal->transactions()->where('amount', '>', 0)->first();
+        $category          = null !== $journal->categories()->first() ? $journal->categories()->first()->name : '';
+        $budget            = null !== $journal->budgets()->first() ? $journal->budgets()->first()->id : 0;
+        $bill              = null !== $journal->bill ? $journal->bill->id : 0;
+        $hasOldInput       = null !== $request->old('_token'); // flash some data
+        $preFilled         = [];
         if ($hasOldInput) {
             $preFilled = [
                 'title'                     => $request->old('title'),
@@ -182,7 +182,7 @@ class CreateController extends Controller
                 'budget_id'                 => $request->old('budget_id'),
                 'bill_id'                   => $request->old('bill_id'),
                 'active'                    => (bool) $request->old('active'),
-                'apply_rules'               => (bool) $request->old('apply_rules')
+                'apply_rules'               => (bool) $request->old('apply_rules'),
             ];
         }
         if (false === $hasOldInput) {
@@ -203,7 +203,7 @@ class CreateController extends Controller
                 'budget_id'                 => $budget,
                 'bill_id'                   => $bill,
                 'active'                    => true,
-                'apply_rules'               => true
+                'apply_rules'               => true,
             ];
         }
         $request->session()->flash('preFilled', $preFilled);
@@ -215,7 +215,7 @@ class CreateController extends Controller
             'weekendResponses'  => $weekendResponses,
             'preFilled'         => $preFilled,
             'repetitionEnds'    => $repetitionEnds,
-            'budgets'           => $budgets
+            'budgets'           => $budgets,
         ]);
     }
 
@@ -228,7 +228,7 @@ class CreateController extends Controller
      */
     public function store(RecurrenceFormRequest $request)
     {
-        $data = $request->getAll();
+        $data     = $request->getAll();
 
         try {
             $recurrence = $this->repository->store($data);
@@ -244,7 +244,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($recurrence, $files);
         }

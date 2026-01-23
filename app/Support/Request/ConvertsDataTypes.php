@@ -88,17 +88,17 @@ trait ConvertsDataTypes
         "\u{202F}", // narrow no-break space
         "\u{3000}", // ideographic space
         "\u{FEFF}", // zero width no -break space
-        "\r" // carriage return
+        "\r", // carriage return
     ];
 
-    public function clearIban(null|string $string): null|string
+    public function clearIban(?string $string): ?string
     {
         $string = $this->clearString($string);
 
         return Steam::filterSpaces($string);
     }
 
-    public function clearString(null|string $string): null|string
+    public function clearString(?string $string): ?string
     {
         $string = $this->clearStringKeepNewlines($string);
 
@@ -115,7 +115,7 @@ trait ConvertsDataTypes
         return trim($string);
     }
 
-    public function clearStringKeepNewlines(null|string $string): null|string
+    public function clearStringKeepNewlines(?string $string): ?string
     {
         if (null === $string) {
             return null;
@@ -147,15 +147,15 @@ trait ConvertsDataTypes
     public function convertSortParameters(string $field, string $class): array
     {
         // assume this all works, because the validator would have caught any errors.
-        $parameter = (string) request()->query->get($field);
+        $parameter      = (string) request()->query->get($field);
         if ('' === $parameter) {
             return [];
         }
         $parts          = explode(',', $parameter);
         $sortParameters = [];
         foreach ($parts as $part) {
-            $part      = trim($part);
-            $direction = 'asc';
+            $part             = trim($part);
+            $direction        = 'asc';
             if ('-' === $part[0]) {
                 $part      = substr($part, 1);
                 $direction = 'desc';
@@ -238,7 +238,7 @@ trait ConvertsDataTypes
     /**
      * @param mixed $array
      */
-    protected function arrayFromValue($array): null|array
+    protected function arrayFromValue($array): ?array
     {
         if (is_array($array)) {
             return $array;
@@ -253,7 +253,7 @@ trait ConvertsDataTypes
         return null;
     }
 
-    protected function convertBoolean(null|string $value): bool
+    protected function convertBoolean(?string $value): bool
     {
         if (null === $value) {
             return false;
@@ -277,7 +277,7 @@ trait ConvertsDataTypes
         return '1' === $value;
     }
 
-    protected function convertDateTime(null|string $string): null|Carbon
+    protected function convertDateTime(?string $string): ?Carbon
     {
         $value = $this->get((string) $string);
         if (null === $value) {
@@ -328,7 +328,7 @@ trait ConvertsDataTypes
     /**
      * Return floating value.
      */
-    protected function convertFloat(string $field): null|float
+    protected function convertFloat(string $field): ?float
     {
         $res = $this->get($field);
         if (null === $res) {
@@ -338,7 +338,7 @@ trait ConvertsDataTypes
         return (float) $res;
     }
 
-    protected function dateFromValue(null|string $string): null|Carbon
+    protected function dateFromValue(?string $string): ?Carbon
     {
         if (null === $string) {
             return null;
@@ -363,7 +363,7 @@ trait ConvertsDataTypes
         return $carbon;
     }
 
-    protected function floatFromValue(null|string $string): null|float
+    protected function floatFromValue(?string $string): ?float
     {
         if (null === $string) {
             return null;
@@ -384,7 +384,7 @@ trait ConvertsDataTypes
         $return = [];
         foreach ($fields as $field => $info) {
             if (true === $this->has($info[0])) {
-                $method = $info[1];
+                $method         = $info[1];
                 $return[$field] = $this->{$method}($info[0]); // @phpstan-ignore-line
             }
         }
@@ -395,7 +395,7 @@ trait ConvertsDataTypes
     /**
      * Return date or NULL.
      */
-    protected function getCarbonDate(string $field): null|Carbon
+    protected function getCarbonDate(string $field): ?Carbon
     {
         $data = (string) $this->get($field);
         Log::debug(sprintf('Date string is "%s"', $data));
@@ -417,7 +417,7 @@ trait ConvertsDataTypes
     /**
      * Parse to integer
      */
-    protected function integerFromValue(null|string $string): null|int
+    protected function integerFromValue(?string $string): ?int
     {
         if (null === $string) {
             return null;
@@ -432,7 +432,7 @@ trait ConvertsDataTypes
     /**
      * Return integer value, or NULL when it's not set.
      */
-    protected function nullableInteger(string $field): null|int
+    protected function nullableInteger(string $field): ?int
     {
         if (false === $this->has($field)) {
             return null;
@@ -456,7 +456,7 @@ trait ConvertsDataTypes
             if (!is_array($entry)) {
                 continue;
             }
-            $amount = null;
+            $amount   = null;
             if (array_key_exists('current_amount', $entry)) {
                 $amount = $this->clearString((string) ($entry['current_amount'] ?? '0'));
                 if (null === $entry['current_amount']) {

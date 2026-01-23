@@ -61,11 +61,11 @@ class UpdateRequest extends FormRequest
             'auto_budget_period' => ['auto_budget_period', 'convertString'],
 
             // webhooks
-            'fire_webhooks' => ['fire_webhooks', 'boolean']
+            'fire_webhooks'      => ['fire_webhooks', 'boolean'],
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {
-            $types = ['none'     => 0, 'reset'    => 1, 'rollover' => 2, 'adjusted' => 3];
+            $types                       = ['none'     => 0, 'reset'    => 1, 'rollover' => 2, 'adjusted' => 3];
             $allData['auto_budget_type'] = $types[$allData['auto_budget_type']] ?? 0;
         }
 
@@ -91,7 +91,7 @@ class UpdateRequest extends FormRequest
             'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
 
             // webhooks
-            'fire_webhooks' => [new IsBoolean()]
+            'fire_webhooks'             => [new IsBoolean()],
         ];
     }
 

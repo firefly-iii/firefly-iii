@@ -61,7 +61,7 @@ class UpdateRequest extends FormRequest
             'order'              => ['order', 'convertInteger'],
             'notes'              => ['notes', 'stringWithNewlines'],
             'object_group_id'    => ['object_group_id', 'convertInteger'],
-            'object_group_title' => ['object_group_title', 'convertString']
+            'object_group_title' => ['object_group_title', 'convertString'],
         ];
 
         return $this->getAllData($fields);
@@ -87,7 +87,7 @@ class UpdateRequest extends FormRequest
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly',
             'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
-            'notes'          => 'min:1|max:32768'
+            'notes'          => 'min:1|max:32768',
         ];
     }
 

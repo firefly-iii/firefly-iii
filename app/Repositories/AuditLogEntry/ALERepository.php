@@ -41,13 +41,13 @@ class ALERepository implements ALERepositoryInterface
 
     public function store(array $data): AuditLogEntry
     {
-        $auditLogEntry = new AuditLogEntry();
+        $auditLogEntry         = new AuditLogEntry();
 
         $auditLogEntry->auditable()->associate($data['auditable']);
         $auditLogEntry->changer()->associate($data['changer']);
         $auditLogEntry->action = $data['action'];
         $auditLogEntry->before = $data['before'];
-        $auditLogEntry->after = $data['after'];
+        $auditLogEntry->after  = $data['after'];
         $auditLogEntry->save();
 
         return $auditLogEntry;

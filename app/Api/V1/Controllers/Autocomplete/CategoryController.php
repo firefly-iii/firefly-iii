@@ -63,7 +63,7 @@ class CategoryController extends Controller
     public function categories(AutocompleteApiRequest $request): JsonResponse
     {
         $result   = $this->repository->searchCategory($request->attributes->get('query'), $request->attributes->get('limit'));
-        $filtered = $result->map(static fn(Category $item): array => ['id'   => (string) $item->id, 'name' => $item->name]);
+        $filtered = $result->map(static fn (Category $item): array => ['id'   => (string) $item->id, 'name' => $item->name]);
 
         return response()->api($filtered->toArray());
     }

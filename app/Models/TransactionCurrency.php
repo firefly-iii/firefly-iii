@@ -38,10 +38,10 @@ class TransactionCurrency extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    public null|bool $userGroupEnabled = null;
-    public null|bool $userGroupNative  = null;
+    public ?bool $userGroupEnabled = null;
+    public ?bool $userGroupNative  = null;
 
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
+    protected $fillable            = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -65,9 +65,9 @@ class TransactionCurrency extends Model
 
     public function refreshForUser(User $user): void
     {
-        $current = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
-        $native  = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
-        $this->userGroupNative = $native->id === $this->id;
+        $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
+        $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+        $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
     }
 
@@ -109,12 +109,12 @@ class TransactionCurrency extends Model
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
-            'enabled'        => 'bool'
+            'enabled'        => 'bool',
         ];
     }
 
     protected function decimalPlaces(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

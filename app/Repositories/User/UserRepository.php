@@ -56,19 +56,19 @@ class UserRepository implements UserRepositoryInterface
      */
     public function changeEmail(User $user, string $newEmail): bool
     {
-        $oldEmail = $user->email;
+        $oldEmail           = $user->email;
 
         // save old email as pref
         Preferences::setForUser($user, 'previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'previous_email_' . Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         // set undo and confirm token:
         Preferences::setForUser($user, 'email_change_undo_token', bin2hex(random_bytes(16)));
         Preferences::setForUser($user, 'email_change_confirm_token', bin2hex(random_bytes(16)));
         // update user
 
-        $user->email = $newEmail;
-        $user->blocked = true;
+        $user->email        = $newEmail;
+        $user->blocked      = true;
         $user->blocked_code = 'email_changed';
         $user->save();
 
@@ -86,7 +86,7 @@ class UserRepository implements UserRepositoryInterface
     public function changeStatus(User $user, bool $isBlocked, string $code): bool
     {
         // change blocked status and code:
-        $user->blocked = $isBlocked;
+        $user->blocked      = $isBlocked;
         $user->blocked_code = $code;
         $user->save();
 
@@ -142,7 +142,7 @@ class UserRepository implements UserRepositoryInterface
         return User::orderBy('id', 'DESC')->get(['users.*']);
     }
 
-    public function findByEmail(string $email): null|User
+    public function findByEmail(string $email): ?User
     {
         return User::where('email', $email)->first();
     }
@@ -150,7 +150,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Returns the first user in the DB. Generally only works when there is just one.
      */
-    public function first(): null|User
+    public function first(): ?User
     {
         return User::orderBy('id', 'ASC')->first();
     }
@@ -160,7 +160,7 @@ class UserRepository implements UserRepositoryInterface
         return InvitedUser::with('user')->get();
     }
 
-    public function getRoleByUser(User $user): null|string
+    public function getRoleByUser(User $user): ?string
     {
         /** @var null|Role $role */
         $role = $user->roles()->first();
@@ -174,7 +174,7 @@ class UserRepository implements UserRepositoryInterface
     public function getRolesInGroup(User $user, int $groupId): array
     {
         /** @var null|UserGroup $group */
-        $group = UserGroup::find($groupId);
+        $group       = UserGroup::find($groupId);
         if (null === $group) {
             throw new FireflyException(sprintf('Could not find group #%d', $groupId));
         }
@@ -183,14 +183,14 @@ class UserRepository implements UserRepositoryInterface
 
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
-            $role = $membership->userRole;
+            $role    = $membership->userRole;
             $roles[] = $role->title;
         }
 
         return $roles;
     }
 
-    public function find(int $userId): null|User
+    public function find(int $userId): ?User
     {
         return User::find($userId);
     }
@@ -221,7 +221,7 @@ class UserRepository implements UserRepositoryInterface
                 ->count('budget_limits.budget_id'),
             'rule_groups'         => $user->ruleGroups()->count(),
             'rules'               => $user->rules()->count(),
-            'tags'                => $user->tags()->count()
+            'tags'                => $user->tags()->count(),
         ];
     }
 
@@ -254,7 +254,7 @@ class UserRepository implements UserRepositoryInterface
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId = $group->id;
+                $groupId       = $group->id;
                 if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
@@ -271,15 +271,15 @@ class UserRepository implements UserRepositoryInterface
         if (!$user instanceof User) {
             throw new FireflyException('User is not a User object.');
         }
-        $now = now(config('app.timezone'));
+        $now                  = now(config('app.timezone'));
         $now->addDays(2);
-        $invitee = new InvitedUser();
+        $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
         $invitee->invite_code = Str::random(64);
-        $invitee->email = $email;
-        $invitee->redeemed = false;
-        $invitee->expires = $now;
-        $invitee->expires_tz = $now->format('e');
+        $invitee->email       = $email;
+        $invitee->redeemed    = false;
+        $invitee->expires     = $now;
+        $invitee->expires_tz  = $now->format('e');
         $invitee->save();
 
         return $invitee;
@@ -297,7 +297,7 @@ class UserRepository implements UserRepositoryInterface
     /**
      * Set MFA code.
      */
-    public function setMFACode(User $user, null|string $code): void
+    public function setMFACode(User $user, ?string $code): void
     {
         $user->mfa_secret = $code;
         $user->save();
@@ -309,7 +309,7 @@ class UserRepository implements UserRepositoryInterface
             'blocked'      => $data['blocked'] ?? false,
             'blocked_code' => $data['blocked_code'] ?? null,
             'email'        => $data['email'],
-            'password'     => Str::random(24)
+            'password'     => Str::random(24),
         ]);
         $role = $data['role'] ?? '';
         if ('' !== $role) {
@@ -340,7 +340,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function unblockUser(User $user): void
     {
-        $user->blocked = false;
+        $user->blocked      = false;
         $user->blocked_code = '';
         $user->save();
     }
@@ -380,11 +380,11 @@ class UserRepository implements UserRepositoryInterface
         if ('' === $newEmail) {
             return true;
         }
-        $oldEmail = $user->email;
+        $oldEmail    = $user->email;
 
         // save old email as pref
         Preferences::setForUser($user, 'admin_previous_email_latest', $oldEmail);
-        Preferences::setForUser($user, 'admin_previous_email_' . Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
+        Preferences::setForUser($user, 'admin_previous_email_'.Carbon::now()->format('Y-m-d-H-i-s'), $oldEmail);
 
         $user->email = $newEmail;
         $user->save();
@@ -404,7 +404,7 @@ class UserRepository implements UserRepositoryInterface
         $user->roles()->detach($roleObj->id);
     }
 
-    public function getRole(string $role): null|Role
+    public function getRole(string $role): ?Role
     {
         return Role::where('name', $role)->first();
     }
@@ -415,7 +415,8 @@ class UserRepository implements UserRepositoryInterface
         $invitee = InvitedUser::where('invite_code', $code)
             ->where('expires', '>', $now->format('Y-m-d H:i:s'))
             ->where('redeemed', 0)
-            ->first();
+            ->first()
+        ;
 
         return null !== $invitee;
     }

@@ -57,7 +57,7 @@ trait CreateStuff
             'account_role'         => 'defaultAsset',
             'opening_balance'      => $request->input('bank_balance'),
             'opening_balance_date' => new Carbon(),
-            'currency_id'          => $currency->id
+            'currency_id'          => $currency->id,
         ];
 
         $repository->store($assetAccount);
@@ -82,7 +82,7 @@ trait CreateStuff
             'account_role'         => 'cashWalletAsset',
             'opening_balance'      => null,
             'opening_balance_date' => null,
-            'currency_id'          => $currency->id
+            'currency_id'          => $currency->id,
         ];
 
         $repository->store($assetAccount);
@@ -101,7 +101,7 @@ trait CreateStuff
             return;
         }
 
-        $key = RSA::createKey(4096);
+        $key                      = RSA::createKey(4096);
 
         Log::alert('NO OAuth keys were found. They have been created.');
 
@@ -126,7 +126,7 @@ trait CreateStuff
             'account_role'         => 'savingAsset',
             'opening_balance'      => $request->input('savings_balance'),
             'opening_balance_date' => new Carbon(),
-            'currency_id'          => $currency->id
+            'currency_id'          => $currency->id,
         ];
         $repository->store($savingsAccount);
 

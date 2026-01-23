@@ -47,10 +47,10 @@ final class ObjectGroupControllerTest extends TestCase
     {
         for ($i = 1; $i <= $count; ++$i) {
             $objectGroup = ObjectGroup::create([
-                'title'         => 'Object Group ' . $i,
+                'title'         => 'Object Group '.$i,
                 'order'         => $i,
                 'user_group_id' => $user->user_group_id,
-                'user_id'       => $user->id
+                'user_id'       => $user->id,
             ]);
         }
     }
@@ -66,7 +66,7 @@ final class ObjectGroupControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         // test API
@@ -77,7 +77,7 @@ final class ObjectGroupControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointThenReturnsObjectGroups(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestObjectGroups(5, $user);
@@ -91,7 +91,7 @@ final class ObjectGroupControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestObjectGroups(5, $user);
@@ -106,7 +106,7 @@ final class ObjectGroupControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestObjectGroups(20, $user);

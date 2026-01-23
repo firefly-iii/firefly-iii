@@ -57,7 +57,7 @@ class ShowController extends Controller
 
         // some useful repositories:
         $this->middleware(function ($request, $next) {
-            $this->repository = app(TransactionGroupRepositoryInterface::class);
+            $this->repository    = app(TransactionGroupRepositoryInterface::class);
             $this->aleRepository = app(ALERepositoryInterface::class);
 
             app('view')->share('title', (string) trans('firefly.transactions'));
@@ -83,51 +83,51 @@ class ShowController extends Controller
     public function show(TransactionGroup $transactionGroup): Factory|\Illuminate\Contracts\View\View
     {
         /** @var User $admin */
-        $admin = auth()->user();
+        $admin           = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
+        $collector       = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setTransactionGroup($transactionGroup)->withAPIInformation();
 
         /** @var null|TransactionGroup $selectedGroup */
-        $selectedGroup = $collector->getGroups()->first();
+        $selectedGroup   = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment      = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup   = $enrichment->enrichSingle($selectedGroup);
 
-        $splits = count($selectedGroup['transactions']);
-        $keys   = array_keys($selectedGroup['transactions']);
-        $first  = $selectedGroup['transactions'][array_shift($keys)];
+        $splits          = count($selectedGroup['transactions']);
+        $keys            = array_keys($selectedGroup['transactions']);
+        $first           = $selectedGroup['transactions'][array_shift($keys)];
         unset($keys);
 
         if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
-        $type     = (string) trans(sprintf('firefly.%s', $first['transaction_type_type']));
-        $title    = 1 === $splits ? $first['description'] : $selectedGroup['title'];
-        $subTitle = sprintf('%s: "%s"', $type, $title);
+        $type            = (string) trans(sprintf('firefly.%s', $first['transaction_type_type']));
+        $title           = 1 === $splits ? $first['description'] : $selectedGroup['title'];
+        $subTitle        = sprintf('%s: "%s"', $type, $title);
 
         // enrich
-        $enrichment = new TransactionGroupEnrichment();
+        $enrichment      = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
 
         /** @var array $selectedGroup */
-        $selectedGroup = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup   = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer = app(TransactionGroupTransformer::class);
+        $transformer     = app(TransactionGroupTransformer::class);
         $transformer->setParameters(new ParameterBag());
-        $groupArray = $transformer->transformObject($transactionGroup);
+        $groupArray      = $transformer->transformObject($transactionGroup);
 
         // do some calculations:
-        $amounts  = $this->getAmounts($selectedGroup);
-        $accounts = $this->getAccounts($selectedGroup);
+        $amounts         = $this->getAmounts($selectedGroup);
+        $accounts        = $this->getAccounts($selectedGroup);
 
         foreach (array_keys($selectedGroup['transactions']) as $index) {
             $selectedGroup['transactions'][$index]['tags'] = $this->repository->getTagObjects(
@@ -141,9 +141,9 @@ class ShowController extends Controller
             $logEntries[$journal['transaction_journal_id']] = $this->aleRepository->getForId(TransactionJournal::class, $journal['transaction_journal_id']);
         }
 
-        $events      = $this->repository->getPiggyEvents($transactionGroup);
-        $attachments = $this->repository->getAttachments($transactionGroup);
-        $links       = $this->repository->getLinks($transactionGroup);
+        $events          = $this->repository->getPiggyEvents($transactionGroup);
+        $attachments     = $this->repository->getAttachments($transactionGroup);
+        $links           = $this->repository->getLinks($transactionGroup);
 
         return view('transactions.show', [
             'transactionGroup' => $transactionGroup,
@@ -159,7 +159,7 @@ class ShowController extends Controller
             'events'           => $events,
             'attachments'      => $attachments,
             'links'            => $links,
-            'accounts'         => $accounts
+            'accounts'         => $accounts,
         ]);
     }
 
@@ -168,7 +168,7 @@ class ShowController extends Controller
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
             // add normal amount:
-            $symbol = $transaction['currency_symbol'];
+            $symbol                     = $transaction['currency_symbol'];
             $amounts[$symbol] ??= ['amount'         => '0', 'symbol'         => $symbol, 'decimal_places' => $transaction['currency_decimal_places']];
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], (string) $transaction['amount']);
 
@@ -179,22 +179,22 @@ class ShowController extends Controller
                 && 0 !== bccomp('0', (string) $transaction['foreign_amount'])
             ) {
                 // same for foreign currency:
-                $foreignSymbol = $transaction['foreign_currency_symbol'];
+                $foreignSymbol                     = $transaction['foreign_currency_symbol'];
                 $amounts[$foreignSymbol] ??= [
                     'amount'         => '0',
                     'symbol'         => $foreignSymbol,
-                    'decimal_places' => $transaction['foreign_currency_decimal_places']
+                    'decimal_places' => $transaction['foreign_currency_decimal_places'],
                 ];
                 $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], (string) $transaction['foreign_amount']);
             }
             // add primary currency amount
             if (null !== $transaction['pc_amount'] && $transaction['currency_id'] !== $this->primaryCurrency->id) {
                 // same for foreign currency:
-                $primarySymbol = $this->primaryCurrency->symbol;
+                $primarySymbol                     = $this->primaryCurrency->symbol;
                 $amounts[$primarySymbol] ??= [
                     'amount'         => '0',
                     'symbol'         => $this->primaryCurrency->symbol,
-                    'decimal_places' => $this->primaryCurrency->decimal_places
+                    'decimal_places' => $this->primaryCurrency->decimal_places,
                 ];
                 $amounts[$primarySymbol]['amount'] = bcadd($amounts[$primarySymbol]['amount'], (string) $transaction['pc_amount']);
             }
@@ -205,24 +205,24 @@ class ShowController extends Controller
 
     private function getAccounts(array $group): array
     {
-        $accounts = ['source'      => [], 'destination' => []];
+        $accounts                = ['source'      => [], 'destination' => []];
 
         foreach ($group['transactions'] as $transaction) {
-            $accounts['source'][] = [
+            $accounts['source'][]      = [
                 'type' => $transaction['source_account_type'],
                 'id'   => $transaction['source_account_id'],
                 'name' => $transaction['source_account_name'],
-                'iban' => $transaction['source_account_iban']
+                'iban' => $transaction['source_account_iban'],
             ];
             $accounts['destination'][] = [
                 'type' => $transaction['destination_account_type'],
                 'id'   => $transaction['destination_account_id'],
                 'name' => $transaction['destination_account_name'],
-                'iban' => $transaction['destination_account_iban']
+                'iban' => $transaction['destination_account_iban'],
             ];
         }
 
-        $accounts['source'] = array_unique($accounts['source'], SORT_REGULAR);
+        $accounts['source']      = array_unique($accounts['source'], SORT_REGULAR);
         $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
 
         return $accounts;

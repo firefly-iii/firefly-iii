@@ -68,12 +68,12 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle(): void
     {
-        $email = (string) config('firefly.site_owner');
-        $args  = $this->exception;
+        $email            = (string) config('firefly.site_owner');
+        $args             = $this->exception;
         $args['loggedIn'] = $this->userData['id'] > 0;
-        $args['user'] = $this->userData;
-        $args['ip'] = $this->ipAddress;
-        $args['token'] = config('firefly.ipinfo_token');
+        $args['user']     = $this->userData;
+        $args['ip']       = $this->ipAddress;
+        $args['token']    = config('firefly.ipinfo_token');
 
         // limit number of error mails that can be sent.
         if ($this->reachedLimit()) {
@@ -113,7 +113,7 @@ class MailError extends Job implements ShouldQueue
         $types     = [
             '5m'  => ['limit' => 5, 'reset' => 5 * 60],
             '1h'  => ['limit' => 15, 'reset' => 60 * 60],
-            '24h' => ['limit' => 15, 'reset' => 24 * 60 * 60]
+            '24h' => ['limit' => 15, 'reset' => 24 * 60 * 60],
         ];
         $file      = storage_path('framework/cache/error-count.json');
         $directory = storage_path('framework/cache');

@@ -57,7 +57,7 @@ class BillUpdateRequest extends FormRequest
             'skip'               => $this->convertInteger('skip'),
             'notes'              => $this->stringWithNewlines('notes'),
             'active'             => $this->boolean('active'),
-            'object_group_title' => $this->convertString('object_group')
+            'object_group_title' => $this->convertString('object_group'),
         ];
     }
 
@@ -80,7 +80,7 @@ class BillUpdateRequest extends FormRequest
             'repeat_freq'             => sprintf('required|in:%s', implode(',', config('firefly.bill_periods'))),
             'skip'                    => 'required|integer|gte:0|lte:31',
             'active'                  => 'boolean',
-            'notes'                   => 'min:1|max:32768|nullable'
+            'notes'                   => 'min:1|max:32768|nullable',
         ];
     }
 

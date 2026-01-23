@@ -67,7 +67,7 @@ class EditController extends Controller
      */
     public function edit(Request $request, RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle    = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = ['active'   => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active];
@@ -117,10 +117,10 @@ class EditController extends Controller
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {
-        $data = [
+        $data     = [
             'title'       => $request->convertString('title'),
             'description' => $request->stringWithNewlines('description'),
-            'active'      => 1 === (int) $request->input('active')
+            'active'      => 1 === (int) $request->input('active'),
         ];
 
         $this->repository->update($ruleGroup, $data);

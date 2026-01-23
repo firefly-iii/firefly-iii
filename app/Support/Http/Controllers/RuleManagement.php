@@ -51,7 +51,7 @@ trait RuleManagement
                         'oldAction'  => $oldAction['type'],
                         'oldValue'   => $oldAction['value'] ?? '',
                         'oldChecked' => 1 === (int) ($oldAction['stop_processing'] ?? '0'),
-                        'count'      => $index + 1
+                        'count'      => $index + 1,
                     ])->render();
                 } catch (Throwable $e) {
                     Log::error(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
@@ -72,8 +72,8 @@ trait RuleManagement
     protected function getPreviousTriggers(Request $request): array
     {
         // TODO duplicated code.
-        $operators = config('search.operators');
-        $triggers  = [];
+        $operators       = config('search.operators');
+        $triggers        = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
                 $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
@@ -93,7 +93,7 @@ trait RuleManagement
                         'oldChecked'    => 1 === (int) ($oldTrigger['stop_processing'] ?? '0'),
                         'oldProhibited' => 1 === (int) ($oldTrigger['prohibited'] ?? '0'),
                         'count'         => $index + 1,
-                        'triggers'      => $triggers
+                        'triggers'      => $triggers,
                     ])->render();
                 } catch (Throwable $e) {
                     Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
@@ -124,7 +124,7 @@ trait RuleManagement
         }
         asort($triggers);
 
-        $index = 0;
+        $index           = 0;
         foreach ($submittedOperators as $operator) {
             $rootOperator = OperatorQuerySearch::getRootOperator($operator['type']);
             $needsContext = (bool) config(sprintf('search.operators.%s.needs_context', $rootOperator));
@@ -136,7 +136,7 @@ trait RuleManagement
                     'oldChecked'    => false,
                     'oldProhibited' => $operator['prohibited'] ?? false,
                     'count'         => $index + 1,
-                    'triggers'      => $triggers
+                    'triggers'      => $triggers,
                 ])->render();
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
@@ -158,7 +158,7 @@ trait RuleManagement
             $data = [
                 'title'       => (string) trans('firefly.default_rule_group_name'),
                 'description' => (string) trans('firefly.default_rule_group_description'),
-                'active'      => true
+                'active'      => true,
             ];
 
             $repository->store($data);

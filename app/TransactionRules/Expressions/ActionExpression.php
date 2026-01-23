@@ -81,19 +81,19 @@ class ActionExpression
         'due_date',
         'process_date',
         //        'destination_transaction_id',
-        'notes'
+        'notes',
     ];
     private readonly ExpressionLanguage $expressionLanguage;
     private readonly bool $isExpression;
-    private readonly null|SyntaxError $validationError;
+    private readonly ?SyntaxError $validationError;
 
     public function __construct(
         private readonly string $expr
     ) {
         $this->expressionLanguage = app(ExpressionLanguage::class);
 
-        $this->isExpression = $this->isExpression($this->expr);
-        $this->validationError = $this->validate();
+        $this->isExpression       = $this->isExpression($this->expr);
+        $this->validationError    = $this->validate();
     }
 
     private function isExpression(string $expr): bool
@@ -101,7 +101,7 @@ class ActionExpression
         return str_starts_with($expr, '=') && strlen($expr) > 1;
     }
 
-    private function validate(): null|SyntaxError
+    private function validate(): ?SyntaxError
     {
         if (!$this->isExpression) {
             return null;
@@ -130,7 +130,7 @@ class ActionExpression
         $this->expressionLanguage->lint($expr, self::$NAMES);
     }
 
-    public function getValidationError(): null|SyntaxError
+    public function getValidationError(): ?SyntaxError
     {
         return $this->validationError;
     }

@@ -72,9 +72,10 @@ class UserInvitation extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject((string) trans('email.invitation_created_subject'));
+            ->subject((string) trans('email.invitation_created_subject'))
+        ;
     }
 
     //    /**
@@ -101,7 +102,7 @@ class UserInvitation extends Notification
 
         return PushoverMessage::create((string) trans('email.invitation_created_body', [
             'email'   => $this->invitee->user->email,
-            'invitee' => $this->invitee->email
+            'invitee' => $this->invitee->email,
         ]))->title((string) trans('email.invitation_created_subject'));
     }
 
@@ -112,7 +113,7 @@ class UserInvitation extends Notification
     {
         return new SlackMessage()->content((string) trans('email.invitation_created_body', [
             'email'   => $this->invitee->user->email,
-            'invitee' => $this->invitee->email
+            'invitee' => $this->invitee->email,
         ]));
     }
 

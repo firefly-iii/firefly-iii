@@ -76,7 +76,7 @@ class UpgradesDatabase extends Command
             'upgrade:620-piggy-banks',
             'upgrade:620-pc-amounts',
             'upgrade:640-upgrade-webhooks',
-            'firefly-iii:correct-database'
+            'firefly-iii:correct-database',
         ];
         $args     = [];
         if ($this->option('force')) {

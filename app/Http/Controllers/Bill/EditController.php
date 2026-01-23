@@ -56,7 +56,7 @@ class EditController extends Controller
             app('view')->share('title', (string) trans('firefly.bills'));
             app('view')->share('mainTitleIcon', 'fa-calendar-o');
             $this->attachments = app(AttachmentHelperInterface::class);
-            $this->repository = app(BillRepositoryInterface::class);
+            $this->repository  = app(BillRepositoryInterface::class);
 
             return $next($request);
         });
@@ -67,16 +67,16 @@ class EditController extends Controller
      */
     public function edit(Request $request, Bill $bill): Factory|View
     {
-        $periods = [];
+        $periods          = [];
 
         /** @var array $billPeriods */
-        $billPeriods = config('firefly.bill_periods');
+        $billPeriods      = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = (string) trans('firefly.' . $current);
+            $periods[$current] = (string) trans('firefly.'.$current);
         }
 
-        $subTitle = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle         = (string) trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -85,18 +85,18 @@ class EditController extends Controller
 
         $bill->amount_min = Steam::bcround($bill->amount_min, $bill->transactionCurrency->decimal_places);
         $bill->amount_max = Steam::bcround($bill->amount_max, $bill->transactionCurrency->decimal_places);
-        $rules = $this->repository->getRulesForBill($bill);
+        $rules            = $this->repository->getRulesForBill($bill);
 
         // code to handle active-checkboxes
-        $hasOldInput = null !== $request->old('_token');
+        $hasOldInput      = null !== $request->old('_token');
 
-        $preFilled = [
+        $preFilled        = [
             'bill_end_date'           => $bill->end_date,
             'extension_date'          => $bill->extension_date,
             'notes'                   => $this->repository->getNoteText($bill),
             'transaction_currency_id' => $bill->transaction_currency_id,
             'active'                  => $hasOldInput ? (bool) $request->old('active') : $bill->active,
-            'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : ''
+            'object_group'            => null !== $bill->objectGroups->first() ? $bill->objectGroups->first()->title : '',
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -119,7 +119,7 @@ class EditController extends Controller
         Preferences::mark();
 
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files    = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($bill, $files);
         }

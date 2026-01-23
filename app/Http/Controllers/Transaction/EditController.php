@@ -100,28 +100,28 @@ class EditController extends Controller
         $previousUrl          = str_replace($search, '', $previousUrl);
 
         // settings necessary for v2
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields       = Preferences::get('transaction_journal_optional_fields', [])->data;
         if (!is_array($optionalFields)) {
             $optionalFields = [];
         }
         // not really a fan of this, but meh.
-        $optionalDateFields = [
+        $optionalDateFields   = [
             'interest_date' => $optionalFields['interest_date'] ?? false,
             'book_date'     => $optionalFields['book_date'] ?? false,
             'process_date'  => $optionalFields['process_date'] ?? false,
             'due_date'      => $optionalFields['due_date'] ?? false,
             'payment_date'  => $optionalFields['payment_date'] ?? false,
-            'invoice_date'  => $optionalFields['invoice_date'] ?? false
+            'invoice_date'  => $optionalFields['invoice_date'] ?? false,
         ];
         $optionalFields['external_url'] ??= false;
-        $optionalFields['location'] ??= false;
-        $optionalFields['location'] =
-            $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location']     ??= false;
+        $optionalFields['location']
+                              = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info voor v2:
-        $longitude = config('firefly.default_location.longitude');
-        $latitude  = config('firefly.default_location.latitude');
-        $zoomLevel = config('firefly.default_location.zoom_level');
+        $longitude            = config('firefly.default_location.longitude');
+        $latitude             = config('firefly.default_location.latitude');
+        $zoomLevel            = config('firefly.default_location.zoom_level');
 
         return view('transactions.edit', [
             'cash'                 => $cash,
@@ -137,7 +137,7 @@ class EditController extends Controller
             'transactionGroup'     => $transactionGroup,
             'allowedOpposingTypes' => $allowedOpposingTypes,
             'accountToTypes'       => $accountToTypes,
-            'previousUrl'          => $previousUrl
+            'previousUrl'          => $previousUrl,
         ]);
     }
 

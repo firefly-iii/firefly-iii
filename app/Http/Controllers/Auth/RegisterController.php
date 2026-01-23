@@ -95,9 +95,9 @@ class RegisterController extends Controller
         }
 
         $this->validator($request->all())->validate();
-        $user = $this->createUser($request->all());
+        $user              = $this->createUser($request->all());
         Log::info(sprintf('Registered new user %s', $user->email));
-        $owner = new OwnerNotifiable();
+        $owner             = new OwnerNotifiable();
         event(new NewUserRegistered($owner, $user));
 
         $this->guard()->login($user);
@@ -126,8 +126,8 @@ class RegisterController extends Controller
         } catch (ContainerExceptionInterface|NotFoundExceptionInterface) {
             $singleUserMode = true;
         }
-        $userCount = User::count();
-        $guard     = config('auth.defaults.guard');
+        $userCount         = User::count();
+        $guard             = config('auth.defaults.guard');
         if (true === $singleUserMode && $userCount > 0 && 'web' === $guard) {
             $allowRegistration = false;
         }
@@ -167,7 +167,7 @@ class RegisterController extends Controller
             return view('errors.error', ['message' => $message]);
         }
 
-        $email = $request->old('email');
+        $email             = $request->old('email');
 
         return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle, 'inviteCode' => $inviteCode]);
     }
@@ -181,7 +181,7 @@ class RegisterController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function showRegistrationForm(null|Request $request = null): Factory|\Illuminate\Contracts\View\View
+    public function showRegistrationForm(?Request $request = null): Factory|\Illuminate\Contracts\View\View
     {
         $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $pageTitle         = (string) trans('firefly.register_page_title');
@@ -193,7 +193,7 @@ class RegisterController extends Controller
             return view('errors.error', ['message' => $message]);
         }
 
-        $email = $request?->old('email');
+        $email             = $request?->old('email');
 
         return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle]);
     }

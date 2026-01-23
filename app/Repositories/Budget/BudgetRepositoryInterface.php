@@ -70,26 +70,26 @@ interface BudgetRepositoryInterface
 
     public function destroyAutoBudget(Budget $budget): void;
 
-    public function find(null|int $budgetId = null): null|Budget;
+    public function find(?int $budgetId = null): ?Budget;
 
-    public function findBudget(null|int $budgetId, null|string $budgetName): null|Budget;
+    public function findBudget(?int $budgetId, ?string $budgetName): ?Budget;
 
     /**
      * Find budget by name.
      */
-    public function findByName(null|string $name): null|Budget;
+    public function findByName(?string $name): ?Budget;
 
     /**
      * This method returns the oldest journal or transaction date known to this budget.
      * Will cache result.
      */
-    public function firstUseDate(Budget $budget): null|Carbon;
+    public function firstUseDate(Budget $budget): ?Carbon;
 
     public function getActiveBudgets(): Collection;
 
     public function getAttachments(Budget $budget): Collection;
 
-    public function getAutoBudget(Budget $budget): null|AutoBudget;
+    public function getAutoBudget(Budget $budget): ?AutoBudget;
 
     public function getBudgets(): Collection;
 
@@ -102,7 +102,7 @@ interface BudgetRepositoryInterface
 
     public function getMaxOrder(): int;
 
-    public function getNoteText(Budget $budget): null|string;
+    public function getNoteText(Budget $budget): ?string;
 
     public function searchBudget(string $query, int $limit): Collection;
 

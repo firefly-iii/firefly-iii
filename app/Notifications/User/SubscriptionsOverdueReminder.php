@@ -58,17 +58,18 @@ class SubscriptionsOverdueReminder extends Notification
         $info  = [];
         $count = 0;
         foreach ($this->overdue as $item) {
-            $current = ['bill' => $item['bill']];
-            $current['pay_dates'] = array_map(static fn(string $date): string => new Carbon($date)->isoFormat((string) trans(
+            $current              = ['bill' => $item['bill']];
+            $current['pay_dates'] = array_map(static fn (string $date): string => new Carbon($date)->isoFormat((string) trans(
                 'config.month_and_day_moment_js'
             )), $item['dates']['pay_dates']);
-            $info[] = $current;
+            $info[]               = $current;
             ++$count;
         }
 
         return new MailMessage()
             ->markdown('emails.subscriptions-overdue-warning', ['info'  => $info, 'count' => $count])
-            ->subject($this->getSubject());
+            ->subject($this->getSubject())
+        ;
     }
 
     private function getSubject(): string
@@ -111,7 +112,8 @@ class SubscriptionsOverdueReminder extends Notification
             ->attachment(static function ($attachment) use ($url): void {
                 $attachment->title((string) trans('firefly.visit_bills'), $url);
             })
-            ->content($this->getSubject());
+            ->content($this->getSubject())
+        ;
     }
 
     /**

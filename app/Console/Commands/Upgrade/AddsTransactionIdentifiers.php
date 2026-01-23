@@ -40,8 +40,8 @@ class AddsTransactionIdentifiers extends Command
 
     public const string CONFIG_NAME = '480_transaction_identifier';
 
-    protected $description = 'Fixes transaction identifiers.';
-    protected $signature   = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
+    protected $description          = 'Fixes transaction identifiers.';
+    protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
     private int $count;
 
@@ -94,7 +94,7 @@ class AddsTransactionIdentifiers extends Command
     private function stupidLaravel(): void
     {
         $this->cliRepository = app(JournalCLIRepositoryInterface::class);
-        $this->count = 0;
+        $this->count         = 0;
     }
 
     private function isExecuted(): bool
@@ -110,8 +110,8 @@ class AddsTransactionIdentifiers extends Command
      */
     private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
     {
-        $identifier = 0;
-        $exclude    = []; // transactions already processed.
+        $identifier   = 0;
+        $exclude      = []; // transactions already processed.
         $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
 
         /** @var Transaction $transaction */
@@ -120,18 +120,18 @@ class AddsTransactionIdentifiers extends Command
             if ($opposing instanceof Transaction) {
                 // give both a new identifier:
                 $transaction->identifier = $identifier;
-                $opposing->identifier = $identifier;
+                $opposing->identifier    = $identifier;
                 $transaction->save();
                 $opposing->save();
-                $exclude[] = $transaction->id;
-                $exclude[] = $opposing->id;
+                $exclude[]               = $transaction->id;
+                $exclude[]               = $opposing->id;
                 ++$this->count;
             }
             ++$identifier;
         }
     }
 
-    private function findOpposing(Transaction $transaction, array $exclude): null|Transaction
+    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
     {
         // find opposing:
         $amount = bcmul($transaction->amount, '-1');
@@ -142,7 +142,8 @@ class AddsTransactionIdentifiers extends Command
                 ->where('amount', $amount)
                 ->where('identifier', '=', 0)
                 ->whereNotIn('id', $exclude)
-                ->first();
+                ->first()
+            ;
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');

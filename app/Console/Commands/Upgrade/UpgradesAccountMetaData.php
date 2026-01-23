@@ -36,9 +36,9 @@ class UpgradesAccountMetaData extends Command
 
     public const string CONFIG_NAME = '480_rename_account_meta';
 
-    protected $description = 'Rename account meta-data to new format.';
+    protected $description          = 'Rename account meta-data to new format.';
 
-    protected $signature = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
+    protected $signature            = 'upgrade:480-account-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -57,7 +57,7 @@ class UpgradesAccountMetaData extends Command
             'accountRole'          => 'account_role',
             'ccType'               => 'cc_type',
             'accountNumber'        => 'account_number',
-            'ccMonthlyPaymentDate' => 'cc_monthly_payment_date'
+            'ccMonthlyPaymentDate' => 'cc_monthly_payment_date',
         ];
         $count = 0;
 

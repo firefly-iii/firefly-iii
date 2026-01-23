@@ -44,7 +44,7 @@ class IsValidAccountTypeList implements ValidationRule
         if (!is_array($values)) {
             $fail('validation.invalid_account_list')->translate();
         }
-        $keys = array_keys($this->types);
+        $keys   = array_keys($this->types);
         foreach ($values as $entry) {
             if (!in_array($entry, $keys, true)) {
                 $fail('validation.invalid_account_list')->translate(['value' => $entry]);

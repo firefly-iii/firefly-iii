@@ -40,7 +40,7 @@ use Illuminate\Support\Facades\Log;
  */
 class FrontpageChartGenerator
 {
-    public bool $convertToPrimary = false;
+    public bool $convertToPrimary     = false;
     public TransactionCurrency $default;
     protected OperationsRepositoryInterface $opsRepository;
     private readonly BudgetLimitRepositoryInterface $blRepository;
@@ -55,8 +55,8 @@ class FrontpageChartGenerator
     public function __construct()
     {
         $this->budgetRepository = app(BudgetRepositoryInterface::class);
-        $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-        $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->blRepository     = app(BudgetLimitRepositoryInterface::class);
+        $this->opsRepository    = app(OperationsRepositoryInterface::class);
     }
 
     /**
@@ -71,7 +71,7 @@ class FrontpageChartGenerator
         $data    = [
             ['label'   => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type'    => 'bar'],
             ['label'   => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type'    => 'bar'],
-            ['label'   => (string) trans('firefly.overspent'), 'entries' => [], 'type'    => 'bar']
+            ['label'   => (string) trans('firefly.overspent'), 'entries' => [], 'type'    => 'bar'],
         ];
 
         // loop al budgets:
@@ -103,7 +103,7 @@ class FrontpageChartGenerator
         $this->blRepository->setUser($user);
         $this->opsRepository->setUser($user);
 
-        $locale = Steam::getLocale();
+        $locale                  = Steam::getLocale();
         $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
     }
 
@@ -133,7 +133,7 @@ class FrontpageChartGenerator
 
         /** @var array $entry */
         foreach ($spent as $entry) {
-            $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+            $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
             $data[0]['entries'][$title] = bcmul((string) $entry['sum'], '-1'); // spent
             $data[1]['entries'][$title] = 0; // left to spend
             $data[2]['entries'][$title] = 0; // overspent
@@ -181,7 +181,7 @@ class FrontpageChartGenerator
             Log::debug(sprintf('Processing limit #%d with %s %s', $limit->id, $limit->transactionCurrency->code, $limit->amount));
         }
 
-        $spent = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+        $spent      = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
         Log::debug(sprintf('Spent array has %d entries.', count($spent)));
 
         /** @var array $entry */
@@ -208,7 +208,7 @@ class FrontpageChartGenerator
      */
     private function processRow(array $data, Budget $budget, BudgetLimit $limit, array $entry): array
     {
-        $title = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
+        $title                      = sprintf('%s (%s)', $budget->name, $entry['currency_name']);
         Log::debug(sprintf('Title is "%s"', $title));
         if ($limit->start_date->startOfDay()->ne($this->start->startOfDay()) || $limit->end_date->startOfDay()->ne($this->end->startOfDay())) {
             $title = sprintf(
@@ -219,15 +219,15 @@ class FrontpageChartGenerator
                 $limit->end_date->isoFormat($this->monthAndDayFormat)
             );
         }
-        $usePrimary = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
-        $amount     = $limit->amount;
+        $usePrimary                 = $this->convertToPrimary && $this->default->id !== $limit->transaction_currency_id;
+        $amount                     = $limit->amount;
         Log::debug(sprintf('Amount is "%s".', $amount));
         if ($usePrimary && $limit->transaction_currency_id !== $this->default->id) {
             $amount = $limit->native_amount;
             Log::debug(sprintf('Amount is now "%s".', $amount));
         }
-        $amount   ??= '0';
-        $sumSpent = bcmul((string) $entry['sum'], '-1'); // spent
+        $amount                     ??= '0';
+        $sumSpent                   = bcmul((string) $entry['sum'], '-1'); // spent
         $data[0]['entries'][$title] ??= '0';
         $data[1]['entries'][$title] ??= '0';
         $data[2]['entries'][$title] ??= '0';

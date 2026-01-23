@@ -46,7 +46,7 @@ class DestroyController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user                 = auth()->user();
 
             $this->ruleRepository = app(RuleRepositoryInterface::class);
             $this->ruleRepository->setUser($user);

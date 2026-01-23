@@ -55,7 +55,7 @@ class ObjectGroupTransformer extends AbstractTransformer
             'updated_at' => $objectGroup->updated_at?->toAtomString(),
             'title'      => $objectGroup->title,
             'order'      => $objectGroup->order,
-            'links'      => [['rel' => 'self', 'uri' => '/object_groups/' . $objectGroup->id]]
+            'links'      => [['rel' => 'self', 'uri' => '/object_groups/'.$objectGroup->id]],
         ];
     }
 }

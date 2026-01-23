@@ -73,21 +73,21 @@ class IndexController extends Controller
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
         $this->repository->correctTransfers();
-        $start      = session('start');
-        $end        = session('end');
-        $collection = $this->repository->getBills();
-        $total      = $collection->count();
+        $start       = session('start');
+        $end         = session('end');
+        $collection  = $this->repository->getBills();
+        $total       = $collection->count();
 
-        $parameters = new ParameterBag();
+        $parameters  = new ParameterBag();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new SubscriptionEnrichment();
+        $admin       = auth()->user();
+        $enrichment  = new SubscriptionEnrichment();
         $enrichment->setUser($admin);
         $enrichment->setStart($start->clone());
         $enrichment->setEnd($end);
-        $collection = $enrichment->enrich($collection);
+        $collection  = $enrichment->enrich($collection);
 
         $parameters->set('start', $start->clone());
         $parameters->set('end', $end);
@@ -99,39 +99,39 @@ class IndexController extends Controller
         $transformer->setParameters($parameters);
 
         // loop all bills, convert to array and add rules and stuff.
-        $rules = $this->repository->getRulesForBills($collection);
+        $rules       = $this->repository->getRulesForBills($collection);
 
         // make bill groups:
-        $bills = [0 => ['object_group_id'    => 0, 'object_group_title' => (string) trans('firefly.default_group_title_name'), 'bills'              => []]]; // the index is the order, not the ID.
+        $bills       = [0 => ['object_group_id'    => 0, 'object_group_title' => (string) trans('firefly.default_group_title_name'), 'bills'              => []]]; // the index is the order, not the ID.
 
         /** @var Bill $bill */
         foreach ($collection as $bill) {
-            $array      = $transformer->transform($bill);
-            $groupOrder = (int) $array['object_group_order'];
+            $array                            = $transformer->transform($bill);
+            $groupOrder                       = (int) $array['object_group_order'];
             // make group array if necessary:
             $bills[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'],
                 'object_group_title' => $array['object_group_title'],
-                'bills'              => []
+                'bills'              => [],
             ];
 
-            $currency = $bill->transactionCurrency ?? $this->primaryCurrency;
-            $array['currency_id'] = $currency->id;
-            $array['currency_name'] = $currency->name;
-            $array['currency_symbol'] = $currency->symbol;
-            $array['currency_code'] = $currency->code;
+            $currency                         = $bill->transactionCurrency ?? $this->primaryCurrency;
+            $array['currency_id']             = $currency->id;
+            $array['currency_name']           = $currency->name;
+            $array['currency_symbol']         = $currency->symbol;
+            $array['currency_code']           = $currency->code;
             $array['currency_decimal_places'] = $currency->decimal_places;
-            $array['attachments'] = $this->repository->getAttachments($bill);
-            $array['rules'] = $rules[$bill['id']] ?? [];
-            $bills[$groupOrder]['bills'][] = $array;
+            $array['attachments']             = $this->repository->getAttachments($bill);
+            $array['rules']                   = $rules[$bill['id']] ?? [];
+            $bills[$groupOrder]['bills'][]    = $array;
         }
         // order by key
         ksort($bills);
 
         // summarise per currency / per group.
-        $sums   = $this->getSums($bills);
-        $totals = $this->getTotals($sums);
-        $today  = now()->startOfDay();
+        $sums        = $this->getSums($bills);
+        $totals      = $this->getTotals($sums);
+        $today       = now()->startOfDay();
 
         return view('bills.index', ['bills'  => $bills, 'sums'   => $sums, 'total'  => $total, 'totals' => $totals, 'today'  => $today]);
     }
@@ -161,7 +161,7 @@ class IndexController extends Controller
                 }
                 Log::debug(sprintf('Now at subscription #%d.', $bill['id']));
 
-                $currencyId = $bill['currency_id'];
+                $currencyId                                   = $bill['currency_id'];
                 $sums[$groupOrder][$currencyId] ??= [
                     'currency_id'             => $currencyId,
                     'currency_code'           => $bill['currency_code'],
@@ -171,7 +171,7 @@ class IndexController extends Controller
                     'avg'                     => '0',
                     'total_left_to_pay'       => '0',
                     'period'                  => $range,
-                    'per_period'              => '0'
+                    'per_period'              => '0',
                 ];
                 Log::debug(sprintf(
                     'Start with avg:%s, total_left_to_pay:%s, per_period:%s',
@@ -182,8 +182,8 @@ class IndexController extends Controller
 
                 // only fill in avg when bill is active.
                 if (null !== $bill['next_expected_match']) {
-                    $avg = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
-                    $avg = bcmul($avg, (string) count($bill['pay_dates']));
+                    $avg                                   = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                    $avg                                   = bcmul($avg, (string) count($bill['pay_dates']));
                     $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
                     Log::debug(sprintf('next expected match is "%s", avg is now %s', $bill['next_expected_match'], $sums[$groupOrder][$currencyId]['avg']));
 
@@ -192,8 +192,8 @@ class IndexController extends Controller
                     if (count($bill['paid_dates']) < count($bill['pay_dates'])) {
                         $count = count($bill['pay_dates']) - count($bill['paid_dates']);
                         if ($count > 0) {
-                            $avg = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
-                            $avg = bcmul($avg, (string) $count);
+                            $avg                                                 = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                            $avg                                                 = bcmul($avg, (string) $count);
                             $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
                             Log::debug(
                                 sprintf(
@@ -207,7 +207,7 @@ class IndexController extends Controller
                     }
                 }
 
-                $perPeriod = $this->amountPerPeriod($bill, $range);
+                $perPeriod                                    = $this->amountPerPeriod($bill, $range);
                 Log::debug(sprintf('Add amount %s to per_period', $perPeriod));
                 // fill in per period regardless:
                 $sums[$groupOrder][$currencyId]['per_period'] = bcadd($sums[$groupOrder][$currencyId]['per_period'], $perPeriod);
@@ -219,7 +219,7 @@ class IndexController extends Controller
 
     private function amountPerPeriod(array $bill, string $range): string
     {
-        $avg = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+        $avg        = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
 
         Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
         Log::debug(sprintf('Average is %s', $avg));
@@ -229,7 +229,7 @@ class IndexController extends Controller
         Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string) ($bill['skip'] + 1)));
 
         // per period:
-        $division  = [
+        $division   = [
             '1Y'      => '1',
             '6M'      => '2',
             '3M'      => '4',
@@ -242,9 +242,9 @@ class IndexController extends Controller
             'last7'   => '52.16',
             'last30'  => '12',
             'last90'  => '4',
-            'last365' => '1'
+            'last365' => '1',
         ];
-        $perPeriod = bcdiv($yearAmount, $division[$range]);
+        $perPeriod  = bcdiv($yearAmount, $division[$range]);
 
         Log::debug(sprintf('Amount per %s is %s (%s / %s)', $range, $perPeriod, $yearAmount, $division[$range]));
 
@@ -275,9 +275,9 @@ class IndexController extends Controller
                     'currency_decimal_places' => $entry['currency_decimal_places'],
                     'avg'                     => '0',
                     'period'                  => $entry['period'],
-                    'per_period'              => '0'
+                    'per_period'              => '0',
                 ];
-                $totals[$currencyId]['avg'] = bcadd($totals[$currencyId]['avg'], (string) $entry['avg']);
+                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], (string) $entry['avg']);
                 $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], (string) $entry['per_period']);
             }
         }

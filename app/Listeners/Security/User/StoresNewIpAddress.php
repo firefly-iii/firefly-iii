@@ -35,13 +35,14 @@ class StoresNewIpAddress
     public function handle(UserSuccessfullyLoggedIn $event): void
     {
         Log::debug('Now in storeUserIPAddress');
-        $user = $event->user;
+        $user       = $event->user;
 
         if ($user->hasRole('demo')) {
             Log::debug('Do not log demo user logins');
 
             return;
         }
+
         /** @var array $preference */
         $preference = Preferences::getForUser($user, 'login_ip_history', [])->data;
         $inArray    = false;
@@ -53,7 +54,7 @@ class StoresNewIpAddress
             if ($row['ip'] === $ip) {
                 Log::debug('Found IP in array, refresh time.');
                 $preference[$index]['time'] = now(config('app.timezone'))->format('Y-m-d H:i:s');
-                $inArray = true;
+                $inArray                    = true;
             }
             // clean up old entries (6 months)
             $carbon = Carbon::createFromFormat('Y-m-d H:i:s', $preference[$index]['time']);
@@ -69,7 +70,7 @@ class StoresNewIpAddress
         $preference = array_values($preference);
 
         /** @var bool $send */
-        $send = Preferences::getForUser($user, 'notification_user_login', true)->data;
+        $send       = Preferences::getForUser($user, 'notification_user_login', true)->data;
         Preferences::setForUser($user, 'login_ip_history', $preference);
 
         if (false === $inArray && true === $send) {

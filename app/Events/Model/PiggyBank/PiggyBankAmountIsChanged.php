@@ -47,11 +47,11 @@ class PiggyBankAmountIsChanged extends Event
     public function __construct(
         PiggyBank $piggyBank,
         string $amount,
-        public null|TransactionJournal $transactionJournal,
-        public null|TransactionGroup $transactionGroup
+        public ?TransactionJournal $transactionJournal,
+        public ?TransactionGroup $transactionGroup
     ) {
         Log::debug(sprintf('Created piggy bank event for piggy bank #%d with amount %s', $piggyBank->id, $amount));
         $this->piggyBank = $piggyBank;
-        $this->amount = $amount;
+        $this->amount    = $amount;
     }
 }

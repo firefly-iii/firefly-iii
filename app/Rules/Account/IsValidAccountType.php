@@ -38,7 +38,7 @@ class IsValidAccountType implements ValidationRule
     {
         // only check the type.
         if (array_key_exists('type', $value)) {
-            $value = $value['type'];
+            $value    = $value['type'];
             if (!is_array($value)) {
                 $value = [$value];
             }

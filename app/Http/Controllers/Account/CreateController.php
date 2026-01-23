@@ -62,7 +62,7 @@ class CreateController extends Controller
             app('view')->share('mainTitleIcon', 'fa-credit-card');
             app('view')->share('title', (string) trans('firefly.accounts'));
 
-            $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository  = app(AccountRepositoryInterface::class);
             $this->attachments = app(AttachmentHelperInterface::class);
 
             return $next($request);
@@ -85,12 +85,12 @@ class CreateController extends Controller
             'latitude'     => $hasOldInput ? old('location_latitude') : config('firefly.default_location.latitude'),
             'longitude'    => $hasOldInput ? old('location_longitude') : config('firefly.default_location.longitude'),
             'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
-            'has_location' => $hasOldInput && 'true' === old('location_has_location')
+            'has_location' => $hasOldInput && 'true' === old('location_has_location'),
         ]];
         $liabilityDirections = ['debit'  => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
-        $interestPeriods = [];
+        $interestPeriods     = [];
         foreach (config('firefly.interest_periods') as $period) {
             $interestPeriods[$period] = trans(sprintf('firefly.interest_calc_%s', $period));
         }
@@ -98,10 +98,10 @@ class CreateController extends Controller
         // pre fill some data
         $request->session()->flash('preFilled', [
             'currency_id'       => $this->primaryCurrency->id,
-            'include_net_worth' => !$hasOldInput || (bool) $request->old('include_net_worth')
+            'include_net_worth' => !$hasOldInput || (bool) $request->old('include_net_worth'),
         ]);
         // issue #8321
-        $showNetWorth = true;
+        $showNetWorth        = true;
         if ('liabilities' !== $objectType && 'asset' !== $objectType) {
             $showNetWorth = false;
         }
@@ -122,7 +122,7 @@ class CreateController extends Controller
             'interestPeriods'     => $interestPeriods,
             'subTitle'            => $subTitle,
             'roles'               => $roles,
-            'liabilityTypes'      => $liabilityTypes
+            'liabilityTypes'      => $liabilityTypes,
         ]);
     }
 
@@ -136,8 +136,8 @@ class CreateController extends Controller
      */
     public function store(AccountFormRequest $request)
     {
-        $data    = $request->getAccountData();
-        $account = $this->repository->store($data);
+        $data      = $request->getAccountData();
+        $account   = $this->repository->store($data);
         $request->session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
         Preferences::mark();
 
@@ -155,7 +155,7 @@ class CreateController extends Controller
 
         // store attachment(s):
         /** @var null|array $files */
-        $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
+        $files     = $request->hasFile('attachments') ? $request->file('attachments') : null;
         if (null !== $files && !auth()->user()->hasRole('demo')) {
             $this->attachments->saveAttachmentsForModel($account, $files);
         }
@@ -169,7 +169,7 @@ class CreateController extends Controller
         }
 
         // redirect to previous URL.
-        $redirect = redirect($this->getPreviousUrl('accounts.create.url'));
+        $redirect  = redirect($this->getPreviousUrl('accounts.create.url'));
         if (1 === (int) $request->get('create_another')) {
             // set value so create routine will not overwrite URL:
             $request->session()->put('accounts.create.fromStore', true);

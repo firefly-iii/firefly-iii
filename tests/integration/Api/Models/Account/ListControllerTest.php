@@ -49,29 +49,32 @@ final class ListControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->user = $this->createAuthenticatedUser();
+        $this->user    = $this->createAuthenticatedUser();
         $this->actingAs($this->user);
 
         $this->account = Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::ASSET)
-            ->create();
+            ->create()
+        ;
         app(AttachmentFactory::class)
             ->setUser($this->user)
             ->create([
                 'filename'        => 'test 1',
                 'title'           => 'test 1',
                 'attachable_type' => Account::class,
-                'attachable_id'   => $this->account->id
-            ]);
+                'attachable_id'   => $this->account->id,
+            ])
+        ;
         app(AttachmentFactory::class)
             ->setUser($this->user)
             ->create([
                 'filename'        => 'test 2',
                 'title'           => 'test 2',
                 'attachable_type' => Account::class,
-                'attachable_id'   => $this->account->id
-            ]);
+                'attachable_id'   => $this->account->id,
+            ])
+        ;
     }
 
     public function testIndex(): void

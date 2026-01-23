@@ -41,31 +41,31 @@ class UpdateCheckCronjob extends AbstractCronjob
         Log::debug('Now in checkForUpdates()');
 
         // should not check for updates:
-        $permission = FireflyConfig::get('permission_update_check', -1);
-        $value      = (int) $permission->data;
+        $permission         = FireflyConfig::get('permission_update_check', -1);
+        $value              = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             // get stuff from job:
-            $this->jobFired = false;
-            $this->jobErrored = false;
+            $this->jobFired     = false;
+            $this->jobErrored   = false;
             $this->jobSucceeded = true;
-            $this->message = 'The update check is not enabled.';
+            $this->message      = 'The update check is not enabled.';
 
             return;
         }
 
         // TODO this is duplicate.
         /** @var Configuration $lastCheckTime */
-        $lastCheckTime = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
-        $now           = Carbon::now()->getTimestamp();
-        $diff          = $now - $lastCheckTime->data;
+        $lastCheckTime      = FireflyConfig::get('last_update_check', Carbon::now()->getTimestamp());
+        $now                = Carbon::now()->getTimestamp();
+        $diff               = $now - $lastCheckTime->data;
         Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800 && false === $this->force) {
             // get stuff from job:
-            $this->jobFired = false;
-            $this->jobErrored = false;
+            $this->jobFired     = false;
+            $this->jobErrored   = false;
             $this->jobSucceeded = true;
-            $this->message = sprintf(
+            $this->message      = sprintf(
                 'Checked for updates less than a week ago (on %s).',
                 Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
             );
@@ -74,20 +74,20 @@ class UpdateCheckCronjob extends AbstractCronjob
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release = $this->getLatestRelease();
+        $release            = $this->getLatestRelease();
         if ('error' === $release['level']) {
             // get stuff from job:
-            $this->jobFired = true;
-            $this->jobErrored = true;
+            $this->jobFired     = true;
+            $this->jobErrored   = true;
             $this->jobSucceeded = false;
-            $this->message = $release['message'];
+            $this->message      = $release['message'];
 
             return;
         }
         // get stuff from job:
-        $this->jobFired = true;
-        $this->jobErrored = false;
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
         $this->jobSucceeded = false;
-        $this->message = $release['message'];
+        $this->message      = $release['message'];
     }
 }

@@ -52,8 +52,8 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user  = $event->user;
-        $count = $repository->count();
+        $user       = $event->user;
+        $count      = $repository->count();
 
         // only act when there is 1 user in the system and he has no admin rights.
         if (1 === $count && !$repository->hasRole($user, 'owner')) {
@@ -80,7 +80,7 @@ class UserEventHandler
         $repository = app(UserRepositoryInterface::class);
 
         /** @var User $user */
-        $user = $event->user;
+        $user       = $event->user;
         if ($repository->hasRole($user, 'demo')) {
             // set user back to English.
             Preferences::setForUser($user, 'language', 'en_US');

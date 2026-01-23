@@ -50,11 +50,11 @@ class CategoryTransformer extends AbstractTransformer
     public function transform(Category $category): array
     {
         return [
-            'id'         => $category->id,
-            'created_at' => $category->created_at->toAtomString(),
-            'updated_at' => $category->updated_at->toAtomString(),
-            'name'       => $category->name,
-            'notes'      => $category->meta['notes'],
+            'id'                              => $category->id,
+            'created_at'                      => $category->created_at->toAtomString(),
+            'updated_at'                      => $category->updated_at->toAtomString(),
+            'name'                            => $category->name,
+            'notes'                           => $category->meta['notes'],
 
             // category never has currency settings.
             'object_has_currency_setting'     => false,
@@ -69,11 +69,11 @@ class CategoryTransformer extends AbstractTransformer
             'pc_earned'                       => $this->beautify($category->meta['pc_earned']),
             'transferred'                     => $this->beautify($category->meta['transfers']),
             'pc_transferred'                  => $this->beautify($category->meta['pc_transfers']),
-            'links'                           => [['rel' => 'self', 'uri' => '/categories/' . $category->id]]
+            'links'                           => [['rel' => 'self', 'uri' => '/categories/'.$category->id]],
         ];
     }
 
-    private function beautify(null|array $array): null|array
+    private function beautify(?array $array): ?array
     {
         if (null === $array) {
             return null;
@@ -81,7 +81,7 @@ class CategoryTransformer extends AbstractTransformer
         $return = [];
         foreach ($array as $data) {
             $data['sum'] = Steam::bcround($data['sum'], (int) $data['currency_decimal_places']);
-            $return[] = $data;
+            $return[]    = $data;
         }
 
         return $return;

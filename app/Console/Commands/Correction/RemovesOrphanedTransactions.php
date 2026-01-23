@@ -40,7 +40,7 @@ class RemovesOrphanedTransactions extends Command
 
     protected $description = 'Deletes orphaned transactions.';
 
-    protected $signature = 'correction:orphaned-transactions';
+    protected $signature   = 'correction:orphaned-transactions';
 
     /**
      * Execute the console command.
@@ -61,7 +61,8 @@ class RemovesOrphanedTransactions extends Command
         $set   = TransactionJournal::leftJoin('transaction_groups', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
             ->whereNotNull('transaction_groups.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
-            ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id']);
+            ->get(['transaction_journals.id', 'transaction_journals.transaction_group_id'])
+        ;
         $count = $set->count();
         if (0 === $count) {
             // $this->friendlyPositive('No orphaned journals.');
@@ -93,7 +94,8 @@ class RemovesOrphanedTransactions extends Command
             ->whereNotNull('transaction_journals.deleted_at')
             ->whereNull('transactions.deleted_at')
             ->whereNotNull('transactions.id')
-            ->get(['transaction_journals.id as journal_id', 'transactions.id as transaction_id']);
+            ->get(['transaction_journals.id as journal_id', 'transactions.id as transaction_id'])
+        ;
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {

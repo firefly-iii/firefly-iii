@@ -54,7 +54,7 @@ class UpdateController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             /** @var User $user */
-            $user = auth()->user();
+            $user               = auth()->user();
             $this->blRepository = app(BudgetLimitRepositoryInterface::class);
             $this->blRepository->setUser($user);
 
@@ -74,24 +74,24 @@ class UpdateController extends Controller
         if ($budget->id !== $budgetLimit->budget_id) {
             throw new FireflyException('20028: The budget limit does not belong to the budget.');
         }
-        $data = $request->getAll();
+        $data              = $request->getAll();
         $data['fire_webhooks'] ??= true;
         $data['budget_id'] = $budget->id;
-        $budgetLimit = $this->blRepository->update($budgetLimit, $data);
-        $manager     = $this->getManager();
+        $budgetLimit       = $this->blRepository->update($budgetLimit, $data);
+        $manager           = $this->getManager();
 
         // enrich
         /** @var User $admin */
-        $admin      = auth()->user();
-        $enrichment = new BudgetLimitEnrichment();
+        $admin             = auth()->user();
+        $enrichment        = new BudgetLimitEnrichment();
         $enrichment->setUser($admin);
-        $budgetLimit = $enrichment->enrichSingle($budgetLimit);
+        $budgetLimit       = $enrichment->enrichSingle($budgetLimit);
 
         /** @var BudgetLimitTransformer $transformer */
-        $transformer = app(BudgetLimitTransformer::class);
+        $transformer       = app(BudgetLimitTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
+        $resource          = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

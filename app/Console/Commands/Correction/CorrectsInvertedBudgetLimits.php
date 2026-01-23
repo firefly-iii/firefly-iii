@@ -39,7 +39,7 @@ class CorrectsInvertedBudgetLimits extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:corrects-inverted-budget-limits';
+    protected $signature   = 'correction:corrects-inverted-budget-limits';
 
     /**
      * The console command description.
@@ -62,10 +62,10 @@ class CorrectsInvertedBudgetLimits extends Command
 
         /** @var BudgetLimit $budgetLimit */
         foreach ($set as $budgetLimit) {
-            $start = $budgetLimit->start_date->copy();
-            $end   = $budgetLimit->end_date->copy();
+            $start                   = $budgetLimit->start_date->copy();
+            $end                     = $budgetLimit->end_date->copy();
             $budgetLimit->start_date = $end;
-            $budgetLimit->end_date = $start;
+            $budgetLimit->end_date   = $start;
             $budgetLimit->saveQuietly();
         }
         if (1 === $set->count()) {

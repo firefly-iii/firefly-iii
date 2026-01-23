@@ -72,9 +72,10 @@ class UserRegistration extends Notification
                 'ip'        => $ip,
                 'host'      => $host,
                 'userAgent' => $userAgent,
-                'time'      => $time
+                'time'      => $time,
             ])
-            ->subject((string) trans('email.registered_subject_admin'));
+            ->subject((string) trans('email.registered_subject_admin'))
+        ;
     }
 
     //    /**
@@ -101,7 +102,7 @@ class UserRegistration extends Notification
 
         return PushoverMessage::create((string) trans('email.admin_new_user_registered', [
             'email'   => $this->user->email,
-            'invitee' => $this->user->email
+            'invitee' => $this->user->email,
         ]))->title((string) trans('email.registered_subject_admin'));
     }
 

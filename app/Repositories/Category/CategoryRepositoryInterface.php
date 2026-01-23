@@ -60,16 +60,16 @@ interface CategoryRepositoryInterface
     /**
      * Find a category or return NULL
      */
-    public function find(int $categoryId): null|Category;
+    public function find(int $categoryId): ?Category;
 
     /**
      * Find a category.
      */
-    public function findByName(string $name): null|Category;
+    public function findByName(string $name): ?Category;
 
-    public function findCategory(null|int $categoryId, null|string $categoryName): null|Category;
+    public function findCategory(?int $categoryId, ?string $categoryName): ?Category;
 
-    public function firstUseDate(Category $category): null|Carbon;
+    public function firstUseDate(Category $category): ?Carbon;
 
     public function getAttachments(Category $category): Collection;
 
@@ -83,12 +83,12 @@ interface CategoryRepositoryInterface
      */
     public function getCategories(): Collection;
 
-    public function getNoteText(Category $category): null|string;
+    public function getNoteText(Category $category): ?string;
 
     /**
      * Return most recent transaction(journal) date or null when never used before.
      */
-    public function lastUseDate(Category $category, Collection $accounts): null|Carbon;
+    public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
     /**
      * Remove notes.

@@ -50,9 +50,9 @@ class CategoryController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             $this->opsRepository = app(OperationsRepositoryInterface::class);
-            $this->repository = app(CategoryRepositoryInterface::class);
-            $this->noRepository = app(NoCategoryRepositoryInterface::class);
-            $user = auth()->user();
+            $this->repository    = app(CategoryRepositoryInterface::class);
+            $this->noRepository  = app(NoCategoryRepositoryInterface::class);
+            $user                = auth()->user();
             $this->opsRepository->setUser($user);
             $this->repository->setUser($user);
             $this->noRepository->setUser($user);
@@ -83,8 +83,8 @@ class CategoryController extends Controller
                     'name'             => $category->name,
                     'difference'       => $expense['sum'],
                     'difference_float' => (float) $expense['sum'], // float but on purpose.
-                    'currency_id'   => (string) $expense['currency_id'],
-                    'currency_code' => $expense['currency_code']
+                    'currency_id'      => (string) $expense['currency_id'],
+                    'currency_code'    => $expense['currency_code'],
                 ];
             }
         }
@@ -105,8 +105,8 @@ class CategoryController extends Controller
             $result[] = [
                 'difference'       => $expense['sum'],
                 'difference_float' => (float) $expense['sum'], // float but on purpose.
-                'currency_id'   => (string) $expense['currency_id'],
-                'currency_code' => $expense['currency_code']
+                'currency_id'      => (string) $expense['currency_id'],
+                'currency_code'    => $expense['currency_code'],
             ];
         }
 

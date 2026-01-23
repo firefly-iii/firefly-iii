@@ -69,12 +69,12 @@ class HandlesNewUserRegistration
      */
     private function createGroupMembership(User $user): void
     {
-        $groupExists = true;
-        $groupTitle  = $user->email;
-        $index       = 1;
+        $groupExists         = true;
+        $groupTitle          = $user->email;
+        $index               = 1;
 
         /** @var null|UserGroup $group */
-        $group = null;
+        $group               = null;
 
         // create a new group.
         while ($groupExists) { // @phpstan-ignore-line
@@ -84,7 +84,7 @@ class HandlesNewUserRegistration
 
                 break;
             }
-            $groupTitle = sprintf('%s-%d', $user->email, $index);
+            $groupTitle  = sprintf('%s-%d', $user->email, $index);
             ++$index;
             if ($index > 99) {
                 throw new FireflyException('Email address can no longer be used for registrations.');
@@ -92,7 +92,7 @@ class HandlesNewUserRegistration
         }
 
         /** @var null|UserRole $role */
-        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $role                = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
@@ -116,6 +116,7 @@ class HandlesNewUserRegistration
         if (!$sendMail) {
             return;
         }
+
         try {
             Notification::send($owner, new AdminRegistrationNotification($user));
         } catch (Exception $e) {
@@ -141,6 +142,7 @@ class HandlesNewUserRegistration
         if (!$sendMail) {
             return;
         }
+
         try {
             Notification::send($user, new UserRegistrationNotification());
         } catch (Exception $e) {

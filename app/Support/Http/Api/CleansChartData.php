@@ -47,7 +47,7 @@ trait CleansChartData
          * @var array $array
          */
         foreach ($data as $index => $array) {
-            $array = $this->cleanSingleArray($index, $array);
+            $array    = $this->cleanSingleArray($index, $array);
             $return[] = $array;
         }
 

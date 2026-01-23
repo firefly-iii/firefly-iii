@@ -48,7 +48,7 @@ class InvitationMail extends Mailable
         public string $admin,
         public string $url
     ) {
-        $host = parse_url($this->url, PHP_URL_HOST);
+        $host       = parse_url($this->url, PHP_URL_HOST);
         if (is_array($host)) {
             $host = '';
         }

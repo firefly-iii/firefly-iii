@@ -63,43 +63,43 @@ class PiggyBankController extends Controller
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
         // chart properties for cache:
-        $cache = new CacheProperties();
+        $cache                  = new CacheProperties();
         $cache->addProperty('chart.piggy-bank.history');
         $cache->addProperty($piggyBank->id);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
-        $set    = $repository->getEvents($piggyBank);
-        $set    = $set->reverse();
-        $locale = Steam::getLocale();
+        $set                    = $repository->getEvents($piggyBank);
+        $set                    = $set->reverse();
+        $locale                 = Steam::getLocale();
 
         // get first event or start date of piggy bank or today
-        $startDate = $piggyBank->start_date ?? today(config('app.timezone'));
+        $startDate              = $piggyBank->start_date ?? today(config('app.timezone'));
 
         /** @var null|PiggyBankEvent $firstEvent */
-        $firstEvent = $set->first();
-        $firstDate  = null === $firstEvent ? new Carbon() : $firstEvent->date;
+        $firstEvent             = $set->first();
+        $firstDate              = null === $firstEvent ? new Carbon() : $firstEvent->date;
 
         // which ever is older:
-        $oldest = $startDate->lt($firstDate) ? $startDate : $firstDate;
-        $today  = today(config('app.timezone'));
+        $oldest                 = $startDate->lt($firstDate) ? $startDate : $firstDate;
+        $today                  = today(config('app.timezone'));
         // depending on diff, do something with range of chart.
-        $step = $this->calculateStep($oldest, $today);
+        $step                   = $this->calculateStep($oldest, $today);
 
-        $chartData = [];
+        $chartData              = [];
         while ($oldest <= $today) {
-            $filtered   = $set->filter(static fn(PiggyBankEvent $event) => $event->date->lte($oldest));
-            $currentSum = $filtered->sum('amount');
-            $label      = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
+            $filtered          = $set->filter(static fn (PiggyBankEvent $event) => $event->date->lte($oldest));
+            $currentSum        = $filtered->sum('amount');
+            $label             = $oldest->isoFormat((string) trans('config.month_and_day_js', [], $locale));
             $chartData[$label] = $currentSum;
-            $oldest = Navigation::addPeriod($oldest, $step);
+            $oldest            = Navigation::addPeriod($oldest, $step);
         }
-        $finalFiltered = $set->filter(static fn(PiggyBankEvent $event) => $event->date->lte($today));
-        $finalSum      = $finalFiltered->sum('amount');
-        $finalLabel    = $today->isoFormat((string) trans('config.month_and_day_js', [], $locale));
+        $finalFiltered          = $set->filter(static fn (PiggyBankEvent $event) => $event->date->lte($today));
+        $finalSum               = $finalFiltered->sum('amount');
+        $finalLabel             = $today->isoFormat((string) trans('config.month_and_day_js', [], $locale));
         $chartData[$finalLabel] = $finalSum;
 
-        $data = $this->generator->singleSet($piggyBank->name, $chartData);
+        $data                   = $this->generator->singleSet($piggyBank->name, $chartData);
         $cache->store($data);
 
         return response()->json($data);

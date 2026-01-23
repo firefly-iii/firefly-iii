@@ -50,11 +50,11 @@ class SetSourceToCashAccount implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user = User::find($journal['user_id']);
+        $user        = User::find($journal['user_id']);
 
         /** @var null|TransactionJournal $object */
-        $object     = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
-        $repository = app(AccountRepositoryInterface::class);
+        $object      = $user->transactionJournals()->find((int) $journal['transaction_journal_id']);
+        $repository  = app(AccountRepositoryInterface::class);
 
         if (null === $object) {
             Log::error('Could not find journal.');
@@ -62,7 +62,7 @@ class SetSourceToCashAccount implements ActionInterface
 
             return false;
         }
-        $type = $object->transactionType->type;
+        $type        = $object->transactionType->type;
         if (TransactionTypeEnum::DEPOSIT->value !== $type) {
             Log::error('Transaction must be deposit.');
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.not_deposit')));
@@ -108,7 +108,8 @@ class SetSourceToCashAccount implements ActionInterface
         DB::table('transactions')
             ->where('transaction_journal_id', '=', $object->id)
             ->where('amount', '<', 0)
-            ->update(['account_id' => $cashAccount->id]);
+            ->update(['account_id' => $cashAccount->id])
+        ;
 
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 

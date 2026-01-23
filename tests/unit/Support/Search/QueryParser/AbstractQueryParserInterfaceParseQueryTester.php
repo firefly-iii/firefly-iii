@@ -64,7 +64,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 
         yield 'multiple words' => [
             'groceries shopping market',
-            new NodeGroup([new StringNode('groceries'), new StringNode('shopping'), new StringNode('market')])
+            new NodeGroup([new StringNode('groceries'), new StringNode('shopping'), new StringNode('market')]),
         ];
 
         yield 'field operator' => ['amount:100', new NodeGroup([new FieldNode('amount', '100')])];
@@ -75,43 +75,43 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 
         yield 'simple subquery' => [
             '(amount:100 category:food)',
-            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')])])
+            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')])]),
         ];
 
         yield 'prohibited subquery' => [
             '-(amount:100 category:food)',
-            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')], true)])
+            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')], true)]),
         ];
 
         yield 'nested subquery' => [
             '(amount:100 (description:"test" category:food))',
             new NodeGroup([new NodeGroup([
                 new FieldNode('amount', '100'),
-                new NodeGroup([new FieldNode('description', 'test'), new FieldNode('category', 'food')])
-            ])])
+                new NodeGroup([new FieldNode('description', 'test'), new FieldNode('category', 'food')]),
+            ])]),
         ];
 
         yield 'mixed words and operators' => [
             'groceries amount:50 shopping',
-            new NodeGroup([new StringNode('groceries'), new FieldNode('amount', '50'), new StringNode('shopping')])
+            new NodeGroup([new StringNode('groceries'), new FieldNode('amount', '50'), new StringNode('shopping')]),
         ];
 
         yield 'subquery after field value' => [
             'amount:100 (description:"market" category:food)',
-            new NodeGroup([new FieldNode('amount', '100'), new NodeGroup([new FieldNode('description', 'market'), new FieldNode('category', 'food')])])
+            new NodeGroup([new FieldNode('amount', '100'), new NodeGroup([new FieldNode('description', 'market'), new FieldNode('category', 'food')])]),
         ];
 
         yield 'word followed by subquery' => [
             'groceries (amount:100 description_contains:"test")',
-            new NodeGroup([new StringNode('groceries'), new NodeGroup([new FieldNode('amount', '100'), new FieldNode('description_contains', 'test')])])
+            new NodeGroup([new StringNode('groceries'), new NodeGroup([new FieldNode('amount', '100'), new FieldNode('description_contains', 'test')])]),
         ];
 
         yield 'nested subquery with prohibited field' => [
             '(amount:100 (description_contains:"test payment" -has_attachments:true))',
             new NodeGroup([new NodeGroup([
                 new FieldNode('amount', '100'),
-                new NodeGroup([new FieldNode('description_contains', 'test payment'), new FieldNode('has_attachments', 'true', true)])
-            ])])
+                new NodeGroup([new FieldNode('description_contains', 'test payment'), new FieldNode('has_attachments', 'true', true)]),
+            ])]),
         ];
 
         yield 'complex nested subqueries' => [
@@ -125,17 +125,17 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
                         new FieldNode('category', 'food', true),
                         new StringNode('word'),
                         new FieldNode('description', 'test phrase'),
-                        new NodeGroup([new FieldNode('has_notes', 'true')])
-                    ])
-                ])
-            ])
+                        new NodeGroup([new FieldNode('has_notes', 'true')]),
+                    ]),
+                ]),
+            ]),
         ];
 
         yield 'word with multiple spaces' => ['"multiple   spaces"', new NodeGroup([new StringNode('multiple   spaces')])];
 
         yield 'field with multiple spaces in value' => [
             'description:"multiple   spaces   here"',
-            new NodeGroup([new FieldNode('description', 'multiple   spaces   here')])
+            new NodeGroup([new FieldNode('description', 'multiple   spaces   here')]),
         ];
 
         yield 'unmatched right parenthesis in word' => ['test)word', new NodeGroup([new StringNode('test)word')])];
@@ -144,7 +144,7 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 
         yield 'subquery followed by word' => [
             '(amount:100 category:food) shopping',
-            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')]), new StringNode('shopping')])
+            new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')]), new StringNode('shopping')]),
         ];
     }
 }

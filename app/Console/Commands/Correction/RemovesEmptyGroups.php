@@ -47,9 +47,10 @@ class RemovesEmptyGroups extends Command
             ->whereNull('transaction_journals.id')
             ->get(['transaction_groups.id'])
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
 
-        $total = count($groupIds);
+        $total    = count($groupIds);
         if ($total > 0) {
             $this->friendlyInfo(sprintf('Deleted %d empty transaction group(s).', $total));
 

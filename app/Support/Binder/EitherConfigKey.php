@@ -61,7 +61,7 @@ class EitherConfigKey
         // webhooks
         'webhook.triggers',
         'webhook.responses',
-        'webhook.deliveries'
+        'webhook.deliveries',
     ];
 
     /**

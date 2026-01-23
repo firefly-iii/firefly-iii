@@ -34,7 +34,7 @@ class RepairsPostgresSequences extends Command
 
     protected $description = 'Fixes issues with PostgreSQL sequences.';
 
-    protected $signature = 'upgrade:600-pgsql-sequences';
+    protected $signature   = 'upgrade:600-pgsql-sequences';
 
     /**
      * Execute the console command.
@@ -100,7 +100,7 @@ class RepairsPostgresSequences extends Command
             'users',
             'webhook_attempts',
             'webhook_messages',
-            'webhooks'
+            'webhooks',
         ];
 
         foreach ($tablesToCheck as $tableToCheck) {

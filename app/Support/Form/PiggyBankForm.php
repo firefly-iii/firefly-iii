@@ -41,7 +41,7 @@ class PiggyBankForm
      *
      * @param mixed $value
      */
-    public function piggyBankList(string $name, $value = null, null|array $options = null): string
+    public function piggyBankList(string $name, $value = null, ?array $options = null): string
     {
         // make repositories
         /** @var PiggyBankRepositoryInterface $repository */
@@ -53,9 +53,9 @@ class PiggyBankForm
 
         /** @var PiggyBank $piggy */
         foreach ($piggyBanks as $piggy) {
-            $group      = $piggy->objectGroups->first();
-            $groupTitle = null;
-            $groupOrder = 0;
+            $group                                       = $piggy->objectGroups->first();
+            $groupTitle                                  = null;
+            $groupOrder                                  = 0;
             if (null !== $group) {
                 $groupTitle = $group->title;
                 $groupOrder = $group->order;
@@ -65,7 +65,7 @@ class PiggyBankForm
         }
         ksort($subList);
         foreach ($subList as $info) {
-            $groupTitle = $info['group']['title'];
+            $groupTitle         = $info['group']['title'];
             $array[$groupTitle] = $info['piggies'];
         }
 

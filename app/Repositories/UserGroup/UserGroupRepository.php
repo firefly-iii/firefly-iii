@@ -54,7 +54,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         /** @var GroupMembership $membership */
         foreach ($memberships as $membership) {
             /** @var null|User $user */
-            $user = $membership->user()->first();
+            $user  = $membership->user()->first();
             if (null === $user) {
                 continue;
             }
@@ -63,7 +63,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             $count = $user->groupMemberships()->where('user_group_id', '!=', $userGroup->id)->count();
             if (0 === $count) {
                 Log::debug('User has no other memberships and needs a new user group.');
-                $newUserGroup = $this->createNewUserGroup($user);
+                $newUserGroup        = $this->createNewUserGroup($user);
                 $user->user_group_id = $newUserGroup->id;
                 $user->save();
                 Log::debug(sprintf('Make new group #%d ("%s")', $newUserGroup->id, $newUserGroup->title));
@@ -73,7 +73,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
                 Log::debug('User has other memberships and will be assigned a new administration.');
 
                 /** @var GroupMembership $first */
-                $first = $user->groupMemberships()->where('user_group_id', '!=', $userGroup->id)->inRandomOrder()->first();
+                $first               = $user->groupMemberships()->where('user_group_id', '!=', $userGroup->id)->inRandomOrder()->first();
                 $user->user_group_id = $first->id;
                 $user->save();
             }
@@ -83,7 +83,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         // all users are now moved away from user group.
         // time to DESTROY all objects.
         // we have to do this one by one to trigger the necessary observers :(
-        $objects = [
+        $objects     = [
             'availableBudgets',
             'bills',
             'budgets',
@@ -98,7 +98,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             'transactionJournals',
             'piggyBanks',
             'accounts',
-            'webhooks'
+            'webhooks',
         ];
         foreach ($objects as $object) {
             foreach ($userGroup->{$object}()->get() as $item) { // @phpstan-ignore-line
@@ -123,7 +123,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             /** @var null|UserGroup $group */
             $group = $membership->userGroup()->first();
             if (null !== $group) {
-                $groupId = $group->id;
+                $groupId       = $group->id;
                 if (in_array($groupId, array_keys($set), true)) {
                     continue;
                 }
@@ -148,18 +148,18 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         while ($exists && $loop < 10) {
             $existingGroup = $this->findByName($groupName);
             if (!$existingGroup instanceof UserGroup) {
-                $exists = false;
+                $exists        = false;
 
                 $existingGroup = $this->store(['user'  => $user, 'title' => $groupName]);
             }
-            $groupName = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999) . microtime()), 0, 4));
+            $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
             ++$loop;
         }
 
         return $existingGroup;
     }
 
-    public function findByName(string $title): null|UserGroup
+    public function findByName(string $title): ?UserGroup
     {
         return UserGroup::whereTitle($title)->first();
     }
@@ -172,7 +172,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         $data['user'] = $this->user;
 
         /** @var UserGroupFactory $factory */
-        $factory = app(UserGroupFactory::class);
+        $factory      = app(UserGroupFactory::class);
 
         return $factory->create($data);
     }
@@ -186,7 +186,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     }
 
     #[Override]
-    public function getById(int $id): null|UserGroup
+    public function getById(int $id): ?UserGroup
     {
         return UserGroup::find($id);
     }
@@ -197,17 +197,18 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         return $this->user
             ->groupMemberships()
             ->where('user_group_id', $groupId)
-            ->get();
+            ->get()
+        ;
     }
 
     public function update(UserGroup $userGroup, array $data): UserGroup
     {
         $userGroup->title = $data['title'];
         $userGroup->save();
-        $currency = null;
+        $currency         = null;
 
         /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
+        $repository       = app(CurrencyRepositoryInterface::class);
 
         if (array_key_exists('primary_currency_code', $data)) {
             $repository->setUser($this->user);
@@ -232,11 +233,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
      */
     public function updateMembership(UserGroup $userGroup, array $data): UserGroup
     {
-        $owner = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
+        $owner           = UserRole::whereTitle(UserRoleEnum::OWNER)->first();
         Log::debug('in update membership');
 
         /** @var null|User $user */
-        $user = null;
+        $user            = null;
         if (array_key_exists('id', $data)) {
             /** @var null|User $user */
             $user = User::find($data['id']);

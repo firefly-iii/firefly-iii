@@ -65,14 +65,14 @@ class AppServiceProvider extends ServiceProvider
             return '';
         });
         Blade::if('partialroute', function (string $route, string $firstParam = ''): bool {
-            $name = Route::getCurrentRoute()->getName() ?? '';
+            $name       = Route::getCurrentRoute()->getName() ?? '';
             if ('' === $firstParam && str_contains($name, $route)) {
                 return true;
             }
 
             /** @var null|array $params */
             $params     = Route::getCurrentRoute()->parameters();
-            $params     ??= [];
+            $params ??= [];
             $objectType = $params['objectType'] ?? '';
 
             return $objectType === $firstParam && str_contains($name, $route);

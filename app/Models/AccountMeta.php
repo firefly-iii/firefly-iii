@@ -51,8 +51,8 @@ class AccountMeta extends Model
     protected function data(): Attribute
     {
         return Attribute::make(
-            get: static fn(mixed $value): string => (string) json_decode((string) $value, true),
-            set: static fn(mixed $value): array => ['data' => json_encode($value)]
+            get: static fn (mixed $value): string => (string) json_decode((string) $value, true),
+            set: static fn (mixed $value): array => ['data' => json_encode($value)]
         );
     }
 }

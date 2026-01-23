@@ -44,7 +44,7 @@ final class NavigationCustomEndOfPeriodTest extends TestCase
         $expected   = Carbon::parse('2023-09-04');
         $navigation = new Navigation();
 
-        $period = $navigation->endOfPeriod($from, 'custom');
+        $period     = $navigation->endOfPeriod($from, 'custom');
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
 }

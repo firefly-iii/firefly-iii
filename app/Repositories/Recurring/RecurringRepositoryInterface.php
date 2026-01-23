@@ -73,27 +73,27 @@ interface RecurringRepositoryInterface
     /**
      * Get the category from a recurring transaction transaction.
      */
-    public function getBillId(RecurrenceTransaction $recTransaction): null|int;
+    public function getBillId(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Get the budget ID from a recurring transaction transaction.
      */
-    public function getBudget(RecurrenceTransaction $recTransaction): null|int;
+    public function getBudget(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Get the category from a recurring transaction transaction.
      */
-    public function getCategoryId(RecurrenceTransaction $recTransaction): null|int;
+    public function getCategoryId(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Get the category from a recurring transaction transaction.
      */
-    public function getCategoryName(RecurrenceTransaction $recTransaction): null|string;
+    public function getCategoryName(RecurrenceTransaction $recTransaction): ?string;
 
     /**
      * Returns the count of journals created for this recurrence, possibly limited by time.
      */
-    public function getJournalCount(Recurrence $recurrence, null|Carbon $start = null, null|Carbon $end = null): int;
+    public function getJournalCount(Recurrence $recurrence, ?Carbon $start = null, ?Carbon $end = null): int;
 
     /**
      * Get journal ID's for journals created by this recurring transaction.
@@ -110,7 +110,7 @@ interface RecurringRepositoryInterface
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array;
 
-    public function getPiggyBank(RecurrenceTransaction $transaction): null|int;
+    public function getPiggyBank(RecurrenceTransaction $transaction): ?int;
 
     /**
      * Get the tags from the recurring transaction.

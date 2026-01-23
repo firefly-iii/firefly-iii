@@ -48,9 +48,9 @@ final class BudgetControllerTest extends TestCase
         for ($i = 1; $i <= $count; ++$i) {
             $budget = Budget::create([
                 'user_id'       => $user->id,
-                'name'          => 'Budget ' . $i,
+                'name'          => 'Budget '.$i,
                 'user_group_id' => $user->user_group_id,
-                'active'        => 1
+                'active'        => 1,
             ]);
         }
     }
@@ -67,7 +67,7 @@ final class BudgetControllerTest extends TestCase
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturns200HttpCode(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
@@ -77,7 +77,7 @@ final class BudgetControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
@@ -91,7 +91,7 @@ final class BudgetControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
@@ -104,7 +104,7 @@ final class BudgetControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsThatMatchQuery(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestBudgets(20, $user);

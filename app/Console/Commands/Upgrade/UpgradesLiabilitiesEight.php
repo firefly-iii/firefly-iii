@@ -44,8 +44,8 @@ class UpgradesLiabilitiesEight extends Command
 
     public const string CONFIG_NAME = '600_upgrade_liabilities';
 
-    protected $description = 'Upgrade liabilities to new 6.0.0 structure.';
-    protected $signature   = 'upgrade:600-liabilities {--F|force : Force the execution of this command.}';
+    protected $description          = 'Upgrade liabilities to new 6.0.0 structure.';
+    protected $signature            = 'upgrade:600-liabilities {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -86,7 +86,8 @@ class UpgradesLiabilitiesEight extends Command
             ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereIn('account_types.type', config('firefly.valid_liabilities'))
-            ->get(['accounts.*']);
+            ->get(['accounts.*'])
+        ;
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -103,7 +104,7 @@ class UpgradesLiabilitiesEight extends Command
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        $direction = $repository->getMetaValue($account, 'liability_direction');
+        $direction  = $repository->getMetaValue($account, 'liability_direction');
         if ('credit' === $direction && $this->hasBadOpening($account)) {
             $this->deleteCreditTransaction($account);
             $this->reverseOpeningBalance($account);
@@ -124,14 +125,16 @@ class UpgradesLiabilitiesEight extends Command
         $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
         if (null === $openingJournal) {
             return false;
         }
-        $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $liabilityJournal   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
         if (null === $liabilityJournal) {
             return false;
         }
@@ -145,7 +148,8 @@ class UpgradesLiabilitiesEight extends Command
         $liabilityJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $liabilityType->id)
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
         if (null !== $liabilityJournal && null !== $liabilityJournal->transactionGroup) {
             $group   = $liabilityJournal->transactionGroup;
             $service = new TransactionGroupDestroyService();
@@ -158,20 +162,21 @@ class UpgradesLiabilitiesEight extends Command
         $openingBalanceType = TransactionType::whereType(TransactionTypeEnum::OPENING_BALANCE->value)->first();
 
         /** @var TransactionJournal $openingJournal */
-        $openingJournal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+        $openingJournal     = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transactions.account_id', $account->id)
             ->where('transaction_journals.transaction_type_id', $openingBalanceType->id)
-            ->first(['transaction_journals.*']);
+            ->first(['transaction_journals.*'])
+        ;
 
         /** @var null|Transaction $source */
-        $source = $openingJournal->transactions()->where('amount', '<', 0)->first();
+        $source             = $openingJournal->transactions()->where('amount', '<', 0)->first();
 
         /** @var null|Transaction $dest */
-        $dest = $openingJournal->transactions()->where('amount', '>', 0)->first();
+        $dest               = $openingJournal->transactions()->where('amount', '>', 0)->first();
         if (null !== $source && null !== $dest) {
-            $sourceId = $source->account_id;
-            $destId   = $dest->account_id;
-            $dest->account_id = $sourceId;
+            $sourceId           = $source->account_id;
+            $destId             = $dest->account_id;
+            $dest->account_id   = $sourceId;
             $source->account_id = $destId;
             $source->save();
             $dest->save();
@@ -189,7 +194,7 @@ class UpgradesLiabilitiesEight extends Command
             $account->id
         )->get(['transaction_journals.*']);
 
-        $service = app(TransactionGroupDestroyService::class);
+        $service  = app(TransactionGroupDestroyService::class);
 
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {

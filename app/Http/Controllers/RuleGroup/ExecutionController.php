@@ -71,8 +71,8 @@ class ExecutionController extends Controller
     {
         Log::debug(sprintf('You have selected rule group #%d', $ruleGroup->id));
         // Get parameters specified by the user
-        $accounts = $request->get('accounts');
-        $set      = new Collection();
+        $accounts  = $request->get('accounts');
+        $set       = new Collection();
         if (is_array($accounts)) {
             $set = $this->repository->getAccountsById($accounts);
         }
@@ -92,8 +92,8 @@ class ExecutionController extends Controller
             $endDate = new Carbon($request->get('end'));
             $collector->setEnd($endDate);
         }
-        $final = $collector->getGroups();
-        $ids   = $final->pluck('id')->toArray();
+        $final     = $collector->getGroups();
+        $ids       = $final->pluck('id')->toArray();
         Log::debug(sprintf('Found %d groups collected from %d account(s)', $final->count(), $set->count()));
         foreach (array_chunk($ids, 1337) as $setOfIds) {
             Log::debug(sprintf('Now processing %d groups', count($setOfIds)));

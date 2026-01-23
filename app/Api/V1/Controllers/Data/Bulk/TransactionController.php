@@ -74,7 +74,7 @@ class TransactionController extends Controller
             $destination = $this->repository->find((int) $params['update']['account_id']);
 
             /** @var AccountDestroyService $service */
-            $service = app(AccountDestroyService::class);
+            $service     = app(AccountDestroyService::class);
             $service->moveTransactions($original, $destination);
         }
 

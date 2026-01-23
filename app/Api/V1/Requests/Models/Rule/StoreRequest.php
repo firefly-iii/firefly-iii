@@ -47,7 +47,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields = [
+        $fields           = [
             'title'            => ['title', 'convertString'],
             'description'      => ['description', 'convertString'],
             'rule_group_id'    => ['rule_group_id', 'convertInteger'],
@@ -56,11 +56,11 @@ class StoreRequest extends FormRequest
             'trigger'          => ['trigger', 'convertString'],
             'strict'           => ['strict', 'boolean'],
             'stop_processing'  => ['stop_processing', 'boolean'],
-            'active'           => ['active', 'boolean']
+            'active'           => ['active', 'boolean'],
         ];
-        $data   = $this->getAllData($fields);
+        $data             = $this->getAllData($fields);
         $data['triggers'] = $this->getRuleTriggers();
-        $data['actions'] = $this->getRuleActions();
+        $data['actions']  = $this->getRuleActions();
 
         return $data;
     }
@@ -76,7 +76,7 @@ class StoreRequest extends FormRequest
                     'value'           => $trigger['value'] ?? null,
                     'prohibited'      => $this->convertBoolean((string) ($trigger['prohibited'] ?? 'false')),
                     'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false'))
+                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -94,7 +94,7 @@ class StoreRequest extends FormRequest
                     'type'            => $action['type'],
                     'value'           => $action['value'],
                     'active'          => $this->convertBoolean((string) ($action['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false'))
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
                 ];
             }
         }
@@ -107,8 +107,8 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $validTriggers = $this->getTriggers();
-        $validActions  = array_keys(config('firefly.rule-actions'));
+        $validTriggers   = $this->getTriggers();
+        $validActions    = array_keys(config('firefly.rule-actions'));
 
         // some triggers and actions require text:
         $contextTriggers = implode(',', $this->getTriggersWithContext());
@@ -120,17 +120,17 @@ class StoreRequest extends FormRequest
             'rule_group_id'              => 'belongsToUser:rule_groups|required_without:rule_group_title',
             'rule_group_title'           => 'nullable|min:1|max:255|required_without:rule_group_id|belongsToUser:rule_groups,title',
             'trigger'                    => 'required|in:store-journal,update-journal,manual-activation',
-            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue|max:1024',
+            'triggers.*.type'            => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value'           => 'required_if:actions.*.type,'.$contextTriggers.'|min:1|ruleTriggerValue|max:1024',
             'triggers.*.stop_processing' => [new IsBoolean()],
             'triggers.*.active'          => [new IsBoolean()],
-            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
+            'actions.*.type'             => 'required|in:'.implode(',', $validActions),
             'actions.*.value'            => [sprintf('required_if:actions.*.type,%s', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
             'actions.*.stop_processing'  => [new IsBoolean()],
             'actions.*.active'           => [new IsBoolean()],
             'strict'                     => [new IsBoolean()],
             'stop_processing'            => [new IsBoolean()],
-            'active'                     => [new IsBoolean()]
+            'active'                     => [new IsBoolean()],
         ];
     }
 
@@ -181,10 +181,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveTrigger(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data          = $validator->getData();
 
         /** @var null|array|int|string $triggers */
-        $triggers = $data['triggers'] ?? [];
+        $triggers      = $data['triggers'] ?? [];
         // need at least one trigger
         if (!is_countable($triggers) || 0 === count($triggers)) {
             return;
@@ -210,10 +210,10 @@ class StoreRequest extends FormRequest
      */
     protected function atLeastOneActiveAction(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data          = $validator->getData();
 
         /** @var null|array|int|string $actions */
-        $actions = $data['actions'] ?? [];
+        $actions       = $data['actions'] ?? [];
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
             return;

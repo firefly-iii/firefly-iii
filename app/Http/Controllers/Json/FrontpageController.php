@@ -52,24 +52,24 @@ class FrontpageController extends Controller
             $pcAmount = $repository->getCurrentPrimaryCurrencyAmount($piggyBank);
             if (1 === bccomp($amount, '0')) {
                 // percentage!
-                $pct = 0;
+                $pct    = 0;
                 if (0 !== bccomp((string) $piggyBank->target_amount, '0')) {
                     $pct = (int) bcmul(bcdiv($amount, (string) $piggyBank->target_amount), '100');
                 }
 
-                $entry = [
-                    'id'         => $piggyBank->id,
-                    'name'       => $piggyBank->name,
-                    'amount'     => $amount,
-                    'pc_amount'  => $pcAmount,
-                    'target'     => $piggyBank->target_amount,
-                    'pc_target'  => $piggyBank->native_target_amount,
-                    'percentage' => $pct,
+                $entry  = [
+                    'id'                              => $piggyBank->id,
+                    'name'                            => $piggyBank->name,
+                    'amount'                          => $amount,
+                    'pc_amount'                       => $pcAmount,
+                    'target'                          => $piggyBank->target_amount,
+                    'pc_target'                       => $piggyBank->native_target_amount,
+                    'percentage'                      => $pct,
                     // currency:
                     'currency_symbol'                 => $piggyBank->transactionCurrency->symbol,
                     'currency_decimal_places'         => $piggyBank->transactionCurrency->decimal_places,
                     'primary_currency_symbol'         => $this->primaryCurrency->symbol,
-                    'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places
+                    'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
                 ];
 
                 $info[] = $entry;
@@ -77,7 +77,7 @@ class FrontpageController extends Controller
         }
 
         // sort by current percentage (lowest at the top)
-        uasort($info, static fn(array $a, array $b): int => $a['percentage'] <=> $b['percentage']);
+        uasort($info, static fn (array $a, array $b): int => $a['percentage'] <=> $b['percentage']);
 
         $html = '';
         if (0 !== count($info)) {
@@ -87,7 +87,7 @@ class FrontpageController extends Controller
                 $html             = view('json.piggy-banks', [
                     'info'             => $info,
                     'convertToPrimary' => $convertToPrimary,
-                    'primary'          => $primary
+                    'primary'          => $primary,
                 ])->render();
             } catch (Throwable $e) {
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));

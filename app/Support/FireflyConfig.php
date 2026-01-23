@@ -39,7 +39,7 @@ class FireflyConfig
 {
     public function delete(string $name): void
     {
-        $fullName = 'ff3-config-' . $name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             Cache::forget($fullName);
         }
@@ -51,9 +51,9 @@ class FireflyConfig
      *
      * @throws FireflyException
      */
-    public function get(string $name, mixed $default = null): null|Configuration
+    public function get(string $name, mixed $default = null): ?Configuration
     {
-        $fullName = 'ff3-config-' . $name;
+        $fullName = 'ff3-config-'.$name;
         if (Cache::has($fullName)) {
             return Cache::get($fullName);
         }
@@ -78,7 +78,7 @@ class FireflyConfig
         return $this->set($name, $default);
     }
 
-    public function getEncrypted(string $name, mixed $default = null): null|Configuration
+    public function getEncrypted(string $name, mixed $default = null): ?Configuration
     {
         $result = $this->get($name, $default);
         if (!$result instanceof Configuration) {
@@ -101,7 +101,7 @@ class FireflyConfig
         return $result;
     }
 
-    public function getFresh(string $name, mixed $default = null): null|Configuration
+    public function getFresh(string $name, mixed $default = null): ?Configuration
     {
         $config = Configuration::where('name', $name)->first(['id', 'name', 'data']);
         if (null !== $config) {
@@ -134,7 +134,7 @@ class FireflyConfig
             $config = Configuration::whereName($name)->whereNull('deleted_at')->first();
         } catch (QueryException $e) {
             Log::error($e->getMessage());
-            $item = new Configuration();
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
 
@@ -142,17 +142,17 @@ class FireflyConfig
         }
 
         if (null === $config) {
-            $item = new Configuration();
+            $item       = new Configuration();
             $item->name = $name;
             $item->data = $value;
             $item->save();
-            Cache::forget('ff3-config-' . $name);
+            Cache::forget('ff3-config-'.$name);
 
             return $item;
         }
         $config->data = $value;
         $config->save();
-        Cache::forget('ff3-config-' . $name);
+        Cache::forget('ff3-config-'.$name);
 
         return $config;
     }

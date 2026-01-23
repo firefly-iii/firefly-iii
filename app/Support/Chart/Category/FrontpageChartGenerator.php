@@ -45,7 +45,7 @@ class FrontpageChartGenerator
     public bool $convertToPrimary = false;
     public TransactionCurrency $primaryCurrency;
     private AccountRepositoryInterface $accountRepos;
-    private array $currencies = [];
+    private array $currencies     = [];
     private NoCategoryRepositoryInterface $noCatRepos;
     private OperationsRepositoryInterface $opsRepos;
     private CategoryRepositoryInterface $repository;
@@ -57,31 +57,31 @@ class FrontpageChartGenerator
         private Carbon $start,
         private Carbon $end
     ) {
-        $this->repository = app(CategoryRepositoryInterface::class);
+        $this->repository   = app(CategoryRepositoryInterface::class);
         $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->opsRepos = app(OperationsRepositoryInterface::class);
-        $this->noCatRepos = app(NoCategoryRepositoryInterface::class);
+        $this->opsRepos     = app(OperationsRepositoryInterface::class);
+        $this->noCatRepos   = app(NoCategoryRepositoryInterface::class);
     }
 
     public function generate(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $categories = $this->repository->getCategories();
-        $accounts   = $this->accountRepos->getAccountsByType([
+        $categories   = $this->repository->getCategories();
+        $accounts     = $this->accountRepos->getAccountsByType([
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::MORTGAGE->value,
             AccountTypeEnum::ASSET->value,
-            AccountTypeEnum::DEFAULT->value
+            AccountTypeEnum::DEFAULT->value,
         ]);
-        $collection = $this->collectExpensesAll($categories, $accounts);
+        $collection   = $this->collectExpensesAll($categories, $accounts);
 
         // collect for no-category:
-        $noCategory = $this->collectNoCatExpenses($accounts);
-        $collection = array_merge($collection, $noCategory);
+        $noCategory   = $this->collectNoCatExpenses($accounts);
+        $collection   = array_merge($collection, $noCategory);
 
         // sort temp array by amount.
-        $amounts = array_column($collection, 'sum_float');
+        $amounts      = array_column($collection, 'sum_float');
         array_multisort($amounts, SORT_ASC, $collection);
 
         $currencyData = $this->createCurrencyGroups($collection);
@@ -98,7 +98,7 @@ class FrontpageChartGenerator
             'currency_name'           => $currency['currency_name'],
             'currency_symbol'         => $currency['currency_symbol'],
             'currency_code'           => $currency['currency_code'],
-            'currency_decimal_places' => $currency['currency_decimal_places']
+            'currency_decimal_places' => $currency['currency_decimal_places'],
         ];
     }
 
@@ -118,7 +118,7 @@ class FrontpageChartGenerator
                     'name'        => $category->name,
                     'sum'         => $currency['sum'],
                     'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places']),
-                    'currency_id' => (int) $currency['currency_id']
+                    'currency_id' => (int) $currency['currency_id'],
                 ];
             }
         }
@@ -133,10 +133,10 @@ class FrontpageChartGenerator
         foreach ($noCatExp as $currency) {
             $this->addCurrency($currency);
             $tempData[] = [
-                'name'      => trans('firefly.no_category'),
-                'sum'       => $currency['sum'],
-                'sum_float' => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
-                'currency_id' => (int) $currency['currency_id']
+                'name'        => trans('firefly.no_category'),
+                'sum'         => $currency['sum'],
+                'sum_float'   => round((float) $currency['sum'], $currency['currency_decimal_places'] ?? 2), // intentional float
+                'currency_id' => (int) $currency['currency_id'],
             ];
         }
 
@@ -152,12 +152,12 @@ class FrontpageChartGenerator
          * @var array $currency
          */
         foreach ($this->currencies as $currencyId => $currency) {
-            $key = sprintf('spent-%d', $currencyId);
+            $key          = sprintf('spent-%d', $currencyId);
             $return[$key] = [
                 'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
-                'entries'         => $names
+                'entries'         => $names,
             ];
         }
 
@@ -168,10 +168,10 @@ class FrontpageChartGenerator
     {
         /** @var array $array */
         foreach ($monetaryData as $array) {
-            $direction = $array['sum_float'] < 0 ? 'spent' : 'earned';
-            $key       = sprintf('%s-%d', $direction, $array['currency_id']);
-            $category  = $array['name'];
-            $amount    = $array['sum_float'] < 0 ? $array['sum_float'] * -1 : $array['sum_float'];
+            $direction                                = $array['sum_float'] < 0 ? 'spent' : 'earned';
+            $key                                      = sprintf('%s-%d', $direction, $array['currency_id']);
+            $category                                 = $array['name'];
+            $amount                                   = $array['sum_float'] < 0 ? $array['sum_float'] * -1 : $array['sum_float'];
             $currencyData[$key]['entries'][$category] = $amount;
         }
 

@@ -35,9 +35,9 @@ use Throwable;
  */
 trait FormSupport
 {
-    public function multiSelect(string $name, null|array $list = null, mixed $selected = null, null|array $options = null): string
+    public function multiSelect(string $name, ?array $list = null, mixed $selected = null, ?array $options = null): string
     {
-        $list     ??= [];
+        $list ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -52,7 +52,7 @@ trait FormSupport
                 'label'    => $label,
                 'selected' => $selected,
                 'options'  => $options,
-                'list'     => $list
+                'list'     => $list,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
@@ -65,9 +65,9 @@ trait FormSupport
     /**
      * @param mixed $selected
      */
-    public function select(string $name, null|array $list = null, $selected = null, null|array $options = null): string
+    public function select(string $name, ?array $list = null, $selected = null, ?array $options = null): string
     {
-        $list     ??= [];
+        $list ??= [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -81,7 +81,7 @@ trait FormSupport
                 'label'    => $label,
                 'selected' => $selected,
                 'options'  => $options,
-                'list'     => $list
+                'list'     => $list,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
@@ -94,14 +94,14 @@ trait FormSupport
     /**
      * @param mixed $label
      */
-    protected function expandOptionArray(string $name, $label, null|array $options = null): array
+    protected function expandOptionArray(string $name, $label, ?array $options = null): array
     {
         $options ??= [];
-        $name    = str_replace('[]', '', $name);
-        $options['class'] = 'form-control';
-        $options['id'] = 'ffInput_' . $name;
+        $name                    = str_replace('[]', '', $name);
+        $options['class']        = 'form-control';
+        $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
-        $options['placeholder'] = ucfirst((string) $label);
+        $options['placeholder']  = ucfirst((string) $label);
 
         return $options;
     }
@@ -152,7 +152,7 @@ trait FormSupport
         return 'form-group';
     }
 
-    protected function label(string $name, null|array $options = null): string
+    protected function label(string $name, ?array $options = null): string
     {
         $options ??= [];
         if (array_key_exists('label', $options)) {
@@ -160,6 +160,6 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string) trans('form.' . $name);
+        return (string) trans('form.'.$name);
     }
 }

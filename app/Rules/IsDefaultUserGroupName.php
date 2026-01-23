@@ -49,12 +49,12 @@ class IsDefaultUserGroupName implements ValidationRule
 
         // are you owner of this group and the name is the same? fail.
         /** @var User $user */
-        $user = auth()->user();
+        $user      = auth()->user();
 
         /** @var UserRepositoryInterface $userRepos */
         $userRepos = app(UserRepositoryInterface::class);
 
-        $roles = $userRepos->getRolesInGroup($user, $this->userGroup->id);
+        $roles     = $userRepos->getRolesInGroup($user, $this->userGroup->id);
         if ($this->userGroup->title === $user->email && in_array('owner', $roles, true)) {
             $fail('validation.administration_owner_rename')->translate();
         }

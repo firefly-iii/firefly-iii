@@ -56,7 +56,7 @@ class ExpenseReportController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $this->generator = app(GeneratorInterface::class);
+            $this->generator         = app(GeneratorInterface::class);
             $this->accountRepository = app(AccountRepositoryInterface::class);
 
             return $next($request);
@@ -72,7 +72,7 @@ class ExpenseReportController extends Controller
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
-        $cache = new CacheProperties();
+        $cache        = new CacheProperties();
         $cache->addProperty('chart.expense.report.main');
         $cache->addProperty($accounts);
         $cache->addProperty($expense);
@@ -100,33 +100,33 @@ class ExpenseReportController extends Controller
         foreach ($combined as $name => $combination) {
             // first is always expense account:
             /** @var Account $exp */
-            $exp = $combination->first();
-            $chartData[$exp->id . '-in'] = [
+            $exp                              = $combination->first();
+            $chartData[$exp->id.'-in']        = [
                 'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.income')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
-                'entries' => []
+                'entries' => [],
             ];
-            $chartData[$exp->id . '-out'] = [
+            $chartData[$exp->id.'-out']       = [
                 'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.expenses')),
                 'type'    => 'bar',
                 'yAxisID' => 'y-axis-0',
-                'entries' => []
+                'entries' => [],
             ];
             // total in, total out:
-            $chartData[$exp->id . '-total-in'] = [
+            $chartData[$exp->id.'-total-in']  = [
                 'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_income')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
-                'entries' => []
+                'entries' => [],
             ];
-            $chartData[$exp->id . '-total-out'] = [
+            $chartData[$exp->id.'-total-out'] = [
                 'label'   => sprintf('%s (%s)', $name, (string) trans('firefly.sum_of_expenses')),
                 'type'    => 'line',
                 'fill'    => false,
                 'yAxisID' => 'y-axis-1',
-                'entries' => []
+                'entries' => [],
             ];
         }
 
@@ -134,35 +134,35 @@ class ExpenseReportController extends Controller
         $sumOfExpense = [];
 
         while ($currentStart < $end) {
-            $currentEnd = clone $currentStart;
-            $currentEnd = $currentEnd->{$function}(); // @phpstan-ignore-line
+            $currentEnd   = clone $currentStart;
+            $currentEnd   = $currentEnd->{$function}(); // @phpstan-ignore-line
 
             // get expenses grouped by opposing name:
-            $expenses = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $income   = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
-            $label    = $currentStart->isoFormat($format);
+            $expenses     = $this->groupByName($this->getExpensesForOpposing($accounts, $all, $currentStart, $currentEnd));
+            $income       = $this->groupByName($this->getIncomeForOpposing($accounts, $all, $currentStart, $currentEnd));
+            $label        = $currentStart->isoFormat($format);
 
             foreach ($combined as $name => $combination) {
                 // first is always expense account:
                 /** @var Account $exp */
-                $exp            = $combination->first();
-                $labelIn        = $exp->id . '-in';
-                $labelOut       = $exp->id . '-out';
-                $labelSumIn     = $exp->id . '-total-in';
-                $labelSumOut    = $exp->id . '-total-out';
-                $currentIncome  = bcmul($income[$name] ?? '0', '-1');
-                $currentExpense = $expenses[$name] ?? '0';
+                $exp                                        = $combination->first();
+                $labelIn                                    = $exp->id.'-in';
+                $labelOut                                   = $exp->id.'-out';
+                $labelSumIn                                 = $exp->id.'-total-in';
+                $labelSumOut                                = $exp->id.'-total-out';
+                $currentIncome                              = bcmul($income[$name] ?? '0', '-1');
+                $currentExpense                             = $expenses[$name] ?? '0';
 
                 // add to sum:
-                $sumOfIncome[$exp->id] ??= '0';
+                $sumOfIncome[$exp->id]  ??= '0';
                 $sumOfExpense[$exp->id] ??= '0';
-                $sumOfIncome[$exp->id] = bcadd($sumOfIncome[$exp->id], $currentIncome);
-                $sumOfExpense[$exp->id] = bcadd($sumOfExpense[$exp->id], $currentExpense);
+                $sumOfIncome[$exp->id]                      = bcadd($sumOfIncome[$exp->id], $currentIncome);
+                $sumOfExpense[$exp->id]                     = bcadd($sumOfExpense[$exp->id], $currentExpense);
 
                 // add to chart:
-                $chartData[$labelIn]['entries'][$label] = $currentIncome;
-                $chartData[$labelOut]['entries'][$label] = $currentExpense;
-                $chartData[$labelSumIn]['entries'][$label] = $sumOfIncome[$exp->id];
+                $chartData[$labelIn]['entries'][$label]     = $currentIncome;
+                $chartData[$labelOut]['entries'][$label]    = $currentExpense;
+                $chartData[$labelSumIn]['entries'][$label]  = $sumOfIncome[$exp->id];
                 $chartData[$labelSumOut]['entries'][$label] = $sumOfExpense[$exp->id];
             }
 
@@ -172,7 +172,7 @@ class ExpenseReportController extends Controller
             $currentStart->startOfDay();
         }
         // remove all empty entries to prevent cluttering:
-        $newSet = [];
+        $newSet       = [];
         foreach ($chartData as $key => $entry) {
             // TODO not sure, this is a bad comparison.
             if (array_sum($entry['entries']) > 0) {
@@ -182,7 +182,7 @@ class ExpenseReportController extends Controller
         if (0 === count($newSet)) {
             $newSet = $chartData;
         }
-        $data = $this->generator->multiSet($newSet);
+        $data         = $this->generator->multiSet($newSet);
         $cache->store($data);
 
         return response()->json($data);

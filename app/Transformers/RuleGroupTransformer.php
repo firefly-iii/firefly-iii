@@ -44,7 +44,7 @@ class RuleGroupTransformer extends AbstractTransformer
             'description' => $ruleGroup->description,
             'order'       => $ruleGroup->order,
             'active'      => $ruleGroup->active,
-            'links'       => [['rel' => 'self', 'uri' => '/rule_groups/' . $ruleGroup->id]]
+            'links'       => [['rel' => 'self', 'uri' => '/rule_groups/'.$ruleGroup->id]],
         ];
     }
 }

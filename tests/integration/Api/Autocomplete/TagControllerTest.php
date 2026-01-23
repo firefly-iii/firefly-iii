@@ -47,8 +47,8 @@ final class TagControllerTest extends TestCase
             $tag = Tag::create([
                 'user_id'       => $user->id,
                 'user_group_id' => $user->user_group_id,
-                'tag'           => 'Tag ' . $i,
-                'tag_mode'      => 'nothing'
+                'tag'           => 'Tag '.$i,
+                'tag_mode'      => 'nothing',
             ]);
         }
     }
@@ -65,7 +65,7 @@ final class TagControllerTest extends TestCase
     public function testAuthenticatedCall(): void
     {
         // act as a user
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
@@ -75,7 +75,7 @@ final class TagControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItems(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(5, $user);
@@ -89,7 +89,7 @@ final class TagControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(5, $user);
@@ -104,7 +104,7 @@ final class TagControllerTest extends TestCase
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
     {
-        $user = $this->createAuthenticatedUser();
+        $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
         $this->createTestTags(20, $user);

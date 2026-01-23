@@ -77,7 +77,7 @@ class CorrectsTransactionTypes extends Command
 
     private function fixJournal(TransactionJournal $journal): bool
     {
-        $type = $journal->transactionType->type;
+        $type         = $journal->transactionType->type;
 
         try {
             $source      = $this->getSourceAccount($journal);
@@ -110,7 +110,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function getSourceAccount(TransactionJournal $journal): Account
     {
-        $collection = $journal->transactions->filter(static fn(Transaction $transaction): bool => $transaction->amount < 0);
+        $collection  = $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount < 0);
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
         }
@@ -122,7 +122,7 @@ class CorrectsTransactionTypes extends Command
         $transaction = $collection->first();
 
         /** @var null|Account $account */
-        $account = $transaction->account;
+        $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('300003: Journal #%d, transaction #%d has no source account.', $journal->id, $transaction->id));
         }
@@ -135,7 +135,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
-        $collection = $journal->transactions->filter(static fn(Transaction $transaction): bool => $transaction->amount > 0);
+        $collection  = $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount > 0);
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300004: Journal #%d has no destination transaction.', $journal->id));
         }
@@ -147,7 +147,7 @@ class CorrectsTransactionTypes extends Command
         $transaction = $collection->first();
 
         /** @var null|Account $account */
-        $account = $transaction->account;
+        $account     = $transaction->account;
         if (null === $account) {
             throw new FireflyException(sprintf('300006: Journal #%d, transaction #%d has no destination account.', $journal->id, $transaction->id));
         }

@@ -50,7 +50,7 @@ class ChartRequest extends FormRequest
             'end'         => $this->convertDateTime('end')?->endOfDay(),
             'preselected' => $this->convertString('preselected', 'empty'),
             'period'      => $this->convertString('period', '1M'),
-            'accounts'    => $this->arrayFromValue($this->get('accounts'))
+            'accounts'    => $this->arrayFromValue($this->get('accounts')),
         ];
     }
 
@@ -65,7 +65,7 @@ class ChartRequest extends FormRequest
             'preselected' => sprintf('nullable|in:%s', implode(',', config('firefly.preselected_accounts'))),
             'period'      => sprintf('nullable|in:%s', implode(',', config('firefly.valid_view_ranges'))),
             'accounts'    => 'nullable|array',
-            'accounts.*'  => 'exists:accounts,id'
+            'accounts.*'  => 'exists:accounts,id',
         ];
     }
 

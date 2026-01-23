@@ -58,7 +58,7 @@ class CategoryReportController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $this->generator = app(GeneratorInterface::class);
+            $this->generator     = app(GeneratorInterface::class);
             $this->opsRepository = app(OperationsRepositoryInterface::class);
 
             return $next($request);
@@ -75,20 +75,20 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $objectName = $journal['budget_name'] ?? trans('firefly.no_budget');
-                    $title      = sprintf('%s (%s)', $objectName, $currency['currency_name']);
+                    $objectName               = $journal['budget_name'] ?? trans('firefly.no_budget');
+                    $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -106,16 +106,16 @@ class CategoryReportController extends Controller
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
-                    'currency_code'   => $currency['currency_code']
+                    'currency_code'   => $currency['currency_code'],
                 ];
                 foreach ($category['transaction_journals'] as $journal) {
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -133,16 +133,16 @@ class CategoryReportController extends Controller
                 $result[$title] ??= [
                     'amount'          => '0',
                     'currency_symbol' => $currency['currency_symbol'],
-                    'currency_code'   => $currency['currency_code']
+                    'currency_code'   => $currency['currency_code'],
                 ];
                 foreach ($category['transaction_journals'] as $journal) {
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -157,20 +157,20 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $objectName = $journal['destination_account_name'] ?? trans('firefly.empty');
-                    $title      = sprintf('%s (%s)', $objectName, $currency['currency_name']);
+                    $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
+                    $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -185,20 +185,20 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $objectName = $journal['destination_account_name'] ?? trans('firefly.empty');
-                    $title      = sprintf('%s (%s)', $objectName, $currency['currency_name']);
+                    $objectName               = $journal['destination_account_name'] ?? trans('firefly.empty');
+                    $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -223,13 +223,13 @@ class CategoryReportController extends Controller
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
                 'currency_id'     => $currency['currency_id'],
-                'entries'         => $this->makeEntries($start, $end)
+                'entries'         => $this->makeEntries($start, $end),
             ];
 
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $key    = $journal['date']->isoFormat($format);
-                    $amount = Steam::positive($journal['amount']);
+                    $key                                   = $journal['date']->isoFormat($format);
+                    $amount                                = Steam::positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
@@ -250,20 +250,20 @@ class CategoryReportController extends Controller
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
                 'currency_id'     => $currency['currency_id'],
-                'entries'         => $this->makeEntries($start, $end)
+                'entries'         => $this->makeEntries($start, $end),
             ];
 
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $key    = $journal['date']->isoFormat($format);
-                    $amount = Steam::positive($journal['amount']);
+                    $key                                   = $journal['date']->isoFormat($format);
+                    $amount                                = Steam::positive($journal['amount']);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiSet($chartData);
+        $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
     }
@@ -278,8 +278,8 @@ class CategoryReportController extends Controller
         $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $currentStart   = clone $start;
         while ($currentStart <= $end) {
-            $currentEnd = Navigation::endOfPeriod($currentStart, $preferredRange);
-            $key        = $currentStart->isoFormat($format);
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
             $return[$key] = '0';
             $currentStart = clone $currentEnd;
             $currentStart->addDay()->startOfDay();
@@ -298,20 +298,20 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $objectName = $journal['source_account_name'] ?? trans('firefly.empty');
-                    $title      = sprintf('%s (%s)', $objectName, $currency['currency_name']);
+                    $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
+                    $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }
@@ -326,20 +326,20 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $objectName = $journal['source_account_name'] ?? trans('firefly.empty');
-                    $title      = sprintf('%s (%s)', $objectName, $currency['currency_name']);
+                    $objectName               = $journal['source_account_name'] ?? trans('firefly.empty');
+                    $title                    = sprintf('%s (%s)', $objectName, $currency['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $currency['currency_symbol'],
-                        'currency_code'   => $currency['currency_code']
+                        'currency_code'   => $currency['currency_code'],
                     ];
-                    $amount = Steam::positive($journal['amount']);
+                    $amount                   = Steam::positive($journal['amount']);
                     $result[$title]['amount'] = bcadd($result[$title]['amount'], $amount);
                 }
             }
         }
 
-        $data = $this->generator->multiCurrencyPieChart($result);
+        $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
     }

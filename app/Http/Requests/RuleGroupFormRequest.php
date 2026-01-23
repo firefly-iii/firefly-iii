@@ -63,7 +63,7 @@ class RuleGroupFormRequest extends FormRequest
         $ruleGroup = $this->route()->parameter('ruleGroup');
 
         if (null !== $ruleGroup) {
-            $titleRule = 'required|min:1|max:255|uniqueObjectForUser:rule_groups,title,' . $ruleGroup->id;
+            $titleRule = 'required|min:1|max:255|uniqueObjectForUser:rule_groups,title,'.$ruleGroup->id;
         }
 
         return ['title'       => $titleRule, 'description' => 'min:1|max:32768|nullable', 'active'      => [new IsBoolean()]];

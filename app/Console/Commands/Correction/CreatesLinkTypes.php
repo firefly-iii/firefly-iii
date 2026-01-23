@@ -34,7 +34,7 @@ class CreatesLinkTypes extends Command
 
     protected $description = 'Creates all link types.';
 
-    protected $signature = 'correction:link-types';
+    protected $signature   = 'correction:link-types';
 
     /**
      * Execute the console command.
@@ -46,14 +46,14 @@ class CreatesLinkTypes extends Command
             'Related'       => ['relates to', 'relates to'],
             'Refund'        => ['(partially) refunds', 'is (partially) refunded by'],
             'Paid'          => ['(partially) pays for', 'is (partially) paid for by'],
-            'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by']
+            'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link = LinkType::where('name', $name)->first();
+            $link           = LinkType::where('name', $name)->first();
             if (null === $link) {
-                $link = new LinkType();
-                $link->name = $name;
-                $link->inward = $values[1];
+                $link          = new LinkType();
+                $link->name    = $name;
+                $link->inward  = $values[1];
                 $link->outward = $values[0];
                 ++$count;
                 $this->friendlyInfo(sprintf('Created missing link type "%s"', $name));

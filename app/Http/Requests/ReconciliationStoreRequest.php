@@ -49,14 +49,14 @@ class ReconciliationStoreRequest extends FormRequest
         if (!is_array($transactions)) {
             $transactions = [];
         }
-        $data = [
+        $data         = [
             'start'         => $this->getCarbonDate('start'),
             'end'           => $this->getCarbonDate('end'),
             'start_balance' => $this->convertString('startBalance'),
             'end_balance'   => $this->convertString('endBalance'),
             'difference'    => $this->convertString('difference'),
             'journals'      => $transactions,
-            'reconcile'     => $this->convertString('reconcile')
+            'reconcile'     => $this->convertString('reconcile'),
         ];
         Log::debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
 
@@ -75,7 +75,7 @@ class ReconciliationStoreRequest extends FormRequest
             'endBalance'   => ['nullable', new IsValidAmount()],
             'difference'   => ['required', new IsValidAmount()],
             'journals'     => [new ValidJournals()],
-            'reconcile'    => 'required|in:create,nothing'
+            'reconcile'    => 'required|in:create,nothing',
         ];
     }
 

@@ -59,7 +59,8 @@ class NewAccessToken extends Notification
 
         return new MailMessage()
             ->markdown('emails.token-created', ['ip'        => $ip, 'host'      => $host, 'userAgent' => $userAgent, 'time'      => $time])
-            ->subject((string) trans('email.access_token_created_subject'));
+            ->subject((string) trans('email.access_token_created_subject'))
+        ;
     }
 
     //    public function toNtfy(User $notifiable): Message

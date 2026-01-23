@@ -42,13 +42,13 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function amountNoCurrency(string $name, $value = null, null|array $options = null): string
+    public function amountNoCurrency(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['currency'], $options['placeholder']);
 
@@ -62,7 +62,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
@@ -79,21 +79,21 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function checkbox(string $name, null|int $value = null, $checked = null, null|array $options = null): string
+    public function checkbox(string $name, ?int $value = null, $checked = null, ?array $options = null): string
     {
         $options ??= [];
         $value   ??= 1;
         $options['checked'] = true === $checked;
 
         if (app('session')->has('preFilled')) {
-            $preFilled = session('preFilled');
+            $preFilled          = session('preFilled');
             $options['checked'] = $preFilled[$name] ?? $options['checked'];
         }
 
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $label              = $this->label($name, $options);
+        $options            = $this->expandOptionArray($name, $label, $options);
+        $classes            = $this->getHolderClasses($name);
+        $value              = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
@@ -103,7 +103,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
@@ -120,7 +120,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function date(string $name, $value = null, null|array $options = null): string
+    public function date(string $name, $value = null, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -143,7 +143,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function file(string $name, null|array $options = null): string
+    public function file(string $name, ?array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -167,9 +167,9 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function integer(string $name, $value = null, null|array $options = null): string
+    public function integer(string $name, $value = null, ?array $options = null): string
     {
-        $options ??= [];
+        $options         ??= [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -182,7 +182,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render integer(): %s', $e->getMessage()));
@@ -199,7 +199,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function location(string $name, $value = null, null|array $options = null): string
+    public function location(string $name, $value = null, ?array $options = null): string
     {
         $options ??= [];
         $label   = $this->label($name, $options);
@@ -213,7 +213,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render location(): %s', $e->getMessage()));
@@ -227,16 +227,16 @@ class ExpandedForm
 
     public function makeSelectListWithEmpty(Collection $set): array
     {
-        $selectList = [];
+        $selectList    = [];
         $selectList[0] = '(none)';
-        $fields = ['title', 'name', 'description'];
+        $fields        = ['title', 'name', 'description'];
 
         /** @var Model $entry */
         foreach ($set as $entry) {
             // All Eloquent models have an ID
-            $entryId = $entry->id;
-            $current = $entry->toArray();
-            $title   = null;
+            $entryId              = $entry->id;
+            $current              = $entry->toArray();
+            $title                = null;
             foreach ($fields as $field) {
                 if (array_key_exists($field, $current) && null === $title) {
                     $title = $current[$field];
@@ -253,13 +253,13 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function objectGroup($value = null, null|array $options = null): string
+    public function objectGroup($value = null, ?array $options = null): string
     {
-        $name    = 'object_group';
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $name            = 'object_group';
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
 
         if (null === $value) {
@@ -272,7 +272,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
@@ -304,7 +304,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function password(string $name, null|array $options = null): string
+    public function password(string $name, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -325,7 +325,7 @@ class ExpandedForm
     /**
      * @throws FireflyException
      */
-    public function passwordWithValue(string $name, string $value, null|array $options = null): string
+    public function passwordWithValue(string $name, string $value, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -337,7 +337,7 @@ class ExpandedForm
                 'value'   => $value,
                 'name'    => $name,
                 'label'   => $label,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render passwordWithValue(): %s', $e->getMessage()));
@@ -356,12 +356,12 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function percentage(string $name, $value = null, null|array $options = null): string
+    public function percentage(string $name, $value = null, ?array $options = null): string
     {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['placeholder']);
 
@@ -371,7 +371,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
@@ -388,7 +388,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function staticText(string $name, $value, null|array $options = null): string
+    public function staticText(string $name, $value, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -411,7 +411,7 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function text(string $name, $value = null, null|array $options = null): string
+    public function text(string $name, $value = null, ?array $options = null): string
     {
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -435,12 +435,12 @@ class ExpandedForm
      *
      * @throws FireflyException
      */
-    public function textarea(string $name, $value = null, null|array $options = null): string
+    public function textarea(string $name, $value = null, ?array $options = null): string
     {
-        $label   = $this->label($name, $options);
-        $options = $this->expandOptionArray($name, $label, $options);
-        $classes = $this->getHolderClasses($name);
-        $value   = $this->fillFieldValue($name, $value);
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
 
         if (null === $value) {
@@ -453,7 +453,7 @@ class ExpandedForm
                 'name'    => $name,
                 'label'   => $label,
                 'value'   => $value,
-                'options' => $options
+                'options' => $options,
             ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));

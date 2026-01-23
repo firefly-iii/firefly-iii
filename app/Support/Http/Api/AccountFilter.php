@@ -44,7 +44,7 @@ trait AccountFilter
             AccountTypeEnum::RECONCILIATION->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::DEBT->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ],
         'normal'                                 => [
             AccountTypeEnum::ASSET->value,
@@ -52,7 +52,7 @@ trait AccountFilter
             AccountTypeEnum::REVENUE->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::DEBT->value,
-            AccountTypeEnum::MORTGAGE->value
+            AccountTypeEnum::MORTGAGE->value,
         ],
         'asset'                                  => [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value],
         'cash'                                   => [AccountTypeEnum::CASH->value],
@@ -62,24 +62,24 @@ trait AccountFilter
             AccountTypeEnum::CASH->value,
             AccountTypeEnum::INITIAL_BALANCE->value,
             AccountTypeEnum::IMPORT->value,
-            AccountTypeEnum::RECONCILIATION->value
+            AccountTypeEnum::RECONCILIATION->value,
         ],
         'hidden'                                 => [
             AccountTypeEnum::INITIAL_BALANCE->value,
             AccountTypeEnum::IMPORT->value,
-            AccountTypeEnum::RECONCILIATION->value
+            AccountTypeEnum::RECONCILIATION->value,
         ],
         'liability'                              => [
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::MORTGAGE->value,
-            AccountTypeEnum::CREDITCARD->value
+            AccountTypeEnum::CREDITCARD->value,
         ],
         'liabilities'                            => [
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::LOAN->value,
             AccountTypeEnum::MORTGAGE->value,
-            AccountTypeEnum::CREDITCARD->value
+            AccountTypeEnum::CREDITCARD->value,
         ],
         AccountTypeEnum::DEFAULT->value          => [AccountTypeEnum::DEFAULT->value],
         AccountTypeEnum::CASH->value             => [AccountTypeEnum::CASH->value],
@@ -108,7 +108,7 @@ trait AccountFilter
         'credit card'                            => [AccountTypeEnum::CREDITCARD->value],
         'credit-card'                            => [AccountTypeEnum::CREDITCARD->value],
         'creditcard'                             => [AccountTypeEnum::CREDITCARD->value],
-        'cc'                                     => [AccountTypeEnum::CREDITCARD->value]
+        'cc'                                     => [AccountTypeEnum::CREDITCARD->value],
     ];
 
     /**

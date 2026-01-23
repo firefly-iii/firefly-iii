@@ -63,7 +63,7 @@ class StoreRequest extends FormRequest
             'order'              => ['order', 'convertInteger'],
             'notes'              => ['notes', 'stringWithNewlines'],
             'object_group_id'    => ['object_group_id', 'convertInteger'],
-            'object_group_title' => ['object_group_title', 'convertString']
+            'object_group_title' => ['object_group_title', 'convertString'],
         ];
 
         return $this->getAllData($fields);
@@ -86,7 +86,7 @@ class StoreRequest extends FormRequest
             'repeat_freq'    => 'in:weekly,monthly,quarterly,half-year,yearly|required',
             'skip'           => 'min:0|max:31|numeric',
             'active'         => [new IsBoolean()],
-            'notes'          => 'nullable|min:1|max:32768'
+            'notes'          => 'nullable|min:1|max:32768',
         ];
     }
 
@@ -96,9 +96,9 @@ class StoreRequest extends FormRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(static function (Validator $validator): void {
-            $data = $validator->getData();
-            $min  = $data['amount_min'] ?? '0';
-            $max  = $data['amount_max'] ?? '0';
+            $data   = $validator->getData();
+            $min    = $data['amount_min'] ?? '0';
+            $max    = $data['amount_max'] ?? '0';
 
             if (is_array($min) || is_array($max)) {
                 $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));

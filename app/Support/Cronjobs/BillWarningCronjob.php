@@ -58,9 +58,9 @@ class BillWarningCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the bill notification cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
-                $this->message = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
-                $this->jobFired = false;
-                $this->jobErrored = false;
+                $this->message      = sprintf('It has been %s since the bill notification cron-job has fired. It will not fire now.', $diffForHumans);
+                $this->jobFired     = false;
+                $this->jobErrored   = false;
                 $this->jobSucceeded = false;
 
                 return;
@@ -83,16 +83,16 @@ class BillWarningCronjob extends AbstractCronjob
         Log::info(sprintf('Will now fire bill notification job task for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
         /** @var WarnAboutBills $job */
-        $job = app(WarnAboutBills::class);
+        $job                = app(WarnAboutBills::class);
         $job->setDate($this->date);
         $job->setForce($this->force);
         $job->handle();
 
         // get stuff from job:
-        $this->jobFired = true;
-        $this->jobErrored = false;
+        $this->jobFired     = true;
+        $this->jobErrored   = false;
         $this->jobSucceeded = true;
-        $this->message = 'Bill notification cron job fired successfully.';
+        $this->message      = 'Bill notification cron job fired successfully.';
 
         FireflyConfig::set('last_bw_job', (int) $this->date->format('U'));
         Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));

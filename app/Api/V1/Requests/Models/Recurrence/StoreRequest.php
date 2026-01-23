@@ -63,7 +63,7 @@ class StoreRequest extends FormRequest
             'nr_of_repetitions' => ['nr_of_repetitions', 'convertInteger'],
             'apply_rules'       => ['apply_rules', 'boolean'],
             'active'            => ['active', 'boolean'],
-            'notes'             => ['notes', 'stringWithNewlines']
+            'notes'             => ['notes', 'stringWithNewlines'],
         ];
         $recurrence = $this->getAllData($fields);
 
@@ -76,7 +76,7 @@ class StoreRequest extends FormRequest
      */
     private function getTransactionData(): array
     {
-        $return = [];
+        $return       = [];
 
         // transaction data:
         /** @var null|array $transactions */
@@ -98,7 +98,7 @@ class StoreRequest extends FormRequest
      */
     private function getRepetitionData(): array
     {
-        $return = [];
+        $return      = [];
 
         // repetition data:
         /** @var null|array $repetitions */
@@ -109,7 +109,7 @@ class StoreRequest extends FormRequest
 
         /** @var array $repetition */
         foreach ($repetitions as $repetition) {
-            $current = [];
+            $current  = [];
             if (array_key_exists('type', $repetition)) {
                 $current['type'] = $repetition['type'];
             }
@@ -135,19 +135,19 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'type'              => 'required|in:withdrawal,transfer,deposit',
-            'title'             => 'required|min:1|max:255|uniqueObjectForUser:recurrences,title',
-            'description'       => 'min:1|max:32768',
-            'first_date'        => 'required|date',
-            'apply_rules'       => [new IsBoolean()],
-            'active'            => [new IsBoolean()],
-            'repeat_until'      => 'nullable|date',
-            'nr_of_repetitions' => 'nullable|numeric|min:1|max:31',
+            'type'                                 => 'required|in:withdrawal,transfer,deposit',
+            'title'                                => 'required|min:1|max:255|uniqueObjectForUser:recurrences,title',
+            'description'                          => 'min:1|max:32768',
+            'first_date'                           => 'required|date',
+            'apply_rules'                          => [new IsBoolean()],
+            'active'                               => [new IsBoolean()],
+            'repeat_until'                         => 'nullable|date',
+            'nr_of_repetitions'                    => 'nullable|numeric|min:1|max:31',
 
-            'repetitions.*.type'    => 'required|in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'  => 'min:0|max:10',
-            'repetitions.*.skip'    => 'nullable|numeric|min:0|max:31',
-            'repetitions.*.weekend' => 'numeric|min:1|max:4',
+            'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'                 => 'min:0|max:10',
+            'repetitions.*.skip'                   => 'nullable|numeric|min:0|max:31',
+            'repetitions.*.weekend'                => 'numeric|min:1|max:4',
 
             'transactions.*.description'           => 'required|min:1|max:255',
             'transactions.*.amount'                => ['required', new IsValidPositiveAmount()],
@@ -162,13 +162,13 @@ class StoreRequest extends FormRequest
             'transactions.*.destination_name'      => 'min:1|max:255|nullable',
 
             // new and updated fields:
-            'transactions.*.budget_id'       => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
-            'transactions.*.budget_name'     => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.category_id'     => ['nullable', 'mustExist:categories,id', new BelongsUser()],
-            'transactions.*.category_name'   => 'min:1|max:255|nullable',
-            'transactions.*.piggy_bank_id'   => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
-            'transactions.*.piggy_bank_name' => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'            => 'nullable|min:1|max:255'
+            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'           => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser()],
+            'transactions.*.category_name'         => 'min:1|max:255|nullable',
+            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
+            'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.tags'                  => 'nullable|min:1|max:255',
         ];
     }
 

@@ -54,8 +54,8 @@ class PiggyBankFactory
 
     public function __construct()
     {
-        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->currencyRepository  = app(CurrencyRepositoryInterface::class);
+        $this->accountRepository   = app(AccountRepositoryInterface::class);
         $this->piggyBankRepository = app(PiggyBankRepositoryInterface::class);
     }
 
@@ -72,7 +72,7 @@ class PiggyBankFactory
      */
     public function store(array $data): PiggyBank
     {
-        $piggyBankData = $data;
+        $piggyBankData                            = $data;
 
         // unset some fields
         unset(
@@ -89,11 +89,11 @@ class PiggyBankFactory
             $piggyBankData['target_amount'] = '0';
         }
 
-        $piggyBankData['start_date_tz'] = $piggyBankData['start_date']?->format('e');
-        $piggyBankData['target_date_tz'] = $piggyBankData['target_date']?->format('e');
-        $piggyBankData['account_id'] = null;
+        $piggyBankData['start_date_tz']           = $piggyBankData['start_date']?->format('e');
+        $piggyBankData['target_date_tz']          = $piggyBankData['target_date']?->format('e');
+        $piggyBankData['account_id']              = null;
         $piggyBankData['transaction_currency_id'] = $this->getCurrency($data)->id;
-        $piggyBankData['order'] = 131337;
+        $piggyBankData['order']                   = 131337;
 
         try {
             /** @var PiggyBank $piggyBank */
@@ -103,11 +103,11 @@ class PiggyBankFactory
 
             throw new FireflyException('400005: Could not store new piggy bank.', 0, $e);
         }
-        $piggyBank = $this->setOrder($piggyBank, $data);
+        $piggyBank                                = $this->setOrder($piggyBank, $data);
         $this->linkToAccountIds($piggyBank, $data['accounts']);
         $this->piggyBankRepository->updateNote($piggyBank, $data['notes']);
 
-        $objectGroupTitle = $data['object_group_title'] ?? '';
+        $objectGroupTitle                         = $data['object_group_title'] ?? '';
         if ('' !== $objectGroupTitle) {
             $objectGroup = $this->findOrCreateObjectGroup($objectGroupTitle);
             if ($objectGroup instanceof ObjectGroup) {
@@ -115,7 +115,7 @@ class PiggyBankFactory
             }
         }
         // try also with ID
-        $objectGroupId = (int) ($data['object_group_id'] ?? 0);
+        $objectGroupId                            = (int) ($data['object_group_id'] ?? 0);
         if (0 !== $objectGroupId) {
             $objectGroup = $this->findObjectGroupById($objectGroupId);
             if ($objectGroup instanceof ObjectGroup) {
@@ -123,7 +123,7 @@ class PiggyBankFactory
             }
         }
         Log::debug('Touch piggy bank');
-        $piggyBank->encrypted = false;
+        $piggyBank->encrypted                     = false;
         $piggyBank->save();
         $piggyBank->touch();
 
@@ -146,7 +146,7 @@ class PiggyBankFactory
         return $currency;
     }
 
-    public function find(null|int $piggyBankId, null|string $piggyBankName): null|PiggyBank
+    public function find(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         $piggyBankId   = (int) $piggyBankId;
         $piggyBankName = (string) $piggyBankName;
@@ -159,7 +159,8 @@ class PiggyBankFactory
                 ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
                 ->where('accounts.user_id', $this->user->id)
                 ->where('piggy_banks.id', $piggyBankId)
-                ->first(['piggy_banks.*']);
+                ->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -177,19 +178,20 @@ class PiggyBankFactory
         return null;
     }
 
-    public function findByName(string $name): null|PiggyBank
+    public function findByName(string $name): ?PiggyBank
     {
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
             ->where('piggy_banks.name', $name)
-            ->first(['piggy_banks.*']);
+            ->first(['piggy_banks.*'])
+        ;
     }
 
     private function setOrder(PiggyBank $piggyBank, array $data): PiggyBank
     {
         $this->resetOrder();
-        $order = $this->getMaxOrder() + 1;
+        $order            = $this->getMaxOrder() + 1;
         if (array_key_exists('order', $data)) {
             $order = $data['order'];
         }
@@ -207,7 +209,8 @@ class PiggyBankFactory
             ->where('accounts.user_id', $this->user->id)
             ->with(['objectGroups'])
             ->orderBy('piggy_banks.order', 'ASC')
-            ->get(['piggy_banks.*']);
+            ->get(['piggy_banks.*'])
+        ;
         $current = 1;
         foreach ($set as $piggyBank) {
             if ($piggyBank->order !== $current) {
@@ -254,8 +257,8 @@ class PiggyBankFactory
             Log::debug(sprintf('Working on account #%d', $account->id));
             if (array_key_exists('current_amount', $info) && null !== $info['current_amount']) {
                 // an amount is set, first check out if there is a difference with the previous amount.
-                $previous = $toBeLinked[$account->id]['current_amount'] ?? '0';
-                $diff     = bcsub($info['current_amount'], $previous);
+                $previous                 = $toBeLinked[$account->id]['current_amount'] ?? '0';
+                $diff                     = bcsub($info['current_amount'], $previous);
 
                 // create event for difference.
                 if (0 !== bccomp($diff, '0')) {
@@ -270,8 +273,8 @@ class PiggyBankFactory
             }
             if (array_key_exists('current_amount', $info) && null === $info['current_amount']) {
                 // no amount is set, first check out if there is a difference with the previous amount.
-                $previous = $toBeLinked[$account->id]['current_amount'] ?? '0';
-                $diff     = bcsub('0', $previous);
+                $previous                 = $toBeLinked[$account->id]['current_amount'] ?? '0';
+                $diff                     = bcsub('0', $previous);
 
                 // create event for difference.
                 if (0 !== bccomp($diff, '0')) {

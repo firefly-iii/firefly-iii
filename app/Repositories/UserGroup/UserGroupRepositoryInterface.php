@@ -48,7 +48,7 @@ interface UserGroupRepositoryInterface
 
     public function getAll(): Collection;
 
-    public function getById(int $id): null|UserGroup;
+    public function getById(int $id): ?UserGroup;
 
     public function getMembershipsFromGroupId(int $groupId): Collection;
 

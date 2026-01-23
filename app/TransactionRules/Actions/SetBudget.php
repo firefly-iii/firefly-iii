@@ -47,10 +47,10 @@ class SetBudget implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var User $user */
-        $user   = User::find($journal['user_id']);
-        $search = $this->action->getValue($journal);
+        $user          = User::find($journal['user_id']);
+        $search        = $this->action->getValue($journal);
 
-        $budget = $user->budgets()->where('name', $search)->first();
+        $budget        = $user->budgets()->where('name', $search)->first();
         if (null === $budget) {
             Log::debug(sprintf(
                 'RuleAction SetBudget could not set budget of journal #%d to "%s" because no such budget exists.',
@@ -71,7 +71,7 @@ class SetBudget implements ActionInterface
             ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_set_budget', [
                 'type' => $journal['transaction_type_type'],
-                'name' => $search
+                'name' => $search,
             ])));
 
             return false;
@@ -98,11 +98,11 @@ class SetBudget implements ActionInterface
         DB::table('budget_transaction_journal')->where('transaction_journal_id', '=', $journal['transaction_journal_id'])->delete();
         DB::table('budget_transaction_journal')->insert([
             'transaction_journal_id' => $journal['transaction_journal_id'],
-            'budget_id'              => $budget->id
+            'budget_id'              => $budget->id,
         ]);
 
         /** @var TransactionJournal $object */
-        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object        = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         event(new TriggeredAuditLog($this->action->rule, $object, 'set_budget', $oldBudgetName, $budget->name));
 
         return true;

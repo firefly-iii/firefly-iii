@@ -73,17 +73,17 @@ class RuleAction extends Model
             'updated_at'      => 'datetime',
             'active'          => 'boolean',
             'order'           => 'int',
-            'stop_processing' => 'boolean'
+            'stop_processing' => 'boolean',
         ];
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function ruleId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int) $value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

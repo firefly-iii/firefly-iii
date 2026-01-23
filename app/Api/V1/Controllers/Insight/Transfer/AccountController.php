@@ -46,7 +46,7 @@ class AccountController extends Controller
     {
         parent::__construct();
         $this->middleware(function ($request, $next) {
-            $user = auth()->user();
+            $user                = auth()->user();
             $this->opsRepository = app(OperationsRepositoryInterface::class);
             $this->opsRepository->setUser($user);
 

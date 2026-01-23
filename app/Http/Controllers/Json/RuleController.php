@@ -47,7 +47,7 @@ class RuleController extends Controller
         $keys    = array_keys(config('firefly.rule-actions'));
         $actions = [];
         foreach ($keys as $key) {
-            $actions[$key] = (string) trans('firefly.rule_action_' . $key . '_choice');
+            $actions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
         }
 
         try {

@@ -38,13 +38,13 @@ class IsValidDateRange implements ValidationRule
      */
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $value = (string) $value;
+        $value      = (string) $value;
         if ('' === $value) {
             $fail('validation.date_or_time')->translate();
 
             return;
         }
-        $other = 'startPeriod';
+        $other      = 'startPeriod';
         if ('startPeriod' === $attribute) {
             $other = 'endPeriod';
         }

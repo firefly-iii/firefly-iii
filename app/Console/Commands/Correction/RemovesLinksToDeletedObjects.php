@@ -41,7 +41,7 @@ class RemovesLinksToDeletedObjects extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:remove-links-to-deleted-objects';
+    protected $signature   = 'correction:remove-links-to-deleted-objects';
 
     /**
      * The console command description.
@@ -59,22 +59,26 @@ class RemovesLinksToDeletedObjects extends Command
             ->whereNotNull('deleted_at')
             ->get('tags.id')
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
         $deletedJournals   = TransactionJournal::withTrashed()
             ->whereNotNull('deleted_at')
             ->get('transaction_journals.id')
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
         $deletedBudgets    = Budget::withTrashed()
             ->whereNotNull('deleted_at')
             ->get('budgets.id')
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
         $deletedCategories = Category::withTrashed()
             ->whereNotNull('deleted_at')
             ->get('categories.id')
             ->pluck('id')
-            ->toArray();
+            ->toArray()
+        ;
 
         if (count($deletedTags) > 0) {
             $this->cleanupTags($deletedTags);

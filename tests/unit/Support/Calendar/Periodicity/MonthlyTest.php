@@ -59,7 +59,7 @@ final class MonthlyTest extends IntervalTestCase
             new IntervalProvider(Carbon::parse('2023-03-31'), Carbon::parse('2023-04-30')),
             new IntervalProvider(Carbon::parse('2023-05-31'), Carbon::parse('2023-06-30')),
             // new IntervalProvider(Carbon::parse('2023-08-31'), Carbon::parse('2023-09-30')),
-            new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2023-11-30'))
+            new IntervalProvider(Carbon::parse('2023-10-31'), Carbon::parse('2023-11-30')),
         ];
     }
 }

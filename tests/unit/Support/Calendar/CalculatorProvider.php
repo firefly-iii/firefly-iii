@@ -106,7 +106,7 @@ readonly class CalculatorProvider
 
             self::from(Periodicity::Yearly, new IntervalProvider(Carbon::now(), Carbon::now()->addYearsNoOverflow(3)), 2),
             self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2019-01-29'), Carbon::parse('2025-01-29')), 5),
-            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10)
+            self::from(Periodicity::Yearly, new IntervalProvider(Carbon::parse('2020-02-29'), Carbon::parse('2031-02-28')), 10),
         ];
 
         /** @var IntervalProvider $interval */
