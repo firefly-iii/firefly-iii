@@ -40,13 +40,10 @@ class TransactionObserver
 
     public function created(Transaction $transaction): void
     {
+        return;
+
         Log::debug('Observe "created" of a transaction.');
-        if (
-            true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data && (
-                1 === bccomp($transaction->amount, '0')
-                && self::$recalculate
-            )
-        ) {
+        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data && (1 === bccomp($transaction->amount, '0') && self::$recalculate)) {
             Log::debug('Trigger recalculateForJournal');
             $journal = $transaction->transactionJournal;
             if ($journal instanceof TransactionJournal) {

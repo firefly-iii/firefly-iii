@@ -1,6 +1,6 @@
 <?php
 /*
- * CreatedTransactionGroupBatch.php
+ * CreatedSingleTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,15 +22,19 @@
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
+use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
-class CreatedTransactionGroupBatch extends Event
+class CreatedSingleTransactionGroup extends Event
 {
     use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Collection $collection, public array $flags) {}
+    public function __construct(public TransactionGroup $transactionGroup, public TransactionGroupEventFlags $flags) {
+        Log::debug(__METHOD__);
+    }
 }
+

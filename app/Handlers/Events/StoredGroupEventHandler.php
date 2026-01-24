@@ -55,8 +55,8 @@ class StoredGroupEventHandler
 
     public function triggerRulesManually(TriggeredStoredTransactionGroup $event): void
     {
-        $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
-        $this->processRules($newEvent, $event->ruleGroup);
+//        $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
+//        $this->processRules($newEvent, $event->ruleGroup);
     }
 
     /**

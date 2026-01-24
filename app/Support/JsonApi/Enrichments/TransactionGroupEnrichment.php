@@ -206,7 +206,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                 'zoom_level' => (int) $location['zoom_level'],
             ];
         }
-        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
+//        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
 
     private function collectMetaData(): void
@@ -242,7 +242,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+//        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectTags(): void

@@ -1,8 +1,7 @@
 <?php
-
-/**
- * StoredTransactionGroup.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * CreatedTransactionGroupBatch.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,22 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Model\TransactionGroup;
 
-namespace FireflyIII\Events;
-
-use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
-/**
- * Class StoredTransactionGroup.
- */
-class StoredTransactionGroup extends Event
+class CreatedTransactionGroupInBatch extends Event
 {
     use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, public bool $applyRules, public bool $fireWebhooks) {}
+    public function __construct(public Collection $collection, public array $flags) {}
 }

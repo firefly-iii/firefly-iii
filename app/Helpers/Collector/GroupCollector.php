@@ -442,7 +442,7 @@ class GroupCollector implements GroupCollectorInterface
         }
         $result      = $this->query->get($this->fields);
         // $this->dumpQueryInLogs();
-        Log::debug(sprintf('Count of result is %d', $result->count()));
+        // Log::debug(sprintf('Count of result is %d', $result->count()));
         // now to parse this into an array.
         $collection  = $this->parseArray($result);
 

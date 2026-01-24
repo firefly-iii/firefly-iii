@@ -327,7 +327,7 @@ class RecurringEnrichment implements EnrichmentInterface
             $this->notes[$notableId] = (string) $note['text'];
             Log::debug(sprintf('Collected note #%d for recurrence #%d', $note['id'], $notableId));
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+//        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectPiggyBankInfo(array $piggyBankIds): void

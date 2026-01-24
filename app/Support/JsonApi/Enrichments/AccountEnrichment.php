@@ -223,10 +223,7 @@ class AccountEnrichment implements EnrichmentInterface
             // $finalBalance            = Steam::finalAccountBalance($item, $date, $this->primaryCurrency, $this->convertToPrimary);
             $finalBalance                 = $this->balances[$id];
             $balanceDifference            = $this->getBalanceDifference($id, $currency);
-            Log::debug(
-                sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()),
-                $finalBalance
-            );
+            // Log::debug(sprintf('Call finalAccountBalance(%s) with date/time "%s"', var_export($this->convertToPrimary, true), $date->toIso8601String()), $finalBalance);
 
             // collect current balances:
             $currentBalance               = Steam::bcround($finalBalance[$currency->code] ?? '0', $currency->decimal_places);
@@ -329,7 +326,7 @@ class AccountEnrichment implements EnrichmentInterface
                 'zoom_level' => (int) $location['zoom_level'],
             ];
         }
-        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
+//        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
 
     private function collectMetaData(): void
@@ -385,7 +382,7 @@ class AccountEnrichment implements EnrichmentInterface
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+//        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectObjectGroups(): void

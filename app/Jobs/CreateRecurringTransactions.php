@@ -25,8 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
-use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
@@ -383,7 +384,10 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
-        event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
+        $flags = new TransactionGroupEventFlags();
+        $flags->applyRules = $recurrence->apply_rules;
+        event(new CreatedSingleTransactionGroup($group, $flags));
+        // event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
         $this->groups->push($group);
 
         // update recurring thing:

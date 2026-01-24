@@ -205,7 +205,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
         foreach ($notes as $note) {
             $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+//        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectObjectGroups(): void

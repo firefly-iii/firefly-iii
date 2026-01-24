@@ -27,7 +27,8 @@ namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -109,9 +110,12 @@ class StoreController extends Controller
             throw new ValidationException($validator);
         }
         Preferences::mark();
-        $applyRules         = $data['apply_rules'] ?? true;
-        $fireWebhooks       = $data['fire_webhooks'] ?? true;
-        event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
+        $flags = new TransactionGroupEventFlags();
+        $flags->applyRules = $data['apply_rules'] ?? true;
+        $flags->fireWebhooks = $data['fire_webhooks'] ?? true;
+        $flags->batchSubmission = $data['batch_submission'] ?? false;
+        Log::debug('dingflofbips');
+        event(new CreatedSingleTransactionGroup($transactionGroup, $flags));
 
         $manager            = $this->getManager();
 

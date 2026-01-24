@@ -398,7 +398,7 @@ trait ConvertsDataTypes
     protected function getCarbonDate(string $field): ?Carbon
     {
         $data = (string) $this->get($field);
-        Log::debug(sprintf('Date string is "%s"', $data));
+        //Log::debug(sprintf('Date string is "%s"', $data));
 
         if ('' === $data) {
             return null;

@@ -59,12 +59,7 @@ class Steam
         ?bool $convertToPrimary = null,
         bool $inclusive = true
     ): array {
-        Log::debug(sprintf(
-            'accountsBalancesOptimized: Called for %d account(s) with date/time "%s" (inclusive: %s)',
-            $accounts->count(),
-            $date->toIso8601String(),
-            var_export($inclusive, true)
-        ));
+        // Log::debug(sprintf('accountsBalancesOptimized: Called for %d account(s) with date/time "%s" (inclusive: %s)', $accounts->count(), $date->toIso8601String(), var_export($inclusive, true)));
         $result      = [];
         $convertToPrimary ??= Amount::convertToPrimary();
         $primary          ??= Amount::getPrimaryCurrency();
@@ -80,7 +75,7 @@ class Steam
             ->toArray()
         ;
 
-        Log::debug('Array of sums: ', $arrayOfSums);
+        // Log::debug('Array of sums: ', $arrayOfSums);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -136,7 +131,7 @@ class Steam
             }
             $final                = array_merge($return, $sumsByCode);
             $result[$account->id] = $final;
-            Log::debug(sprintf('Final balance for account #%d is', $account->id), $final);
+            // Log::debug(sprintf('Final balance for account #%d is', $account->id), $final);
         }
 
         return $result;
