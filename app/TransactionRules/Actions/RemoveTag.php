@@ -45,33 +45,34 @@ class RemoveTag implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $name = $this->action->getValue($journal);
+        $name   = $this->action->getValue($journal);
 
         /** @var User $user */
-        $user = User::find($journal['user_id']);
-        $tag  = $user->tags()->where('tag', $name)->first();
+        $user   = User::find($journal['user_id']);
+        $tag    = $user->tags()->where('tag', $name)->first();
 
         // if tag does not exist, no need to continue:
         if (null === $tag) {
             Log::debug(sprintf(
-                           'RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.',
-                           $name,
-                           $journal['transaction_journal_id']
-                       ));
+                'RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag exists.',
+                $name,
+                $journal['transaction_journal_id']
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_tag', ['tag' => $name])));
 
             return false;
         }
-        $count = DB::table('tag_transaction_journal')
-                   ->where('transaction_journal_id', $journal['transaction_journal_id'])
-                   ->where('tag_id', $tag->id)
-                   ->count();
+        $count  = DB::table('tag_transaction_journal')
+            ->where('transaction_journal_id', $journal['transaction_journal_id'])
+            ->where('tag_id', $tag->id)
+            ->count()
+        ;
         if (0 === $count) {
             Log::debug(sprintf(
-                           'RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.',
-                           $name,
-                           $journal['transaction_journal_id']
-                       ));
+                'RuleAction RemoveTag tried to remove tag "%s" from journal #%d but no such tag is linked.',
+                $name,
+                $journal['transaction_journal_id']
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_unlink_tag', ['tag' => $name])));
 
             return false;
@@ -79,9 +80,10 @@ class RemoveTag implements ActionInterface
 
         Log::debug(sprintf('RuleAction RemoveTag removed tag #%d ("%s") from journal #%d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
         DB::table('tag_transaction_journal')
-          ->where('transaction_journal_id', $journal['transaction_journal_id'])
-          ->where('tag_id', $tag->id)
-          ->delete();
+            ->where('transaction_journal_id', $journal['transaction_journal_id'])
+            ->where('tag_id', $tag->id)
+            ->delete()
+        ;
 
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);

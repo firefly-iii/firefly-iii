@@ -27,7 +27,6 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
-use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;

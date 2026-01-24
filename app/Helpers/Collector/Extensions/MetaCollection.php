@@ -786,6 +786,7 @@ trait MetaCollection
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
+
                         return true;
                     }
                 }

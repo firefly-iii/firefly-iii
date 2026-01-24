@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * ChecksForNewVersion.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -41,8 +44,8 @@ class ChecksForNewVersion
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         // should not check for updates:
-        $permission = FireflyConfig::get('permission_update_check', -1);
-        $value      = (int)$permission->data;
+        $permission    = FireflyConfig::get('permission_update_check', -1);
+        $value         = (int) $permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
@@ -51,8 +54,8 @@ class ChecksForNewVersion
         }
 
         /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $user       = $event->user;
+        $repository    = app(UserRepositoryInterface::class);
+        $user          = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -71,7 +74,7 @@ class ChecksForNewVersion
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release = $this->getLatestRelease();
+        $release       = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
         FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
@@ -100,9 +103,9 @@ class ChecksForNewVersion
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < (604800 * 4)) {
             Log::debug(sprintf(
-                           'Warned about updates less than four weeks ago (on %s).',
-                           Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
-                       ));
+                'Warned about updates less than four weeks ago (on %s).',
+                Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
+            ));
 
             return;
         }

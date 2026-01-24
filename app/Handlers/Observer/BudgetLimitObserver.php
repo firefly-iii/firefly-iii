@@ -49,7 +49,7 @@ class BudgetLimitObserver
         $singleton = PreferencesSingleton::getInstance();
 
         if (true === $singleton->getPreference('fire_webhooks_bl_store')) {
-            $user = $budgetLimit->budget->user;
+            $user   = $budgetLimit->budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);
@@ -73,7 +73,7 @@ class BudgetLimitObserver
         $userCurrency               = Amount::getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
         $budgetLimit->native_amount = null;
         if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
+            $converter                  = new ExchangeRateConverter();
             $converter->setUserGroup($budgetLimit->budget->user->userGroup);
             $converter->setIgnoreSettings(true);
             $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
@@ -92,7 +92,7 @@ class BudgetLimitObserver
         $singleton = PreferencesSingleton::getInstance();
 
         if (true === $singleton->getPreference('fire_webhooks_bl_update')) {
-            $user = $budgetLimit->budget->user;
+            $user   = $budgetLimit->budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SystemRequestedVersionCheck.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,5 +32,7 @@ class SystemRequestedVersionCheck extends Event
 {
     use SerializesModels;
 
-    public function __construct(public User $user) {}
+    public function __construct(
+        public User $user
+    ) {}
 }

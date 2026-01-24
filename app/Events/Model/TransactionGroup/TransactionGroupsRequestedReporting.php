@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * TransactionGroupsRequestedReporting.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,6 +35,8 @@ class TransactionGroupsRequestedReporting extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public int $userId, public Collection $groups) {}
+    public function __construct(
+        public int $userId,
+        public Collection $groups
+    ) {}
 }
-
