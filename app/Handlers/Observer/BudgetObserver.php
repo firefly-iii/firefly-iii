@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Enums\WebhookTrigger;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Attachment;
@@ -59,8 +60,8 @@ class BudgetObserver
             $engine->setObjects(new Collection()->push($budget));
             $engine->setTrigger(WebhookTrigger::STORE_BUDGET);
             $engine->generateMessages();
-            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-            event(new RequestedSendWebhookMessages());
+            Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+            event(new WebhookMessagesRequestSending());
         }
     }
 
@@ -80,8 +81,8 @@ class BudgetObserver
             $engine->setObjects(new Collection()->push($budget));
             $engine->setTrigger(WebhookTrigger::UPDATE_BUDGET);
             $engine->generateMessages();
-            Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-            event(new RequestedSendWebhookMessages());
+            Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+            event(new WebhookMessagesRequestSending());
         }
     }
 
@@ -97,8 +98,8 @@ class BudgetObserver
         $engine->setObjects(new Collection()->push($budget));
         $engine->setTrigger(WebhookTrigger::DESTROY_BUDGET);
         $engine->generateMessages();
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
 
         $repository   = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);

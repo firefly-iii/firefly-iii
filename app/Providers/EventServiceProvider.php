@@ -27,7 +27,6 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredAccount;
@@ -47,98 +46,42 @@ use Override;
  */
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        // is a User related event.
-        //            RegisteredUser::class                  => [
-        //                'FireflyIII\Handlers\Events\UserEventHandler@createExchangeRates',
-        //            ],
-        //            UserAttemptedLogin::class              => [
-        //                'FireflyIII\Handlers\Events\UserEventHandler@sendLoginAttemptNotification',
-        //            ],
-        // is a User related event.
-        Login::class                           => [
-            'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
-            'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
-        ],
-        //            DetectedNewIPAddress::class            => [
-        //                'FireflyIII\Handlers\Events\UserEventHandler@notifyNewIPAddress',
-        //            ],
-        RequestedVersionCheckStatus::class     => ['FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates'],
-        RequestedReportOnJournals::class       => ['FireflyIII\Handlers\Events\AutomationHandler@reportJournals'],
+    protected $listen
+        = [
+            Login::class                           => [
+                'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+                'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
+            ],
+            RequestedVersionCheckStatus::class     => ['FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates'],
 
-        // is a User related event.
-        InvitationCreated::class               => [
-            'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
-            'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
-        ],
+            // is a User related event.
+            InvitationCreated::class               => [
+                'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
+                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
+            ],
 
-        // is a Transaction Journal related event.
-        StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
-        TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
-        // is a Transaction Journal related event.
-        UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
-        DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
-        // API related events:
-        AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
+            // is a Transaction Journal related event.
+            StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
+            TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
+            // is a Transaction Journal related event.
+            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
+            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
+            // API related events:
+            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
 
-        // Webhook related event:
-        RequestedSendWebhookMessages::class    => ['FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages'],
+            // Webhook related event:
+            RequestedSendWebhookMessages::class    => ['FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages'],
 
-        // account related events:
-        StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
-        UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
+            // account related events:
+            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
+            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
 
-        // subscription related events:
-        //            SubscriptionNeedsExtensionOrRenewal::class                 => [
-        //                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutBill',
-        //            ],
-        //            WarnUserAboutOverdueSubscriptions::class => [
-        //                'FireflyIII\Handlers\Events\BillEventHandler@warnAboutOverdueSubscriptions',
-        //            ],
+            // audit log events:
+            TriggeredAuditLog::class               => ['FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent'],
 
-        // audit log events:
-        TriggeredAuditLog::class               => ['FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent'],
-        // piggy bank related events:
-        //            PiggyBankAmountIsChanged::class => [
-        //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changePiggyAmount',
-        //            ],
-        //            ChangedName::class                     => [
-        //                'FireflyIII\Handlers\Events\Model\PiggyBankEventHandler@changedPiggyBankName',
-        //            ],
-
-        // rule actions
-        //            RuleActionFailedOnArray::class         => [
-        //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnArray',
-        //            ],
-        //            RuleActionFailedOnObject::class        => [
-        //                'FireflyIII\Handlers\Events\Model\RuleHandler@ruleActionFailedOnObject',
-        //            ],
-
-        // security related
-        //            EnabledMFA::class                      => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAEnabledMail',
-        //            ],
-        //            DisabledMFA::class                     => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFADisabledMail',
-        //            ],
-        //            MFANewBackupCodes::class               => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendNewMFABackupCodesMail',
-        //            ],
-        //            MFAUsedBackupCode::class               => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendUsedBackupCodeMail',
-        //            ],
-        //            MFABackupFewLeft::class                => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupFewLeftMail',
-        //            ],
-        //            MFABackupNoLeft::class                 => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendBackupNoLeftMail',
-        //            ],
-        //            MFAManyFailedAttempts::class           => [
-        //                'FireflyIII\Handlers\Events\Security\MFAHandler@sendMFAFailedAttemptsMail',
-        //            ],
-        // preferences
-        UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
-    ];
+            // preferences
+            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
+        ];
 
     /**
      * Register any events for your application.

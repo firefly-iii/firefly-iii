@@ -1,8 +1,7 @@
 <?php
-
-/**
- * AutomationHandler.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * MailsNewTransactionsReport.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,13 +19,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use Exception;
-use FireflyIII\Events\RequestedReportOnJournals;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -35,19 +31,10 @@ use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-/**
- * Class AutomationHandler
- */
-class AutomationHandler
+class MailsNewTransactionsReport
 {
-    /**
-     * Respond to the creation of X journals.
-     *
-     * @throws FireflyException
-     */
-    public function reportJournals(RequestedReportOnJournals $event): void
-    {
-        Log::debug('In reportJournals.');
+    public function handle(TransactionGroupsRequestedReporting $event) {
+        Log::debug('In MailsNewTransactionsReport.');
 
         /** @var UserRepositoryInterface $repository */
         $repository  = app(UserRepositoryInterface::class);
@@ -98,4 +85,5 @@ class AutomationHandler
         }
         Log::debug('If there is no error above this line, message was sent.');
     }
+
 }

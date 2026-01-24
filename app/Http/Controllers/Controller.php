@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
@@ -152,10 +153,10 @@ abstract class Controller extends BaseController
                 View::share('original_route_name', Route::currentRouteName());
 
                 // lottery to send any remaining webhooks:
-                if (7 === random_int(1, 10)) {
+                if (7 === random_int(1, 30)) {
                     // trigger event to send them:
-                    Log::debug('send event RequestedSendWebhookMessages through lottery');
-                    event(new RequestedSendWebhookMessages());
+                    Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+                    event(new WebhookMessagesRequestSending());
                 }
             }
             View::share('darkMode', $darkMode);

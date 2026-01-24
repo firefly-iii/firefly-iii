@@ -1,8 +1,7 @@
 <?php
-
-/**
- * RequestedReportOnJournals.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * TransactionGroupsRequestedReporting.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,41 +19,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Model\TransactionGroup;
 
-namespace FireflyIII\Events;
-
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Foundation\Events\Dispatchable;
+use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
-/**
- * Class RequestedReportOnJournals
- */
-class RequestedReportOnJournals
+class TransactionGroupsRequestedReporting extends Event
 {
-    use Dispatchable;
-    use InteractsWithSockets;
     use SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public int $userId,
-        public Collection $groups
-    ) {
-        Log::debug('In event RequestedReportOnJournals.');
-    }
-
-    /**
-     * Get the channels the event should broadcast on.
-     */
-    public function broadcastOn(): PrivateChannel
-    {
-        return new PrivateChannel('channel-name');
-    }
+    public function __construct(public int $userId, public Collection $groups) {}
 }
+

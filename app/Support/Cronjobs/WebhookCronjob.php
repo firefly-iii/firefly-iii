@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Cronjobs;
 
 use Carbon\Carbon;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
@@ -73,17 +74,17 @@ class WebhookCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the webhook cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        $this->fireWebhookmessages();
+        $this->fireWebhookMessages();
 
         Preferences::mark();
     }
 
-    private function fireWebhookmessages(): void
+    private function fireWebhookMessages(): void
     {
         Log::info(sprintf('Will now send webhook messages for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
-        Log::debug('send event RequestedSendWebhookMessages through cron job.');
-        event(new RequestedSendWebhookMessages());
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
 
         // get stuff from job:
         $this->jobFired     = true;

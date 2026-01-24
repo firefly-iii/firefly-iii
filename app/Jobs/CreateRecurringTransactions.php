@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -145,7 +145,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Now running report thing.');
         // will now send email to users.
         foreach ($result as $userId => $journals) {
-            event(new RequestedReportOnJournals($userId, $journals));
+            event(new TransactionGroupsRequestedReporting($userId, $journals));
         }
 
         Log::debug('Done with handle()');
