@@ -44,19 +44,19 @@ class EventServiceProvider extends ServiceProvider
         = [
             // is a Transaction Journal related event.
             // StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
-            TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
+            // TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
             // is a Transaction Journal related event.
-            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
-            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
+//            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
+//            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
             // API related events:
-            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
+//            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
 
             // account related events:
-            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
-            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
+//            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
+//            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
 
             // preferences
-            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
+//            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
         ];
 
     /**
