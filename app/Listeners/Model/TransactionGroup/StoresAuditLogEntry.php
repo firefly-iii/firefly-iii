@@ -1,8 +1,7 @@
 <?php
-
 /*
- * AuditEventHandler.php
- * Copyright (c) 2022 james@firefly-iii.org
+ * StoresAuditLogEntry.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,22 +19,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use Carbon\Carbon;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class AuditEventHandler
- */
-class AuditEventHandler
+class StoresAuditLogEntry
 {
-    public function storeAuditEvent(TriggeredAuditLog $event): void
-    {
+    public function handle(TransactionGroupRequestsAuditLogEntry $event): void {
         $array      = [
             'auditable' => $event->auditable,
             'changer'   => $event->changer,

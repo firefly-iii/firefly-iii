@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -48,10 +48,10 @@ class AppendNotes implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         $this->refreshNotes($journal);
-        $dbNote       = Note::where('noteable_id', (int) $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first(['notes.*']);
+        $dbNote = Note::where('noteable_id', (int)$journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first(['notes.*']);
         if (null === $dbNote) {
             $dbNote                = new Note();
-            $dbNote->noteable_id   = (int) $journal['transaction_journal_id'];
+            $dbNote->noteable_id   = (int)$journal['transaction_journal_id'];
             $dbNote->noteable_type = TransactionJournal::class;
             $dbNote->text          = '';
         }
@@ -62,10 +62,10 @@ class AppendNotes implements ActionInterface
         $dbNote->save();
 
         /** @var TransactionJournal $object */
-        $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         Log::debug(sprintf('RuleAction AppendNotes appended "%s" to "%s".', $append, $before));
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $before, $text));
 
         return true;
     }

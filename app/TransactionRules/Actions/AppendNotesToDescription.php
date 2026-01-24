@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -62,21 +62,21 @@ class AppendNotesToDescription implements ActionInterface
 
             return false;
         }
-        $note   = $object->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             Log::debug('Journal has no notes.');
-            $note       = new Note();
+            $note = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
         // only append if there is something to append
         if ('' !== $note->text) {
             $before              = $object->description;
-            $object->description = trim(sprintf('%s %s', $object->description, (string) $this->clearString($note->text)));
+            $object->description = trim(sprintf('%s %s', $object->description, (string)$this->clearString($note->text)));
             $object->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
 
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $object->description));
 
             return true;
         }

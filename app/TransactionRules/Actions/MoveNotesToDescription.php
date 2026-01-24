@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -53,14 +53,14 @@ class MoveNotesToDescription implements ActionInterface
     public function actOnArray(array $journal): bool
     {
         /** @var null|TransactionJournal $object */
-        $object              = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
+        $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.journal_other_user')));
 
             return false;
         }
-        $note                = $object->notes()->first();
+        $note = $object->notes()->first();
         if (null === $note) {
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_notes_to_move')));
 
@@ -76,12 +76,12 @@ class MoveNotesToDescription implements ActionInterface
         }
         $before              = $object->description;
         $beforeNote          = $note->text;
-        $object->description = (string) $this->clearString($note->text);
+        $object->description = (string)$this->clearString($note->text);
         $object->save();
         $note->delete();
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
-        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_notes', $beforeNote, null));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $object->description));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'clear_notes', $beforeNote, null));
 
         return true;
     }

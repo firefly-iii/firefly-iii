@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
@@ -121,7 +122,7 @@ class SetDestinationAccount implements ActionInterface
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_destination', null, $newAccount->name));
 
         // update destination transaction with new destination account:
         DB::table('transactions')

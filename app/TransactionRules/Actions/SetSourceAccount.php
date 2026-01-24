@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
@@ -119,7 +120,7 @@ class SetSourceAccount implements ActionInterface
             ->update(['account_id' => $newAccount->id])
         ;
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 

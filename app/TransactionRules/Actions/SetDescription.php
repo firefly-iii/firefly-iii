@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -70,7 +71,7 @@ class SetDescription implements ActionInterface
             $after
         ));
         $object->refresh();
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

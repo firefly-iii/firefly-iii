@@ -25,6 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -87,7 +88,7 @@ class LinkToBill implements ActionInterface
 
             /** @var TransactionJournal $object */
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_bill', null, $bill->name));
 
             return true;
         }

@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
@@ -58,7 +58,7 @@ class GroupUpdateService
             $oldTitle                = $transactionGroup->title;
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
-            event(new TriggeredAuditLog($transactionGroup->user, $transactionGroup, 'update_group_title', $oldTitle, $data['group_title']));
+            event(new TransactionGroupRequestsAuditLogEntry($transactionGroup->user, $transactionGroup, 'update_group_title', $oldTitle, $data['group_title']));
         }
 
         if (0 === count($transactions)) {
@@ -81,8 +81,8 @@ class GroupUpdateService
 
         Log::debug('Going to update split group.');
 
-        $existing     = $transactionGroup->transactionJournals->pluck('id')->toArray();
-        $updated      = $this->updateTransactions($transactionGroup, $transactions);
+        $existing = $transactionGroup->transactionJournals->pluck('id')->toArray();
+        $updated  = $this->updateTransactions($transactionGroup, $transactions);
         Log::debug('Array of updated IDs: ', $updated);
 
         if (0 === count($updated)) {
@@ -94,13 +94,13 @@ class GroupUpdateService
             return $transactionGroup;
         }
 
-        $result       = array_diff($existing, $updated);
+        $result = array_diff($existing, $updated);
         Log::debug('Result of DIFF: ', $result);
 
         /** @var string $deletedId */
         foreach ($result as $deletedId) {
             /** @var TransactionJournal $journal */
-            $journal = $transactionGroup->transactionJournals()->find((int) $deletedId);
+            $journal = $transactionGroup->transactionJournals()->find((int)$deletedId);
 
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);
@@ -151,10 +151,10 @@ class GroupUpdateService
          */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now at #%d of %d', $index + 1, count($transactions)), $transaction);
-            $journalId = (int) ($transaction['transaction_journal_id'] ?? 0);
+            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
 
             /** @var null|TransactionJournal $journal */
-            $journal   = $transactionGroup->transactionJournals()->find($journalId);
+            $journal = $transactionGroup->transactionJournals()->find($journalId);
             if (null === $journal) {
                 Log::debug('This entry has no existing journal: make a new split.');
                 // force the transaction type on the transaction data.
@@ -199,7 +199,7 @@ class GroupUpdateService
         $submission = ['transactions' => [$data]];
 
         /** @var TransactionJournalFactory $factory */
-        $factory    = app(TransactionJournalFactory::class);
+        $factory = app(TransactionJournalFactory::class);
         $factory->setUser($transactionGroup->user);
 
         try {

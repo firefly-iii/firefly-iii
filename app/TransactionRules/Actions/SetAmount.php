@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -79,7 +80,7 @@ class SetAmount implements ActionInterface
         // event for audit log entry
         if (0 !== bccomp($journal['amount'], $value)) {
             event(
-                new TriggeredAuditLog(
+                new TransactionGroupRequestsAuditLogEntry(
                     $this->action->rule,
                     $object,
                     'update_amount',

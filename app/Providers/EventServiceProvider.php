@@ -29,7 +29,6 @@ use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
-use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use Illuminate\Auth\Events\Login;
@@ -50,7 +49,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
             ],
-                // is a User related event.
+            // is a User related event.
             InvitationCreated::class               => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
@@ -69,8 +68,6 @@ class EventServiceProvider extends ServiceProvider
             StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
             UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
 
-            // audit log events:
-            TriggeredAuditLog::class               => ['FireflyIII\Handlers\Events\AuditEventHandler@storeAuditEvent'],
 
             // preferences
             UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],

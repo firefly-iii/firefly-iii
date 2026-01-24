@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
@@ -63,7 +64,7 @@ class PrependNotes implements ActionInterface
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $before, $text));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $before, $text));
 
         return true;
     }

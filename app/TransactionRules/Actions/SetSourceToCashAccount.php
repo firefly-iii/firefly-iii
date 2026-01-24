@@ -26,6 +26,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -102,7 +103,7 @@ class SetSourceToCashAccount implements ActionInterface
             return false;
         }
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $cashAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_source', null, $cashAccount->name));
 
         // update destination transaction with new destination account:
         DB::table('transactions')

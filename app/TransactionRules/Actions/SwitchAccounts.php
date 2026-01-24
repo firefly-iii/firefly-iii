@@ -26,6 +26,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -97,7 +98,7 @@ class SwitchAccounts implements ActionInterface
         $sourceTransaction->save();
         $destTransaction->save();
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'switch_accounts', $sourceAccountId, $destinationAccountId));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'switch_accounts', $sourceAccountId, $destinationAccountId));
 
         return true;
     }

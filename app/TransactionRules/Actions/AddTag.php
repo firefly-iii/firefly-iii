@@ -25,7 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -52,12 +52,12 @@ class AddTag implements ActionInterface
         $factory = app(TagFactory::class);
 
         /** @var User $user */
-        $user    = User::find($journal['user_id']);
+        $user = User::find($journal['user_id']);
         $factory->setUser($user);
         $tagName = $this->action->getValue($journal);
         $tag     = $factory->findOrCreate($tagName);
 
-        $type    = $journal['transaction_type_type'];
+        $type = $journal['transaction_type_type'];
         if (
             TransactionTypeEnum::OPENING_BALANCE->value === $type
             || TransactionTypeEnum::LIABILITY_CREDIT->value === $type
@@ -75,33 +75,32 @@ class AddTag implements ActionInterface
             return false;
         }
 
-        $count   = DB::table('tag_transaction_journal')
-            ->where('tag_id', $tag->id)
-            ->where('transaction_journal_id', $journal['transaction_journal_id'])
-            ->count()
-        ;
+        $count = DB::table('tag_transaction_journal')
+                   ->where('tag_id', $tag->id)
+                   ->where('transaction_journal_id', $journal['transaction_journal_id'])
+                   ->count();
         if (0 === $count) {
             // add to journal:
             DB::table('tag_transaction_journal')->insert([
-                'tag_id'                 => $tag->id,
-                'transaction_journal_id' => $journal['transaction_journal_id'],
-            ]);
+                                                             'tag_id'                 => $tag->id,
+                                                             'transaction_journal_id' => $journal['transaction_journal_id'],
+                                                         ]);
             Log::debug(sprintf('RuleAction AddTag. Added tag #%d ("%s") to journal %d.', $tag->id, $tag->tag, $journal['transaction_journal_id']));
 
             /** @var TransactionJournal $object */
             $object = TransactionJournal::find($journal['transaction_journal_id']);
 
             // event for audit log entry
-            event(new TriggeredAuditLog($this->action->rule, $object, 'add_tag', null, $tag->tag));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'add_tag', null, $tag->tag));
 
             return true;
         }
         Log::debug(sprintf(
-            'RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.',
-            $tag->id,
-            $tag->tag,
-            $journal['transaction_journal_id']
-        ));
+                       'RuleAction AddTag fired but tag %d ("%s") was already added to journal %d.',
+                       $tag->id,
+                       $tag->tag,
+                       $journal['transaction_journal_id']
+                   ));
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.tag_already_added', ['tag' => $tagName])));
 
         return false;

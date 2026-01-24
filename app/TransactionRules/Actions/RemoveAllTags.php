@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
@@ -58,7 +59,7 @@ class RemoveAllTags implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
-        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_all_tags', null, null));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'clear_all_tags', null, null));
 
         return true;
     }

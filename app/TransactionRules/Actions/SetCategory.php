@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Events\TriggeredAuditLog;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
@@ -97,7 +98,7 @@ class SetCategory implements ActionInterface
 
         /** @var TransactionJournal $object */
         $object          = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_category', $oldCategoryName, $category->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_category', $oldCategoryName, $category->name));
 
         return true;
     }
