@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * NotifiesAboutNewInvitation.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,7 +25,7 @@
 namespace FireflyIII\Listeners\Security\System;
 
 use Exception;
-use FireflyIII\Events\Admin\InvitationCreated;
+
 use FireflyIII\Events\Security\System\NewInvitationCreated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\InvitationMail;
