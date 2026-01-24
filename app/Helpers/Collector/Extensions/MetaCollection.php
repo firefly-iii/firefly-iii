@@ -773,30 +773,21 @@ trait MetaCollection
         $this->query->whereNotNull('tag_transaction_journal.tag_id');
 
         // Added this while fixing #10898, not sure why a post filter was ever necessary.
-        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
+        // Removed again for #11473 because it breaks multiple tag filters.
+        // $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         // this method adds a "postFilter" to the collector.
         $list                = $tags->pluck('tag')->toArray();
         $list                = array_map(strtolower(...), $list);
         $filter              = static function (array $object) use ($list): bool {
-            Log::debug(sprintf('Now in setTags(%s) filter', implode(', ', $list)));
+            Log::debug(sprintf('Now in setTags (any) filter: %s', implode(', ', $list)));
             foreach ($object['transactions'] as $transaction) {
-                $total   = count($transaction['tags']);
-                $matched = 0;
                 foreach ($transaction['tags'] as $tag) {
                     Log::debug(sprintf('"%s" versus', strtolower((string) $tag['name'])), $list);
                     if (in_array(strtolower((string) $tag['name']), $list, true)) {
                         Log::debug(sprintf('Transaction has tag "%s" so return true.', $tag['name']));
-                        ++$matched;
-                        if (1 === count($list)) {
-                            return true;
-                        }
+                        return true;
                     }
-                }
-                if (count($list) > 1 && $total === $matched && $matched === count($list)) {
-                    Log::debug(sprintf('All %d searched tags are present.', $total));
-
-                    return true;
                 }
             }
             Log::debug('Transaction has no tags from the list, so return false.');
