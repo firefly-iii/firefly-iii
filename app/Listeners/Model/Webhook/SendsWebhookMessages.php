@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * SendsWebhookMessages.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,7 +32,8 @@ use Illuminate\Support\Facades\Log;
 
 class SendsWebhookMessages
 {
-    public function handle(WebhookMessagesRequestSending $event): void {
+    public function handle(WebhookMessagesRequestSending $event): void
+    {
         Log::debug(sprintf('Now in %s for %s', __METHOD__, get_class($event)));
         if (false === config('firefly.feature_flags.webhooks') || false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::debug('Webhook event handler is disabled, do not run sendWebhookMessages().');
@@ -39,9 +43,9 @@ class SendsWebhookMessages
 
         // kick off the job!
         $messages = WebhookMessage::where('webhook_messages.sent', false)
-                                  ->get(['webhook_messages.*'])
-                                  ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
-                                  ->splice(0, 5)
+            ->get(['webhook_messages.*'])
+            ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
+            ->splice(0, 5)
         ;
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
 
@@ -62,5 +66,4 @@ class SendsWebhookMessages
         // clean up sent messages table:
         WebhookMessage::where('webhook_messages.sent', true)->where('webhook_messages.created_at', '<', now()->subDays(14))->delete();
     }
-
 }

@@ -43,35 +43,33 @@ use Override;
  */
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen
-        = [
-            Login::class                           => [
-                'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
-                'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
-            ],
-            // is a User related event.
-            InvitationCreated::class               => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
-                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
-            ],
+    protected $listen = [
+        Login::class                           => [
+            'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
+            'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
+        ],
+        // is a User related event.
+        InvitationCreated::class               => [
+            'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
+            'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
+        ],
 
-            // is a Transaction Journal related event.
-            StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
-            TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
-            // is a Transaction Journal related event.
-            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
-            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
-            // API related events:
-            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
+        // is a Transaction Journal related event.
+        StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
+        TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
+        // is a Transaction Journal related event.
+        UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
+        DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
+        // API related events:
+        AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
 
-            // account related events:
-            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
-            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
+        // account related events:
+        StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
+        UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
 
-
-            // preferences
-            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
-        ];
+        // preferences
+        UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
+    ];
 
     /**
      * Register any events for your application.
