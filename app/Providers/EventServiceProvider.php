@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
@@ -31,7 +30,6 @@ use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Events\UpdatedTransactionGroup;
-use Illuminate\Auth\Events\Login;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 use Laravel\Passport\Events\AccessTokenCreated;
 use Override;
@@ -45,16 +43,6 @@ class EventServiceProvider extends ServiceProvider
 {
     protected $listen
         = [
-            Login::class                           => [
-                'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
-                'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
-            ],
-            // is a User related event.
-            InvitationCreated::class               => [
-                'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
-                'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
-            ],
-
             // is a Transaction Journal related event.
             StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
             TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],

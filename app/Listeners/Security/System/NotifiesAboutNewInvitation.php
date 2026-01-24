@@ -1,8 +1,7 @@
 <?php
-
-/**
- * AdminEventHandler.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * NotifiesAboutNewInvitation.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,24 +18,48 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Security\System;
 
 use Exception;
 use FireflyIII\Events\Admin\InvitationCreated;
+use FireflyIII\Events\Security\System\NewInvitationCreated;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Mail\InvitationMail;
+use FireflyIII\Models\InvitedUser;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 
-/**
- * Class AdminEventHandler.
- */
-class AdminEventHandler
+class NotifiesAboutNewInvitation
 {
-    public function sendInvitationNotification(InvitationCreated $event): void
+    public function handle(NewInvitationCreated $event): void
+    {
+        $this->sendInvitationNotification($event->invitee);
+        $this->sendRegistrationInvite($event->invitee);
+    }
+
+
+    private function sendRegistrationInvite(InvitedUser $invitee): void
+    {
+        $email = $invitee->email;
+        $admin = $invitee->user->email;
+        $url   = route('invite', [$invitee->invite_code]);
+
+        try {
+            Mail::to($email)->send(new InvitationMail($invitee, $admin, $url));
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+    }
+
+    private function sendInvitationNotification(InvitedUser $invitee): void
     {
         $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
         if (false === $sendMail) {
@@ -44,7 +67,7 @@ class AdminEventHandler
         }
 
         try {
-            Notification::send(new OwnerNotifiable(), new UserInvitation($event->invitee));
+            Notification::send(new OwnerNotifiable(), new UserInvitation($invitee));
         } catch (Exception $e) {
             $message = $e->getMessage();
             if (str_contains($message, 'Bcc')) {
@@ -62,5 +85,4 @@ class AdminEventHandler
         }
     }
 
-    // Send new version message to admin.
 }
