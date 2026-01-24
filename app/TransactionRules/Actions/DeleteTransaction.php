@@ -45,15 +45,15 @@ class DeleteTransaction implements ActionInterface
 
     public function actOnArray(array $journal): bool
     {
-        $count = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
+        $count  = TransactionJournal::where('transaction_group_id', $journal['transaction_group_id'])->count();
 
         // destroy entire group.
         if (1 === $count) {
             Log::debug(sprintf(
-                           'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                           $journal['transaction_journal_id'],
-                           $journal['description']
-                       ));
+                'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $journal['description']
+            ));
 
             /** @var TransactionGroup $group */
             $group   = TransactionGroup::find($journal['transaction_group_id']);
@@ -65,10 +65,10 @@ class DeleteTransaction implements ActionInterface
             return true;
         }
         Log::debug(sprintf(
-                       'RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").',
-                       $journal['transaction_journal_id'],
-                       $journal['description']
-                   ));
+            'RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").',
+            $journal['transaction_journal_id'],
+            $journal['description']
+        ));
 
         // trigger delete factory:
         /** @var null|TransactionJournal $object */

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * StoresAuditLogEntry.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,7 +31,8 @@ use Illuminate\Support\Facades\Log;
 
 class StoresAuditLogEntry
 {
-    public function handle(TransactionGroupRequestsAuditLogEntry $event): void {
+    public function handle(TransactionGroupRequestsAuditLogEntry $event): void
+    {
         $array      = [
             'auditable' => $event->auditable,
             'changer'   => $event->changer,

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * MailsNewTransactionsReport.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -33,7 +36,8 @@ use Illuminate\Support\Facades\Notification;
 
 class MailsNewTransactionsReport
 {
-    public function handle(TransactionGroupsRequestedReporting $event) {
+    public function handle(TransactionGroupsRequestedReporting $event): void
+    {
         Log::debug('In MailsNewTransactionsReport.');
 
         /** @var UserRepositoryInterface $repository */
@@ -85,5 +89,4 @@ class MailsNewTransactionsReport
         }
         Log::debug('If there is no error above this line, message was sent.');
     }
-
 }

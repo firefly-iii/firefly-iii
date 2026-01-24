@@ -62,17 +62,17 @@ class AppendNotesToDescription implements ActionInterface
 
             return false;
         }
-        $note = $object->notes()->first();
+        $note   = $object->notes()->first();
         if (null === $note) {
             Log::debug('Journal has no notes.');
-            $note = new Note();
+            $note       = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
         // only append if there is something to append
         if ('' !== $note->text) {
             $before              = $object->description;
-            $object->description = trim(sprintf('%s %s', $object->description, (string)$this->clearString($note->text)));
+            $object->description = trim(sprintf('%s %s', $object->description, (string) $this->clearString($note->text)));
             $object->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
 

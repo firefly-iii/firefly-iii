@@ -55,13 +55,13 @@ class AppendDescriptionToNotes implements ActionInterface
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
         if (null === $object) {
             Log::error(sprintf('No journal #%d belongs to user #%d.', $journal['transaction_journal_id'], $journal['user_id']));
-            event(new RuleActionFailedOnArray($this->action, $journal, (string)trans('rules.journal_other_user')));
+            event(new RuleActionFailedOnArray($this->action, $journal, (string) trans('rules.journal_other_user')));
 
             return false;
         }
-        $note = $object->notes()->first();
+        $note   = $object->notes()->first();
         if (null === $note) {
-            $note = new Note();
+            $note       = new Note();
             $note->noteable()->associate($object);
             $note->text = '';
         }
@@ -70,9 +70,9 @@ class AppendDescriptionToNotes implements ActionInterface
             $note->text = trim(sprintf("%s  \n%s", $note->text, $object->description));
         }
         if ('' === $note->text) {
-            $note->text = (string)$object->description;
+            $note->text = (string) $object->description;
         }
-        $after = $note->text;
+        $after  = $note->text;
 
         // event for audit log entry
         event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $before, $after));

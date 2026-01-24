@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * TransactionGroupRequestsAuditLogEntry.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,5 +32,11 @@ class TransactionGroupRequestsAuditLogEntry extends Event
 {
     use SerializesModels;
 
-    public function __construct(public Model $changer, public Model $auditable, public string $field, public mixed $before, public mixed $after) {}
+    public function __construct(
+        public Model $changer,
+        public Model $auditable,
+        public string $field,
+        public mixed $before,
+        public mixed $after
+    ) {}
 }
