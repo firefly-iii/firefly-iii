@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;

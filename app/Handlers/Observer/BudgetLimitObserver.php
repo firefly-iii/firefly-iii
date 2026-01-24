@@ -26,7 +26,6 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Events\RequestedSendWebhookMessages;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Support\Facades\Amount;

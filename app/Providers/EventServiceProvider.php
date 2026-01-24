@@ -27,8 +27,6 @@ use FireflyIII\Events\Admin\InvitationCreated;
 use FireflyIII\Events\DestroyedTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
 use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\RequestedSendWebhookMessages;
-use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Events\StoredAccount;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\TriggeredAuditLog;
@@ -52,9 +50,7 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\UserEventHandler@checkSingleUserIsAdmin',
                 'FireflyIII\Handlers\Events\UserEventHandler@demoUserBackToEnglish',
             ],
-            RequestedVersionCheckStatus::class     => ['FireflyIII\Handlers\Events\VersionCheckEventHandler@checkForUpdates'],
-
-            // is a User related event.
+                // is a User related event.
             InvitationCreated::class               => [
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendInvitationNotification',
                 'FireflyIII\Handlers\Events\UserEventHandler@sendRegistrationInvite',
@@ -68,9 +64,6 @@ class EventServiceProvider extends ServiceProvider
             DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
             // API related events:
             AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
-
-            // Webhook related event:
-            RequestedSendWebhookMessages::class    => ['FireflyIII\Handlers\Events\WebhookEventHandler@sendWebhookMessages'],
 
             // account related events:
             StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],

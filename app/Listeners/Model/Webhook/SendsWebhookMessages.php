@@ -1,8 +1,7 @@
 <?php
-
 /*
- * WebhookEventHandler.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * SendsWebhookMessages.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,26 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Listeners\Model\Webhook;
 
-namespace FireflyIII\Handlers\Events;
-
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class WebhookEventHandler
- */
-class WebhookEventHandler
+class SendsWebhookMessages
 {
-    /**
-     * Will try to send at most 3 messages so the flow doesn't get broken too much.
-     */
-    public function sendWebhookMessages(): void
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+    public function handle(WebhookMessagesRequestSending $event): void {
+        Log::debug(sprintf('Now in %s for %s', __METHOD__, get_class($event)));
         if (false === config('firefly.feature_flags.webhooks') || false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
             Log::debug('Webhook event handler is disabled, do not run sendWebhookMessages().');
 
@@ -48,9 +39,9 @@ class WebhookEventHandler
 
         // kick off the job!
         $messages = WebhookMessage::where('webhook_messages.sent', false)
-            ->get(['webhook_messages.*'])
-            ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
-            ->splice(0, 5)
+                                  ->get(['webhook_messages.*'])
+                                  ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2)
+                                  ->splice(0, 5)
         ;
         Log::debug(sprintf('Found %d webhook message(s) ready to be send.', $messages->count()));
 
@@ -69,6 +60,7 @@ class WebhookEventHandler
         }
 
         // clean up sent messages table:
-        WebhookMessage::where('webhook_messages.sent', true)->where('webhook_messages.created_at', '<', now()->subDays(30))->delete();
+        WebhookMessage::where('webhook_messages.sent', true)->where('webhook_messages.created_at', '<', now()->subDays(14))->delete();
     }
+
 }

@@ -1,8 +1,7 @@
 <?php
-
-/**
- * VersionCheckEventHandler.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * ChecksForNewVersion.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -19,13 +18,11 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Security\System;
 
 use Carbon\Carbon;
-use Deprecated;
-use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\Security\System\SystemRequestedVersionCheck;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
@@ -35,28 +32,17 @@ use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-/**
- * Class VersionCheckEventHandler
- */
-class VersionCheckEventHandler
+class ChecksForNewVersion
 {
     use UpdateTrait;
 
-    /**
-     * Checks with GitHub to see if there is a new version.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws FireflyException
-     * @throws NotFoundExceptionInterface
-     */
-    #[Deprecated(message: '?')]
-    public function checkForUpdates(RequestedVersionCheckStatus $event): void
+    public function handle(SystemRequestedVersionCheck $event): void
     {
-        Log::debug('Now in checkForUpdates()');
+        Log::debug(sprintf('Now in %s', __METHOD__));
 
         // should not check for updates:
-        $permission    = FireflyConfig::get('permission_update_check', -1);
-        $value         = (int) $permission->data;
+        $permission = FireflyConfig::get('permission_update_check', -1);
+        $value      = (int)$permission->data;
         if (1 !== $value) {
             Log::debug('Update check is not enabled.');
             $this->warnToCheckForUpdates($event);
@@ -65,8 +51,8 @@ class VersionCheckEventHandler
         }
 
         /** @var UserRepositoryInterface $repository */
-        $repository    = app(UserRepositoryInterface::class);
-        $user          = $event->user;
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
 
@@ -85,7 +71,7 @@ class VersionCheckEventHandler
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
-        $release       = $this->getLatestRelease();
+        $release = $this->getLatestRelease();
 
         session()->flash($release['level'], $release['message']);
         FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
@@ -96,7 +82,7 @@ class VersionCheckEventHandler
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    protected function warnToCheckForUpdates(RequestedVersionCheckStatus $event): void
+    private function warnToCheckForUpdates(SystemRequestedVersionCheck $event): void
     {
         /** @var UserRepositoryInterface $repository */
         $repository    = app(UserRepositoryInterface::class);
@@ -114,9 +100,9 @@ class VersionCheckEventHandler
         Log::debug(sprintf('Last warning time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < (604800 * 4)) {
             Log::debug(sprintf(
-                'Warned about updates less than four weeks ago (on %s).',
-                Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
-            ));
+                           'Warned about updates less than four weeks ago (on %s).',
+                           Carbon::createFromTimestamp($lastCheckTime->data)->format('Y-m-d H:i:s')
+                       ));
 
             return;
         }
