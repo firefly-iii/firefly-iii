@@ -441,7 +441,7 @@ class GroupCollector implements GroupCollectorInterface
             $this->query->orWhereIn('transaction_journals.transaction_group_id', $groupIds);
         }
         $result      = $this->query->get($this->fields);
-        $this->dumpQueryInLogs();
+        // $this->dumpQueryInLogs();
         Log::debug(sprintf('Count of result is %d', $result->count()));
         // now to parse this into an array.
         $collection  = $this->parseArray($result);

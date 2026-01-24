@@ -57,6 +57,7 @@ class CorrectsGroupAccounts extends Command
         foreach ($groups as $groupId) {
             $group = TransactionGroup::find($groupId);
             // TODO in theory the "unifyAccounts" method could lead to the need for run recalculations.
+            // FIXME needs to be a collection.
             $event = new UpdatedTransactionGroup($group, true, true, false);
             $handler->unifyAccounts($event);
         }

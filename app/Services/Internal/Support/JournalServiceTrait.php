@@ -378,7 +378,7 @@ trait JournalServiceTrait
         return $amount;
     }
 
-    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
+    protected function storeBudget(TransactionJournal $journal, array $data): void
     {
         if (TransactionTypeEnum::WITHDRAWAL->value !== $journal->transactionType->type) {
             $journal->budgets()->sync([]);
@@ -396,7 +396,7 @@ trait JournalServiceTrait
         $journal->budgets()->sync([]);
     }
 
-    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
+    protected function storeCategory(TransactionJournal $journal, array $data): void
     {
         $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
         if (null !== $category) {

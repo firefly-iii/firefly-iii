@@ -113,7 +113,9 @@ class UpdateRequest extends FormRequest
         ];
         $this->booleanFields  = ['reconciled'];
         $this->arrayFields    = ['tags'];
-        $data                 = [];
+        $data                 = [
+            'batch_submission' => false,
+        ];
         if ($this->has('transactions')) {
             $data['transactions'] = $this->getTransactionData();
         }
@@ -122,6 +124,9 @@ class UpdateRequest extends FormRequest
         }
         if ($this->has('fire_webhooks')) {
             $data['fire_webhooks'] = $this->boolean('fire_webhooks', true);
+        }
+        if ($this->has('batch_submission')) {
+            $data['batch_submission'] = $this->boolean('batch_submission');
         }
         if ($this->has('group_title')) {
             $data['group_title'] = $this->convertString('group_title');

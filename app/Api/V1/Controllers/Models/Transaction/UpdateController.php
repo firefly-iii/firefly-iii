@@ -82,6 +82,9 @@ class UpdateController extends Controller
         $applyRules        = $data['apply_rules'] ?? true;
         $fireWebhooks      = $data['fire_webhooks'] ?? true;
         $runRecalculations = $oldHash !== $newHash;
+
+        // FIXME responds to a single event.
+        // flags in array?
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $runRecalculations));
 
         /** @var User $admin */
