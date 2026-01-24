@@ -28,9 +28,10 @@ use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Jobs\SendWebhookMessage;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class SendsWebhookMessages
+class SendsWebhookMessages implements ShouldQueue
 {
     public function handle(WebhookMessagesRequestSending $event): void
     {

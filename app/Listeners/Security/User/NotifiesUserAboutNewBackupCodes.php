@@ -27,10 +27,11 @@ namespace FireflyIII\Listeners\Security\User;
 use Exception;
 use FireflyIII\Events\Security\User\UserHasGeneratedNewBackupCodes;
 use FireflyIII\Notifications\Security\NewBackupCodesNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutNewBackupCodes
+class NotifiesUserAboutNewBackupCodes implements ShouldQueue
 {
     public function handle(UserHasGeneratedNewBackupCodes $event): void
     {

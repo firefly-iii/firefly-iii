@@ -27,10 +27,11 @@ namespace FireflyIII\Listeners\Security\User;
 use Exception;
 use FireflyIII\Events\Security\User\UserHasEnabledMFA;
 use FireflyIII\Notifications\Security\EnabledMFANotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutEnabledMFA
+class NotifiesUserAboutEnabledMFA implements ShouldQueue
 {
     public function handle(UserHasEnabledMFA $event): void
     {

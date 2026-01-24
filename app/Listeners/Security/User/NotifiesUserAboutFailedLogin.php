@@ -26,10 +26,11 @@ namespace FireflyIII\Listeners\Security\User;
 
 use Exception;
 use FireflyIII\Events\Security\User\UserFailedLoginAttempt;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutFailedLogin
+class NotifiesUserAboutFailedLogin implements ShouldQueue
 {
     public function handle(UserFailedLoginAttempt $event): void
     {

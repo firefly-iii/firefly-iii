@@ -29,10 +29,11 @@ use FireflyIII\Events\Security\System\SystemFoundNewVersionOnline;
 use FireflyIII\Notifications\Admin\VersionCheckResult;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesOwnerAboutNewVersion
+class NotifiesOwnerAboutNewVersion implements ShouldQueue
 {
     public function handle(SystemFoundNewVersionOnline $event): void
     {

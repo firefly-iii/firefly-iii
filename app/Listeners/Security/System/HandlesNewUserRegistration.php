@@ -38,10 +38,11 @@ use FireflyIII\Notifications\User\UserRegistration as UserRegistrationNotificati
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class HandlesNewUserRegistration
+class HandlesNewUserRegistration implements ShouldQueue
 {
     public function handle(NewUserRegistered $event): void
     {

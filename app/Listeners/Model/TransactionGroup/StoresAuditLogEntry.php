@@ -27,9 +27,10 @@ namespace FireflyIII\Listeners\Model\TransactionGroup;
 use Carbon\Carbon;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Repositories\AuditLogEntry\ALERepositoryInterface;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class StoresAuditLogEntry
+class StoresAuditLogEntry implements ShouldQueue
 {
     public function handle(TransactionGroupRequestsAuditLogEntry $event): void
     {

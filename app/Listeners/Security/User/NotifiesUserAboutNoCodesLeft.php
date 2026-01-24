@@ -27,10 +27,11 @@ namespace FireflyIII\Listeners\Security\User;
 use Exception;
 use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
 use FireflyIII\Notifications\Security\MFABackupNoLeftNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutNoCodesLeft
+class NotifiesUserAboutNoCodesLeft implements ShouldQueue
 {
     public function handle(UserHasNoMFABackupCodesLeft $event): void
     {

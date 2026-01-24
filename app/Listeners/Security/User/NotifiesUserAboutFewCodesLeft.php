@@ -27,10 +27,11 @@ namespace FireflyIII\Listeners\Security\User;
 use Exception;
 use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
 use FireflyIII\Notifications\Security\MFABackupFewLeftNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutFewCodesLeft
+class NotifiesUserAboutFewCodesLeft implements ShouldQueue
 {
     public function handle(UserHasFewMFABackupCodesLeft $event): void
     {

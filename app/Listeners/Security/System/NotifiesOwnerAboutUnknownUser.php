@@ -28,10 +28,11 @@ use Exception;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Notifications\Admin\UnknownUserLoginAttempt;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesOwnerAboutUnknownUser
+class NotifiesOwnerAboutUnknownUser implements ShouldQueue
 {
     public function handle(UnknownUserTriedLogin $event): void
     {

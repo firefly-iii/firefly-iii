@@ -27,10 +27,11 @@ namespace FireflyIII\Listeners\Security\User;
 use Exception;
 use FireflyIII\Events\Security\User\UserKeepsFailingMFA;
 use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class NotifiesUserAboutRepeatedMFAFailures
+class NotifiesUserAboutRepeatedMFAFailures implements ShouldQueue
 {
     public function handle(UserKeepsFailingMFA $event): void
     {

@@ -28,10 +28,11 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
-class RespondsToNewLogin
+class RespondsToNewLogin implements ShouldQueue
 {
     public function handle(Login $event): void
     {

@@ -31,10 +31,11 @@ use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 
-class MailsNewTransactionsReport
+class MailsNewTransactionsReport implements ShouldQueue
 {
     public function handle(TransactionGroupsRequestedReporting $event): void
     {

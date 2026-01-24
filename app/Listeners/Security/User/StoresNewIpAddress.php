@@ -28,9 +28,10 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\User\UserLoggedInFromNewIpAddress;
 use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
 use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class StoresNewIpAddress
+class StoresNewIpAddress implements ShouldQueue
 {
     public function handle(UserSuccessfullyLoggedIn $event): void
     {

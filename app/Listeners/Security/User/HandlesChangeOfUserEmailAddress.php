@@ -30,10 +30,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\ConfirmEmailChangeMail;
 use FireflyIII\Mail\UndoEmailChangeMail;
 use FireflyIII\Support\Facades\Preferences;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
-class HandlesChangeOfUserEmailAddress
+class HandlesChangeOfUserEmailAddress implements ShouldQueue
 {
     public function handle(UserChangedEmailAddress $event): void
     {

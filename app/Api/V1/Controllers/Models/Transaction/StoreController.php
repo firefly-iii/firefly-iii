@@ -114,7 +114,7 @@ class StoreController extends Controller
         $flags->applyRules = $data['apply_rules'] ?? true;
         $flags->fireWebhooks = $data['fire_webhooks'] ?? true;
         $flags->batchSubmission = $data['batch_submission'] ?? false;
-        Log::debug('dingflofbips');
+        Log::debug('CreatedSingleTransactionGroup');
         event(new CreatedSingleTransactionGroup($transactionGroup, $flags));
 
         $manager            = $this->getManager();

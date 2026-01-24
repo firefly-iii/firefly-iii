@@ -31,11 +31,12 @@ use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class ChecksForNewVersion
+class ChecksForNewVersion implements ShouldQueue
 {
     use UpdateTrait;
 

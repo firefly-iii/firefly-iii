@@ -22,9 +22,10 @@
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 
-class ProcessesNewTransactionGroup
+class ProcessesNewTransactionGroup implements ShouldQueue
 {
     public function handle(CreatedSingleTransactionGroup $event): void
     {
