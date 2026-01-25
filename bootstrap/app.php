@@ -33,6 +33,7 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Http\Kernel;
@@ -40,6 +41,12 @@ use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks;
+use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
+use Illuminate\Foundation\Http\Middleware\TrimStrings;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Http\Middleware\ValidatePostSize;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -93,11 +100,20 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       health  : '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
+                      // overrule the standard middleware
+                      $middleware->use([
+                                           InvokeDeferredCallbacks::class,
+                                           // \Illuminate\Http\Middleware\TrustHosts::class,
+                                           TrustProxies::class,
+                                           HandleCors::class,
+                                           PreventRequestsDuringMaintenance::class,
+                                           ValidatePostSize::class,
+                                           TrimStrings::class,
+                                           ConvertEmptyStringsToNull::class,
+                                           SecureHeaders::class,
+                                       ]);
 
-                      // always append secure header thing.
-                      $middleware->append(SecureHeaders::class);
-
-                      // add stuff to the web group
+                      // overrule the web group
                       $middleware->group('web', [
                           Illuminate\Cookie\Middleware\EncryptCookies::class,
                           Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
