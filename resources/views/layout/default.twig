@@ -11,8 +11,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="color-scheme" content="light dark">
-
     <title>
         {% if pageTitle %}
             {{ pageTitle }} »
@@ -39,6 +37,7 @@
     <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
           nonce="{{ JS_NONCE }}">
     {% if 'browser' == darkMode %}
+        <meta name="color-scheme" content="light dark">
         <script nonce="{{ JS_NONCE }}">
             // If `prefers-color-scheme` is not supported, fall back to light mode.
             // In this case, light.css will be downloaded with `highest` priority.
@@ -58,12 +57,14 @@
               nonce="{{ JS_NONCE }}" media="(prefers-color-scheme: light)">
     {% endif %}
     {% if 'dark' == darkMode %}
+        <meta name="color-scheme" content="dark">
         <link href="v1/css/daterangepicker-dark.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
         <link href="v1/lib/adminlte/css/skins/skin-dark.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
     {% endif %}
     {% if 'light' == darkMode %}
+        <meta name="color-scheme" content="light">
         <link href="v1/css/daterangepicker-light.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
               nonce="{{ JS_NONCE }}">
         <link href="v1/lib/adminlte/css/skins/skin-light.min.css?v={{ FF_BUILD_TIME }}" rel="stylesheet" type="text/css"
