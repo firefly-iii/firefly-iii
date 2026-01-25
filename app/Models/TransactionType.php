@@ -77,8 +77,8 @@ class TransactionType extends Model
         if (!auth()->check()) {
             throw new NotFoundHttpException();
         }
-        if($value instanceof self) {
-            $value = (string)$value->type;
+        if ($value instanceof self) {
+            $value = (string) $value->type;
         }
         $transactionType = self::where('type', ucfirst($value))->first();
         if (null !== $transactionType) {

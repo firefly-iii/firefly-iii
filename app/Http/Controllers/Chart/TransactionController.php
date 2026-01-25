@@ -76,7 +76,11 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $budget                 = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
             $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
-            $data[$title] ??= ['amount'          => '0', 'currency_symbol' => $journal['currency_symbol'], 'currency_code'   => $journal['currency_code']];
+            $data[$title] ??= [
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
@@ -122,7 +126,11 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $category               = $journal['category_name'] ?? (string) trans('firefly.no_category');
             $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
-            $data[$title] ??= ['amount'          => '0', 'currency_symbol' => $journal['currency_symbol'], 'currency_code'   => $journal['currency_code']];
+            $data[$title] ??= [
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
@@ -168,7 +176,11 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $name                   = $journal['destination_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
-            $data[$title] ??= ['amount'          => '0', 'currency_symbol' => $journal['currency_symbol'], 'currency_code'   => $journal['currency_code']];
+            $data[$title] ??= [
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
@@ -214,7 +226,11 @@ class TransactionController extends Controller
         foreach ($result as $journal) {
             $name                   = $journal['source_account_name'];
             $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
-            $data[$title] ??= ['amount'          => '0', 'currency_symbol' => $journal['currency_symbol'], 'currency_code'   => $journal['currency_code']];
+            $data[$title] ??= [
+                'amount'          => '0',
+                'currency_symbol' => $journal['currency_symbol'],
+                'currency_code'   => $journal['currency_code'],
+            ];
             $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);

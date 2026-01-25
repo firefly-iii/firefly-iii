@@ -327,7 +327,8 @@ class RecurringEnrichment implements EnrichmentInterface
             $this->notes[$notableId] = (string) $note['text'];
             Log::debug(sprintf('Collected note #%d for recurrence #%d', $note['id'], $notableId));
         }
-//        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+
+        //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectPiggyBankInfo(array $piggyBankIds): void
@@ -357,7 +358,10 @@ class RecurringEnrichment implements EnrichmentInterface
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($set as $repetition) {
-            $recurrence                               = $this->collection->filter(static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)->first();
+            $recurrence                               = $this->collection
+                ->filter(static fn (Recurrence $item): bool => (int) $item->id === (int) $repetition->recurrence_id)
+                ->first()
+            ;
             $fromDate                                 = clone ($recurrence->latest_date ?? $recurrence->first_date);
             $recurrenceId                             = (int) $repetition->recurrence_id;
             $repId                                    = (int) $repetition->id;

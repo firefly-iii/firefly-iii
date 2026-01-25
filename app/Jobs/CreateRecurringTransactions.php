@@ -384,8 +384,8 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
-        $flags = new TransactionGroupEventFlags();
-        $flags->applyRules = $recurrence->apply_rules;
+        $flags                      = new TransactionGroupEventFlags();
+        $flags->applyRules          = $recurrence->apply_rules;
         event(new CreatedSingleTransactionGroup($group, $flags));
         // event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
         $this->groups->push($group);

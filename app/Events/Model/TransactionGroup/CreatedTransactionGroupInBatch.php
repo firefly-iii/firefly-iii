@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * CreatedTransactionGroupBatch.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,5 +35,8 @@ class CreatedTransactionGroupInBatch extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public Collection $collection, public array $flags) {}
+    public function __construct(
+        public Collection $collection,
+        public array $flags
+    ) {}
 }

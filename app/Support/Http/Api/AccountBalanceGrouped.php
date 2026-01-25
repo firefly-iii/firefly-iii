@@ -170,7 +170,7 @@ class AccountBalanceGrouped
     {
         $this->primary                  = $primary;
         $primaryCurrencyId              = $primary->id;
-        $this->currencies               = [$primary->id => $primary]; // currency cache
+        $this->currencies               = [$primary->id  => $primary]; // currency cache
         $this->data[$primaryCurrencyId] = [
             'currency_id'                     => (string) $primaryCurrencyId,
             'currency_symbol'                 => $primary->symbol,

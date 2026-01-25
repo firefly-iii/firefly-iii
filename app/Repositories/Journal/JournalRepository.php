@@ -39,6 +39,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
+use Override;
 
 /**
  * Class JournalRepository.
@@ -251,13 +252,17 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $journal;
     }
 
-    #[\Override]
+    #[Override]
     public function getUncompletedJournals(): Collection
     {
-        return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
+        return $this->userGroup
+            ->transactionJournals()
+            ->where('completed', false)
+            ->get(['transaction_journals.*'])
+        ;
     }
 
-    #[\Override]
+    #[Override]
     public function markAsCompleted(Collection $set): void
     {
         TransactionJournal::whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);

@@ -295,7 +295,11 @@ class UpgradesTransferCurrencies extends Command
     {
         if (null === $this->sourceTransaction->transaction_currency_id && $this->sourceCurrency instanceof TransactionCurrency) {
             $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
-            $message                                          = sprintf('Transaction #%d has no currency setting, now set to %s.', $this->sourceTransaction->id, $this->sourceCurrency->code);
+            $message                                          = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->sourceTransaction->id,
+                $this->sourceCurrency->code
+            );
             $this->friendlyInfo($message);
             ++$this->count;
             $this->sourceTransaction->save();
@@ -335,7 +339,11 @@ class UpgradesTransferCurrencies extends Command
     {
         if (null === $this->destinationTransaction->transaction_currency_id && $this->destinationCurrency instanceof TransactionCurrency) {
             $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
-            $message                                               = sprintf('Transaction #%d has no currency setting, now set to %s.', $this->destinationTransaction->id, $this->destinationCurrency->code);
+            $message                                               = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->destinationTransaction->id,
+                $this->destinationCurrency->code
+            );
             $this->friendlyInfo($message);
             ++$this->count;
             $this->destinationTransaction->save();

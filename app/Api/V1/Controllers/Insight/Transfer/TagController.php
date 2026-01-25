@@ -155,7 +155,10 @@ class TagController extends Controller
                         'currency_id'      => (string) $foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
-                    $response[$foreignKey]['difference']       = bcadd((string) $response[$foreignKey]['difference'], Steam::positive($journal['foreign_amount']));
+                    $response[$foreignKey]['difference']       = bcadd(
+                        (string) $response[$foreignKey]['difference'],
+                        Steam::positive($journal['foreign_amount'])
+                    );
                     $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference']; // intentional float
                 }
             }

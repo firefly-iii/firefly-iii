@@ -68,7 +68,7 @@ class CorrectsMetaDataFields extends Command
 
     private function rename(string $original, string $update): void
     {
-        $total = DB::table('journal_meta')->where('name', '=', $original)->update(['name' => $update]);
+        $total = DB::table('journal_meta')->where('name', '=', $original)->update(['name'       => $update]);
         $this->count += $total;
     }
 }

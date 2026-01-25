@@ -83,29 +83,29 @@ class EditController extends Controller
         }
 
         /** @var AccountRepositoryInterface $repository */
-        $repository           = app(AccountRepositoryInterface::class);
-        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $expectedSourceTypes  = config('firefly.expected_source_types');
-        $allowedSourceDests   = config('firefly.source_dests');
-        $title                = $transactionGroup->transactionJournals()->count() > 1
+        $repository                 = app(AccountRepositoryInterface::class);
+        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
+        $accountToTypes             = config('firefly.account_to_transaction');
+        $expectedSourceTypes        = config('firefly.expected_source_types');
+        $allowedSourceDests         = config('firefly.source_dests');
+        $title                      = $transactionGroup->transactionJournals()->count() > 1
             ? $transactionGroup->title
             : $transactionGroup->transactionJournals()->first()->description;
-        $subTitle             = (string) trans('firefly.edit_transaction_title', ['description'             => $title]);
-        $subTitleIcon         = 'fa-plus';
-        $cash                 = $repository->getCashAccount();
-        $previousUrl          = $this->rememberPreviousUrl('transactions.edit.url');
-        $parts                = parse_url((string) $previousUrl);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl          = str_replace($search, '', $previousUrl);
+        $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description'             => $title]);
+        $subTitleIcon               = 'fa-plus';
+        $cash                       = $repository->getCashAccount();
+        $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');
+        $parts                      = parse_url((string) $previousUrl);
+        $search                     = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl                = str_replace($search, '', $previousUrl);
 
         // settings necessary for v2
-        $optionalFields       = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
         if (!is_array($optionalFields)) {
             $optionalFields = [];
         }
         // not really a fan of this, but meh.
-        $optionalDateFields   = [
+        $optionalDateFields         = [
             'interest_date' => $optionalFields['interest_date'] ?? false,
             'book_date'     => $optionalFields['book_date'] ?? false,
             'process_date'  => $optionalFields['process_date'] ?? false,
@@ -115,13 +115,13 @@ class EditController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location']
-                              = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location'] = $optionalFields['location']
+        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info voor v2:
-        $longitude            = config('firefly.default_location.longitude');
-        $latitude             = config('firefly.default_location.latitude');
-        $zoomLevel            = config('firefly.default_location.zoom_level');
+        $longitude                  = config('firefly.default_location.longitude');
+        $latitude                   = config('firefly.default_location.latitude');
+        $zoomLevel                  = config('firefly.default_location.zoom_level');
 
         return view('transactions.edit', [
             'cash'                 => $cash,

@@ -172,7 +172,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 }
                 $listedJournals[]                                                       = $journalId;
 
-                $array[$currencyId]['tags'][$tagId] ??= ['id'                   => $tagId, 'name'                 => $tagName, 'transaction_journals' => []];
+                $array[$currencyId]['tags'][$tagId] ??= [
+                    'id'                   => $tagId,
+                    'name'                 => $tagName,
+                    'transaction_journals' => [],
+                ];
                 $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => Steam::positive($journal['amount']),

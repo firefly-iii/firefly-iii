@@ -64,8 +64,8 @@ class Attachment extends Model
      */
     public static function routeBinder(self|string $value): self
     {
-        if($value instanceof self) {
-            $value = (int)$value->id;
+        if ($value instanceof self) {
+            $value = (int) $value->id;
         }
         if (auth()->check()) {
             $attachmentId = (int) $value;

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;

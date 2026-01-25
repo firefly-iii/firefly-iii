@@ -131,6 +131,7 @@ class Steam
             }
             $final                = array_merge($return, $sumsByCode);
             $result[$account->id] = $final;
+
             // Log::debug(sprintf('Final balance for account #%d is', $account->id), $final);
         }
 

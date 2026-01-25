@@ -58,7 +58,7 @@ class SubscriptionsOverdueReminder extends Notification
         $info  = [];
         $count = 0;
         foreach ($this->overdue as $item) {
-            $current              = ['bill' => $item['bill']];
+            $current              = ['bill'              => $item['bill']];
             $current['pay_dates'] = array_map(static fn (string $date): string => new Carbon($date)->isoFormat((string) trans(
                 'config.month_and_day_moment_js'
             )), $item['dates']['pay_dates']);
