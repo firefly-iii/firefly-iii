@@ -42,8 +42,11 @@ class InvitedUser extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if($value instanceof self) {
+            $value = (int)$value->id;
+        }
         if (auth()->check()) {
             $attemptId = (int) $value;
 

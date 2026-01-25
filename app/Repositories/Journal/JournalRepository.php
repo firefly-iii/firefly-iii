@@ -250,4 +250,10 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
 
         return $journal;
     }
+
+    #[\Override]
+    public function getUncompletedJournals(): Collection
+    {
+        return $this->userGroup->transactionJournals()->where('completed', false)->get(['transaction_journals.*']);
+    }
 }

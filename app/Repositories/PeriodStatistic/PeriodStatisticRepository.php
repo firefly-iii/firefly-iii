@@ -25,12 +25,18 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\PeriodStatistic;
-use FireflyIII\Models\UserGroup;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Override;
 
@@ -50,7 +56,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat                          = new PeriodStatistic();
+        $stat = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
         $stat->user_group_id           = $this->getUserGroup()->id;
@@ -64,16 +70,16 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $model::class,
-            $model->id,
-            $stat->transaction_currency_id,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $model::class,
+                       $model->id,
+                       $stat->transaction_currency_id,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
     }
@@ -96,20 +102,20 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
             ->where('start', '>=', $start)
             ->where('end', '<=', $end)
-            ->get()
-        ;
+            ->get();
     }
 
     #[Override]
     public function savePrefixedStatistic(
         string $prefix,
-        int $currencyId,
+        int    $currencyId,
         Carbon $start,
         Carbon $end,
         string $type,
-        int $count,
+        int    $count,
         string $amount
-    ): PeriodStatistic {
+    ): PeriodStatistic
+    {
         $stat                          = new PeriodStatistic();
         $stat->transaction_currency_id = $currencyId;
         $stat->user_group_id           = $this->getUserGroup()->id;
@@ -123,22 +129,87 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $stat->transaction_currency_id,
-            $stat->type,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $stat->transaction_currency_id,
+                       $stat->type,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
     }
 
     #[Override]
-    public function deleteStatisticsForPrefix(UserGroup $userGroup, string $prefix, Carbon $date): void
+    public function deleteStatisticsForPrefix(string $prefix, Collection $dates): void
     {
-        $userGroup->periodStatistics()->where('start', '<=', $date)->where('end', '>=', $date)->where('type', 'LIKE', sprintf('%s%%', $prefix))->delete();
+        $count = $this->userGroup->periodStatistics()
+                                 ->where(function (Builder $q) use ($dates) {
+                                     foreach ($dates as $date) {
+                                         $q->where(function (Builder $q1) use ($date) {
+                                             $q1->where('start', '<=', $date)->where('end', '>=', $date);
+                                         });
+                                     }
+                                 })
+                                 ->where('type', 'LIKE', sprintf('%s%%', $prefix))->delete();
+        Log::debug(sprintf('Deleted %d entries for prefix "%s"', $count, $prefix));
+    }
+
+    public function deleteStatisticsForType(string $class, Collection $objects, Collection $dates): void
+    {
+        if (0 === count($objects)) {
+            Log::debug(sprintf('Nothing to delete in deleteStatisticsForType("%s")', $class));
+            return;
+        }
+        $count = PeriodStatistic
+            ::where('primary_statable_type', $class)
+            ->whereIn('primary_statable_id', $objects->pluck('id')->toArray())
+            ->where(function (Builder $q) use ($dates) {
+                foreach ($dates as $date) {
+                    $q->where(function (Builder $q1) use ($date) {
+                        $q1->where('start', '<=', $date)->where('end', '>=', $date);
+                    });
+                }
+            })
+            ->delete();
+        Log::debug(sprintf('Delete %d statistics for %dx %s', $count, $objects->count(), $class));
+    }
+
+    #[\Override]
+    public function deleteStatisticsForCollection(Collection $set)
+    {
+        Log::debug(sprintf('Delete statistics for %d transaction journals.', count($set)));
+        // collect all transactions:
+        $transactions = Transaction::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['transactions.*']);
+
+        // collect all accounts and delete stats:
+        $accounts = Account::whereIn('id', $transactions->pluck('account_id')->toArray())->get(['accounts.*']);
+        $dates    = $set->pluck('date');
+        $this->deleteStatisticsForType(Account::class, $accounts, $dates);
+
+        // collect all categories, and remove stats.
+        $categories = Category::whereIn('id', DB::table('category_transaction_journal')->whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['category_transaction_journal.category_id'])->pluck('category_id')->toArray())->get(['categories.*']);
+        $this->deleteStatisticsForType(Category::class, $categories, $dates);
+
+        // budgets, same thing
+        $budgets = Budget::whereIn('id', DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['budget_transaction_journal.budget_id'])->pluck('budget_id')->toArray())->get(['budgets.*']);
+        $this->deleteStatisticsForType(Budget::class, $budgets, $dates);
+
+        // tags
+        $tags = Tag::whereIn('id', DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['tag_transaction_journal.tag_id'])->pluck('tag_id')->toArray())->get(['tags.*']);
+        $this->deleteStatisticsForType(Tag::class, $tags, $dates);
+
+        // remove for no tag, no cat, etc.
+        if (0 === $categories->count()) {
+            $this->deleteStatisticsForPrefix('no_category', $dates);
+        }
+        if (0 === $budgets->count()) {
+            $this->deleteStatisticsForPrefix('no_budget', $dates);
+        }
+        if (0 === $tags->count()) {
+            $this->deleteStatisticsForPrefix('no_tag', $dates);
+        }
     }
 }

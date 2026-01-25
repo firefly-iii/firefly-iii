@@ -92,6 +92,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       health  : '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
+
                       // always append secure header thing.
                       $middleware->append(\FireflyIII\Http\Middleware\SecureHeaders::class);
 

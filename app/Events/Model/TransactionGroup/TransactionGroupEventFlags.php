@@ -26,5 +26,6 @@ class TransactionGroupEventFlags
     public bool $applyRules = true;
     public bool $fireWebhooks = true;
     public bool $batchSubmission = false;
+    public bool $recalculateCredit = true;
 
 }

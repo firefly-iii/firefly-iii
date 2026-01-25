@@ -21,8 +21,18 @@
 
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
+use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
+use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class ProcessesNewTransactionGroup implements ShouldQueue
@@ -35,6 +45,101 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             return;
         }
         Log::debug(sprintf('Will join group #%d with all other open transaction groups and process them.', $event->transactionGroup->id));
+        $collection = $event->transactionGroup->transactionJournals;
+        $repository = app(JournalRepositoryInterface::class);
+        $set        = $collection->merge($repository->getUncompletedJournals());
+        if (0 === $set->count()) {
+            Log::debug('Set is empty, never mind.');
+            return;
+        }
+        if (!$event->flags->applyRules) {
+            Log::debug(sprintf('Will NOT process rules for %d journal(s)', $set->count()));
+        }
+        if (!$event->flags->recalculateCredit) {
+            Log::debug(sprintf('Will NOT recalculate credit for %d journal(s)', $set->count()));
+        }
+        if (!$event->flags->fireWebhooks) {
+            Log::debug(sprintf('Will NOT fire webhooks for %d journal(s)', $set->count()));
+        }
+        if ($event->flags->applyRules) {
+            $this->processRules($set);
+        }
+        if($event->flags->recalculateCredit) {
+            $this->recalculateCredit($set);
+        }
+        if($event->flags->fireWebhooks) {
+            $this->fireWebhooks($set);
+        }
+        // always remove old statistics.
+        $this->removePeriodStatistics($set);
+
+    }
+
+    private function removePeriodStatistics(Collection $set): void
+    {
+        Log::debug('Always remove period statistics');
+        /** @var PeriodStatisticRepositoryInterface $repository */
+        $repository = app(PeriodStatisticRepositoryInterface::class);
+        $repository->deleteStatisticsForCollection($set);
+    }
+
+    private function fireWebhooks(Collection $set): void
+    {
+        // collect transaction groups by set ids.
+        $groups = TransactionGroup::whereIn('id',array_unique($set->pluck('transaction_group_id')->toArray()))->get();
+
+        Log::debug(__METHOD__);
+        $user       = $set->first()->user;
+
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser($user);
+
+        // tell the generator which trigger it should look for
+        $engine->setTrigger(WebhookTrigger::STORE_TRANSACTION);
+        // tell the generator which objects to process
+        $engine->setObjects($groups);
+        // tell the generator to generate the messages
+        $engine->generateMessages();
+
+        // trigger event to send them:
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
+    }
+
+    private function recalculateCredit(Collection $set): void
+    {
+        Log::debug(sprintf('Will now recalculateCredit for %d journal(s)', $set->count()));
+
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setJournals($set);
+        $object->recalculate();
+    }
+
+    private function processRules(Collection $set): void
+    {
+        Log::debug(sprintf('Will now processRules for %d journal(s)', $set->count()));
+        $array      = $set->pluck('id')->toArray();
+        $journalIds = implode(',', $array);
+        $user       = $set->first()->user;
+        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+
+        // collect rules:
+        $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $ruleGroupRepository->setUser($user);
+
+        // add the groups to the rule engine.
+        // it should run the rules in the group and cancel the group if necessary.
+        Log::debug('Fire processRules with ALL store-journal rule groups.');
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+
+        // create and fire rule engine.
+        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine->setUser($user);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->setRuleGroups($groups);
+        $newRuleEngine->fire();
     }
 
 }

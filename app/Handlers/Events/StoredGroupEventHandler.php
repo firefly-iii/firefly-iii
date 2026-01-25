@@ -47,9 +47,9 @@ class StoredGroupEventHandler
 {
     public function runAllHandlers(StoredTransactionGroup $event): void
     {
-        $this->processRules($event, null);
-        $this->recalculateCredit($event);
-        $this->triggerWebhooks($event);
+        // $this->processRules($event, null);
+        // $this->recalculateCredit($event);
+        // $this->triggerWebhooks($event);
         $this->removePeriodStatistics($event);
     }
 

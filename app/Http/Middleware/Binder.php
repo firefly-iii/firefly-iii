@@ -75,7 +75,7 @@ class Binder
      *
      * @return mixed
      */
-    private function performBinding(string $key, string $value, Route $route)
+    private function performBinding(string $key, object|string $value, Route $route)
     {
         $class = $this->binders[$key];
 
