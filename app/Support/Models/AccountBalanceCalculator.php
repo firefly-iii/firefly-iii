@@ -93,7 +93,7 @@ class AccountBalanceCalculator
     public static function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
-            Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
+            // Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
 
             return '0';
         }

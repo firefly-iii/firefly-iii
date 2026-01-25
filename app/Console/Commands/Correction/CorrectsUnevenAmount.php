@@ -369,7 +369,7 @@ class CorrectsUnevenAmount extends Command
                 continue;
             }
             if (!$this->isBetweenAssetAndLiability($journal)) {
-                Log::debug('Not between asset and liability, continue.');
+                // Log::debug('Not between asset and liability, continue.');
 
                 continue;
             }

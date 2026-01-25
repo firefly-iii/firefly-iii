@@ -31,6 +31,7 @@ use FireflyIII\Http\Middleware\InterestingMessage;
 use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
+use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -94,12 +95,16 @@ $app = Application::configure(basePath: dirname(__DIR__))
                   ->withMiddleware(function (Middleware $middleware): void {
 
                       // always append secure header thing.
-                      $middleware->append(\FireflyIII\Http\Middleware\SecureHeaders::class);
+                      $middleware->append(SecureHeaders::class);
 
                       // add stuff to the web group
-                      $middleware->appendToGroup('web', [
+                      $middleware->group('web', [
+                          Illuminate\Cookie\Middleware\EncryptCookies::class,
+                          Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
                           StartFireflySession::class,
+                          Illuminate\View\Middleware\ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
+                          Illuminate\Routing\Middleware\SubstituteBindings::class,
                           CreateFreshApiToken::class,
                       ]);
                       // new group?
