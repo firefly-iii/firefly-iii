@@ -64,6 +64,7 @@ return [
         'web'               => [
             'driver'   => 'session',
             'provider' => 'users',
+            'remember' => true,
         ],
         'remote_user_guard' => [
             'driver'   => 'remote_user_guard',

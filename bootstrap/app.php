@@ -33,7 +33,6 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
-use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Http\Kernel;
@@ -47,6 +46,7 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Middleware\ValidatePostSize;
+use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -88,11 +88,6 @@ if (!function_exists('stringIsEqual')) {
     }
 }
 
-//$app = new Application(
-//    realpath(__DIR__ . '/../')
-//);
-
-
 $app = Application::configure(basePath: dirname(__DIR__))
                   ->withRouting(
                       web     : __DIR__ . '/../routes/web.php',
@@ -100,31 +95,40 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       health  : '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
+                      $middleware->trustProxies(at: envNonEmpty('TRUSTED_PROXIES', ''));
                       // overrule the standard middleware
-                      $middleware->use([
-                                           InvokeDeferredCallbacks::class,
-                                           // \Illuminate\Http\Middleware\TrustHosts::class,
-                                           TrustProxies::class,
-                                           HandleCors::class,
-                                           PreventRequestsDuringMaintenance::class,
-                                           ValidatePostSize::class,
-                                           TrimStrings::class,
-                                           ConvertEmptyStringsToNull::class,
-                                           SecureHeaders::class,
-                                       ]);
+                      $middleware->use(
+                          [
+                              InvokeDeferredCallbacks::class,
+                              HandleCors::class,
+                              PreventRequestsDuringMaintenance::class,
+                              ValidatePostSize::class,
+                              TrimStrings::class,
+                              ConvertEmptyStringsToNull::class,
+                              SecureHeaders::class,
+                          ]
+                      );
 
                       // overrule the web group
-                      $middleware->group('web', [
-                          Illuminate\Cookie\Middleware\EncryptCookies::class,
-                          Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          Illuminate\View\Middleware\ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
-                          Illuminate\Routing\Middleware\SubstituteBindings::class,
-                          CreateFreshApiToken::class,
-                      ]);
+                      $middleware->group('web',
+                                         [
+                                             EncryptCookies::class,
+                                             AddQueuedCookiesToResponse::class,
+                                             StartFireflySession::class,
+                                             ShareErrorsFromSession::class,
+                                             VerifyCsrfToken::class,
+                                             SubstituteBindings::class,
+                                             CreateFreshApiToken::class,
+                                         ]
+                      );
                       // new group?
-                      $middleware->appendToGroup('binders-only', [Installer::class, EncryptCookies::class, AddQueuedCookiesToResponse::class, Binder::class]);
+                      $middleware->appendToGroup('binders-only',
+                                                 [
+                                                     Installer::class,
+                                                     EncryptCookies::class,
+                                                     AddQueuedCookiesToResponse::class,
+                                                     Binder::class,
+                                                 ]);
 
                       //
                       $middleware->appendToGroup('user-not-logged-in', [
