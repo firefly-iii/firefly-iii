@@ -27,7 +27,7 @@ namespace FireflyIII\TransactionRules\Actions;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnObject;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
@@ -48,7 +48,9 @@ class ConvertToTransfer implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
@@ -97,16 +99,24 @@ class ConvertToTransfer implements ActionInterface
         $expectedType = null;
         if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
             $expectedType = $this->getSourceType($journalId);
+
             // Withdrawal? Replace destination with account with same type as source.
         }
         if (TransactionTypeEnum::DEPOSIT->value === $type) {
             $expectedType = $this->getDestinationType($journalId);
+
             // Deposit? Replace source with account with same type as destination.
         }
         $opposing     = $repository->findByName($accountName, [$expectedType]);
 
         if (null === $opposing) {
-            Log::error(sprintf('Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).', $expectedType, $journalId, $accountName, $this->action->rule_id));
+            Log::error(sprintf(
+                'Journal #%d cannot be converted because no valid %s account with name "%s" exists (rule #%d).',
+                $expectedType,
+                $journalId,
+                $accountName,
+                $this->action->rule_id
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_valid_opposing', ['name' => $accountName])));
 
             return false;
@@ -125,7 +135,15 @@ class ConvertToTransfer implements ActionInterface
                 return false;
             }
             if ($res) {
-                event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value));
+                event(
+                    new TransactionGroupRequestsAuditLogEntry(
+                        $this->action->rule,
+                        $object,
+                        'update_transaction_type',
+                        TransactionTypeEnum::WITHDRAWAL->value,
+                        TransactionTypeEnum::TRANSFER->value
+                    )
+                );
             }
 
             return $res;
@@ -143,7 +161,15 @@ class ConvertToTransfer implements ActionInterface
             return false;
         }
         if ($res) {
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value));
+            event(
+                new TransactionGroupRequestsAuditLogEntry(
+                    $this->action->rule,
+                    $object,
+                    'update_transaction_type',
+                    TransactionTypeEnum::DEPOSIT->value,
+                    TransactionTypeEnum::TRANSFER->value
+                )
+            );
         }
 
         return $res;
@@ -159,7 +185,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '<', 0)->first()?->account?->accountType?->type;
     }
 
     private function getDestinationType(int $journalId): string
@@ -172,7 +198,7 @@ class ConvertToTransfer implements ActionInterface
             return '';
         }
 
-        return (string)$journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
+        return (string) $journal->transactions()->where('amount', '>', 0)->first()?->account?->accountType?->type;
     }
 
     /**
@@ -188,7 +214,11 @@ class ConvertToTransfer implements ActionInterface
         $sourceAccount               = $this->getSourceAccount($journal);
         $repository->setUser($sourceAccount->user);
         if ($sourceAccount->id === $opposing->id) {
-            Log::error(vsprintf('Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).', [$journal->id, $opposing->name, $this->action->rule_id]));
+            Log::error(vsprintf('Journal #%d has already has "%s" as a source asset. ConvertToTransfer failed. (rule #%d).', [
+                $journal->id,
+                $opposing->name,
+                $this->action->rule_id,
+            ]));
             event(new RuleActionFailedOnObject($this->action, $journal, trans('rules.already_has_source_asset', ['name' => $opposing->name])));
 
             return false;
@@ -213,14 +243,19 @@ class ConvertToTransfer implements ActionInterface
         // if the currencies do not match, need to be smart about the involved amounts:
         if ($sourceCurrency->id !== $destCurrency->id) {
             Log::debug(sprintf('Accounts have different currencies. Source has %s, dest has %s', $sourceCurrency->code, $destCurrency->code));
-            $foreignAmount                            = '' === (string)$sourceTransaction->foreign_amount ? $sourceTransaction->amount : $sourceTransaction->foreign_amount;
+            $foreignAmount                            = '' === (string) $sourceTransaction->foreign_amount ? $sourceTransaction->amount : $sourceTransaction->foreign_amount;
             Log::debug(sprintf('Foreign amount: %s', $foreignAmount));
 
             // source transaction: set the foreign currency ID and leave as is.
             $sourceTransaction->foreign_currency_id   = $destCurrency->id;
             $sourceTransaction->foreign_amount        = Steam::negative($foreignAmount);
             $sourceTransaction->save();
-            Log::debug(sprintf('Set source transaction #%d foreign currency ID to #%d (amount: %s)', $sourceTransaction->id, $destCurrency->id, $foreignAmount));
+            Log::debug(sprintf(
+                'Set source transaction #%d foreign currency ID to #%d (amount: %s)',
+                $sourceTransaction->id,
+                $destCurrency->id,
+                $foreignAmount
+            ));
 
             // dest transaction: set reverse amounts and currency IDs from source transaction.
             $destTransaction->foreign_currency_id     = $sourceCurrency->transaction_currency_id;
@@ -228,13 +263,20 @@ class ConvertToTransfer implements ActionInterface
             $destTransaction->amount                  = Steam::positive($foreignAmount);
             $destTransaction->foreign_amount          = Steam::positive($sourceTransaction->amount);
             $destTransaction->save();
-            Log::debug(sprintf('Set dest transaction #%d to #%d %s and foreign #%d %s', $destTransaction->id, $destTransaction->transaction_currency_id, $destTransaction->amount, $destTransaction->foreign_currency_id, $destTransaction->foreign_amount));
+            Log::debug(sprintf(
+                'Set dest transaction #%d to #%d %s and foreign #%d %s',
+                $destTransaction->id,
+                $destTransaction->transaction_currency_id,
+                $destTransaction->amount,
+                $destTransaction->foreign_currency_id,
+                $destTransaction->foreign_amount
+            ));
         }
 
         // change transaction type of journal:
         $newType                     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
-        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
 
         Log::debug('Converted withdrawal to transfer.');
 
@@ -265,12 +307,11 @@ class ConvertToTransfer implements ActionInterface
     {
         $destAccount = $this->getDestinationAccount($journal);
         if ($destAccount->id === $opposing->id) {
-            Log::error(
-                vsprintf(
-                    'Journal #%d has already has "%s" as a destination asset. ConvertToTransfer failed. (rule #%d).',
-                    [$journal->id, $opposing->name, $this->action->rule_id]
-                )
-            );
+            Log::error(vsprintf('Journal #%d has already has "%s" as a destination asset. ConvertToTransfer failed. (rule #%d).', [
+                $journal->id,
+                $opposing->name,
+                $this->action->rule_id,
+            ]));
             event(new RuleActionFailedOnObject($this->action, $journal, trans('rules.already_has_destination_asset', ['name' => $opposing->name])));
 
             return false;
@@ -286,10 +327,7 @@ class ConvertToTransfer implements ActionInterface
         // change transaction type of journal:
         $newType     = TransactionType::whereType(TransactionTypeEnum::TRANSFER->value)->first();
 
-        DB::table('transaction_journals')
-            ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
-        ;
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
 
         Log::debug('Converted deposit to transfer.');
 

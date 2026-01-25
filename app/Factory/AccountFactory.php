@@ -47,12 +47,12 @@ class AccountFactory
     use LocationServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
-    protected array                      $validAssetFields;
-    protected array                      $validCCFields;
-    protected array                      $validFields;
-    private array                        $canHaveOpeningBalance;
-    private array                        $canHaveVirtual;
-    private User                         $user;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array $canHaveOpeningBalance;
+    private array $canHaveVirtual;
+    private User $user;
 
     /**
      * AccountFactory constructor.
@@ -80,22 +80,25 @@ class AccountFactory
         }
 
         /** @var null|Account $return */
-        $return = $this->user->accounts->where('account_type_id', $type->id)->where('name', $accountName)->first();
+        $return = $this->user
+            ->accounts
+            ->where('account_type_id', $type->id)
+            ->where('name', $accountName)
+            ->first()
+        ;
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
-            $return = $this->create(
-                [
-                    'user_id'           => $this->user->id,
-                    'user_group_id'     => $this->user->user_group_id,
-                    'name'              => $accountName,
-                    'account_type_id'   => $type->id,
-                    'account_type_name' => null,
-                    'virtual_balance'   => '0',
-                    'iban'              => null,
-                    'active'            => true,
-                ]
-            );
+            $return = $this->create([
+                'user_id'           => $this->user->id,
+                'user_group_id'     => $this->user->user_group_id,
+                'name'              => $accountName,
+                'account_type_id'   => $type->id,
+                'account_type_name' => null,
+                'virtual_balance'   => '0',
+                'iban'              => null,
+                'active'            => true,
+            ]);
         }
 
         return $return;
@@ -163,7 +166,12 @@ class AccountFactory
         $type = AccountType::whereType($accountType)->first();
 
         /** @var null|Account */
-        return $this->user->accounts()->where('account_type_id', $type->id)->where('name', $accountName)->first();
+        return $this->user
+            ->accounts()
+            ->where('account_type_id', $type->id)
+            ->where('name', $accountName)
+            ->first()
+        ;
     }
 
     /**

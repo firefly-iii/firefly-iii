@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Repositories\Recurring;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait CalculateRangeOccurrences
@@ -41,7 +41,7 @@ trait CalculateRangeOccurrences
         $return   = [];
         $attempts = 0;
         while ($start <= $end) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $start;
             }
             $start->addDay();
@@ -59,7 +59,7 @@ trait CalculateRangeOccurrences
     {
         $return     = [];
         $attempts   = 0;
-        $dayOfMonth = (int)$moment;
+        $dayOfMonth = (int) $moment;
         if ($start->day > $dayOfMonth) {
             // day has passed already, add a month.
             $start->addMonth();
@@ -67,7 +67,7 @@ trait CalculateRangeOccurrences
         while ($start < $end) {
             $domCorrected = min($dayOfMonth, $start->daysInMonth);
             $start->day   = $domCorrected;
-            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+            if (0 === ($attempts % $skipMod) && $start->lte($start) && $end->gte($start)) {
                 $return[] = clone $start;
             }
             ++$attempts;
@@ -93,7 +93,7 @@ trait CalculateRangeOccurrences
         while ($start <= $end) {
             $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $start->format('F'), $start->format('Y'));
             $newCarbon = new Carbon($string);
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $newCarbon;
             }
             ++$attempts;
@@ -114,7 +114,7 @@ trait CalculateRangeOccurrences
         Log::debug('Rep is weekly.');
         // monday = 1
         // sunday = 7
-        $dayOfWeek     = (int)$moment;
+        $dayOfWeek     = (int) $moment;
         Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
         if ($start->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
@@ -128,7 +128,7 @@ trait CalculateRangeOccurrences
         $start->addDays($dayDifference);
         Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
         while ($start <= $end) {
-            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+            if (0 === ($attempts % $skipMod) && $start->lte($start) && $end->gte($start)) {
                 Log::debug('Date is in range of start+end, add to set.');
                 $return[] = clone $start;
             }
@@ -158,7 +158,7 @@ trait CalculateRangeOccurrences
         $obj        = clone $date;
         $count      = 0;
         while ($obj <= $end && $obj >= $start && $count < 10) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $obj;
             }
             $obj->addYears();

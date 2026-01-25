@@ -38,12 +38,7 @@ class ChartJsGenerator implements GeneratorInterface
      */
     public function multiCurrencyPieChart(array $data): array
     {
-        $chartData = [
-            'datasets' => [
-                0 => [],
-            ],
-            'labels'   => [],
-        ];
+        $chartData = ['datasets' => [0 => []], 'labels'   => []];
 
         $amounts   = array_column($data, 'amount');
         $next      = next($amounts);
@@ -114,11 +109,7 @@ class ChartJsGenerator implements GeneratorInterface
         unset($first, $labels);
 
         foreach ($data as $set) {
-            $currentSet              = [
-                'label' => $set['label'] ?? '(no label)',
-                'type'  => $set['type'] ?? 'line',
-                'data'  => array_values($set['entries']),
-            ];
+            $currentSet              = ['label' => $set['label'] ?? '(no label)', 'type'  => $set['type'] ?? 'line', 'data'  => array_values($set['entries'])];
             if (array_key_exists('yAxisID', $set)) {
                 $currentSet['yAxisID'] = $set['yAxisID'];
             }
@@ -144,12 +135,7 @@ class ChartJsGenerator implements GeneratorInterface
      */
     public function pieChart(array $data): array
     {
-        $chartData = [
-            'datasets' => [
-                0 => [],
-            ],
-            'labels'   => [],
-        ];
+        $chartData = ['datasets' => [0 => []], 'labels'   => []];
 
         // sort by value, keep keys.
         // different sort when values are positive and when they're negative.
@@ -184,12 +170,7 @@ class ChartJsGenerator implements GeneratorInterface
         return [
             'count'    => 1,
             'labels'   => array_keys($data), // take ALL labels from the first set.
-            'datasets' => [
-                [
-                    'label' => $setLabel,
-                    'data'  => array_values($data),
-                ],
-            ],
+            'datasets' => [['label' => $setLabel, 'data'  => array_values($data)]],
         ];
     }
 }

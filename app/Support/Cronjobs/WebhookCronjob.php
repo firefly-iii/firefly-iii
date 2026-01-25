@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Cronjobs;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
-use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -46,7 +46,7 @@ class WebhookCronjob extends AbstractCronjob
 
         /** @var Configuration $config */
         $config        = FireflyConfig::get('last_webhook_job', 0);
-        $lastTime      = (int)$config->data;
+        $lastTime      = (int) $config->data;
         $diff          = now(config('app.timezone'))->getTimestamp() - $lastTime;
         $diffForHumans = now(config('app.timezone'))->diffForHumans(Carbon::createFromTimestamp($lastTime), null, true);
 
@@ -73,17 +73,17 @@ class WebhookCronjob extends AbstractCronjob
             Log::info(sprintf('It has been %s since the webhook cron-job has fired. It will fire now!', $diffForHumans));
         }
 
-        $this->fireWebhookmessages();
+        $this->fireWebhookMessages();
 
         Preferences::mark();
     }
 
-    private function fireWebhookmessages(): void
+    private function fireWebhookMessages(): void
     {
         Log::info(sprintf('Will now send webhook messages for date "%s".', $this->date->format('Y-m-d H:i:s')));
 
-        Log::debug('send event RequestedSendWebhookMessages through cron job.');
-        event(new RequestedSendWebhookMessages());
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
 
         // get stuff from job:
         $this->jobFired     = true;
@@ -91,8 +91,8 @@ class WebhookCronjob extends AbstractCronjob
         $this->jobSucceeded = true;
         $this->message      = 'Send webhook messages cron job fired successfully.';
 
-        FireflyConfig::set('last_webhook_job', (int)$this->date->format('U'));
-        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int)$this->date->format('U')));
+        FireflyConfig::set('last_webhook_job', (int) $this->date->format('U'));
+        Log::info(sprintf('Marked the last time this job has run as "%s" (%d)', $this->date->format('Y-m-d H:i:s'), (int) $this->date->format('U')));
         Log::info('Done with webhook cron job task.');
     }
 }

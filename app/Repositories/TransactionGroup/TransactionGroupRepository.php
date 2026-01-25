@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionGroup;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -44,13 +43,14 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 use function Safe\json_decode;
 
@@ -149,7 +149,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $set        = Attachment::whereIn('attachable_id', $journals)
             ->where('attachable_type', TransactionJournal::class)
             ->where('uploaded', true)
-            ->whereNull('deleted_at')->get()
+            ->whereNull('deleted_at')
+            ->get()
         ;
 
         $result     = [];
@@ -175,13 +176,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     public function getNoteText(int $journalId): ?string
     {
         /** @var null|Note $note */
-        $note = Note::where('noteable_id', $journalId)
-            ->where('noteable_type', TransactionJournal::class)
-            ->first()
-        ;
+        $note = Note::where('noteable_id', $journalId)->where('noteable_type', TransactionJournal::class)->first();
 
         return $note?->text;
-
     }
 
     /**
@@ -191,16 +188,15 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     {
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
-        $set      = TransactionJournalLink::where(
-            static function (Builder $q) use ($journals): void {
-                $q->whereIn('source_id', $journals);
-                $q->orWhereIn('destination_id', $journals);
-            }
-        )
-            ->with(['source', 'destination', 'source.transactions'])
-            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
-            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward', 'link_types.editable'])
-        ;
+        $set      = TransactionJournalLink::where(static function (Builder $q) use ($journals): void {
+            $q->whereIn('source_id', $journals);
+            $q->orWhereIn('destination_id', $journals);
+        })->with(['source', 'destination', 'source.transactions'])->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')->get([
+            'journal_links.*',
+            'link_types.inward',
+            'link_types.outward',
+            'link_types.editable',
+        ]);
 
         /** @var TransactionJournalLink $entry */
         foreach ($set as $entry) {
@@ -217,7 +213,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
-                    'editable'       => 1 === (int)$entry->editable,
+                    'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -230,7 +226,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
-                    'editable'       => 1 === (int)$entry->editable,
+                    'editable'       => 1 === (int) $entry->editable,
                     'amount'         => $amount,
                     'foreign_amount' => $foreignAmount,
                 ];
@@ -262,7 +258,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
             return '';
         }
 
-        if (0 === bccomp('0', (string)$transaction->foreign_amount)) {
+        if (0 === bccomp('0', (string) $transaction->foreign_amount)) {
             return '';
         }
 
@@ -301,7 +297,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = new Carbon(json_decode((string)$row->data, true, 512, JSON_THROW_ON_ERROR));
+            $return[$row->name] = new Carbon(json_decode((string) $row->data, true, 512, JSON_THROW_ON_ERROR));
         }
 
         return new NullArrayObject($return);
@@ -321,7 +317,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return = [];
 
         foreach ($query as $row) {
-            $return[$row->name] = json_decode((string)$row->data);
+            $return[$row->name] = json_decode((string) $row->data);
         }
 
         return new NullArrayObject($return);
@@ -337,10 +333,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $return   = [];
         $journals = $group->transactionJournals->pluck('id')->toArray();
         $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
-        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)
-            ->with('piggyBank', 'piggyBank.account')
-            ->get(['piggy_bank_events.*'])
-        ;
+        $data     = PiggyBankEvent::whereIn('transaction_journal_id', $journals)->with('piggyBank', 'piggyBank.account')->get(['piggy_bank_events.*']);
 
         /** @var PiggyBankEvent $row */
         foreach ($data as $row) {
@@ -348,10 +341,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
                 continue;
             }
             // get currency preference.
-            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)
-                ->where('name', 'currency_id')
-                ->first()
-            ;
+            $currencyPreference   = AccountMeta::where('account_id', $row->piggyBank->account_id)->where('name', 'currency_id')->first();
             if (null !== $currencyPreference) {
                 $currency = Amount::getTransactionCurrencyById((int) $currencyPreference->data);
             }
@@ -443,8 +433,8 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
-                if (-1 === bccomp('0', (string)$transaction->amount)) {
-                    $sum   = bcadd($sum, (string)$transaction->amount);
+                if (-1 === bccomp('0', (string) $transaction->amount)) {
+                    $sum   = bcadd($sum, (string) $transaction->amount);
                     $names = sprintf('%s%s', $names, $transaction->account->name);
                 }
             }

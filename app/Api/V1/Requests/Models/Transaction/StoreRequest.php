@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Location;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Request\AppendsLocationData;
 use FireflyIII\Support\Request\ChecksLogin;
@@ -38,9 +38,9 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class StoreRequest
@@ -64,10 +64,12 @@ class StoreRequest extends FormRequest
         return [
             'group_title'             => $this->convertString('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
+            'batch_submission'        => $this->boolean('batch_submission'),
             'apply_rules'             => $this->boolean('apply_rules', true),
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),
             'transactions'            => $this->getTransactionData(),
         ];
+
         // TODO include location and ability to process it.
     }
 
@@ -272,35 +274,33 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // must be valid array.
-                $this->validateTransactionArray($validator);
+        $validator->after(function (Validator $validator): void {
+            // must be valid array.
+            $this->validateTransactionArray($validator);
 
-                // must submit at least one transaction.
-                Log::debug('Now going to validateOneTransaction');
-                $this->validateOneTransaction($validator);
-                Log::debug('Now done with validateOneTransaction');
+            // must submit at least one transaction.
+            Log::debug('Now going to validateOneTransaction');
+            $this->validateOneTransaction($validator);
+            Log::debug('Now done with validateOneTransaction');
 
-                // all journals must have a description
-                $this->validateDescriptions($validator);
+            // all journals must have a description
+            $this->validateDescriptions($validator);
 
-                // all transaction types must be equal:
-                $this->validateTransactionTypes($validator);
+            // all transaction types must be equal:
+            $this->validateTransactionTypes($validator);
 
-                // validate foreign currency info
-                $this->validateForeignCurrencyInformation($validator);
+            // validate foreign currency info
+            $this->validateForeignCurrencyInformation($validator);
 
-                // validate all account info
-                $this->validateAccountInformation($validator);
+            // validate all account info
+            $this->validateAccountInformation($validator);
 
-                // validate source/destination is equal, depending on the transaction journal type.
-                $this->validateEqualAccounts($validator);
+            // validate source/destination is equal, depending on the transaction journal type.
+            $this->validateEqualAccounts($validator);
 
-                // the group must have a description if > 1 journal.
-                $this->validateGroupDescription($validator);
-            }
-        );
+            // the group must have a description if > 1 journal.
+            $this->validateGroupDescription($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

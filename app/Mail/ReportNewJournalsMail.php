@@ -46,7 +46,9 @@ class ReportNewJournalsMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public Collection $groups) {}
+    public function __construct(
+        public Collection $groups
+    ) {}
 
     /**
      * Build the message.
@@ -59,10 +61,7 @@ class ReportNewJournalsMail extends Mailable
     {
         $this->transform();
 
-        return $this
-            ->markdown('emails.report-new-journals')
-            ->subject(trans_choice('email.new_journals_subject', $this->groups->count()))
-        ;
+        return $this->markdown('emails.report-new-journals')->subject(trans_choice('email.new_journals_subject', $this->groups->count()));
     }
 
     /**

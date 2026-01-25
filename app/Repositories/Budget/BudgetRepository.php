@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -41,6 +40,8 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -51,7 +52,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BudgetRepository.
@@ -66,9 +66,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         if ('' !== $query) {
             $search->whereLike('name', sprintf('%%%s', $query));
         }
-        $search->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')->where('active', true)
-        ;
+        $search->orderBy('order', 'ASC')->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
     }
@@ -79,9 +77,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         if ('' !== $query) {
             $search->whereLike('name', sprintf('%s%%', $query));
         }
-        $search->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')->where('active', true)
-        ;
+        $search->orderBy('order', 'ASC')->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
     }
@@ -144,16 +140,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
                 $amount                          = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
                 $return[$currencyCode]['sum']    = bcadd($return[$currencyCode]['sum'], $amount);
                 $return[$currencyCode]['pc_sum'] = bcmul($rate, $return[$currencyCode]['sum']);
-                Log::debug(
-                    sprintf(
-                        'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                        bcdiv((string) $limit->amount, (string) $total),
-                        $limit->amount,
-                        $total,
-                        $days,
-                        $amount
-                    )
-                );
+                Log::debug(sprintf(
+                    'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
+                    bcdiv((string) $limit->amount, (string) $total),
+                    $limit->amount,
+                    $total,
+                    $days,
+                    $amount
+                ));
             }
         }
 
@@ -162,7 +156,9 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
     public function getActiveBudgets(): Collection
     {
-        return $this->user->budgets()->where('active', true)
+        return $this->user
+            ->budgets()
+            ->where('active', true)
             ->orderBy('order', 'ASC')
             ->orderBy('name', 'ASC')
             ->get()
@@ -245,16 +241,14 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $days                         = $this->daysInOverlap($limit, $start, $end);
             $amount                       = bcmul(bcdiv((string) $limit->amount, (string) $total), (string) $days);
             $return[$currency->id]['sum'] = bcadd($return[$currency->id]['sum'], $amount);
-            Log::debug(
-                sprintf(
-                    'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
-                    bcdiv((string) $limit->amount, (string) $total),
-                    $limit->amount,
-                    $total,
-                    $days,
-                    $amount
-                )
-            );
+            Log::debug(sprintf(
+                'Amount per day: %s (%s over %d days). Total amount for %d days: %s',
+                bcdiv((string) $limit->amount, (string) $total),
+                $limit->amount,
+                $total,
+                $days,
+                $amount
+            ));
         }
 
         return $return;
@@ -275,7 +269,11 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $budget->saveQuietly();
         }
         // other budgets, set to 0.
-        $this->user->budgets()->where('active', 0)->update(['order' => 0]);
+        $this->user
+            ->budgets()
+            ->where('active', 0)
+            ->update(['order' => 0])
+        ;
 
         return true;
     }
@@ -473,8 +471,11 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
     public function getBudgets(): Collection
     {
-        return $this->user->budgets()->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')->get()
+        return $this->user
+            ->budgets()
+            ->orderBy('order', 'ASC')
+            ->orderBy('name', 'ASC')
+            ->get()
         ;
     }
 
@@ -514,7 +515,11 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $query = sprintf('%%%s%%', $name);
 
         /** @var null|Budget */
-        return $this->user->budgets()->whereLike('name', $query)->first();
+        return $this->user
+            ->budgets()
+            ->whereLike('name', $query)
+            ->first()
+        ;
     }
 
     /**
@@ -526,7 +531,6 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
 
         return $journal?->date;
-
     }
 
     public function getAttachments(Budget $budget): Collection
@@ -535,15 +539,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null !== $notes ? $notes->text : '';
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+            $notes                   = $attachment->notes()->first();
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
     }
 
     /**
@@ -551,14 +553,21 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
      */
     public function getByIds(array $budgetIds): Collection
     {
-        return $this->user->budgets()->whereIn('id', $budgetIds)->get();
+        return $this->user
+            ->budgets()
+            ->whereIn('id', $budgetIds)
+            ->get()
+        ;
     }
 
     public function getInactiveBudgets(): Collection
     {
-        return $this->user->budgets()
+        return $this->user
+            ->budgets()
             ->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')->where('active', 0)->get()
+            ->orderBy('name', 'ASC')
+            ->where('active', 0)
+            ->get()
         ;
     }
 
@@ -567,7 +576,6 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $note = $budget->notes()->first();
 
         return $note?->text;
-
     }
 
     public function searchBudget(string $query, int $limit): Collection
@@ -576,9 +584,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         if ('' !== $query) {
             $search->whereLike('name', sprintf('%%%s%%', $query));
         }
-        $search->orderBy('order', 'ASC')
-            ->orderBy('name', 'ASC')->where('active', true)
-        ;
+        $search->orderBy('order', 'ASC')->orderBy('name', 'ASC')->where('active', true);
 
         return $search->take($limit)->get();
     }
@@ -611,7 +617,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         // start collecting:
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)
+        $collector
+            ->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
@@ -673,7 +680,8 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         // start collecting:
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)
+        $collector
+            ->setUser($this->user)
             ->setRange($start, $end)
             ->excludeDestinationAccounts($selection)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
@@ -727,15 +735,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
         $singleton->setPreference('fire_webhooks_budget_create', $data['fire_webhooks'] ?? true);
 
         try {
-            $newBudget = Budget::create(
-                [
-                    'user_id'       => $this->user->id,
-                    'user_group_id' => $this->user->user_group_id,
-                    'name'          => $data['name'],
-                    'order'         => $order + 1,
-                    'active'        => array_key_exists('active', $data) ? $data['active'] : true,
-                ]
-            );
+            $newBudget = Budget::create([
+                'user_id'       => $this->user->id,
+                'user_group_id' => $this->user->user_group_id,
+                'name'          => $data['name'],
+                'order'         => $order + 1,
+                'active'        => array_key_exists('active', $data) ? $data['active'] : true,
+            ]);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -797,15 +803,13 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
         $limitRepos                          = app(BudgetLimitRepositoryInterface::class);
         $limitRepos->setUser($this->user);
-        $limitRepos->store(
-            [
-                'budget_id'   => $newBudget->id,
-                'currency_id' => $autoBudget->transaction_currency_id,
-                'start_date'  => $start,
-                'end_date'    => $end,
-                'amount'      => $autoBudget->amount,
-            ]
-        );
+        $limitRepos->store([
+            'budget_id'   => $newBudget->id,
+            'currency_id' => $autoBudget->transaction_currency_id,
+            'start_date'  => $start,
+            'end_date'    => $end,
+            'amount'      => $autoBudget->amount,
+        ]);
 
         return $newBudget;
     }

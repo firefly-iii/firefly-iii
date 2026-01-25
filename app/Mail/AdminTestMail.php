@@ -51,9 +51,6 @@ class AdminTestMail extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.admin-test')
-            ->subject((string) trans('email.admin_test_subject'))
-        ;
+        return $this->markdown('emails.admin-test')->subject((string) trans('email.admin_test_subject'));
     }
 }

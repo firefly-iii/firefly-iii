@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * RecalculatesRunningBalance.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -26,9 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class RecalculatesRunningBalance extends Command
 {

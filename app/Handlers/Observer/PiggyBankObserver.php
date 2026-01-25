@@ -27,9 +27,9 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankObserver

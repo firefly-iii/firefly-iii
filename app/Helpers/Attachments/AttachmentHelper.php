@@ -55,8 +55,8 @@ class AttachmentHelper implements AttachmentHelperInterface
     public Collection $attachments;
     public MessageBag $errors;
     public MessageBag $messages;
-    protected array   $allowedMimes  = [];
-    protected int     $maxUploadSize = 0;
+    protected array $allowedMimes  = [];
+    protected int   $maxUploadSize = 0;
 
     protected Filesystem $uploadDisk;
 

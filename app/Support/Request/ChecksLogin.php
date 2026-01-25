@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Request;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait ChecksLogin
@@ -87,10 +87,10 @@ trait ChecksLogin
         $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
             Log::debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
-            $userGroupId = (int)$this->get('user_group_id');
+            $userGroupId = (int) $this->get('user_group_id');
             if (0 === $userGroupId) {
                 Log::debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
-                $userGroupId = (int)$user->user_group_id;
+                $userGroupId = (int) $user->user_group_id;
             }
             $userGroup   = UserGroup::find($userGroupId);
             if (null === $userGroup) {

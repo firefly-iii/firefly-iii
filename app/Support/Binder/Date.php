@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidDateException;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**

@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Model\Bill\WarnUserAboutBill;
-use FireflyIII\Events\Model\Bill\WarnUserAboutOverdueSubscriptions;
+use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
+use FireflyIII\Events\Model\Subscription\SubscriptionsAreOverdueForPayment;
 use FireflyIII\Models\Bill;
 use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
@@ -49,7 +49,7 @@ class WarnAboutBills implements ShouldQueue
     use SerializesModels;
 
     private Carbon $date;
-    private bool   $force;
+    private bool $force;
 
     /**
      * Create a new job instance.
@@ -86,7 +86,7 @@ class WarnAboutBills implements ShouldQueue
                 Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
                 $dates = $this->getDates($bill);
                 if ($this->needsOverdueAlert($dates)) {
-                    $overdue[] = ['bill' => $bill, 'dates' => $dates];
+                    $overdue[] = ['bill'  => $bill, 'dates' => $dates];
                 }
                 if ($this->hasDateFields($bill)) {
                     if ($this->needsWarning($bill, 'end_date')) {
@@ -100,7 +100,6 @@ class WarnAboutBills implements ShouldQueue
             $this->sendOverdueAlerts($user, $overdue);
         }
         Log::debug('Done with handle()');
-
     }
 
     private function hasDateFields(Bill $bill): bool
@@ -136,14 +135,14 @@ class WarnAboutBills implements ShouldQueue
         $today  = clone $this->date;
         $carbon = clone $bill->{$field};
 
-        return (int)$today->diffInDays($carbon);
+        return (int) $today->diffInDays($carbon);
     }
 
     private function sendWarning(Bill $bill, string $field): void
     {
         $diff = $this->getDiff($bill, $field);
         Log::debug('Will now send warning!');
-        event(new WarnUserAboutBill($bill, $field, $diff));
+        event(new SubscriptionNeedsExtensionOrRenewal($bill, $field, $diff));
     }
 
     public function setDate(Carbon $date): void
@@ -172,10 +171,7 @@ class WarnAboutBills implements ShouldQueue
         /** @var Bill $single */
         $single     = $enrichment->enrichSingle($bill);
 
-        return [
-            'pay_dates'  => $single->meta['pay_dates'] ?? [],
-            'paid_dates' => $single->meta['paid_dates'] ?? [],
-        ];
+        return ['pay_dates'  => $single->meta['pay_dates'] ?? [], 'paid_dates' => $single->meta['paid_dates'] ?? []];
     }
 
     private function needsOverdueAlert(array $dates): bool
@@ -197,8 +193,8 @@ class WarnAboutBills implements ShouldQueue
     private function sendOverdueAlerts(User $user, array $overdue): void
     {
         if (count($overdue) > 0) {
-            Log::debug(sprintf('Will now send warning about overdue bill for user #%d.', $user->id));
-            event(new WarnUserAboutOverdueSubscriptions($user, $overdue));
+            Log::debug(sprintf('Will now send warning about overdue subscription(s) for user #%d.', $user->id));
+            event(new SubscriptionsAreOverdueForPayment($user, $overdue));
         }
     }
 }

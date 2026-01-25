@@ -23,10 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use Exception;
-use FireflyIII\Events\UserChangedEmail;
+use FireflyIII\Events\Security\User\UserChangedEmailAddress;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -35,6 +33,7 @@ use FireflyIII\Http\Requests\EmailFormRequest;
 use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
@@ -48,6 +47,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\ClientRepository;
 use Psr\Container\ContainerExceptionInterface;
@@ -72,14 +72,12 @@ class ProfileController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.profile'));
-                app('view')->share('mainTitleIcon', 'fa-user');
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.profile'));
+            app('view')->share('mainTitleIcon', 'fa-user');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
@@ -137,7 +135,7 @@ class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.delete_account');
         $subTitleIcon = 'fa-trash';
 
-        return view('profile.delete-account', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('profile.delete-account', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -151,7 +149,11 @@ class ProfileController extends Controller
         /** @var User $user */
         $user           = auth()->user();
         $isInternalAuth = $this->internalAuth;
-        $count          = DB::table('oauth_clients')->where('personal_access_client', true)->whereNull('user_id')->count();
+        $count          = DB::table('oauth_clients')
+            ->where('personal_access_client', true)
+            ->whereNull('user_id')
+            ->count()
+        ;
         $subTitle       = $user->email;
         $userId         = $user->id;
         $enabled2FA     = null !== $user->mfa_secret;
@@ -175,10 +177,14 @@ class ProfileController extends Controller
             $accessToken = Preferences::set('access_token', $token);
         }
 
-        return view(
-            'profile.index',
-            ['subTitle' => $subTitle, 'mfaBackupCount' => $mfaBackupCount, 'userId' => $userId, 'accessToken' => $accessToken, 'enabled2FA' => $enabled2FA, 'isInternalAuth' => $isInternalAuth]
-        );
+        return view('profile.index', [
+            'subTitle'       => $subTitle,
+            'mfaBackupCount' => $mfaBackupCount,
+            'userId'         => $userId,
+            'accessToken'    => $accessToken,
+            'enabled2FA'     => $enabled2FA,
+            'isInternalAuth' => $isInternalAuth,
+        ]);
     }
 
     public function logoutOtherSessions(): Factory|RedirectResponse|View
@@ -226,7 +232,7 @@ class ProfileController extends Controller
         // now actually update user:
         $repository->changeEmail($user, $newEmail);
 
-        event(new UserChangedEmail($user, $newEmail, $oldEmail));
+        event(new UserChangedEmailAddress($user, $newEmail, $oldEmail));
 
         // force user logout.
         Auth::guard()->logout();
@@ -252,7 +258,7 @@ class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.change_your_email');
         $subTitleIcon = 'fa-envelope';
 
-        return view('profile.change-email', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email' => $email]);
+        return view('profile.change-email', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email'        => $email]);
     }
 
     /**
@@ -304,7 +310,7 @@ class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.change_your_password');
         $subTitleIcon = 'fa-key';
 
-        return view('profile.change-password', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('profile.change-password', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -347,10 +353,7 @@ class ProfileController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $creds = [
-            'email'    => auth()->user()->email,
-            'password' => $request->get('password'),
-        ];
+        $creds = ['email'    => auth()->user()->email, 'password' => $request->get('password')];
         if (Auth::once($creds)) {
             Auth::logoutOtherDevices($request->get('password'));
             session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));

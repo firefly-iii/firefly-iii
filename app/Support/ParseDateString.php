@@ -38,20 +38,19 @@ use function Safe\preg_match;
  */
 class ParseDateString
 {
-    private array $keywords
-        = [
-            'today',
-            'yesterday',
-            'tomorrow',
-            'start of this week',
-            'end of this week',
-            'start of this month',
-            'end of this month',
-            'start of this quarter',
-            'end of this quarter',
-            'start of this year',
-            'end of this year',
-        ];
+    private array $keywords = [
+        'today',
+        'yesterday',
+        'tomorrow',
+        'start of this week',
+        'end of this week',
+        'start of this month',
+        'end of this month',
+        'start of this quarter',
+        'end of this quarter',
+        'start of this year',
+        'end of this year',
+    ];
 
     public function isDateRange(string $date): bool
     {
@@ -113,7 +112,7 @@ class ParseDateString
             return new Carbon('1984-09-17');
         }
         // maybe a year, nothing else?
-        if (4 === strlen($date) && is_numeric($date) && (int)$date > 1000 && (int)$date <= 3000) {
+        if (4 === strlen($date) && is_numeric($date) && (int) $date > 1000 && (int) $date <= 3000) {
             return new Carbon(sprintf('%d-01-01', $date));
         }
 
@@ -123,9 +122,7 @@ class ParseDateString
     public function parseRange(string $date): array
     {
         // several types of range can be submitted
-        $result = [
-            'exact' => new Carbon('1984-09-17'),
-        ];
+        $result = ['exact' => new Carbon('1984-09-17')];
 
         switch (true) {
             default:
@@ -264,9 +261,7 @@ class ParseDateString
     {
         $parts = explode('-', $date);
 
-        return [
-            'day' => $parts[2],
-        ];
+        return ['day' => $parts[2]];
     }
 
     protected function parseDefaultDate(string $date): Carbon
@@ -300,7 +295,7 @@ class ParseDateString
             'start of this quarter' => $today->startOfQuarter(),
             'end of this quarter'   => $today->endOfQuarter(),
             'start of this year'    => $today->startOfYear(),
-            'end of this year'      => $today->endOfYear(),
+            'end of this year'      => $today->endOfYear()
         };
     }
 
@@ -312,9 +307,7 @@ class ParseDateString
         Log::debug(sprintf('parseMonthRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
 
-        return [
-            'month' => $parts[1],
-        ];
+        return ['month' => $parts[1]];
     }
 
     /**
@@ -325,10 +318,7 @@ class ParseDateString
         Log::debug(sprintf('parseMonthYearRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
 
-        return [
-            'year'  => $parts[0],
-            'month' => $parts[1],
-        ];
+        return ['year'  => $parts[0], 'month' => $parts[1]];
     }
 
     protected function parseRelativeDate(string $date): Carbon
@@ -337,20 +327,8 @@ class ParseDateString
         $parts     = explode(' ', $date);
         $today     = today(config('app.timezone'))->startOfDay();
         $functions = [
-            [
-                'd' => 'subDays',
-                'w' => 'subWeeks',
-                'm' => 'subMonths',
-                'q' => 'subQuarters',
-                'y' => 'subYears',
-            ],
-            [
-                'd' => 'addDays',
-                'w' => 'addWeeks',
-                'm' => 'addMonths',
-                'q' => 'addQuarters',
-                'y' => 'addYears',
-            ],
+            ['d' => 'subDays', 'w' => 'subWeeks', 'm' => 'subMonths', 'q' => 'subQuarters', 'y' => 'subYears'],
+            ['d' => 'addDays', 'w' => 'addWeeks', 'm' => 'addMonths', 'q' => 'addQuarters', 'y' => 'addYears'],
         ];
 
         foreach ($parts as $part) {
@@ -367,7 +345,7 @@ class ParseDateString
             }
             $direction = str_starts_with($part, '+') ? 1 : 0;
             $period    = $part[strlen($part) - 1];
-            $number    = (int)substr($part, 1, -1);
+            $number    = (int) substr($part, 1, -1);
             if (!array_key_exists($period, $functions[$direction])) {
                 Log::error(sprintf('No method for direction %d and period "%s".', $direction, $period));
 
@@ -390,9 +368,7 @@ class ParseDateString
         Log::debug(sprintf('parseYearRange: Parsed "%s"', $date));
         $parts = explode('-', $date);
 
-        return [
-            'year' => $parts[0],
-        ];
+        return ['year' => $parts[0]];
     }
 
     /**
@@ -403,10 +379,7 @@ class ParseDateString
         Log::debug(sprintf('parseDayYearRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
 
-        return [
-            'year' => $parts[0],
-            'day'  => $parts[2],
-        ];
+        return ['year' => $parts[0], 'day'  => $parts[2]];
     }
 
     /**
@@ -417,9 +390,6 @@ class ParseDateString
         Log::debug(sprintf('parseMonthDayRange: Parsed "%s".', $date));
         $parts = explode('-', $date);
 
-        return [
-            'month' => $parts[1],
-            'day'   => $parts[2],
-        ];
+        return ['month' => $parts[1], 'day'   => $parts[2]];
     }
 }

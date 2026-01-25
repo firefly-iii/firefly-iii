@@ -38,7 +38,7 @@ use League\Fractal\Resource\Item;
  */
 class StoreController extends Controller
 {
-    private AccountRepositoryInterface   $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
 
     /**
@@ -47,20 +47,18 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user                      = auth()->user();
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-                $this->ruleGroupRepository->setUser($user);
+            $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+            $this->ruleGroupRepository->setUser($user);
 
-                $this->accountRepository   = app(AccountRepositoryInterface::class);
-                $this->accountRepository->setUser($user);
+            $this->accountRepository   = app(AccountRepositoryInterface::class);
+            $this->accountRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**

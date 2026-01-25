@@ -39,22 +39,19 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const int AUTO_BUDGET_ADJUSTED = 3;
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const int AUTO_BUDGET_RESET    = 1;
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const int AUTO_BUDGET_ROLLOVER = 2;
-    protected $casts
-                                          = [
-            'amount'        => 'string',
-            'native_amount' => 'string',
-        ];
+
+    protected $casts                      = ['amount'        => 'string', 'native_amount' => 'string'];
     protected $fillable                   = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function budget(): BelongsTo
@@ -69,16 +66,12 @@ class AutoBudget extends Model
 
     protected function amount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function budgetId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -90,8 +83,6 @@ class AutoBudget extends Model
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

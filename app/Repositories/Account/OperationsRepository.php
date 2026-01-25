@@ -119,10 +119,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::WITHDRAWAL->value, $start, $end, $accounts, $expense, $currency);
@@ -135,11 +135,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function getTransactionsForSum(
-        string               $type,
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $opposing = null,
+        string $type,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $opposing = null,
         ?TransactionCurrency $currency = null
     ): array {
         $start->startOfDay();
@@ -180,9 +180,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         if ($currency instanceof TransactionCurrency) {
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
-            $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type])->withAccountInformation()
-                ->setForeignCurrency($currency)
-            ;
+            $collector->setUser($this->user)->setRange($start, $end)->setTypes([$type])->withAccountInformation()->setForeignCurrency($currency);
             if (TransactionTypeEnum::WITHDRAWAL->value === $type) {
                 if ($accounts instanceof Collection) {
                     $collector->setSourceAccounts($accounts);
@@ -220,10 +218,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::WITHDRAWAL->value, $start, $end, $accounts, $expense, $currency);
@@ -242,10 +240,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::WITHDRAWAL->value, $start, $end, $accounts, $expense, $currency);
@@ -257,10 +255,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncome(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::DEPOSIT->value, $start, $end, $accounts, $revenue, $currency);
@@ -272,10 +270,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::DEPOSIT->value, $start, $end, $accounts, $revenue, $currency);
@@ -287,10 +285,10 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array {
         $journals = $this->getTransactionsForSum(TransactionTypeEnum::DEPOSIT->value, $start, $end, $accounts, $revenue, $currency);

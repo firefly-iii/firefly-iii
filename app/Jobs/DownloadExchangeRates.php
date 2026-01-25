@@ -54,10 +54,10 @@ class DownloadExchangeRates implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private array                       $active = [];
-    private Carbon                      $date;
+    private array $active = [];
+    private Carbon $date;
     private CurrencyRepositoryInterface $repository;
-    private Collection                  $users;
+    private Collection $users;
 
     /**
      * Create a new job instance.

@@ -75,13 +75,13 @@ use Illuminate\Support\Str;
  */
 trait PeriodOverview
 {
-    protected AccountRepositoryInterface         $accountRepository;
-    protected CategoryRepositoryInterface        $categoryRepository;
-    protected TagRepositoryInterface             $tagRepository;
-    protected JournalRepositoryInterface         $journalRepos;
+    protected AccountRepositoryInterface $accountRepository;
+    protected CategoryRepositoryInterface $categoryRepository;
+    protected TagRepositoryInterface $tagRepository;
+    protected JournalRepositoryInterface $journalRepos;
     protected PeriodStatisticRepositoryInterface $periodStatisticRepo;
-    private Collection                           $statistics;   // temp data holder
-    private array                                $transactions; // temp data holder
+    private Collection $statistics; // temp data holder
+    private array $transactions; // temp data holder
 
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc. (this depends on the users session range)
@@ -152,7 +152,6 @@ trait PeriodOverview
         $entries                   = [];
         [$start, $end]             = $this->getPeriodFromBlocks($dates, $start, $end);
         $this->statistics          = $this->periodStatisticRepo->allInRangeForModel($category, $start, $end);
-
 
         Log::debug(sprintf('Count of loops: %d', count($dates)));
         foreach ($dates as $currentDate) {
@@ -244,15 +243,10 @@ trait PeriodOverview
             $groupedSpent       = $this->groupByCurrency($spent);
             $groupedEarned      = $this->groupByCurrency($earned);
             $groupedTransferred = $this->groupByCurrency($transferred);
-            $entry
-                                = [
-                                    'title'              => $title,
-                                    'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
-                                    'total_transactions' => count($spent),
-                                    'spent'              => $groupedSpent,
-                                    'earned'             => $groupedEarned,
-                                    'transferred'        => $groupedTransferred,
-                                ];
+            $entry              = ['title'              => $title, 'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [
+                $start->format('Y-m-d'),
+                $end->format('Y-m-d'),
+            ]), 'total_transactions' => count($spent), 'spent'              => $groupedSpent, 'earned'             => $groupedEarned, 'transferred'        => $groupedTransferred];
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'spent', $groupedSpent);
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'earned', $groupedEarned);
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'transferred', $groupedTransferred);
@@ -261,33 +255,28 @@ trait PeriodOverview
         }
         Log::debug(sprintf('Found %d statistics in period %s - %s.', count($statistics), $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        $entry
-                    = [
-                        'title'              => $title,
-                        'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [$start->format('Y-m-d'), $end->format('Y-m-d')]),
-                        'total_transactions' => 0,
-                        'spent'              => [],
-                        'earned'             => [],
-                        'transferred'        => [],
-                    ];
+        $entry      = ['title'              => $title, 'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [
+            $start->format('Y-m-d'),
+            $end->format('Y-m-d'),
+        ]), 'total_transactions' => 0, 'spent'              => [], 'earned'             => [], 'transferred'        => []];
         $grouped    = [];
 
         /** @var PeriodStatistic $statistic */
         foreach ($statistics as $statistic) {
             $type                = str_replace(sprintf('no_%s_', $model), '', $statistic->type);
-            $id                  = (int)$statistic->transaction_currency_id;
+            $id                  = (int) $statistic->transaction_currency_id;
             $currency            = Amount::getTransactionCurrencyById($id);
             $grouped[$type]['count'] ??= 0;
             $grouped[$type][$id] = [
-                'amount'                  => (string)$statistic->amount,
-                'count'                   => (int)$statistic->count,
+                'amount'                  => (string) $statistic->amount,
+                'count'                   => (int) $statistic->count,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $grouped[$type]['count'] += (int)$statistic->count;
+            $grouped[$type]['count'] += (int) $statistic->count;
         }
         $types      = ['spent', 'earned', 'transferred'];
         foreach ($types as $type) {
@@ -296,7 +285,6 @@ trait PeriodOverview
                 unset($grouped[$type]['count']);
                 $entry[$type] = $grouped[$type];
             }
-
         }
 
         return $entry;
@@ -308,7 +296,11 @@ trait PeriodOverview
         $types              = ['spent', 'earned', 'transferred_in', 'transferred_away'];
         $return             = [
             'title'              => Navigation::periodShow($start, $period),
-            'route'              => route(sprintf('%s.show', strtolower(Str::plural(class_basename($model)))), [$model->id, $start->format('Y-m-d'), $end->format('Y-m-d')]),
+            'route'              => route(sprintf('%s.show', strtolower(Str::plural(class_basename($model)))), [
+                $model->id,
+                $start->format('Y-m-d'),
+                $end->format('Y-m-d'),
+            ]),
             'total_transactions' => 0,
         ];
         $this->transactions = [];
@@ -344,13 +336,24 @@ trait PeriodOverview
         }
 
         return $this->statistics->filter(
-            static fn (PeriodStatistic $statistic): bool => $statistic->start->eq($start) && $statistic->end->eq($end) && str_starts_with($statistic->type, $prefix)
+            static fn (PeriodStatistic $statistic): bool => (
+                $statistic->start->eq($start)
+                && $statistic->end->eq($end)
+                && str_starts_with($statistic->type, $prefix)
+            )
         );
     }
 
     private function getSingleModelPeriodByType(Model $model, Carbon $start, Carbon $end, string $type): array
     {
-        Log::debug(sprintf('Now in getSingleModelPeriodByType(%s #%d, %s %s, %s)', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type));
+        Log::debug(sprintf(
+            'Now in getSingleModelPeriodByType(%s #%d, %s %s, %s)',
+            $model::class,
+            $model->id,
+            $start->format('Y-m-d'),
+            $end->format('Y-m-d'),
+            $type
+        ));
         $statistics = $this->filterStatistics($start, $end, $type);
 
         // nothing found, regenerate them.
@@ -383,7 +386,6 @@ trait PeriodOverview
                     throw new FireflyException(sprintf('Cannot deal with category period type %s', $type));
 
                 case 'spent':
-
                     $result = $this->filterTransactionsByType(TransactionTypeEnum::WITHDRAWAL, $start, $end);
 
                     break;
@@ -411,24 +413,22 @@ trait PeriodOverview
 
             return $grouped;
         }
-        $grouped    = [
-            'count' => 0,
-        ];
+        $grouped    = ['count' => 0];
 
         /** @var PeriodStatistic $statistic */
         foreach ($statistics as $statistic) {
-            $id           = (int)$statistic->transaction_currency_id;
+            $id           = (int) $statistic->transaction_currency_id;
             $currency     = Amount::getTransactionCurrencyById($id);
             $grouped[$id] = [
-                'amount'                  => (string)$statistic->amount,
-                'count'                   => (int)$statistic->count,
+                'amount'                  => (string) $statistic->amount,
+                'count'                   => (int) $statistic->count,
                 'currency_id'             => $currency->id,
                 'currency_name'           => $currency->name,
                 'currency_code'           => $currency->code,
                 'currency_symbol'         => $currency->symbol,
                 'currency_decimal_places' => $currency->decimal_places,
             ];
-            $grouped['count'] += (int)$statistic->count;
+            $grouped['count'] += (int) $statistic->count;
         }
 
         return $grouped;
@@ -439,8 +439,8 @@ trait PeriodOverview
      *
      * @throws FireflyException
      */
-    protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
-    {
+    protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array
+    { // period overview for tags.
         $this->tagRepository       = app(TagRepositoryInterface::class);
         $this->tagRepository->setUser($tag->user);
         $this->periodStatisticRepo = app(PeriodStatisticRepositoryInterface::class);
@@ -453,7 +453,6 @@ trait PeriodOverview
         $entries                   = [];
         [$start, $end]             = $this->getPeriodFromBlocks($dates, $start, $end);
         $this->statistics          = $this->periodStatisticRepo->allInRangeForModel($tag, $start, $end);
-
 
         Log::debug(sprintf('Count of loops: %d', count($dates)));
         foreach ($dates as $currentDate) {
@@ -495,7 +494,7 @@ trait PeriodOverview
         $loops         = 0;
 
         foreach ($dates as $currentDate) {
-            $title = Navigation::periodShow($currentDate['end'], $currentDate['period']);
+            $title     = Navigation::periodShow($currentDate['end'], $currentDate['period']);
 
             if ($loops < 10) {
                 // set to correct array
@@ -509,15 +508,18 @@ trait PeriodOverview
                     $transferred = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
                 }
             }
-            $entries[]
-                   = [
-                       'title'              => $title,
-                       'route'              => route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                       'total_transactions' => count($spent) + count($earned) + count($transferred),
-                       'spent'              => $this->groupByCurrency($spent),
-                       'earned'             => $this->groupByCurrency($earned),
-                       'transferred'        => $this->groupByCurrency($transferred),
-                   ];
+            $entries[] = [
+                'title'              => $title,
+                'route'              => route('transactions.index', [
+                    $transactionType,
+                    $currentDate['start']->format('Y-m-d'),
+                    $currentDate['end']->format('Y-m-d'),
+                ]),
+                'total_transactions' => count($spent) + count($earned) + count($transferred),
+                'spent'              => $this->groupByCurrency($spent),
+                'earned'             => $this->groupByCurrency($earned),
+                'transferred'        => $this->groupByCurrency($transferred),
+            ];
             ++$loops;
         }
 
@@ -527,7 +529,15 @@ trait PeriodOverview
     private function saveGroupedAsStatistics(Model $model, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
-        Log::debug(sprintf('saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))', $model::class, $model->id, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
+        Log::debug(sprintf(
+            'saveGroupedAsStatistics(%s #%d, %s, %s, "%s", array(%d))',
+            $model::class,
+            $model->id,
+            $start->format('Y-m-d'),
+            $end->format('Y-m-d'),
+            $type,
+            count($array)
+        ));
         foreach ($array as $entry) {
             $this->periodStatisticRepo->saveStatistic($model, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
@@ -540,7 +550,14 @@ trait PeriodOverview
     private function saveGroupedForPrefix(string $prefix, Carbon $start, Carbon $end, string $type, array $array): void
     {
         unset($array['count']);
-        Log::debug(sprintf('saveGroupedForPrefix("%s", %s, %s, "%s", array(%d))', $prefix, $start->format('Y-m-d'), $end->format('Y-m-d'), $type, count($array)));
+        Log::debug(sprintf(
+            'saveGroupedForPrefix("%s", %s, %s, "%s", array(%d))',
+            $prefix,
+            $start->format('Y-m-d'),
+            $end->format('Y-m-d'),
+            $type,
+            count($array)
+        ));
         foreach ($array as $entry) {
             $this->periodStatisticRepo->savePrefixedStatistic($prefix, $entry['currency_id'], $start, $end, $type, $entry['count'], $entry['amount']);
         }
@@ -575,9 +592,8 @@ trait PeriodOverview
             $date = Carbon::parse($item['date']);
             $fits = $item['type'] === $type->value && $date >= $start && $date <= $end;
             if ($fits) {
-
                 // if type is withdrawal, negative amount:
-                if (TransactionTypeEnum::WITHDRAWAL === $type && 1 === bccomp((string)$item['amount'], '0')) {
+                if (TransactionTypeEnum::WITHDRAWAL === $type && 1 === bccomp((string) $item['amount'], '0')) {
                     $item['amount'] = Steam::negative($item['amount']);
                 }
                 $result[] = $item;
@@ -594,12 +610,12 @@ trait PeriodOverview
         foreach ($this->transactions as $item) {
             $date = Carbon::parse($item['date']);
             if ($date >= $start && $date <= $end) {
-                if ('Transfer' === $item['type'] && 'away' === $direction && -1 === bccomp((string)$item['amount'], '0')) {
+                if ('Transfer' === $item['type'] && 'away' === $direction && -1 === bccomp((string) $item['amount'], '0')) {
                     $result[] = $item;
 
                     continue;
                 }
-                if ('Transfer' === $item['type'] && 'in' === $direction && 1 === bccomp((string)$item['amount'], '0')) {
+                if ('Transfer' === $item['type'] && 'in' === $direction && 1 === bccomp((string) $item['amount'], '0')) {
                     $result[] = $item;
                 }
             }
@@ -611,16 +627,14 @@ trait PeriodOverview
     private function groupByCurrency(array $journals): array
     {
         Log::debug('groupByCurrency()');
-        $return = [
-            'count' => 0,
-        ];
+        $return = ['count' => 0];
         if (0 === count($journals)) {
             return $return;
         }
 
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $currencyId                    = (int)$journal['currency_id'];
+            $currencyId                    = (int) $journal['currency_id'];
             $currencyCode                  = $journal['currency_code'];
             $currencyName                  = $journal['currency_name'];
             $currencySymbol                = $journal['currency_symbol'];
@@ -629,7 +643,7 @@ trait PeriodOverview
             $amount                        = (string) ($journal['amount'] ?? '0');
 
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId !== $this->primaryCurrency->id) {
-                $amount                = (string)  ($journal['pc_amount'] ?? '0');
+                $amount                = (string) ($journal['pc_amount'] ?? '0');
                 $currencyId            = $this->primaryCurrency->id;
                 $currencyCode          = $this->primaryCurrency->code;
                 $currencyName          = $this->primaryCurrency->name;
@@ -637,7 +651,7 @@ trait PeriodOverview
                 $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
             }
             if ($this->convertToPrimary && $currencyId !== $this->primaryCurrency->id && $foreignCurrencyId === $this->primaryCurrency->id) {
-                $currencyId            = (int)$foreignCurrencyId;
+                $currencyId            = (int) $foreignCurrencyId;
                 $currencyCode          = $journal['foreign_currency_code'];
                 $currencyName          = $journal['foreign_currency_name'];
                 $currencySymbol        = $journal['foreign_currency_symbol'];
@@ -654,8 +668,7 @@ trait PeriodOverview
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
 
-
-            $return[$currencyId]['amount'] = bcadd((string)$return[$currencyId]['amount'], $amount);
+            $return[$currencyId]['amount'] = bcadd((string) $return[$currencyId]['amount'], $amount);
             ++$return[$currencyId]['count'];
             ++$return['count'];
         }

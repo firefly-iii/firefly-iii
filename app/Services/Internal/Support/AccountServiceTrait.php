@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Deprecated;
 use FireflyIII\Enums\AccountTypeEnum;
@@ -42,9 +40,11 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
-use Illuminate\Support\Facades\Validator;
-use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Trait AccountServiceTrait
@@ -58,8 +58,8 @@ trait AccountServiceTrait
         if (null === $iban) {
             return null;
         }
-        $data      = ['iban' => $iban];
-        $rules     = ['iban' => 'required|iban'];
+        $data      = ['iban'      => $iban];
+        $rules     = ['iban'     => 'required|iban'];
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             Log::info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
@@ -75,16 +75,17 @@ trait AccountServiceTrait
      */
     public function isEmptyOBData(array $data): bool
     {
-        if (!array_key_exists('opening_balance', $data)
-            && !array_key_exists('opening_balance_date', $data)
-        ) {
+        if (!array_key_exists('opening_balance', $data) && !array_key_exists('opening_balance_date', $data)) {
             // not set, so false.
             return false;
         }
 
         // if is set, but is empty:
-        return (array_key_exists('opening_balance', $data) && '' === $data['opening_balance'])
-        || (array_key_exists('opening_balance_date', $data) && '' === $data['opening_balance_date']);
+        return
+            array_key_exists('opening_balance', $data)
+            && '' === $data['opening_balance']
+            || array_key_exists('opening_balance_date', $data)
+            && '' === $data['opening_balance_date'];
     }
 
     /**
@@ -177,8 +178,12 @@ trait AccountServiceTrait
         if ('' !== $data['opening_balance'] && 0 === bccomp($data['opening_balance'], '0')) {
             $data['opening_balance'] = '';
         }
-        if ('' !== $data['opening_balance'] && array_key_exists('opening_balance_date', $data) && '' !== $data['opening_balance_date']
-            && $data['opening_balance_date'] instanceof Carbon) {
+        if (
+            '' !== $data['opening_balance']
+            && array_key_exists('opening_balance_date', $data)
+            && '' !== $data['opening_balance_date']
+            && $data['opening_balance_date'] instanceof Carbon
+        ) {
             Log::debug('Array has valid opening balance data.');
 
             return true;
@@ -240,32 +245,30 @@ trait AccountServiceTrait
             'group_title'  => null,
             'user'         => $account->user,
             'user_group'   => $account->user->userGroup,
-            'transactions' => [
-                [
-                    'type'             => 'Opening balance',
-                    'date'             => $data['opening_balance_date'],
-                    'source_id'        => $sourceId,
-                    'source_name'      => $sourceName,
-                    'destination_id'   => $destId,
-                    'destination_name' => $destName,
-                    'user'             => $account->user,
-                    'user_group'       => $account->user->userGroup,
-                    'currency_id'      => $currency->id,
-                    'order'            => 0,
-                    'amount'           => $amount,
-                    'foreign_amount'   => null,
-                    'description'      => trans('firefly.initial_balance_description', ['account' => $account->name]),
-                    'budget_id'        => null,
-                    'budget_name'      => null,
-                    'category_id'      => null,
-                    'category_name'    => null,
-                    'piggy_bank_id'    => null,
-                    'piggy_bank_name'  => null,
-                    'reconciled'       => false,
-                    'notes'            => null,
-                    'tags'             => [],
-                ],
-            ],
+            'transactions' => [[
+                'type'             => 'Opening balance',
+                'date'             => $data['opening_balance_date'],
+                'source_id'        => $sourceId,
+                'source_name'      => $sourceName,
+                'destination_id'   => $destId,
+                'destination_name' => $destName,
+                'user'             => $account->user,
+                'user_group'       => $account->user->userGroup,
+                'currency_id'      => $currency->id,
+                'order'            => 0,
+                'amount'           => $amount,
+                'foreign_amount'   => null,
+                'description'      => trans('firefly.initial_balance_description', ['account'      => $account->name]),
+                'budget_id'        => null,
+                'budget_name'      => null,
+                'category_id'      => null,
+                'category_name'    => null,
+                'piggy_bank_id'    => null,
+                'piggy_bank_name'  => null,
+                'reconciled'       => false,
+                'notes'            => null,
+                'tags'             => [],
+            ]],
         ];
         Log::debug('Going for submission in createOBGroup', $submission);
 
@@ -446,7 +449,7 @@ trait AccountServiceTrait
             $sourceId   = $account->id;
             $sourceName = null;
             $destId     = null;
-            $destName   = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
+            $destName   = trans('firefly.liability_credit_description', ['account'   => $account->name], $language);
         }
 
         // amount must be positive for the transaction to work.
@@ -462,32 +465,30 @@ trait AccountServiceTrait
             'group_title'  => null,
             'user'         => $account->user,
             'user_group'   => $account->user->userGroup,
-            'transactions' => [
-                [
-                    'type'             => 'Liability credit',
-                    'date'             => $openingBalanceDate,
-                    'source_id'        => $sourceId,
-                    'source_name'      => $sourceName,
-                    'destination_id'   => $destId,
-                    'destination_name' => $destName,
-                    'user'             => $account->user,
-                    'user_group'       => $account->user->userGroup,
-                    'currency_id'      => $currency->id,
-                    'order'            => 0,
-                    'amount'           => $amount,
-                    'foreign_amount'   => null,
-                    'description'      => trans('firefly.liability_credit_description', ['account' => $account->name]),
-                    'budget_id'        => null,
-                    'budget_name'      => null,
-                    'category_id'      => null,
-                    'category_name'    => null,
-                    'piggy_bank_id'    => null,
-                    'piggy_bank_name'  => null,
-                    'reconciled'       => false,
-                    'notes'            => null,
-                    'tags'             => [],
-                ],
-            ],
+            'transactions' => [[
+                'type'             => 'Liability credit',
+                'date'             => $openingBalanceDate,
+                'source_id'        => $sourceId,
+                'source_name'      => $sourceName,
+                'destination_id'   => $destId,
+                'destination_name' => $destName,
+                'user'             => $account->user,
+                'user_group'       => $account->user->userGroup,
+                'currency_id'      => $currency->id,
+                'order'            => 0,
+                'amount'           => $amount,
+                'foreign_amount'   => null,
+                'description'      => trans('firefly.liability_credit_description', ['account'      => $account->name]),
+                'budget_id'        => null,
+                'budget_name'      => null,
+                'category_id'      => null,
+                'category_name'    => null,
+                'piggy_bank_id'    => null,
+                'piggy_bank_name'  => null,
+                'reconciled'       => false,
+                'notes'            => null,
+                'tags'             => [],
+            ]],
         ];
         Log::debug('Going for submission in createCreditTransaction', $submission);
 
@@ -661,32 +662,30 @@ trait AccountServiceTrait
             'group_title'  => null,
             'user'         => $account->user,
             'user_group'   => $account->user->userGroup,
-            'transactions' => [
-                [
-                    'type'             => 'Opening balance',
-                    'date'             => $openingBalanceDate,
-                    'source_id'        => $sourceId,
-                    'source_name'      => $sourceName,
-                    'destination_id'   => $destId,
-                    'destination_name' => $destName,
-                    'user'             => $account->user,
-                    'user_group'       => $account->user->userGroup,
-                    'currency_id'      => $currency->id,
-                    'order'            => 0,
-                    'amount'           => $amount,
-                    'foreign_amount'   => null,
-                    'description'      => trans('firefly.initial_balance_description', ['account' => $account->name]),
-                    'budget_id'        => null,
-                    'budget_name'      => null,
-                    'category_id'      => null,
-                    'category_name'    => null,
-                    'piggy_bank_id'    => null,
-                    'piggy_bank_name'  => null,
-                    'reconciled'       => false,
-                    'notes'            => null,
-                    'tags'             => [],
-                ],
-            ],
+            'transactions' => [[
+                'type'             => 'Opening balance',
+                'date'             => $openingBalanceDate,
+                'source_id'        => $sourceId,
+                'source_name'      => $sourceName,
+                'destination_id'   => $destId,
+                'destination_name' => $destName,
+                'user'             => $account->user,
+                'user_group'       => $account->user->userGroup,
+                'currency_id'      => $currency->id,
+                'order'            => 0,
+                'amount'           => $amount,
+                'foreign_amount'   => null,
+                'description'      => trans('firefly.initial_balance_description', ['account'      => $account->name]),
+                'budget_id'        => null,
+                'budget_name'      => null,
+                'category_id'      => null,
+                'category_name'    => null,
+                'piggy_bank_id'    => null,
+                'piggy_bank_name'  => null,
+                'reconciled'       => false,
+                'notes'            => null,
+                'tags'             => [],
+            ]],
         ];
         Log::debug('Going for submission in createOBGroupV2', $submission);
 

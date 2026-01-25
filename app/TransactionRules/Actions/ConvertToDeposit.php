@@ -24,11 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
@@ -38,6 +37,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ConvertToDeposit
@@ -47,7 +47,9 @@ class ConvertToDeposit implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -92,7 +94,15 @@ class ConvertToDeposit implements ActionInterface
                 return false;
             }
 
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value));
+            event(
+                new TransactionGroupRequestsAuditLogEntry(
+                    $this->action->rule,
+                    $object,
+                    'update_transaction_type',
+                    TransactionTypeEnum::WITHDRAWAL->value,
+                    TransactionTypeEnum::DEPOSIT->value
+                )
+            );
 
             return $res;
         }
@@ -108,7 +118,15 @@ class ConvertToDeposit implements ActionInterface
 
                 return false;
             }
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_transaction_type', TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value));
+            event(
+                new TransactionGroupRequestsAuditLogEntry(
+                    $this->action->rule,
+                    $object,
+                    'update_transaction_type',
+                    TransactionTypeEnum::TRANSFER->value,
+                    TransactionTypeEnum::DEPOSIT->value
+                )
+            );
 
             return $res;
         }
@@ -167,10 +185,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        DB::table('transaction_journals')
-            ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
-        ;
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
 
         Log::debug('Converted withdrawal to deposit.');
 
@@ -248,10 +263,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        DB::table('transaction_journals')
-            ->where('id', '=', $journal->id)
-            ->update(['transaction_type_id' => $newType->id, 'bill_id' => null])
-        ;
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
 
         Log::debug('Converted transfer to deposit.');
 

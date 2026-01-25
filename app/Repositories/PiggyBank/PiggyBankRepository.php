@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Model\PiggyBank\ChangedAmount;
+use FireflyIII\Events\Model\PiggyBank\PiggyBankAmountIsChanged;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Account;
@@ -36,6 +36,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
@@ -44,7 +45,6 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Override;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankRepository.
@@ -96,7 +96,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.id', $piggyBankId)->first(['piggy_banks.*'])
+            ->where('piggy_banks.id', $piggyBankId)
+            ->first(['piggy_banks.*'])
         ;
     }
 
@@ -108,7 +109,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.name', $name)->first(['piggy_banks.*'])
+            ->where('piggy_banks.name', $name)
+            ->first(['piggy_banks.*'])
         ;
     }
 
@@ -118,15 +120,13 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null !== $notes ? $notes->text : '';
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+            $notes                   = $attachment->notes()->first();
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
     }
 
     /**
@@ -183,7 +183,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $destination     = $journal->transactions()->with(['account'])->where('amount', '>', 0)->first();
         $hits            = 0;
         foreach ($piggyBank->accounts as $account) {
-
             // matches source, which means amount will be removed from piggy:
             if ($account->id === $source->account_id) {
                 $operator = 'negative';
@@ -204,7 +203,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
             return '0';
         }
-
 
         if (null === $operator || null === $currency) {
             Log::debug('Currency is NULL and operator is NULL, return "0".');
@@ -311,9 +309,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
     public function getPiggyBanks(): Collection
     {
-        $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-        ;
+        $query = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')->leftJoin(
+            'accounts',
+            'accounts.id',
+            '=',
+            'account_piggy_bank.account_id'
+        );
         if (!$this->user instanceof User) {
             $query->where('accounts.user_group_id', $this->userGroup->id);
         }
@@ -321,14 +322,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             $query->where('accounts.user_id', $this->user->id);
         }
 
-        return $query
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*'])
-        ;
+        return $query->with(['objectGroups'])->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*']);
     }
 
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
@@ -404,11 +398,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
             ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
+            ->with(['objectGroups'])
             ->delete()
         ;
     }
@@ -426,19 +416,15 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $search = PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
             ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
             ->where('accounts.user_id', $this->user->id)
-            ->with(
-                [
-                    'objectGroups',
-                ]
-            )
-            ->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC')->distinct()
+            ->with(['objectGroups'])
+            ->orderBy('piggy_banks.order', 'ASC')
+            ->orderBy('piggy_banks.name', 'ASC')
+            ->distinct()
         ;
         if ('' !== $query) {
             $search->whereLike('piggy_banks.name', sprintf('%%%s%%', $query));
         }
-        $search->orderBy('piggy_banks.order', 'ASC')
-            ->orderBy('piggy_banks.name', 'ASC')
-        ;
+        $search->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get(['piggy_banks.*']);
     }
@@ -448,7 +434,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $piggyBank->piggyBankEvents()->delete();
         foreach ($piggyBank->accounts as $account) {
             if (0 !== bccomp('0', (string) $account->pivot->current_amount)) {
-                event(new ChangedAmount($piggyBank, $account->pivot->current_amount, null, null));
+                event(new PiggyBankAmountIsChanged($piggyBank, $account->pivot->current_amount, null, null));
             }
         }
     }

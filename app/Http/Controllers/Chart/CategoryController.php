@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -34,6 +33,7 @@ use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Chart\Category\FrontpageChartGenerator;
 use FireflyIII\Support\Chart\Category\WholePeriodChartGenerator;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ChartGeneration;
@@ -156,7 +156,6 @@ class CategoryController extends Controller
      */
     private function reportPeriodChart(Collection $accounts, Carbon $start, Carbon $end, ?Category $category): array
     {
-
         $income     = [];
         $expenses   = [];
         $categoryId = 0;
@@ -185,24 +184,22 @@ class CategoryController extends Controller
         // make empty data array:
         // double foreach (bad) to make empty array:
         foreach ($currencies as $currencyId) {
-            $currencyInfo = $expenses[$currencyId] ?? $income[$currencyId];
-            $outKey       = sprintf('%d-out', $currencyId);
-            $inKey        = sprintf('%d-in', $currencyId);
-            $chartData[$outKey]
-                          = [
-                              'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-                          ];
+            $currencyInfo       = $expenses[$currencyId] ?? $income[$currencyId];
+            $outKey             = sprintf('%d-out', $currencyId);
+            $inKey              = sprintf('%d-in', $currencyId);
+            $chartData[$outKey] = [
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+            ];
 
-            $chartData[$inKey]
-                          = [
-                              'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
-                              'entries'         => [],
-                              'type'            => 'bar',
-                              'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-                          ];
+            $chartData[$inKey]  = [
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned'), $currencyInfo['currency_name']),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
+            ];
             // loop empty periods:
             foreach (array_keys($periods) as $period) {
                 $label                                 = $periods[$period];
@@ -210,7 +207,7 @@ class CategoryController extends Controller
                 $chartData[$inKey]['entries'][$label]  = '0';
             }
             // loop income and expenses for this category.:
-            $outSet       = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $outSet             = $expenses[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($outSet['transaction_journals'] as $journal) {
                 $amount                               = Steam::positive($journal['amount']);
                 $date                                 = $journal['date']->isoFormat($format);
@@ -219,7 +216,7 @@ class CategoryController extends Controller
                 $chartData[$outKey]['entries'][$date] = bcadd($amount, $chartData[$outKey]['entries'][$date]);
             }
 
-            $inSet        = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
+            $inSet              = $income[$currencyId]['categories'][$categoryId] ?? ['transaction_journals' => []];
             foreach ($inSet['transaction_journals'] as $journal) {
                 $amount                              = Steam::positive($journal['amount']);
                 $date                                = $journal['date']->isoFormat($format);

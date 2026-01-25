@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Rules\UniqueIban;
-use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 
@@ -47,10 +46,10 @@ use function Safe\json_encode;
  */
 trait JournalServiceTrait
 {
-    private AccountRepositoryInterface  $accountRepository;
-    private BudgetRepositoryInterface   $budgetRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private BudgetRepositoryInterface $budgetRepository;
     private CategoryRepositoryInterface $categoryRepository;
-    private TagFactory                  $tagFactory;
+    private TagFactory $tagFactory;
 
     /**
      * @throws FireflyException
@@ -96,12 +95,7 @@ trait JournalServiceTrait
             Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
             $temp = $this->findAccountById(['id' => $data['id']], []);
             if (null !== $temp) {
-                $tempData = [
-                    'name'   => $temp->name,
-                    'iban'   => $temp->iban,
-                    'number' => null,
-                    'bic'    => null,
-                ];
+                $tempData = ['name'   => $temp->name, 'iban'   => $temp->iban, 'number' => null, 'bic'    => null];
                 $result   = $this->createAccount(null, $tempData, $creatableType);
             }
         }
@@ -134,9 +128,7 @@ trait JournalServiceTrait
                 return $search;
             }
             if (null !== $search && 0 === count($types)) {
-                Log::debug(
-                    sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type)
-                );
+                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type));
 
                 return $search;
             }
@@ -277,14 +269,7 @@ trait JournalServiceTrait
         Log::debug('Now in createAccount()', $data);
         // return new account.
         if ($account instanceof Account) {
-            Log::debug(
-                sprintf(
-                    'Was given %s account #%d ("%s") so will simply return that.',
-                    $account->accountType->type,
-                    $account->id,
-                    $account->name
-                )
-            );
+            Log::debug(sprintf('Was given %s account #%d ("%s") so will simply return that.', $account->accountType->type, $account->id, $account->name));
         }
         if (!$account instanceof Account) {
             // final attempt, create it.
@@ -314,32 +299,29 @@ trait JournalServiceTrait
                 $data['iban'] = null;
             }
 
-
             // $data['name'] = $data['name'] ?? '(no name)';
 
-            $account   = $this->accountRepository->store(
-                [
-                    'account_type_id'   => null,
-                    'account_type_name' => $preferredType,
-                    'name'              => $data['name'],
-                    'virtual_balance'   => null,
-                    'active'            => true,
-                    'iban'              => $data['iban'],
-                    'currency_id'       => $data['currency_id'] ?? null,
-                    'order'             => $this->accountRepository->maxOrder($preferredType),
-                ]
-            );
+            $account   = $this->accountRepository->store([
+                'account_type_id'   => null,
+                'account_type_name' => $preferredType,
+                'name'              => $data['name'],
+                'virtual_balance'   => null,
+                'active'            => true,
+                'iban'              => $data['iban'],
+                'currency_id'       => $data['currency_id'] ?? null,
+                'order'             => $this->accountRepository->maxOrder($preferredType),
+            ]);
             // store BIC
             if (null !== $data['bic']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'BIC', 'data' => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'BIC', 'data'       => $data['bic']]);
             }
             // store account number
             if (null !== $data['number']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'account_number', 'data'       => $data['number']]);
             }
         }
 
@@ -349,8 +331,7 @@ trait JournalServiceTrait
     private function getCashAccount(?Account $account, array $data, array $types): ?Account
     {
         // return cash account.
-        if (!$account instanceof Account && '' === (string) $data['name']
-            && in_array(AccountTypeEnum::CASH->value, $types, true)) {
+        if (!$account instanceof Account && '' === (string) $data['name'] && in_array(AccountTypeEnum::CASH->value, $types, true)) {
             $account = $this->accountRepository->getCashAccount();
         }
         Log::debug('Cannot return cash account, return input instead.');
@@ -396,7 +377,7 @@ trait JournalServiceTrait
         return $amount;
     }
 
-    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
+    protected function storeBudget(TransactionJournal $journal, array $data): void
     {
         if (TransactionTypeEnum::WITHDRAWAL->value !== $journal->transactionType->type) {
             $journal->budgets()->sync([]);
@@ -414,7 +395,7 @@ trait JournalServiceTrait
         $journal->budgets()->sync([]);
     }
 
-    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
+    protected function storeCategory(TransactionJournal $journal, array $data): void
     {
         $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
         if (null !== $category) {

@@ -33,12 +33,6 @@ abstract class TestCase extends BaseTestCase
 
     protected function createUser(): User
     {
-        return User::create(
-            [
-                'email'    => 'james@firefly',
-                'password' => 'secret',
-            ]
-        );
-
+        return User::create(['email'    => 'james@firefly', 'password' => 'secret']);
     }
 }

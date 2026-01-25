@@ -44,7 +44,12 @@ class JournalList implements BinderInterface
             // get the journals by using the collector.
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
-            $collector->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::RECONCILIATION->value]);
+            $collector->setTypes([
+                TransactionTypeEnum::WITHDRAWAL->value,
+                TransactionTypeEnum::DEPOSIT->value,
+                TransactionTypeEnum::TRANSFER->value,
+                TransactionTypeEnum::RECONCILIATION->value,
+            ]);
             $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
             $collector->setJournalIds($list);
             $result    = $collector->getExtractedJournals();

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -40,19 +39,19 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetEnrichment implements EnrichmentInterface
 {
-    private array      $autoBudgets   = [];
+    private array $autoBudgets     = [];
     private Collection $collection;
-    private array      $currencies    = [];
-    private ?Carbon    $end           = null;
-    private array      $ids           = [];
-    private array      $mappedObjects = [];
-    private array      $notes         = [];
-    private array      $objectGroups  = [];
-    private array      $pcSpent       = [];
-    private array      $spent         = [];
-    private ?Carbon    $start         = null;
-    private User       $user;
-    private UserGroup  $userGroup;
+    private array   $currencies    = [];
+    private ?Carbon $end           = null;
+    private array   $ids           = [];
+    private array   $mappedObjects = [];
+    private array   $notes         = [];
+    private array   $objectGroups  = [];
+    private array   $pcSpent       = [];
+    private array   $spent         = [];
+    private ?Carbon $start         = null;
+    private User $user;
+    private UserGroup $userGroup;
 
     public function enrich(Collection $collection): Collection
     {
@@ -101,7 +100,7 @@ class BudgetEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (Budget $item): Budget {
-            $id         = (int)$item->id;
+            $id         = (int) $item->id;
             $meta       = [
                 'object_group_id'    => null,
                 'object_group_order' => null,
@@ -116,11 +115,10 @@ class BudgetEnrichment implements EnrichmentInterface
             // add object group if available
             if (array_key_exists($id, $this->mappedObjects)) {
                 $key                        = $this->mappedObjects[$id];
-                $meta['object_group_id']    = (string)$this->objectGroups[$key]['id'];
+                $meta['object_group_id']    = (string) $this->objectGroups[$key]['id'];
                 $meta['object_group_title'] = $this->objectGroups[$key]['title'];
                 $meta['object_group_order'] = $this->objectGroups[$key]['order'];
             }
-
 
             $item->meta = $meta;
 
@@ -134,10 +132,10 @@ class BudgetEnrichment implements EnrichmentInterface
 
         /** @var AutoBudget $autoBudget */
         foreach ($set as $autoBudget) {
-            $budgetId                     = (int)$autoBudget->budget_id;
+            $budgetId                     = (int) $autoBudget->budget_id;
             $this->currencies[$budgetId]  = $autoBudget->transactionCurrency;
             $this->autoBudgets[$budgetId] = [
-                'type'      => (int)$autoBudget->auto_budget_type,
+                'type'      => (int) $autoBudget->auto_budget_type,
                 'period'    => $autoBudget->period,
                 'amount'    => $autoBudget->amount,
                 'pc_amount' => $autoBudget->native_amount,
@@ -156,7 +154,7 @@ class BudgetEnrichment implements EnrichmentInterface
             // $set = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget))
             $expenses      = $opsRepository->collectExpenses($this->start, $this->end, null, $this->collection);
             foreach ($this->collection as $item) {
-                $id                 = (int)$item->id;
+                $id                 = (int) $item->id;
                 $this->spent[$id]   = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item));
                 $this->pcSpent[$id] = array_values($opsRepository->sumCollectedExpensesByBudget($expenses, $item, true));
             }
@@ -167,22 +165,26 @@ class BudgetEnrichment implements EnrichmentInterface
     {
         /** @var Budget $budget */
         foreach ($this->collection as $budget) {
-            $this->ids[] = (int)$budget->id;
+            $this->ids[] = (int) $budget->id;
         }
         $this->ids = array_unique($this->ids);
     }
 
     private function collectNotes(): void
     {
-        $notes = Note::query()->whereIn('noteable_id', $this->ids)
+        $notes = Note::query()
+            ->whereIn('noteable_id', $this->ids)
             ->whereNotNull('notes.text')
             ->where('notes.text', '!=', '')
-            ->where('noteable_type', Budget::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+            ->where('noteable_type', Budget::class)
+            ->get(['notes.noteable_id', 'notes.text'])
+            ->toArray()
         ;
         foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+
+        //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectObjectGroups(): void
@@ -196,14 +198,14 @@ class BudgetEnrichment implements EnrichmentInterface
         $ids    = array_unique($set->pluck('object_group_id')->toArray());
 
         foreach ($set as $entry) {
-            $this->mappedObjects[(int)$entry->object_groupable_id] = (int)$entry->object_group_id;
+            $this->mappedObjects[(int) $entry->object_groupable_id] = (int) $entry->object_group_id;
         }
 
         $groups = ObjectGroup::whereIn('id', $ids)->get(['id', 'title', 'order'])->toArray();
         foreach ($groups as $group) {
-            $group['id']                           = (int)$group['id'];
-            $group['order']                        = (int)$group['order'];
-            $this->objectGroups[(int)$group['id']] = $group;
+            $group['id']                            = (int) $group['id'];
+            $group['order']                         = (int) $group['order'];
+            $this->objectGroups[(int) $group['id']] = $group;
         }
     }
 }

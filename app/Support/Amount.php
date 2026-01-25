@@ -28,6 +28,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
@@ -35,7 +36,6 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use NumberFormatter;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class Amount.
@@ -118,7 +118,9 @@ class Amount
         if (!$user instanceof User) {
             $pref = $instance->getPreference('convert_to_primary_no_user');
             if (null === $pref) {
-                $res = true === Preferences::get('convert_to_primary', false)->data && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+                $res
+                    = true === Preferences::get('convert_to_primary', false)->data
+                    && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
                 $instance->setPreference('convert_to_primary_no_user', $res);
 
                 return $res;
@@ -129,7 +131,9 @@ class Amount
         $key      = sprintf('convert_to_primary_%d', $user->id);
         $pref     = $instance->getPreference($key);
         if (null === $pref) {
-            $res = true === Preferences::getForUser($user, 'convert_to_primary', false)->data && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+            $res
+                = true === Preferences::getForUser($user, 'convert_to_primary', false)->data
+                && true === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
             $instance->setPreference($key, $res);
 
             return $res;
@@ -173,7 +177,7 @@ class Amount
         $fmt->setSymbol(NumberFormatter::CURRENCY_SYMBOL, $symbol);
         $fmt->setAttribute(NumberFormatter::MIN_FRACTION_DIGITS, $decimalPlaces);
         $fmt->setAttribute(NumberFormatter::MAX_FRACTION_DIGITS, $decimalPlaces);
-        $result  = (string)$fmt->format((float)$rounded); // intentional float
+        $result  = (string) $fmt->format((float) $rounded); // intentional float
 
         if ($coloured) {
             if (1 === bccomp($rounded, '0')) {
@@ -206,12 +210,13 @@ class Amount
         $amount           = $journal[$field] ?? '0';
         // Log::debug(sprintf('Field is %s, amount is %s', $field, $amount));
         // fallback, the transaction has a foreign amount in $currency.
-        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int)$journal['foreign_currency_id']) {
+        if ($convertToPrimary && null !== $journal['foreign_amount'] && $currency->id === (int) $journal['foreign_currency_id']) {
             $amount = $journal['foreign_amount'];
+
             // Log::debug(sprintf('Overruled, amount is now %s', $amount));
         }
 
-        return (string)$amount;
+        return (string) $amount;
     }
 
     /**
@@ -230,9 +235,9 @@ class Amount
             return '0';
         }
         $amount            = $sourceTransaction->{$field} ?? '0';
-        if ((int)$sourceTransaction->foreign_currency_id === $currency->id) {
+        if ((int) $sourceTransaction->foreign_currency_id === $currency->id) {
             // use foreign amount instead!
-            $amount = (string)$sourceTransaction->foreign_amount; // hard coded to be foreign amount.
+            $amount = (string) $sourceTransaction->foreign_amount; // hard coded to be foreign amount.
         }
 
         return $amount;
@@ -263,11 +268,7 @@ class Amount
         return [
             'mon_decimal_point' => $config['mon_decimal_point'],
             'mon_thousands_sep' => $config['mon_thousands_sep'],
-            'format'            => [
-                'pos'  => $positive,
-                'neg'  => $negative,
-                'zero' => $positive,
-            ],
+            'format'            => ['pos'  => $positive, 'neg'  => $negative, 'zero' => $positive],
         ];
     }
 
@@ -361,8 +362,7 @@ class Amount
 
     private function getLocaleField(array $info, string $field): bool
     {
-        return (is_bool($info[$field]) && $info[$field])
-               || (is_int($info[$field]) && 1 === $info[$field]);
+        return is_bool($info[$field]) && $info[$field] || is_int($info[$field]) && 1 === $info[$field];
     }
 
     /**

@@ -45,19 +45,16 @@ class BillServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): BillRepositoryInterface {
-                /** @var BillRepositoryInterface $repository */
-                $repository = app(BillRepository::class);
+        $this->app->bind(static function (Application $app): BillRepositoryInterface {
+            /** @var BillRepositoryInterface $repository */
+            $repository = app(BillRepository::class);
 
-                // reference to auth is not understood by phpstan.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+            // reference to auth is not understood by phpstan.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
 
+            return $repository;
+        });
     }
 }

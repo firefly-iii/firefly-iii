@@ -46,15 +46,13 @@ class BillController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $user             = auth()->user();
-                $this->repository = app(BillRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $user             = auth()->user();
+            $this->repository = app(BillRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -97,7 +95,14 @@ class BillController extends Controller
             if ($convertToPrimary && $journal['currency_id'] !== $primary->id && $primary->id === $journal['foreign_currency_id']) {
                 $field = 'foreign_amount';
             }
-            Log::debug(sprintf('Journal #%d in bill #%d will use %s (%s %s)', $journal['transaction_group_id'], $billId, $field, $currencyCode, $journal[$field] ?? '0'));
+            Log::debug(sprintf(
+                'Journal #%d in bill #%d will use %s (%s %s)',
+                $journal['transaction_group_id'],
+                $billId,
+                $field,
+                $currencyCode,
+                $journal[$field] ?? '0'
+            ));
 
             $key          = sprintf('%d-%d', $billId, $currencyId);
 

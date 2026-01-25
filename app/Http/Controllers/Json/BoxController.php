@@ -84,14 +84,14 @@ class BoxController extends Controller
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
-        ;
+        $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
         $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
         foreach ($set as $journal) {
-            $currencyId           = $this->convertToPrimary && $this->primaryCurrency->id !== (int) $journal['currency_id'] ? $this->primaryCurrency->id : (int) $journal['currency_id'];
+            $currencyId           = $this->convertToPrimary && $this->primaryCurrency->id !== (int) $journal['currency_id']
+                ? $this->primaryCurrency->id
+                : (int) $journal['currency_id'];
             $amount               = Amount::getAmountFromJournal($journal);
             $incomes[$currencyId] ??= '0';
             $incomes[$currencyId] = bcadd($incomes[$currencyId], Steam::positive($amount));
@@ -102,9 +102,7 @@ class BoxController extends Controller
         // collect expenses
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
-        ;
+        $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
         $set       = $collector->getExtractedJournals();
 
         /** @var array $journal */
@@ -132,13 +130,7 @@ class BoxController extends Controller
             $expenses[$this->primaryCurrency->id] = Amount::formatAnything($this->primaryCurrency, '0', false);
         }
 
-        $response  = [
-            'incomes'   => $incomes,
-            'expenses'  => $expenses,
-            'sums'      => $sums,
-            'size'      => count($sums),
-            'preferred' => $currency->id,
-        ];
+        $response  = ['incomes'   => $incomes, 'expenses'  => $expenses, 'sums'      => $sums, 'size'      => count($sums), 'preferred' => $currency->id];
         $cache->store($response);
 
         return response()->json($response);
@@ -163,23 +155,25 @@ class BoxController extends Controller
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $allAccounts       = $accountRepository->getActiveAccountsByType(
-            [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]
-        );
+        $allAccounts       = $accountRepository->getActiveAccountsByType([
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ]);
         Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
         // filter list on preference of being included.
-        $filtered          = $allAccounts->filter(
-            static function (Account $account) use ($accountRepository): bool {
-                $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
-                $result          = null === $includeNetWorth || '1' === $includeNetWorth;
-                if (false === $result) {
-                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
-                }
-
-                return $result;
+        $filtered          = $allAccounts->filter(static function (Account $account) use ($accountRepository): bool {
+            $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
+            $result          = null === $includeNetWorth || '1' === $includeNetWorth;
+            if (false === $result) {
+                Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
             }
-        );
+
+            return $result;
+        });
 
         $netWorthSet       = $netWorthHelper->byAccounts($filtered, $date);
         $return            = [];
@@ -189,9 +183,7 @@ class BoxController extends Controller
             }
             $return[$data['currency_id']] = Amount::formatFlat($data['currency_symbol'], $data['currency_decimal_places'], $data['balance'], false);
         }
-        $return            = [
-            'net_worths' => array_values($return),
-        ];
+        $return            = ['net_worths' => array_values($return)];
 
         return response()->json($return);
     }

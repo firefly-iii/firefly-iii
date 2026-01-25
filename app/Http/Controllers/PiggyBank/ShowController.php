@@ -50,16 +50,14 @@ class ShowController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
+            $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -94,7 +92,12 @@ class ShowController extends Controller
         $subTitle    = $piggyBank->name;
         $attachments = $this->piggyRepos->getAttachments($piggyBank);
 
-
-        return view('piggy-banks.show', ['piggyBank' => $piggyBank, 'events' => $events, 'subTitle' => $subTitle, 'piggy' => $piggy, 'attachments' => $attachments]);
+        return view('piggy-banks.show', [
+            'piggyBank'   => $piggyBank,
+            'events'      => $events,
+            'subTitle'    => $subTitle,
+            'piggy'       => $piggy,
+            'attachments' => $attachments,
+        ]);
     }
 }

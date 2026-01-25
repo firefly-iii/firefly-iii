@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -43,7 +43,7 @@ class TagOrId implements BinderInterface
 
             $result     = $repository->findByTag($value);
             if (null === $result) {
-                $result = $repository->find((int)$value);
+                $result = $repository->find((int) $value);
             }
             if (null !== $result) {
                 return $result;

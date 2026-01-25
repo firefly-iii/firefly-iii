@@ -33,7 +33,7 @@ use FireflyIII\Support\Facades\Amount;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
-    private readonly TransactionCurrency                   $primaryCurrency;
+    private readonly TransactionCurrency $primaryCurrency;
 
     /**
      * PiggyBankTransformer constructor.
@@ -51,13 +51,13 @@ class PiggyBankTransformer extends AbstractTransformer
         // Amounts, depending on 0.0 state of target amount
         $percentage = null;
         if (null !== $piggyBank->meta['target_amount'] && 0 !== bccomp((string) $piggyBank->meta['current_amount'], '0')) { // target amount is not 0.00
-            $percentage = (int)bcmul(bcdiv((string) $piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
+            $percentage = (int) bcmul(bcdiv((string) $piggyBank->meta['current_amount'], $piggyBank->meta['target_amount']), '100');
         }
         $startDate  = $piggyBank->start_date?->toAtomString();
         $targetDate = $piggyBank->target_date?->toAtomString();
 
         return [
-            'id'                              => (string)$piggyBank->id,
+            'id'                              => (string) $piggyBank->id,
             'created_at'                      => $piggyBank->created_at->toAtomString(),
             'updated_at'                      => $piggyBank->updated_at->toAtomString(),
             'name'                            => $piggyBank->name,
@@ -74,18 +74,17 @@ class PiggyBankTransformer extends AbstractTransformer
 
             // currency settings, 6.3.0.
             'object_has_currency_setting'     => true,
-            'currency_id'                     => (string)$piggyBank->meta['currency']->id,
+            'currency_id'                     => (string) $piggyBank->meta['currency']->id,
             'currency_name'                   => $piggyBank->meta['currency']->name,
             'currency_code'                   => $piggyBank->meta['currency']->code,
             'currency_symbol'                 => $piggyBank->meta['currency']->symbol,
             'currency_decimal_places'         => $piggyBank->meta['currency']->decimal_places,
 
-            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
             'primary_currency_code'           => $this->primaryCurrency->code,
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
-            'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
-
+            'primary_currency_decimal_places' => (int) $this->primaryCurrency->decimal_places,
 
             'target_amount'                   => $piggyBank->meta['target_amount'],
             'pc_target_amount'                => $piggyBank->meta['pc_target_amount'],
@@ -96,12 +95,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'save_per_month'                  => $piggyBank->meta['save_per_month'],
             'pc_save_per_month'               => $piggyBank->meta['pc_save_per_month'],
 
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => sprintf('/piggy-banks/%d', $piggyBank->id),
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => sprintf('/piggy-banks/%d', $piggyBank->id)]],
         ];
     }
 }

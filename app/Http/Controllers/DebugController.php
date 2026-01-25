@@ -34,6 +34,7 @@ use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
@@ -51,7 +52,6 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\file_get_contents;
 use function Safe\ini_get;
@@ -119,7 +119,7 @@ class DebugController extends Controller
 
         try {
             Artisan::call('twig:clean');
-        } catch (Exception $e) {  // intentional generic exception
+        } catch (Exception $e) { // intentional generic exception
             throw new FireflyException($e->getMessage(), 0, $e);
         }
 
@@ -159,7 +159,7 @@ class DebugController extends Controller
             $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
         }
 
-        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
+        return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
     }
 
     public function apiTest(): View
@@ -175,7 +175,7 @@ class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
     }
 
     private function getSystemInformation(): array
@@ -230,10 +230,10 @@ class DebugController extends Controller
             Log::debug('Could not check build date, but thats ok.');
             Log::warning($e->getMessage());
         }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) {       // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
             $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
         }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) {            // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
             $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
         }
 
@@ -375,8 +375,7 @@ class DebugController extends Controller
             foreach ($routes as $route) {
                 ++$i;
                 // skip API and other routes.
-                if (!str_starts_with($route->uri(), 'api/v1')
-                ) {
+                if (!str_starts_with($route->uri(), 'api/v1')) {
                     continue;
                 }
                 // skip non GET routes
@@ -391,17 +390,16 @@ class DebugController extends Controller
                 }
 
                 echo substr($route->uri(), 3);
-                if (0 === $i % 5) {
+                if (0 === ($i % 5)) {
                     echo '"<br>PATHS="${PATHS},';
                 }
-                if (0 !== $i % 5) {
+                if (0 !== ($i % 5)) {
                     echo ',';
                 }
             }
 
             exit;
         }
-
 
         $return = [];
 
@@ -432,7 +430,6 @@ class DebugController extends Controller
                 exit;
             }
             if (!str_contains($route->uri(), '{')) {
-
                 $return[$route->getName()] = route($route->getName());
 
                 continue;
@@ -450,7 +447,7 @@ class DebugController extends Controller
         foreach ($return as $name => $path) {
             echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
             ++$count;
-            if (0 === $count % 10) {
+            if (0 === ($count % 10)) {
                 echo '<hr>';
                 echo sprintf('<h2>%s</h2>', $count);
             }
@@ -552,7 +549,6 @@ class DebugController extends Controller
 
             case 'transactionType':
                 return 'withdrawal';
-
         }
     }
 

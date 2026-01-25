@@ -34,10 +34,9 @@ use Laravel\Passport\Passport;
  */
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $policies
-        = [
-            // 'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
-        ];
+    protected $policies = [
+        // 'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
+    ];
 
     /**
      * Register any authentication / authorization services.
@@ -46,10 +45,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Auth::provider(
-            'remote_user_provider',
-            static fn ($app, array $config): RemoteUserProvider => new RemoteUserProvider()
-        );
+        Auth::provider('remote_user_provider', static fn ($app, array $config): RemoteUserProvider => new RemoteUserProvider());
 
         Auth::extend(
             'remote_user_guard',

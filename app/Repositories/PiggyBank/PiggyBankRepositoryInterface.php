@@ -86,6 +86,7 @@ interface PiggyBankRepositoryInterface
      * Get all events.
      */
     public function getEvents(PiggyBank $piggyBank): Collection;
+
     /**
      * Get current amount saved in piggy bank.
      */

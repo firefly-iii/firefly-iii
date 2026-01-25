@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\ClauseType;
 use FireflyIII\Rules\IsValidBulkClause;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\Api\Data\Bulk\ValidatesBulkTransactionQuery;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use JsonException;
@@ -50,9 +50,7 @@ class TransactionRequest extends FormRequest
         $data = [];
 
         try {
-            $data = [
-                'query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR),
-            ];
+            $data = ['query' => json_decode($this->get('query'), true, 8, JSON_THROW_ON_ERROR)];
         } catch (JsonException $e) {
             // don't really care. the validation should catch invalid json.
             Log::error($e->getMessage());
@@ -63,19 +61,15 @@ class TransactionRequest extends FormRequest
 
     public function rules(): array
     {
-        return [
-            'query' => ['required', 'min:1', 'max:255', 'json', new IsValidBulkClause(ClauseType::TRANSACTION)],
-        ];
+        return ['query' => ['required', 'min:1', 'max:255', 'json', new IsValidBulkClause(ClauseType::TRANSACTION)]];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate transaction query data.
-                $this->validateTransactionQuery($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            // validate transaction query data.
+            $this->validateTransactionQuery($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

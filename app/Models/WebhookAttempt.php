@@ -42,10 +42,13 @@ class WebhookAttempt extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            $attemptId = (int)$value;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
+            }
+            $attemptId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -67,8 +70,6 @@ class WebhookAttempt extends Model
 
     protected function webhookMessageId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

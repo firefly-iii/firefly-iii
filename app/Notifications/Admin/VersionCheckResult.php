@@ -40,15 +40,16 @@ class VersionCheckResult extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $message) {}
+    public function __construct(
+        private string $message
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -84,9 +85,7 @@ class VersionCheckResult extends Notification
     {
         Log::debug('Now in toPushover() for VersionCheckResult');
 
-        return PushoverMessage::create($this->message)
-            ->title((string) trans('email.new_version_email_subject'))
-        ;
+        return PushoverMessage::create($this->message)->title((string) trans('email.new_version_email_subject'));
     }
 
     /**
@@ -94,7 +93,8 @@ class VersionCheckResult extends Notification
      */
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
-        return new SlackMessage()->content($this->message)
+        return new SlackMessage()
+            ->content($this->message)
             ->attachment(static function ($attachment): void {
                 $attachment->title('Firefly III @ GitHub', 'https://github.com/firefly-iii/firefly-iii/releases');
             })

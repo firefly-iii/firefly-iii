@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankStoreRequest;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -42,7 +42,7 @@ use Illuminate\View\View;
  */
 class CreateController extends Controller
 {
-    private AttachmentHelperInterface    $attachments;
+    private AttachmentHelperInterface $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -52,17 +52,15 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -86,7 +84,7 @@ class CreateController extends Controller
         }
         session()->forget('piggy-banks.create.fromStore');
 
-        return view('piggy-banks.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled' => $preFilled]);
+        return view('piggy-banks.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'preFilled'    => $preFilled]);
     }
 
     /**

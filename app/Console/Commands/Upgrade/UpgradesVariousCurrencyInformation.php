@@ -34,21 +34,22 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 class UpgradesVariousCurrencyInformation extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_other_currencies';
+
     protected $description          = 'Update all journal currency information.';
     protected $signature            = 'upgrade:480-currency-information {--F|force : Force the execution of this command.}';
-    private array                         $accountCurrencies;
-    private AccountRepositoryInterface    $accountRepos;
+    private array $accountCurrencies;
+    private AccountRepositoryInterface $accountRepos;
     private JournalCLIRepositoryInterface $cliRepos;
-    private int                           $count;
-    private JournalRepositoryInterface    $journalRepos;
+    private int $count;
+    private JournalRepositoryInterface $journalRepos;
 
     /**
      * Execute the console command.
@@ -89,8 +90,7 @@ class UpgradesVariousCurrencyInformation extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     /**
@@ -101,9 +101,12 @@ class UpgradesVariousCurrencyInformation extends Command
      */
     private function updateOtherJournalsCurrencies(): void
     {
-        $set = $this->cliRepos->getAllJournals(
-            [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::OPENING_BALANCE->value, TransactionTypeEnum::RECONCILIATION->value]
-        );
+        $set = $this->cliRepos->getAllJournals([
+            TransactionTypeEnum::WITHDRAWAL->value,
+            TransactionTypeEnum::DEPOSIT->value,
+            TransactionTypeEnum::OPENING_BALANCE->value,
+            TransactionTypeEnum::RECONCILIATION->value,
+        ]);
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
@@ -129,35 +132,31 @@ class UpgradesVariousCurrencyInformation extends Command
         $currency        = $this->getCurrency($account);
         $isMultiCurrency = $this->isMultiCurrency($account);
         if (!$currency instanceof TransactionCurrency) {
-            $this->friendlyError(
-                sprintf(
-                    'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
-                    $account->id,
-                    $account->name,
-                    $journal->id
-                )
-            );
+            $this->friendlyError(sprintf(
+                'Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
+                $account->id,
+                $account->name,
+                $journal->id
+            ));
             ++$this->count;
 
             return;
         }
         // fix each transaction:
-        $journal->transactions->each(
-            static function (Transaction $transaction) use ($currency, $isMultiCurrency): void {
-                if (null === $transaction->transaction_currency_id) {
-                    $transaction->transaction_currency_id = $currency->id;
-                    $transaction->save();
-                }
-
-                // when mismatch in transaction:
-                if ($transaction->transaction_currency_id !== $currency->id && !$isMultiCurrency) {
-                    $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
-                    $transaction->foreign_amount          = $transaction->amount;
-                    $transaction->transaction_currency_id = $currency->id;
-                    $transaction->save();
-                }
+        $journal->transactions->each(static function (Transaction $transaction) use ($currency, $isMultiCurrency): void {
+            if (null === $transaction->transaction_currency_id) {
+                $transaction->transaction_currency_id = $currency->id;
+                $transaction->save();
             }
-        );
+
+            // when mismatch in transaction:
+            if ($transaction->transaction_currency_id !== $currency->id && !$isMultiCurrency) {
+                $transaction->foreign_currency_id     = $transaction->transaction_currency_id;
+                $transaction->foreign_amount          = $transaction->amount;
+                $transaction->transaction_currency_id = $currency->id;
+                $transaction->save();
+            }
+        });
         // also update the journal, of course:
         if (!$isMultiCurrency) {
             $journal->transaction_currency_id = $currency->id;
@@ -191,23 +190,25 @@ class UpgradesVariousCurrencyInformation extends Command
 
             case TransactionTypeEnum::OPENING_BALANCE->value:
                 // whichever isn't an initial balance account:
-                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types',
-                    'accounts.account_type_id',
-                    '=',
-                    'account_types.id'
-                )->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)->first(['transactions.*']);
+                $lead = $journal
+                    ->transactions()
+                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+                    ->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)
+                    ->first(['transactions.*'])
+                ;
 
                 break;
 
             case TransactionTypeEnum::RECONCILIATION->value:
                 // whichever isn't the reconciliation account:
-                $lead = $journal->transactions()->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')->leftJoin(
-                    'account_types',
-                    'accounts.account_type_id',
-                    '=',
-                    'account_types.id'
-                )->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)->first(['transactions.*']);
+                $lead = $journal
+                    ->transactions()
+                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+                    ->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)
+                    ->first(['transactions.*'])
+                ;
 
                 break;
         }

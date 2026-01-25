@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\ObjectGroup;
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class ObjectGroupControllerTest
@@ -86,13 +86,7 @@ final class ObjectGroupControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['title' => 'Object Group 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'title',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'title']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsWithLimit(): void
@@ -101,23 +95,13 @@ final class ObjectGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestObjectGroups(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.object-groups', [
-            'query' => 'Object Group',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Object Group 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'title',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'title']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsThatMatchQuery(): void
@@ -126,10 +110,7 @@ final class ObjectGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestObjectGroups(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.object-groups', [
-            'query' => 'Object Group 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

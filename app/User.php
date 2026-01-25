@@ -27,7 +27,7 @@ namespace FireflyIII;
 use Deprecated;
 use Exception;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Events\RequestedNewPassword;
+use FireflyIII\Events\Security\User\UserRequestedNewPassword;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
@@ -86,8 +86,11 @@ class User extends Authenticatable
     /**
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
             $userId = (int) $value;
             $user   = self::find($userId);
@@ -463,7 +466,7 @@ class User extends Authenticatable
     {
         $ipAddress = Request::ip();
 
-        event(new RequestedNewPassword($this, $token, $ipAddress));
+        event(new UserRequestedNewPassword($this, $token, $ipAddress));
     }
 
     /**

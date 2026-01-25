@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BudgetLimitEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -40,18 +39,18 @@ use Illuminate\Support\Facades\Log;
 
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
-    private Collection                   $collection;
-    private readonly bool                         $convertToPrimary; // @phpstan-ignore-line
-    private array                        $currencies  = [];
-    private array                        $currencyIds = [];
-    private Carbon                       $end;
-    private array                        $expenses    = [];
-    private array                        $ids         = [];
-    private array                        $notes       = [];
-    private array                        $pcExpenses  = [];
+    private Collection $collection;
+    private readonly bool $convertToPrimary; // @phpstan-ignore-line
+    private array $currencies  = [];
+    private array $currencyIds = [];
+    private Carbon $end;
+    private array $expenses    = [];
+    private array $ids         = [];
+    private array $notes       = [];
+    private array $pcExpenses  = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private Carbon                       $start;
-    private User                         $user;
+    private Carbon $start;
+    private User $user;
 
     public function __construct()
     {
@@ -91,8 +90,8 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (BudgetLimit $item): BudgetLimit {
-            $id         = (int)$item->id;
-            $currencyId = (int)$item->transaction_currency_id;
+            $id         = (int) $item->id;
+            $currencyId = (int) $item->transaction_currency_id;
             if (0 === $currencyId) {
                 $currencyId = $this->primaryCurrency->id;
             }
@@ -110,7 +109,11 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectBudgets(): void
     {
-        $budgetIds  = $this->collection->pluck('budget_id')->unique()->toArray();
+        $budgetIds  = $this->collection
+            ->pluck('budget_id')
+            ->unique()
+            ->toArray()
+        ;
         $budgets    = Budget::whereIn('id', $budgetIds)->get();
 
         $repository = app(OperationsRepository::class);
@@ -120,13 +123,24 @@ class BudgetLimitEnrichment implements EnrichmentInterface
         /** @var BudgetLimit $budgetLimit */
         foreach ($this->collection as $budgetLimit) {
             Log::debug(sprintf('Filtering expenses for budget limit #%d (budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
-            $id                  = (int)$budgetLimit->id;
+            $id                  = (int) $budgetLimit->id;
             $filteredExpenses    = $this->filterToBudget($expenses, $budgetLimit->budget_id);
-            $filteredExpenses    = $repository->sumCollectedExpenses($filteredExpenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency);
+            $filteredExpenses    = $repository->sumCollectedExpenses(
+                $filteredExpenses,
+                $budgetLimit->start_date,
+                $budgetLimit->end_date,
+                $budgetLimit->transactionCurrency
+            );
             $this->expenses[$id] = array_values($filteredExpenses);
 
             if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id !== $this->primaryCurrency->id) {
-                $pcFilteredExpenses    = $repository->sumCollectedExpenses($expenses, $budgetLimit->start_date, $budgetLimit->end_date, $budgetLimit->transactionCurrency, true);
+                $pcFilteredExpenses    = $repository->sumCollectedExpenses(
+                    $expenses,
+                    $budgetLimit->start_date,
+                    $budgetLimit->end_date,
+                    $budgetLimit->transactionCurrency,
+                    true
+                );
                 $this->pcExpenses[$id] = array_values($pcFilteredExpenses);
             }
             if ($this->convertToPrimary && $budgetLimit->transactionCurrency->id === $this->primaryCurrency->id) {
@@ -138,9 +152,12 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function collectCurrencies(): void
     {
         $this->currencies[$this->primaryCurrency->id] = $this->primaryCurrency;
-        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot('id', $this->primaryCurrency->id)->get();
+        $currencies                                   = TransactionCurrency::whereIn('id', $this->currencyIds)->whereNot(
+            'id',
+            $this->primaryCurrency->id
+        )->get();
         foreach ($currencies as $currency) {
-            $this->currencies[(int)$currency->id] = $currency;
+            $this->currencies[(int) $currency->id] = $currency;
         }
     }
 
@@ -154,10 +171,10 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
         /** @var BudgetLimit $limit */
         foreach ($this->collection as $limit) {
-            $id          = (int)$limit->id;
+            $id          = (int) $limit->id;
             $this->ids[] = $id;
-            if (0 !== (int)$limit->transaction_currency_id) {
-                $this->currencyIds[$id] = (int)$limit->transaction_currency_id;
+            if (0 !== (int) $limit->transaction_currency_id) {
+                $this->currencyIds[$id] = (int) $limit->transaction_currency_id;
             }
         }
         $this->ids         = array_unique($this->ids);
@@ -166,20 +183,24 @@ class BudgetLimitEnrichment implements EnrichmentInterface
 
     private function collectNotes(): void
     {
-        $notes = Note::query()->whereIn('noteable_id', $this->ids)
+        $notes = Note::query()
+            ->whereIn('noteable_id', $this->ids)
             ->whereNotNull('notes.text')
             ->where('notes.text', '!=', '')
-            ->where('noteable_type', BudgetLimit::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+            ->where('noteable_type', BudgetLimit::class)
+            ->get(['notes.noteable_id', 'notes.text'])
+            ->toArray()
         ;
         foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+
+        //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function filterToBudget(array $expenses, int $budget): array
     {
-        $result = array_filter($expenses, static fn (array $item): bool => (int)$item['budget_id'] === $budget);
+        $result = array_filter($expenses, static fn (array $item): bool => (int) $item['budget_id'] === $budget);
         Log::debug(sprintf('filterToBudget for budget #%d, from %d to %d items', $budget, count($expenses), count($result)));
 
         return $result;
@@ -188,7 +209,7 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     private function stringifyIds(): void
     {
         $this->expenses   = array_map(static fn ($first): array => array_map(static function (array $second): array {
-            $second['currency_id'] = (string)($second['currency_id'] ?? 0);
+            $second['currency_id'] = (string) ($second['currency_id'] ?? 0);
 
             return $second;
         }, $first), $this->expenses);

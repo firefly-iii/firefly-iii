@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Data\Bulk;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -41,10 +41,7 @@ class MoveTransactionsRequest extends FormRequest
 
     public function getAll(): array
     {
-        return [
-            'original_account'    => $this->convertInteger('original_account'),
-            'destination_account' => $this->convertInteger('destination_account'),
-        ];
+        return ['original_account'    => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
     }
 
     /**
@@ -64,15 +61,13 @@ class MoveTransactionsRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate start before end only if both are there.
-                $data = $validator->getData();
-                if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
-                    $this->validateMove($validator);
-                }
+        $validator->after(function (Validator $validator): void {
+            // validate start before end only if both are there.
+            $data = $validator->getData();
+            if (array_key_exists('original_account', $data) && array_key_exists('destination_account', $data)) {
+                $this->validateMove($validator);
             }
-        );
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

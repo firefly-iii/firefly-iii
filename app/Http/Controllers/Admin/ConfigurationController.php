@@ -45,14 +45,12 @@ class ConfigurationController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.system_settings'));
-                app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.system_settings'));
+            app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $this->middleware(IsDemoUser::class)->except(['index']);
     }
 
@@ -63,7 +61,7 @@ class ConfigurationController extends Controller
      */
     public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle            = (string)trans('firefly.instance_configuration');
+        $subTitle            = (string) trans('firefly.instance_configuration');
         $subTitleIcon        = 'fa-wrench';
 
         Log::channel('audit')->info('User visits admin config index.');
@@ -81,22 +79,19 @@ class ConfigurationController extends Controller
         $allowWebhooks       = FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
         $validUrlProtocols   = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
-        return view(
-            'settings.configuration.index',
-            [
-                'subTitle'            => $subTitle,
-                'subTitleIcon'        => $subTitleIcon,
-                'singleUserMode'      => $singleUserMode,
-                'isDemoSite'          => $isDemoSite,
-                'siteOwner'           => $siteOwner,
-                'enableExchangeRates' => $enableExchangeRates,
-                'useRunningBalance'   => $useRunningBalance,
-                'enableExternalMap'   => $enableExternalMap,
-                'enableExternalRates' => $enableExternalRates,
-                'allowWebhooks'       => $allowWebhooks,
-                'validUrlProtocols'   => $validUrlProtocols,
-            ]
-        );
+        return view('settings.configuration.index', [
+            'subTitle'            => $subTitle,
+            'subTitleIcon'        => $subTitleIcon,
+            'singleUserMode'      => $singleUserMode,
+            'isDemoSite'          => $isDemoSite,
+            'siteOwner'           => $siteOwner,
+            'enableExchangeRates' => $enableExchangeRates,
+            'useRunningBalance'   => $useRunningBalance,
+            'enableExternalMap'   => $enableExternalMap,
+            'enableExternalRates' => $enableExternalRates,
+            'allowWebhooks'       => $allowWebhooks,
+            'validUrlProtocols'   => $validUrlProtocols,
+        ]);
     }
 
     /**
@@ -123,7 +118,7 @@ class ConfigurationController extends Controller
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message
-        session()->flash('success', (string)trans('firefly.configuration_updated'));
+        session()->flash('success', (string) trans('firefly.configuration_updated'));
         Preferences::mark();
 
         return redirect()->route('settings.configuration.index');

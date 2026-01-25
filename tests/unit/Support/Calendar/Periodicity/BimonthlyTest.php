@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support\Calendar\Periodicity;
 
-use FireflyIII\Support\Calendar\Periodicity\Bimonthly;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
+use FireflyIII\Support\Calendar\Periodicity\Bimonthly;
 
 /**
  * @group unit-test

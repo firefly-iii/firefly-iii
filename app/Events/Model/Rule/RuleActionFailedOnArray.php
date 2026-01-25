@@ -35,8 +35,11 @@ class RuleActionFailedOnArray
 {
     use SerializesModels;
 
-    public function __construct(public RuleAction $ruleAction, public array $journal, public string $error)
-    {
+    public function __construct(
+        public RuleAction $ruleAction,
+        public array $journal,
+        public string $error
+    ) {
         Log::debug('Created new RuleActionFailedOnArray');
     }
 }

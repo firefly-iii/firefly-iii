@@ -50,20 +50,37 @@ class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                     = ['user_id', 'user_group_id', 'transaction_type_id', 'title', 'description', 'first_date', 'first_date_tz', 'repeat_until', 'repeat_until_tz', 'latest_date', 'latest_date_tz', 'repetitions', 'apply_rules', 'active'];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'title',
+        'description',
+        'first_date',
+        'first_date_tz',
+        'repeat_until',
+        'repeat_until_tz',
+        'latest_date',
+        'latest_date_tz',
+        'repetitions',
+        'apply_rules',
+        'active',
+    ];
 
-    protected $table = 'recurrences';
+    protected $table    = 'recurrences';
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -143,8 +160,6 @@ class Recurrence extends Model
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

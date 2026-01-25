@@ -44,10 +44,13 @@ class WebhookMessage extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            $messageId = (int)$value;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
+            }
+            $messageId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -74,13 +77,7 @@ class WebhookMessage extends Model
 
     protected function casts(): array
     {
-        return [
-            'sent'    => 'boolean',
-            'errored' => 'boolean',
-            'uuid'    => 'string',
-            'message' => 'json',
-            'logs'    => 'json',
-        ];
+        return ['sent'    => 'boolean', 'errored' => 'boolean', 'uuid'    => 'string', 'message' => 'json', 'logs'    => 'json'];
     }
 
     /**
@@ -88,15 +85,11 @@ class WebhookMessage extends Model
      */
     protected function sent(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): bool => (bool)$value,
-        );
+        return Attribute::make(get: static fn ($value): bool => (bool) $value);
     }
 
     protected function webhookId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

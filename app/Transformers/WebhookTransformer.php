@@ -47,12 +47,7 @@ class WebhookTransformer extends AbstractTransformer
             'deliveries' => $webhook->meta['deliveries'],
             'responses'  => $webhook->meta['responses'],
             'url'        => $webhook->url,
-            'links'      => [
-                [
-                    'rel' => 'self',
-                    'uri' => sprintf('/webhooks/%d', $webhook->id),
-                ],
-            ],
+            'links'      => [['rel' => 'self', 'uri' => sprintf('/webhooks/%d', $webhook->id)]],
         ];
     }
 }

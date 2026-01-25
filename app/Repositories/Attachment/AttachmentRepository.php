@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AttachmentFactory;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
 use LogicException;

@@ -44,14 +44,7 @@ class ReturnsSettings
     private static function getNtfySettings(string $type, ?User $user): array
     {
         Log::debug(sprintf('Getting Ntfy settings for %s and user #%d', $type, $user?->id));
-        $settings = [
-            'ntfy_server' => 'https://ntfy.sh',
-            'ntfy_topic'  => '',
-            'ntfy_auth'   => false,
-            'ntfy_user'   => '',
-            'ntfy_pass'   => '',
-
-        ];
+        $settings = ['ntfy_server' => 'https://ntfy.sh', 'ntfy_topic'  => '', 'ntfy_auth'   => false, 'ntfy_user'   => '', 'ntfy_pass'   => ''];
         if ('user' === $type && $user instanceof User) {
             $settings['ntfy_server'] = Preferences::getEncryptedForUser($user, 'ntfy_server', 'https://ntfy.sh')->data;
             $settings['ntfy_topic']  = Preferences::getEncryptedForUser($user, 'ntfy_topic', '')->data;

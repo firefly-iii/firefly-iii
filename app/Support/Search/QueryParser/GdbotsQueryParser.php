@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * GdbotsQueryParser.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -53,10 +52,7 @@ class GdbotsQueryParser implements QueryParserInterface
     {
         try {
             $result = $this->parser->parse($query);
-            $nodes  = array_map(
-                $this->convertNode(...),
-                $result->getNodes()
-            );
+            $nodes  = array_map($this->convertNode(...), $result->getNodes());
 
             return new NodeGroup($nodes);
         } catch (LogicException|TypeError $e) {
@@ -70,27 +66,17 @@ class GdbotsQueryParser implements QueryParserInterface
 
     private function convertNode(GdbotsNode\Node $node): Node
     {
-
         switch (true) {
             case $node instanceof GdbotsNode\Word:
                 return new StringNode($node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             case $node instanceof GdbotsNode\Field:
-                return new FieldNode(
-                    $node->getValue(),
-                    (string)$node->getNode()->getValue(),
-                    BoolOperator::PROHIBITED === $node->getBoolOperator()
-                );
+                return new FieldNode($node->getValue(), (string) $node->getNode()->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             case $node instanceof GdbotsNode\Subquery:
                 Log::debug('Subquery');
 
-                return new NodeGroup(
-                    array_map(
-                        $this->convertNode(...),
-                        $node->getNodes()
-                    )
-                );
+                return new NodeGroup(array_map($this->convertNode(...), $node->getNodes()));
 
             case $node instanceof GdbotsNode\Phrase:
             case $node instanceof GdbotsNode\Numbr:
@@ -100,12 +86,10 @@ class GdbotsQueryParser implements QueryParserInterface
             case $node instanceof GdbotsNode\Mention:
             case $node instanceof GdbotsNode\Emoticon:
             case $node instanceof GdbotsNode\Emoji:
-                return new StringNode((string)$node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
+                return new StringNode((string) $node->getValue(), BoolOperator::PROHIBITED === $node->getBoolOperator());
 
             default:
-                throw new FireflyException(
-                    sprintf('Unsupported node type: %s', $node::class)
-                );
+                throw new FireflyException(sprintf('Unsupported node type: %s', $node::class));
         }
     }
 }

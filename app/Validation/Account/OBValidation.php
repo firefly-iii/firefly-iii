@@ -61,7 +61,7 @@ trait OBValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
-                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {

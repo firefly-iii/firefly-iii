@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -35,9 +34,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Account\AccountRepository;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\User;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\User;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransactionValidation
@@ -116,12 +116,7 @@ trait TransactionValidation
         $sourceName        = array_key_exists('source_name', $transaction) ? (string) $transaction['source_name'] : null;
         $sourceIban        = array_key_exists('source_iban', $transaction) ? (string) $transaction['source_iban'] : null;
         $sourceNumber      = array_key_exists('source_number', $transaction) ? (string) $transaction['source_number'] : null;
-        $source            = [
-            'id'     => $sourceId,
-            'name'   => $sourceName,
-            'iban'   => $sourceIban,
-            'number' => $sourceNumber,
-        ];
+        $source            = ['id'     => $sourceId, 'name'   => $sourceName, 'iban'   => $sourceIban, 'number' => $sourceNumber];
         $validSource       = $accountValidator->validateSource($source);
 
         // do something with result:
@@ -136,12 +131,7 @@ trait TransactionValidation
         $destinationName   = array_key_exists('destination_name', $transaction) ? (string) $transaction['destination_name'] : null;
         $destinationIban   = array_key_exists('destination_iban', $transaction) ? (string) $transaction['destination_iban'] : null;
         $destinationNumber = array_key_exists('destination_number', $transaction) ? (string) $transaction['destination_number'] : null;
-        $destination       = [
-            'id'     => $destinationId,
-            'name'   => $destinationName,
-            'iban'   => $destinationIban,
-            'number' => $destinationNumber,
-        ];
+        $destination       = ['id'     => $destinationId, 'name'   => $destinationName, 'iban'   => $destinationIban, 'number' => $destinationNumber];
         $validDestination  = $accountValidator->validateDestination($destination);
         // do something with result:
         if (false === $validDestination) {
@@ -161,8 +151,12 @@ trait TransactionValidation
     protected function sanityCheckReconciliation(Validator $validator, string $transactionType, int $index, array $source, array $destination): void
     {
         Log::debug('Now in sanityCheckReconciliation');
-        if (TransactionTypeEnum::RECONCILIATION->value === ucfirst($transactionType)
-            && null === $source['id'] && null === $source['name'] && null === $destination['id'] && null === $destination['name']
+        if (
+            TransactionTypeEnum::RECONCILIATION->value === ucfirst($transactionType)
+            && null === $source['id']
+            && null === $source['name']
+            && null === $destination['id']
+            && null === $destination['name']
         ) {
             Log::debug('Both are NULL, error!');
             $validator->errors()->add(sprintf('transactions.%d.source_id', $index), trans('validation.reconciliation_either_account'));
@@ -171,9 +165,11 @@ trait TransactionValidation
             $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), trans('validation.reconciliation_either_account'));
         }
 
-        if (TransactionTypeEnum::RECONCILIATION->value === $transactionType
+        if (
+            TransactionTypeEnum::RECONCILIATION->value === $transactionType
             && (null !== $source['id'] || null !== $source['name'])
-            && (null !== $destination['id'] || null !== $destination['name'])) {
+            && (null !== $destination['id'] || null !== $destination['name'])
+        ) {
             Log::debug('Both are not NULL, error!');
             $validator->errors()->add(sprintf('transactions.%d.source_id', $index), trans('validation.reconciliation_either_account'));
             $validator->errors()->add(sprintf('transactions.%d.source_name', $index), trans('validation.reconciliation_either_account'));
@@ -189,11 +185,11 @@ trait TransactionValidation
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
     private function sanityCheckForeignCurrency(
-        Validator        $validator,
+        Validator $validator,
         AccountValidator $accountValidator,
-        array            $transaction,
-        string           $transactionType,
-        int              $index
+        array $transaction,
+        string $transactionType,
+        int $index
     ): void {
         Log::debug('Now in sanityCheckForeignCurrency()');
         if (0 !== $validator->errors()->count()) {
@@ -366,7 +362,8 @@ trait TransactionValidation
             !array_key_exists('source_id', $transaction)
             && !array_key_exists('source_name', $transaction)
             && !array_key_exists('destination_id', $transaction)
-            && !array_key_exists('destination_name', $transaction)) {
+            && !array_key_exists('destination_name', $transaction)
+        ) {
             Log::debug('No account data has been submitted so will not validating account info.');
 
             return;
@@ -396,9 +393,12 @@ trait TransactionValidation
             $sourceName   = $transaction['source_name'] ?? null;
             $sourceIban   = $transaction['source_iban'] ?? null;
             $sourceNumber = $transaction['source_number'] ?? null;
-            $validSource  = $accountValidator->validateSource(
-                ['id' => $sourceId, 'name' => $sourceName, 'iban' => $sourceIban, 'number' => $sourceNumber]
-            );
+            $validSource  = $accountValidator->validateSource([
+                'id'     => $sourceId,
+                'name'   => $sourceName,
+                'iban'   => $sourceIban,
+                'number' => $sourceNumber,
+            ]);
 
             // do something with result:
             if (false === $validSource) {
@@ -440,7 +440,7 @@ trait TransactionValidation
             $destinationName   = $transaction['destination_name'] ?? null;
             $destinationIban   = $transaction['destination_iban'] ?? null;
             $destinationNumber = $transaction['destination_number'] ?? null;
-            $array             = ['id' => $destinationId, 'name' => $destinationName, 'iban' => $destinationIban, 'number' => $destinationNumber];
+            $array             = ['id'     => $destinationId, 'name'   => $destinationName, 'iban'   => $destinationIban, 'number' => $destinationNumber];
             $validDestination  = $accountValidator->validateDestination($array);
             // do something with result:
             if (false === $validDestination) {
@@ -711,25 +711,28 @@ trait TransactionValidation
 
     private function getOriginalData(int $journalId): array
     {
-        $return      = [
-            'source_id'        => 0,
-            'source_name'      => '',
-            'destination_id'   => 0,
-            'destination_name' => '',
-        ];
+        $return      = ['source_id'        => 0, 'source_name'      => '', 'destination_id'   => 0, 'destination_name' => ''];
         if (0 === $journalId) {
             return $return;
         }
 
         /** @var null|Transaction $source */
-        $source      = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
+        $source      = Transaction::where('transaction_journal_id', $journalId)
+            ->where('amount', '<', 0)
+            ->with(['account'])
+            ->first()
+        ;
         if (null !== $source) {
             $return['source_id']   = $source->account_id;
             $return['source_name'] = $source->account->name;
         }
 
         /** @var null|Transaction $destination */
-        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
+        $destination = Transaction::where('transaction_journal_id', $journalId)
+            ->where('amount', '>', 0)
+            ->with(['account'])
+            ->first()
+        ;
         if (null !== $destination) {
             $return['destination_id']   = $destination->account_id;
             $return['destination_name'] = $destination->account->name;
@@ -743,7 +746,7 @@ trait TransactionValidation
         return match ($type) {
             default    => $this->compareAccountDataWithdrawal($comparison),
             'deposit'  => $this->compareAccountDataDeposit($comparison),
-            'transfer' => $this->compareAccountDataTransfer($comparison),
+            'transfer' => $this->compareAccountDataTransfer($comparison)
         };
     }
 

@@ -47,12 +47,7 @@ trait CronRunner
         try {
             $billWarning->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
@@ -73,12 +68,7 @@ trait CronRunner
         try {
             $exchangeRates->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
@@ -99,12 +89,7 @@ trait CronRunner
         try {
             $autoBudget->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
@@ -125,12 +110,7 @@ trait CronRunner
         try {
             $recurring->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [
@@ -151,12 +131,7 @@ trait CronRunner
         try {
             $webhook->fire();
         } catch (FireflyException $e) {
-            return [
-                'job_fired'     => false,
-                'job_succeeded' => false,
-                'job_errored'   => true,
-                'message'       => $e->getMessage(),
-            ];
+            return ['job_fired'     => false, 'job_succeeded' => false, 'job_errored'   => true, 'message'       => $e->getMessage()];
         }
 
         return [

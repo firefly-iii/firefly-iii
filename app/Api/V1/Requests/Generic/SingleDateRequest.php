@@ -54,8 +54,6 @@ class SingleDateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'date' => 'required|date|after:1970-01-02|before:2038-01-17',
-        ];
+        return ['date' => 'required|date|after:1970-01-02|before:2038-01-17'];
     }
 }

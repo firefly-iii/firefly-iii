@@ -30,11 +30,11 @@ use FireflyIII\Models\Webhook;
 use FireflyIII\Models\WebhookAttempt;
 use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class DestroyController
@@ -46,14 +46,12 @@ class DestroyController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(WebhookRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -95,7 +93,12 @@ class DestroyController extends Controller
         }
 
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {
-            Log::channel('audit')->warning(sprintf('User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.', $webhook->id, $message->id, $attempt->id));
+            Log::channel('audit')->warning(sprintf(
+                'User tries to destroy webhook #%d, message #%d, attempt #%d, but webhooks are DISABLED.',
+                $webhook->id,
+                $message->id,
+                $attempt->id
+            ));
 
             throw new NotFoundHttpException('Webhooks are not enabled.');
         }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * IsOldVersion.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -67,12 +68,16 @@ trait IsOldVersion
     protected function isOldVersionInstalled(): bool
     {
         // version compare thing.
-        $configBuildTime = (int)config('firefly.build_time');
-        $dbBuildTime     = (int)FireflyConfig::getFresh('ff3_build_time', 123)->data;
+        $configBuildTime = (int) config('firefly.build_time');
+        $dbBuildTime     = (int) FireflyConfig::getFresh('ff3_build_time', 123)->data;
         $configTime      = Carbon::createFromTimestamp($configBuildTime, config('app.timezone'));
         $dbTime          = Carbon::createFromTimestamp($dbBuildTime, config('app.timezone'));
         if ($dbBuildTime < $configBuildTime) {
-            Log::warning(sprintf('Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.', $dbTime->format('Y-m-d H:i:s'), $configTime->format('Y-m-d H:i:s')));
+            Log::warning(sprintf(
+                'Your database was last managed by an older version of Firefly III (I see %s, I expect %s). Redirect to migrate routine.',
+                $dbTime->format('Y-m-d H:i:s'),
+                $configTime->format('Y-m-d H:i:s')
+            ));
 
             return true;
         }

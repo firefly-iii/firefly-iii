@@ -43,31 +43,22 @@ class IndexController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(UserGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(UserGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function index(PaginationRequest $request): JsonResponse
     {
-        $administrations = $this->repository->get();
-        [
-            'page'   => $page,
-            'limit'  => $limit,
-            'offset' => $offset,
-        ]                = $request->attributes->all();
-        $count           = $administrations->count();
-        $administrations = $administrations->slice($offset, $limit);
-        $paginator       = new LengthAwarePaginator($administrations, $count, $limit, $page);
-        $transformer     = new UserGroupTransformer();
+        $administrations                                             = $this->repository->get();
+        ['page'   => $page, 'limit'  => $limit, 'offset' => $offset] = $request->attributes->all();
+        $count                                                       = $administrations->count();
+        $administrations                                             = $administrations->slice($offset, $limit);
+        $paginator                                                   = new LengthAwarePaginator($administrations, $count, $limit, $page);
+        $transformer                                                 = new UserGroupTransformer();
 
-        return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

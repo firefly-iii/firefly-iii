@@ -45,7 +45,8 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function all(): Collection
     {
-        return $this->user->webhooks()
+        return $this->user
+            ->webhooks()
             // only get upgraded webhooks
             ->where('delivery', 1)
             ->where('response', 1)
@@ -79,22 +80,18 @@ class WebhookRepository implements WebhookRepositoryInterface, UserGroupInterfac
 
     public function getMessages(Webhook $webhook): Collection
     {
-        return $webhook->webhookMessages()
-            ->orderBy('created_at', 'DESC')
-            ->get(['webhook_messages.*'])
-        ;
+        return $webhook->webhookMessages()->orderBy('created_at', 'DESC')->get(['webhook_messages.*']);
     }
 
     public function getReadyMessages(Webhook $webhook): Collection
     {
-        return $webhook->webhookMessages()
+        return $webhook
+            ->webhookMessages()
             ->where('webhook_messages.sent', 0)
             ->where('webhook_messages.errored', 0)
             ->get(['webhook_messages.*'])
-            ->filter(
-                static fn (WebhookMessage $message): bool // @phpstan-ignore-line
-                => $message->webhookAttempts()->count() <= 2
-            )->splice(0, 3)
+            ->filter(static fn (WebhookMessage $message): bool => $message->webhookAttempts()->count() <= 2) // @phpstan-ignore-line
+            ->splice(0, 3)
         ;
     }
 

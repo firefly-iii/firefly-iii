@@ -44,10 +44,14 @@ class UserGroup extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            $userGroupId = (int)$value;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
+            }
+
+            $userGroupId = (int) $value;
 
             /** @var User $user */
             $user        = auth()->user();

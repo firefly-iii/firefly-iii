@@ -33,16 +33,17 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesLiabilitiesEight extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '600_upgrade_liabilities';
+
     protected $description          = 'Upgrade liabilities to new 6.0.0 structure.';
     protected $signature            = 'upgrade:600-liabilities {--F|force : Force the execution of this command.}';
 
@@ -66,8 +67,7 @@ class UpgradesLiabilitiesEight extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function upgradeLiabilities(): void
@@ -82,7 +82,8 @@ class UpgradesLiabilitiesEight extends Command
 
     private function upgradeForUser(User $user): void
     {
-        $accounts = $user->accounts()
+        $accounts = $user
+            ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereIn('account_types.type', config('firefly.valid_liabilities'))
             ->get(['accounts.*'])
@@ -138,7 +139,7 @@ class UpgradesLiabilitiesEight extends Command
             return false;
         }
 
-        return (bool)$openingJournal->date->isSameDay($liabilityJournal->date);
+        return (bool) $openingJournal->date->isSameDay($liabilityJournal->date);
     }
 
     private function deleteCreditTransaction(Account $account): void
@@ -153,7 +154,6 @@ class UpgradesLiabilitiesEight extends Command
             $group   = $liabilityJournal->transactionGroup;
             $service = new TransactionGroupDestroyService();
             $service->destroy($group);
-
         }
     }
 
@@ -189,9 +189,10 @@ class UpgradesLiabilitiesEight extends Command
     private function deleteTransactions(Account $account): int
     {
         $count    = 0;
-        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transactions.account_id', $account->id)->get(['transaction_journals.*'])
-        ;
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')->where(
+            'transactions.account_id',
+            $account->id
+        )->get(['transaction_journals.*']);
 
         $service  = app(TransactionGroupDestroyService::class);
 

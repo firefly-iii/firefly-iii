@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * StringNode.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -30,8 +29,10 @@ namespace FireflyIII\Support\Search\QueryParser;
  */
 class StringNode extends Node
 {
-    public function __construct(private readonly string $value, bool $prohibited = false)
-    {
+    public function __construct(
+        private readonly string $value,
+        bool $prohibited = false
+    ) {
         $this->prohibited = $prohibited;
     }
 

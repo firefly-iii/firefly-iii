@@ -72,22 +72,23 @@ class ExportDataGenerator
 {
     use ConvertsDataTypes;
 
-    private const string ADD_RECORD_ERR    = 'Could not add record to set: %s';
-    private const string EXPORT_ERR        = 'Could not export to string: %s';
+    private const string ADD_RECORD_ERR = 'Could not add record to set: %s';
+    private const string EXPORT_ERR     = 'Could not export to string: %s';
+
     private Collection $accounts;
-    private Carbon     $end;
-    private bool       $exportAccounts     = false;
-    private bool       $exportBills        = false;
-    private bool       $exportBudgets      = false;
-    private bool       $exportCategories   = false;
-    private bool       $exportPiggies      = false;
-    private bool       $exportRecurring    = false;
-    private bool       $exportRules        = false;
-    private bool       $exportTags         = false;
-    private bool       $exportTransactions = false;
-    private Carbon     $start;
-    private User       $user;
-    private UserGroup  $userGroup; // @phpstan-ignore-line
+    private Carbon $end;
+    private bool $exportAccounts        = false;
+    private bool $exportBills           = false;
+    private bool $exportBudgets         = false;
+    private bool $exportCategories      = false;
+    private bool $exportPiggies         = false;
+    private bool $exportRecurring       = false;
+    private bool $exportRules           = false;
+    private bool $exportTags            = false;
+    private bool $exportTransactions    = false;
+    private Carbon $start;
+    private User $user;
+    private UserGroup $userGroup; // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -381,17 +382,7 @@ class ExportDataGenerator
      */
     private function exportBudgets(): string
     {
-        $header      = [
-            'user_id',
-            'budget_id',
-            'name',
-            'active',
-            'order',
-            'start_date',
-            'end_date',
-            'currency_code',
-            'amount',
-        ];
+        $header      = ['user_id', 'budget_id', 'name', 'active', 'order', 'start_date', 'end_date', 'currency_code', 'amount'];
 
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetRepos->setUser($this->user);
@@ -461,13 +452,7 @@ class ExportDataGenerator
 
         /** @var Category $category */
         foreach ($categories as $category) {
-            $records[] = [
-                $this->user->id,
-                $category->id,
-                $category->created_at->toAtomString(),
-                $category->updated_at->toAtomString(),
-                $category->name,
-            ];
+            $records[] = [$this->user->id, $category->id, $category->created_at->toAtomString(), $category->updated_at->toAtomString(), $category->name];
         }
 
         // load the CSV document from a string
@@ -586,12 +571,39 @@ class ExportDataGenerator
         $recurringRepos->setUser($this->user);
         $header         = [
             // recurrence:
-            'user_id', 'recurrence_id', 'row_contains', 'created_at', 'updated_at', 'type', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active',
+            'user_id',
+            'recurrence_id',
+            'row_contains',
+            'created_at',
+            'updated_at',
+            'type',
+            'title',
+            'description',
+            'first_date',
+            'repeat_until',
+            'latest_date',
+            'repetitions',
+            'apply_rules',
+            'active',
 
             // repetition info:
-            'type', 'moment', 'skip', 'weekend',
+            'type',
+            'moment',
+            'skip',
+            'weekend',
             // transactions + meta:
-            'currency_code', 'foreign_currency_code', 'source_name', 'source_type', 'destination_name', 'destination_type', 'amount', 'foreign_amount', 'category', 'budget', 'piggy_bank', 'tags',
+            'currency_code',
+            'foreign_currency_code',
+            'source_name',
+            'source_type',
+            'destination_name',
+            'destination_type',
+            'amount',
+            'foreign_amount',
+            'category',
+            'budget',
+            'piggy_bank',
+            'tags',
         ];
         $records        = [];
         $recurrences    = $recurringRepos->get();
@@ -600,9 +612,20 @@ class ExportDataGenerator
         foreach ($recurrences as $recurrence) {
             // add recurrence:
             $records[] = [
-                $this->user->id, $recurrence->id,
+                $this->user->id,
+                $recurrence->id,
                 'recurrence',
-                $recurrence->created_at->toAtomString(), $recurrence->updated_at->toAtomString(), $recurrence->transactionType->type, $recurrence->title, $recurrence->description, $recurrence->first_date?->format('Y-m-d'), $recurrence->repeat_until?->format('Y-m-d'), $recurrence->latest_date?->format('Y-m-d'), $recurrence->repetitions, $recurrence->apply_rules, $recurrence->active,
+                $recurrence->created_at->toAtomString(),
+                $recurrence->updated_at->toAtomString(),
+                $recurrence->transactionType->type,
+                $recurrence->title,
+                $recurrence->description,
+                $recurrence->first_date?->format('Y-m-d'),
+                $recurrence->repeat_until?->format('Y-m-d'),
+                $recurrence->latest_date?->format('Y-m-d'),
+                $recurrence->repetitions,
+                $recurrence->apply_rules,
+                $recurrence->active,
             ];
 
             // add new row for each repetition
@@ -613,10 +636,23 @@ class ExportDataGenerator
                     $this->user->id,
                     $recurrence->id,
                     'repetition',
-                    null, null, null, null, null, null, null, null, null, null, null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // repetition:
-                    $repetition->repetition_type, $repetition->repetition_moment, $repetition->repetition_skip, $repetition->weekend,
+                    $repetition->repetition_type,
+                    $repetition->repetition_moment,
+                    $repetition->repetition_skip,
+                    $repetition->weekend,
                 ];
             }
 
@@ -632,13 +668,37 @@ class ExportDataGenerator
                     $this->user->id,
                     $recurrence->id,
                     'transaction',
-                    null, null, null, null, null, null, null, null, null, null, null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // repetition:
-                    null, null, null, null,
+                    null,
+                    null,
+                    null,
+                    null,
 
                     // transaction:
-                    $transaction->transactionCurrency->code, $transaction->foreignCurrency?->code, $transaction->sourceAccount->name, $transaction->sourceAccount->accountType->type, $transaction->destinationAccount->name, $transaction->destinationAccount->accountType->type, $transaction->amount, $transaction->foreign_amount, $categoryName, $budgetId, $piggyBankId, implode(',', $tags),
+                    $transaction->transactionCurrency->code,
+                    $transaction->foreignCurrency?->code,
+                    $transaction->sourceAccount->name,
+                    $transaction->sourceAccount->accountType->type,
+                    $transaction->destinationAccount->name,
+                    $transaction->destinationAccount->accountType->type,
+                    $transaction->amount,
+                    $transaction->foreign_amount,
+                    $categoryName,
+                    $budgetId,
+                    $piggyBankId,
+                    implode(',', $tags),
                 ];
             }
         }
@@ -674,10 +734,29 @@ class ExportDataGenerator
     private function exportRules(): string
     {
         $header    = [
-            'user_id', 'rule_id', 'row_contains',
-            'created_at', 'updated_at', 'group_id', 'title', 'description', 'order', 'active', 'stop_processing', 'strict',
-            'trigger_type', 'trigger_value', 'trigger_order', 'trigger_active', 'trigger_stop_processing',
-            'action_type', 'action_value', 'action_order', 'action_active', 'action_stop_processing'];
+            'user_id',
+            'rule_id',
+            'row_contains',
+            'created_at',
+            'updated_at',
+            'group_id',
+            'title',
+            'description',
+            'order',
+            'active',
+            'stop_processing',
+            'strict',
+            'trigger_type',
+            'trigger_value',
+            'trigger_order',
+            'trigger_active',
+            'trigger_stop_processing',
+            'action_type',
+            'action_value',
+            'action_order',
+            'action_active',
+            'action_stop_processing',
+        ];
         $ruleRepos = app(RuleRepositoryInterface::class);
         $ruleRepos->setUser($this->user);
         $rules     = $ruleRepos->getAll();
@@ -686,10 +765,28 @@ class ExportDataGenerator
         /** @var Rule $rule */
         foreach ($rules as $rule) {
             $entry     = [
-                $this->user->id, $rule->id,
+                $this->user->id,
+                $rule->id,
                 'rule',
-                $rule->created_at->toAtomString(), $rule->updated_at->toAtomString(), $rule->ruleGroup->id, $rule->ruleGroup->title, $rule->title, $rule->description, $rule->order, $rule->active, $rule->stop_processing, $rule->strict,
-                null, null, null, null, null, null, null, null, null,
+                $rule->created_at->toAtomString(),
+                $rule->updated_at->toAtomString(),
+                $rule->ruleGroup->id,
+                $rule->ruleGroup->title,
+                $rule->title,
+                $rule->description,
+                $rule->order,
+                $rule->active,
+                $rule->stop_processing,
+                $rule->strict,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
             ];
             $records[] = $entry;
 
@@ -699,9 +796,25 @@ class ExportDataGenerator
                     $this->user->id,
                     $rule->id,
                     'trigger',
-                    null, null, null, null, null, null, null, null, null,
-                    $trigger->trigger_type, $trigger->trigger_value, $trigger->order, $trigger->active, $trigger->stop_processing,
-                    null, null, null, null, null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $trigger->trigger_type,
+                    $trigger->trigger_value,
+                    $trigger->order,
+                    $trigger->active,
+                    $trigger->stop_processing,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
                 ];
                 $records[] = $entry;
             }
@@ -712,8 +825,25 @@ class ExportDataGenerator
                     $this->user->id,
                     $rule->id,
                     'action',
-                    null, null, null, null, null, null, null, null, null, null, null, null, null, null,
-                    $action->action_type, $action->action_value, $action->order, $action->active, $action->stop_processing,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    $action->action_type,
+                    $action->action_value,
+                    $action->order,
+                    $action->active,
+                    $action->stop_processing,
                 ];
                 $records[] = $entry;
             }
@@ -808,7 +938,36 @@ class ExportDataGenerator
     {
         Log::debug('Will now export transactions.');
         // TODO better place for keys?
-        $header     = ['user_id', 'group_id', 'journal_id', 'created_at', 'updated_at', 'group_title', 'type', 'currency_code', 'amount', 'foreign_currency_code', 'foreign_amount', 'primary_currency_code', 'pc_amount', 'pc_foreign_amount', 'description', 'date', 'source_name', 'source_iban', 'source_type', 'destination_name', 'destination_iban', 'destination_type', 'reconciled', 'category', 'budget', 'bill', 'tags', 'notes'];
+        $header     = [
+            'user_id',
+            'group_id',
+            'journal_id',
+            'created_at',
+            'updated_at',
+            'group_title',
+            'type',
+            'currency_code',
+            'amount',
+            'foreign_currency_code',
+            'foreign_amount',
+            'primary_currency_code',
+            'pc_amount',
+            'pc_foreign_amount',
+            'description',
+            'date',
+            'source_name',
+            'source_iban',
+            'source_type',
+            'destination_name',
+            'destination_iban',
+            'destination_type',
+            'reconciled',
+            'category',
+            'budget',
+            'bill',
+            'tags',
+            'notes',
+        ];
 
         $metaFields = config('firefly.journal_meta_fields');
         $header     = array_merge($header, $metaFields);
@@ -816,7 +975,15 @@ class ExportDataGenerator
 
         $collector  = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
-        $collector->setRange($this->start, $this->end)->withAccountInformation()->withCategoryInformation()->withBillInformation()->withBudgetInformation()->withTagInformation()->withNotes();
+        $collector
+            ->setRange($this->start, $this->end)
+            ->withAccountInformation()
+            ->withCategoryInformation()
+            ->withBillInformation()
+            ->withBudgetInformation()
+            ->withTagInformation()
+            ->withNotes()
+        ;
         if (0 !== $this->accounts->count()) {
             $collector->setAccounts($this->accounts);
         }
@@ -833,46 +1000,104 @@ class ExportDataGenerator
         foreach ($journals as $journal) {
             $metaData        = $repository->getMetaFields($journal['transaction_journal_id'], $metaFields);
             $amount          = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
-            $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+            $foreignAmount   = null === $journal['foreign_amount']
+                ? null
+                : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
             $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_amount']), $primary->decimal_places);
-            $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
+            $pcForeignAmount = null === $journal['pc_foreign_amount']
+                ? null
+                : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
 
             if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
                 $amount          = Steam::bcround(Steam::positive($journal['amount']), $journal['currency_decimal_places']);
-                $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+                $foreignAmount   = null === $journal['foreign_amount']
+                    ? null
+                    : Steam::bcround(Steam::positive($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
                 $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::positive($journal['pc_amount']), $primary->decimal_places);
-                $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::positive($journal['pc_foreign_amount']), $primary->decimal_places);
+                $pcForeignAmount = null === $journal['pc_foreign_amount']
+                    ? null
+                    : Steam::bcround(Steam::positive($journal['pc_foreign_amount']), $primary->decimal_places);
             }
 
             // opening balance depends on source account type.
-            if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type'] && AccountTypeEnum::ASSET->value === $journal['source_account_type']) {
+            if (
+                TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
+                && AccountTypeEnum::ASSET->value === $journal['source_account_type']
+            ) {
                 $amount          = Steam::bcround(Steam::negative($journal['amount']), $journal['currency_decimal_places']);
-                $foreignAmount   = null === $journal['foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
+                $foreignAmount   = null === $journal['foreign_amount']
+                    ? null
+                    : Steam::bcround(Steam::negative($journal['foreign_amount']), $journal['foreign_currency_decimal_places']);
                 $pcAmount        = null === $journal['pc_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_amount']), $primary->decimal_places);
-                $pcForeignAmount = null === $journal['pc_foreign_amount'] ? null : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
+                $pcForeignAmount = null === $journal['pc_foreign_amount']
+                    ? null
+                    : Steam::bcround(Steam::negative($journal['pc_foreign_amount']), $primary->decimal_places);
             }
 
             $records[]       = [
-                $journal['user_id'], $journal['transaction_group_id'], $journal['transaction_journal_id'], $journal['created_at']->toAtomString(), $journal['updated_at']->toAtomString(), $journal['transaction_group_title'], $journal['transaction_type_type'],
+                $journal['user_id'],
+                $journal['transaction_group_id'],
+                $journal['transaction_journal_id'],
+                $journal['created_at']->toAtomString(),
+                $journal['updated_at']->toAtomString(),
+                $journal['transaction_group_title'],
+                $journal['transaction_type_type'],
                 // amounts and currencies
-                $journal['currency_code'], $amount, $journal['foreign_currency_code'], $foreignAmount, $primary->code, $pcAmount, $pcForeignAmount,
+                $journal['currency_code'],
+                $amount,
+                $journal['foreign_currency_code'],
+                $foreignAmount,
+                $primary->code,
+                $pcAmount,
+                $pcForeignAmount,
 
                 // more fields
-                $journal['description'], $journal['date']->toAtomString(), $journal['source_account_name'], $journal['source_account_iban'], $journal['source_account_type'], $journal['destination_account_name'], $journal['destination_account_iban'], $journal['destination_account_type'], $journal['reconciled'], $journal['category_name'], $journal['budget_name'], $journal['bill_name'],
+                $journal['description'],
+                $journal['date']->toAtomString(),
+                $journal['source_account_name'],
+                $journal['source_account_iban'],
+                $journal['source_account_type'],
+                $journal['destination_account_name'],
+                $journal['destination_account_iban'],
+                $journal['destination_account_type'],
+                $journal['reconciled'],
+                $journal['category_name'],
+                $journal['budget_name'],
+                $journal['bill_name'],
                 $this->mergeTags($journal['tags']),
                 $this->clearStringKeepNewlines($journal['notes']),
 
                 // sepa
-                $metaData['sepa_cc'], $metaData['sepa_ct_op'], $metaData['sepa_ct_id'], $metaData['sepa_db'], $metaData['sepa_country'], $metaData['sepa_ep'], $metaData['sepa_ci'], $metaData['sepa_batch_id'], $metaData['external_url'],
+                $metaData['sepa_cc'],
+                $metaData['sepa_ct_op'],
+                $metaData['sepa_ct_id'],
+                $metaData['sepa_db'],
+                $metaData['sepa_country'],
+                $metaData['sepa_ep'],
+                $metaData['sepa_ci'],
+                $metaData['sepa_batch_id'],
+                $metaData['external_url'],
 
                 // dates
-                $metaData['interest_date'], $metaData['book_date'], $metaData['process_date'], $metaData['due_date'], $metaData['payment_date'], $metaData['invoice_date'],
+                $metaData['interest_date'],
+                $metaData['book_date'],
+                $metaData['process_date'],
+                $metaData['due_date'],
+                $metaData['payment_date'],
+                $metaData['invoice_date'],
 
                 // others
-                $metaData['recurrence_id'], $metaData['internal_reference'], $metaData['bunq_payment_id'], $metaData['import_hash'], $metaData['import_hash_v2'], $metaData['external_id'], $metaData['original_source'],
+                $metaData['recurrence_id'],
+                $metaData['internal_reference'],
+                $metaData['bunq_payment_id'],
+                $metaData['import_hash'],
+                $metaData['import_hash_v2'],
+                $metaData['external_id'],
+                $metaData['original_source'],
 
                 // recurring transactions
-                $metaData['recurrence_total'], $metaData['recurrence_count'],
+                $metaData['recurrence_total'],
+                $metaData['recurrence_count'],
             ];
         }
 

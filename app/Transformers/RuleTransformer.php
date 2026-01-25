@@ -69,12 +69,7 @@ class RuleTransformer extends AbstractTransformer
             'trigger'          => $this->getRuleTrigger($rule),
             'triggers'         => $this->triggers($rule),
             'actions'          => $this->actions($rule),
-            'links'            => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/rules/'.$rule->id,
-                ],
-            ],
+            'links'            => [['rel' => 'self', 'uri' => '/rules/'.$rule->id]],
         ];
     }
 

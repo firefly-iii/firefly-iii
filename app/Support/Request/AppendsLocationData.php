@@ -127,14 +127,12 @@ trait AppendsLocationData
             $data['remove_location'] = true;
         }
         Log::debug(sprintf('Returning longitude: "%s", latitude: "%s", zoom level: "%s"', $data['longitude'], $data['latitude'], $data['zoom_level']));
-        Log::debug(
-            sprintf(
-                'Returning actions: store: %s, update: %s, delete: %s',
-                var_export($data['store_location'], true),
-                var_export($data['update_location'], true),
-                var_export($data['remove_location'], true),
-            )
-        );
+        Log::debug(sprintf(
+            'Returning actions: store: %s, update: %s, delete: %s',
+            var_export($data['store_location'], true),
+            var_export($data['update_location'], true),
+            var_export($data['remove_location'], true)
+        ));
 
         return $data;
     }
@@ -154,14 +152,11 @@ trait AppendsLocationData
         $latitudeKey  = $this->getLocationKey($prefix, 'latitude');
         $zoomLevelKey = $this->getLocationKey($prefix, 'zoom_level');
 
-        return (
+        return
             null === $this->get($longitudeKey)
             && null === $this->get($latitudeKey)
-            && null === $this->get($zoomLevelKey))
-               && (
-                   'PUT' === $this->method()
-                   || ('POST' === $this->method() && $this->routeIs('*.update'))
-               );
+            && null === $this->get($zoomLevelKey)
+            && ('PUT' === $this->method() || 'POST' === $this->method() && $this->routeIs('*.update'));
     }
 
     private function isValidPUT(?string $prefix): bool
@@ -244,14 +239,14 @@ trait AppendsLocationData
 
     private function validLatitude(string $latitude): bool
     {
-        $number = (float)$latitude;
+        $number = (float) $latitude;
 
         return $number >= -90 && $number <= 90;
     }
 
     private function validLongitude(string $longitude): bool
     {
-        $number = (float)$longitude;
+        $number = (float) $longitude;
 
         return $number >= -180 && $number <= 180;
     }

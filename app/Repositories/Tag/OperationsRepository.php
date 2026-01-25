@@ -28,10 +28,10 @@ use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class OperationsRepository
@@ -91,11 +91,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                     continue;
                 }
                 $listedJournals[]                                                       = $journalId;
-                $array[$currencyId]['tags'][$tagId] ??= [
-                    'id'                   => $tagId,
-                    'name'                 => $tagName,
-                    'transaction_journals' => [],
-                ];
+                $array[$currencyId]['tags'][$tagId] ??= ['id'                   => $tagId, 'name'                 => $tagName, 'transaction_journals' => []];
 
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => Steam::negative($journal['amount']),

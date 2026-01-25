@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * CorrectsPrimaryCurrencyAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -41,6 +40,7 @@ use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Console\Command;
@@ -48,7 +48,6 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Query\Builder as DatabaseBuilder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class CorrectsPrimaryCurrencyAmounts extends Command
 {
@@ -98,22 +97,25 @@ class CorrectsPrimaryCurrencyAmounts extends Command
         $this->recalculateAvailableBudgets($userGroup, $currency);
         $this->recalculateBills($userGroup, $currency);
         $this->calculateTransactions($userGroup, $currency);
-
     }
 
     private function recalculateAccounts(UserGroup $userGroup): void
     {
-        $set = $userGroup->accounts()->where(static function (EloquentBuilder $q): void {
-            $q->whereNotNull('virtual_balance');
+        $set = $userGroup
+            ->accounts()
+            ->where(static function (EloquentBuilder $q): void {
+                $q->whereNotNull('virtual_balance');
 
-            // this needs a different piece of code for postgres.
-            if ('pgsql' === config('database.default')) {
-                $q->orWhere(DB::raw('CAST(virtual_balance AS TEXT)'), '!=', '');
-            }
-            if ('pgsql' !== config('database.default')) {
-                $q->orWhere('virtual_balance', '!=', '');
-            }
-        })->get();
+                // this needs a different piece of code for postgres.
+                if ('pgsql' === config('database.default')) {
+                    $q->orWhere(DB::raw('CAST(virtual_balance AS TEXT)'), '!=', '');
+                }
+                if ('pgsql' !== config('database.default')) {
+                    $q->orWhere('virtual_balance', '!=', '');
+                }
+            })
+            ->get()
+        ;
 
         /** @var Account $account */
         foreach ($set as $account) {
@@ -130,9 +132,7 @@ class CorrectsPrimaryCurrencyAmounts extends Command
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
         $set        = $repository->getPiggyBanks();
-        $set        = $set->filter(
-            static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id
-        );
+        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;
             $piggyBank->save();
@@ -140,24 +140,26 @@ class CorrectsPrimaryCurrencyAmounts extends Command
             foreach ($piggyBank->accounts as $account) {
                 $account->pivot->native_current_amount = null;
                 if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
-                    $account->pivot->native_current_amount = $converter->convert($piggyBank->transactionCurrency, $currency, today(), (string) $account->pivot->current_amount);
+                    $account->pivot->native_current_amount = $converter->convert(
+                        $piggyBank->transactionCurrency,
+                        $currency,
+                        today(),
+                        (string) $account->pivot->current_amount
+                    );
                 }
                 $account->pivot->save();
             }
             $this->recalculatePiggyBankEvents($piggyBank);
         }
         Log::debug(sprintf('Recalculated %d piggy banks for user group #%d.', $set->count(), $userGroup->id));
-
     }
 
     private function recalculatePiggyBankEvents(PiggyBank $piggyBank): void
     {
         $set = $piggyBank->piggyBankEvents()->get();
-        $set->each(
-            static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
-                $event->touch();
-            }
-        );
+        $set->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
+            $event->touch();
+        });
         Log::debug(sprintf('Recalculated %d piggy bank events.', $set->count()));
     }
 
@@ -233,11 +235,11 @@ class CorrectsPrimaryCurrencyAmounts extends Command
                     $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
                 });
             })
-//            ->where(static function (DatabaseBuilder $q) use ($currency): void {
-//                $q->whereNot('transactions.transaction_currency_id', $currency->id)
-//                    ->whereNot('transactions.foreign_currency_id', $currency->id)
-//                ;
-//            })
+            //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
+            //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
+            //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
+            //                ;
+            //            })
             ->get(['transactions.id'])
         ;
         TransactionObserver::$recalculate = false;

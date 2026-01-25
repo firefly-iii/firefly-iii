@@ -53,17 +53,15 @@ class TriggerController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                      = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user                      = auth()->user();
 
-                $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-                $this->ruleGroupRepository->setUser($user);
+            $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+            $this->ruleGroupRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -87,15 +85,15 @@ class TriggerController extends Controller
         // overrule the rule(s) if necessary.
         if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
             // add a range:
-            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
+            $ruleEngine->addOperator(['type'  => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
 
         if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
             // add a range:
-            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
+            $ruleEngine->addOperator(['type'  => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
         if (array_key_exists('accounts', $parameters) && '' !== $parameters['accounts']) {
-            $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
+            $ruleEngine->addOperator(['type'  => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
         // file the rule(s)
@@ -148,15 +146,15 @@ class TriggerController extends Controller
         // overrule the rule(s) if necessary.
         if (array_key_exists('start', $parameters) && null !== $parameters['start']) {
             // add a range:
-            $ruleEngine->addOperator(['type' => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
+            $ruleEngine->addOperator(['type'  => 'date_after', 'value' => $parameters['start']->format('Y-m-d')]);
         }
 
         if (array_key_exists('end', $parameters) && null !== $parameters['end']) {
             // add a range:
-            $ruleEngine->addOperator(['type' => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
+            $ruleEngine->addOperator(['type'  => 'date_before', 'value' => $parameters['end']->format('Y-m-d')]);
         }
         if (array_key_exists('accounts', $parameters) && is_array($parameters['accounts']) && count($parameters['accounts']) > 0) {
-            $ruleEngine->addOperator(['type' => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
+            $ruleEngine->addOperator(['type'  => 'account_id', 'value' => implode(',', $parameters['accounts'])]);
         }
 
         // file the rule(s)

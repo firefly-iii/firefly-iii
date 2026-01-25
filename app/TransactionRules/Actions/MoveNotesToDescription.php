@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class MoveNotesToDescription
@@ -46,7 +46,9 @@ class MoveNotesToDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action) {}
+    public function __construct(
+        private RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -78,8 +80,8 @@ class MoveNotesToDescription implements ActionInterface
         $object->save();
         $note->delete();
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
-        event(new TriggeredAuditLog($this->action->rule, $object, 'clear_notes', $beforeNote, null));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $object->description));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'clear_notes', $beforeNote, null));
 
         return true;
     }

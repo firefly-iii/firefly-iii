@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
@@ -58,16 +58,14 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -135,6 +133,12 @@ class IndexController extends Controller
 
         $this->verifyRecurringCronJob();
 
-        return view('recurring.index', ['paginator' => $paginator, 'today' => $today, 'page' => $page, 'pageSize' => $pageSize, 'total' => $total]);
+        return view('recurring.index', [
+            'paginator' => $paginator,
+            'today'     => $today,
+            'page'      => $page,
+            'pageSize'  => $pageSize,
+            'total'     => $total,
+        ]);
     }
 }

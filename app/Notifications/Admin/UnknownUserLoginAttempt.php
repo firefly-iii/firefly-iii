@@ -39,15 +39,16 @@ class UnknownUserLoginAttempt extends Notification
 {
     use Queueable;
 
-    public function __construct(private string $address) {}
+    public function __construct(
+        private string $address
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -61,7 +62,13 @@ class UnknownUserLoginAttempt extends Notification
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
 
         return new MailMessage()
-            ->markdown('emails.owner.unknown-user', ['address' => $this->address, 'ip' => $ip, 'host' => $host, 'userAgent' => $userAgent, 'time' => $time])
+            ->markdown('emails.owner.unknown-user', [
+                'address'   => $this->address,
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time,
+            ])
             ->subject((string) trans('email.unknown_user_subject'))
         ;
     }
@@ -89,9 +96,9 @@ class UnknownUserLoginAttempt extends Notification
     {
         $ip = Request::ip();
 
-        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]))
-            ->title((string) trans('email.unknown_user_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip'      => $ip]))->title((string) trans(
+            'email.unknown_user_subject'
+        ));
     }
 
     /**
@@ -101,9 +108,7 @@ class UnknownUserLoginAttempt extends Notification
     {
         $ip = Request::ip();
 
-        return new SlackMessage()->content(
-            (string) trans('email.unknown_user_body', ['address' => $this->address, 'ip' => $ip])
-        );
+        return new SlackMessage()->content((string) trans('email.unknown_user_body', ['address' => $this->address, 'ip'      => $ip]));
     }
 
     /**

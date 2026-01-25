@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * QueryRequest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -23,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Generic;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 
 class QueryRequest extends ApiRequest
 {
@@ -35,21 +36,17 @@ class QueryRequest extends ApiRequest
 
     public function rules(): array
     {
-        return [
-            'query' => sprintf('min:0|max:50|%s', $this->required),
-        ];
+        return ['query' => sprintf('min:0|max:50|%s', $this->required)];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $query = $this->convertString('query');
-                $this->attributes->set('query', $query);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $query = $this->convertString('query');
+            $this->attributes->set('query', $query);
+        });
     }
 }

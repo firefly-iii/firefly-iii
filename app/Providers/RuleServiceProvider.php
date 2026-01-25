@@ -45,16 +45,14 @@ class RuleServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): RuleRepositoryInterface {
-                /** @var RuleRepository $repository */
-                $repository = app(RuleRepository::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): RuleRepositoryInterface {
+            /** @var RuleRepository $repository */
+            $repository = app(RuleRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

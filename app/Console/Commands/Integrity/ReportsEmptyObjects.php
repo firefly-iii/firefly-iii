@@ -69,13 +69,7 @@ class ReportsEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
+            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->name);
             $this->friendlyWarning($line);
         }
     }
@@ -95,13 +89,7 @@ class ReportsEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has category #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
+            $line = sprintf('User #%d (%s) has category #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->name);
             $this->friendlyWarning($line);
         }
     }
@@ -118,13 +106,7 @@ class ReportsEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has tag #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->tag
-            );
+            $line = sprintf('User #%d (%s) has tag #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->tag);
             $this->friendlyWarning($line);
         }
     }
@@ -138,9 +120,7 @@ class ReportsEmptyObjects extends Command
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
             ->whereNull('transactions.account_id')
-            ->get(
-                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
-            )
+            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
         ;
 
         /** @var stdClass $entry */
@@ -165,13 +145,7 @@ class ReportsEmptyObjects extends Command
 
         /** @var Budget $entry */
         foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no budget limits.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
+            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no budget limits.', $entry->user_id, $entry->email, $entry->id, $entry->name);
             $this->friendlyWarning($line);
         }
     }

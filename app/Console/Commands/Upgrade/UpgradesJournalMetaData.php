@@ -29,10 +29,10 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesJournalMetaData extends Command
 {
@@ -110,12 +110,20 @@ class UpgradesJournalMetaData extends Command
 
     private function getIdsForBudgets(): array
     {
-        $transactions = DB::table('budget_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $transactions = DB::table('budget_transaction')
+            ->distinct()
+            ->pluck('transaction_id')
+            ->toArray()
+        ;
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
-            $set   = DB::table('transactions')->whereIn('transactions.id', $chunk)->pluck('transaction_journal_id')->toArray();
+            $set   = DB::table('transactions')
+                ->whereIn('transactions.id', $chunk)
+                ->pluck('transaction_journal_id')
+                ->toArray()
+            ;
             $array = array_merge($array, $set);
         }
 
@@ -173,14 +181,19 @@ class UpgradesJournalMetaData extends Command
 
     private function getIdsForCategories(): array
     {
-        $transactions = DB::table('category_transaction')->distinct()->pluck('transaction_id')->toArray();
+        $transactions = DB::table('category_transaction')
+            ->distinct()
+            ->pluck('transaction_id')
+            ->toArray()
+        ;
         $array        = [];
         $chunks       = array_chunk($transactions, 500);
 
         foreach ($chunks as $chunk) {
             $set   = DB::table('transactions')
                 ->whereIn('transactions.id', $chunk)
-                ->pluck('transaction_journal_id')->toArray()
+                ->pluck('transaction_journal_id')
+                ->toArray()
             ;
             $array = array_merge($array, $set);
         }

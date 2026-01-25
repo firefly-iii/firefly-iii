@@ -82,7 +82,11 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
     public function get(): Collection
     {
-        return $this->user->tags()->orderBy('tag', 'ASC')->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->orderBy('tag', 'ASC')
+            ->get(['tags.*'])
+        ;
     }
 
     public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array
@@ -105,7 +109,11 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     public function findByTag(string $tag): ?Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->where('tag', $tag)->first();
+        return $this->user
+            ->tags()
+            ->where('tag', $tag)
+            ->first()
+        ;
     }
 
     public function firstUseDate(Tag $tag): ?Carbon
@@ -118,21 +126,23 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         $set  = $tag->attachments()->get();
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
-                /** @var null|Note $note */
-                $note                    = $attachment->notes()->first();
-                // only used in v1 view of tags
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null === $note ? '' : $note->text;
-            }
-        );
+        return $set->each(static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
+            /** @var null|Note $note */
+            $note                    = $attachment->notes()->first();
+            // only used in v1 view of tags
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text  = null === $note ? '' : $note->text;
+        });
     }
 
     public function getTagsInYear(?int $year): array
     {
         // get all tags in the year (if present):
-        $tagQuery   = $this->user->tags()->with(['locations', 'attachments'])->orderBy('tags.tag');
+        $tagQuery   = $this->user
+            ->tags()
+            ->with(['locations', 'attachments'])
+            ->orderBy('tags.tag')
+        ;
 
         // add date range (or not):
         if (null === $year) {
@@ -185,13 +195,23 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     public function newestTag(): ?Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'DESC')->first();
+        return $this->user
+            ->tags()
+            ->whereNotNull('date')
+            ->orderBy('date', 'DESC')
+            ->first()
+        ;
     }
 
     public function oldestTag(): ?Tag
     {
         /** @var null|Tag */
-        return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
+        return $this->user
+            ->tags()
+            ->whereNotNull('date')
+            ->orderBy('date', 'ASC')
+            ->first()
+        ;
     }
 
     /**
@@ -201,7 +221,11 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         $search = sprintf('%%%s%%', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*'])
+        ;
     }
 
     /**
@@ -304,14 +328,22 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         $search = sprintf('%%%s', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*'])
+        ;
     }
 
     public function tagStartsWith(string $query): Collection
     {
         $search = sprintf('%s%%', $query);
 
-        return $this->user->tags()->whereLike('tag', $search)->get(['tags.*']);
+        return $this->user
+            ->tags()
+            ->whereLike('tag', $search)
+            ->get(['tags.*'])
+        ;
     }
 
     public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
@@ -384,7 +416,8 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        return $tag->transactionJournals()
+        return $tag
+            ->transactionJournals()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
@@ -415,7 +448,6 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
                 'transactions.native_amount as pc_amount',
                 'transactions.foreign_amount',
             ])
-            ->toArray()
-        ;
+            ->toArray();
     }
 }

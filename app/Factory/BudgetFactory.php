@@ -64,7 +64,11 @@ class BudgetFactory
     public function findByName(string $name): ?Budget
     {
         /** @var null|Budget */
-        return $this->user->budgets()->where('name', $name)->first();
+        return $this->user
+            ->budgets()
+            ->where('name', $name)
+            ->first()
+        ;
     }
 
     public function setUser(User $user): void

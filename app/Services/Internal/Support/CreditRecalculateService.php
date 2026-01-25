@@ -33,18 +33,25 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CreditRecalculateService
  */
 class CreditRecalculateService
 {
-    private ?Account                   $account = null;
-    private ?TransactionGroup          $group   = null;
+    private ?Account          $account = null;
+    private ?TransactionGroup $group   = null;
+    private Collection $journals;
     private AccountRepositoryInterface $repository;
-    private array                      $work    = [];
+    private array $work                = [];
+
+    public function __construct()
+    {
+        $this->journals = new Collection();
+    }
 
     public function recalculate(): void
     {
@@ -58,23 +65,44 @@ class CreditRecalculateService
             // work based on account.
             $this->processAccount();
         }
+        if ($this->journals->count() > 0) {
+            $this->processJournals();
+        }
         if (0 === count($this->work)) {
+            Log::debug('No work found for recalculate() to do.');
+
             return;
         }
         $this->processWork();
     }
 
-    private function processGroup(): void
+    private function collectFromJournals(Collection $transactionJournals): void
     {
-        /** @var TransactionJournal $journal */
-        foreach ($this->group->transactionJournals as $journal) {
-            try {
-                $this->findByJournal($journal);
-            } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
+        Log::debug('Now in collectFromJournals()');
+        $valid    = config('firefly.valid_liabilities');
+        $accounts = Account::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+            ->whereIn('transaction_journals.id', $transactionJournals->pluck('id')->toArray())
+            ->whereIn('account_types.type', $valid)
+            ->get(['accounts.*'])
+        ;
+        if ($accounts->count() > 0) {
+            Log::debug(sprintf('Found %d account(s) to process.', $accounts->count()));
+            foreach ($accounts as $account) {
+                $this->work[] = $account;
             }
         }
+    }
+
+    private function processGroup(): void
+    {
+        $this->collectFromJournals($this->group->transactionJournals);
+    }
+
+    private function processJournals(): void
+    {
+        $this->collectFromJournals($this->journals);
     }
 
     /**
@@ -172,7 +200,8 @@ class CreditRecalculateService
         //        Log::debug(sprintf('Debt direction is "%s"', $direction));
 
         // now loop all transactions (except opening balance and credit thing)
-        $transactions   = $account->transactions()
+        $transactions   = $account
+            ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->orderBy('transaction_journals.date', 'ASC')
             ->get(['transactions.*'])
@@ -215,8 +244,8 @@ class CreditRecalculateService
             }
             $source->save();
             $dest->save();
-
         }
+
         // Log::debug('Opening balance is valid');
     }
 
@@ -237,7 +266,6 @@ class CreditRecalculateService
 
             return $leftOfDebt;
         }
-
 
         $foreignCurrency = $transaction->foreignCurrency;
         $accountCurrency = $this->repository->getAccountCurrency($account);
@@ -266,6 +294,7 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 1 (withdrawal into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
@@ -273,6 +302,7 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 2 (withdrawal away from liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
@@ -280,6 +310,7 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 3 (deposit away from liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
@@ -287,30 +318,35 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 4 (deposit into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isCredit && $this->isTransferIn($usedAmount, $type)) { // case 5
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 5 (transfer into credit liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalIn($usedAmount, $type)) { // case 6
             $usedAmount = Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 6 (withdrawal into debit liability): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isDepositOut($usedAmount, $type)) { // case 7
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 7 (deposit away from liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
         if ($isSameAccount && $isDebit && $this->isWithdrawalOut($usedAmount, $type)) { // case 8
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case 8 (withdrawal away from liability): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
@@ -318,6 +354,7 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcsub($leftOfDebt, (string) $usedAmount);
+
             // 2024-10-05, #9225 this used to say you would owe more, but a transfer INTO a debit from wherever means you owe LESS.
             //            Log::debug(sprintf('Case 9 (transfer into debit liability, means you owe LESS): %s - %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
@@ -325,6 +362,7 @@ class CreditRecalculateService
             $usedAmount = Steam::positive($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             // 2024-10-05, #9225 this used to say you would owe less, but a transfer OUT OF a debit from wherever means you owe MORE.
             //            Log::debug(sprintf('Case 10 (transfer out of debit liability, means you owe MORE): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
@@ -334,6 +372,7 @@ class CreditRecalculateService
             $usedAmount = Steam::negative($usedAmount);
 
             return bcadd($leftOfDebt, (string) $usedAmount);
+
             //            Log::debug(sprintf('Case X (all other cases): %s + %s = %s', \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2), \FireflyIII\Support\Facades\Steam::bcround($result, 2)));
         }
 
@@ -348,6 +387,7 @@ class CreditRecalculateService
         //        Log::debug(sprintf('Amount of transaction is %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
         if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $accountCurrency->id) {
             $usedAmount = $transaction->foreign_amount;
+
             //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
         }
 
@@ -447,5 +487,10 @@ class CreditRecalculateService
     public function setGroup(TransactionGroup $group): void
     {
         $this->group = $group;
+    }
+
+    public function setJournals(Collection $journals): void
+    {
+        $this->journals = $journals;
     }
 }

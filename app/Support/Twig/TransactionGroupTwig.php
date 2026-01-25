@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Carbon\CarbonInterface;
 use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Support\Facades\DB;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_decode;
 
@@ -47,13 +47,7 @@ class TransactionGroupTwig extends AbstractExtension
     #[Override]
     public function getFunctions(): array
     {
-        return [
-            $this->journalArrayAmount(),
-            $this->journalObjectAmount(),
-            $this->journalHasMeta(),
-            $this->journalGetMetaDate(),
-            $this->journalGetMetaField(),
-        ];
+        return [$this->journalArrayAmount(), $this->journalObjectAmount(), $this->journalHasMeta(), $this->journalGetMetaDate(), $this->journalGetMetaField()];
     }
 
     /**
@@ -80,61 +74,52 @@ class TransactionGroupTwig extends AbstractExtension
 
     public function journalGetMetaDate(): TwigFunction
     {
-        return new TwigFunction(
-            'journalGetMetaDate',
-            static function (int $journalId, string $metaField): Carbon|CarbonInterface {
-                /** @var null|TransactionJournalMeta $entry */
-                $entry = DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
-                if (null === $entry) {
-                    return today(config('app.timezone'));
-                }
-
-                return new Carbon(json_decode((string)$entry->data, false));
+        return new TwigFunction('journalGetMetaDate', static function (int $journalId, string $metaField): Carbon|CarbonInterface {
+            /** @var null|TransactionJournalMeta $entry */
+            $entry = DB::table('journal_meta')
+                ->where('name', $metaField)
+                ->where('transaction_journal_id', $journalId)
+                ->whereNull('deleted_at')
+                ->first()
+            ;
+            if (null === $entry) {
+                return today(config('app.timezone'));
             }
-        );
+
+            return new Carbon(json_decode((string) $entry->data, false));
+        });
     }
 
     public function journalGetMetaField(): TwigFunction
     {
-        return new TwigFunction(
-            'journalGetMetaField',
-            static function (int $journalId, string $metaField) {
-                /** @var null|TransactionJournalMeta $entry */
-                $entry = DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->first()
-                ;
-                if (null === $entry) {
-                    return '';
-                }
-
-                return json_decode((string)$entry->data, true);
+        return new TwigFunction('journalGetMetaField', static function (int $journalId, string $metaField) {
+            /** @var null|TransactionJournalMeta $entry */
+            $entry = DB::table('journal_meta')
+                ->where('name', $metaField)
+                ->where('transaction_journal_id', $journalId)
+                ->whereNull('deleted_at')
+                ->first()
+            ;
+            if (null === $entry) {
+                return '';
             }
-        );
+
+            return json_decode((string) $entry->data, true);
+        });
     }
 
     public function journalHasMeta(): TwigFunction
     {
-        return new TwigFunction(
-            'journalHasMeta',
-            static function (int $journalId, string $metaField): bool {
-                $count = DB::table('journal_meta')
-                    ->where('name', $metaField)
-                    ->where('transaction_journal_id', $journalId)
-                    ->whereNull('deleted_at')
-                    ->count()
-                ;
+        return new TwigFunction('journalHasMeta', static function (int $journalId, string $metaField): bool {
+            $count = DB::table('journal_meta')
+                ->where('name', $metaField)
+                ->where('transaction_journal_id', $journalId)
+                ->whereNull('deleted_at')
+                ->count()
+            ;
 
-                return 1 === $count;
-            }
-        );
+            return 1 === $count;
+        });
     }
 
     /**
@@ -173,7 +158,7 @@ class TransactionGroupTwig extends AbstractExtension
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             $colored = false;
         }
-        $result     = Amount::formatFlat($array['foreign_currency_symbol'], (int)$array['foreign_currency_decimal_places'], $amount, $colored);
+        $result     = Amount::formatFlat($array['foreign_currency_symbol'], (int) $array['foreign_currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }
@@ -231,7 +216,7 @@ class TransactionGroupTwig extends AbstractExtension
             $colored = false;
         }
 
-        $result     = Amount::formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
+        $result     = Amount::formatFlat($array['currency_symbol'], (int) $array['currency_decimal_places'], $amount, $colored);
         if (TransactionTypeEnum::TRANSFER->value === $type) {
             return sprintf('<span class="text-info money-transfer">%s</span>', $result);
         }

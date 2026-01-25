@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpgradesPrimaryCurrencyAmounts.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -26,9 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesPrimaryCurrencyAmounts extends Command
 {
@@ -55,7 +54,6 @@ class UpgradesPrimaryCurrencyAmounts extends Command
 
         $this->markAsExecuted();
 
-
         return 0;
     }
 
@@ -63,8 +61,7 @@ class UpgradesPrimaryCurrencyAmounts extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

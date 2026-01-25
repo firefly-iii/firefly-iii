@@ -52,17 +52,15 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $admin */
-                $admin                 = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $admin */
+            $admin                 = auth()->user();
 
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-                $this->groupRepository->setUser($admin);
+            $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+            $this->groupRepository->setUser($admin);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -84,6 +82,9 @@ class UpdateController extends Controller
         $applyRules        = $data['apply_rules'] ?? true;
         $fireWebhooks      = $data['fire_webhooks'] ?? true;
         $runRecalculations = $oldHash !== $newHash;
+
+        // FIXME responds to a single event.
+        // flags in array?
         event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $runRecalculations));
 
         /** @var User $admin */

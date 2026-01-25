@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountBalance.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -48,9 +47,6 @@ class AccountBalance extends Model
 
     protected function casts(): array
     {
-        return [
-            'date'    => SeparateTimezoneCaster::class,
-            'balance' => 'string',
-        ];
+        return ['date'    => SeparateTimezoneCaster::class, 'balance' => 'string'];
     }
 }

@@ -98,10 +98,7 @@ trait UserGroupTrait
      */
     public function setUserGroupById(int $userGroupId): void
     {
-        $memberships = GroupMembership::where('user_id', $this->user->id)
-            ->where('user_group_id', $userGroupId)
-            ->count()
-        ;
+        $memberships = GroupMembership::where('user_id', $this->user->id)->where('user_group_id', $userGroupId)->count();
         if (0 === $memberships) {
             throw new FireflyException(sprintf('User #%d has no access to administration #%d', $this->user->id, $userGroupId));
         }

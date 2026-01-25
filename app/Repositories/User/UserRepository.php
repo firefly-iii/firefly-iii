@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\User;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -33,10 +31,12 @@ use FireflyIII\Models\GroupMembership;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Models\Role;
 use FireflyIII\Models\UserGroup;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Override;
 use SensitiveParameter;
@@ -95,7 +95,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function createRole(string $name, string $displayName, string $description): Role
     {
-        return Role::create(['name' => $name, 'display_name' => $displayName, 'description' => $description]);
+        return Role::create(['name'         => $name, 'display_name' => $displayName, 'description'  => $description]);
     }
 
     public function deleteInvite(InvitedUser $invite): void
@@ -166,7 +166,6 @@ class UserRepository implements UserRepositoryInterface
         $role = $user->roles()->first();
 
         return $role?->name;
-
     }
 
     /**
@@ -201,12 +200,29 @@ class UserRepository implements UserRepositoryInterface
      */
     public function getUserData(User $user): array
     {
-        return ['has_2fa' => null !== $user->mfa_secret, 'is_admin' => $this->hasRole($user, 'owner'), 'blocked' => 1 === (int) $user->blocked, 'blocked_code' => $user->blocked_code, 'accounts' => $user->accounts()->count(), 'journals' => $user->transactionJournals()->count(), 'transactions' => $user->transactions()->count(), 'attachments' => $user->attachments()->count(), 'attachments_size' => $user->attachments()->sum('size'), 'bills' => $user->bills()->count(), 'categories' => $user->categories()->count(), 'budgets' => $user->budgets()->count(), 'budgets_with_limits' => BudgetLimit::distinct()
-            ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-            ->where('amount', '>', 0)
-            ->whereNull('budgets.deleted_at')
-            ->where('budgets.user_id', $user->id)
-            ->count('budget_limits.budget_id'), 'rule_groups' => $user->ruleGroups()->count(), 'rules' => $user->rules()->count(), 'tags' => $user->tags()->count()];
+        return [
+            'has_2fa'             => null !== $user->mfa_secret,
+            'is_admin'            => $this->hasRole($user, 'owner'),
+            'blocked'             => 1 === (int) $user->blocked,
+            'blocked_code'        => $user->blocked_code,
+            'accounts'            => $user->accounts()->count(),
+            'journals'            => $user->transactionJournals()->count(),
+            'transactions'        => $user->transactions()->count(),
+            'attachments'         => $user->attachments()->count(),
+            'attachments_size'    => $user->attachments()->sum('size'),
+            'bills'               => $user->bills()->count(),
+            'categories'          => $user->categories()->count(),
+            'budgets'             => $user->budgets()->count(),
+            'budgets_with_limits' => BudgetLimit::distinct()
+                ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+                ->where('amount', '>', 0)
+                ->whereNull('budgets.deleted_at')
+                ->where('budgets.user_id', $user->id)
+                ->count('budget_limits.budget_id'),
+            'rule_groups'         => $user->ruleGroups()->count(),
+            'rules'               => $user->rules()->count(),
+            'tags'                => $user->tags()->count(),
+        ];
     }
 
     public function hasRole(Authenticatable|User|null $user, string $role): bool
@@ -255,7 +271,7 @@ class UserRepository implements UserRepositoryInterface
         if (!$user instanceof User) {
             throw new FireflyException('User is not a User object.');
         }
-        $now                  = today(config('app.timezone'));
+        $now                  = now(config('app.timezone'));
         $now->addDays(2);
         $invitee              = new InvitedUser();
         $invitee->user()->associate($user);
@@ -289,14 +305,12 @@ class UserRepository implements UserRepositoryInterface
 
     public function store(array $data): User
     {
-        $user = User::create(
-            [
-                'blocked'      => $data['blocked'] ?? false,
-                'blocked_code' => $data['blocked_code'] ?? null,
-                'email'        => $data['email'],
-                'password'     => Str::random(24),
-            ]
-        );
+        $user = User::create([
+            'blocked'      => $data['blocked'] ?? false,
+            'blocked_code' => $data['blocked_code'] ?? null,
+            'email'        => $data['email'],
+            'password'     => Str::random(24),
+        ]);
         $role = $data['role'] ?? '';
         if ('' !== $role) {
             $this->attachRole($user, $role);
@@ -398,7 +412,11 @@ class UserRepository implements UserRepositoryInterface
     public function validateInviteCode(string $code): bool
     {
         $now     = today(config('app.timezone'));
-        $invitee = InvitedUser::where('invite_code', $code)->where('expires', '>', $now->format('Y-m-d H:i:s'))->where('redeemed', 0)->first();
+        $invitee = InvitedUser::where('invite_code', $code)
+            ->where('expires', '>', $now->format('Y-m-d H:i:s'))
+            ->where('redeemed', 0)
+            ->first()
+        ;
 
         return null !== $invitee;
     }

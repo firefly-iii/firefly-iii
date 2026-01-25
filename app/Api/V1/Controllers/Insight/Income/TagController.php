@@ -46,15 +46,13 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $user             = auth()->user();
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $user             = auth()->user();
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -100,7 +98,6 @@ class TagController extends Controller
             ];
             $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
-
         }
 
         return response()->json(array_values($response));
@@ -161,7 +158,10 @@ class TagController extends Controller
                         'currency_id'      => (string) $foreignCurrencyId,
                         'currency_code'    => $journal['foreign_currency_code'],
                     ];
-                    $response[$foreignKey]['difference']       = bcadd((string) $response[$foreignKey]['difference'], Steam::positive($journal['foreign_amount']));
+                    $response[$foreignKey]['difference']       = bcadd(
+                        (string) $response[$foreignKey]['difference'],
+                        Steam::positive($journal['foreign_amount'])
+                    );
                     $response[$foreignKey]['difference_float'] = (float) $response[$foreignKey]['difference'];
                 }
             }

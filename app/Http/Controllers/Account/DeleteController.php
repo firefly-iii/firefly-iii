@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -50,16 +50,14 @@ class DeleteController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -74,7 +72,7 @@ class DeleteController extends Controller
         }
 
         $typeName    = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
+        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name'    => $account->name]);
         $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         $objectType  = $typeName;
         unset($accountList[$account->id]);
@@ -82,7 +80,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('accounts.delete.url');
 
-        return view('accounts.delete', ['account' => $account, 'subTitle' => $subTitle, 'accountList' => $accountList, 'objectType' => $objectType]);
+        return view('accounts.delete', ['account'     => $account, 'subTitle'    => $subTitle, 'accountList' => $accountList, 'objectType'  => $objectType]);
     }
 
     /**

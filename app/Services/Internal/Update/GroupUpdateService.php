@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -58,15 +58,7 @@ class GroupUpdateService
             $oldTitle                = $transactionGroup->title;
             $transactionGroup->title = $data['group_title'];
             $transactionGroup->save();
-            event(
-                new TriggeredAuditLog(
-                    $transactionGroup->user,
-                    $transactionGroup,
-                    'update_group_title',
-                    $oldTitle,
-                    $data['group_title']
-                )
-            );
+            event(new TransactionGroupRequestsAuditLogEntry($transactionGroup->user, $transactionGroup, 'update_group_title', $oldTitle, $data['group_title']));
         }
 
         if (0 === count($transactions)) {
@@ -125,11 +117,8 @@ class GroupUpdateService
     /**
      * Update single journal.
      */
-    private function updateTransactionJournal(
-        TransactionGroup   $transactionGroup,
-        TransactionJournal $journal,
-        array              $data
-    ): void {
+    private function updateTransactionJournal(TransactionGroup $transactionGroup, TransactionJournal $journal, array $data): void
+    {
         Log::debug(sprintf('Now in %s', __METHOD__));
         if (0 === count($data)) {
             return;
@@ -174,9 +163,7 @@ class GroupUpdateService
                     Log::debug('No transaction type is indicated.');
 
                     /** @var null|TransactionJournal $randomJournal */
-                    $randomJournal = $transactionGroup->transactionJournals()->inRandomOrder()->with(
-                        ['transactionType']
-                    )->first();
+                    $randomJournal = $transactionGroup->transactionJournals()->inRandomOrder()->with(['transactionType'])->first();
                     if (null !== $randomJournal) {
                         $transaction['type'] = $randomJournal->transactionType->type;
                         Log::debug(sprintf('Transaction type set to %s.', $transaction['type']));
@@ -209,11 +196,7 @@ class GroupUpdateService
      */
     private function createTransactionJournal(TransactionGroup $transactionGroup, array $data): ?TransactionJournal
     {
-        $submission = [
-            'transactions' => [
-                $data,
-            ],
-        ];
+        $submission = ['transactions' => [$data]];
 
         /** @var TransactionJournalFactory $factory */
         $factory    = app(TransactionJournalFactory::class);
@@ -225,17 +208,11 @@ class GroupUpdateService
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
 
-            throw new FireflyException(
-                sprintf('Could not create new transaction journal: %s', $e->getMessage()),
-                0,
-                $e
-            );
+            throw new FireflyException(sprintf('Could not create new transaction journal: %s', $e->getMessage()), 0, $e);
         }
-        $collection->each(
-            static function (TransactionJournal $journal) use ($transactionGroup): void {
-                $transactionGroup->transactionJournals()->save($journal);
-            }
-        );
+        $collection->each(static function (TransactionJournal $journal) use ($transactionGroup): void {
+            $transactionGroup->transactionJournals()->save($journal);
+        });
         if (0 === $collection->count()) {
             return null;
         }

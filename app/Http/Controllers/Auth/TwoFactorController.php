@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
-use FireflyIII\Events\Security\MFABackupFewLeft;
-use FireflyIII\Events\Security\MFABackupNoLeft;
-use FireflyIII\Events\Security\MFAManyFailedAttempts;
-use FireflyIII\Events\Security\MFAUsedBackupCode;
+use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
+use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
+use FireflyIII\Events\Security\User\UserHasUsedBackupCode;
+use FireflyIII\Events\Security\User\UserKeepsFailingMFA;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -56,7 +56,7 @@ class TwoFactorController extends Controller
         $siteOwner = config('firefly.site_owner');
         $title     = (string) trans('firefly.two_factor_forgot_title');
 
-        return view('auth.lost-two-factor', ['user' => $user, 'siteOwner' => $siteOwner, 'title' => $title]);
+        return view('auth.lost-two-factor', ['user'      => $user, 'siteOwner' => $siteOwner, 'title'     => $title]);
     }
 
     /**
@@ -88,7 +88,7 @@ class TwoFactorController extends Controller
             if (3 === $counter || 10 === $counter) {
                 // do not reset MFA failure counter, but DO send a warning to the user.
                 Log::channel('audit')->info(sprintf('User "%s" has had %d failed MFA attempts.', $user->email, $counter));
-                event(new MFAManyFailedAttempts($user, $counter));
+                event(new UserKeepsFailingMFA($user, $counter));
             }
             unset($user);
         }
@@ -116,7 +116,7 @@ class TwoFactorController extends Controller
             // send user notification.
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used a backup code.', $user->email));
-            event(new MFAUsedBackupCode($user));
+            event(new UserHasUsedBackupCode($user));
 
             return redirect(route('home'));
         }
@@ -136,7 +136,7 @@ class TwoFactorController extends Controller
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
-            if ($code === $mfaCode && $now - $time <= 300) {
+            if ($code === $mfaCode && ($now - $time) <= 300) {
                 return true;
             }
         }
@@ -156,11 +156,8 @@ class TwoFactorController extends Controller
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
-            if ($now - $time <= 300) {
-                $newHistory[] = [
-                    'time' => $time,
-                    'code' => $code,
-                ];
+            if (($now - $time) <= 300) {
+                $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
         Preferences::set('mfa_history', $newHistory);
@@ -186,10 +183,7 @@ class TwoFactorController extends Controller
     {
         /** @var array $mfaHistory */
         $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = [
-            'time' => Carbon::now()->getTimestamp(),
-            'code' => $mfaCode,
-        ];
+        $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
         Preferences::set('mfa_history', $mfaHistory);
@@ -230,13 +224,13 @@ class TwoFactorController extends Controller
         if (count($newList) <= 3 && count($newList) > 0) {
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used a backup code. They have %d backup codes left.', $user->email, count($newList)));
-            event(new MFABackupFewLeft($user, count($newList)));
+            event(new UserHasFewMFABackupCodesLeft($user, count($newList)));
         }
         // if the list is empty, send notification
         if (0 === count($newList)) {
             $user = auth()->user();
             Log::channel('audit')->info(sprintf('User "%s" has used their last backup code.', $user->email));
-            event(new MFABackupNoLeft($user));
+            event(new UserHasNoMFABackupCodesLeft($user));
         }
 
         Preferences::set('mfa_recovery', $newList);

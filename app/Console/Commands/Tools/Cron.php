@@ -33,10 +33,10 @@ use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class Cron extends Command
 {
@@ -58,11 +58,11 @@ class Cron extends Command
     public function handle(): int
     {
         $doAll = !$this->option('download-cer')
-                 && !$this->option('create-recurring')
-                 && !$this->option('create-auto-budgets')
-                 && !$this->option('send-subscription-warnings')
-                 && !$this->option('check-version')
-                 && !$this->option('send-webhook-messages');
+        && !$this->option('create-recurring')
+        && !$this->option('create-auto-budgets')
+        && !$this->option('send-subscription-warnings')
+        && !$this->option('check-version')
+        && !$this->option('send-webhook-messages');
         $date  = null;
 
         try {

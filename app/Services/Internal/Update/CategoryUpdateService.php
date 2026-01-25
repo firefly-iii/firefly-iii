@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
@@ -32,6 +31,7 @@ use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class CategoryUpdateService

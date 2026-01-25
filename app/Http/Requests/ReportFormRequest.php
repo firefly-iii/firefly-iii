@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -32,6 +31,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Request\ChecksLogin;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -248,9 +248,7 @@ class ReportFormRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'report_type' => 'in:audit,default,category,budget,tag,double',
-        ];
+        return ['report_type' => 'in:audit,default,category,budget,tag,double'];
     }
 
     public function withValidator(Validator $validator): void

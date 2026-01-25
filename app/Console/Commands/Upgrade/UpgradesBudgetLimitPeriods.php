@@ -26,9 +26,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesBudgetLimitPeriods extends Command
 {
@@ -110,7 +110,11 @@ class UpgradesBudgetLimitPeriods extends Command
             return 'daily';
         }
         // is weekly
-        if ('1' === $limit->start_date->format('N') && '7' === $limit->end_date->format('N') && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)) {
+        if (
+            '1' === $limit->start_date->format('N')
+            && '7' === $limit->end_date->format('N')
+            && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)
+        ) {
             return 'weekly';
         }
 

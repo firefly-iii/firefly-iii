@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 use function Safe\json_encode;
 
@@ -41,11 +41,11 @@ class UniqueAccountNumber implements ValidationRule
     /**
      * Create a new rule instance.
      */
-    public function __construct(private readonly ?Account $account, private ?string $expectedType)
-    {
-        app('log')
-            ->debug('Constructed UniqueAccountNumber')
-        ;
+    public function __construct(
+        private readonly ?Account $account,
+        private ?string $expectedType
+    ) {
+        app('log')->debug('Constructed UniqueAccountNumber');
         // a very basic fix to make sure we get the correct account type:
         if ('expense' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::EXPENSE->value;
@@ -90,15 +90,13 @@ class UniqueAccountNumber implements ValidationRule
             $count = $this->countHits($type, $value);
             Log::debug(sprintf('Count for "%s" and account number "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                Log::debug(
-                    sprintf(
-                        'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
-                        $value,
-                        $count,
-                        $type,
-                        $this->expectedType
-                    )
-                );
+                Log::debug(sprintf(
+                    'account number "%s" is in use with %d account(s) of type "%s", which is too much for expected type "%s"',
+                    $value,
+                    $count,
+                    $type,
+                    $this->expectedType
+                ));
 
                 $fail('validation.unique_account_number_for_user')->translate();
 
@@ -110,11 +108,7 @@ class UniqueAccountNumber implements ValidationRule
 
     private function getMaxOccurrences(): array
     {
-        $maxCounts = [
-            AccountTypeEnum::ASSET->value   => 0,
-            AccountTypeEnum::EXPENSE->value => 0,
-            AccountTypeEnum::REVENUE->value => 0,
-        ];
+        $maxCounts = [AccountTypeEnum::ASSET->value   => 0, AccountTypeEnum::EXPENSE->value => 0, AccountTypeEnum::REVENUE->value => 0];
 
         if ('expense' === $this->expectedType || AccountTypeEnum::EXPENSE->value === $this->expectedType) {
             // IBAN should be unique amongst expense and asset accounts.

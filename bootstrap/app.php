@@ -21,11 +21,36 @@
 
 declare(strict_types=1);
 
-use Illuminate\Foundation\Application;
-use Illuminate\Contracts\Http\Kernel;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use FireflyIII\Exceptions\Handler;
-use function Safe\realpath;
+use FireflyIII\Http\Middleware\AcceptHeaders;
+use FireflyIII\Http\Middleware\Authenticate;
+use FireflyIII\Http\Middleware\Binder;
+use FireflyIII\Http\Middleware\EncryptCookies;
+use FireflyIII\Http\Middleware\Installer;
+use FireflyIII\Http\Middleware\InterestingMessage;
+use FireflyIII\Http\Middleware\IsAdmin;
+use FireflyIII\Http\Middleware\Range;
+use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
+use FireflyIII\Http\Middleware\SecureHeaders;
+use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\TrustProxies;
+use FireflyIII\Http\Middleware\VerifyCsrfToken;
+use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Contracts\Http\Kernel;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
+use Illuminate\Foundation\Http\Middleware\InvokeDeferredCallbacks;
+use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
+use Illuminate\Foundation\Http\Middleware\TrimStrings;
+use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Http\Middleware\ValidatePostSize;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use PragmaRX\Google2FALaravel\Middleware as MFAMiddleware;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,9 +88,126 @@ if (!function_exists('stringIsEqual')) {
     }
 }
 
-$app = new Application(
-    realpath(__DIR__ . '/../')
-);
+//$app = new Application(
+//    realpath(__DIR__ . '/../')
+//);
+
+
+$app = Application::configure(basePath: dirname(__DIR__))
+                  ->withRouting(
+                      web     : __DIR__ . '/../routes/web.php',
+                      commands: __DIR__ . '/../routes/console.php',
+                      health  : '/up',
+                  )
+                  ->withMiddleware(function (Middleware $middleware): void {
+                      // overrule the standard middleware
+                      $middleware->use([
+                                           InvokeDeferredCallbacks::class,
+                                           // \Illuminate\Http\Middleware\TrustHosts::class,
+                                           TrustProxies::class,
+                                           HandleCors::class,
+                                           PreventRequestsDuringMaintenance::class,
+                                           ValidatePostSize::class,
+                                           TrimStrings::class,
+                                           ConvertEmptyStringsToNull::class,
+                                           SecureHeaders::class,
+                                       ]);
+
+                      // overrule the web group
+                      $middleware->group('web', [
+                          Illuminate\Cookie\Middleware\EncryptCookies::class,
+                          Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          Illuminate\View\Middleware\ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Illuminate\Routing\Middleware\SubstituteBindings::class,
+                          CreateFreshApiToken::class,
+                      ]);
+                      // new group?
+                      $middleware->appendToGroup('binders-only', [Installer::class, EncryptCookies::class, AddQueuedCookiesToResponse::class, Binder::class]);
+
+                      //
+                      $middleware->appendToGroup('user-not-logged-in', [
+                          Installer::class,
+                          EncryptCookies::class,
+                          AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Binder::class,
+                          RedirectIfAuthenticated::class,
+                      ]);
+
+                      // more
+                      $middleware->appendToGroup('user-logged-in-no-2fa', [
+                          Installer::class,
+                          EncryptCookies::class,
+                          AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Binder::class,
+                          Authenticate::class,
+                      ]);
+
+                      // simple auth
+                      $middleware->appendToGroup('user-simple-auth', [
+                          EncryptCookies::class,
+                          AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Binder::class,
+                          Authenticate::class,
+                      ]);
+
+                      // user full auth
+                      $middleware->appendToGroup('user-full-auth', [
+                          EncryptCookies::class,
+                          AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Authenticate::class,
+                          MFAMiddleware::class,
+                          Range::class,
+                          Binder::class,
+                          InterestingMessage::class,
+                          CreateFreshApiToken::class,
+                      ]);
+
+                      // admin
+                      $middleware->appendToGroup('admin', [
+                          EncryptCookies::class,
+                          AddQueuedCookiesToResponse::class,
+                          StartFireflySession::class,
+                          ShareErrorsFromSession::class,
+                          VerifyCsrfToken::class,
+                          Authenticate::class,
+                          // AuthenticateTwoFactor::class,
+                          IsAdmin::class,
+                          Range::class,
+                          Binder::class,
+                          CreateFreshApiToken::class,
+                      ]);
+
+                      // api
+                      $middleware->appendToGroup('api', [AcceptHeaders::class, EnsureFrontendRequestsAreStateful::class, 'auth:api,sanctum', Binder::class]);
+                      // api basic,
+                      $middleware->appendToGroup('api_basic', [AcceptHeaders::class, Binder::class]);
+
+                  })
+                  ->withEvents(discover: [
+                                             __DIR__ . '/../app/Listeners',
+                                         ])
+                  ->withExceptions(function (Exceptions $exceptions): void {
+                      //
+                  })->create();
+
+
+//$app->withEvents(discover: [
+//                           __DIR__.'/../app/Domain/Orders/Listeners',
+//                       ]);
 
 /*
 |--------------------------------------------------------------------------

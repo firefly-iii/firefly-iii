@@ -79,7 +79,8 @@ class CorrectsUnevenAmount extends Command
             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
             ->whereNotNull('foreign_currency_id')
-            ->whereNotNull('foreign_amount')->get(['transactions.transaction_journal_id'])
+            ->whereNotNull('foreign_amount')
+            ->get(['transactions.transaction_journal_id'])
         ;
         $count        = 0;
 
@@ -133,16 +134,22 @@ class CorrectsUnevenAmount extends Command
     private function fixUnevenAmounts(): void
     {
         Log::debug('fixUnevenAmounts()');
-        $journals = DB::table('transactions')->groupBy('transaction_journal_id')->whereNull('deleted_at')->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')]);
+        $journals = DB::table('transactions')
+            ->groupBy('transaction_journal_id')
+            ->whereNull('deleted_at')
+            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
+        ;
 
         /** @var stdClass $entry */
         foreach ($journals as $entry) {
             $sum = (string) $entry->the_sum;
             $sum = Steam::floatalize($sum);
-            if (!is_numeric($sum)
+            if (
+                !is_numeric($sum)
                 || '' === $sum // @phpstan-ignore-line
                 || str_contains($sum, 'e')
-                || str_contains($sum, ',')) {
+                || str_contains($sum, ',')
+            ) {
                 $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->friendlyWarning($message);
                 Log::warning($message);
@@ -177,7 +184,11 @@ class CorrectsUnevenAmount extends Command
         $source              = $journal->transactions()->where('amount', '<', 0)->first();
 
         if (null === $source) {
-            $this->friendlyError(sprintf('Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
+            $this->friendlyError(sprintf(
+                'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
+                $journal->id ?? 0,
+                $journal->description ?? ''
+            ));
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
             ++$this->count;
@@ -192,7 +203,11 @@ class CorrectsUnevenAmount extends Command
         $destination         = $journal->transactions()->where('amount', '>', 0)->first();
 
         if (null === $destination) {
-            $this->friendlyError(sprintf('Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.', $journal->id ?? 0, $journal->description ?? ''));
+            $this->friendlyError(sprintf(
+                'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
+                $journal->id ?? 0,
+                $journal->description ?? ''
+            ));
 
             Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
             TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
@@ -242,7 +257,8 @@ class CorrectsUnevenAmount extends Command
         //        Log::debug(sprintf('[b] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($destination->amount), \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount))));
         //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
         //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
-        return 0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
+        return
+            0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
             && $source->transaction_currency_id === $destination->foreign_currency_id
             && 0 === bccomp(Steam::positive($destination->amount), Steam::positive($source->foreign_amount))
             && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id;
@@ -250,10 +266,11 @@ class CorrectsUnevenAmount extends Command
 
     private function matchCurrencies(): void
     {
-        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->where('transactions.transaction_currency_id', '!=', DB::raw('transaction_journals.transaction_currency_id'))
-            ->get(['transaction_journals.*'])
-        ;
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')->where(
+            'transactions.transaction_currency_id',
+            '!=',
+            DB::raw('transaction_journals.transaction_currency_id')
+        )->get(['transaction_journals.*']);
 
         $count    = 0;
 
@@ -320,7 +337,6 @@ class CorrectsUnevenAmount extends Command
 
     private function convertOldStyleTransactions(): void
     {
-
         /** @var AccountRepositoryInterface $repository */
         $repository   = app(AccountRepositoryInterface::class);
         Log::debug('convertOldStyleTransactions()');
@@ -333,7 +349,12 @@ class CorrectsUnevenAmount extends Command
             ->whereNot('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
             ->whereNotNull('foreign_currency_id')
             ->whereNotNull('foreign_amount')
-            ->whereIn('account_types.type', [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value])
+            ->whereIn('account_types.type', [
+                AccountTypeEnum::ASSET->value,
+                AccountTypeEnum::DEBT->value,
+                AccountTypeEnum::MORTGAGE->value,
+                AccountTypeEnum::LOAN->value,
+            ])
             ->get(['transactions.transaction_journal_id'])
         ;
 
@@ -348,7 +369,7 @@ class CorrectsUnevenAmount extends Command
                 continue;
             }
             if (!$this->isBetweenAssetAndLiability($journal)) {
-                Log::debug('Not between asset and liability, continue.');
+                // Log::debug('Not between asset and liability, continue.');
 
                 continue;
             }
@@ -363,7 +384,10 @@ class CorrectsUnevenAmount extends Command
 
                 continue;
             }
-            if (0 === bccomp((string) $source->amount, (string) $source->foreign_amount) && 0 === bccomp((string) $source->foreign_amount, (string) $source->amount)) {
+            if (
+                0 === bccomp((string) $source->amount, (string) $source->foreign_amount)
+                && 0 === bccomp((string) $source->foreign_amount, (string) $source->amount)
+            ) {
                 Log::debug('Already fixed, continue.');
 
                 continue;
@@ -400,12 +424,12 @@ class CorrectsUnevenAmount extends Command
                 $destination->balance_dirty           = true;
                 $destination->saveQuietly();
                 $destination->refresh();
+
                 //                Log::debug(sprintf('destination->amount                  = %s', $destination->amount));
                 //                Log::debug(sprintf('destination->transaction_currency_id = %s', $destination->transaction_currency_id));
                 //                Log::debug(sprintf('destination->foreign_amount          = %s', $destination->foreign_amount));
                 //                Log::debug(sprintf('destination->foreign_currency_id     = %s', $destination->foreign_currency_id));
             }
-
 
             //            // only fix the destination transaction
             //            $destination->foreign_currency_id     = $source->transaction_currency_id;

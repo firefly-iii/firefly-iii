@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Account;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -32,6 +31,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Debug\Timer;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
@@ -64,16 +64,14 @@ class ShowController extends Controller
         app('view')->share('showCategory', true);
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
 
-                $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -85,8 +83,12 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
-    public function show(Request $request, Account $account, ?Carbon $start = null, ?Carbon $end = null): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
-    {
+    public function show(
+        Request $request,
+        Account $account,
+        ?Carbon $start = null,
+        ?Carbon $end = null
+    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
         if (0 === $account->id) {
             throw new NotFoundHttpException();
         }
@@ -119,7 +121,7 @@ class ShowController extends Controller
         $currency         = $accountCurrency ?? $this->primaryCurrency;
         $fStart           = $start->isoFormat($this->monthAndDayFormat);
         $fEnd             = $end->isoFormat($this->monthAndDayFormat);
-        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $subTitle         = (string) trans('firefly.journals_in_period_for_account', ['name'  => $account->name, 'start' => $fStart, 'end'   => $fEnd]);
         $chartUrl         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
 
@@ -160,7 +162,6 @@ class ShowController extends Controller
         $collector->setExpandGroupSearch(true);
         $groups           = $collector->getPaginatedGroups();
 
-
         Log::debug('End collect transactions');
         $timer->stop('collection');
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
@@ -174,7 +175,23 @@ class ShowController extends Controller
         $balances         = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
         // $balances         = Steam::filterAccountBalance(Steam::finalAccountBalance($account, $now), $account, $this->convertToPrimary, $accountCurrency);
 
-        return view('accounts.show', ['account' => $account, 'showAll' => $showAll, 'objectType' => $objectType, 'currency' => $currency, 'today' => $today, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'attachments' => $attachments, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'chartUrl' => $chartUrl, 'location' => $location, 'balances' => $balances]);
+        return view('accounts.show', [
+            'account'      => $account,
+            'showAll'      => $showAll,
+            'objectType'   => $objectType,
+            'currency'     => $currency,
+            'today'        => $today,
+            'periods'      => $periods,
+            'subTitleIcon' => $subTitleIcon,
+            'groups'       => $groups,
+            'attachments'  => $attachments,
+            'subTitle'     => $subTitle,
+            'start'        => $start,
+            'end'          => $end,
+            'chartUrl'     => $chartUrl,
+            'location'     => $location,
+            'balances'     => $balances,
+        ]);
     }
 
     /**
@@ -202,7 +219,7 @@ class ShowController extends Controller
         $page         = (int) $request->get('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
-        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
+        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name'     => $account->name]);
         $periods      = new Collection();
 
         $end->endOfDay();
@@ -232,6 +249,23 @@ class ShowController extends Controller
         // $balances        = Steam::filterAccountBalance($balances, $account, $this->convertToPrimary, $accountCurrency);
         $balances     = Steam::accountsBalancesOptimized(new Collection()->push($account), $now)[$account->id];
 
-        return view('accounts.show', ['account' => $account, 'showAll' => $showAll, 'location' => $location, 'objectType' => $objectType, 'isLiability' => $isLiability, 'attachments' => $attachments, 'currency' => $currency, 'today' => $today, 'chartUrl' => $chartUrl, 'periods' => $periods, 'subTitleIcon' => $subTitleIcon, 'groups' => $groups, 'subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'balances' => $balances]);
+        return view('accounts.show', [
+            'account'      => $account,
+            'showAll'      => $showAll,
+            'location'     => $location,
+            'objectType'   => $objectType,
+            'isLiability'  => $isLiability,
+            'attachments'  => $attachments,
+            'currency'     => $currency,
+            'today'        => $today,
+            'chartUrl'     => $chartUrl,
+            'periods'      => $periods,
+            'subTitleIcon' => $subTitleIcon,
+            'groups'       => $groups,
+            'subTitle'     => $subTitle,
+            'start'        => $start,
+            'end'          => $end,
+            'balances'     => $balances,
+        ]);
     }
 }

@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionType;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class TransactionTypeRepository

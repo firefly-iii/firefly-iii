@@ -56,15 +56,13 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string)trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->repository = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->repository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -80,7 +78,6 @@ class IndexController extends Controller
         $collection  = $this->repository->getBills();
         $total       = $collection->count();
 
-
         $parameters  = new ParameterBag();
 
         // enrich
@@ -91,7 +88,6 @@ class IndexController extends Controller
         $enrichment->setStart($start->clone());
         $enrichment->setEnd($end);
         $collection  = $enrichment->enrich($collection);
-
 
         $parameters->set('start', $start->clone());
         $parameters->set('end', $end);
@@ -106,18 +102,12 @@ class IndexController extends Controller
         $rules       = $this->repository->getRulesForBills($collection);
 
         // make bill groups:
-        $bills       = [
-            0 => [ // the index is the order, not the ID.
-                'object_group_id'    => 0,
-                'object_group_title' => (string)trans('firefly.default_group_title_name'),
-                'bills'              => [],
-            ],
-        ];
+        $bills       = [0 => ['object_group_id'    => 0, 'object_group_title' => (string) trans('firefly.default_group_title_name'), 'bills'              => []]]; // the index is the order, not the ID.
 
         /** @var Bill $bill */
         foreach ($collection as $bill) {
             $array                            = $transformer->transform($bill);
-            $groupOrder                       = (int)$array['object_group_order'];
+            $groupOrder                       = (int) $array['object_group_order'];
             // make group array if necessary:
             $bills[$groupOrder] ??= [
                 'object_group_id'    => $array['object_group_id'],
@@ -143,7 +133,7 @@ class IndexController extends Controller
         $totals      = $this->getTotals($sums);
         $today       = now()->startOfDay();
 
-        return view('bills.index', ['bills' => $bills, 'sums' => $sums, 'total' => $total, 'totals' => $totals, 'today' => $today]);
+        return view('bills.index', ['bills'  => $bills, 'sums'   => $sums, 'total'  => $total, 'totals' => $totals, 'today'  => $today]);
     }
 
     private function getSums(array $bills): array
@@ -183,12 +173,17 @@ class IndexController extends Controller
                     'period'                  => $range,
                     'per_period'              => '0',
                 ];
-                Log::debug(sprintf('Start with avg:%s, total_left_to_pay:%s, per_period:%s', $sums[$groupOrder][$currencyId]['avg'], $sums[$groupOrder][$currencyId]['total_left_to_pay'], $sums[$groupOrder][$currencyId]['per_period']));
+                Log::debug(sprintf(
+                    'Start with avg:%s, total_left_to_pay:%s, per_period:%s',
+                    $sums[$groupOrder][$currencyId]['avg'],
+                    $sums[$groupOrder][$currencyId]['total_left_to_pay'],
+                    $sums[$groupOrder][$currencyId]['per_period']
+                ));
 
                 // only fill in avg when bill is active.
                 if (null !== $bill['next_expected_match']) {
-                    $avg                                   = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
-                    $avg                                   = bcmul($avg, (string)count($bill['pay_dates']));
+                    $avg                                   = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                    $avg                                   = bcmul($avg, (string) count($bill['pay_dates']));
                     $sums[$groupOrder][$currencyId]['avg'] = bcadd($sums[$groupOrder][$currencyId]['avg'], $avg);
                     Log::debug(sprintf('next expected match is "%s", avg is now %s', $bill['next_expected_match'], $sums[$groupOrder][$currencyId]['avg']));
 
@@ -197,10 +192,20 @@ class IndexController extends Controller
                     if (count($bill['paid_dates']) < count($bill['pay_dates'])) {
                         $count = count($bill['pay_dates']) - count($bill['paid_dates']);
                         if ($count > 0) {
-                            $avg                                                 = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
-                            $avg                                                 = bcmul($avg, (string)$count);
+                            $avg                                                 = bcdiv(
+                                bcadd((string) $bill['amount_min'], (string) $bill['amount_max']),
+                                '2'
+                            );
+                            $avg                                                 = bcmul($avg, (string) $count);
                             $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
-                            Log::debug(sprintf('Bill has %d dates that need payment, total left to pay is now %s', $count, $sums[$groupOrder][$currencyId]['total_left_to_pay']), $bill['pay_dates']);
+                            Log::debug(
+                                sprintf(
+                                    'Bill has %d dates that need payment, total left to pay is now %s',
+                                    $count,
+                                    $sums[$groupOrder][$currencyId]['total_left_to_pay']
+                                ),
+                                $bill['pay_dates']
+                            );
                         }
                     }
                 }
@@ -217,21 +222,14 @@ class IndexController extends Controller
 
     private function amountPerPeriod(array $bill, string $range): string
     {
-        $avg        = bcdiv(bcadd((string)$bill['amount_min'], (string)$bill['amount_max']), '2');
+        $avg        = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
 
         Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
         Log::debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
-        $multiplies = [
-            'yearly'    => '1',
-            'half-year' => '2',
-            'quarterly' => '4',
-            'monthly'   => '12',
-            'weekly'    => '52.17',
-            'daily'     => '365.24',
-        ];
-        $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
-        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string)($bill['skip'] + 1)));
+        $multiplies = ['yearly'    => '1', 'half-year' => '2', 'quarterly' => '4', 'monthly'   => '12', 'weekly'    => '52.17', 'daily'     => '365.24'];
+        $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string) ($bill['skip'] + 1)));
+        Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string) ($bill['skip'] + 1)));
 
         // per period:
         $division   = [
@@ -282,8 +280,8 @@ class IndexController extends Controller
                     'period'                  => $entry['period'],
                     'per_period'              => '0',
                 ];
-                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], (string)$entry['avg']);
-                $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], (string)$entry['per_period']);
+                $totals[$currencyId]['avg']        = bcadd($totals[$currencyId]['avg'], (string) $entry['avg']);
+                $totals[$currencyId]['per_period'] = bcadd($totals[$currencyId]['per_period'], (string) $entry['per_period']);
             }
         }
 
@@ -295,8 +293,8 @@ class IndexController extends Controller
      */
     public function setOrder(Request $request, Bill $bill): JsonResponse
     {
-        $objectGroupTitle = (string)$request->get('objectGroupTitle');
-        $newOrder         = (int)$request->get('order');
+        $objectGroupTitle = (string) $request->get('objectGroupTitle');
+        $newOrder         = (int) $request->get('order');
         $this->repository->setOrder($bill, $newOrder);
         if ('' !== $objectGroupTitle) {
             $this->repository->setObjectGroup($bill, $objectGroupTitle);

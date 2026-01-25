@@ -43,11 +43,7 @@ class UpdateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'    => $this->convertString('name'),
-            'outward' => $this->convertString('outward'),
-            'inward'  => $this->convertString('inward'),
-        ];
+        return ['name'    => $this->convertString('name'), 'outward' => $this->convertString('outward'), 'inward'  => $this->convertString('inward')];
     }
 
     /**

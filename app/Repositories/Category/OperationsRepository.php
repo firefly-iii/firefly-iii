@@ -196,8 +196,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
-            ->setDestinationAccounts($accounts)->excludeSourceAccounts($accounts)
+        $collector
+            ->setUser($this->user)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
+            ->setDestinationAccounts($accounts)
+            ->excludeSourceAccounts($accounts)
         ;
         if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
@@ -259,8 +263,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value])
-            ->setSourceAccounts($accounts)->excludeDestinationAccounts($accounts)
+        $collector
+            ->setUser($this->user)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::TRANSFER->value])
+            ->setSourceAccounts($accounts)
+            ->excludeDestinationAccounts($accounts)
         ;
         if ($categories instanceof Collection && $categories->count() > 0) {
             $collector->setCategories($categories);
@@ -348,9 +356,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -417,9 +423,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::TRANSFER->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -469,9 +473,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::DEPOSIT->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
@@ -488,9 +490,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)->setRange($start, $end)
-            ->setTypes([TransactionTypeEnum::TRANSFER->value])
-        ;
+        $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::TRANSFER->value]);
 
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);

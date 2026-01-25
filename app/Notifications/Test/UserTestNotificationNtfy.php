@@ -42,8 +42,7 @@ class UserTestNotificationNtfy extends Notification
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     //    public function toNtfy(User $user): Message
@@ -57,7 +56,6 @@ class UserTestNotificationNtfy extends Notification
     //
     //        return $message;
     //    }
-
     //    public function via(User $user): array
     //    {
     //        return [NtfyChannel::class];

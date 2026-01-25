@@ -24,17 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
+use Deprecated;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Override;
-use Deprecated;
 
 /**
  * Class NoBudgetRepository

@@ -65,13 +65,7 @@ class CategoryFactory
             }
 
             try {
-                return Category::create(
-                    [
-                        'user_id'       => $this->user->id,
-                        'user_group_id' => $this->user->user_group_id,
-                        'name'          => $categoryName,
-                    ]
-                );
+                return Category::create(['user_id'       => $this->user->id, 'user_group_id' => $this->user->user_group_id, 'name'          => $categoryName]);
             } catch (QueryException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
@@ -86,7 +80,11 @@ class CategoryFactory
     public function findByName(string $name): ?Category
     {
         /** @var null|Category */
-        return $this->user->categories()->where('name', $name)->first();
+        return $this->user
+            ->categories()
+            ->where('name', $name)
+            ->first()
+        ;
     }
 
     public function setUser(User $user): void

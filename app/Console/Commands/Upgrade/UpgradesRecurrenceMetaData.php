@@ -28,8 +28,8 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceTransactionMeta;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 use function Safe\json_encode;
 
@@ -68,8 +68,7 @@ class UpgradesRecurrenceMetaData extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function migrateMetaData(): int
@@ -104,13 +103,7 @@ class UpgradesRecurrenceMetaData extends Command
             $value = json_encode($array, JSON_THROW_ON_ERROR);
         }
 
-        RecurrenceTransactionMeta::create(
-            [
-                'rt_id' => $firstTransaction->id,
-                'name'  => $meta->name,
-                'value' => $value,
-            ]
-        );
+        RecurrenceTransactionMeta::create(['rt_id' => $firstTransaction->id, 'name'  => $meta->name, 'value' => $value]);
         $meta->forceDelete();
 
         return 1;

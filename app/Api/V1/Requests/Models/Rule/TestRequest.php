@@ -39,12 +39,7 @@ class TestRequest extends FormRequest
 
     public function getTestParameters(): array
     {
-        return [
-            'page'     => $this->getPage(),
-            'start'    => $this->getDate('start'),
-            'end'      => $this->getDate('end'),
-            'accounts' => $this->getAccounts(),
-        ];
+        return ['page'     => $this->getPage(), 'start'    => $this->getDate('start'), 'end'      => $this->getDate('end'), 'accounts' => $this->getAccounts()];
     }
 
     private function getPage(): int

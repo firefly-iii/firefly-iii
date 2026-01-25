@@ -53,10 +53,13 @@ class BudgetLimit extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $budgetLimitId = (int)$value;
+            $budgetLimitId = (int) $value;
             $budgetLimit   = self::where('budget_limits.id', $budgetLimitId)
                 ->leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
                 ->where('budgets.user_id', auth()->user()->id)
@@ -93,16 +96,12 @@ class BudgetLimit extends Model
      */
     protected function amount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function budgetId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -120,8 +119,6 @@ class BudgetLimit extends Model
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

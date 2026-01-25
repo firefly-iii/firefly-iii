@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Profile;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
-use FireflyIII\Events\Security\DisabledMFA;
-use FireflyIII\Events\Security\EnabledMFA;
-use FireflyIII\Events\Security\MFANewBackupCodes;
+use FireflyIII\Events\Security\User\UserHasDisabledMFA;
+use FireflyIII\Events\Security\User\UserHasEnabledMFA;
+use FireflyIII\Events\Security\User\UserHasGeneratedNewBackupCodes;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Requests\ExistingTokenFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -69,20 +69,17 @@ class MfaController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.profile'));
-                app('view')->share('mainTitleIcon', 'fa-user');
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.profile'));
+            app('view')->share('mainTitleIcon', 'fa-user');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         $authGuard          = config('firefly.authentication_guard');
         $this->internalAuth = 'web' === $authGuard;
         Log::debug(sprintf('ProfileController::__construct(). Authentication guard is "%s"', $authGuard));
 
         $this->middleware(IsDemoUser::class)->except(['index']);
-
     }
 
     public function backupCodes(Request $request): Factory|RedirectResponse|View
@@ -117,12 +114,7 @@ class MfaController extends Controller
         }
         // generate recovery codes:
         $recovery      = app(Recovery::class);
-        $recoveryCodes = $recovery->lowercase()
-            ->setCount(8)     // Generate 8 codes
-            ->setBlocks(2)    // Every code must have 2 blocks
-            ->setChars(6)     // Each block must have 6 chars
-            ->toArray()
-        ;
+        $recoveryCodes = $recovery->lowercase()->setCount(8)->setBlocks(2)->setChars(6)->toArray(); // Generate 8 codes // Every code must have 2 blocks // Each block must have 6 chars
         $codes         = implode("\r\n", $recoveryCodes);
 
         Preferences::set('mfa_recovery', $recoveryCodes);
@@ -131,10 +123,9 @@ class MfaController extends Controller
         // send user notification.
         $user          = auth()->user();
         Log::channel('audit')->info(sprintf('User "%s" has generated new backup codes.', $user->email));
-        event(new MFANewBackupCodes($user));
+        event(new UserHasGeneratedNewBackupCodes($user));
 
         return view('profile.mfa.backup-codes-post')->with(['codes' => $codes]);
-
     }
 
     public function disableMFA(Request $request): Factory|RedirectResponse|View
@@ -153,7 +144,7 @@ class MfaController extends Controller
         $subTitle     = (string) trans('firefly.mfa_index_title');
         $subTitleIcon = 'fa-calculator';
 
-        return view('profile.mfa.disable-mfa')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
+        return view('profile.mfa.disable-mfa')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
     }
 
     /**
@@ -187,7 +178,7 @@ class MfaController extends Controller
 
         // send user notification.
         Log::channel('audit')->info(sprintf('User "%s" has disabled MFA', $user->email));
-        event(new DisabledMFA($user));
+        event(new UserHasDisabledMFA($user));
 
         return redirect(route('profile.index'));
     }
@@ -221,9 +212,7 @@ class MfaController extends Controller
 
         Preferences::set('temp-mfa-secret', $secret);
 
-
-        return view('profile.mfa.enable-mfa', ['image' => $image, 'secret' => $secret]);
-
+        return view('profile.mfa.enable-mfa', ['image'  => $image, 'secret' => $secret]);
     }
 
     /**
@@ -245,7 +234,7 @@ class MfaController extends Controller
 
         // verify password.
         $password   = $request->get('password');
-        if (!auth()->validate(['email' => $user->email, 'password' => $password])) {
+        if (!auth()->validate(['email'    => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
             return redirect(route('profile.mfa.index'));
@@ -280,7 +269,7 @@ class MfaController extends Controller
 
         // send user notification.
         Log::channel('audit')->info(sprintf('User "%s" has enabled MFA', $user->email));
-        event(new EnabledMFA($user));
+        event(new UserHasEnabledMFA($user));
 
         return redirect(route('profile.mfa.backup-codes'));
     }
@@ -295,10 +284,7 @@ class MfaController extends Controller
     {
         /** @var array $mfaHistory */
         $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = [
-            'time' => Carbon::now()->getTimestamp(),
-            'code' => $mfaCode,
-        ];
+        $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
         $mfaHistory[] = $entry;
 
         Preferences::set('mfa_history', $mfaHistory);
@@ -317,11 +303,8 @@ class MfaController extends Controller
         foreach ($mfaHistory as $entry) {
             $time = $entry['time'];
             $code = $entry['code'];
-            if ($now - $time <= 300) {
-                $newHistory[] = [
-                    'time' => $time,
-                    'code' => $code,
-                ];
+            if (($now - $time) <= 300) {
+                $newHistory[] = ['time' => $time, 'code' => $code];
             }
         }
         Preferences::set('mfa_history', $newHistory);
@@ -339,6 +322,6 @@ class MfaController extends Controller
         $subTitleIcon = 'fa-calculator';
         $enabledMFA   = null !== auth()->user()->mfa_secret;
 
-        return view('profile.mfa.index')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
+        return view('profile.mfa.index')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
     }
 }

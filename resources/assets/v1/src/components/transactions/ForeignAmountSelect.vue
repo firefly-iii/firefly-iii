@@ -121,8 +121,10 @@ export default {
             let srcType = this.source.type ? this.source.type.toLowerCase() : 'invalid';
             let tType = this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
             let liabilities = ['loan', 'debt', 'mortgage'];
+            let asset = ['asset account'];
             let sourceIsLiability = liabilities.indexOf(srcType) !== -1;
             let destIsLiability = liabilities.indexOf(destType) !== -1;
+            let destIsAsset =asset.indexOf(destType) !== -1;
 
 
             // console.log(srcType + ' (source) is a liability: ' + sourceIsLiability);
@@ -131,18 +133,15 @@ export default {
             if (tType === 'transfer' || destIsLiability || sourceIsLiability) {
                 console.log('Source or dest is a liability.')
                 console.log('Source is liability OR dest is liability, OR transfer. Lock list on currency of destination.');
+                console.log(this.destination.type);
                 // console.log('Length of currencies is ' + this.currencies.length);
                 // console.log(this.currencies);
                 this.liability = true;
                 // lock dropdown list on currencyID of destination UNLESS dest is not liab
                 for (const key in this.currencies) {
                     if (this.currencies.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        if (
-                            parseInt(this.currencies[key].id) === parseInt(this.destination.currency_id) || !destIsLiability
-                        ) {
-                            console.log('Enable currency!!');
-                            console.log(this.currencies[key]);
-                            // console.log(this.destination);
+                        if (parseInt(this.currencies[key].id) === parseInt(this.destination.currency_id) || (!destIsLiability && 'transfer' !== tType)) {
+                            console.log('Enable currency: ' + this.currencies[key].attributes.code + '.');
                             this.enabledCurrencies.push(this.currencies[key]);
                         }
                     }

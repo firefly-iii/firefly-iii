@@ -40,7 +40,7 @@ class CategoryController extends Controller
 {
     private NoCategoryRepositoryInterface $noRepository;
     private OperationsRepositoryInterface $opsRepository;
-    private CategoryRepositoryInterface   $repository;
+    private CategoryRepositoryInterface $repository;
 
     /**
      * AccountController constructor.
@@ -48,19 +48,17 @@ class CategoryController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
-                $this->repository    = app(CategoryRepositoryInterface::class);
-                $this->noRepository  = app(NoCategoryRepositoryInterface::class);
-                $user                = auth()->user();
-                $this->opsRepository->setUser($user);
-                $this->repository->setUser($user);
-                $this->noRepository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
+            $this->repository    = app(CategoryRepositoryInterface::class);
+            $this->noRepository  = app(NoCategoryRepositoryInterface::class);
+            $user                = auth()->user();
+            $this->opsRepository->setUser($user);
+            $this->repository->setUser($user);
+            $this->noRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function category(GenericRequest $request): JsonResponse

@@ -37,8 +37,8 @@ use Illuminate\Support\Facades\Log;
 class TransactionGroupFactory
 {
     private readonly TransactionJournalFactory $journalFactory;
-    private User                               $user;
-    private UserGroup                          $userGroup;
+    private User $user;
+    private UserGroup $userGroup;
 
     /**
      * TransactionGroupFactory constructor.

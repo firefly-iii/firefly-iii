@@ -29,7 +29,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsFilterValueIn implements ValidationRule
 {
-    public function __construct(private readonly string $key, private readonly array $values) {}
+    public function __construct(
+        private readonly string $key,
+        private readonly array $values
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
@@ -50,6 +53,7 @@ class IsFilterValueIn implements ValidationRule
         if (!in_array($value, $this->values, true)) {
             $fail('validation.filter_must_be_in')->translate(['filter' => $this->key, 'values' => implode(', ', $this->values)]);
         }
+
         // $fail('validation.filter_not_string')->translate(['filter' => $this->key]);
     }
 }

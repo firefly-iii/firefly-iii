@@ -72,9 +72,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function collectJournals(): Collection
     {
-        return TransactionJournal::with(['transactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])
-            ->get()
-        ;
+        return TransactionJournal::with(['transactionType', 'transactions', 'transactions.account', 'transactions.account.accountType'])->get();
     }
 
     private function fixJournal(TransactionJournal $journal): bool
@@ -91,16 +89,14 @@ class CorrectsTransactionTypes extends Command
         }
         $expectedType = (string) config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if ($expectedType !== $type) {
-            $this->friendlyWarning(
-                sprintf(
-                    'Transaction journal #%d was of type "%s" but is corrected to "%s" (%s -> %s)',
-                    $journal->id,
-                    $type,
-                    $expectedType,
-                    $source->accountType->type,
-                    $destination->accountType->type,
-                )
-            );
+            $this->friendlyWarning(sprintf(
+                'Transaction journal #%d was of type "%s" but is corrected to "%s" (%s -> %s)',
+                $journal->id,
+                $type,
+                $expectedType,
+                $source->accountType->type,
+                $destination->accountType->type
+            ));
             $this->changeJournal($journal, $expectedType);
 
             return true;
@@ -114,9 +110,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function getSourceAccount(TransactionJournal $journal): Account
     {
-        $collection  = $journal->transactions->filter(
-            static fn (Transaction $transaction): bool => $transaction->amount < 0
-        );
+        $collection  = $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount < 0);
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300001: Journal #%d has no source transaction.', $journal->id));
         }
@@ -141,9 +135,7 @@ class CorrectsTransactionTypes extends Command
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
-        $collection  = $journal->transactions->filter(
-            static fn (Transaction $transaction): bool => $transaction->amount > 0
-        );
+        $collection  = $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount > 0);
         if (0 === $collection->count()) {
             throw new FireflyException(sprintf('300004: Journal #%d has no destination transaction.', $journal->id));
         }

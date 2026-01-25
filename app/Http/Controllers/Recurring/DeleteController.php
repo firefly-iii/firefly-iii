@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,16 +49,14 @@ class DeleteController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -74,7 +72,7 @@ class DeleteController extends Controller
 
         $journalsCreated = $this->repository->getTransactions($recurrence)->count();
 
-        return view('recurring.delete', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'journalsCreated' => $journalsCreated]);
+        return view('recurring.delete', ['recurrence'      => $recurrence, 'subTitle'        => $subTitle, 'journalsCreated' => $journalsCreated]);
     }
 
     /**

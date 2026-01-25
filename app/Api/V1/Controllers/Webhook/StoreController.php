@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\Webhook;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Webhook\CreateRequest;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\JsonApi\Enrichments\WebhookEnrichment;
 use FireflyIII\Transformers\WebhookTransformer;
 use FireflyIII\User;
@@ -34,7 +35,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use League\Fractal\Resource\Item;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class StoreController
@@ -42,19 +42,18 @@ use FireflyIII\Support\Facades\FireflyConfig;
 class StoreController extends Controller
 {
     public const string RESOURCE_KEY = 'webhooks';
+
     private WebhookRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(WebhookRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -78,7 +77,6 @@ class StoreController extends Controller
         $enrichment  = new WebhookEnrichment();
         $enrichment->setUser($admin);
         $webhook     = $enrichment->enrichSingle($webhook);
-
 
         $manager     = $this->getManager();
 

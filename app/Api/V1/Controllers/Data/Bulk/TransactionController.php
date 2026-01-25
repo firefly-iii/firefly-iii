@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Data\Bulk;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Data\Bulk\TransactionRequest;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
  * Class TransactionController
@@ -51,16 +51,14 @@ class TransactionController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->validateUserGroup($request);
-                $this->repository = app(AccountRepositoryInterface::class);
-                $this->repository->setUserGroup($this->userGroup);
-                $this->repository->setUser($this->user);
+        $this->middleware(function (Request $request, $next) {
+            $this->validateUserGroup($request);
+            $this->repository = app(AccountRepositoryInterface::class);
+            $this->repository->setUserGroup($this->userGroup);
+            $this->repository->setUser($this->user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function update(TransactionRequest $request): JsonResponse

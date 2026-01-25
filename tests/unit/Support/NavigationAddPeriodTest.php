@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
 use FireflyIII\Support\Navigation;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -52,8 +52,12 @@ final class NavigationAddPeriodTest extends TestCase
     }
 
     #[DataProvider('providePeriodsWithSkippingParam')]
-    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(int $skip, string $frequency, Carbon $from, Carbon $expected): void
-    {
+    public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(
+        int $skip,
+        string $frequency,
+        Carbon $from,
+        Carbon $expected
+    ): void {
         $period = $this->navigation->addPeriod($from, $frequency, $skip);
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }
@@ -61,42 +65,167 @@ final class NavigationAddPeriodTest extends TestCase
     public static function providePeriodsWithSkippingParam(): iterable
     {
         $intervals = [
-            '2019-01-31 to 2019-02-11' => ['skip' => 10, 'frequency' => 'daily', 'from' => Carbon::parse('2019-01-31'), 'expected' => Carbon::parse('2019-02-11')],
-            '1D'                       => ['skip' => 1, 'frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(2)],
-            'daily'                    => ['skip' => 1, 'frequency' => 'daily', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(2)],
-            '1W'                       => ['skip' => 1, 'frequency' => '1W', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
-            'weekly'                   => ['skip' => 1, 'frequency' => 'weekly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
-            'week'                     => ['skip' => 1, 'frequency' => 'week', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
-            '1M'                       => ['skip' => 1, 'frequency' => '1M', 'from' => Carbon::parse('2023-06-25'), 'expected' => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2)],
-            'month'                    => ['skip' => 1, 'frequency' => 'month', 'from' => Carbon::parse('2023-06-25'), 'expected' => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2)],
-            'monthly'                  => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-06-25'), 'expected' => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2)],
-            '2019-01-29 to 2019-03-29' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2019-01-29'), 'expected' => Carbon::parse('2019-03-29')],
-            '2019-01-30 to 2019-03-30' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2019-01-30'), 'expected' => Carbon::parse('2019-03-30')],
-            '2019-01-31 to 2019-03-31' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2019-01-31'), 'expected' => Carbon::parse('2019-03-31')],
-            '2023-03-31 to 2023-05-31' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-03-31'), 'expected' => Carbon::parse('2023-05-31')],
-            '2023-05-31 to 2023-07-31' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-05-31'), 'expected' => Carbon::parse('2023-07-31')],
-            '2023-08-31 to 2023-10-31' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-08-31'), 'expected' => Carbon::parse('2023-10-31')],
-            '2023-10-31 to 2023-12-31' => ['skip' => 1, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-10-31'), 'expected' => Carbon::parse('2023-12-31')],
-            '2023-01-31 to 2023-03-30' => ['skip' => 2, 'frequency' => 'monthly', 'from' => Carbon::parse('2023-01-31'), 'expected' => Carbon::parse('2023-04-30')],
-            '3M'                       => ['skip' => 1, 'frequency' => '3M', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(6)],
-            'quarter'                  => ['skip' => 1, 'frequency' => 'quarter', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(6)],
-            'quarterly'                => ['skip' => 1, 'frequency' => 'quarterly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(6)],
-            'quarter_2'                => ['skip' => 2, 'frequency' => 'quarter', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(9)],
-            'quarterly_2'              => ['skip' => 2, 'frequency' => 'quarterly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(9)],
-            'quarter_3'                => ['skip' => 2, 'frequency' => 'quarter', 'from' => Carbon::parse('2023-01-01'), 'expected' => Carbon::parse('2023-10-01')],
-            '6M'                       => ['skip' => 1, 'frequency' => '6M', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(12)],
-            'half-year'                => ['skip' => 1, 'frequency' => 'half-year', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(12)],
-            'year'                     => ['skip' => 1, 'frequency' => 'year', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
-            'yearly'                   => ['skip' => 1, 'frequency' => 'yearly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
-            '1Y'                       => ['skip' => 1, 'frequency' => '1Y', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
-            '2023-02-01 to 2023-02-15' => ['skip' => 1, 'frequency' => 'last7', 'from' => Carbon::parse('2023-02-01'), 'expected' => Carbon::parse('2023-02-15')],
-            'last7'                    => ['skip' => 1, 'frequency' => 'last7', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(14)],
-            'last30'                   => ['skip' => 1, 'frequency' => 'last30', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(2)],
-            'last90'                   => ['skip' => 1, 'frequency' => 'last90', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(6)],
-            'last365'                  => ['skip' => 1, 'frequency' => 'last365', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
-            'MTD'                      => ['skip' => 1, 'frequency' => 'MTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(2)],
-            'QTD'                      => ['skip' => 1, 'frequency' => 'QTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->addMonthsNoOverflow(6)],
-            'YTD'                      => ['skip' => 1, 'frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
+            '2019-01-31 to 2019-02-11' => [
+                'skip'      => 10,
+                'frequency' => 'daily',
+                'from'      => Carbon::parse('2019-01-31'),
+                'expected'  => Carbon::parse('2019-02-11'),
+            ],
+            '1D'                       => ['skip'      => 1, 'frequency' => '1D', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(2)],
+            'daily'                    => ['skip'      => 1, 'frequency' => 'daily', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(2)],
+            '1W'                       => ['skip'      => 1, 'frequency' => '1W', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
+            'weekly'                   => ['skip'      => 1, 'frequency' => 'weekly', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
+            'week'                     => ['skip'      => 1, 'frequency' => 'week', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
+            '1M'                       => [
+                'skip'      => 1,
+                'frequency' => '1M',
+                'from'      => Carbon::parse('2023-06-25'),
+                'expected'  => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2),
+            ],
+            'month'                    => [
+                'skip'      => 1,
+                'frequency' => 'month',
+                'from'      => Carbon::parse('2023-06-25'),
+                'expected'  => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2),
+            ],
+            'monthly'                  => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-06-25'),
+                'expected'  => Carbon::parse('2023-06-25')->addMonthsNoOverflow(2),
+            ],
+            '2019-01-29 to 2019-03-29' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2019-01-29'),
+                'expected'  => Carbon::parse('2019-03-29'),
+            ],
+            '2019-01-30 to 2019-03-30' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2019-01-30'),
+                'expected'  => Carbon::parse('2019-03-30'),
+            ],
+            '2019-01-31 to 2019-03-31' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2019-01-31'),
+                'expected'  => Carbon::parse('2019-03-31'),
+            ],
+            '2023-03-31 to 2023-05-31' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-03-31'),
+                'expected'  => Carbon::parse('2023-05-31'),
+            ],
+            '2023-05-31 to 2023-07-31' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-05-31'),
+                'expected'  => Carbon::parse('2023-07-31'),
+            ],
+            '2023-08-31 to 2023-10-31' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-08-31'),
+                'expected'  => Carbon::parse('2023-10-31'),
+            ],
+            '2023-10-31 to 2023-12-31' => [
+                'skip'      => 1,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-10-31'),
+                'expected'  => Carbon::parse('2023-12-31'),
+            ],
+            '2023-01-31 to 2023-03-30' => [
+                'skip'      => 2,
+                'frequency' => 'monthly',
+                'from'      => Carbon::parse('2023-01-31'),
+                'expected'  => Carbon::parse('2023-04-30'),
+            ],
+            '3M'                       => [
+                'skip'      => 1,
+                'frequency' => '3M',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(6),
+            ],
+            'quarter'                  => [
+                'skip'      => 1,
+                'frequency' => 'quarter',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(6),
+            ],
+            'quarterly'                => [
+                'skip'      => 1,
+                'frequency' => 'quarterly',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(6),
+            ],
+            'quarter_2'                => [
+                'skip'      => 2,
+                'frequency' => 'quarter',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(9),
+            ],
+            'quarterly_2'              => [
+                'skip'      => 2,
+                'frequency' => 'quarterly',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(9),
+            ],
+            'quarter_3'                => [
+                'skip'      => 2,
+                'frequency' => 'quarter',
+                'from'      => Carbon::parse('2023-01-01'),
+                'expected'  => Carbon::parse('2023-10-01'),
+            ],
+            '6M'                       => [
+                'skip'      => 1,
+                'frequency' => '6M',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(12),
+            ],
+            'half-year'                => [
+                'skip'      => 1,
+                'frequency' => 'half-year',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(12),
+            ],
+            'year'                     => ['skip'      => 1, 'frequency' => 'year', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            'yearly'                   => ['skip'      => 1, 'frequency' => 'yearly', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            '1Y'                       => ['skip'      => 1, 'frequency' => '1Y', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            '2023-02-01 to 2023-02-15' => [
+                'skip'      => 1,
+                'frequency' => 'last7',
+                'from'      => Carbon::parse('2023-02-01'),
+                'expected'  => Carbon::parse('2023-02-15'),
+            ],
+            'last7'                    => ['skip'      => 1, 'frequency' => 'last7', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(14)],
+            'last30'                   => [
+                'skip'      => 1,
+                'frequency' => 'last30',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(2),
+            ],
+            'last90'                   => [
+                'skip'      => 1,
+                'frequency' => 'last90',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(6),
+            ],
+            'last365'                  => ['skip'      => 1, 'frequency' => 'last365', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            'MTD'                      => [
+                'skip'      => 1,
+                'frequency' => 'MTD',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(2),
+            ],
+            'QTD'                      => [
+                'skip'      => 1,
+                'frequency' => 'QTD',
+                'from'      => Carbon::now(),
+                'expected'  => Carbon::now()->addMonthsNoOverflow(6),
+            ],
+            'YTD'                      => ['skip'      => 1, 'frequency' => 'YTD', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
         ];
         foreach ($intervals as $interval) {
             yield "{$interval['frequency']} {$interval['from']->toDateString()} to {$interval['expected']->toDateString()}" => $interval;
@@ -154,8 +283,11 @@ final class NavigationAddPeriodTest extends TestCase
     }
 
     #[DataProvider('provideFrequencies')]
-    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(Periodicity $periodicity, Carbon $from, Carbon $expected): void
-    {
+    public function testGivenAIntervalWhenCallTheNextDateByIntervalMethodThenReturnsTheExpectedDateSuccessful(
+        Periodicity $periodicity,
+        Carbon $from,
+        Carbon $expected
+    ): void {
         $period = $this->navigation->nextDateByInterval($from, $periodicity);
         $this->assertSame($expected->toDateString(), $period->toDateString());
     }

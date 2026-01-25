@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\PiggyBank;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -47,9 +47,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $fields                            = [
-            'order' => ['order', 'convertInteger'],
-        ];
+        $fields                            = ['order'                            => ['order', 'convertInteger']];
         $data                              = $this->getAllData($fields);
         $data['name']                      = $this->convertString('name');
         $data['accounts']                  = $this->parseAccounts($this->get('accounts'));
@@ -92,42 +90,40 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate start before end only if both are there.
-                $data          = $validator->getData();
-                $currency      = $this->getCurrencyFromData($validator, $data);
-                if (!$currency instanceof TransactionCurrency) {
-                    return;
-                }
-                $targetAmount  = (string) ($data['target_amount'] ?? '0');
-                $currentAmount = '0';
-                if (array_key_exists('accounts', $data) && is_array($data['accounts'])) {
-                    $repository = app(AccountRepositoryInterface::class);
-                    $types      = config('firefly.piggy_bank_account_types');
-                    foreach ($data['accounts'] as $index => $array) {
-                        $accountId = (int) ($array['account_id'] ?? 0);
-                        $account   = $repository->find($accountId);
-                        if (null !== $account) {
-                            // check currency here.
-                            $accountCurrency = $repository->getAccountCurrency($account);
-                            $isMultiCurrency = $repository->getMetaValue($account, 'is_multi_currency');
-                            $currentAmount   = bcadd($currentAmount, (string) ($array['current_amount'] ?? '0'));
-                            if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
-                                $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
-                            }
-                            $type            = $account->accountType->type;
-                            if (!in_array($type, $types, true)) {
-                                $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
-                            }
+        $validator->after(function (Validator $validator): void {
+            // validate start before end only if both are there.
+            $data          = $validator->getData();
+            $currency      = $this->getCurrencyFromData($validator, $data);
+            if (!$currency instanceof TransactionCurrency) {
+                return;
+            }
+            $targetAmount  = (string) ($data['target_amount'] ?? '0');
+            $currentAmount = '0';
+            if (array_key_exists('accounts', $data) && is_array($data['accounts'])) {
+                $repository = app(AccountRepositoryInterface::class);
+                $types      = config('firefly.piggy_bank_account_types');
+                foreach ($data['accounts'] as $index => $array) {
+                    $accountId = (int) ($array['account_id'] ?? 0);
+                    $account   = $repository->find($accountId);
+                    if (null !== $account) {
+                        // check currency here.
+                        $accountCurrency = $repository->getAccountCurrency($account);
+                        $isMultiCurrency = $repository->getMetaValue($account, 'is_multi_currency');
+                        $currentAmount   = bcadd($currentAmount, (string) ($array['current_amount'] ?? '0'));
+                        if ($accountCurrency->id !== $currency->id && 'true' !== $isMultiCurrency) {
+                            $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_currency'));
+                        }
+                        $type            = $account->accountType->type;
+                        if (!in_array($type, $types, true)) {
+                            $validator->errors()->add(sprintf('accounts.%d', $index), trans('validation.invalid_account_type'));
                         }
                     }
                 }
-                if (-1 === bccomp($targetAmount, $currentAmount) && 1 === bccomp($targetAmount, '0')) {
-                    $validator->errors()->add('target_amount', trans('validation.current_amount_too_much'));
-                }
             }
-        );
+            if (-1 === bccomp($targetAmount, $currentAmount) && 1 === bccomp($targetAmount, '0')) {
+                $validator->errors()->add('target_amount', trans('validation.current_amount_too_much'));
+            }
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

@@ -38,6 +38,7 @@ class CreatesGroupMemberships extends Command
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '560_create_group_memberships';
+
     protected $description          = 'Update group memberships';
     protected $signature            = 'correction:create-group-memberships';
 
@@ -86,16 +87,11 @@ class CreatesGroupMemberships extends Command
         }
         $membership = GroupMembership::where('user_id', $user->id)
             ->where('user_group_id', $userGroup->id)
-            ->where('user_role_id', $userRole->id)->first()
+            ->where('user_role_id', $userRole->id)
+            ->first()
         ;
         if (null === $membership) {
-            GroupMembership::create(
-                [
-                    'user_id'       => $user->id,
-                    'user_role_id'  => $userRole->id,
-                    'user_group_id' => $userGroup->id,
-                ]
-            );
+            GroupMembership::create(['user_id'       => $user->id, 'user_role_id'  => $userRole->id, 'user_group_id' => $userGroup->id]);
         }
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;

@@ -37,11 +37,11 @@ class CorrectsRecurringTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description                      = 'Fixes recurring transactions with the wrong transaction type.';
-    protected $signature                        = 'correction:recurring-transactions';
-    private int                          $count = 0;
+    protected $description = 'Fixes recurring transactions with the wrong transaction type.';
+    protected $signature   = 'correction:recurring-transactions';
+    private int $count     = 0;
     private RecurringRepositoryInterface $recurringRepos;
-    private UserRepositoryInterface      $userRepos;
+    private UserRepositoryInterface $userRepos;
 
     /**
      * Execute the console command.
@@ -101,9 +101,12 @@ class CorrectsRecurringTransactions extends Command
         $type        = $recurrence->transactionType;
         $link        = config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if (null !== $link && strtolower((string) $type->type) !== strtolower($link)) {
-            $this->friendlyWarning(
-                sprintf('Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.', $recurrence->id, $link, $type->type)
-            );
+            $this->friendlyWarning(sprintf(
+                'Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.',
+                $recurrence->id,
+                $link,
+                $type->type
+            ));
             $transactionType = TransactionType::whereType($link)->first();
             if (null !== $transactionType) {
                 $recurrence->transaction_type_id = $transactionType->id;

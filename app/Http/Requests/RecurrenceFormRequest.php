@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
@@ -35,6 +34,7 @@ use FireflyIII\Rules\ValidRecurrenceRepetitionValue;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AccountValidator;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -68,35 +68,31 @@ class RecurrenceFormRequest extends FormRequest
                 'active'            => $this->boolean('active'),
                 'repetition_end'    => $this->convertString('repetition_end'),
             ],
-            'transactions' => [
-                [
-                    'currency_id'           => $this->convertInteger('transaction_currency_id'),
-                    'currency_code'         => null,
-                    'type'                  => $this->convertString('transaction_type'),
-                    'description'           => $this->convertString('transaction_description'),
-                    'amount'                => $this->convertString('amount'),
-                    'foreign_amount'        => null,
-                    'foreign_currency_id'   => null,
-                    'foreign_currency_code' => null,
-                    'budget_id'             => $this->convertInteger('budget_id'),
-                    'budget_name'           => null,
-                    'bill_id'               => $this->convertInteger('bill_id'),
-                    'bill_name'             => null,
-                    'category_id'           => null,
-                    'category_name'         => $this->convertString('category'),
-                    'tags'                  => '' !== $this->convertString('tags') ? explode(',', $this->convertString('tags')) : [],
-                    'piggy_bank_id'         => $this->convertInteger('piggy_bank_id'),
-                    'piggy_bank_name'       => null,
-                ],
-            ],
-            'repetitions'  => [
-                [
-                    'type'    => $repetitionData['type'],
-                    'moment'  => $repetitionData['moment'],
-                    'skip'    => $this->convertInteger('skip'),
-                    'weekend' => $this->convertInteger('weekend'),
-                ],
-            ],
+            'transactions' => [[
+                'currency_id'           => $this->convertInteger('transaction_currency_id'),
+                'currency_code'         => null,
+                'type'                  => $this->convertString('transaction_type'),
+                'description'           => $this->convertString('transaction_description'),
+                'amount'                => $this->convertString('amount'),
+                'foreign_amount'        => null,
+                'foreign_currency_id'   => null,
+                'foreign_currency_code' => null,
+                'budget_id'             => $this->convertInteger('budget_id'),
+                'budget_name'           => null,
+                'bill_id'               => $this->convertInteger('bill_id'),
+                'bill_name'             => null,
+                'category_id'           => null,
+                'category_name'         => $this->convertString('category'),
+                'tags'                  => '' !== $this->convertString('tags') ? explode(',', $this->convertString('tags')) : [],
+                'piggy_bank_id'         => $this->convertInteger('piggy_bank_id'),
+                'piggy_bank_name'       => null,
+            ]],
+            'repetitions'  => [[
+                'type'    => $repetitionData['type'],
+                'moment'  => $repetitionData['moment'],
+                'skip'    => $this->convertInteger('skip'),
+                'weekend' => $this->convertInteger('weekend'),
+            ]],
         ];
 
         // fill in foreign currency data
@@ -157,10 +153,7 @@ class RecurrenceFormRequest extends FormRequest
     private function parseRepetitionData(): array
     {
         $value  = $this->convertString('repetition_type');
-        $return = [
-            'type'   => '',
-            'moment' => '',
-        ];
+        $return = ['type'   => '', 'moment' => ''];
 
         if ('daily' === $value) {
             $return['type'] = $value;
@@ -274,12 +267,10 @@ class RecurrenceFormRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate all account info
-                $this->validateAccountInformation($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            // validate all account info
+            $this->validateAccountInformation($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

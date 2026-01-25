@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Facades\DB;
@@ -37,20 +37,26 @@ class PrependDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
         $before = $journal['description'];
         $after  = sprintf('%s%s', $this->action->getValue($journal), $journal['description']);
-        DB::table('transaction_journals')->where('id', $journal['transaction_journal_id'])->limit(1)->update(['description' => $after]);
+        DB::table('transaction_journals')
+            ->where('id', $journal['transaction_journal_id'])
+            ->limit(1)
+            ->update(['description' => $after])
+        ;
 
         // journal
         /** @var TransactionJournal $object */
         $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
         // audit log
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

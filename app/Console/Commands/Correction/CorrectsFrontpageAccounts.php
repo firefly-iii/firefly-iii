@@ -73,9 +73,15 @@ class CorrectsFrontpageAccounts extends Command
             foreach ($data as $accountId) {
                 $accountIdInt = (int) $accountId;
                 $account      = $repository->find($accountIdInt);
-                if (null !== $account
-                    && in_array($account->accountType->type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value], true)
-                    && true === $account->active) {
+                if (
+                    null !== $account
+                    && in_array(
+                        $account->accountType->type,
+                        [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value],
+                        true
+                    )
+                    && true === $account->active
+                ) {
                     $fixed[] = $account->id;
                 }
             }

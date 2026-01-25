@@ -87,7 +87,7 @@ class IsValidAttachmentModel implements ValidationRule
             Tag::class                => $this->validateTag((int) $value),
             Transaction::class        => $this->validateTransaction((int) $value),
             TransactionJournal::class => $this->validateJournal((int) $value),
-            default                   => false,
+            default                   => false
         };
 
         if (false === $result) {

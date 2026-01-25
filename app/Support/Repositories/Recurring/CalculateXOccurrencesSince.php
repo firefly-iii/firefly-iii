@@ -44,7 +44,7 @@ trait CalculateXOccurrencesSince
         $total    = 0;
         $attempts = 0;
         while ($total < $count) {
-            if (0 === $attempts % $skipMod && $mutator->gt($afterDate)) {
+            if (0 === ($attempts % $skipMod) && $mutator->gt($afterDate)) {
                 $return[] = clone $mutator;
                 ++$total;
             }
@@ -68,7 +68,7 @@ trait CalculateXOccurrencesSince
         $mutator    = clone $date;
         $total      = 0;
         $attempts   = 0;
-        $dayOfMonth = (int)$moment;
+        $dayOfMonth = (int) $moment;
         $dayOfMonth = 0 === $dayOfMonth ? 1 : $dayOfMonth;
         if ($mutator->day > $dayOfMonth) {
             Log::debug(sprintf('%d is after %d, add a month. Mutator is now...', $mutator->day, $dayOfMonth));
@@ -81,7 +81,7 @@ trait CalculateXOccurrencesSince
             $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
             $mutator->day = $domCorrected;
             $mutator->setTime(0, 0);
-            if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
+            if (0 === ($attempts % $skipMod) && $mutator->gte($afterDate)) {
                 Log::debug(sprintf('Mutator is now %s and is added to the list.', $mutator->toAtomString()));
                 $return[] = clone $mutator;
                 ++$total;
@@ -117,7 +117,7 @@ trait CalculateXOccurrencesSince
         while ($total < $count) {
             $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
             $newCarbon = new Carbon($string);
-            if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
+            if (0 === ($attempts % $skipMod) && $mutator->gte($afterDate)) {
                 $return[] = clone $newCarbon;
                 ++$total;
             }
@@ -145,7 +145,7 @@ trait CalculateXOccurrencesSince
         // sunday = 7
         // Removed assumption today has passed, see issue https://github.com/firefly-iii/firefly-iii/issues/4798
         // $mutator->addDay(); // always assume today has passed.
-        $dayOfWeek     = (int)$moment;
+        $dayOfWeek     = (int) $moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $mutator->addWeek();
@@ -156,7 +156,7 @@ trait CalculateXOccurrencesSince
         $mutator->addDays($dayDifference);
 
         while ($total < $count) {
-            if (0 === $attempts % $skipMod && $mutator->gte($afterDate)) {
+            if (0 === ($attempts % $skipMod) && $mutator->gte($afterDate)) {
                 $return[] = clone $mutator;
                 ++$total;
             }
@@ -183,9 +183,12 @@ trait CalculateXOccurrencesSince
         $date       = new Carbon($moment);
         $date->year = $mutator->year;
         if ($mutator > $date) {
-            Log::debug(
-                sprintf('mutator (%s) > date (%s), so add a year to date (%s)', $mutator->format('Y-m-d'), $date->format('Y-m-d'), $date->format('Y-m-d'))
-            );
+            Log::debug(sprintf(
+                'mutator (%s) > date (%s), so add a year to date (%s)',
+                $mutator->format('Y-m-d'),
+                $date->format('Y-m-d'),
+                $date->format('Y-m-d')
+            ));
             $date->addYear();
             Log::debug(sprintf('Date is now %s', $date->format('Y-m-d')));
         }
@@ -194,7 +197,7 @@ trait CalculateXOccurrencesSince
             Log::debug(sprintf('total (%d) < count (%d) so go.', $total, $count));
             Log::debug(sprintf('attempts (%d) %% skipmod (%d) === %d', $attempts, $skipMod, $attempts % $skipMod));
             Log::debug(sprintf('Obj (%s) gte afterdate (%s)? %s', $obj->format('Y-m-d'), $afterDate->format('Y-m-d'), var_export($obj->gte($afterDate), true)));
-            if (0 === $attempts % $skipMod && $obj->gte($afterDate)) {
+            if (0 === ($attempts % $skipMod) && $obj->gte($afterDate)) {
                 Log::debug('All conditions true, add obj.');
                 $return[] = clone $obj;
                 ++$total;

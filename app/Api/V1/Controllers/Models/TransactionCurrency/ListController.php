@@ -89,13 +89,11 @@ class ListController extends Controller
         $unfiltered        = $accountRepository->getAccountsByType($types);
 
         // filter list on currency preference:
-        $collection        = $unfiltered->filter(
-            static function (Account $account) use ($currency, $accountRepository): bool {
-                $currencyId = (int) $accountRepository->getMetaValue($account, 'currency_id');
+        $collection        = $unfiltered->filter(static function (Account $account) use ($currency, $accountRepository): bool {
+            $currencyId = (int) $accountRepository->getMetaValue($account, 'currency_id');
 
-                return $currencyId === $currency->id;
-            }
-        );
+            return $currencyId === $currency->id;
+        });
 
         $count             = $collection->count();
         $accounts          = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
@@ -177,9 +175,7 @@ class ListController extends Controller
         $unfiltered  = $billRepos->getBills();
 
         // filter and paginate list:
-        $collection  = $unfiltered->filter(
-            static fn (Bill $bill): bool => $bill->transaction_currency_id === $currency->id
-        );
+        $collection  = $unfiltered->filter(static fn (Bill $bill): bool => $bill->transaction_currency_id === $currency->id);
         $count       = $collection->count();
         $bills       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
@@ -260,15 +256,16 @@ class ListController extends Controller
         $unfiltered     = $recurringRepos->get();
 
         // filter selection
-        $collection     = $unfiltered->filter(
-            static function (Recurrence $recurrence) use ($currency): ?Recurrence {  // @phpstan-ignore-line
-                if (array_any($recurrence->recurrenceTransactions, static fn ($transaction): bool => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id)) {
-                    return $recurrence;
-                }
-
-                return null;
+        $collection     = $unfiltered->filter(static function (Recurrence $recurrence) use ($currency): null|Recurrence { // @phpstan-ignore-line
+            if (array_any(
+                $recurrence->recurrenceTransactions,
+                static fn ($transaction): bool => $transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id
+            )) {
+                return $recurrence;
             }
-        );
+
+            return null;
+        });
         $count          = $collection->count();
         $recurrences    = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
@@ -309,15 +306,16 @@ class ListController extends Controller
         $ruleRepos   = app(RuleRepositoryInterface::class);
         $unfiltered  = $ruleRepos->getAll();
 
-        $collection  = $unfiltered->filter(
-            static function (Rule $rule) use ($currency): ?Rule { // @phpstan-ignore-line
-                if (array_any($rule->ruleTriggers, static fn ($trigger): bool => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value)) {
-                    return $rule;
-                }
-
-                return null;
+        $collection  = $unfiltered->filter(static function (Rule $rule) use ($currency): null|Rule { // @phpstan-ignore-line
+            if (array_any(
+                $rule->ruleTriggers,
+                static fn ($trigger): bool => 'currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value
+            )) {
+                return $rule;
             }
-        );
+
+            return null;
+        });
 
         $count       = $collection->count();
         $rules       = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

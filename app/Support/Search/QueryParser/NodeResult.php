@@ -34,6 +34,6 @@ class NodeResult
 {
     public function __construct(
         public readonly ?Node $node,
-        public readonly bool  $isSubqueryEnd
+        public readonly bool $isSubqueryEnd
     ) {}
 }

@@ -47,8 +47,7 @@ class ApplyRules extends Command
 
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
-    protected $signature
-                           = 'firefly-iii:apply-rules
+    protected $signature   = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
                             {--accounts= : A comma-separated list of asset accounts or liabilities to apply your rules to.}
@@ -57,16 +56,16 @@ class ApplyRules extends Command
                             {--all_rules : If set, will overrule both settings and simply apply ALL of your rules.}
                             {--start_date= : The date of the earliest transaction to be included (inclusive). If omitted, will be your very first transaction ever. Format: YYYY-MM-DD}
                             {--end_date= : The date of the latest transaction to be included (inclusive). If omitted, will be your latest transaction ever. Format: YYYY-MM-DD}';
-    private array                        $acceptedAccounts;
-    private Collection                   $accounts;
-    private bool                         $allRules;
-    private Carbon                       $endDate;
-    private Collection                   $groups;
+    private array $acceptedAccounts;
+    private Collection $accounts;
+    private bool $allRules;
+    private Carbon $endDate;
+    private Collection $groups;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
-    private array                        $ruleGroupSelection;
-    private RuleRepositoryInterface      $ruleRepository;
-    private array                        $ruleSelection;
-    private Carbon                       $startDate;
+    private array $ruleGroupSelection;
+    private RuleRepositoryInterface $ruleRepository;
+    private array $ruleSelection;
+    private Carbon $startDate;
 
     /**
      * Execute the console command.
@@ -122,11 +121,11 @@ class ApplyRules extends Command
             $filterAccountList[] = $account->id;
         }
         $list              = implode(',', $filterAccountList);
-        $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
+        $ruleEngine->addOperator(['type'  => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
-        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
-        $ruleEngine->addOperator(['type' => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type'  => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type'  => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
 
         // start running rules.
         $this->friendlyLine(sprintf('Will apply %d rule(s) to your transaction(s).', $count));
@@ -154,7 +153,13 @@ class ApplyRules extends Command
         $this->ruleGroupSelection  = [];
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->acceptedAccounts    = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value];
+        $this->acceptedAccounts    = [
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ];
         $this->groups              = new Collection();
     }
 
@@ -198,7 +203,7 @@ class ApplyRules extends Command
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             if (0 === $accountId) {
                 $this->friendlyWarning('You provided an account with ID 0 (zero). It will be ignored.');
 
@@ -239,7 +244,7 @@ class ApplyRules extends Command
         $ruleGroupList   = explode(',', $ruleGroupString);
 
         foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroupId                = (int)$ruleGroupId;
+            $ruleGroupId                = (int) $ruleGroupId;
 
             if (0 === $ruleGroupId) {
                 $this->friendlyWarning('You added a rule group with ID 0 (zero). It will be skipped.');
@@ -275,7 +280,7 @@ class ApplyRules extends Command
         $ruleList   = explode(',', $ruleString);
 
         foreach ($ruleList as $ruleId) {
-            $ruleId                = (int)$ruleId;
+            $ruleId                = (int) $ruleId;
             if (0 === $ruleId) {
                 $this->friendlyWarning('You added a rule with ID 0 (zero). It will be skipped.');
 
@@ -374,8 +379,6 @@ class ApplyRules extends Command
 
     private function includeRule(Rule $rule, RuleGroup $group): bool
     {
-        return in_array((int)$group->id, $this->ruleGroupSelection, true)
-               || in_array((int)$rule->id, $this->ruleSelection, true)
-               || $this->allRules;
+        return in_array((int) $group->id, $this->ruleGroupSelection, true) || in_array((int) $rule->id, $this->ruleSelection, true) || $this->allRules;
     }
 }

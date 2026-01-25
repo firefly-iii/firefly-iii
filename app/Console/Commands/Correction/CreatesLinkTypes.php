@@ -49,9 +49,7 @@ class CreatesLinkTypes extends Command
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link           = LinkType::where('name', $name)
-                ->first()
-            ;
+            $link           = LinkType::where('name', $name)->first();
             if (null === $link) {
                 $link          = new LinkType();
                 $link->name    = $name;

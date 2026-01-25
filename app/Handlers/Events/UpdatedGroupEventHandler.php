@@ -25,7 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\WebhookTrigger;
-use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
@@ -55,8 +55,6 @@ class UpdatedGroupEventHandler
         if ($event->runRecalculations) {
             $this->updateRunningBalance($event);
         }
-
-
     }
 
     /**
@@ -112,7 +110,8 @@ class UpdatedGroupEventHandler
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first         = $group->transactionJournals()
+        $first         = $group
+            ->transactionJournals()
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
@@ -137,15 +136,11 @@ class UpdatedGroupEventHandler
         $type          = $first->transactionType->type;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
-            Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id])
-            ;
+            Transaction::whereIn('transaction_journal_id', $all)->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
         }
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::DEPOSIT->value === $type) {
             // set all destination transactions to destination account:
-            Transaction::whereIn('transaction_journal_id', $all)
-                ->where('amount', '>', 0)->update(['account_id' => $destAccount->id])
-            ;
+            Transaction::whereIn('transaction_journal_id', $all)->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
         }
     }
 
@@ -179,7 +174,7 @@ class UpdatedGroupEventHandler
         // file rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
@@ -212,8 +207,8 @@ class UpdatedGroupEventHandler
         $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION);
         $engine->generateMessages();
 
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
     }
 
     private function updateRunningBalance(UpdatedTransactionGroup $event): void

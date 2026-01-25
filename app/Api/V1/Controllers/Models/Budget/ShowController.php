@@ -43,7 +43,7 @@ use League\Fractal\Resource\Item;
 class ShowController extends Controller
 {
     private BudgetLimitRepositoryInterface $blRepository;
-    private BudgetRepositoryInterface      $repository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * ListController constructor.
@@ -51,16 +51,14 @@ class ShowController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository   = app(BudgetRepositoryInterface::class);
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
-                $this->blRepository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository   = app(BudgetRepositoryInterface::class);
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
+            $this->blRepository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**

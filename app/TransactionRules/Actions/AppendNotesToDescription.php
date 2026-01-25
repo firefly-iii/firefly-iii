@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AppendNotesToDescription
@@ -45,7 +45,9 @@ class AppendNotesToDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action) {}
+    public function __construct(
+        private RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -74,7 +76,7 @@ class AppendNotesToDescription implements ActionInterface
             $object->save();
             Log::debug(sprintf('Journal description is updated to "%s".', $object->description));
 
-            event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $object->description));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $object->description));
 
             return true;
         }

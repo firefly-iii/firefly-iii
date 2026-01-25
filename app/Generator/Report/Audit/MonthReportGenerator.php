@@ -31,11 +31,11 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Throwable;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class MonthReportGenerator.
@@ -43,8 +43,8 @@ use FireflyIII\Support\Facades\Amount;
 class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
-    private Carbon     $end;
-    private Carbon     $start;
+    private Carbon $end;
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -101,8 +101,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ];
 
         try {
-            $result = view('reports.audit.report', ['reportType' => $reportType, 'accountIds' => $accountIds, 'auditData' => $auditData, 'hideable' => $hideable, 'defaultShow' => $defaultShow])
-                ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
+            $result = view('reports.audit.report', [
+                'reportType'  => $reportType,
+                'accountIds'  => $accountIds,
+                'auditData'   => $auditData,
+                'hideable'    => $hideable,
+                'defaultShow' => $defaultShow,
+            ])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
+                ->with('accounts', $this->accounts)
                 ->render()
             ;
         } catch (Throwable $e) {
@@ -133,8 +141,14 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         /** @var GroupCollectorInterface $collector */
         $collector         = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection()->push($account))->setRange($this->start, $this->end)->withAccountInformation()
-            ->withBudgetInformation()->withCategoryInformation()->withBillInformation()->withNotes()
+        $collector
+            ->setAccounts(new Collection()->push($account))
+            ->setRange($this->start, $this->end)
+            ->withAccountInformation()
+            ->withBudgetInformation()
+            ->withCategoryInformation()
+            ->withBillInformation()
+            ->withNotes()
         ;
         $journals          = $collector->getExtractedJournals();
         $journals          = array_reverse($journals, true);

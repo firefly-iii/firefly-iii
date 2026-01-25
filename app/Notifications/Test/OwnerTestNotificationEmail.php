@@ -42,8 +42,7 @@ class OwnerTestNotificationEmail extends Notification
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**

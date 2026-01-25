@@ -46,11 +46,7 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         // This is the way.
-        $fields = [
-            'tag'         => ['tag', 'convertString'],
-            'date'        => ['date', 'date'],
-            'description' => ['description', 'convertString'],
-        ];
+        $fields = ['tag'         => ['tag', 'convertString'], 'date'        => ['date', 'date'], 'description' => ['description', 'convertString']];
         $data   = $this->getAllData($fields);
 
         return $this->appendLocationData($data, null);

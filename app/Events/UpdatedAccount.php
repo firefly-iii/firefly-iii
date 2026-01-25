@@ -37,5 +37,7 @@ class UpdatedAccount extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public Account $account) {}
+    public function __construct(
+        public Account $account
+    ) {}
 }

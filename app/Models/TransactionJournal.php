@@ -58,32 +58,34 @@ class TransactionJournal extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                      = [
-            'user_id',
-            'user_group_id',
-            'transaction_type_id',
-            'bill_id',
-            'tag_count',
-            'transaction_currency_id',
-            'description',
-            'completed',
-            'order',
-            'date',
-            'date_tz',
-        ];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'bill_id',
+        'tag_count',
+        'transaction_currency_id',
+        'description',
+        'completed',
+        'order',
+        'date',
+        'date_tz',
+    ];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $journalId = (int)$value;
+            $journalId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -231,16 +233,12 @@ class TransactionJournal extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]

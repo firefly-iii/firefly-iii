@@ -23,18 +23,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class SessionFilter.
@@ -144,10 +144,7 @@ class Range
         app('view')->share('listLength', $pref);
 
         // share security message:
-        if (
-            FireflyConfig::has('upgrade_security_message')
-            && FireflyConfig::has('upgrade_security_level')
-        ) {
+        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
             app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
             app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
         }

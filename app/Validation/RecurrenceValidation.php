@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Illuminate\Support\Facades\Log;
-use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 
 /**
@@ -93,7 +93,7 @@ trait RecurrenceValidation
             // validate source account.
             $sourceId         = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
             $sourceName       = $transaction['source_name'] ?? null;
-            $validSource      = $accountValidator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
+            $validSource      = $accountValidator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
 
             // do something with result:
             if (false === $validSource) {
@@ -105,7 +105,7 @@ trait RecurrenceValidation
             // validate destination account
             $destinationId    = array_key_exists('destination_id', $transaction) ? (int) $transaction['destination_id'] : null;
             $destinationName  = $transaction['destination_name'] ?? null;
-            $validDestination = $accountValidator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
+            $validDestination = $accountValidator->validateDestination(['id'   => $destinationId, 'name' => $destinationName]);
             // do something with result:
             if (false === $validDestination) {
                 $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
