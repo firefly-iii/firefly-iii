@@ -61,7 +61,7 @@ class AccountBalanceCalculator
             AccountBalance::whereNotNull('created_at')->delete();
         }
         $object = new self();
-        $object->optimizedCalculation(new Collection());
+        self::optimizedCalculation(new Collection());
     }
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
@@ -87,10 +87,10 @@ class AccountBalanceCalculator
             Log::debug(sprintf('Date is overruled with "%s"', $date->toW3cString()));
         }
 
-        $object->optimizedCalculation($accounts, $date);
+        self::optimizedCalculation($accounts, $date);
     }
 
-    private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
+    public static function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
             Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
@@ -138,7 +138,7 @@ class AccountBalanceCalculator
         return $balance;
     }
 
-    private function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
+    public static function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
     {
         if ($notBefore instanceof Carbon) {
             $notBefore->startOfDay();
@@ -187,7 +187,7 @@ class AccountBalanceCalculator
             // start with empty array:
             $balances[$entry->account_id]                                  ??= [];
             $balances[$entry->account_id][$entry->transaction_currency_id] ??= [
-                $this->getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore),
+                self::getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore),
                 null,
             ];
 

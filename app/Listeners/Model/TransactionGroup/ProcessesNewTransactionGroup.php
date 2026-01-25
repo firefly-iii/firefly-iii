@@ -21,15 +21,20 @@
 
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
+use Carbon\Carbon;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Models\AccountBalanceCalculator;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
@@ -72,8 +77,46 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         }
         // always remove old statistics.
         $this->removePeriodStatistics($set);
+
+        // recalculate running balance if necessary.
+
+        Log::debug('Observe "created" of a transaction.');
+        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            $this->recalculateRunningBalance($set);
+        }
+
         $repository->markAsCompleted($set);
 
+    }
+
+    private function recalculateRunningBalance(Collection $set): void
+    {
+        Log::debug('Now in recalculateRunningBalance');
+        // find the earliest date in the set, based on date and _internal_previous_date
+        $earliest = $set->pluck('date')->sort()->first();
+        $entries  = TransactionJournalMeta
+            ::whereIn('transaction_journal_id', $set->pluck('id')->toArray())
+            ->where('name', '_internal_previous_date')
+            ->get(['journal_meta.*']);
+        $array    = $entries->toArray();
+        if (count($array) > 0) {
+            usort($array, function (array $a, array $b) {
+                return Carbon::parse($a['data'])->gt(Carbon::parse($b['data']));
+            });
+            /** @var Carbon $date */
+            $date     = Carbon::parse($array[0]['data']);
+            $earliest = $date->lt($earliest) ? $date : $earliest;
+        }
+
+        // get accounts
+        $accounts = Account
+            ::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+            ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
+            ->get(['accounts.*']);
+
+        AccountBalanceCalculator::optimizedCalculation($accounts, $earliest);
     }
 
     private function removePeriodStatistics(Collection $set): void
