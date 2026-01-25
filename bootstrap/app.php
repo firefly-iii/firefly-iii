@@ -33,6 +33,7 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Contracts\Http\Kernel;
@@ -95,7 +96,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       health  : '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
-                      $middleware->trustProxies(at: envNonEmpty('TRUSTED_PROXIES', ''));
                       // overrule the standard middleware
                       $middleware->use(
                           [
@@ -106,6 +106,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                               TrimStrings::class,
                               ConvertEmptyStringsToNull::class,
                               SecureHeaders::class,
+                              TrustProxies::class,
                           ]
                       );
 

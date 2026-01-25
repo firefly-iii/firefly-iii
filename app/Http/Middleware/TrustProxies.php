@@ -45,6 +45,6 @@ class TrustProxies extends Middleware
      */
     public function __construct()
     {
-        $this->proxies = (string) config('firefly.trusted_proxies');
+        $this->proxies = (string) config('trustedproxy.proxies');
     }
 }
