@@ -78,7 +78,7 @@ class EditController extends Controller
         }
 
         $subTitleIcon     = 'fa-pencil';
-        $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name'     => $currency->name]);
+        $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name'         => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
         // is currently enabled (for this user?)

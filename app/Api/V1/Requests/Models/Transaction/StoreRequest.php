@@ -64,7 +64,7 @@ class StoreRequest extends FormRequest
         return [
             'group_title'             => $this->convertString('group_title'),
             'error_if_duplicate_hash' => $this->boolean('error_if_duplicate_hash'),
-            'batch_submission' => $this->boolean('batch_submission'),
+            'batch_submission'        => $this->boolean('batch_submission'),
             'apply_rules'             => $this->boolean('apply_rules', true),
             'fire_webhooks'           => $this->boolean('fire_webhooks', true),
             'transactions'            => $this->getTransactionData(),

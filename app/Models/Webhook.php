@@ -133,8 +133,8 @@ class Webhook extends Model
     public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            if($value instanceof self) {
-                $value = (int)$value->id;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
             }
             $webhookId = (int) $value;
 

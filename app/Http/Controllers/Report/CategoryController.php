@@ -95,7 +95,11 @@ class CategoryController extends Controller
                         'categories'              => [],
                     ];
 
-                    $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']] ??= ['spent'  => '0', 'earned' => '0', 'sum'    => '0'];
+                    $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']] ??= [
+                        'spent'  => '0',
+                        'earned' => '0',
+                        'sum'    => '0',
+                    ];
                     $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['categories'][$category['id']]['spent'],
                         (string) $journal['amount']
@@ -122,7 +126,11 @@ class CategoryController extends Controller
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                         'categories'              => [],
                     ];
-                    $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']] ??= ['spent'  => '0', 'earned' => '0', 'sum'    => '0'];
+                    $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']] ??= [
+                        'spent'  => '0',
+                        'earned' => '0',
+                        'sum'    => '0',
+                    ];
                     $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'] = bcadd(
                         $report[$destinationId]['currencies'][$currencyId]['categories'][$category['id']]['earned'],
                         (string) $journal['amount']

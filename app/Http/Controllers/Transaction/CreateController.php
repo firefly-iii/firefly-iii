@@ -77,7 +77,7 @@ class CreateController extends Controller
                 $newGroup = $service->cloneGroup($group);
 
                 // event!
-                $flags = new TransactionGroupEventFlags();
+                $flags    = new TransactionGroupEventFlags();
                 event(new CreatedSingleTransactionGroup($group, $flags));
                 // event(new StoredTransactionGroup($newGroup, true, true));
 
@@ -110,29 +110,29 @@ class CreateController extends Controller
     {
         Preferences::mark();
 
-        $sourceId             = (int) request()->get('source');
-        $destinationId        = (int) request()->get('destination');
+        $sourceId                   = (int) request()->get('source');
+        $destinationId              = (int) request()->get('destination');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository    = app(AccountRepositoryInterface::class);
-        $cash                 = $accountRepository->getCashAccount();
-        $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle             = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
-        $subTitleIcon         = 'fa-plus';
+        $accountRepository          = app(AccountRepositoryInterface::class);
+        $cash                       = $accountRepository->getCashAccount();
+        $preFilled                  = session()->has('preFilled') ? session('preFilled') : [];
+        $subTitle                   = (string) trans(sprintf('breadcrumbs.create_%s', strtolower((string) $objectType)));
+        $subTitleIcon               = 'fa-plus';
 
         /** @var null|array $optionalFields */
-        $optionalFields       = Preferences::get('transaction_journal_optional_fields', [])->data;
-        $allowedOpposingTypes = config('firefly.allowed_opposing_types');
-        $accountToTypes       = config('firefly.account_to_transaction');
-        $previousUrl          = $this->rememberPreviousUrl('transactions.create.url');
-        $parts                = parse_url((string) $previousUrl);
-        $search               = sprintf('?%s', $parts['query'] ?? '');
-        $previousUrl          = str_replace($search, '', $previousUrl);
+        $optionalFields             = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $allowedOpposingTypes       = config('firefly.allowed_opposing_types');
+        $accountToTypes             = config('firefly.account_to_transaction');
+        $previousUrl                = $this->rememberPreviousUrl('transactions.create.url');
+        $parts                      = parse_url((string) $previousUrl);
+        $search                     = sprintf('?%s', $parts['query'] ?? '');
+        $previousUrl                = str_replace($search, '', $previousUrl);
         if (!is_array($optionalFields)) {
             $optionalFields = [];
         }
         // not really a fan of this, but meh.
-        $optionalDateFields   = [
+        $optionalDateFields         = [
             'interest_date' => $optionalFields['interest_date'] ?? false,
             'book_date'     => $optionalFields['book_date'] ?? false,
             'process_date'  => $optionalFields['process_date'] ?? false,
@@ -142,13 +142,13 @@ class CreateController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location']
-                              = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location'] = $optionalFields['location']
+        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
-        $longitude            = config('firefly.default_location.longitude');
-        $latitude             = config('firefly.default_location.latitude');
-        $zoomLevel            = config('firefly.default_location.zoom_level');
+        $longitude                  = config('firefly.default_location.longitude');
+        $latitude                   = config('firefly.default_location.latitude');
+        $zoomLevel                  = config('firefly.default_location.zoom_level');
 
         session()->put('preFilled', $preFilled);
 

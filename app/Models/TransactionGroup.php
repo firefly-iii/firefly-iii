@@ -57,8 +57,8 @@ class TransactionGroup extends Model
      */
     public static function routeBinder(self|string $value): self
     {
-        if($value instanceof self) {
-            $value = (int)$value->id;
+        if ($value instanceof self) {
+            $value = (int) $value->id;
         }
         Log::debug(sprintf('Now in %s("%s")', __METHOD__, $value));
         if (auth()->check()) {

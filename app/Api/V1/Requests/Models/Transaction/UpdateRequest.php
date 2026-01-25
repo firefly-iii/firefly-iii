@@ -113,9 +113,7 @@ class UpdateRequest extends FormRequest
         ];
         $this->booleanFields  = ['reconciled'];
         $this->arrayFields    = ['tags'];
-        $data                 = [
-            'batch_submission' => false,
-        ];
+        $data                 = ['batch_submission'                => false];
         if ($this->has('transactions')) {
             $data['transactions'] = $this->getTransactionData();
         }

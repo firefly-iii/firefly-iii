@@ -37,7 +37,7 @@ class RespondsToNewLogin implements ShouldQueue
     public function handle(Login $event): void
     {
         $user = $event->user;
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             throw new InvalidArgumentException(sprintf('User cannot be an instance of %s.', get_class($user)));
         }
 
@@ -85,5 +85,4 @@ class RespondsToNewLogin implements ShouldQueue
             Preferences::mark();
         }
     }
-
 }

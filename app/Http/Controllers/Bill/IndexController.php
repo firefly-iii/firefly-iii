@@ -192,7 +192,10 @@ class IndexController extends Controller
                     if (count($bill['paid_dates']) < count($bill['pay_dates'])) {
                         $count = count($bill['pay_dates']) - count($bill['paid_dates']);
                         if ($count > 0) {
-                            $avg                                                 = bcdiv(bcadd((string) $bill['amount_min'], (string) $bill['amount_max']), '2');
+                            $avg                                                 = bcdiv(
+                                bcadd((string) $bill['amount_min'], (string) $bill['amount_max']),
+                                '2'
+                            );
                             $avg                                                 = bcmul($avg, (string) $count);
                             $sums[$groupOrder][$currencyId]['total_left_to_pay'] = bcadd($sums[$groupOrder][$currencyId]['total_left_to_pay'], $avg);
                             Log::debug(

@@ -539,7 +539,13 @@ class BudgetController extends Controller
             }
 
             // get spent amount in this period for this currency.
-            $sum                             = $this->opsRepository->sumExpenses($currentStart, $currentEnd, $accounts, new Collection()->push($budget), $currency);
+            $sum                             = $this->opsRepository->sumExpenses(
+                $currentStart,
+                $currentEnd,
+                $accounts,
+                new Collection()->push($budget),
+                $currency
+            );
             $amount                          = Steam::positive($sum[$currency->id]['sum'] ?? '0');
             $chartData[0]['entries'][$title] = Steam::bcround($amount, $currency->decimal_places);
 

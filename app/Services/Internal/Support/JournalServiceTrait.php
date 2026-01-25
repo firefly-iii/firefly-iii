@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Rules\UniqueIban;
-use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 

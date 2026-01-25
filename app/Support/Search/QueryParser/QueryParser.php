@@ -65,7 +65,7 @@ class QueryParser implements QueryParserInterface
                     // Log::debug('BACKSLASH!');
                     // escaped quote, pretend it's a normal char and continue two places (skipping the actual character).
                     $tokenUnderConstruction .= '\\'.$nextChar;
-                    $this->position += 2;
+                    $this->position         += 2;
 
                     continue;
                 }

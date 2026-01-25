@@ -26,7 +26,6 @@ namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
 use FireflyIII\Models\PeriodStatistic;
-use FireflyIII\Models\UserGroup;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 

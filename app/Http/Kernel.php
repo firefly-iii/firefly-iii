@@ -44,24 +44,22 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
  */
 class Kernel extends HttpKernel
 {
-    protected $middleware
-                                  = [
-            // SecureHeaders::class,
-            CheckForMaintenanceMode::class,
-            ValidatePostSize::class,
-            TrimStrings::class,
-            ConvertEmptyStringsToNull::class,
-            TrustProxies::class,
-            InstallationId::class,
-        ];
-    protected $middlewareAliases
-                                  = [
-            'auth'       => Authenticate::class,
-            'auth.basic' => AuthenticateWithBasicAuth::class,
-            'bindings'   => Binder::class,
-            'can'        => Authorize::class,
-            'guest'      => RedirectIfAuthenticated::class,
-            'throttle'   => ThrottleRequests::class,
-        ];
+    protected $middleware         = [
+        // SecureHeaders::class,
+        CheckForMaintenanceMode::class,
+        ValidatePostSize::class,
+        TrimStrings::class,
+        ConvertEmptyStringsToNull::class,
+        TrustProxies::class,
+        InstallationId::class,
+    ];
+    protected $middlewareAliases  = [
+        'auth'       => Authenticate::class,
+        'auth.basic' => AuthenticateWithBasicAuth::class,
+        'bindings'   => Binder::class,
+        'can'        => Authorize::class,
+        'guest'      => RedirectIfAuthenticated::class,
+        'throttle'   => ThrottleRequests::class,
+    ];
     protected $middlewarePriority = [StartFireflySession::class, ShareErrorsFromSession::class, Authenticate::class, Binder::class, Authorize::class];
 }

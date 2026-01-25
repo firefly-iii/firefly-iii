@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * CreatedSingleTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -33,8 +36,10 @@ class CreatedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, public TransactionGroupEventFlags $flags) {
+    public function __construct(
+        public TransactionGroup $transactionGroup,
+        public TransactionGroupEventFlags $flags
+    ) {
         Log::debug(__METHOD__);
     }
 }
-

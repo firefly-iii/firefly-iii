@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Listeners\Security\System;
 
 use Exception;
-
 use FireflyIII\Events\Security\System\NewInvitationCreated;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Mail\InvitationMail;
@@ -45,7 +44,6 @@ class NotifiesAboutNewInvitation implements ShouldQueue
         $this->sendInvitationNotification($event->invitee);
         $this->sendRegistrationInvite($event->invitee);
     }
-
 
     private function sendRegistrationInvite(InvitedUser $invitee): void
     {
@@ -88,5 +86,4 @@ class NotifiesAboutNewInvitation implements ShouldQueue
             Log::error($e->getTraceAsString());
         }
     }
-
 }

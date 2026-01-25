@@ -32,5 +32,7 @@ class NewInvitationCreated extends Event
 {
     use SerializesModels;
 
-    public function __construct(public InvitedUser $invitee) {}
+    public function __construct(
+        public InvitedUser $invitee
+    ) {}
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * TransactionGroupEventFlags.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -23,9 +26,8 @@ namespace FireflyIII\Events\Model\TransactionGroup;
 
 class TransactionGroupEventFlags
 {
-    public bool $applyRules = true;
-    public bool $fireWebhooks = true;
-    public bool $batchSubmission = false;
+    public bool $applyRules        = true;
+    public bool $fireWebhooks      = true;
+    public bool $batchSubmission   = false;
     public bool $recalculateCredit = true;
-
 }
