@@ -64,14 +64,15 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         if ($event->flags->applyRules) {
             $this->processRules($set);
         }
-        if($event->flags->recalculateCredit) {
+        if ($event->flags->recalculateCredit) {
             $this->recalculateCredit($set);
         }
-        if($event->flags->fireWebhooks) {
+        if ($event->flags->fireWebhooks) {
             $this->fireWebhooks($set);
         }
         // always remove old statistics.
         $this->removePeriodStatistics($set);
+        $repository->markAsCompleted($set);
 
     }
 
@@ -86,10 +87,10 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     private function fireWebhooks(Collection $set): void
     {
         // collect transaction groups by set ids.
-        $groups = TransactionGroup::whereIn('id',array_unique($set->pluck('transaction_group_id')->toArray()))->get();
+        $groups = TransactionGroup::whereIn('id', array_unique($set->pluck('transaction_group_id')->toArray()))->get();
 
         Log::debug(__METHOD__);
-        $user       = $set->first()->user;
+        $user = $set->first()->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);

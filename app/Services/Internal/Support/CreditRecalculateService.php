@@ -75,29 +75,33 @@ class CreditRecalculateService
         $this->processWork();
     }
 
-    private function processGroup(): void
+    private function collectFromJournals(Collection $transactionJournals): void
     {
-        /** @var TransactionJournal $journal */
-        foreach ($this->group->transactionJournals as $journal) {
-            try {
-                $this->findByJournal($journal);
-            } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction group #%d.', $this->group->id));
+        Log::debug('Now in collectFromJournals()');
+        $valid    = config('firefly.valid_liabilities');
+        $accounts = Account
+            ::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+            ->whereIn('transaction_journals.id', $transactionJournals->pluck('id')->toArray())
+            ->whereIn('account_types.type', $valid)
+            ->get(['accounts.*']);
+        if ($accounts->count() > 0) {
+            Log::debug(sprintf('Found %d account(s) to process.', $accounts->count()));
+            foreach ($accounts as $account) {
+                $this->work[] = $account;
             }
         }
     }
 
+    private function processGroup(): void
+    {
+        $this->collectFromJournals($this->group->transactionJournals);
+    }
+
     private function processJournals(): void
     {
-        foreach ($this->journals as $journal) {
-            try {
-                $this->findByJournal($journal);
-            } catch (FireflyException $e) {
-                Log::error($e->getTraceAsString());
-                Log::error(sprintf('Could not find work account for transaction journal #%d.', $journal->id));
-            }
-        }
+        $this->collectFromJournals($this->journals);
     }
 
 
