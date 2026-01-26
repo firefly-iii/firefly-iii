@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * BatchController.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -46,23 +49,23 @@ class BatchController extends Controller
         });
     }
 
-
     public function finishBatch(Request $request): JsonResponse
     {
-        $journals = $this->repository->getUncompletedJournals();
+        $journals          = $this->repository->getUncompletedJournals();
         if (0 === count($journals)) {
             return response()->json([], 204);
         }
+
         /** @var TransactionJournal $first */
-        $first = $journals->first();
-        $group = $first?->transactionGroup;
+        $first             = $journals->first();
+        $group             = $first?->transactionGroup;
         if (null === $group) {
             return response()->json([], 204);
         }
         $flags             = new TransactionGroupEventFlags();
         $flags->applyRules = 'true' === $request->get('apply_rules');
         event(new CreatedSingleTransactionGroup($group, $flags));
+
         return response()->json([], 204);
     }
-
 }
