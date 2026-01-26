@@ -81,6 +81,7 @@ return [
         'objectGroup'           => ObjectGroup::class,
         'piggyBank'             => PiggyBank::class,
         'preference'            => Preference::class,
+        'preferenceName'            => Preference::class,
         'tj'                    => TransactionJournal::class,
         'tag'                   => Tag::class,
         'recurrence'            => Recurrence::class,
