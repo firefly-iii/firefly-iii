@@ -58,10 +58,7 @@ class UserController extends Controller
         });
     }
 
-
-    public function finishBatch(): JsonResponse {
-
-    }
+    public function finishBatch(): JsonResponse {}
 
     /**
      * This endpoint is documented at:
