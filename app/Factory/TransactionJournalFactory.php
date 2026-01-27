@@ -179,7 +179,7 @@ class TransactionJournalFactory
         Log::debug('Find foreign currency or return NULL.');
 
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'] ?? 0, $row['foreign_currency_code'] ?? '');
-        $bill                  = $this->billRepository->findBill(((int) $row['bill_id'] ?? 0, $row['bill_name'] ?? '');
+        $bill                  = $this->billRepository->findBill(((int) $row['bill_id'] ?? 0), $row['bill_name'] ?? '');
         $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && $bill instanceof Bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
