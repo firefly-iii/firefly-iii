@@ -48,9 +48,13 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     public function handle(CreatedSingleTransactionGroup $event): void
     {
         Log::debug(sprintf('In ProcessesNewTransactionGroup::handle(#%d)', $event->transactionGroup->id));
-        $setting = FireflyConfig::get('enable_batch_processing', false)->data;
+        $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
-            Log::debug(sprintf('Will do nothing for group #%d because it is part of a batch (setting:%s).', $event->transactionGroup->id, var_export($setting, true)));
+            Log::debug(sprintf(
+                'Will do nothing for group #%d because it is part of a batch (setting:%s).',
+                $event->transactionGroup->id,
+                var_export($setting, true)
+            ));
 
             return;
         }
