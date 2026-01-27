@@ -31,6 +31,7 @@ use FireflyIII\Jobs\MailError;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -71,6 +72,7 @@ class Handler extends ExceptionHandler
         AuthenticationException::class,
         LaravelValidationException::class,
         NotFoundHttpException::class,
+        ModelNotFoundException::class,
         GoneHttpException::class,
         OAuthServerException::class,
         LaravelOAuthException::class,
