@@ -48,6 +48,7 @@ use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
 
@@ -527,7 +528,7 @@ class JournalUpdateService
         if ($this->hasFields(['category_id', 'category_name'])) {
             Log::debug('Will update category.');
 
-            $this->storeCategory($this->transactionJournal, $this->data);
+            $this->storeCategory($this->transactionJournal, new NullArrayObject($this->data));
         }
     }
 
@@ -536,7 +537,7 @@ class JournalUpdateService
         // update budget
         if ($this->hasFields(['budget_id', 'budget_name'])) {
             Log::debug('Will update budget.');
-            $this->storeBudget($this->transactionJournal, $this->data);
+            $this->storeBudget($this->transactionJournal, new NullArrayObject($this->data));
         }
         // is transfer? remove budget
         if (TransactionTypeEnum::TRANSFER->value === $this->transactionJournal->transactionType->type) {

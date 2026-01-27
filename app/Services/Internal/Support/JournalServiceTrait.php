@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Rules\UniqueIban;
+use FireflyIII\Support\NullArrayObject;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 
@@ -377,7 +378,7 @@ trait JournalServiceTrait
         return $amount;
     }
 
-    protected function storeBudget(TransactionJournal $journal, array $data): void
+    protected function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
         if (TransactionTypeEnum::WITHDRAWAL->value !== $journal->transactionType->type) {
             $journal->budgets()->sync([]);
@@ -395,7 +396,7 @@ trait JournalServiceTrait
         $journal->budgets()->sync([]);
     }
 
-    protected function storeCategory(TransactionJournal $journal, array $data): void
+    protected function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
     {
         $category = $this->categoryRepository->findCategory($data['category_id'], $data['category_name']);
         if (null !== $category) {

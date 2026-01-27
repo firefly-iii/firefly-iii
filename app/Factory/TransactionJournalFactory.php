@@ -50,6 +50,7 @@ use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
@@ -162,7 +163,7 @@ class TransactionJournalFactory
      *
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      */
-    private function createJournal(array $row): ?TransactionJournal
+    private function createJournal(NullArrayObject $row): ?TransactionJournal
     {
         Log::debug('Now in TransactionJournalFactory::createJournal()');
         $row['import_hash_v2'] = $this->hashArray($row);
@@ -175,11 +176,11 @@ class TransactionJournalFactory
         $order                 = $row['order'] ?? 0;
 
         Log::debug('Find currency or return default.');
-        $currency              = $this->currencyRepository->findCurrency(((int) $row['currency_id'] ?? 0), (string) ($row['currency_code'] ?? ''));
+        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'],$row['currency_code']);
         Log::debug('Find foreign currency or return NULL.');
 
-        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'] ?? 0, $row['foreign_currency_code'] ?? '');
-        $bill                  = $this->billRepository->findBill(((int) $row['bill_id'] ?? 0), $row['bill_name'] ?? '');
+        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
+        $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
         $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && $bill instanceof Bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
@@ -345,7 +346,7 @@ class TransactionJournalFactory
         return $journal;
     }
 
-    private function hashArray(array $row): string
+    private function hashArray(NullArrayObject $row): string
     {
         unset($row['import_hash_v2'], $row['original_source']);
 
@@ -356,7 +357,7 @@ class TransactionJournalFactory
             $json = microtime();
         }
         $hash = hash('sha256', $json);
-        Log::debug(sprintf('The hash is: %s', $hash), $row);
+        Log::debug(sprintf('The hash is: %s', $hash), $row->getArrayCopy());
 
         return $hash;
     }
@@ -576,7 +577,7 @@ class TransactionJournalFactory
     /**
      * Link a piggy bank to this journal.
      */
-    private function storePiggyEvent(TransactionJournal $journal, array $data): void
+    private function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
     {
         Log::debug('Will now store piggy event.');
 
@@ -591,10 +592,10 @@ class TransactionJournalFactory
         Log::debug('Create no piggy event');
     }
 
-    private function storeMetaFields(TransactionJournal $journal, array $transaction): void
+    private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
     {
         foreach ($this->fields as $field) {
-            $this->storeMeta($journal, $transaction, $field);
+            $this->storeMeta($journal, $transaction->getArrayCopy(), $field);
         }
     }
 
@@ -614,7 +615,7 @@ class TransactionJournalFactory
         $factory->updateOrCreate($set);
     }
 
-    private function storeLocation(TransactionJournal $journal, array $data): void
+    private function storeLocation(TransactionJournal $journal, NullArrayObject $data): void
     {
         if (!in_array(null, [$data['longitude'], $data['latitude'], $data['zoom_level']], true)) {
             $location             = new Location();
