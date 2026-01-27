@@ -178,8 +178,8 @@ class TransactionJournalFactory
         $currency              = $this->currencyRepository->findCurrency(((int) $row['currency_id'] ?? 0), (string) ($row['currency_code'] ?? ''));
         Log::debug('Find foreign currency or return NULL.');
 
-        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
-        $bill                  = $this->billRepository->findBill((int) $row['bill_id'], $row['bill_name']);
+        $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'] ?? 0, $row['foreign_currency_code'] ?? '');
+        $bill                  = $this->billRepository->findBill(((int) $row['bill_id'] ?? 0, $row['bill_name'] ?? '');
         $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && $bill instanceof Bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
