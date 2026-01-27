@@ -20,8 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 declare(strict_types=1);
 
 return [
@@ -55,8 +53,6 @@ return [
     'deposit_list'           => 'Revenue, income and deposits',
     'transfer_list'          => 'Transfers',
     'transfers_list'         => 'Transfers',
-
-
 
     'reconciliation_list'    => 'Reconciliations',
     'create_withdrawal'      => 'Create new withdrawal',
@@ -93,5 +89,4 @@ return [
     // exchange rates
     'exchange_rates_index'   => 'Exchange rates',
     'exchange_rates_rates'   => 'Exchange rates between :from and :to (and the other way around)',
-
 ];
