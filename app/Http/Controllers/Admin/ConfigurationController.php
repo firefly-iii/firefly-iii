@@ -46,7 +46,7 @@ class ConfigurationController extends Controller
         parent::__construct();
 
         $this->middleware(static function ($request, $next) {
-            app('view')->share('title', (string) trans('firefly.system_settings'));
+            app('view')->share('title', (string)trans('firefly.system_settings'));
             app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
             return $next($request);
@@ -59,38 +59,40 @@ class ConfigurationController extends Controller
      *
      * @return Factory|View
      */
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory | \Illuminate\Contracts\View\View
     {
-        $subTitle            = (string) trans('firefly.instance_configuration');
-        $subTitleIcon        = 'fa-wrench';
+        $subTitle     = (string)trans('firefly.instance_configuration');
+        $subTitleIcon = 'fa-wrench';
 
         Log::channel('audit')->info('User visits admin config index.');
 
         // all available configuration and their default value in case
         // they don't exist yet.
-        $singleUserMode      = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $isDemoSite          = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $siteOwner           = config('firefly.site_owner');
+        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $isDemoSite     = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $siteOwner      = config('firefly.site_owner');
 
-        $enableExchangeRates = FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
-        $useRunningBalance   = FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
-        $enableExternalMap   = FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
-        $enableExternalRates = FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data;
-        $allowWebhooks       = FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
-        $validUrlProtocols   = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
+        $enableExchangeRates   = FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data;
+        $useRunningBalance     = FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data;
+        $enableExternalMap     = FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $enableExternalRates   = FireflyConfig::get('enable_external_rates', config('cer.download_enabled'))->data;
+        $allowWebhooks         = FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data;
+        $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false)->data;
+        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', config('firefly.valid_url_protocols'))->data;
 
         return view('settings.configuration.index', [
-            'subTitle'            => $subTitle,
-            'subTitleIcon'        => $subTitleIcon,
-            'singleUserMode'      => $singleUserMode,
-            'isDemoSite'          => $isDemoSite,
-            'siteOwner'           => $siteOwner,
-            'enableExchangeRates' => $enableExchangeRates,
-            'useRunningBalance'   => $useRunningBalance,
-            'enableExternalMap'   => $enableExternalMap,
-            'enableExternalRates' => $enableExternalRates,
-            'allowWebhooks'       => $allowWebhooks,
-            'validUrlProtocols'   => $validUrlProtocols,
+            'subTitle'              => $subTitle,
+            'subTitleIcon'          => $subTitleIcon,
+            'singleUserMode'        => $singleUserMode,
+            'isDemoSite'            => $isDemoSite,
+            'siteOwner'             => $siteOwner,
+            'enableExchangeRates'   => $enableExchangeRates,
+            'useRunningBalance'     => $useRunningBalance,
+            'enableExternalMap'     => $enableExternalMap,
+            'enableExternalRates'   => $enableExternalRates,
+            'allowWebhooks'         => $allowWebhooks,
+            'enableBatchProcessing' => $enableBatchProcessing,
+            'validUrlProtocols'     => $validUrlProtocols,
         ]);
     }
 
@@ -118,7 +120,7 @@ class ConfigurationController extends Controller
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);
 
         // flash message
-        session()->flash('success', (string) trans('firefly.configuration_updated'));
+        session()->flash('success', (string)trans('firefly.configuration_updated'));
         Preferences::mark();
 
         return redirect()->route('settings.configuration.index');

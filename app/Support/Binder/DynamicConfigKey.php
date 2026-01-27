@@ -42,6 +42,7 @@ class DynamicConfigKey
         'configuration.enable_external_map', // boolean
         'configuration.enable_external_rates', // boolean
         'configuration.allow_webhooks', // boolean
+        'configuration.enable_batch_processing', // boolean
         'configuration.valid_url_protocols', // string ("http,https")
     ];
 
