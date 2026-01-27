@@ -127,7 +127,7 @@ class TransactionJournalFactory
             foreach ($transactions as $index => $row) {
                 $row['batch_submission'] = $batchSubmission;
                 Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
-                $journal                 = $this->createJournal($row);
+                $journal                 = $this->createJournal(new NullArrayObject($row));
                 if ($journal instanceof TransactionJournal) {
                     $collection->push($journal);
                 }
