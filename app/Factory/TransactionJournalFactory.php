@@ -175,11 +175,11 @@ class TransactionJournalFactory
         $order                 = $row['order'] ?? 0;
 
         Log::debug('Find currency or return default.');
-        $currency              = $this->currencyRepository->findCurrency(((int) $row['currency_id'] ?? 0), (string) ($row['currency_code'] ?? ''));
+        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'] ?? 0, (string) ($row['currency_code'] ?? ''));
         Log::debug('Find foreign currency or return NULL.');
 
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'] ?? 0, $row['foreign_currency_code'] ?? '');
-        $bill                  = $this->billRepository->findBill(((int) $row['bill_id'] ?? 0), $row['bill_name'] ?? '');
+        $bill                  = $this->billRepository->findBill((int) $row['bill_id'] ?? 0, $row['bill_name'] ?? '');
         $billId                = TransactionTypeEnum::WITHDRAWAL->value === $type->type && $bill instanceof Bill ? $bill->id : null;
         $description           = (string) $row['description'];
 
