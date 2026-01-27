@@ -176,7 +176,7 @@ class TransactionJournalFactory
         $order                 = $row['order'] ?? 0;
 
         Log::debug('Find currency or return default.');
-        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'],$row['currency_code']);
+        $currency              = $this->currencyRepository->findCurrency((int) $row['currency_id'], $row['currency_code']);
         Log::debug('Find foreign currency or return NULL.');
 
         $foreignCurrency       = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
