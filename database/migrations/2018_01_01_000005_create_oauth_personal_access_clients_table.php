@@ -51,17 +51,16 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     {
         if (!Schema::hasTable('oauth_personal_access_clients')) {
             try {
-                Schema::create(
-                    'oauth_personal_access_clients',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->integer('client_id')->index();
-                        $table->timestamps();
-                    }
-                );
+                Schema::create('oauth_personal_access_clients', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->integer('client_id')->index();
+                    $table->timestamps();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "oauth_personal_access_clients": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

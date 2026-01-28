@@ -51,23 +51,22 @@ class CreateOauthClientsTable extends Migration
     {
         if (!Schema::hasTable('oauth_clients')) {
             try {
-                Schema::create(
-                    'oauth_clients',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->integer('user_id')->index()->nullable();
-                        $table->string('name');
-                        $table->string('secret', 100);
-                        $table->text('redirect');
-                        $table->boolean('personal_access_client');
-                        $table->boolean('password_client');
-                        $table->boolean('revoked');
-                        $table->timestamps();
-                    }
-                );
+                Schema::create('oauth_clients', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->integer('user_id')->index()->nullable();
+                    $table->string('name');
+                    $table->string('secret', 100);
+                    $table->text('redirect');
+                    $table->boolean('personal_access_client');
+                    $table->boolean('password_client');
+                    $table->boolean('revoked');
+                    $table->timestamps();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "oauth_clients": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }
