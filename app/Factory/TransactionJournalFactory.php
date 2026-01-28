@@ -399,7 +399,7 @@ class TransactionJournalFactory
     /**
      * @throws FireflyException
      */
-    private function validateAccounts(array $data): void
+    private function validateAccounts(NullArrayObject $data): void
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $transactionType  = $data['type'] ?? 'invalid';
