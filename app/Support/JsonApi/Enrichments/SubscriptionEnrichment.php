@@ -114,7 +114,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
                 $amounts['pc_amount_min'] = Steam::bcround($item->native_amount_min, $this->primaryCurrency->decimal_places);
                 $amounts['pc_amount_max'] = Steam::bcround($item->native_amount_max, $this->primaryCurrency->decimal_places);
                 $amounts['pc_average']    = Steam::bcround(
-                    bcdiv(bcadd($item->native_amount_min, $item->native_amount_max), '2'),
+                    bcdiv(bcadd($item->native_amount_min ?? '0', $item->native_amount_max ?? '0'), '2'),
                     $this->primaryCurrency->decimal_places
                 );
             }
