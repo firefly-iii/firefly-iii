@@ -51,24 +51,23 @@ class MakeLocationsTable extends Migration
     {
         if (!Schema::hasTable('locations')) {
             try {
-                Schema::create(
-                    'locations',
-                    static function (Blueprint $table): void {
-                        $table->bigIncrements('id');
-                        $table->timestamps();
-                        $table->softDeletes();
+                Schema::create('locations', static function (Blueprint $table): void {
+                    $table->bigIncrements('id');
+                    $table->timestamps();
+                    $table->softDeletes();
 
-                        $table->integer('locatable_id', false, true);
-                        $table->string('locatable_type', 255);
+                    $table->integer('locatable_id', false, true);
+                    $table->string('locatable_type', 255);
 
-                        $table->decimal('latitude', 12, 8)->nullable();
-                        $table->decimal('longitude', 12, 8)->nullable();
-                        $table->smallInteger('zoom_level', false, true)->nullable();
-                    }
-                );
+                    $table->decimal('latitude', 12, 8)->nullable();
+                    $table->decimal('longitude', 12, 8)->nullable();
+                    $table->smallInteger('zoom_level', false, true)->nullable();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "locations": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

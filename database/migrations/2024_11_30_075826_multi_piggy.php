@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2024_11_30_075826_multi_piggy.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -28,7 +27,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      */
@@ -114,7 +113,6 @@ return new class () extends Migration {
                 $table->unique(['account_id', 'piggy_bank_id'], 'unique_piggy_save');
             });
         }
-
     }
 
     /**
@@ -161,7 +159,6 @@ return new class () extends Migration {
 
     protected static function hasForeign(string $table, string $column): bool
     {
-
         $foreignKeysDefinitions = Schema::getForeignKeys($table);
         foreach ($foreignKeysDefinitions as $foreignKeyDefinition) {
             if ($foreignKeyDefinition['name'] === $column) {

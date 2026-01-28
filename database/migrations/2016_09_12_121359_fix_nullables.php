@@ -39,7 +39,9 @@ class FixNullables extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void {}
+    public function down(): void
+    {
+    }
 
     /**
      * Run the migrations.
@@ -50,12 +52,9 @@ class FixNullables extends Migration
     {
         if (!Schema::hasColumn('rule_groups', 'description')) {
             try {
-                Schema::table(
-                    'rule_groups',
-                    static function (Blueprint $table): void {
-                        $table->text('description')->nullable()->change();
-                    }
-                );
+                Schema::table('rule_groups', static function (Blueprint $table): void {
+                    $table->text('description')->nullable()->change();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf(self::TABLE_UPDATE_ERROR, 'rule_groups', $e->getMessage()));
                 app('log')->error(self::COLUMN_ALREADY_EXISTS);
@@ -64,12 +63,9 @@ class FixNullables extends Migration
 
         if (!Schema::hasColumn('rules', 'description')) {
             try {
-                Schema::table(
-                    'rules',
-                    static function (Blueprint $table): void {
-                        $table->text('description')->nullable()->change();
-                    }
-                );
+                Schema::table('rules', static function (Blueprint $table): void {
+                    $table->text('description')->nullable()->change();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf(self::TABLE_UPDATE_ERROR, 'rules', $e->getMessage()));
                 app('log')->error(self::COLUMN_ALREADY_EXISTS);

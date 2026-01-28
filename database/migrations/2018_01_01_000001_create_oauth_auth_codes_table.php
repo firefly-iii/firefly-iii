@@ -51,20 +51,19 @@ class CreateOauthAuthCodesTable extends Migration
     {
         if (!Schema::hasTable('oauth_auth_codes')) {
             try {
-                Schema::create(
-                    'oauth_auth_codes',
-                    static function (Blueprint $table): void {
-                        $table->string('id', 100)->primary();
-                        $table->integer('user_id');
-                        $table->integer('client_id');
-                        $table->text('scopes')->nullable();
-                        $table->boolean('revoked');
-                        $table->dateTime('expires_at')->nullable();
-                    }
-                );
+                Schema::create('oauth_auth_codes', static function (Blueprint $table): void {
+                    $table->string('id', 100)->primary();
+                    $table->integer('user_id');
+                    $table->integer('client_id');
+                    $table->text('scopes')->nullable();
+                    $table->boolean('revoked');
+                    $table->dateTime('expires_at')->nullable();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "oauth_auth_codes": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

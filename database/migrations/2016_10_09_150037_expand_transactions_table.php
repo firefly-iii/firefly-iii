@@ -40,12 +40,9 @@ class ExpandTransactionsTable extends Migration
     {
         if (Schema::hasColumn('transactions', 'identifier')) {
             try {
-                Schema::table(
-                    'transactions',
-                    static function (Blueprint $table): void {
-                        $table->dropColumn('identifier');
-                    }
-                );
+                Schema::table('transactions', static function (Blueprint $table): void {
+                    $table->dropColumn('identifier');
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not drop column "identifier": %s', $e->getMessage()));
                 app('log')->error('If the column does not exist, this is not an problem. Otherwise, please open a GitHub discussion.');
@@ -62,12 +59,9 @@ class ExpandTransactionsTable extends Migration
     {
         if (!Schema::hasColumn('transactions', 'identifier')) {
             try {
-                Schema::table(
-                    'transactions',
-                    static function (Blueprint $table): void {
-                        $table->smallInteger('identifier', false, true)->default(0);
-                    }
-                );
+                Schema::table('transactions', static function (Blueprint $table): void {
+                    $table->smallInteger('identifier', false, true)->default(0);
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
