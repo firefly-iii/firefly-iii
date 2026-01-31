@@ -24,12 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserHasEnabledMFA;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\EnabledMFANotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutEnabledMFA implements ShouldQueue
 {
@@ -38,23 +37,6 @@ class NotifiesUserAboutEnabledMFA implements ShouldQueue
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;
-
-        try {
-            Notification::send($user, new EnabledMFANotification($user));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        NotificationSender::send($user, new EnabledMFANotification($user));
     }
 }

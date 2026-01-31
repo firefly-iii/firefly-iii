@@ -31,6 +31,7 @@ use FireflyIII\Mail\InvitationMail;
 use FireflyIII\Models\InvitedUser;
 use FireflyIII\Notifications\Admin\UserInvitation;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
@@ -68,22 +69,6 @@ class NotifiesAboutNewInvitation implements ShouldQueue
             return;
         }
 
-        try {
-            Notification::send(new OwnerNotifiable(), new UserInvitation($invitee));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+            NotificationSender::send(new OwnerNotifiable(), new UserInvitation($invitee));
     }
 }

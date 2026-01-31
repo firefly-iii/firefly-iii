@@ -24,12 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserHasFewMFABackupCodesLeft;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\MFABackupFewLeftNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutFewCodesLeft implements ShouldQueue
 {
@@ -39,23 +38,6 @@ class NotifiesUserAboutFewCodesLeft implements ShouldQueue
 
         $user  = $event->user;
         $count = $event->count;
-
-        try {
-            Notification::send($user, new MFABackupFewLeftNotification($user, $count));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        NotificationSender::send($user, new MFABackupFewLeftNotification($user, $count));
     }
 }

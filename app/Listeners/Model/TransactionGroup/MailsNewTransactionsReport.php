@@ -24,16 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
-use Exception;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\TransactionCreation;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class MailsNewTransactionsReport implements ShouldQueue
 {
@@ -42,11 +41,11 @@ class MailsNewTransactionsReport implements ShouldQueue
         Log::debug('In MailsNewTransactionsReport.');
 
         /** @var UserRepositoryInterface $repository */
-        $repository  = app(UserRepositoryInterface::class);
-        $user        = $repository->find($event->userId);
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $repository->find($event->userId);
 
         /** @var bool $sendReport */
-        $sendReport  = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
+        $sendReport = Preferences::getForUser($user, 'notification_transaction_creation', false)->data;
 
         if (false === $sendReport) {
             Log::debug('Not sending report, because config says so.');
@@ -71,23 +70,7 @@ class MailsNewTransactionsReport implements ShouldQueue
             $groups[] = $transformer->transformObject($group);
         }
 
-        try {
-            Notification::send($user, new TransactionCreation($groups));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        NotificationSender::send($user, new TransactionCreation($groups));
         Log::debug('If there is no error above this line, message was sent.');
     }
 }

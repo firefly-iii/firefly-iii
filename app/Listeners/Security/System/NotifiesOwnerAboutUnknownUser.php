@@ -24,35 +24,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\System;
 
-use Exception;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Notifications\Admin\UnknownUserLoginAttempt;
 use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
+use FireflyIII\Notifications\NotificationSender;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesOwnerAboutUnknownUser implements ShouldQueue
 {
     public function handle(UnknownUserTriedLogin $event): void
     {
-        try {
-            $owner = new OwnerNotifiable();
-            Notification::send($owner, new UnknownUserLoginAttempt($event->address));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        $owner = new OwnerNotifiable();
+        NotificationSender::send($owner, new UnknownUserLoginAttempt($event->address));
     }
 }

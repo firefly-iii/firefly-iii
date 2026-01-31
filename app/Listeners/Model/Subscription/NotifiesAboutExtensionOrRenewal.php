@@ -24,13 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Model\Subscription;
 
-use Exception;
 use FireflyIII\Events\Model\Subscription\SubscriptionNeedsExtensionOrRenewal;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\BillReminder;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesAboutExtensionOrRenewal implements ShouldQueue
 {
@@ -40,29 +39,11 @@ class NotifiesAboutExtensionOrRenewal implements ShouldQueue
         $subscription = $event->subscription;
 
         /** @var bool $preference */
-        $preference   = Preferences::getForUser($subscription->user, 'notification_bill_reminder', true)->data;
+        $preference = Preferences::getForUser($subscription->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
             Log::debug('Subscription reminder is true!');
-
-            try {
-                Notification::send($subscription->user, new BillReminder($subscription, $event->field, $event->diff));
-            } catch (Exception $e) {
-                $message = $e->getMessage();
-                if (str_contains($message, 'Bcc')) {
-                    Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                if (str_contains($message, 'RFC 2822')) {
-                    Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                    return;
-                }
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-
+            NotificationSender::send($subscription->user, new BillReminder($subscription, $event->field, $event->diff));
             return;
         }
         Log::debug('User has disabled subscription reminders.');
