@@ -41,40 +41,6 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountObserver
 {
-    public function created(Account $account): void
-    {
-        //        Log::debug('Observe "created" of an account.');
-        $this->updatePrimaryCurrencyAmount($account);
-    }
-
-    private function updatePrimaryCurrencyAmount(Account $account): void
-    {
-        if (!Amount::convertToPrimary($account->user)) {
-            return;
-        }
-        $userCurrency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
-        $repository   = app(AccountRepositoryInterface::class);
-        $currency     = $repository->getAccountCurrency($account);
-        if (
-            null !== $currency
-            && $currency->id !== $userCurrency->id
-            && '' !== (string) $account->virtual_balance
-            && 0 !== bccomp($account->virtual_balance, '0')
-        ) {
-            $converter                       = new ExchangeRateConverter();
-            $converter->setUserGroup($account->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $account->native_virtual_balance = $converter->convert($currency, $userCurrency, today(), $account->virtual_balance);
-        }
-        if ('' === (string) $account->virtual_balance || 0 === bccomp($account->virtual_balance, '0')) {
-            $account->virtual_balance        = null;
-            $account->native_virtual_balance = null;
-        }
-        $account->saveQuietly();
-
-        // Log::debug('Account primary currency virtual balance is updated.');
-    }
-
     /**
      * Also delete related objects.
      */
@@ -116,11 +82,5 @@ class AccountObserver
 
         $account->notes()->delete();
         $account->locations()->delete();
-    }
-
-    public function updated(Account $account): void
-    {
-        //        Log::debug('Observe "updated" of an account.');
-        $this->updatePrimaryCurrencyAmount($account);
     }
 }

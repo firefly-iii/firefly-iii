@@ -1,6 +1,6 @@
 <?php
 /*
- * TriggersCreditRecalculation.php
+ * UpdatedExistingAccount.php
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -19,23 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Listeners\Model\Account;
+namespace FireflyIII\Events\Model\Account;
 
-use FireflyIII\Events\Model\Account\CreatedNewAccount;
-use FireflyIII\Services\Internal\Support\CreditRecalculateService;
-use Illuminate\Support\Facades\Log;
+use FireflyIII\Events\Event;
+use FireflyIII\Models\Account;
+use Illuminate\Queue\SerializesModels;
 
-class TriggersCreditRecalculation
+class UpdatedExistingAccount extends Event
 {
-    public function handle(CreatedNewAccount $event): void
-    {
-        L¬og::debug('Will call CreditRecalculateService because a new account was created.');
-        $account = $event->account;
-        /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
-        $object->setAccount($account);
-        $object->recalculate();
-    }
+    use SerializesModels;
 
-
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(public Account $account) {}
 }
