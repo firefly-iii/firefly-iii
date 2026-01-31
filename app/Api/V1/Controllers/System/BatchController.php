@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers\System;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\JsonResponse;
@@ -64,7 +65,8 @@ class BatchController extends Controller
         }
         $flags             = new TransactionGroupEventFlags();
         $flags->applyRules = 'true' === $request->get('apply_rules');
-        event(new CreatedSingleTransactionGroup($group, $flags));
+        event(new UserRequestedBatchProcessing($flags));
+        // event(new CreatedSingleTransactionGroup($group, $flags));
 
         return response()->json([], 204);
     }

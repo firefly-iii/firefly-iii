@@ -130,16 +130,16 @@
         },
         {
             "name": "brick/math",
-            "version": "0.14.1",
+            "version": "0.14.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/math.git",
-                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0"
+                "reference": "55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/math/zipball/f05858549e5f9d7bb45875a75583240a38a281d0",
-                "reference": "f05858549e5f9d7bb45875a75583240a38a281d0",
+                "url": "https://api.github.com/repos/brick/math/zipball/55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2",
+                "reference": "55c950aa71a2cabc1d8f2bec1f8a7020bd244aa2",
                 "shasum": ""
             },
             "require": {
@@ -178,7 +178,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/math/issues",
-                "source": "https://github.com/brick/math/tree/0.14.1"
+                "source": "https://github.com/brick/math/tree/0.14.2"
             },
             "funding": [
                 {
@@ -186,7 +186,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-11-24T14:40:29+00:00"
+            "time": "2026-01-30T14:03:11+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3724,16 +3724,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "3.11.0",
+            "version": "3.11.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/CarbonPHP/carbon.git",
-                "reference": "bdb375400dcd162624531666db4799b36b64e4a1"
+                "reference": "f438fcc98f92babee98381d399c65336f3a3827f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/bdb375400dcd162624531666db4799b36b64e4a1",
-                "reference": "bdb375400dcd162624531666db4799b36b64e4a1",
+                "url": "https://api.github.com/repos/CarbonPHP/carbon/zipball/f438fcc98f92babee98381d399c65336f3a3827f",
+                "reference": "f438fcc98f92babee98381d399c65336f3a3827f",
                 "shasum": ""
             },
             "require": {
@@ -3757,7 +3757,7 @@
                 "phpstan/extension-installer": "^1.4.3",
                 "phpstan/phpstan": "^2.1.22",
                 "phpunit/phpunit": "^10.5.53",
-                "squizlabs/php_codesniffer": "^3.13.4"
+                "squizlabs/php_codesniffer": "^3.13.4 || ^4.0.0"
             },
             "bin": [
                 "bin/carbon"
@@ -3800,14 +3800,14 @@
                 }
             ],
             "description": "An API extension for DateTime that supports 281 different languages.",
-            "homepage": "https://carbon.nesbot.com",
+            "homepage": "https://carbonphp.github.io/carbon/",
             "keywords": [
                 "date",
                 "datetime",
                 "time"
             ],
             "support": {
-                "docs": "https://carbon.nesbot.com/docs",
+                "docs": "https://carbonphp.github.io/carbon/guide/getting-started/introduction.html",
                 "issues": "https://github.com/CarbonPHP/carbon/issues",
                 "source": "https://github.com/CarbonPHP/carbon"
             },
@@ -3825,7 +3825,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-02T21:04:28+00:00"
+            "time": "2026-01-29T09:26:29+00:00"
         },
         {
             "name": "nette/schema",
@@ -10530,16 +10530,16 @@
         },
         {
             "name": "fruitcake/laravel-debugbar",
-            "version": "v4.0.3",
+            "version": "v4.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruitcake/laravel-debugbar.git",
-                "reference": "9eec3770a304c52d1dd71577b44bbb9ab904f5d8"
+                "reference": "1da86437d28f36baf3bb9841d77e74cb639372a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/9eec3770a304c52d1dd71577b44bbb9ab904f5d8",
-                "reference": "9eec3770a304c52d1dd71577b44bbb9ab904f5d8",
+                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/1da86437d28f36baf3bb9841d77e74cb639372a9",
+                "reference": "1da86437d28f36baf3bb9841d77e74cb639372a9",
                 "shasum": ""
             },
             "require": {
@@ -10616,7 +10616,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fruitcake/laravel-debugbar/issues",
-                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.0.3"
+                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.0.5"
             },
             "funding": [
                 {
@@ -10628,7 +10628,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-26T18:25:58+00:00"
+            "time": "2026-01-29T19:18:02+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -11414,11 +11414,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.37",
+            "version": "2.1.38",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/28cd424c5ea984128c95cfa7ea658808e8954e49",
-                "reference": "28cd424c5ea984128c95cfa7ea658808e8954e49",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dfaf1f530e1663aa167bc3e52197adb221582629",
+                "reference": "dfaf1f530e1663aa167bc3e52197adb221582629",
                 "shasum": ""
             },
             "require": {
@@ -11463,7 +11463,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-24T08:21:55+00:00"
+            "time": "2026-01-30T17:12:46+00:00"
         },
         {
             "name": "phpstan/phpstan-deprecation-rules",
@@ -13199,5 +13199,8 @@
         "ext-xmlwriter": "*"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.4"
+    },
     "plugin-api-version": "2.9.0"
 }

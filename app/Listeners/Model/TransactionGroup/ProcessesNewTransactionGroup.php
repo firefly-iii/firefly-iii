@@ -27,10 +27,12 @@ namespace FireflyIII\Listeners\Model\TransactionGroup;
 use Carbon\Carbon;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
@@ -45,21 +47,26 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesNewTransactionGroup implements ShouldQueue
 {
-    public function handle(CreatedSingleTransactionGroup $event): void
+    public function handle(CreatedSingleTransactionGroup | UserRequestedBatchProcessing $event): void
     {
-        Log::debug(sprintf('In ProcessesNewTransactionGroup::handle(#%d)', $event->transactionGroup->id));
-        $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
+        $groupId    = 0;
+        $collection = new Collection();
+        if ($event instanceof CreatedSingleTransactionGroup) {
+            Log::debug(sprintf('In ProcessesNewTransactionGroup::handle(#%d)', $event->transactionGroup->id));
+            $groupId    = $event->transactionGroup->id;
+            $collection = $event->transactionGroup->transactionJournals;
+        }
+        if ($event instanceof UserRequestedBatchProcessing) {
+            Log::debug('User called UserRequestedBatchProcessing');
+        }
+
+        $setting = FireflyConfig::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
-            Log::debug(sprintf(
-                'Will do nothing for group #%d because it is part of a batch (setting:%s).',
-                $event->transactionGroup->id,
-                var_export($setting, true)
-            ));
+            Log::debug(sprintf('Will do nothing for group #%d because it is part of a batch.', $groupId));
 
             return;
         }
-        Log::debug(sprintf('Will join group #%d with all other open transaction groups and process them.', $event->transactionGroup->id));
-        $collection = $event->transactionGroup->transactionJournals;
+        Log::debug(sprintf('Will (joined with group #%d) collect all open transaction groups and process them.', $groupId));
         $repository = app(JournalRepositoryInterface::class);
         $set        = $collection->merge($repository->getUncompletedJournals());
         if (0 === $set->count()) {
@@ -67,6 +74,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
             return;
         }
+        Log::debug(sprintf('Set count is %d', $set->count()));
         if (!$event->flags->applyRules) {
             Log::debug(sprintf('Will NOT process rules for %d journal(s)', $set->count()));
         }
@@ -85,12 +93,10 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         if ($event->flags->fireWebhooks) {
             $this->fireWebhooks($set);
         }
-        // always remove old statistics.
+        // always remove old relevant statistics.
         $this->removePeriodStatistics($set);
 
         // recalculate running balance if necessary.
-
-        Log::debug('Observe "created" of a transaction.');
         if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             $this->recalculateRunningBalance($set);
         }
@@ -103,9 +109,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         Log::debug('Now in recalculateRunningBalance');
         // find the earliest date in the set, based on date and _internal_previous_date
         $earliest = $set->pluck('date')->sort()->first();
-        $entries  = TransactionJournalMeta::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->where('name', '_internal_previous_date')->get([
-            'journal_meta.*',
-        ]);
+        $entries  = TransactionJournalMeta::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->where('name', '_internal_previous_date')->get(['journal_meta.*']);
         $array    = $entries->toArray();
         if (count($array) > 0) {
             usort($array, function (array $a, array $b) {
@@ -114,16 +118,19 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
             /** @var Carbon $date */
             $date     = Carbon::parse($array[0]['data']);
+            /** @var Carbon $earliest */
             $earliest = $date->lt($earliest) ? $date : $earliest;
         }
+        Log::debug(sprintf('Found earliest date: %s', $earliest->toW3cString()));
 
         // get accounts
         $accounts = Account::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
-            ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
-            ->get(['accounts.*'])
-        ;
+                           ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+                           ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+                           ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
+                           ->get(['accounts.*']);
+
+        Log::debug('Found accounts to process', $accounts->pluck('id')->toArray());
 
         AccountBalanceCalculator::optimizedCalculation($accounts, $earliest);
     }
@@ -143,7 +150,9 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         $groups = TransactionGroup::whereIn('id', array_unique($set->pluck('transaction_group_id')->toArray()))->get();
 
         Log::debug(__METHOD__);
-        $user   = $set->first()->user;
+        /** @var TransactionJournal $first */
+        $first = $set->first();
+        $user  = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -174,9 +183,11 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     private function processRules(Collection $set): void
     {
         Log::debug(sprintf('Will now processRules for %d journal(s)', $set->count()));
-        $array               = $set->pluck('id')->toArray();
-        $journalIds          = implode(',', $array);
-        $user                = $set->first()->user;
+        $array = $set->pluck('id')->toArray();
+        /** @var TransactionJournal $first */
+        $first      = $set->first();
+        $journalIds = implode(',', $array);
+        $user       = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -186,12 +197,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug('Fire processRules with ALL store-journal rule groups.');
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
 
         // create and fire rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
