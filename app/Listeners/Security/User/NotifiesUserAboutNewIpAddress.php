@@ -26,6 +26,7 @@ namespace FireflyIII\Listeners\Security\User;
 
 use Exception;
 use FireflyIII\Events\Security\User\UserLoggedInFromNewIpAddress;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,23 +51,7 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
         /** @var array $entry */
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
-                try {
-                    Notification::send($user, new UserLogin());
-                } catch (Exception $e) {
-                    $message = $e->getMessage();
-                    if (str_contains($message, 'Bcc')) {
-                        Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                        return;
-                    }
-                    if (str_contains($message, 'RFC 2822')) {
-                        Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                        return;
-                    }
-                    Log::error($e->getMessage());
-                    Log::error($e->getTraceAsString());
-                }
+                    NotificationSender::send($user, new UserLogin());
             }
             $list[$index]['notified'] = true;
         }

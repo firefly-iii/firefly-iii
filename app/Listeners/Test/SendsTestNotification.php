@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Test;
 
-use Exception;
 use FireflyIII\Events\Test\OwnerTestsNotificationChannel;
 use FireflyIII\Events\Test\UserTestsNotificationChannel;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Test\OwnerTestNotificationEmail;
 use FireflyIII\Notifications\Test\OwnerTestNotificationPushover;
 use FireflyIII\Notifications\Test\OwnerTestNotificationSlack;
@@ -34,11 +34,10 @@ use FireflyIII\Notifications\Test\UserTestNotificationEmail;
 use FireflyIII\Notifications\Test\UserTestNotificationPushover;
 use FireflyIII\Notifications\Test\UserTestNotificationSlack;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class SendsTestNotification
 {
-    public function handle(OwnerTestsNotificationChannel|UserTestsNotificationChannel $event): void
+    public function handle(OwnerTestsNotificationChannel | UserTestsNotificationChannel $event): void
     {
         Log::debug(sprintf('Now in SendsTestNotification::handle(%s->"%s")', get_class($event), $event->channel));
 
@@ -82,24 +81,7 @@ class SendsTestNotification
                 return;
         }
         Log::debug(sprintf('Will send %s as a notification.', $class));
-
-        try {
-            Notification::send($event->user, new $class());
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        NotificationSender::send($event->user, new $class());
         Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 }

@@ -24,33 +24,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserRequestedNewPassword;
+use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserNewPassword;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class SendsUserNewPassword implements ShouldQueue
 {
     public function handle(UserRequestedNewPassword $event): void
     {
-        try {
-            Notification::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
-        } catch (Exception $e) {
-            $message = $e->getMessage();
-            if (str_contains($message, 'Bcc')) {
-                Log::warning('[Bcc] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            if (str_contains($message, 'RFC 2822')) {
-                Log::warning('[RFC] Could not send notification. Please validate your email settings, use the .env.example file as a guide.');
-
-                return;
-            }
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-        }
+        NotificationSender::send($event->user, new UserNewPassword(route('password.reset', [$event->token])));
     }
 }
