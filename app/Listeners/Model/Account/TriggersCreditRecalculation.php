@@ -1,9 +1,6 @@
 <?php
-
-declare(strict_types=1);
-
 /*
- * CreatedTransactionGroupBatch.php
+ * TriggersCreditRecalculation.php
  * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -22,21 +19,23 @@ declare(strict_types=1);
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-namespace FireflyIII\Events\Model\TransactionGroup;
+namespace FireflyIII\Listeners\Model\Account;
 
-use FireflyIII\Events\Event;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Collection;
+use FireflyIII\Events\Model\Account\CreatedNewAccount;
+use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use Illuminate\Support\Facades\Log;
 
-class CreatedTransactionGroupInBatch extends Event
+class TriggersCreditRecalculation
 {
-    use SerializesModels;
+    public function handle(CreatedNewAccount $event): void
+    {
+        L¬og::debug('Will call CreditRecalculateService because a new account was created.');
+        $account = $event->account;
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setAccount($account);
+        $object->recalculate();
+    }
 
-    /**
-     * Create a new event instance.
-     */
-    public function __construct(
-        public Collection $collection,
-        public array $flags
-    ) {}
+
 }

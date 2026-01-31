@@ -23,14 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Events\DestroyedTransactionGroup;
-use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
-use FireflyIII\Events\Preferences\UserGroupChangedPrimaryCurrency;
-use FireflyIII\Events\StoredAccount;
-use FireflyIII\Events\UpdatedAccount;
-use FireflyIII\Events\UpdatedTransactionGroup;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Laravel\Passport\Events\AccessTokenCreated;
 use Override;
 
 /**
@@ -40,21 +33,22 @@ use Override;
  */
 class EventServiceProvider extends ServiceProvider
 {
-    protected $listen = [
-        // is a Transaction Journal related event.
-        // StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
-        // TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
-        // is a Transaction Journal related event.
-        //            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
-        //            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
-        // API related events:
-        //            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
-        // account related events:
-        //            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
-        //            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
-        // preferences
-        //            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
-    ];
+    protected $listen
+        = [
+            // is a Transaction Journal related event.
+            // StoredTransactionGroup::class          => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@runAllHandlers'],
+            // TriggeredStoredTransactionGroup::class => ['FireflyIII\Handlers\Events\StoredGroupEventHandler@triggerRulesManually'],
+            // is a Transaction Journal related event.
+            //            UpdatedTransactionGroup::class         => ['FireflyIII\Handlers\Events\UpdatedGroupEventHandler@runAllHandlers'],
+            //            DestroyedTransactionGroup::class       => ['FireflyIII\Handlers\Events\DestroyedGroupEventHandler@runAllHandlers'],
+            // API related events:
+            //            AccessTokenCreated::class              => ['FireflyIII\Handlers\Events\APIEventHandler@accessTokenCreated'],
+            // account related events:
+            //            StoredAccount::class                   => ['FireflyIII\Handlers\Events\StoredAccountEventHandler@recalculateCredit'],
+            //            UpdatedAccount::class                  => ['FireflyIII\Handlers\Events\UpdatedAccountEventHandler@recalculateCredit'],
+            // preferences
+            //            UserGroupChangedPrimaryCurrency::class => ['FireflyIII\Handlers\Events\PreferencesEventHandler@resetPrimaryCurrencyAmounts'],
+        ];
 
     /**
      * Register any events for your application.

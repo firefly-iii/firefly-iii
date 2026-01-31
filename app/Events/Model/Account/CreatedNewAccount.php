@@ -1,8 +1,7 @@
 <?php
-
 /*
- * StoredAccountEventHandler.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * CreatedNewAccount.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,25 +19,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Events\Model\Account;
 
-namespace FireflyIII\Handlers\Events;
+use FireflyIII\Events\Event;
+use FireflyIII\Models\Account;
+use Illuminate\Queue\SerializesModels;
 
-use FireflyIII\Events\StoredAccount;
-use FireflyIII\Services\Internal\Support\CreditRecalculateService;
-
-/**
- * Class StoredAccountEventHandler
- */
-class StoredAccountEventHandler
+class CreatedNewAccount extends Event
 {
-    public function recalculateCredit(StoredAccount $event): void
-    {
-        $account = $event->account;
+    use SerializesModels;
 
-        /** @var CreditRecalculateService $object */
-        $object  = app(CreditRecalculateService::class);
-        $object->setAccount($account);
-        $object->recalculate();
-    }
+    /**
+     * Create a new event instance.
+     */
+    public function __construct(public Account $account) {}
 }
