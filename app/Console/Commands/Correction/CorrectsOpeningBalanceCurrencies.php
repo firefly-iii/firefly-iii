@@ -32,10 +32,10 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 class CorrectsOpeningBalanceCurrencies extends Command
 {
@@ -70,7 +70,8 @@ class CorrectsOpeningBalanceCurrencies extends Command
         /** @var Collection */
         return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)->get(['transaction_journals.*'])
+            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
+            ->get(['transaction_journals.*'])
         ;
     }
 

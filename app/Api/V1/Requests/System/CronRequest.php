@@ -48,10 +48,7 @@ class CronRequest extends FormRequest
      */
     public function getAll(): array
     {
-        $data = [
-            'force' => false,
-            'date'  => today(config('app.timezone')),
-        ];
+        $data = ['force' => false, 'date'  => today(config('app.timezone'))];
         if ($this->has('force')) {
             $data['force'] = $this->boolean('force');
         }
@@ -71,9 +68,6 @@ class CronRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'force' => 'in:true,false',
-            'date'  => 'nullable|date|after:1970-01-02|before:2038-01-17',
-        ];
+        return ['force' => 'in:true,false', 'date'  => 'nullable|date|after:1970-01-02|before:2038-01-17'];
     }
 }

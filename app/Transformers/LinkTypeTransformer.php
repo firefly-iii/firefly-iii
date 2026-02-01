@@ -44,12 +44,7 @@ class LinkTypeTransformer extends AbstractTransformer
             'inward'     => $linkType->inward,
             'outward'    => $linkType->outward,
             'editable'   => $linkType->editable,
-            'links'      => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/link_types/'.$linkType->id,
-                ],
-            ],
+            'links'      => [['rel' => 'self', 'uri' => '/link_types/'.$linkType->id]],
         ];
     }
 }

@@ -45,8 +45,8 @@ trait ChartGeneration
      *
      * @throws FireflyException
      */
-    protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
-    {
+    protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
+    { // chart helper method.
         // chart properties for cache:
         $convertToPrimary = Amount::convertToPrimary();
         $cache            = new CacheProperties();
@@ -80,11 +80,7 @@ trait ChartGeneration
             $field        = $convertToPrimary ? 'pc_balance' : 'balance';
             $currency     = $usePrimary ? $primary : $currency;
             Log::debug(sprintf('Will use field %s', $field));
-            $currentSet   = [
-                'label'           => $account->name,
-                'currency_symbol' => $currency->symbol,
-                'entries'         => [],
-            ];
+            $currentSet   = ['label'           => $account->name, 'currency_symbol' => $currency->symbol, 'entries'         => []];
 
             $currentStart = clone $start;
             $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);
@@ -92,7 +88,7 @@ trait ChartGeneration
             Log::debug(sprintf('Start balance for account #%d ("%s) is', $account->id, $account->name), $previous);
             while ($currentStart <= $end) {
                 $format                        = $currentStart->format('Y-m-d');
-                $label                         = trim($currentStart->isoFormat((string)trans('config.month_and_day_js', [], $locale)));
+                $label                         = trim($currentStart->isoFormat((string) trans('config.month_and_day_js', [], $locale)));
                 $balance                       = $range[$format] ?? $previous;
                 $previous                      = $balance;
                 $currentStart->addDay();

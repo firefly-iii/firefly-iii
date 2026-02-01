@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -34,12 +32,14 @@ use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -51,7 +51,7 @@ class ReportController extends Controller
 {
     use RenderPartialViews;
 
-    protected ReportHelperInterface   $helper;
+    protected ReportHelperInterface $helper;
     private BudgetRepositoryInterface $repository;
 
     /**
@@ -61,17 +61,15 @@ class ReportController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.reports'));
-                app('view')->share('mainTitleIcon', 'fa-bar-chart');
-                app('view')->share('subTitleIcon', 'fa-calendar');
-                $this->helper     = app(ReportHelperInterface::class);
-                $this->repository = app(BudgetRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.reports'));
+            app('view')->share('mainTitleIcon', 'fa-bar-chart');
+            app('view')->share('subTitleIcon', 'fa-calendar');
+            $this->helper     = app(ReportHelperInterface::class);
+            $this->repository = app(BudgetRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -90,16 +88,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share(
-            'subTitle',
-            trans(
-                'firefly.report_audit',
-                [
-                    'start' => $start->isoFormat($this->monthAndDayFormat),
-                    'end'   => $end->isoFormat($this->monthAndDayFormat),
-                ]
-            )
-        );
+        app('view')->share('subTitle', trans('firefly.report_audit', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Audit', $start, $end);
         $generator->setAccounts($accounts);
@@ -123,16 +115,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share(
-            'subTitle',
-            trans(
-                'firefly.report_budget',
-                [
-                    'start' => $start->isoFormat($this->monthAndDayFormat),
-                    'end'   => $end->isoFormat($this->monthAndDayFormat),
-                ]
-            )
-        );
+        app('view')->share('subTitle', trans('firefly.report_budget', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Budget', $start, $end);
         $generator->setAccounts($accounts);
@@ -157,7 +143,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share('subTitle', trans('firefly.report_category', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end'   => $end->isoFormat($this->monthAndDayFormat)]));
+        app('view')->share('subTitle', trans('firefly.report_category', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Category', $start, $end);
         $generator->setAccounts($accounts);
@@ -183,7 +172,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share('subTitle', trans('firefly.report_default', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end'   => $end->isoFormat($this->monthAndDayFormat)]));
+        app('view')->share('subTitle', trans('firefly.report_default', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Standard', $start, $end);
         $generator->setAccounts($accounts);
@@ -206,7 +198,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share('subTitle', trans('firefly.report_double', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end'   => $end->isoFormat($this->monthAndDayFormat)]));
+        app('view')->share('subTitle', trans('firefly.report_double', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Account', $start, $end);
         $generator->setAccounts($accounts);
@@ -229,9 +224,13 @@ class ReportController extends Controller
         $start            = clone session('first', today(config('app.timezone')));
         $months           = $this->helper->listOfMonths($start);
         $customFiscalYear = Preferences::get('customFiscalYear', 0)->data;
-        $accounts         = $repository->getAccountsByType(
-            [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value]
-        );
+        $accounts         = $repository->getAccountsByType([
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ]);
 
         // group accounts by role:
         $groupedAccounts  = [];
@@ -255,7 +254,14 @@ class ReportController extends Controller
         $accountList      = implode(',', $accounts->pluck('id')->toArray());
         $this->repository->cleanupBudgets();
 
-        return view('reports.index', ['months' => $months, 'accounts' => $accounts, 'start' => $start, 'accountList' => $accountList, 'groupedAccounts' => $groupedAccounts, 'customFiscalYear' => $customFiscalYear]);
+        return view('reports.index', [
+            'months'           => $months,
+            'accounts'         => $accounts,
+            'start'            => $start,
+            'accountList'      => $accountList,
+            'groupedAccounts'  => $groupedAccounts,
+            'customFiscalYear' => $customFiscalYear,
+        ]);
     }
 
     /**
@@ -272,7 +278,7 @@ class ReportController extends Controller
             'category' => $this->categoryReportOptions(),
             'budget'   => $this->budgetReportOptions(),
             'tag'      => $this->tagReportOptions(),
-            'double'   => $this->doubleReportOptions(),
+            'double'   => $this->doubleReportOptions()
         };
 
         return response()->json(['html' => $result]);
@@ -336,7 +342,7 @@ class ReportController extends Controller
             'audit'    => route('reports.report.audit', [$accounts, $start, $end]),
             'budget'   => route('reports.report.budget', [$accounts, $budgets, $start, $end]),
             'tag'      => route('reports.report.tag', [$accounts, $tags, $start, $end]),
-            'double'   => route('reports.report.double', [$accounts, $double, $start, $end]),
+            'double'   => route('reports.report.double', [$accounts, $double, $start, $end])
         };
 
         return redirect($url);
@@ -358,16 +364,10 @@ class ReportController extends Controller
         $start->endOfDay(); // end of day so the final balance is at the end of that day.
         $end->endOfDay();
 
-        app('view')->share(
-            'subTitle',
-            trans(
-                'firefly.report_tag',
-                [
-                    'start' => $start->isoFormat($this->monthAndDayFormat),
-                    'end'   => $end->isoFormat($this->monthAndDayFormat),
-                ]
-            )
-        );
+        app('view')->share('subTitle', trans('firefly.report_tag', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]));
 
         $generator = ReportGeneratorFactory::reportGenerator('Tag', $start, $end);
         $generator->setAccounts($accounts);

@@ -51,18 +51,17 @@ class CreateOauthRefreshTokensTable extends Migration
     {
         if (!Schema::hasTable('oauth_refresh_tokens')) {
             try {
-                Schema::create(
-                    'oauth_refresh_tokens',
-                    static function (Blueprint $table): void {
-                        $table->string('id', 100)->primary();
-                        $table->string('access_token_id', 100)->index();
-                        $table->boolean('revoked');
-                        $table->dateTime('expires_at')->nullable();
-                    }
-                );
+                Schema::create('oauth_refresh_tokens', static function (Blueprint $table): void {
+                    $table->string('id', 100)->primary();
+                    $table->string('access_token_id', 100)->index();
+                    $table->boolean('revoked');
+                    $table->dateTime('expires_at')->nullable();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "oauth_refresh_tokens": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

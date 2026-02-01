@@ -43,19 +43,16 @@ final class RuleGroupControllerTest extends TestCase
 
     private function createTestRuleGroups(int $count, User $user): void
     {
-
         for ($i = 1; $i <= $count; ++$i) {
-            $ruleGroup = RuleGroup::create(
-                [
-                    'user_id'             => $user->id,
-                    'user_group_id'       => $user->user_group_id,
-                    'title'               => 'RuleGroup '.$i,
-                    'description'         => 'RuleGroup '.$i,
-                    'order'               => 1,
-                    'active'              => 1,
-                    'stop_processing'     => 0,
-                ]
-            );
+            $ruleGroup = RuleGroup::create([
+                'user_id'         => $user->id,
+                'user_group_id'   => $user->user_group_id,
+                'title'           => 'RuleGroup '.$i,
+                'description'     => 'RuleGroup '.$i,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+            ]);
         }
     }
 
@@ -90,14 +87,7 @@ final class RuleGroupControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'RuleGroup 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
@@ -106,23 +96,13 @@ final class RuleGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRuleGroups(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.rule-groups', [
-            'query' => 'RuleGroup',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.rule-groups', ['query' => 'RuleGroup', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'RuleGroup 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
@@ -131,10 +111,7 @@ final class RuleGroupControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRuleGroups(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.rule-groups', [
-            'query' => 'RuleGroup 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.rule-groups', ['query' => 'RuleGroup 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

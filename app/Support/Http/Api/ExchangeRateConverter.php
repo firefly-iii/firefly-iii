@@ -31,10 +31,10 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ExchangeRateConverter
@@ -127,7 +127,7 @@ class ExchangeRateConverter
         $cache = new CacheProperties();
         $cache->addProperty('cer-euro-id');
         if ($cache->has()) {
-            return (int)$cache->get();
+            return (int) $cache->get();
         }
         $euro  = Amount::getTransactionCurrencyByCode('EUR');
         ++$this->queryCount;
@@ -154,13 +154,15 @@ class ExchangeRateConverter
         $rate   = $this->getFromDB($euroId, $currency->id, $date->format('Y-m-d'));
         if (null !== $rate) {
             return bcdiv('1', $rate);
+
             //            \Illuminate\Support\Facades\Log::debug(sprintf('Inverted rate for %s to EUR is %s.', $currency->code, $rate));
             // return $rate;
         }
         // grab backup values from config file:
         $backup = config(sprintf('cer.rates.%s', $currency->code));
         if (null !== $backup) {
-            return bcdiv('1', (string)$backup);
+            return bcdiv('1', (string) $backup);
+
             // \Illuminate\Support\Facades\Log::debug(sprintf('Backup rate for %s to EUR is %s.', $currency->code, $backup));
             // return $backup;
         }
@@ -199,7 +201,8 @@ class ExchangeRateConverter
         }
 
         /** @var null|CurrencyExchangeRate $result */
-        $result       = $this->userGroup->currencyExchangeRates()
+        $result       = $this->userGroup
+            ->currencyExchangeRates()
             ->where('from_currency_id', $from)
             ->where('to_currency_id', $to)
             ->where('date', '<=', $date)
@@ -207,7 +210,7 @@ class ExchangeRateConverter
             ->first()
         ;
         ++$this->queryCount;
-        $rate         = (string)$result?->rate;
+        $rate         = (string) $result?->rate;
 
         if ('' === $rate) {
             Log::debug(sprintf('ExchangeRateConverter: Found no rate for #%d->#%d (%s) in the DB.', $from, $to, $date));
@@ -223,17 +226,9 @@ class ExchangeRateConverter
         $cache->store($rate);
 
         // if the rate has not been cached during this particular run, save it
-        $this->prepared[$date] ??= [
-            $from => [
-                $to => $rate,
-            ],
-        ];
+        $this->prepared[$date] ??= [$from => [$to => $rate]];
         // also save the exchange rate the other way around:
-        $this->prepared[$date] ??= [
-            $to => [
-                $from => bcdiv('1', $rate),
-            ],
-        ];
+        $this->prepared[$date] ??= [$to => [$from => bcdiv('1', $rate)]];
 
         return $rate;
     }

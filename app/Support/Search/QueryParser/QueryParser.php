@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * QueryParser.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -35,7 +34,7 @@ use SensitiveParameter;
  */
 class QueryParser implements QueryParserInterface
 {
-    private int    $position = 0;
+    private int $position = 0;
     private string $query;
 
     public function parse(string $query): NodeGroup
@@ -114,10 +113,7 @@ class QueryParser implements QueryParserInterface
                         // A left parentheses at the beginning of a token indicates the start of a subquery
                         ++$this->position;
 
-                        return new NodeResult(
-                            $this->buildNodeGroup(true, $prohibited),
-                            false
-                        );
+                        return new NodeResult($this->buildNodeGroup(true, $prohibited), false);
                     }
                     // In any other location, it's just a normal character
                     $tokenUnderConstruction .= $char;
@@ -131,9 +127,7 @@ class QueryParser implements QueryParserInterface
                         ++$this->position;
 
                         return new NodeResult(
-                            '' !== $tokenUnderConstruction
-                                ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-                                : null,
+                            '' !== $tokenUnderConstruction ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null,
                             true
                         );
                     }
@@ -141,7 +135,6 @@ class QueryParser implements QueryParserInterface
                     $tokenUnderConstruction .= $char;
 
                     break;
-
 
                 case ':':
                     $skipNext = false;
@@ -157,7 +150,6 @@ class QueryParser implements QueryParserInterface
                         $tokenUnderConstruction = '';
                     }
 
-
                     break;
 
                 case ' ':
@@ -165,10 +157,7 @@ class QueryParser implements QueryParserInterface
                     if ('' !== $tokenUnderConstruction) {
                         ++$this->position;
 
-                        return new NodeResult(
-                            $this->createNode($tokenUnderConstruction, $fieldName, $prohibited),
-                            false
-                        );
+                        return new NodeResult($this->createNode($tokenUnderConstruction, $fieldName, $prohibited), false);
                     }
 
                     break;
@@ -180,9 +169,7 @@ class QueryParser implements QueryParserInterface
             ++$this->position;
         }
 
-        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName
-            ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited)
-            : null;
+        $finalNode              = '' !== $tokenUnderConstruction || '' !== $fieldName ? $this->createNode($tokenUnderConstruction, $fieldName, $prohibited) : null;
 
         return new NodeResult($finalNode, true);
     }

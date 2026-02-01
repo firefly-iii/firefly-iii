@@ -45,17 +45,15 @@ class RecurringServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): RecurringRepositoryInterface {
-                /** @var RecurringRepositoryInterface $repository */
-                $repository = app(RecurringRepository::class);
+        $this->app->bind(static function (Application $app): RecurringRepositoryInterface {
+            /** @var RecurringRepositoryInterface $repository */
+            $repository = app(RecurringRepository::class);
 
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

@@ -29,10 +29,10 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BillFactory
@@ -51,8 +51,10 @@ class BillFactory
     {
         Log::debug(sprintf('Now in %s', __METHOD__), $data);
         $factory          = app(TransactionCurrencyFactory::class);
-        $currency         = $factory->find((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null))
-                    ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $currency         = $factory->find(
+            (int) ($data['currency_id'] ?? null),
+            (string) ($data['currency_code'] ?? null)
+        ) ?? Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         try {
             $skip   = array_key_exists('skip', $data) ? $data['skip'] : 0;
@@ -62,27 +64,25 @@ class BillFactory
             $data['end_date']       ??= null;
 
             /** @var Bill $bill */
-            $bill   = Bill::create(
-                [
-                    'name'                    => $data['name'],
-                    'match'                   => 'MIGRATED_TO_RULES',
-                    'amount_min'              => $data['amount_min'],
-                    'user_id'                 => $this->user->id,
-                    'user_group_id'           => $this->user->user_group_id,
-                    'transaction_currency_id' => $currency->id,
-                    'amount_max'              => $data['amount_max'],
-                    'date'                    => $data['date'],
-                    'date_tz'                 => $data['date']->format('e'),
-                    'end_date'                => $data['end_date'] ?? null,
-                    'end_date_tz'             => $data['end_date']?->format('e'),
-                    'extension_date'          => $data['extension_date'] ?? null,
-                    'extension_date_tz'       => $data['extension_date']?->format('e'),
-                    'repeat_freq'             => $data['repeat_freq'],
-                    'skip'                    => $skip,
-                    'automatch'               => true,
-                    'active'                  => $active,
-                ]
-            );
+            $bill   = Bill::create([
+                'name'                    => $data['name'],
+                'match'                   => 'MIGRATED_TO_RULES',
+                'amount_min'              => $data['amount_min'],
+                'user_id'                 => $this->user->id,
+                'user_group_id'           => $this->user->user_group_id,
+                'transaction_currency_id' => $currency->id,
+                'amount_max'              => $data['amount_max'],
+                'date'                    => $data['date'],
+                'date_tz'                 => $data['date']->format('e'),
+                'end_date'                => $data['end_date'] ?? null,
+                'end_date_tz'             => $data['end_date']?->format('e'),
+                'extension_date'          => $data['extension_date'] ?? null,
+                'extension_date_tz'       => $data['extension_date']?->format('e'),
+                'repeat_freq'             => $data['repeat_freq'],
+                'skip'                    => $skip,
+                'automatch'               => true,
+                'active'                  => $active,
+            ]);
         } catch (QueryException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
@@ -136,7 +136,11 @@ class BillFactory
     public function findByName(string $name): ?Bill
     {
         /** @var null|Bill */
-        return $this->user->bills()->whereLike('name', sprintf('%%%s%%', $name))->first();
+        return $this->user
+            ->bills()
+            ->whereLike('name', sprintf('%%%s%%', $name))
+            ->first()
+        ;
     }
 
     public function setUser(User $user): void

@@ -20,8 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 declare(strict_types=1);
 
 return [
@@ -29,7 +27,7 @@ return [
     'icon'                    => 'Icon',
     'id'                      => 'ID',
     'create_date'             => 'Created at',
-    'primary_currency'         => 'Primary currency',
+    'primary_currency'        => 'Primary currency',
     'update_date'             => 'Updated at',
     'updated_at'              => 'Updated at',
     'balance_before'          => 'Balance before',
@@ -67,8 +65,6 @@ return [
     'amount_due'              => 'Amount due',
     'balance_difference'      => 'Balance difference',
     'menu'                    => 'Menu',
-
-
 
     'repeat_freq'             => 'Repeats',
     'description'             => 'Description',
@@ -135,8 +131,6 @@ return [
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'File name',
-
-
 
     'file_size'               => 'File size',
     'file_type'               => 'File type',

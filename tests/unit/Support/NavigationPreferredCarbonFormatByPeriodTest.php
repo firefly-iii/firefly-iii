@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use FireflyIII\Support\Navigation;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 

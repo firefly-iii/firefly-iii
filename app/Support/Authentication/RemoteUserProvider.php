@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Authentication;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Console\Commands\Correction\CreatesGroupMemberships;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Role;
 use FireflyIII\User;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\UserProvider;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Override;
 use SensitiveParameter;
@@ -71,14 +71,7 @@ class RemoteUserProvider implements UserProvider
         $user = User::where('email', $identifier)->first();
         if (null === $user) {
             Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
-            $user = User::create(
-                [
-                    'blocked'      => false,
-                    'blocked_code' => null,
-                    'email'        => $identifier,
-                    'password'     => bcrypt(Str::random(64)),
-                ]
-            );
+            $user = User::create(['blocked'      => false, 'blocked_code' => null, 'email'        => $identifier, 'password'     => bcrypt(Str::random(64))]);
             // if this is the first user, give them admin as well.
             if (1 === User::count()) {
                 $roleObject = Role::where('name', 'owner')->first();

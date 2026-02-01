@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
-use FireflyIII\Events\RequestedReportOnJournals;
-use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
@@ -37,6 +37,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -55,16 +56,16 @@ class CreateRecurringTransactions implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int                                  $created;
-    public int                                  $executed;
-    public int                                  $submitted;
-    private Carbon                              $date;
-    private bool                                $force;
+    public int $created;
+    public int $executed;
+    public int $submitted;
+    private Carbon $date;
+    private bool $force;
     private TransactionGroupRepositoryInterface $groupRepository;
-    private Collection                          $groups;
-    private JournalRepositoryInterface          $journalRepository;
-    private Collection                          $recurrences;
-    private RecurringRepositoryInterface        $repository;
+    private Collection $groups;
+    private JournalRepositoryInterface $journalRepository;
+    private Collection $recurrences;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * Create a new job instance.
@@ -145,7 +146,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Now running report thing.');
         // will now send email to users.
         foreach ($result as $userId => $journals) {
-            event(new RequestedReportOnJournals($userId, $journals));
+            event(new TransactionGroupsRequestedReporting($userId, $journals));
         }
 
         Log::debug('Done with handle()');
@@ -156,9 +157,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
     private function filterRecurrences(Collection $recurrences): Collection
     {
-        return $recurrences->filter(
-            $this->validRecurrence(...)
-        );
+        return $recurrences->filter($this->validRecurrence(...));
     }
 
     /**
@@ -185,28 +184,24 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
-            Log::info(
-                sprintf(
-                    'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
-                    $recurrence->id,
-                    $recurrence->repeat_until->format('Y-m-d'),
-                    $this->date->format('Y-m-d')
-                )
-            );
+            Log::info(sprintf(
+                'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
+                $recurrence->id,
+                $recurrence->repeat_until->format('Y-m-d'),
+                $this->date->format('Y-m-d')
+            ));
 
             return false;
         }
 
         // first_date is in the future
         if ($this->hasNotStartedYet($recurrence)) {
-            Log::info(
-                sprintf(
-                    'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
-                    $recurrence->id,
-                    $recurrence->first_date->format('Y-m-d H:i:s'),
-                    $this->date->format('Y-m-d H:i:s')
-                )
-            );
+            Log::info(sprintf(
+                'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
+                $recurrence->id,
+                $recurrence->first_date->format('Y-m-d H:i:s'),
+                $this->date->format('Y-m-d H:i:s')
+            ));
 
             return false;
         }
@@ -285,14 +280,12 @@ class CreateRecurringTransactions implements ShouldQueue
 
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
-            Log::debug(
-                sprintf(
-                    'Now repeating %s with value "%s", skips every %d time(s)',
-                    $repetition->repetition_type,
-                    $repetition->repetition_moment,
-                    $repetition->repetition_skip
-                )
-            );
+            Log::debug(sprintf(
+                'Now repeating %s with value "%s", skips every %d time(s)',
+                $repetition->repetition_type,
+                $repetition->repetition_moment,
+                $repetition->repetition_skip
+            ));
 
             // start looping from $startDate to today perhaps we have a hit?
             // add two days to $this->date, so we always include the weekend.
@@ -391,7 +384,10 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::info(sprintf('Created new transaction group #%d', $group->id));
 
         // trigger event:
-        event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
+        $flags                      = new TransactionGroupEventFlags();
+        $flags->applyRules          = $recurrence->apply_rules;
+        event(new CreatedSingleTransactionGroup($group, $flags));
+        // event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
         $this->groups->push($group);
 
         // update recurring thing:
@@ -415,13 +411,12 @@ class CreateRecurringTransactions implements ShouldQueue
         $transactions->first();
         $return       = [];
 
-
-
-
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'type'                  => null === $transaction?->transactionType?->type ? strtolower((string) $recurrence->transactionType->type) : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
+                'type'                  => null === $transaction?->transactionType?->type
+                    ? strtolower((string) $recurrence->transactionType->type)
+                    : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
                 'date'                  => $date,
                 'user'                  => $recurrence->user,
                 'user_group'            => $recurrence->user->userGroup,
@@ -444,7 +439,7 @@ class CreateRecurringTransactions implements ShouldQueue
                 'identifier'            => $index,
                 'recurrence_id'         => $recurrence->id,
                 'order'                 => $index,
-                'notes'                 => (string) trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
+                'notes'                 => (string) trans('firefly.created_from_recurrence', ['id'    => $recurrence->id, 'title' => $recurrence->title]),
                 'tags'                  => $this->repository->getTags($transaction),
                 'piggy_bank_id'         => $this->repository->getPiggyBank($transaction),
                 'piggy_bank_name'       => null,

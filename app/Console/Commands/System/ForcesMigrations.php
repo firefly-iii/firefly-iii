@@ -78,7 +78,7 @@ class ForcesMigrations extends Command
         sleep(2);
         Schema::dropIfExists('migrations');
         $this->friendlyLine('Re-run all migrations...');
-        Artisan::call('migrate', ['--seed' => true, '--force' => true]);
+        Artisan::call('migrate', ['--seed'  => true, '--force' => true]);
         sleep(2);
         $this->friendlyLine('');
         $this->friendlyWarning('There is a good chance you just saw a lot of error messages.');

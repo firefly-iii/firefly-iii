@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\StoreByCurrenciesRequest;
@@ -38,6 +37,7 @@ use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Transformers\ExchangeRateTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -45,26 +45,24 @@ class StoreController extends Controller
 {
     use ValidatesUserGroupTrait;
 
-    public const string RESOURCE_KEY                       = 'exchange-rates';
-    protected array                         $acceptedRoles = [UserRoleEnum::OWNER];
+    public const string RESOURCE_KEY = 'exchange-rates';
+
+    protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->repository = app(ExchangeRateRepositoryInterface::class);
-                $this->repository->setUserGroup($this->validateUserGroup($request));
+        $this->middleware(function (Request $request, $next) {
+            $this->repository = app(ExchangeRateRepositoryInterface::class);
+            $this->repository->setUserGroup($this->validateUserGroup($request));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function storeByCurrencies(StoreByCurrenciesRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
-
         $data        = $request->getAll();
         $collection  = new Collection();
 
@@ -87,15 +85,11 @@ class StoreController extends Controller
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 
-        return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function storeByDate(StoreByDateRequest $request, Carbon $date): JsonResponse
     {
-
         $data        = $request->getAll();
         $from        = $request->getFromCurrency();
         $collection  = new Collection();
@@ -118,10 +112,7 @@ class StoreController extends Controller
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters); // give params to transformer
 
-        return response()
-            ->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 
     public function store(StoreRequest $request): JsonResponse
@@ -145,9 +136,6 @@ class StoreController extends Controller
         $transformer = new ExchangeRateTransformer();
         $transformer->setParameters($this->parameters);
 
-        return response()
-            ->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

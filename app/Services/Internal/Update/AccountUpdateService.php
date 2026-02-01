@@ -24,9 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
+use FireflyIII\Events\Model\Account\UpdatedExistingAccount;
 use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -34,8 +33,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Location;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
-use FireflyIII\User;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
+use FireflyIII\User;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class AccountUpdateService
@@ -46,11 +47,11 @@ class AccountUpdateService
     use AccountServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
-    protected array                      $validAssetFields;
-    protected array                      $validCCFields;
-    protected array                      $validFields;
-    private array                        $canHaveOpeningBalance;
-    private User                         $user;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array $canHaveOpeningBalance;
+    private User $user;
 
     /**
      * Constructor.
@@ -150,6 +151,8 @@ class AccountUpdateService
 
         $account->save();
 
+        event(new UpdatedExistingAccount($account));
+
         return $account;
     }
 
@@ -175,7 +178,11 @@ class AccountUpdateService
         }
         // skip if not of orderable type.
         $type           = $account->accountType->type;
-        if (!in_array($type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value], true)) {
+        if (!in_array(
+            $type,
+            [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value],
+            true
+        )) {
             Log::debug('Will not change order of this account.');
 
             return $account;
@@ -190,7 +197,10 @@ class AccountUpdateService
         }
 
         if ($newOrder > $oldOrder) {
-            $this->user->accounts()->where('accounts.order', '<=', $newOrder)->where('accounts.order', '>', $oldOrder)
+            $this->user
+                ->accounts()
+                ->where('accounts.order', '<=', $newOrder)
+                ->where('accounts.order', '>', $oldOrder)
                 ->where('accounts.id', '!=', $account->id)
                 ->whereIn('accounts.account_type_id', $list)
                 ->decrement('order')
@@ -202,7 +212,10 @@ class AccountUpdateService
             return $account;
         }
 
-        $this->user->accounts()->where('accounts.order', '>=', $newOrder)->where('accounts.order', '<', $oldOrder)
+        $this->user
+            ->accounts()
+            ->where('accounts.order', '>=', $newOrder)
+            ->where('accounts.order', '<', $oldOrder)
             ->where('accounts.id', '!=', $account->id)
             ->whereIn('accounts.account_type_id', $list)
             ->increment('order')
@@ -270,9 +283,7 @@ class AccountUpdateService
 
                 // if liability, make sure the amount is positive for a credit, and negative for a debit.
                 if ($this->isLiability($account)) {
-                    $openingBalance = 'credit' === $data['liability_direction'] ? Steam::positive($openingBalance) : Steam::negative(
-                        $openingBalance
-                    );
+                    $openingBalance = 'credit' === $data['liability_direction'] ? Steam::positive($openingBalance) : Steam::negative($openingBalance);
                 }
                 $this->updateOBGroupV2($account, $openingBalance, $openingBalanceDate);
             }

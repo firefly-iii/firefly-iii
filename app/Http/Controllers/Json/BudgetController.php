@@ -31,9 +31,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\AvailableBudgetRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetLimitRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class BudgetController
@@ -43,8 +43,8 @@ class BudgetController extends Controller
     use DateCalculation;
 
     private AvailableBudgetRepositoryInterface $abRepository;
-    private BudgetLimitRepositoryInterface     $blRepository;
-    private BudgetRepositoryInterface          $repository;
+    private BudgetLimitRepositoryInterface $blRepository;
+    private BudgetRepositoryInterface $repository;
 
     /**
      * IndexController constructor.
@@ -53,18 +53,16 @@ class BudgetController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.budgets'));
-                app('view')->share('mainTitleIcon', 'fa-pie-chart');
-                $this->repository   = app(BudgetRepositoryInterface::class);
-                $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
-                $this->blRepository = app(BudgetLimitRepositoryInterface::class);
-                $this->repository->cleanupBudgets();
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.budgets'));
+            app('view')->share('mainTitleIcon', 'fa-pie-chart');
+            $this->repository   = app(BudgetRepositoryInterface::class);
+            $this->abRepository = app(AvailableBudgetRepositoryInterface::class);
+            $this->blRepository = app(BudgetLimitRepositoryInterface::class);
+            $this->repository->cleanupBudgets();
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function getBudgetInformation(TransactionCurrency $currency, Carbon $start, Carbon $end): JsonResponse
@@ -82,19 +80,17 @@ class BudgetController extends Controller
         }
 
         // if available, get the AB for this period + currency, so the bar can be redrawn.
-        return response()->json(
-            [
-                'budgeted'                => $budgeted,
-                'budgeted_formatted'      => Amount::formatAnything($currency, $budgeted, true),
-                'available'               => $available,
-                'available_formatted'     => Amount::formatAnything($currency, $available, true),
-                'percentage'              => $percentage,
-                'currency_id'             => $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_name'           => $currency->name,
-                'currency_decimal_places' => $currency->decimal_places,
-            ]
-        );
+        return response()->json([
+            'budgeted'                => $budgeted,
+            'budgeted_formatted'      => Amount::formatAnything($currency, $budgeted, true),
+            'available'               => $available,
+            'available_formatted'     => Amount::formatAnything($currency, $available, true),
+            'percentage'              => $percentage,
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_name'           => $currency->name,
+            'currency_decimal_places' => $currency->decimal_places,
+        ]);
     }
 }

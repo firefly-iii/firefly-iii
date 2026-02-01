@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -43,9 +43,7 @@ class ObjectGroupFormRequest extends FormRequest
      */
     public function getObjectGroupData(): array
     {
-        return [
-            'title' => $this->convertString('title'),
-        ];
+        return ['title' => $this->convertString('title')];
     }
 
     /**
@@ -61,9 +59,7 @@ class ObjectGroupFormRequest extends FormRequest
             $titleRule = sprintf('required|min:1|max:255|uniqueObjectGroup:%d', $objectGroup->id);
         }
 
-        return [
-            'title' => $titleRule,
-        ];
+        return ['title' => $titleRule];
     }
 
     public function withValidator(Validator $validator): void

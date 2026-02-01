@@ -40,9 +40,9 @@ use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\RecurrenceTransactionMeta;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 use function Safe\json_encode;
 
@@ -74,15 +74,13 @@ trait RecurringTransactionTrait
     {
         /** @var array $array */
         foreach ($repetitions as $array) {
-            RecurrenceRepetition::create(
-                [
-                    'recurrence_id'     => $recurrence->id,
-                    'repetition_type'   => $array['type'],
-                    'repetition_moment' => $array['moment'] ?? '',
-                    'repetition_skip'   => $array['skip'] ?? 0,
-                    'weekend'           => $array['weekend'] ?? 1,
-                ]
-            );
+            RecurrenceRepetition::create([
+                'recurrence_id'     => $recurrence->id,
+                'repetition_type'   => $array['type'],
+                'repetition_moment' => $array['moment'] ?? '',
+                'repetition_skip'   => $array['skip'] ?? 0,
+                'weekend'           => $array['weekend'] ?? 1,
+            ]);
         }
     }
 
@@ -111,9 +109,11 @@ trait RecurringTransactionTrait
                 $currency = Amount::getPrimaryCurrencyByUserGroup($recurrence->user->userGroup);
             }
 
-            Log::debug(
-                sprintf('Will set the validator type to %s based on the type of the recurrence (#%d).', $recurrence->transactionType->type, $recurrence->id)
-            );
+            Log::debug(sprintf(
+                'Will set the validator type to %s based on the type of the recurrence (#%d).',
+                $recurrence->transactionType->type,
+                $recurrence->id
+            ));
 
             // once the accounts have been determined, we still verify their validity:
             /** @var AccountValidator $validator */
@@ -132,18 +132,16 @@ trait RecurringTransactionTrait
                 unset($array['foreign_amount']);
             }
             // TODO typeOverrule. The account validator may have a different opinion on the type of the transaction.
-            $transaction     = new RecurrenceTransaction(
-                [
-                    'recurrence_id'           => $recurrence->id,
-                    'transaction_currency_id' => $currency->id,
-                    'foreign_currency_id'     => $foreignCurrency?->id,
-                    'source_id'               => $source->id,
-                    'destination_id'          => $destination->id,
-                    'amount'                  => $array['amount'],
-                    'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string) $array['foreign_amount'] : null,
-                    'description'             => $array['description'],
-                ]
-            );
+            $transaction     = new RecurrenceTransaction([
+                'recurrence_id'           => $recurrence->id,
+                'transaction_currency_id' => $currency->id,
+                'foreign_currency_id'     => $foreignCurrency?->id,
+                'source_id'               => $source->id,
+                'destination_id'          => $destination->id,
+                'amount'                  => $array['amount'],
+                'foreign_amount'          => array_key_exists('foreign_amount', $array) ? (string) $array['foreign_amount'] : null,
+                'description'             => $array['description'],
+            ]);
             $transaction->save();
 
             if (array_key_exists('budget_id', $array)) {
@@ -190,7 +188,13 @@ trait RecurringTransactionTrait
         }
 
         // maybe we can create it? Try to avoid LOAN and other asset types.
-        $cannotCreate = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::CREDITCARD->value];
+        $cannotCreate = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::CREDITCARD->value,
+        ];
 
         /** @var AccountFactory $factory */
         $factory      = app(AccountFactory::class);
@@ -291,7 +295,7 @@ trait RecurringTransactionTrait
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
             if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name'  => 'piggy_bank_id', 'value' => $piggyBank->id]);
             }
             $entry->value = $piggyBank->id;
             $entry->save();
@@ -308,7 +312,7 @@ trait RecurringTransactionTrait
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name'  => 'tags', 'value' => json_encode($tags)]);
             }
             $entry->value = json_encode($tags);
             $entry->save();

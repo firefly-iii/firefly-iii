@@ -52,6 +52,10 @@ interface JournalRepositoryInterface
      */
     public function destroyGroup(TransactionGroup $transactionGroup): void;
 
+    public function getUncompletedJournals(): Collection;
+
+    public function markAsCompleted(Collection $set): void;
+
     /**
      * Deletes a journal.
      */

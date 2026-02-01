@@ -32,6 +32,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -60,7 +61,7 @@ class AccountBalanceCalculator
             AccountBalance::whereNotNull('created_at')->delete();
         }
         $object = new self();
-        $object->optimizedCalculation(new Collection());
+        self::optimizedCalculation(new Collection());
     }
 
     public static function recalculateForJournal(TransactionJournal $transactionJournal): void
@@ -86,21 +87,19 @@ class AccountBalanceCalculator
             Log::debug(sprintf('Date is overruled with "%s"', $date->toW3cString()));
         }
 
-
-        $object->optimizedCalculation($accounts, $date);
+        self::optimizedCalculation($accounts, $date);
     }
 
-    private function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
+    public static function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
-            Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
+            // Log::debug(sprintf('Start balance for account #%d and currency #%d is 0.', $accountId, $currencyId));
 
             return '0';
         }
-        Log::debug(sprintf('getLatestBalance: notBefore date is "%s", calculating', $notBefore->format('Y-m-d')));
         $query   = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->whereNull('transactions.deleted_at')
-            ->where('transaction_journals.transaction_currency_id', $currencyId)
+            ->where('transactions.transaction_currency_id', $currencyId)
             ->whereNull('transaction_journals.deleted_at')
             // this order is the same as GroupCollector
             ->orderBy('transaction_journals.date', 'DESC')
@@ -110,21 +109,44 @@ class AccountBalanceCalculator
             ->orderBy('transactions.amount', 'DESC')
             ->where('transactions.account_id', $accountId)
         ;
-        $notBefore->startOfDay();
         $query->where('transaction_journals.date', '<', $notBefore);
 
-        $first   = $query->first(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount', 'transactions.balance_after']);
-        $balance = (string)($first->balance_after ?? '0');
-        Log::debug(sprintf('getLatestBalance: found balance: %s in transaction #%d', $balance, $first->id ?? 0));
+        $first   = $query->first([
+            'transactions.id',
+            'transactions.balance_dirty',
+            'transactions.transaction_currency_id',
+            'transaction_journals.date',
+            'transactions.account_id',
+            'transactions.amount',
+            'transactions.balance_after',
+        ]);
+
+        if (null === $first) {
+            Log::debug(sprintf('Found no transactions for currency #%d and account #%d, return 0.', $currencyId, $accountId));
+
+            return '0';
+        }
+
+        $balance = (string) ($first->balance_after ?? '0');
+        Log::debug(sprintf(
+            'getLatestBalance: found balance: %s in transaction #%d on moment %s',
+            Steam::bcround($balance, 2),
+            $first->id ?? 0,
+            $notBefore->format('Y-m-d H:i:s')
+        ));
 
         return $balance;
     }
 
-    private function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
+    public static function optimizedCalculation(Collection $accounts, ?Carbon $notBefore = null): void
     {
-        Log::debug('start of optimizedCalculation');
+        if ($notBefore instanceof Carbon) {
+            $notBefore->startOfDay();
+        }
+
+        Log::debug(sprintf('start of optimizedCalculation with date "%s"', $notBefore?->format('Y-m-d H:i:s')));
         if ($accounts->count() > 0) {
-            Log::debug(sprintf('Limited to %d account(s)', $accounts->count()));
+            Log::debug(sprintf('Limited to %d account(s): %s', $accounts->count(), implode(', ', $accounts->pluck('id')->toArray())));
         }
         // collect all transactions and the change they make.
         $balances = [];
@@ -143,25 +165,38 @@ class AccountBalanceCalculator
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
         if ($notBefore instanceof Carbon) {
-            $notBefore->startOfDay();
             $query->where('transaction_journals.date', '>=', $notBefore);
         }
 
-        $set      = $query->get(['transactions.id', 'transactions.balance_dirty', 'transactions.transaction_currency_id', 'transaction_journals.date', 'transactions.account_id', 'transactions.amount']);
-        Log::debug(sprintf('Counted %d transaction(s)', $set->count()));
+        $set      = $query->get([
+            'transactions.id',
+            'transactions.balance_dirty',
+            'transactions.transaction_currency_id',
+            'transaction_journals.date',
+            'transactions.account_id',
+            'transactions.amount',
+        ]);
+        Log::debug(sprintf('Found %d transaction(s)', $set->count()));
 
         // the balance value is an array.
         // first entry is the balance, second is the date.
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
+            // Log::debug(sprintf('Processing transaction #%d with currency #%d and amount %s', $entry->id, $entry->transaction_currency_id, Steam::bcround($entry->amount, 2)));
             // start with empty array:
             $balances[$entry->account_id]                                  ??= [];
-            $balances[$entry->account_id][$entry->transaction_currency_id] ??= [$this->getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore), null];
+            $balances[$entry->account_id][$entry->transaction_currency_id] ??= [
+                self::getLatestBalance($entry->account_id, $entry->transaction_currency_id, $notBefore),
+                null,
+            ];
 
             // before and after are easy:
             $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after                                                         = bcadd($before, (string)$entry->amount);
+            $after                                                         = bcadd($before, (string) $entry->amount);
+
+            // Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
+
             if (true === $entry->balance_dirty || $accounts->count() > 0) {
                 // update the transaction:
                 $entry->balance_before = $before;
@@ -175,8 +210,8 @@ class AccountBalanceCalculator
             $balances[$entry->account_id][$entry->transaction_currency_id] = [$after, $entry->date];
         }
         Log::debug(sprintf('end of optimizedCalculation, corrected %d balance(s)', $count));
-        // then update all transactions.
 
+        // then update all transactions.
         // save all collected balances in their respective account objects.
         // $this->storeAccountBalances($balances);
     }
@@ -210,15 +245,16 @@ class AccountBalanceCalculator
                 }
 
                 /** @var AccountBalance $object */
-                $object          = $account->accountBalances()->firstOrCreate(
-                    [
+                $object          = $account
+                    ->accountBalances()
+                    ->firstOrCreate([
                         'title'                   => 'running_balance',
                         'balance'                 => '0',
                         'transaction_currency_id' => $currencyId,
                         'date'                    => $balance[1],
                         'date_tz'                 => $balance[1]?->format('e'),
-                    ]
-                );
+                    ])
+                ;
                 $object->balance = $balance[0];
                 $object->date    = $balance[1];
                 $object->date_tz = $balance[1]?->format('e');

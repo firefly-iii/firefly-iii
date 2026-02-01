@@ -60,10 +60,13 @@ class Account extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $accountId = (int)$value;
+            $accountId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -126,7 +129,7 @@ class Account extends Model
 
     public function setVirtualBalanceAttribute(mixed $value): void
     {
-        $value                               = (string)$value;
+        $value                               = (string) $value;
         if ('' === $value) {
             $value = null;
         }
@@ -145,9 +148,7 @@ class Account extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -157,10 +158,7 @@ class Account extends Model
     {
         return Attribute::make(get: function () {
             /** @var null|AccountMeta $metaValue */
-            $metaValue = $this->accountMeta()
-                ->where('name', 'account_number')
-                ->first()
-            ;
+            $metaValue = $this->accountMeta()->where('name', 'account_number')->first();
 
             return null !== $metaValue ? $metaValue->data : '';
         });
@@ -176,9 +174,7 @@ class Account extends Model
      */
     protected function accountTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]
@@ -220,16 +216,12 @@ class Account extends Model
 
     protected function iban(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string)$value)),
-        );
+        return Attribute::make(get: static fn ($value): ?string => null === $value ? null : trim(str_replace(' ', '', (string) $value)));
     }
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -237,15 +229,11 @@ class Account extends Model
      */
     protected function virtualBalance(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     public function primaryPeriodStatistics(): MorphMany
     {
-
         return $this->morphMany(PeriodStatistic::class, 'primary_statable');
-
     }
 }

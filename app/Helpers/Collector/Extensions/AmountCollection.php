@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Collector\Extensions;
 
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 /**
  * Trait AmountCollection
@@ -38,22 +38,18 @@ trait AmountCollection
      */
     public function amountIs(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('source.amount', Steam::negative($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->where('source.amount', Steam::negative($amount));
+        });
 
         return $this;
     }
 
     public function amountIsNot(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('source.amount', '!=', Steam::negative($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->where('source.amount', '!=', Steam::negative($amount));
+        });
 
         return $this;
     }
@@ -63,11 +59,9 @@ trait AmountCollection
      */
     public function amountLess(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('destination.amount', '<=', Steam::positive($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->where('destination.amount', '<=', Steam::positive($amount));
+        });
 
         return $this;
     }
@@ -77,11 +71,9 @@ trait AmountCollection
      */
     public function amountMore(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->where('destination.amount', '>=', Steam::positive($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->where('destination.amount', '>=', Steam::positive($amount));
+        });
 
         return $this;
     }
@@ -91,12 +83,10 @@ trait AmountCollection
      */
     public function foreignAmountIs(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->whereNotNull('source.foreign_amount');
-                $q->where('source.foreign_amount', Steam::negative($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->whereNotNull('source.foreign_amount');
+            $q->where('source.foreign_amount', Steam::negative($amount));
+        });
 
         return $this;
     }
@@ -106,12 +96,10 @@ trait AmountCollection
      */
     public function foreignAmountIsNot(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->whereNull('source.foreign_amount');
-                $q->orWhere('source.foreign_amount', '!=', Steam::negative($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->whereNull('source.foreign_amount');
+            $q->orWhere('source.foreign_amount', '!=', Steam::negative($amount));
+        });
 
         return $this;
     }
@@ -121,12 +109,10 @@ trait AmountCollection
      */
     public function foreignAmountLess(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->whereNotNull('destination.foreign_amount');
-                $q->where('destination.foreign_amount', '<=', Steam::positive($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->whereNotNull('destination.foreign_amount');
+            $q->where('destination.foreign_amount', '<=', Steam::positive($amount));
+        });
 
         return $this;
     }
@@ -136,12 +122,10 @@ trait AmountCollection
      */
     public function foreignAmountMore(string $amount): GroupCollectorInterface
     {
-        $this->query->where(
-            static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
-                $q->whereNotNull('destination.foreign_amount');
-                $q->where('destination.foreign_amount', '>=', Steam::positive($amount));
-            }
-        );
+        $this->query->where(static function (EloquentBuilder $q) use ($amount): void { // @phpstan-ignore-line
+            $q->whereNotNull('destination.foreign_amount');
+            $q->where('destination.foreign_amount', '>=', Steam::positive($amount));
+        });
 
         return $this;
     }

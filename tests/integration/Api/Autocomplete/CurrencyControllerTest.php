@@ -91,15 +91,7 @@ final class CurrencyControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
         $response->assertJsonFragment(['code' => 'CUR1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(10);
     }
@@ -134,18 +126,9 @@ final class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(1);
-
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
@@ -154,10 +137,7 @@ final class CurrencyControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestCurrencies(20, true);
-        $response = $this->get(route('api.v1.autocomplete.currencies', [
-            'query' => 'Currency 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.currencies', ['query' => 'Currency 1', 'limit' => 20]), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)

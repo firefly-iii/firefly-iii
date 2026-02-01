@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\System\OAuthKeys;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class RestoresOAuthKeys extends Command
 {
@@ -40,7 +41,9 @@ class RestoresOAuthKeys extends Command
      */
     public function handle(): int
     {
+        Log::debug('Restore OAuth Keys command.');
         $this->restoreOAuthKeys();
+        Log::debug('Done with OAuth Keys command.');
 
         return 0;
     }
@@ -70,7 +73,6 @@ class RestoresOAuthKeys extends Command
         if (!$this->keysInDatabase() && $this->keysOnDrive()) {
             $this->storeKeysInDB();
             $this->friendlyInfo('Stored OAuth keys in database.');
-
         }
     }
 

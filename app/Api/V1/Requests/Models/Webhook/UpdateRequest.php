@@ -27,11 +27,11 @@ namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\ValidatesWebhooks;
 use Illuminate\Foundation\Http\FormRequest;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UpdateRequest
@@ -44,11 +44,7 @@ class UpdateRequest extends FormRequest
 
     public function getData(): array
     {
-        $fields               = [
-            'title'    => ['title', 'convertString'],
-            'active'   => ['active', 'boolean'],
-            'url'      => ['url', 'convertString'],
-        ];
+        $fields               = ['title'  => ['title', 'convertString'], 'active' => ['active', 'boolean'], 'url'    => ['url', 'convertString']];
 
         $triggers             = $this->get('triggers', []);
         $responses            = $this->get('responses', []);
@@ -82,7 +78,6 @@ class UpdateRequest extends FormRequest
         return [
             'title'        => sprintf('min:1|max:255|uniqueObjectForUser:webhooks,title,%d', $webhook->id),
             'active'       => [new IsBoolean()],
-
             'trigger'      => 'prohibited',
             'triggers'     => 'required|array|min:1|max:10',
             'triggers.*'   => sprintf('required|in:%s', $triggers),
@@ -92,7 +87,6 @@ class UpdateRequest extends FormRequest
             'delivery'     => 'prohibited',
             'deliveries'   => 'required|array|min:1|max:1',
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
-
             'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
         ];
     }

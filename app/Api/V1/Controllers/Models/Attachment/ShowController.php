@@ -55,16 +55,14 @@ class ShowController extends Controller
     {
         parent::__construct();
         $this->middleware(ApiDemoUser::class)->except(['delete', 'download', 'show', 'index']);
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
-                $this->repository = app(AttachmentRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user             = auth()->user();
+            $this->repository = app(AttachmentRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -123,11 +121,7 @@ class ShowController extends Controller
      */
     public function index(PaginationRequest $request): JsonResponse
     {
-        [
-            'limit'  => $limit,
-            'offset' => $offset,
-            'page'   => $page,
-        ]            = $request->attributes->all();
+        ['limit'  => $limit, 'offset' => $offset, 'page'   => $page] = $request->attributes->all();
 
         if (true === auth()->user()->hasRole('demo')) {
             Log::channel('audit')->warning(sprintf('Demo user tries to access attachment API in %s', __METHOD__));
@@ -135,21 +129,21 @@ class ShowController extends Controller
             throw new NotFoundHttpException();
         }
 
-        $manager     = $this->getManager();
+        $manager                                                     = $this->getManager();
 
         // get list of attachments. Count it and split it.
-        $collection  = $this->repository->get();
-        $count       = $collection->count();
-        $attachments = $collection->slice($offset, $limit);
+        $collection                                                  = $this->repository->get();
+        $count                                                       = $collection->count();
+        $attachments                                                 = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator   = new LengthAwarePaginator($attachments, $count, $limit, $page);
+        $paginator                                                   = new LengthAwarePaginator($attachments, $count, $limit, $page);
         $paginator->setPath(route('api.v1.attachments.index').$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
-        $transformer = app(AttachmentTransformer::class);
+        $transformer                                                 = app(AttachmentTransformer::class);
 
-        $resource    = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource                                                    = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
@@ -33,6 +32,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use stdClass;
 
 /**
@@ -67,7 +67,8 @@ class AccountDestroyService
     private function destroyOpeningBalance(Account $account): void
     {
         Log::debug(sprintf('Searching for opening balance for account #%d "%s"', $account->id, $account->name));
-        $set = $account->transactions()
+        $set = $account
+            ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
@@ -78,10 +79,7 @@ class AccountDestroyService
             Log::debug(sprintf('Found opening balance journal with ID #%d', $journalId));
 
             // get transactions with this journal (should be just one):
-            $transactions = Transaction::where('transaction_journal_id', $journalId)
-                ->where('account_id', '!=', $account->id)
-                ->get()
-            ;
+            $transactions = Transaction::where('transaction_journal_id', $journalId)->where('account_id', '!=', $account->id)->get();
 
             /** @var Transaction $transaction */
             foreach ($transactions as $transaction) {
@@ -109,7 +107,11 @@ class AccountDestroyService
         Log::debug(sprintf('Move from account #%d to #%d', $account->id, $moveTo->id));
         DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
 
-        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get(['transaction_journal_id', 'account_id', DB::raw('count(*) as the_count')]);
+        $collection = Transaction::groupBy('transaction_journal_id', 'account_id')->where('account_id', $moveTo->id)->get([
+            'transaction_journal_id',
+            'account_id',
+            DB::raw('count(*) as the_count'),
+        ]);
         if (0 === $collection->count()) {
             return;
         }
@@ -139,12 +141,10 @@ class AccountDestroyService
 
     private function destroyRecurrences(Account $account): void
     {
-        $recurrences    = RecurrenceTransaction::where(
-            static function (Builder $q) use ($account): void {
-                $q->where('source_id', $account->id);
-                $q->orWhere('destination_id', $account->id);
-            }
-        )->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
+        $recurrences    = RecurrenceTransaction::where(static function (Builder $q) use ($account): void {
+            $q->where('source_id', $account->id);
+            $q->orWhere('destination_id', $account->id);
+        })->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
 
         /** @var RecurrenceDestroyService $destroyService */
         $destroyService = app(RecurrenceDestroyService::class);

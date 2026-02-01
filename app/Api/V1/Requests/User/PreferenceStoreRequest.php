@@ -38,10 +38,7 @@ class PreferenceStoreRequest extends FormRequest
 
     public function getAll(): array
     {
-        $array = [
-            'name' => $this->convertString('name'),
-            'data' => $this->get('data'),
-        ];
+        $array = ['name' => $this->convertString('name'), 'data' => $this->get('data')];
         if ('true' === $array['data']) {
             $array['data'] = true;
         }
@@ -60,9 +57,6 @@ class PreferenceStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required',
-            'data' => 'required',
-        ];
+        return ['name' => 'required', 'data' => 'required'];
     }
 }

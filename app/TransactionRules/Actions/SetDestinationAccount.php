@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -34,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDestinationAccount.
@@ -45,7 +45,9 @@ class SetDestinationAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -70,13 +72,7 @@ class SetDestinationAccount implements ActionInterface
         // if this is a transfer or a deposit, the new destination account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
         if ((TransactionTypeEnum::DEPOSIT->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && !$newAccount instanceof Account) {
-            Log::error(
-                sprintf(
-                    'Cant change destination account of journal #%d because no asset account with name "%s" exists.',
-                    $object->id,
-                    $accountName
-                )
-            );
+            Log::error(sprintf('Cant change destination account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
 
             return false;
@@ -99,13 +95,11 @@ class SetDestinationAccount implements ActionInterface
             return false;
         }
         if ($newAccount instanceof Account && $newAccount->id === $source->account_id) {
-            Log::error(
-                sprintf(
-                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
-                    $newAccount->id,
-                    $source->account_id
-                )
-            );
+            Log::error(sprintf(
+                'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
+                $newAccount->id,
+                $source->account_id
+            ));
 
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_destination', ['name' => $newAccount->name])));
 
@@ -118,12 +112,7 @@ class SetDestinationAccount implements ActionInterface
             $newAccount = $this->findWithdrawalDestinationAccount($accountName);
         }
         if (!$newAccount instanceof Account) {
-            Log::error(
-                sprintf(
-                    'No destination account found for name "%s".',
-                    $accountName
-                )
-            );
+            Log::error(sprintf('No destination account found for name "%s".', $accountName));
 
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.no_destination', ['name' => $accountName])));
 
@@ -132,7 +121,7 @@ class SetDestinationAccount implements ActionInterface
 
         Log::debug(sprintf('New destination account is #%d ("%s").', $newAccount->id, $newAccount->name));
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $newAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_destination', null, $newAccount->name));
 
         // update destination transaction with new destination account:
         DB::table('transactions')

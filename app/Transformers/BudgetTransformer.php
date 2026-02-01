@@ -36,9 +36,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                $convertToPrimary;
+    private readonly bool $convertToPrimary;
     private readonly TransactionCurrency $primaryCurrency;
-    private array                        $types;
+    private array $types;
 
     /**
      * BudgetTransformer constructor.
@@ -60,7 +60,6 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function transform(Budget $budget): array
     {
-
         // info for auto budget.
         $abType    = null;
         $abAmount  = null;
@@ -77,7 +76,7 @@ class BudgetTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                              => (string)$budget->id,
+            'id'                              => (string) $budget->id,
             'created_at'                      => $budget->created_at->toAtomString(),
             'updated_at'                      => $budget->updated_at->toAtomString(),
             'active'                          => $budget->active,
@@ -92,13 +91,13 @@ class BudgetTransformer extends AbstractTransformer
 
             // new currency settings.
             'object_has_currency_setting'     => null !== $budget->meta['currency'],
-            'currency_id'                     => null === $currency ? null : (string)$currency->id,
+            'currency_id'                     => null === $currency ? null : (string) $currency->id,
             'currency_code'                   => $currency?->code,
             'currency_name'                   => $currency?->name,
             'currency_symbol'                 => $currency?->symbol,
             'currency_decimal_places'         => $currency?->decimal_places,
 
-            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
             'primary_currency_code'           => $this->primaryCurrency->code,
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
@@ -108,12 +107,7 @@ class BudgetTransformer extends AbstractTransformer
             'pc_auto_budget_amount'           => $abPrimary,
             'spent'                           => null === $budget->meta['spent'] ? null : $this->beautify($budget->meta['spent']),
             'pc_spent'                        => null === $budget->meta['pc_spent'] ? null : $this->beautify($budget->meta['pc_spent']),
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/budgets/'.$budget->id,
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => '/budgets/'.$budget->id]],
         ];
     }
 
@@ -121,7 +115,7 @@ class BudgetTransformer extends AbstractTransformer
     {
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = Steam::bcround($data['sum'], (int)$data['currency_decimal_places']);
+            $data['sum'] = Steam::bcround($data['sum'], (int) $data['currency_decimal_places']);
             $return[]    = $data;
         }
 

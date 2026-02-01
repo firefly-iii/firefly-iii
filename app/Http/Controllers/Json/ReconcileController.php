@@ -54,15 +54,13 @@ class ReconcileController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-credit-card');
-                app('view')->share('title', (string) trans('firefly.accounts'));
-                $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-credit-card');
+            app('view')->share('title', (string) trans('firefly.accounts'));
+            $this->accountRepos = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -136,7 +134,21 @@ class ReconcileController extends Controller
         $reconSum        = bcadd(bcadd($startBalance ?? '0', $amount), $clearedAmount);
 
         try {
-            $view = view('accounts.reconcile.overview', ['account' => $account, 'start' => $start, 'diffCompare' => $diffCompare, 'difference' => $difference, 'end' => $end, 'clearedAmount' => $clearedAmount, 'startBalance' => $startBalance, 'endBalance' => $endBalance, 'amount' => $amount, 'route' => $route, 'countCleared' => $countCleared, 'reconSum' => $reconSum, 'selectedIds' => $selectedIds])->render();
+            $view = view('accounts.reconcile.overview', [
+                'account'       => $account,
+                'start'         => $start,
+                'diffCompare'   => $diffCompare,
+                'difference'    => $difference,
+                'end'           => $end,
+                'clearedAmount' => $clearedAmount,
+                'startBalance'  => $startBalance,
+                'endBalance'    => $endBalance,
+                'amount'        => $amount,
+                'route'         => $route,
+                'countCleared'  => $countCleared,
+                'reconSum'      => $reconSum,
+                'selectedIds'   => $selectedIds,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('View error: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -145,7 +157,7 @@ class ReconcileController extends Controller
             throw new FireflyException($view, 0, $e);
         }
 
-        $return          = ['post_url' => $route, 'html' => $view];
+        $return          = ['post_url' => $route, 'html'     => $view];
 
         return response()->json($return);
     }
@@ -220,7 +232,6 @@ class ReconcileController extends Controller
             $endBalance[$key] = Steam::bcround($value, $currency->decimal_places);
         }
 
-
         // get the transactions
         $selectionStart = clone $start;
         $selectionStart->startOfDay();
@@ -236,18 +247,26 @@ class ReconcileController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector      = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts(new Collection()->push($account))
+        $collector
+            ->setAccounts(new Collection()->push($account))
             ->setRange($selectionStart, $selectionEnd)
-            ->withBudgetInformation()->withCategoryInformation()->withAccountInformation()
+            ->withBudgetInformation()
+            ->withCategoryInformation()
+            ->withAccountInformation()
         ;
         $array          = $collector->getExtractedJournals();
         $journals       = $this->processTransactions($account, $array);
 
         try {
-            $html = view(
-                'accounts.reconcile.transactions',
-                ['account' => $account, 'journals' => $journals, 'currency' => $currency, 'start' => $start, 'end' => $end, 'selectionStart' => $selectionStart, 'selectionEnd' => $selectionEnd]
-            )->render();
+            $html = view('accounts.reconcile.transactions', [
+                'account'        => $account,
+                'journals'       => $journals,
+                'currency'       => $currency,
+                'start'          => $start,
+                'end'            => $end,
+                'selectionStart' => $selectionStart,
+                'selectionEnd'   => $selectionEnd,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -256,7 +275,7 @@ class ReconcileController extends Controller
             throw new FireflyException($html, 0, $e);
         }
 
-        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+        return response()->json(['html'         => $html, 'startBalance' => $startBalance, 'endBalance'   => $endBalance]);
     }
 
     /**
@@ -279,8 +298,7 @@ class ReconcileController extends Controller
             }
 
             // opening balance into account? then positive amount:
-            if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
-                && $account->id === $journal['destination_account_id']) {
+            if (TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type'] && $account->id === $journal['destination_account_id']) {
                 $inverse = true;
             }
 

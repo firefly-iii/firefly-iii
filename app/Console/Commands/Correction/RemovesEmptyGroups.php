@@ -43,12 +43,14 @@ class RemovesEmptyGroups extends Command
      */
     public function handle(): int
     {
-        $groupIds
-               = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
-                   ->whereNull('transaction_journals.id')->get(['transaction_groups.id'])->pluck('id')->toArray()
+        $groupIds = TransactionGroup::leftJoin('transaction_journals', 'transaction_groups.id', '=', 'transaction_journals.transaction_group_id')
+            ->whereNull('transaction_journals.id')
+            ->get(['transaction_groups.id'])
+            ->pluck('id')
+            ->toArray()
         ;
 
-        $total = count($groupIds);
+        $total    = count($groupIds);
         if ($total > 0) {
             $this->friendlyInfo(sprintf('Deleted %d empty transaction group(s).', $total));
 

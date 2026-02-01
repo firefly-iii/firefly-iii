@@ -730,6 +730,19 @@ Route::group(
     }
 );
 
+// Batch API routes:
+Route::group(
+    [
+        'middleware' => ['auth:api,sanctum', 'bindings'],
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
+        'prefix'     => 'v1/batch',
+        'as'         => 'api.v1.batch.',
+    ],
+    static function (): void {
+        Route::post('finish', ['uses' => 'BatchController@finishBatch', 'as' => 'finish']);
+    }
+);
+
 // USER
 
 // Preference API routes:
@@ -743,8 +756,8 @@ Route::group(
         Route::get('', ['uses' => 'PreferencesController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PreferencesController@store', 'as' => 'store']);
         // Route::get('{preferenceList}', ['uses' => 'PreferencesController@showList', 'as' => 'show-list'])->where('preferenceList', ',+');
-        Route::get('{preference}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
-        Route::put('{preference}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
+        Route::get('{preferenceName}', ['uses' => 'PreferencesController@show', 'as' => 'show']);
+        Route::put('{preferenceName}', ['uses' => 'PreferencesController@update', 'as' => 'update']);
     }
 );
 

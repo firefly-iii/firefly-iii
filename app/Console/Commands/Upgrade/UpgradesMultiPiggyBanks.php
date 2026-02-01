@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpgradesMultiPiggyBanks.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -29,10 +28,10 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Facades\Amount;
 
 class UpgradesMultiPiggyBanks extends Command
 {
@@ -43,7 +42,7 @@ class UpgradesMultiPiggyBanks extends Command
     protected $description          = 'Upgrade piggy banks so they can use multiple accounts.';
 
     protected $signature            = 'upgrade:620-piggy-banks {--F|force : Force the execution of this command.}';
-    private AccountRepositoryInterface   $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $repository;
 
     /**
@@ -68,8 +67,7 @@ class UpgradesMultiPiggyBanks extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function upgradePiggyBanks(): void
@@ -109,7 +107,6 @@ class UpgradesMultiPiggyBanks extends Command
 
         // remove all repetitions (no longer used)
         $piggyBank->piggyBankRepetitions()->delete();
-
     }
 
     private function markAsExecuted(): void

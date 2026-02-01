@@ -44,17 +44,9 @@ final class IntervalException extends Exception
         parent::__construct($message, $code, $previous);
     }
 
-    public static function unavailable(
-        Periodicity $periodicity,
-        array       $intervals,
-        int         $code = 0,
-        ?Throwable $previous = null
-    ): self {
-        $message                       = sprintf(
-            'The periodicity %s is unknown. Choose one of available periodicity: %s',
-            $periodicity->name,
-            implode(', ', $intervals)
-        );
+    public static function unavailable(Periodicity $periodicity, array $intervals, int $code = 0, ?Throwable $previous = null): self
+    {
+        $message                       = sprintf('The periodicity %s is unknown. Choose one of available periodicity: %s', $periodicity->name, implode(', ', $intervals));
 
         $exception                     = new self($message, $code, $previous);
         $exception->periodicity        = $periodicity;

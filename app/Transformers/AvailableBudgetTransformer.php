@@ -34,7 +34,7 @@ use FireflyIII\Support\Facades\Steam;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
-    private readonly bool                $convertToPrimary;
+    private readonly bool $convertToPrimary;
     private readonly TransactionCurrency $primary;
 
     /**
@@ -86,12 +86,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'pc_spent_in_budgets'             => $availableBudget->meta['pc_spent_in_budgets'],
             'spent_outside_budgets'           => $availableBudget->meta['spent_outside_budgets'],
             'pc_spent_outside_budgets'        => $availableBudget->meta['pc_spent_outside_budgets'],
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/available_budgets/'.$availableBudget->id,
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => '/available_budgets/'.$availableBudget->id]],
         ];
     }
 }

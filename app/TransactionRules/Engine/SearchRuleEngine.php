@@ -45,12 +45,12 @@ use Illuminate\Support\Facades\Log;
 class SearchRuleEngine implements RuleEngineInterface
 {
     private readonly Collection $groups;
-    private array               $operators       = [];
+    private array $operators       = [];
     // always collect the triggers from the database, unless indicated otherwise.
-    private bool                $refreshTriggers = true;
-    private array               $resultCount     = [];
+    private bool  $refreshTriggers = true;
+    private array $resultCount     = [];
     private readonly Collection $rules;
-    private User                $user;
+    private User $user;
 
     public function __construct()
     {
@@ -228,7 +228,13 @@ class SearchRuleEngine implements RuleEngineInterface
 
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
-            Log::debug(sprintf('Now at rule trigger #%d: %s:"%s" (%s).', $ruleTrigger->id, $ruleTrigger->trigger_type, $ruleTrigger->trigger_value, var_export($ruleTrigger->stop_processing, true)));
+            Log::debug(sprintf(
+                'Now at rule trigger #%d: %s:"%s" (%s).',
+                $ruleTrigger->id,
+                $ruleTrigger->trigger_type,
+                $ruleTrigger->trigger_value,
+                var_export($ruleTrigger->stop_processing, true)
+            ));
             if (false === $ruleTrigger->active) {
                 Log::debug('Trigger is not active, continue.');
 
@@ -283,17 +289,16 @@ class SearchRuleEngine implements RuleEngineInterface
         Log::debug(sprintf('Done running %d trigger(s)', $count));
 
         // make collection unique
-        $unique   = $total->unique(
-            static function (array $group): string {
-                $str = '';
-                foreach ($group['transactions'] as $transaction) {
-                    $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
-                }
-
-                return sprintf('%d%s', $group['id'], $str);
-                // Log::debug(sprintf('Return key: %s ', $key));
+        $unique   = $total->unique(static function (array $group): string {
+            $str = '';
+            foreach ($group['transactions'] as $transaction) {
+                $str = sprintf('%s%d', $str, $transaction['transaction_journal_id']);
             }
-        );
+
+            return sprintf('%d%s', $group['id'], $str);
+
+            // Log::debug(sprintf('Return key: %s ', $key));
+        });
 
         Log::debug(sprintf('SearchRuleEngine:: Found %d transactions using search engine.', $unique->count()));
 
@@ -316,7 +321,10 @@ class SearchRuleEngine implements RuleEngineInterface
             foreach ($this->rules as $rule) { // @phpstan-ignore-line
                 $result = $this->fireRule($rule);
                 if ($result && true === $rule->stop_processing) {
-                    Log::debug(sprintf('Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.', $rule->id));
+                    Log::debug(sprintf(
+                        'Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.',
+                        $rule->id
+                    ));
                 }
                 if (false === $result && true === $rule->stop_processing) {
                     Log::debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));
@@ -442,14 +450,12 @@ class SearchRuleEngine implements RuleEngineInterface
         $journalId   = $transaction['transaction_journal_id'] ?? 0;
         if ($result) {
             $this->resultCount[$journalId] = array_key_exists($journalId, $this->resultCount) ? $this->resultCount[$journalId]++ : 1;
-            Log::debug(
-                sprintf(
-                    'Action "%s" on journal #%d was executed, so count a result. Updated transaction journal count is now %d.',
-                    $ruleAction->action_type,
-                    $transaction['transaction_journal_id'] ?? 0,
-                    count($this->resultCount),
-                )
-            );
+            Log::debug(sprintf(
+                'Action "%s" on journal #%d was executed, so count a result. Updated transaction journal count is now %d.',
+                $ruleAction->action_type,
+                $transaction['transaction_journal_id'] ?? 0,
+                count($this->resultCount)
+            ));
         }
         if (false === $result) {
             Log::debug(sprintf('Action "%s" reports NO changes were made.', $ruleAction->action_type));
@@ -471,7 +477,10 @@ class SearchRuleEngine implements RuleEngineInterface
     private function addNotes(array $transaction): array
     {
         $transaction['notes'] = '';
-        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first(['notes.*']);
+        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])
+            ->where('noteable_type', TransactionJournal::class)
+            ->first(['notes.*'])
+        ;
         if (null !== $dbNote) {
             $transaction['notes'] = $dbNote->text;
         }
@@ -508,11 +517,12 @@ class SearchRuleEngine implements RuleEngineInterface
         }
         if (!$group->relationLoaded('rules')) {
             Log::debug('Group rules have NOT been pre-loaded, load them NOW.');
-            $rules = $group->rules()
+            $rules = $group
+                ->rules()
                 ->orderBy('rules.order', 'ASC')
-//                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-//                         ->where('rule_triggers.trigger_type', 'user_action')
-//                         ->where('rule_triggers.trigger_value', 'store-journal')
+                //                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                //                         ->where('rule_triggers.trigger_type', 'user_action')
+                //                         ->where('rule_triggers.trigger_value', 'store-journal')
                 ->where('rules.active', true)
                 ->get(['rules.*'])
             ;

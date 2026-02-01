@@ -40,7 +40,11 @@ class BillWarningMail extends Mailable
     /**
      * ConfirmEmailChangeMail constructor.
      */
-    public function __construct(public Bill $bill, public string $field, public int $diff) {}
+    public function __construct(
+        public Bill $bill,
+        public string $field,
+        public int $diff
+    ) {}
 
     /**
      * Build the message.
@@ -54,9 +58,6 @@ class BillWarningMail extends Mailable
             $subject = (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
         }
 
-        return $this
-            ->markdown('emails.bill-warning')
-            ->subject($subject)
-        ;
+        return $this->markdown('emails.bill-warning')->subject($subject);
     }
 }

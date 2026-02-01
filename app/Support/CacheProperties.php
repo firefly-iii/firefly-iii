@@ -23,8 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
@@ -37,7 +37,7 @@ use function Safe\json_encode;
  */
 class CacheProperties
 {
-    protected string     $hash = '';
+    protected string $hash = '';
     protected Collection $properties;
 
     public function __construct()
@@ -97,7 +97,7 @@ class CacheProperties
                 $content = sprintf('%s%s', $content, json_encode($property, JSON_THROW_ON_ERROR));
             } catch (JsonException) {
                 // @ignoreException
-                $content = sprintf('%s%s', $content, hash('sha256', (string)Carbon::now()->getTimestamp()));
+                $content = sprintf('%s%s', $content, hash('sha256', (string) Carbon::now()->getTimestamp()));
             }
         }
         $this->hash = substr(hash('sha256', $content), 0, 16);

@@ -46,15 +46,14 @@ class Webhook extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $casts
-                        = [
-            'active'        => 'boolean',
-            'trigger'       => 'integer',
-            'response'      => 'integer',
-            'delivery'      => 'integer',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
+    protected $casts    = [
+        'active'        => 'boolean',
+        'trigger'       => 'integer',
+        'response'      => 'integer',
+        'delivery'      => 'integer',
+        'user_id'       => 'integer',
+        'user_group_id' => 'integer',
+    ];
     protected $fillable = ['active', 'trigger', 'response', 'delivery', 'user_id', 'user_group_id', 'url', 'title', 'secret'];
 
     public static function getDeliveries(): array
@@ -131,10 +130,13 @@ class Webhook extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            $webhookId = (int)$value;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
+            }
+            $webhookId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();

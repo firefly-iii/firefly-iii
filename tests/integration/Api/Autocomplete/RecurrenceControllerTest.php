@@ -56,7 +56,6 @@ final class RecurrenceControllerTest extends TestCase
                 'apply_rules'         => 1,
                 'active'              => 1,
                 'repetitions'         => 5,
-
             ]);
         }
     }
@@ -92,14 +91,7 @@ final class RecurrenceControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Recurrence 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
@@ -108,23 +100,13 @@ final class RecurrenceControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRecurrences(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.recurring', [
-            'query' => 'Recurrence',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.recurring', ['query' => 'Recurrence', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Recurrence 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
@@ -133,10 +115,7 @@ final class RecurrenceControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRecurrences(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.recurring', [
-            'query' => 'Recurrence 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.recurring', ['query' => 'Recurrence 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

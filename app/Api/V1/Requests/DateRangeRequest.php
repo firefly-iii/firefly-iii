@@ -37,17 +37,15 @@ class DateRangeRequest extends ApiRequest
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $start = $this->getCarbonDate('start')?->startOfDay();
-                $end   = $this->getCarbonDate('end')?->endOfDay();
-
-                $this->attributes->set('start', $start);
-                $this->attributes->set('end', $end);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $start = $this->getCarbonDate('start')?->startOfDay();
+            $end   = $this->getCarbonDate('end')?->endOfDay();
+
+            $this->attributes->set('start', $start);
+            $this->attributes->set('end', $end);
+        });
     }
 }

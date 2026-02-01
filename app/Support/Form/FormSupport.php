@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\MessageBag;
 use Throwable;
 
@@ -46,7 +46,14 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
 
         try {
-            $html = view('form.multi-select', ['classes' => $classes, 'name' => $name, 'label' => $label, 'selected' => $selected, 'options' => $options, 'list' => $list])->render();
+            $html = view('form.multi-select', [
+                'classes'  => $classes,
+                'name'     => $name,
+                'label'    => $label,
+                'selected' => $selected,
+                'options'  => $options,
+                'list'     => $list,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render multi-select(): %s', $e->getMessage()));
             $html = 'Could not render multi-select.';
@@ -68,7 +75,14 @@ trait FormSupport
         unset($options['autocomplete'], $options['placeholder']);
 
         try {
-            $html = view('form.select', ['classes' => $classes, 'name' => $name, 'label' => $label, 'selected' => $selected, 'options' => $options, 'list' => $list])->render();
+            $html = view('form.select', [
+                'classes'  => $classes,
+                'name'     => $name,
+                'label'    => $label,
+                'selected' => $selected,
+                'options'  => $options,
+                'list'     => $list,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
             $html = 'Could not render select.';
@@ -87,7 +101,7 @@ trait FormSupport
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_'.$name;
         $options['autocomplete'] = 'off';
-        $options['placeholder']  = ucfirst((string)$label);
+        $options['placeholder']  = ucfirst((string) $label);
 
         return $options;
     }
@@ -146,6 +160,6 @@ trait FormSupport
         }
         $name = str_replace('[]', '', $name);
 
-        return (string)trans('form.'.$name);
+        return (string) trans('form.'.$name);
     }
 }

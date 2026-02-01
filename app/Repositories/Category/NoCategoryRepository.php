@@ -57,7 +57,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                                                              = (int) $journal['currency_id'];
             $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
@@ -75,12 +75,11 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
 
             // add journal to array:
             // only a subset of the fields.
-            $journalId  = (int) $journal['transaction_journal_id'];
-            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
-                        = [
-                            'amount' => Steam::negative($journal['amount']),
-                            'date'   => $journal['date'],
-                        ];
+            $journalId                                                               = (int) $journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId] = [
+                'amount' => Steam::negative($journal['amount']),
+                'date'   => $journal['date'],
+            ];
         }
 
         return $array;
@@ -103,7 +102,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $array     = [];
 
         foreach ($journals as $journal) {
-            $currencyId = (int) $journal['currency_id'];
+            $currencyId                                                              = (int) $journal['currency_id'];
             $array[$currencyId]                  ??= [
                 'categories'              => [],
                 'currency_id'             => $currencyId,
@@ -121,12 +120,11 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
             ];
             // add journal to array:
             // only a subset of the fields.
-            $journalId  = (int) $journal['transaction_journal_id'];
-            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId]
-                        = [
-                            'amount' => Steam::positive($journal['amount']),
-                            'date'   => $journal['date'],
-                        ];
+            $journalId                                                               = (int) $journal['transaction_journal_id'];
+            $array[$currencyId]['categories'][0]['transaction_journals'][$journalId] = [
+                'amount' => Steam::positive($journal['amount']),
+                'date'   => $journal['date'],
+            ];
         }
 
         return $array;

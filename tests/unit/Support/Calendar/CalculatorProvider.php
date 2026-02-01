@@ -26,15 +26,18 @@ namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 use Generator;
+use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {
-    public string           $label;
+    public string $label;
 
-    private function __construct(public IntervalProvider $intervalProvider, public Periodicity $periodicity, public int $skip = 0)
-    {
+    private function __construct(
+        public IntervalProvider $intervalProvider,
+        public Periodicity $periodicity,
+        public int $skip = 0
+    ) {
         $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
     }
 

@@ -73,7 +73,6 @@ class PeriodController extends Controller
                 $amount = $journal['amount'];
             }
 
-
             $response[$currencyId] ??= [
                 'difference'       => '0',
                 'difference_float' => 0,

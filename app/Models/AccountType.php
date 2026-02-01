@@ -32,67 +32,63 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string ASSET            = 'Asset account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string BENEFICIARY      = 'Beneficiary account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string CASH             = 'Cash account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string CREDITCARD       = 'Credit card';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string DEBT             = 'Debt';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string DEFAULT          = 'Default account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string EXPENSE          = 'Expense account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string IMPORT           = 'Import account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string INITIAL_BALANCE  = 'Initial balance account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string LIABILITY_CREDIT = 'Liability credit account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string LOAN             = 'Loan';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string MORTGAGE         = 'Mortgage';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string RECONCILIATION   = 'Reconciliation account';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string REVENUE          = 'Revenue account';
 
-    protected $casts
-                                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-        ];
+    protected $casts                     = ['created_at' => 'datetime', 'updated_at' => 'datetime'];
 
     protected $fillable                  = ['type'];
 

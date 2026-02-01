@@ -18,10 +18,10 @@ class PeriodStatistic extends Model
     protected function casts(): array
     {
         return [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'start'         => SeparateTimezoneCaster::class,
-            'end'           => SeparateTimezoneCaster::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
+            'start'      => SeparateTimezoneCaster::class,
+            'end'        => SeparateTimezoneCaster::class,
         ];
     }
 
@@ -32,29 +32,21 @@ class PeriodStatistic extends Model
 
     protected function count(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function primaryStatable(): MorphTo
     {
-
         return $this->morphTo();
-
     }
 
     public function secondaryStatable(): MorphTo
     {
-
         return $this->morphTo();
-
     }
 
     public function tertiaryStatable(): MorphTo
     {
-
         return $this->morphTo();
-
     }
 }

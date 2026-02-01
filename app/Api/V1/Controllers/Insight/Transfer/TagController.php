@@ -46,15 +46,13 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $user             = auth()->user();
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+        $this->middleware(function ($request, $next) {
+            $user             = auth()->user();
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function noTag(GenericRequest $request): JsonResponse
@@ -65,7 +63,6 @@ class TagController extends Controller
         $response         = [];
         $convertToPrimary = Amount::convertToPrimary();
         $primary          = Amount::getPrimaryCurrency();
-
 
         // collect all expenses in this period (regardless of type) by the given bills and accounts.
         $collector        = app(GroupCollectorInterface::class);
@@ -98,7 +95,6 @@ class TagController extends Controller
             ];
             $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
-
         }
 
         return response()->json(array_values($response));

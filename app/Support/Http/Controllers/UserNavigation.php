@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
-use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait UserNavigation
@@ -51,7 +51,7 @@ trait UserNavigation
     final protected function getPreviousUrl(string $identifier): string
     {
         Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
-        $url = (string)session($identifier);
+        $url = (string) session($identifier);
         Log::debug(sprintf('The URL is %s', $url));
 
         return Steam::getSafeUrl($url, route('index'));
@@ -62,7 +62,14 @@ trait UserNavigation
      */
     final protected function isEditableAccount(Account $account): bool
     {
-        $editable = [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+        $editable = [
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ];
         $type     = $account->accountType->type;
 
         return in_array($type, $editable, true);
@@ -76,7 +83,12 @@ trait UserNavigation
             return false;
         }
         $type     = $journal->transactionType->type;
-        $editable = [TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::RECONCILIATION->value];
+        $editable = [
+            TransactionTypeEnum::WITHDRAWAL->value,
+            TransactionTypeEnum::TRANSFER->value,
+            TransactionTypeEnum::DEPOSIT->value,
+            TransactionTypeEnum::RECONCILIATION->value,
+        ];
 
         return in_array($type, $editable, true);
     }
@@ -84,7 +96,11 @@ trait UserNavigation
     final protected function redirectAccountToAccount(Account $account): Redirector|RedirectResponse
     {
         $type = $account->accountType->type;
-        if (AccountTypeEnum::RECONCILIATION->value === $type || AccountTypeEnum::INITIAL_BALANCE->value === $type || AccountTypeEnum::LIABILITY_CREDIT->value === $type) {
+        if (
+            AccountTypeEnum::RECONCILIATION->value === $type
+            || AccountTypeEnum::INITIAL_BALANCE->value === $type
+            || AccountTypeEnum::LIABILITY_CREDIT->value === $type
+        ) {
             // reconciliation must be stored somewhere in this account's transactions.
 
             /** @var null|Transaction $transaction */
@@ -123,7 +139,12 @@ trait UserNavigation
         }
         // prefer redirect to everything but expense and revenue:
         $transactions = $journal->transactions;
-        $ignore       = [AccountTypeEnum::REVENUE->value, AccountTypeEnum::EXPENSE->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::INITIAL_BALANCE->value];
+        $ignore       = [
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::RECONCILIATION->value,
+            AccountTypeEnum::INITIAL_BALANCE->value,
+        ];
 
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {

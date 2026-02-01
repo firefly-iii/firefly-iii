@@ -47,20 +47,16 @@ class SearchServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static fn (): QueryParserInterface => app(QueryParser::class)
-        );
+        $this->app->bind(static fn (): QueryParserInterface => app(QueryParser::class));
 
-        $this->app->bind(
-            static function (Application $app): SearchInterface {
-                /** @var OperatorQuerySearch $search */
-                $search = app(OperatorQuerySearch::class);
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $search->setUser(auth()->user());
-                }
-
-                return $search;
+        $this->app->bind(static function (Application $app): SearchInterface {
+            /** @var OperatorQuerySearch $search */
+            $search = app(OperatorQuerySearch::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $search->setUser(auth()->user());
             }
-        );
+
+            return $search;
+        });
     }
 }

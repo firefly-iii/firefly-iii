@@ -39,58 +39,57 @@ use function Safe\preg_replace;
  */
 trait ConvertsDataTypes
 {
-    private array $characters
-        = [
-            "\0", // NUL
-            "\f", // form feed
-            "\v", // vertical tab
-            "\u{0001}", // start of heading
-            "\u{0002}", // start of text
-            "\u{0003}", // end of text
-            "\u{0004}", // end of transmission
-            "\u{0005}", // enquiry
-            "\u{0006}", // ACK
-            "\u{0007}", // BEL
-            "\u{0008}", // backspace
-            "\u{000E}", // shift out
-            "\u{000F}", // shift in
-            "\u{0010}", // data link escape
-            "\u{0011}", // DC1
-            "\u{0012}", // DC2
-            "\u{0013}", // DC3
-            "\u{0014}", // DC4
-            "\u{0015}", // NAK
-            "\u{0016}", // SYN
-            "\u{0017}", // ETB
-            "\u{0018}", // CAN
-            "\u{0019}", // EM
-            "\u{001A}", // SUB
-            "\u{001B}", // escape
-            "\u{001C}", // file separator
-            "\u{001D}", // group separator
-            "\u{001E}", // record separator
-            "\u{001F}", // unit separator
-            "\u{007F}", // DEL
-            "\u{00A0}", // non-breaking space
-            "\u{1680}", // ogham space mark
-            "\u{180E}", // mongolian vowel separator
-            "\u{2000}", // en quad
-            "\u{2001}", // em quad
-            "\u{2002}", // en space
-            "\u{2003}", // em space
-            "\u{2004}", // three-per-em space
-            "\u{2005}", // four-per-em space
-            "\u{2006}", // six-per-em space
-            "\u{2007}", // figure space
-            "\u{2008}", // punctuation space
-            "\u{2009}", // thin space
-            "\u{200A}", // hair space
-            "\u{200B}", // zero width space
-            "\u{202F}", // narrow no-break space
-            "\u{3000}", // ideographic space
-            "\u{FEFF}", // zero width no -break space
-            "\r", // carriage return
-        ];
+    private array $characters = [
+        "\0", // NUL
+        "\f", // form feed
+        "\v", // vertical tab
+        "\u{0001}", // start of heading
+        "\u{0002}", // start of text
+        "\u{0003}", // end of text
+        "\u{0004}", // end of transmission
+        "\u{0005}", // enquiry
+        "\u{0006}", // ACK
+        "\u{0007}", // BEL
+        "\u{0008}", // backspace
+        "\u{000E}", // shift out
+        "\u{000F}", // shift in
+        "\u{0010}", // data link escape
+        "\u{0011}", // DC1
+        "\u{0012}", // DC2
+        "\u{0013}", // DC3
+        "\u{0014}", // DC4
+        "\u{0015}", // NAK
+        "\u{0016}", // SYN
+        "\u{0017}", // ETB
+        "\u{0018}", // CAN
+        "\u{0019}", // EM
+        "\u{001A}", // SUB
+        "\u{001B}", // escape
+        "\u{001C}", // file separator
+        "\u{001D}", // group separator
+        "\u{001E}", // record separator
+        "\u{001F}", // unit separator
+        "\u{007F}", // DEL
+        "\u{00A0}", // non-breaking space
+        "\u{1680}", // ogham space mark
+        "\u{180E}", // mongolian vowel separator
+        "\u{2000}", // en quad
+        "\u{2001}", // em quad
+        "\u{2002}", // en space
+        "\u{2003}", // em space
+        "\u{2004}", // three-per-em space
+        "\u{2005}", // four-per-em space
+        "\u{2006}", // six-per-em space
+        "\u{2007}", // figure space
+        "\u{2008}", // punctuation space
+        "\u{2009}", // thin space
+        "\u{200A}", // hair space
+        "\u{200B}", // zero width space
+        "\u{202F}", // narrow no-break space
+        "\u{3000}", // ideographic space
+        "\u{FEFF}", // zero width no -break space
+        "\r", // carriage return
+    ];
 
     public function clearIban(?string $string): ?string
     {
@@ -142,13 +141,13 @@ trait ConvertsDataTypes
      */
     public function convertInteger(string $field): int
     {
-        return (int)$this->get($field);
+        return (int) $this->get($field);
     }
 
     public function convertSortParameters(string $field, string $class): array
     {
         // assume this all works, because the validator would have caught any errors.
-        $parameter      = (string)request()->query->get($field);
+        $parameter      = (string) request()->query->get($field);
         if ('' === $parameter) {
             return [];
         }
@@ -177,7 +176,7 @@ trait ConvertsDataTypes
             return $default;
         }
 
-        return (string)$this->clearString((string)$entry);
+        return (string) $this->clearString((string) $entry);
     }
 
     /**
@@ -208,7 +207,7 @@ trait ConvertsDataTypes
         $collection = new Collection();
         if (is_array($set)) {
             foreach ($set as $accountId) {
-                $account = $repository->find((int)$accountId);
+                $account = $repository->find((int) $accountId);
                 if (null !== $account) {
                     $collection->push($account);
                 }
@@ -233,7 +232,7 @@ trait ConvertsDataTypes
      */
     public function stringWithNewlines(string $field): string
     {
-        return (string)$this->clearStringKeepNewlines((string)($this->get($field) ?? ''));
+        return (string) $this->clearStringKeepNewlines((string) ($this->get($field) ?? ''));
     }
 
     /**
@@ -280,14 +279,14 @@ trait ConvertsDataTypes
 
     protected function convertDateTime(?string $string): ?Carbon
     {
-        $value = $this->get((string)$string);
+        $value = $this->get((string) $string);
         if (null === $value) {
             return null;
         }
         if ('' === $value) {
             return null;
         }
-        if (10 === strlen((string)$value)) {
+        if (10 === strlen((string) $value)) {
             // probably a date format.
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value, config('app.timezone'));
@@ -336,13 +335,12 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float)$res;
+        return (float) $res;
     }
 
     protected function dateFromValue(?string $string): ?Carbon
     {
         if (null === $string) {
-
             return null;
         }
         if ('' === $string) {
@@ -374,7 +372,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (float)$string;
+        return (float) $string;
     }
 
     /**
@@ -399,8 +397,8 @@ trait ConvertsDataTypes
      */
     protected function getCarbonDate(string $field): ?Carbon
     {
-        $data = (string)$this->get($field);
-        Log::debug(sprintf('Date string is "%s"', $data));
+        $data = (string) $this->get($field);
+        // Log::debug(sprintf('Date string is "%s"', $data));
 
         if ('' === $data) {
             return null;
@@ -428,7 +426,7 @@ trait ConvertsDataTypes
             return null;
         }
 
-        return (int)$string;
+        return (int) $string;
     }
 
     /**
@@ -440,12 +438,12 @@ trait ConvertsDataTypes
             return null;
         }
 
-        $value = (string)$this->get($field);
+        $value = (string) $this->get($field);
         if ('' === $value) {
             return null;
         }
 
-        return (int)$value;
+        return (int) $value;
     }
 
     protected function parseAccounts(mixed $array): array
@@ -460,7 +458,7 @@ trait ConvertsDataTypes
             }
             $amount   = null;
             if (array_key_exists('current_amount', $entry)) {
-                $amount = $this->clearString((string)($entry['current_amount'] ?? '0'));
+                $amount = $this->clearString((string) ($entry['current_amount'] ?? '0'));
                 if (null === $entry['current_amount']) {
                     $amount = null;
                 }
@@ -468,10 +466,7 @@ trait ConvertsDataTypes
             if (!array_key_exists('current_amount', $entry)) {
                 $amount = null;
             }
-            $return[] = [
-                'account_id'     => $this->integerFromValue((string)($entry['account_id'] ?? '0')),
-                'current_amount' => $amount,
-            ];
+            $return[] = ['account_id'     => $this->integerFromValue((string) ($entry['account_id'] ?? '0')), 'current_amount' => $amount];
         }
 
         return $return;

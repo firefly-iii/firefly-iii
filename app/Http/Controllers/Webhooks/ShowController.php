@@ -26,12 +26,12 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class ShowController
@@ -46,15 +46,13 @@ class ShowController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-bolt');
-                app('view')->share('subTitleIcon', 'fa-bolt');
-                app('view')->share('title', (string) trans('firefly.webhooks'));
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-bolt');
+            app('view')->share('subTitleIcon', 'fa-bolt');
+            app('view')->share('title', (string) trans('firefly.webhooks'));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,6 +70,6 @@ class ShowController extends Controller
         Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         $subTitle = (string) trans('firefly.show_webhook', ['title' => $webhook->title]);
 
-        return view('webhooks.show', ['webhook' => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.show', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
     }
 }

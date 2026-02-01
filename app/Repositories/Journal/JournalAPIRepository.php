@@ -64,15 +64,13 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
 
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): Attachment {
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment {
+            $notes                   = $attachment->notes()->first();
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text  = null !== $notes ? $notes->text : ''; // TODO should not set notes like this.
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
     }
 
     public function getJournalLinks(TransactionJournal $journal): Collection
@@ -88,11 +86,9 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
         $events = $journal->piggyBankEvents()->get();
-        $events->each(
-            static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
-                $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
-            }
-        );
+        $events->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
+            $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
+        });
 
         return $events;
     }

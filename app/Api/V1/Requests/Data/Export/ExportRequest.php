@@ -70,11 +70,6 @@ class ExportRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'type'     => 'in:csv',
-            'accounts' => 'min:1|max:32768',
-            'start'    => 'date|before:end',
-            'end'      => 'date|after:start',
-        ];
+        return ['type'     => 'in:csv', 'accounts' => 'min:1|max:32768', 'start'    => 'date|before:end', 'end'      => 'date|after:start'];
     }
 }

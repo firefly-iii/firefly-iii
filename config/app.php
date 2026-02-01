@@ -117,7 +117,7 @@ return [
         AppServiceProvider::class,
         FireflyIII\Providers\AuthServiceProvider::class,
         // FireflyIII\Providers\BroadcastServiceProvider::class,
-        EventServiceProvider::class,
+        // EventServiceProvider::class,
         RouteServiceProvider::class,
 
         // own stuff:

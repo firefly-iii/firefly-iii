@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2024_03_03_174645_add_indices.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -28,7 +27,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     private const string QUERY_ERROR = 'Could not execute query (table "%s", field "%s"): %s';
     private const string EXPL        = 'If the index already exists (see error), or if MySQL can\'t do it, this is not an problem. Otherwise, please open a GitHub discussion.';
 
@@ -46,19 +45,24 @@ return new class () extends Migration {
             'category_transaction_journal' => ['transaction_journal_id'],
             'categories'                   => ['user_id', 'user_group_id'],
             'transaction_groups'           => ['user_id', 'user_group_id'],
-            'transaction_journals'         => ['user_id', 'user_group_id', 'date', 'transaction_group_id', 'transaction_type_id', 'transaction_currency_id', 'bill_id'],
-            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
+            'transaction_journals'         => [
+                'user_id',
+                'user_group_id',
+                'date',
+                'transaction_group_id',
+                'transaction_type_id',
+                'transaction_currency_id',
+                'bill_id'
+            ],
+            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id']
         ];
 
         foreach ($set as $table => $fields) {
             foreach ($fields as $field) {
                 try {
-                    Schema::table(
-                        $table,
-                        static function (Blueprint $blueprint) use ($field): void {
-                            $blueprint->index($field);
-                        }
-                    );
+                    Schema::table($table, static function (Blueprint $blueprint) use ($field): void {
+                        $blueprint->index($field);
+                    });
                 } catch (QueryException $e) {
                     app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $e->getMessage()));
                     app('log')->error(self::EXPL);
@@ -70,5 +74,7 @@ return new class () extends Migration {
     /**
      * Reverse the migrations.
      */
-    public function down(): void {}
+    public function down(): void
+    {
+    }
 };

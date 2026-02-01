@@ -62,12 +62,7 @@ class TagTransformer extends AbstractTransformer
             'longitude'   => $longitude,
             'latitude'    => $latitude,
             'zoom_level'  => $zoomLevel,
-            'links'       => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/tags/'.$tag->id,
-                ],
-            ],
+            'links'       => [['rel' => 'self', 'uri' => '/tags/'.$tag->id]],
         ];
     }
 }

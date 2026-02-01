@@ -38,8 +38,9 @@ class DestroyedTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup)
-    {
+    public function __construct(
+        public TransactionGroup $transactionGroup
+    ) {
         Log::debug(sprintf('Now in %s', __METHOD__));
     }
 }

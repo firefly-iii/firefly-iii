@@ -25,7 +25,7 @@ namespace FireflyIII\TransactionRules\Actions;
 
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -41,7 +41,9 @@ class LinkToBill implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -59,25 +61,42 @@ class LinkToBill implements ActionInterface
         $type       = $object->transactionType->type;
 
         if (null !== $bill && TransactionTypeEnum::WITHDRAWAL->value === $type) {
-            $count  = DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->where('bill_id', $bill->id)->count();
+            $count  = DB::table('transaction_journals')
+                ->where('id', '=', $journal['transaction_journal_id'])
+                ->where('bill_id', $bill->id)
+                ->count()
+            ;
             if (0 !== $count) {
-                Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.', $journal['transaction_journal_id'], $billName));
+                Log::error(sprintf(
+                    'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": already set.',
+                    $journal['transaction_journal_id'],
+                    $billName
+                ));
                 // event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_linked_to_subscription', ['name' => $billName])));
 
                 return false;
             }
 
             DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->update(['bill_id' => $bill->id]);
-            Log::debug(sprintf('RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").', $journal['transaction_journal_id'], $bill->id, $bill->name));
+            Log::debug(sprintf(
+                'RuleAction LinkToBill set the bill of journal #%d to bill #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $bill->id,
+                $bill->name
+            ));
 
             /** @var TransactionJournal $object */
             $object = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'set_bill', null, $bill->name));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_bill', null, $bill->name));
 
             return true;
         }
 
-        Log::error(sprintf('RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.', $journal['transaction_journal_id'], $billName));
+        Log::error(sprintf(
+            'RuleAction LinkToBill could not set the bill of journal #%d to bill "%s": no such bill found or not a withdrawal.',
+            $journal['transaction_journal_id'],
+            $billName
+        ));
         event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_subscription', ['name' => $billName])));
 
         return false;

@@ -58,14 +58,12 @@ class BudgetReportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->generator     = app(GeneratorInterface::class);
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->generator     = app(GeneratorInterface::class);
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -173,7 +171,7 @@ class BudgetReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_budget', ['budget' => $budget->name]),
+                    (string) trans('firefly.spent_in_specific_budget', ['budget'           => $budget->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2024_05_12_060551_create_account_balance_table.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -27,7 +26,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
     /**
      * Run the migrations.
      */

@@ -163,7 +163,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         if ($param instanceof Account) {
             $accountId = $param->id;
         }
-        if (!($param instanceof Account) && !is_object($param)) {
+        if (!$param instanceof Account && !is_object($param)) {
             $accountId = (int) $param;
         }
 

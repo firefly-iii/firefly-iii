@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Transaction;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Rules\BelongsUser;
@@ -32,13 +31,14 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Rules\IsValidZeroOrMoreAmount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\GroupValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class UpdateRequest
@@ -66,15 +66,54 @@ class UpdateRequest extends FormRequest
     public function getAll(): array
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $this->integerFields  = ['order', 'currency_id', 'foreign_currency_id', 'transaction_journal_id', 'source_id', 'destination_id', 'budget_id', 'category_id', 'bill_id', 'recurrence_id'];
+        $this->integerFields  = [
+            'order',
+            'currency_id',
+            'foreign_currency_id',
+            'transaction_journal_id',
+            'source_id',
+            'destination_id',
+            'budget_id',
+            'category_id',
+            'bill_id',
+            'recurrence_id',
+        ];
         $this->dateFields     = ['date', 'interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $this->textareaFields = ['notes'];
         // not really floats, for validation.
         $this->floatFields    = ['amount', 'foreign_amount'];
-        $this->stringFields   = ['type', 'currency_code', 'foreign_currency_code', 'description', 'source_name', 'source_iban', 'source_number', 'source_bic', 'destination_name', 'destination_iban', 'destination_number', 'destination_bic', 'budget_name', 'category_name', 'bill_name', 'internal_reference', 'external_id', 'bunq_payment_id', 'sepa_cc', 'sepa_ct_op', 'sepa_ct_id', 'sepa_db', 'sepa_country', 'sepa_ep', 'sepa_ci', 'sepa_batch_id', 'external_url'];
+        $this->stringFields   = [
+            'type',
+            'currency_code',
+            'foreign_currency_code',
+            'description',
+            'source_name',
+            'source_iban',
+            'source_number',
+            'source_bic',
+            'destination_name',
+            'destination_iban',
+            'destination_number',
+            'destination_bic',
+            'budget_name',
+            'category_name',
+            'bill_name',
+            'internal_reference',
+            'external_id',
+            'bunq_payment_id',
+            'sepa_cc',
+            'sepa_ct_op',
+            'sepa_ct_id',
+            'sepa_db',
+            'sepa_country',
+            'sepa_ep',
+            'sepa_ci',
+            'sepa_batch_id',
+            'external_url',
+        ];
         $this->booleanFields  = ['reconciled'];
         $this->arrayFields    = ['tags'];
-        $data                 = [];
+        $data                 = ['batch_submission'                => false];
         if ($this->has('transactions')) {
             $data['transactions'] = $this->getTransactionData();
         }
@@ -83,6 +122,9 @@ class UpdateRequest extends FormRequest
         }
         if ($this->has('fire_webhooks')) {
             $data['fire_webhooks'] = $this->boolean('fire_webhooks', true);
+        }
+        if ($this->has('batch_submission')) {
+            $data['batch_submission'] = $this->boolean('batch_submission');
         }
         if ($this->has('group_title')) {
             $data['group_title'] = $this->convertString('group_title');
@@ -335,33 +377,31 @@ class UpdateRequest extends FormRequest
 
         /** @var TransactionGroup $transactionGroup */
         $transactionGroup = $this->route()->parameter('transactionGroup');
-        $validator->after(
-            function (Validator $validator) use ($transactionGroup): void {
-                // if more than one, verify that there are journal ID's present.
-                $this->validateJournalIds($validator, $transactionGroup);
+        $validator->after(function (Validator $validator) use ($transactionGroup): void {
+            // if more than one, verify that there are journal ID's present.
+            $this->validateJournalIds($validator, $transactionGroup);
 
-                // if more than one split, needs group title
-                $this->validateGroupDescription($validator);
+            // if more than one split, needs group title
+            $this->validateGroupDescription($validator);
 
-                // all transaction types must be equal:
-                $this->validateTransactionTypesForUpdate($validator);
+            // all transaction types must be equal:
+            $this->validateTransactionTypesForUpdate($validator);
 
-                // user wants to update a reconciled transaction.
-                // source, destination, amount + foreign_amount cannot be changed
-                // and must be omitted from the request.
-                $this->preventUpdateReconciled($validator, $transactionGroup);
+            // user wants to update a reconciled transaction.
+            // source, destination, amount + foreign_amount cannot be changed
+            // and must be omitted from the request.
+            $this->preventUpdateReconciled($validator, $transactionGroup);
 
-                // validate source/destination is equal, depending on the transaction journal type.
-                $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
+            // validate source/destination is equal, depending on the transaction journal type.
+            $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
-                // see method:
-                // $this->preventNoAccountInfo($validator, );
+            // see method:
+            // $this->preventNoAccountInfo($validator, );
 
-                // validate that the currency fits the source and/or destination account.
-                // validate all account info
-                $this->validateAccountInformationUpdate($validator, $transactionGroup);
-            }
-        );
+            // validate that the currency fits the source and/or destination account.
+            // validate all account info
+            $this->validateAccountInformationUpdate($validator, $transactionGroup);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

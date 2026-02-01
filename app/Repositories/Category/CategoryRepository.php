@@ -100,7 +100,12 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function getCategories(): Collection
     {
-        return $this->user->categories()->with(['attachments'])->orderBy('name', 'ASC')->get();
+        return $this->user
+            ->categories()
+            ->with(['attachments'])
+            ->orderBy('name', 'ASC')
+            ->get()
+        ;
     }
 
     /**
@@ -142,7 +147,11 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     public function findByName(string $name): ?Category
     {
         /** @var null|Category */
-        return $this->user->categories()->where('name', $name)->first(['categories.*']);
+        return $this->user
+            ->categories()
+            ->where('name', $name)
+            ->first(['categories.*'])
+        ;
     }
 
     /**
@@ -214,13 +223,13 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $result = $query->first(['transaction_journals.*']);
 
         return $result?->date;
-
     }
 
     private function getFirstTransactionDate(Category $category): ?Carbon
     {
         // check transactions:
-        $query           = $category->transactions()
+        $query           = $category
+            ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->orderBy('transaction_journals.date', 'ASC')
         ;
@@ -239,15 +248,13 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
         $disk = Storage::disk('upload');
 
-        return $set->each(
-            static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
-                $notes                   = $attachment->notes()->first();
-                $attachment->file_exists = $disk->exists($attachment->fileName());
-                $attachment->notes_text  = null !== $notes ? $notes->text : '';
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+            $notes                   = $attachment->notes()->first();
+            $attachment->file_exists = $disk->exists($attachment->fileName());
+            $attachment->notes_text  = null !== $notes ? $notes->text : '';
 
-                return $attachment;
-            }
-        );
+            return $attachment;
+        });
     }
 
     /**
@@ -255,7 +262,11 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
      */
     public function getByIds(array $categoryIds): Collection
     {
-        return $this->user->categories()->whereIn('id', $categoryIds)->get();
+        return $this->user
+            ->categories()
+            ->whereIn('id', $categoryIds)
+            ->get()
+        ;
     }
 
     public function getNoteText(Category $category): ?string
@@ -263,7 +274,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $dbNote = $category->notes()->first();
 
         return $dbNote?->text;
-
     }
 
     /**
@@ -303,7 +313,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         $result = $query->first(['transaction_journals.*']);
 
         return $result?->date;
-
     }
 
     /**
@@ -312,7 +321,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {
         // check transactions:
-        $query           = $category->transactions()
+        $query           = $category
+            ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->orderBy('transaction_journals.date', 'DESC')
         ;
@@ -355,7 +365,8 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     {
         Log::debug(sprintf('periodCollection(#%d, %s, %s)', $category->id, $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        return $category->transactionJournals()
+        return $category
+            ->transactionJournals()
             ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
@@ -386,7 +397,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
                 'transactions.native_amount as pc_amount',
                 'transactions.foreign_amount',
             ])
-            ->toArray()
-        ;
+            ->toArray();
     }
 }

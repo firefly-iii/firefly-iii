@@ -35,62 +35,49 @@ class Rule extends AbstractExtension
 {
     public function allActionTriggers(): TwigFunction
     {
-        return new TwigFunction(
-            'allRuleActions',
-            static function (): array {
-                // array of valid values for actions
-                $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
-                $possibleActions = [];
-                foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = (string)trans('firefly.rule_action_'.$key.'_choice');
-                }
-                unset($ruleActions);
-                asort($possibleActions);
-
-                return $possibleActions;
+        return new TwigFunction('allRuleActions', static function (): array {
+            // array of valid values for actions
+            $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+            $possibleActions = [];
+            foreach ($ruleActions as $key) {
+                $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');
             }
-        );
+            unset($ruleActions);
+            asort($possibleActions);
+
+            return $possibleActions;
+        });
     }
 
     public function allJournalTriggers(): TwigFunction
     {
-        return new TwigFunction(
-            'allJournalTriggers',
-            static fn (): array => [
-                'store-journal'     => (string)trans('firefly.rule_trigger_store_journal'),
-                'update-journal'    => (string)trans('firefly.rule_trigger_update_journal'),
-                'manual-activation' => (string)trans('firefly.rule_trigger_manual'),
-            ]
-        );
+        return new TwigFunction('allJournalTriggers', static fn (): array => [
+            'store-journal'     => (string) trans('firefly.rule_trigger_store_journal'),
+            'update-journal'    => (string) trans('firefly.rule_trigger_update_journal'),
+            'manual-activation' => (string) trans('firefly.rule_trigger_manual'),
+        ]);
     }
 
     public function allRuleTriggers(): TwigFunction
     {
-        return new TwigFunction(
-            'allRuleTriggers',
-            static function (): array {
-                $ruleTriggers     = array_keys(config('search.operators'));
-                $possibleTriggers = [];
-                foreach ($ruleTriggers as $key) {
-                    if ('user_action' !== $key) {
-                        $possibleTriggers[$key] = (string)trans('firefly.rule_trigger_'.$key.'_choice');
-                    }
+        return new TwigFunction('allRuleTriggers', static function (): array {
+            $ruleTriggers     = array_keys(config('search.operators'));
+            $possibleTriggers = [];
+            foreach ($ruleTriggers as $key) {
+                if ('user_action' !== $key) {
+                    $possibleTriggers[$key] = (string) trans('firefly.rule_trigger_'.$key.'_choice');
                 }
-                unset($ruleTriggers);
-                asort($possibleTriggers);
-
-                return $possibleTriggers;
             }
-        );
+            unset($ruleTriggers);
+            asort($possibleTriggers);
+
+            return $possibleTriggers;
+        });
     }
 
     #[Override]
     public function getFunctions(): array
     {
-        return [
-            $this->allJournalTriggers(),
-            $this->allRuleTriggers(),
-            $this->allActionTriggers(),
-        ];
+        return [$this->allJournalTriggers(), $this->allRuleTriggers(), $this->allActionTriggers()];
     }
 }

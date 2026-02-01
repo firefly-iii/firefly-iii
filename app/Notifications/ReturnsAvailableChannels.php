@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Notifications;
 
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Notifications\UrlValidator;
 use FireflyIII\User;
 use Illuminate\Support\Facades\Log;
 use NotificationChannels\Pushover\PushoverChannel;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 // use Wijourdil\NtfyNotificationChannel\Channels\NtfyChannel;
 
@@ -46,13 +46,11 @@ class ReturnsAvailableChannels
             return self::returnUserChannels($user);
         }
 
-
         return $channels;
     }
 
     private static function returnOwnerChannels(): array
     {
-
         $channels = ['mail'];
         if (true === config('notifications.channels.slack.enabled', false)) {
             $slackUrl = FireflyConfig::getEncrypted('slack_webhook_url', '')->data;

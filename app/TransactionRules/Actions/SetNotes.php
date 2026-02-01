@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetNotes.
@@ -37,13 +37,13 @@ class SetNotes implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
-        $dbNote       = Note::where('noteable_id', $journal['transaction_journal_id'])
-            ->where('noteable_type', TransactionJournal::class)->first()
-        ;
+        $dbNote       = Note::where('noteable_id', $journal['transaction_journal_id'])->where('noteable_type', TransactionJournal::class)->first();
         if (null === $dbNote) {
             $dbNote                = new Note();
             $dbNote->noteable_id   = $journal['transaction_journal_id'];
@@ -55,19 +55,17 @@ class SetNotes implements ActionInterface
         $dbNote->text = $newNotes;
         $dbNote->save();
 
-        Log::debug(
-            sprintf(
-                'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
-                $journal['transaction_journal_id'],
-                $oldNotes,
-                $newNotes
-            )
-        );
+        Log::debug(sprintf(
+            'RuleAction SetNotes changed the notes of journal #%d from "%s" to "%s".',
+            $journal['transaction_journal_id'],
+            $oldNotes,
+            $newNotes
+        ));
 
         /** @var TransactionJournal $object */
         $object       = TransactionJournal::where('user_id', $journal['user_id'])->find($journal['transaction_journal_id']);
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_notes', $oldNotes, $newNotes));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_notes', $oldNotes, $newNotes));
 
         return true;
     }

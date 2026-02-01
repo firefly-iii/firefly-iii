@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -68,9 +68,7 @@ class UpdateRequest extends FormRequest
         ];
         $reps                   = $this->getRepetitionData();
         $transactions           = $this->getTransactionData();
-        $return                 = [
-            'recurrence' => $this->getAllData($fields),
-        ];
+        $return                 = ['recurrence'       => $this->getAllData($fields)];
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }
@@ -193,20 +191,18 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // $this->validateOneRecurrenceTransaction($validator);
-                // $this->validateOneRepetitionUpdate($validator);
+        $validator->after(function (Validator $validator): void {
+            // $this->validateOneRecurrenceTransaction($validator);
+            // $this->validateOneRepetitionUpdate($validator);
 
-                /** @var Recurrence $recurrence */
-                $recurrence = $this->route()->parameter('recurrence');
-                $this->validateTransactionId($recurrence, $validator);
-                $this->validateRecurrenceRepetition($validator);
-                $this->validateRepetitionMoment($validator);
-                $this->validateForeignCurrencyInformation($validator);
-                $this->valUpdateAccountInfo($validator);
-            }
-        );
+            /** @var Recurrence $recurrence */
+            $recurrence = $this->route()->parameter('recurrence');
+            $this->validateTransactionId($recurrence, $validator);
+            $this->validateRecurrenceRepetition($validator);
+            $this->validateRepetitionMoment($validator);
+            $this->validateForeignCurrencyInformation($validator);
+            $this->valUpdateAccountInfo($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

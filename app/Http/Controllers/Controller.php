@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -38,7 +39,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\ini_get;
 use function Safe\realpath;
@@ -59,12 +59,12 @@ abstract class Controller extends BaseController
 
     // fails on PHP < 8.4
     public protected(set) string $name;
-    protected bool                 $convertToPrimary = false;
-    protected string               $dateTimeFormat;
+    protected bool $convertToPrimary = false;
+    protected string $dateTimeFormat;
     protected ?TransactionCurrency $primaryCurrency;
-    protected string               $monthAndDayFormat;
-    protected string               $monthFormat;
-    protected string               $redirectUrl      = '/';
+    protected string $monthAndDayFormat;
+    protected string $monthFormat;
+    protected string $redirectUrl    = '/';
 
     /**
      * Controller constructor.
@@ -81,7 +81,10 @@ abstract class Controller extends BaseController
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
         // is webhooks enabled?
-        View::share('featuringWebhooks', true === config('firefly.feature_flags.webhooks') && true === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data);
+        View::share(
+            'featuringWebhooks',
+            true === config('firefly.feature_flags.webhooks') && true === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data
+        );
 
         // share custom auth guard info.
         $authGuard        = config('firefly.authentication_guard');
@@ -122,45 +125,42 @@ abstract class Controller extends BaseController
         View::share('FF_IS_BETA', $isBeta);
         View::share('FF_IS_DEVELOP', $isDevelop);
 
-        $this->middleware(
-            function ($request, $next): mixed {
-                $locale                  = Steam::getLocale();
-                // translations for specific strings:
-                $this->monthFormat       = (string) trans('config.month_js', [], $locale);
-                $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
-                $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
-                $darkMode                = 'browser';
-                $this->primaryCurrency   = null;
-                // get shown-intro-preference:
-                if (auth()->check()) {
-                    View::share('anonymous', Steam::anonymous());
-                    $this->primaryCurrency  = Amount::getPrimaryCurrency();
-                    $language               = Steam::getLanguage();
-                    $locale                 = Steam::getLocale();
-                    $darkMode               = Preferences::get('darkMode', 'browser')->data;
-                    $this->convertToPrimary = Amount::convertToPrimary();
-                    $page                   = $this->getPageName();
-                    $shownDemo              = $this->hasSeenDemo();
-                    View::share('language', $language);
-                    View::share('locale', $locale);
-                    View::share('convertToPrimary', $this->convertToPrimary);
-                    View::share('primaryCurrency', $this->primaryCurrency);
-                    View::share('shownDemo', $shownDemo);
-                    View::share('current_route_name', $page);
-                    View::share('original_route_name', Route::currentRouteName());
+        $this->middleware(function ($request, $next): mixed {
+            $locale                  = Steam::getLocale();
+            // translations for specific strings:
+            $this->monthFormat       = (string) trans('config.month_js', [], $locale);
+            $this->monthAndDayFormat = (string) trans('config.month_and_day_js', [], $locale);
+            $this->dateTimeFormat    = (string) trans('config.date_time_js', [], $locale);
+            $darkMode                = 'browser';
+            $this->primaryCurrency   = null;
+            // get shown-intro-preference:
+            if (auth()->check()) {
+                View::share('anonymous', Steam::anonymous());
+                $this->primaryCurrency  = Amount::getPrimaryCurrency();
+                $language               = Steam::getLanguage();
+                $locale                 = Steam::getLocale();
+                $darkMode               = Preferences::get('darkMode', 'browser')->data;
+                $this->convertToPrimary = Amount::convertToPrimary();
+                $page                   = $this->getPageName();
+                $shownDemo              = $this->hasSeenDemo();
+                View::share('language', $language);
+                View::share('locale', $locale);
+                View::share('convertToPrimary', $this->convertToPrimary);
+                View::share('primaryCurrency', $this->primaryCurrency);
+                View::share('shownDemo', $shownDemo);
+                View::share('current_route_name', $page);
+                View::share('original_route_name', Route::currentRouteName());
 
-                    // lottery to send any remaining webhooks:
-                    if (7 === random_int(1, 10)) {
-                        // trigger event to send them:
-                        Log::debug('send event RequestedSendWebhookMessages through lottery');
-                        event(new RequestedSendWebhookMessages());
-                    }
-
+                // lottery to send any remaining webhooks:
+                if (7 === random_int(1, 30)) {
+                    // trigger event to send them:
+                    Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+                    event(new WebhookMessagesRequestSending());
                 }
-                View::share('darkMode', $darkMode);
-
-                return $next($request);
             }
-        );
+            View::share('darkMode', $darkMode);
+
+            return $next($request);
+        });
     }
 }

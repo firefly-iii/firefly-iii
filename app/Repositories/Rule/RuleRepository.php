@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Rule;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use FireflyIII\Support\Search\OperatorQuerySearch;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RuleRepository.
@@ -89,7 +89,11 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
      */
     public function getAll(): Collection
     {
-        return $this->user->rules()->with(['ruleGroup'])->get();
+        return $this->user
+            ->rules()
+            ->with(['ruleGroup'])
+            ->get()
+        ;
     }
 
     /**
@@ -161,14 +165,16 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 
     public function getStoreRules(): Collection
     {
-        $collection = $this->user->rules()
+        $collection = $this->user
+            ->rules()
             ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
             ->where('rules.active', true)
             ->where('rule_groups.active', true)
             ->orderBy('rule_groups.order', 'ASC')
             ->orderBy('rules.order', 'ASC')
             ->orderBy('rules.id', 'ASC')
-            ->with(['ruleGroup', 'ruleTriggers'])->get(['rules.*'])
+            ->with(['ruleGroup', 'ruleTriggers'])
+            ->get(['rules.*'])
         ;
         $filtered   = new Collection();
 
@@ -187,14 +193,16 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
 
     public function getUpdateRules(): Collection
     {
-        $collection = $this->user->rules()
+        $collection = $this->user
+            ->rules()
             ->leftJoin('rule_groups', 'rule_groups.id', '=', 'rules.rule_group_id')
             ->where('rules.active', true)
             ->where('rule_groups.active', true)
             ->orderBy('rule_groups.order', 'ASC')
             ->orderBy('rules.order', 'ASC')
             ->orderBy('rules.id', 'ASC')
-            ->with(['ruleGroup', 'ruleTriggers'])->get()
+            ->with(['ruleGroup', 'ruleTriggers'])
+            ->get()
         ;
         $filtered   = new Collection();
 
@@ -217,9 +225,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         if ('' !== $query) {
             $search->whereLike('rules.title', sprintf('%%%s%%', $query));
         }
-        $search->orderBy('rules.order', 'ASC')
-            ->orderBy('rules.title', 'ASC')
-        ;
+        $search->orderBy('rules.order', 'ASC')->orderBy('rules.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
     }
@@ -234,7 +240,11 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
             $ruleGroup = $this->user->ruleGroups()->find($data['rule_group_id']);
         }
         if (array_key_exists('rule_group_title', $data)) {
-            $ruleGroup = $this->user->ruleGroups()->where('title', $data['rule_group_title'])->first();
+            $ruleGroup = $this->user
+                ->ruleGroups()
+                ->where('title', $data['rule_group_title'])
+                ->first()
+            ;
         }
         if (null === $ruleGroup) {
             throw new FireflyException('No such rule group.');
@@ -322,7 +332,8 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
         Log::debug(sprintf('New order will be %d', $newOrder));
 
         if ($newOrder > $oldOrder) {
-            $this->user->rules()
+            $this->user
+                ->rules()
                 ->where('rules.rule_group_id', $groupId)
                 ->where('rules.order', '<=', $newOrder)
                 ->where('rules.order', '>', $oldOrder)
@@ -336,7 +347,8 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
             return;
         }
 
-        $this->user->rules()
+        $this->user
+            ->rules()
             ->where('rules.rule_group_id', $groupId)
             ->where('rules.order', '>=', $newOrder)
             ->where('rules.order', '<', $oldOrder)
@@ -456,14 +468,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     public function update(Rule $rule, array $data): Rule
     {
         // update rule:
-        $fields = [
-            'title',
-            'description',
-            'strict',
-            'rule_group_id',
-            'active',
-            'stop_processing',
-        ];
+        $fields = ['title', 'description', 'strict', 'rule_group_id', 'active', 'stop_processing'];
         foreach ($fields as $field) {
             if (array_key_exists($field, $data)) {
                 $rule->{$field} = $data[$field];

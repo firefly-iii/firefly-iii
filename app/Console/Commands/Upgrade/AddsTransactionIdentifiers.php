@@ -28,21 +28,22 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class AddsTransactionIdentifiers extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_transaction_identifier';
+
     protected $description          = 'Fixes transaction identifiers.';
     protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
-    private int                           $count;
+    private int $count;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they
@@ -100,8 +101,7 @@ class AddsTransactionIdentifiers extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     /**
@@ -139,7 +139,8 @@ class AddsTransactionIdentifiers extends Command
         try {
             /** @var Transaction $opposing */
             $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
-                ->where('amount', $amount)->where('identifier', '=', 0)
+                ->where('amount', $amount)
+                ->where('identifier', '=', 0)
                 ->whereNotIn('id', $exclude)
                 ->first()
             ;

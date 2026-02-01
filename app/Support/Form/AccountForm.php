@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Form;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -48,12 +48,18 @@ class AccountForm
      */
     public function activeDepositDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
-        $types                    = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::REVENUE->value];
+        $types                    = [
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::CREDITCARD->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::REVENUE->value,
+        ];
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
         $cash                     = $repository->getCashAccount();
-        $key                      = (string)trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+        $key                      = (string) trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string) trans('firefly.cash'));
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -63,13 +69,19 @@ class AccountForm
      */
     public function activeWithdrawalDestinations(string $name, mixed $value = null, ?array $options = null): string
     {
-        $types                    = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::EXPENSE->value];
+        $types                    = [
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::CREDITCARD->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::EXPENSE->value,
+        ];
         $repository               = $this->getAccountRepository();
         $grouped                  = $this->getAccountsGrouped($types, $repository);
 
         $cash                     = $repository->getCashAccount();
-        $key                      = (string)trans('firefly.cash_account_type');
-        $grouped[$key][$cash->id] = sprintf('(%s)', (string)trans('firefly.cash'));
+        $key                      = (string) trans('firefly.cash_account_type');
+        $grouped[$key][$cash->id] = sprintf('(%s)', (string) trans('firefly.cash'));
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -88,13 +100,26 @@ class AccountForm
         $selected = request()->old($name) ?? [];
 
         // get all asset accounts:
-        $types    = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value];
+        $types    = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+        ];
         $grouped  = $this->getAccountsGrouped($types);
 
         unset($options['class']);
 
         try {
-            $html = view('form.assetAccountCheckList', ['classes' => $classes, 'selected' => $selected, 'name' => $name, 'label' => $label, 'options' => $options, 'grouped' => $grouped])->render();
+            $html = view('form.assetAccountCheckList', [
+                'classes'  => $classes,
+                'selected' => $selected,
+                'name'     => $name,
+                'label'    => $label,
+                'options'  => $options,
+                'grouped'  => $grouped,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
             $html = 'Could not render assetAccountCheckList.';
@@ -125,7 +150,13 @@ class AccountForm
      */
     public function assetLiabilityMultiAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value];
+        $types   = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::LOAN->value,
+        ];
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->multiSelect($name, $grouped, $value, $options);
@@ -138,7 +169,13 @@ class AccountForm
      */
     public function longAccountList(string $name, $value = null, ?array $options = null): string
     {
-        $types   = [AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value];
+        $types   = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::LOAN->value,
+        ];
         $grouped = $this->getAccountsGrouped($types);
 
         return $this->select($name, $grouped, $value, $options);
@@ -155,7 +192,7 @@ class AccountForm
 
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $role                        = (string)$repository->getMetaValue($account, 'account_role');
+            $role                        = (string) $repository->getMetaValue($account, 'account_role');
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = sprintf('l_%s', $account->accountType->type);
             }
@@ -168,7 +205,7 @@ class AccountForm
                     $role = 'revenue_account';
                 }
             }
-            $key                         = (string)trans(sprintf('firefly.opt_group_%s', $role));
+            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
             $grouped[$key][$account->id] = $account->name;
         }
 

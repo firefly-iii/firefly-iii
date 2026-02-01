@@ -43,8 +43,11 @@ class InvitationMail extends Mailable
     /**
      * OAuthTokenCreatedMail constructor.
      */
-    public function __construct(public string $invitee, public string $admin, public string $url)
-    {
+    public function __construct(
+        public string $invitee,
+        public string $admin,
+        public string $url
+    ) {
         $host       = parse_url($this->url, PHP_URL_HOST);
         if (is_array($host)) {
             $host = '';
@@ -59,9 +62,6 @@ class InvitationMail extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.invitation')
-            ->subject((string) trans('email.invite_user_subject'))
-        ;
+        return $this->markdown('emails.invitation')->subject((string) trans('email.invite_user_subject'));
     }
 }

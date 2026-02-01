@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -36,6 +35,7 @@ use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use FireflyIII\Support\Report\Budget\BudgetReportGenerator;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -54,13 +54,11 @@ class BudgetController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -84,7 +82,7 @@ class BudgetController extends Controller
         $generator->accountPerBudget();
         $report    = $generator->getReport();
 
-        return view('reports.budget.partials.account-per-budget', ['report' => $report, 'budgets' => $budgets]);
+        return view('reports.budget.partials.account-per-budget', ['report'  => $report, 'budgets' => $budgets]);
     }
 
     /**
@@ -99,12 +97,7 @@ class BudgetController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= [
-                'name'       => $account->name,
-                'id'         => $account->id,
-                'iban'       => $account->iban,
-                'currencies' => [],
-            ];
+            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -136,7 +129,7 @@ class BudgetController extends Controller
             }
         }
 
-        return view('reports.budget.partials.accounts', ['sums' => $sums, 'report' => $report]);
+        return view('reports.budget.partials.accounts', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**
@@ -202,11 +195,7 @@ class BudgetController extends Controller
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $budgetId = $budget->id;
-            $report[$budgetId] ??= [
-                'name'       => $budget->name,
-                'id'         => $budget->id,
-                'currencies' => [],
-            ];
+            $report[$budgetId] ??= ['name'       => $budget->name, 'id'         => $budget->id, 'currencies' => []];
         }
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
@@ -232,7 +221,10 @@ class BudgetController extends Controller
                         'currency_name'           => $currency['currency_name'],
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                     ];
-                    $report[$budgetId]['currencies'][$currencyId]['sum'] = bcadd($report[$budgetId]['currencies'][$currencyId]['sum'], (string) $journal['amount']);
+                    $report[$budgetId]['currencies'][$currencyId]['sum'] = bcadd(
+                        $report[$budgetId]['currencies'][$currencyId]['sum'],
+                        (string) $journal['amount']
+                    );
                     $sums[$currencyId]['sum']                            = bcadd($sums[$currencyId]['sum'], (string) $journal['amount']);
                 }
             }
@@ -251,7 +243,7 @@ class BudgetController extends Controller
             }
         }
 
-        return view('reports.budget.partials.budgets', ['sums' => $sums, 'report' => $report]);
+        return view('reports.budget.partials.budgets', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**
@@ -315,8 +307,6 @@ class BudgetController extends Controller
                         continue;
                     }
 
-
-
                     ++$count;
                     $key                               = sprintf('%d-%d', $budget['id'], $currency['currency_id']);
                     $dateKey                           = $journal['date']->format($keyFormat);
@@ -340,7 +330,7 @@ class BudgetController extends Controller
         }
 
         try {
-            $result = view('reports.partials.budget-period', ['report' => $report, 'periods' => $periods])->render();
+            $result = view('reports.partials.budget-period', ['report'  => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

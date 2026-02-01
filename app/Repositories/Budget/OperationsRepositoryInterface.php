@@ -66,17 +66,29 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $budgets = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
         ?TransactionCurrency $currency = null,
-        bool                 $convertToPrimary = false
+        bool $convertToPrimary = false
     ): array;
 
-    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array;
+    public function sumCollectedExpenses(
+        array $expenses,
+        Carbon $start,
+        Carbon $end,
+        TransactionCurrency $transactionCurrency,
+        bool $convertToPrimary = false
+    ): array;
 
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array;
 
-    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array;
+    public function collectExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
+    ): array;
 }

@@ -34,8 +34,9 @@ use SplObjectStorage;
 class Calculator
 {
     public const int DEFAULT_INTERVAL             = 1;
+
     private static ?SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
-    private static array             $intervals   = [];
+    private static array $intervals               = [];
 
     private function containsInterval(Periodicity $periodicity): bool
     {

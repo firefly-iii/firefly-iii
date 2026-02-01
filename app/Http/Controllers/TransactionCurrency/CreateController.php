@@ -44,7 +44,7 @@ use Illuminate\View\View;
 class CreateController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
-    protected UserRepositoryInterface     $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
@@ -53,16 +53,14 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.currencies'));
-                app('view')->share('mainTitleIcon', 'fa-usd');
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.currencies'));
+            app('view')->share('mainTitleIcon', 'fa-usd');
+            $this->repository     = app(CurrencyRepositoryInterface::class);
+            $this->userRepository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -91,7 +89,7 @@ class CreateController extends Controller
 
         Log::channel('audit')->info('Create new currency.');
 
-        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
+        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
     }
 
     /**

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
+use FireflyIII\Support\Facades\Navigation;
 
 /**
  * Trait DateCalculation
@@ -41,13 +41,13 @@ trait DateCalculation
      */
     public function activeDaysLeft(Carbon $start, Carbon $end): int
     {
-        $difference = (int)($start->diffInDays($end, true) + 1);
+        $difference = (int) ($start->diffInDays($end, true) + 1);
         $today      = today(config('app.timezone'))->startOfDay();
         if ($start->lte($today) && $end->gte($today)) {
             $difference = $today->diffInDays($end) + 1;
         }
 
-        return (int)(0 === $difference ? 1 : $difference);
+        return (int) (0 === $difference ? 1 : $difference);
     }
 
     /**
@@ -64,7 +64,7 @@ trait DateCalculation
             $difference = $start->diffInDays($today, true) + 1;
         }
 
-        return (int)$difference;
+        return (int) $difference;
     }
 
     protected function calculateStep(Carbon $start, Carbon $end): string

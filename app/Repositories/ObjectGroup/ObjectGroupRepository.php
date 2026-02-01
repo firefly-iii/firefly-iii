@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\ObjectGroup;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ObjectGroupRepository
@@ -53,10 +53,12 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
     public function get(): Collection
     {
-        return $this->user->objectGroups()
+        return $this->user
+            ->objectGroups()
             ->with(['piggyBanks', 'bills'])
             ->orderBy('order', 'ASC')
-            ->orderBy('title', 'ASC')->get()
+            ->orderBy('title', 'ASC')
+            ->get()
         ;
     }
 
@@ -104,9 +106,13 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         /** @var ObjectGroup $objectGroup */
         foreach ($list as $objectGroup) {
             if ($index !== $objectGroup->order) {
-                Log::debug(
-                    sprintf('objectGroup #%d ("%s"): order should %d be but is %d.', $objectGroup->id, $objectGroup->title, $index, $objectGroup->order)
-                );
+                Log::debug(sprintf(
+                    'objectGroup #%d ("%s"): order should %d be but is %d.',
+                    $objectGroup->id,
+                    $objectGroup->title,
+                    $index,
+                    $objectGroup->order
+                ));
                 $objectGroup->order = $index;
                 $objectGroup->save();
             }
@@ -116,7 +122,11 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
 
     public function search(string $query, int $limit): Collection
     {
-        $dbQuery = $this->user->objectGroups()->orderBy('order', 'ASC')->orderBy('title', 'ASC');
+        $dbQuery = $this->user
+            ->objectGroups()
+            ->orderBy('order', 'ASC')
+            ->orderBy('title', 'ASC')
+        ;
         if ('' !== $query) {
             // split query on spaces just in case:
             $parts = explode(' ', $query);
@@ -149,7 +159,10 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         $oldOrder = $objectGroup->order;
 
         if ($newOrder > $oldOrder) {
-            $this->user->objectGroups()->where('object_groups.order', '<=', $newOrder)->where('object_groups.order', '>', $oldOrder)
+            $this->user
+                ->objectGroups()
+                ->where('object_groups.order', '<=', $newOrder)
+                ->where('object_groups.order', '>', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)
                 ->decrement('object_groups.order')
             ;
@@ -158,7 +171,10 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
             $objectGroup->save();
         }
         if ($newOrder < $oldOrder) {
-            $this->user->objectGroups()->where('object_groups.order', '>=', $newOrder)->where('object_groups.order', '<', $oldOrder)
+            $this->user
+                ->objectGroups()
+                ->where('object_groups.order', '>=', $newOrder)
+                ->where('object_groups.order', '<', $oldOrder)
                 ->where('object_groups.id', '!=', $objectGroup->id)
                 ->increment('object_groups.order')
             ;

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * IsValidSortInstruction.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -28,7 +29,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 
 class IsValidSortInstruction implements ValidationRule
 {
-    public function __construct(private readonly string $class) {}
+    public function __construct(
+        private readonly string $class
+    ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -53,7 +56,7 @@ class IsValidSortInstruction implements ValidationRule
         foreach ($parts as $i => $part) {
             $part = trim($part);
             if (strlen($part) < 2) {
-                $fail('validation.invalid_sort_instruction_index')->translate(['index' => $i, 'object' => $shortClass]);
+                $fail('validation.invalid_sort_instruction_index')->translate(['index'  => $i, 'object' => $shortClass]);
 
                 return;
             }
@@ -61,7 +64,7 @@ class IsValidSortInstruction implements ValidationRule
                 $part = substr($part, 1);
             }
             if (!in_array($part, $validParameters, true)) {
-                $fail('validation.invalid_sort_instruction_index')->translate(['index' => $i, 'object' => $shortClass]);
+                $fail('validation.invalid_sort_instruction_index')->translate(['index'  => $i, 'object' => $shortClass]);
 
                 return;
             }

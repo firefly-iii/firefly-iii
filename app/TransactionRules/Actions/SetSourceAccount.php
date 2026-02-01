@@ -23,10 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
@@ -34,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetSourceAccount.
@@ -45,7 +45,9 @@ class SetSourceAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -69,9 +71,7 @@ class SetSourceAccount implements ActionInterface
         // if this is a transfer or a withdrawal, the new source account must be an asset account or a default account, and it MUST exist:
         $newAccount       = $this->findAssetAccount($type, $accountName);
         if ((TransactionTypeEnum::WITHDRAWAL->value === $type || TransactionTypeEnum::TRANSFER->value === $type) && !$newAccount instanceof Account) {
-            Log::error(
-                sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName)
-            );
+            Log::error(sprintf('Cant change source account of journal #%d because no asset account with name "%s" exists.', $object->id, $accountName));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.cannot_find_asset', ['name' => $accountName])));
 
             return false;
@@ -94,13 +94,11 @@ class SetSourceAccount implements ActionInterface
             return false;
         }
         if ($newAccount instanceof Account && $newAccount->id === $destination->account_id) {
-            Log::error(
-                sprintf(
-                    'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
-                    $newAccount->id,
-                    $destination->account_id
-                )
-            );
+            Log::error(sprintf(
+                'New source account ID #%d and current destination account ID #%d are the same. Do nothing.',
+                $newAccount->id,
+                $destination->account_id
+            ));
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_source', ['name' => $newAccount->name])));
 
             return false;
@@ -121,7 +119,7 @@ class SetSourceAccount implements ActionInterface
             ->update(['account_id' => $newAccount->id])
         ;
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_source', null, $newAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_source', null, $newAccount->name));
 
         Log::debug(sprintf('Updated journal #%d (group #%d) and gave it new source account ID.', $object->id, $object->transaction_group_id));
 

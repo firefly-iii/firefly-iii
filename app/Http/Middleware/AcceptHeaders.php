@@ -56,10 +56,7 @@ class AcceptHeaders
         // if bad 'Content-Type' header, refuse service.
 
         // some routes are exempt from this.
-        $exempt       = [
-            'api.v1.data.bulk.transactions',
-            'api.v1.attachments.upload',
-        ];
+        $exempt       = ['api.v1.data.bulk.transactions', 'api.v1.attachments.upload'];
 
         if (('POST' === $method || 'PUT' === $method) && !$request->hasHeader('Content-Type') && !in_array($request->route()->getName(), $exempt, true)) {
             $error             = new BadHttpHeaderException('Content-Type header cannot be empty.');
@@ -67,7 +64,11 @@ class AcceptHeaders
 
             throw $error;
         }
-        if (('POST' === $method || 'PUT' === $method) && !$this->acceptsHeader($submitted, $contentTypes) && !in_array($request->route()->getName(), $exempt, true)) {
+        if (
+            ('POST' === $method || 'PUT' === $method)
+            && !$this->acceptsHeader($submitted, $contentTypes)
+            && !in_array($request->route()->getName(), $exempt, true)
+        ) {
             $error             = new BadHttpHeaderException(sprintf('Content-Type cannot be "%s"', $submitted));
             $error->statusCode = 415;
 
@@ -76,7 +77,7 @@ class AcceptHeaders
 
         // throw bad request if trace id is not a UUID
         $uuid         = $request->header('X-Trace-Id');
-        if (is_string($uuid) && '' !== trim($uuid) && (1 !== preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid)))) {
+        if (is_string($uuid) && '' !== trim($uuid) && 1 !== preg_match('/^[a-f\d]{8}(-[a-f\d]{4}){4}[a-f\d]{8}$/i', trim($uuid))) {
             throw new BadRequestHttpException('Bad X-Trace-Id header.');
         }
 

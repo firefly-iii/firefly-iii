@@ -58,16 +58,14 @@ class ShowController extends Controller
         app('view')->share('showCategory', true);
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
 
-                $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -107,8 +105,7 @@ class ShowController extends Controller
                 $date                                               = new Carbon($occurrence)->startOfDay();
                 $set                                                = [
                     'date'  => $date,
-                    'fired' => $this->repository->createdPreviously($recurrence, $date)
-                               || $this->repository->getJournalCount($recurrence, $date) > 0,
+                    'fired' => $this->repository->createdPreviously($recurrence, $date) || $this->repository->getJournalCount($recurrence, $date) > 0,
                 ];
                 $array['repetitions'][$index]['occurrences'][$item] = $set;
             }
@@ -137,6 +134,12 @@ class ShowController extends Controller
 
         $subTitle               = (string) trans('firefly.overview_for_recurrence', ['title' => $recurrence->title]);
 
-        return view('recurring.show', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'array' => $array, 'groups' => $groups, 'today' => $today]);
+        return view('recurring.show', [
+            'recurrence' => $recurrence,
+            'subTitle'   => $subTitle,
+            'array'      => $array,
+            'groups'     => $groups,
+            'today'      => $today,
+        ]);
     }
 }

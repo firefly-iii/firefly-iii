@@ -40,7 +40,13 @@ trait WithdrawalValidation
         $accountIban = $array['iban'] ?? null;
         Log::debug('Now in validateGenericSource', $array);
         // source can be any of the following types.
-        $validTypes  = [AccountTypeEnum::ASSET->value, AccountTypeEnum::REVENUE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+        $validTypes  = [
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ];
         if (null === $accountId && null === $accountName && null === $accountIban && false === $this->canCreateTypes($validTypes)) {
             // if both values are NULL we return TRUE
             // because we assume the user doesn't want to submit / change anything.
@@ -53,7 +59,7 @@ trait WithdrawalValidation
         // otherwise try to find the account:
         $search      = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;
@@ -97,7 +103,7 @@ trait WithdrawalValidation
                     return true;
                 }
                 // todo explain error in log message.
-                $this->destError = (string) trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.withdrawal_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
 
                 return false;
             }
@@ -141,7 +147,7 @@ trait WithdrawalValidation
         // otherwise try to find the account:
         $search        = $this->findExistingAccount($validTypes, $array);
         if (null === $search) {
-            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
+            $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
             Log::warning('Not a valid source. Cant find it.', $validTypes);
 
             return false;

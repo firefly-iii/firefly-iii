@@ -52,9 +52,14 @@ use function Safe\preg_replace;
  */
 class Steam
 {
-    public function accountsBalancesOptimized(Collection $accounts, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array
-    {
-        Log::debug(sprintf('accountsBalancesOptimized: Called for %d account(s) with date/time "%s" (inclusive: %s)', $accounts->count(), $date->toIso8601String(), var_export($inclusive, true)));
+    public function accountsBalancesOptimized(
+        Collection $accounts,
+        Carbon $date,
+        ?TransactionCurrency $primary = null,
+        ?bool $convertToPrimary = null,
+        bool $inclusive = true
+    ): array {
+        // Log::debug(sprintf('accountsBalancesOptimized: Called for %d account(s) with date/time "%s" (inclusive: %s)', $accounts->count(), $date->toIso8601String(), var_export($inclusive, true)));
         $result      = [];
         $convertToPrimary ??= Amount::convertToPrimary();
         $primary          ??= Amount::getPrimaryCurrency();
@@ -66,17 +71,15 @@ class Steam
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
             ->where('transaction_journals.date', $inclusive ? '<=' : '<', $date->format('Y-m-d H:i:s'))
             ->groupBy(['transactions.account_id', 'transaction_currencies.code'])
-            ->get(['transactions.account_id', 'transaction_currencies.code', DB::raw('SUM(transactions.amount) as sum_of_amount')])->toArray()
+            ->get(['transactions.account_id', 'transaction_currencies.code', DB::raw('SUM(transactions.amount) as sum_of_amount')])
+            ->toArray()
         ;
 
-        Log::debug('Array of sums: ', $arrayOfSums);
+        // Log::debug('Array of sums: ', $arrayOfSums);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $return               = [
-                'pc_balance' => '0',
-                'balance'    => '0', // this key is overwritten right away, but I must remember it is always created.
-            ];
+            $return               = ['pc_balance' => '0', 'balance'    => '0']; // this key is overwritten right away, but I must remember it is always created.
             $currency             = $currencies[$account->id];
 
             // second array
@@ -89,7 +92,7 @@ class Steam
             $sumsByCode           = [];
             foreach ($accountSums as $accountSum) {
                 // $accountSum  = array_values($accountSum)[0];
-                $sumOfAmount                     = (string)$accountSum['sum_of_amount'];
+                $sumOfAmount                     = (string) $accountSum['sum_of_amount'];
                 $sumOfAmount                     = $this->floatalize('' === $sumOfAmount ? '0' : $sumOfAmount);
                 $sumsByCode[$accountSum['code']] = $sumOfAmount;
             }
@@ -98,33 +101,38 @@ class Steam
             $return['balance']    = $sumsByCode[$currency->code] ?? '0';
             if (!$convertToPrimary) {
                 unset($return['pc_balance']);
+
                 // Log::debug(sprintf('Set balance to %s, unset pc_balance', $return['balance']));
             }
 
             // if there is a request to convert, convert to "pc_balance" and use "balance" for whichever amount is in the primary currency.
             if ($convertToPrimary) {
                 $return['pc_balance'] = $this->convertAllBalances($sumsByCode, $primary, $date);
+
                 // Log::debug(sprintf('Set pc_balance to %s', $return['pc_balance']));
             }
 
             // either way, the balance is always combined with the virtual balance:
-            $virtualBalance       = (string)('' === (string)$account->virtual_balance ? '0' : $account->virtual_balance);
+            $virtualBalance       = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
 
             if ($convertToPrimary) {
                 // the primary currency balance is combined with a converted virtual_balance:
                 $converter            = new ExchangeRateConverter();
                 $pcVirtualBalance     = $converter->convert($currency, $primary, $date, $virtualBalance);
                 $return['pc_balance'] = bcadd($pcVirtualBalance, $return['pc_balance']);
+
                 // Log::debug(sprintf('Primary virtual balance makes the primary total %s', $return['pc_balance']));
             }
             if (!$convertToPrimary) {
                 // if not, also increase the balance + primary balance for consistency.
                 $return['balance'] = bcadd($return['balance'], $virtualBalance);
+
                 // Log::debug(sprintf('Virtual balance makes the (primary currency) total %s', $return['balance']));
             }
             $final                = array_merge($return, $sumsByCode);
             $result[$account->id] = $final;
-            Log::debug(sprintf('Final balance for account #%d is', $account->id), $final);
+
+            // Log::debug(sprintf('Final balance for account #%d is', $account->id), $final);
         }
 
         return $result;
@@ -134,8 +142,13 @@ class Steam
      * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it
      * properly gets the balance of a range.
      */
-    public function accountsBalancesInRange(Collection $accounts, Carbon $start, Carbon $end, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null): array
-    {
+    public function accountsBalancesInRange(
+        Collection $accounts,
+        Carbon $start,
+        Carbon $end,
+        ?TransactionCurrency $primary = null,
+        ?bool $convertToPrimary = null
+    ): array {
         return [
             $this->accountsBalancesOptimized($accounts, $start, $primary, $convertToPrimary, inclusive: false),
             $this->accountsBalancesOptimized($accounts, $end, $primary, $convertToPrimary),
@@ -292,31 +305,34 @@ class Steam
         return str_replace($search, '', $string);
     }
 
-    #[Deprecated(
-        message: <<<'TXT'
+    #[Deprecated(message: <<<'TXT'
 
-            By default this method returns "smaller than or equal to", so be careful with END OF DAY.
-            If you need end of day balance, use "inclusive = false".
+        By default this method returns "smaller than or equal to", so be careful with END OF DAY.
+        If you need end of day balance, use "inclusive = false".
 
-            Returns the balance of an account at exact moment given. Array with at least one value.
-            Always returns:
-            "balance": balance in the account's currency OR user's primary currency if the account has no currency
-            "EUR": balance in EUR (or whatever currencies the account has balance in)
+        Returns the balance of an account at exact moment given. Array with at least one value.
+        Always returns:
+        "balance": balance in the account's currency OR user's primary currency if the account has no currency
+        "EUR": balance in EUR (or whatever currencies the account has balance in)
 
-            If the user has $convertToPrimary:
-            "balance": balance in the account's currency OR user's primary currency if the account has no currency
-            --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
-            "EUR": balance in EUR (or whatever currencies the account has balance in)
-            TXT
-    )]
-    public function finalAccountBalance(Account $account, Carbon $date, ?TransactionCurrency $primary = null, ?bool $convertToPrimary = null, bool $inclusive = true): array
-    {
-
+        If the user has $convertToPrimary:
+        "balance": balance in the account's currency OR user's primary currency if the account has no currency
+        --> "pc_balance": balance in the user's primary currency, with all amounts converted to the primary currency.
+        "EUR": balance in EUR (or whatever currencies the account has balance in)
+        TXT)]
+    public function finalAccountBalance(
+        Account $account,
+        Carbon $date,
+        ?TransactionCurrency $primary = null,
+        ?bool $convertToPrimary = null,
+        bool $inclusive = true
+    ): array {
         $cache             = new CacheProperties();
         $cache->addProperty($account->id);
         $cache->addProperty($date);
         if ($cache->has()) {
             Log::debug(sprintf('CACHED finalAccountBalance(#%d, %s, inclusive:%s)', $account->id, $date->format('Y-m-d H:i:s'), var_export($inclusive, true)));
+
             // return $cache->get();
         }
         Log::debug(sprintf('finalAccountBalance(#%d, %s)', $account->id, $date->format('Y-m-d H:i:s')));
@@ -336,16 +352,15 @@ class Steam
         }
         $hasCurrency       = null !== $accountCurrency;
         $currency          = $hasCurrency ? $accountCurrency : $primary;
-        $return            = [
-            'pc_balance' => '0',
-            'balance'    => '0', // this key is overwritten right away, but I must remember it is always created.
-        ];
+        $return            = ['pc_balance' => '0', 'balance'    => '0']; // this key is overwritten right away, but I must remember it is always created.
         // balance(s) in all currencies.
-        $array             = $account->transactions()
+        $array             = $account
+            ->transactions()
             ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->leftJoin('transaction_currencies', 'transaction_currencies.id', '=', 'transactions.transaction_currency_id')
             ->where('transaction_journals.date', $inclusive ? '<=' : '<', $date->format('Y-m-d H:i:s'))
-            ->get(['transaction_currencies.code', 'transactions.amount'])->toArray()
+            ->get(['transaction_currencies.code', 'transactions.amount'])
+            ->toArray()
         ;
         $others            = $this->groupAndSumTransactions($array, 'code', 'amount');
         Log::debug('All balances are (joined)', $others);
@@ -353,27 +368,31 @@ class Steam
         $return['balance'] = $others[$currency->code] ?? '0';
         if (!$convertToPrimary) {
             unset($return['pc_balance']);
+
             // Log::debug(sprintf('Set balance to %s, unset pc_balance', $return['balance']));
         }
         // if there is a request to convert, convert to "pc_balance" and use "balance" for whichever amount is in the primary currency.
         if ($convertToPrimary) {
             $return['pc_balance'] = $this->convertAllBalances($others, $primary, $date);
+
             // Log::debug(sprintf('Set pc_balance to %s', $return['pc_balance']));
         }
 
         // either way, the balance is always combined with the virtual balance:
-        $virtualBalance    = (string)('' === (string)$account->virtual_balance ? '0' : $account->virtual_balance);
+        $virtualBalance    = (string) ('' === (string) $account->virtual_balance ? '0' : $account->virtual_balance);
 
         if ($convertToPrimary) {
             // the primary currency balance is combined with a converted virtual_balance:
             $converter            = new ExchangeRateConverter();
             $pcVirtualBalance     = $converter->convert($currency, $primary, $date, $virtualBalance);
             $return['pc_balance'] = bcadd($pcVirtualBalance, $return['pc_balance']);
+
             // Log::debug(sprintf('Primary virtual balance makes the primary total %s', $return['pc_balance']));
         }
         if (!$convertToPrimary) {
             // if not, also increase the balance + primary balance for consistency.
             $return['balance'] = bcadd($return['balance'], $virtualBalance);
+
             // Log::debug(sprintf('Virtual balance makes the (primary currency) total %s', $return['balance']));
         }
         $final             = array_merge($return, $others);
@@ -402,6 +421,7 @@ class Steam
         $cache->addProperty($end);
         if ($cache->has()) {
             Log::debug('Return cached finalAccountBalanceInRange');
+
             // return $cache->get();
         }
 
@@ -425,17 +445,15 @@ class Steam
             Log::debug(sprintf('Also set start balance in %s', $primaryCurrency->code));
             $startBalance[$primaryCurrency->code] ??= '0';
         }
-        $currencies           = [
-            $currency->id        => $currency,
-            $primaryCurrency->id => $primaryCurrency,
-        ];
+        $currencies           = [$currency->id        => $currency, $primaryCurrency->id => $primaryCurrency];
 
         $balances[$formatted] = $startBalance;
         Log::debug('Final start balance: ', $startBalance);
 
         // sums up the balance changes per day.
         Log::debug(sprintf('Date >= %s and <= %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        $set                  = $account->transactions()
+        $set                  = $account
+            ->transactions()
             ->leftJoin('transaction_journals', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
             ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
             ->where('transaction_journals.date', '<=', $end->format('Y-m-d  H:i:s'))
@@ -443,18 +461,11 @@ class Steam
             ->groupBy('transactions.transaction_currency_id')
             ->orderBy('transaction_journals.date', 'ASC')
             ->whereNull('transaction_journals.deleted_at')
-            ->get(
-                [ // @phpstan-ignore-line
-                    'transaction_journals.date',
-                    'transactions.transaction_currency_id',
-                    DB::raw('SUM(transactions.amount) AS sum_of_day'),
-                ]
-            )
+            ->get(['transaction_journals.date', 'transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) AS sum_of_day')]) // @phpstan-ignore-line
         ;
 
         $currentBalance       = $startBalance;
         $converter            = new ExchangeRateConverter();
-
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
@@ -462,7 +473,7 @@ class Steam
             $carbon                               = new Carbon($entry->date, $entry->date_tz);
             $carbonKey                            = $carbon->format('Y-m-d');
             // make sure sum is a string:
-            $sumOfDay                             = (string)($entry->sum_of_day ?? '0');
+            $sumOfDay                             = (string) ($entry->sum_of_day ?? '0');
             // #10426 make sure sum is not in scientific notation.
             $sumOfDay                             = $this->floatalize($sumOfDay);
 
@@ -477,20 +488,20 @@ class Steam
 
             // add amount to current balance in currency code.
             $currentBalance[$entryCurrency->code]        ??= '0';
-            $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, (string)$currentBalance[$entryCurrency->code]);
+            $currentBalance[$entryCurrency->code] = bcadd($sumOfDay, (string) $currentBalance[$entryCurrency->code]);
 
             // if not requested to convert to primary currency, add the amount to "balance", do nothing else.
             if (!$convertToPrimary) {
-                $currentBalance['balance'] = bcadd((string)$currentBalance['balance'], $sumOfDay);
+                $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
             }
             // if convert to primary currency add the converted amount to "pc_balance".
             // if there is a request to convert, convert to "pc_balance" and use "balance" for whichever amount is in the primary currency.
             if ($convertToPrimary) {
                 $pcSumOfDay                   = $converter->convert($entryCurrency, $primaryCurrency, $carbon, $sumOfDay);
-                $currentBalance['pc_balance'] = bcadd((string)($currentBalance['pc_balance'] ?? '0'), $pcSumOfDay);
+                $currentBalance['pc_balance'] = bcadd((string) ($currentBalance['pc_balance'] ?? '0'), $pcSumOfDay);
                 // if it's the same currency as the entry, also add to balance (see other code).
                 if ($currency->id === $entryCurrency->id) {
-                    $currentBalance['balance'] = bcadd((string)$currentBalance['balance'], $sumOfDay);
+                    $currentBalance['balance'] = bcadd((string) $currentBalance['balance'], $sumOfDay);
                 }
             }
             // add to final array.
@@ -517,20 +528,20 @@ class Steam
         }
         Log::debug(sprintf('Floatalizing %s', $value));
 
-        $number = substr($value, 0, (int)strpos($value, 'E'));
+        $number = substr($value, 0, (int) strpos($value, 'E'));
         if (str_contains($number, '.')) {
-            $post   = strlen(substr($number, (int)strpos($number, '.') + 1));
-            $mantis = substr($value, (int)strpos($value, 'E') + 1);
+            $post   = strlen(substr($number, (int) strpos($number, '.') + 1));
+            $mantis = substr($value, (int) strpos($value, 'E') + 1);
             if ($mantis < 0) {
-                $post += abs((int)$mantis);
+                $post += abs((int) $mantis);
             }
 
             // TODO careless float could break financial math.
-            return number_format((float)$value, $post, '.', '');
+            return number_format((float) $value, $post, '.', '');
         }
 
         // TODO careless float could break financial math.
-        return number_format((float)$value, 0, '.', '');
+        return number_format((float) $value, 0, '.', '');
     }
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency
@@ -547,7 +558,7 @@ class Steam
             return null;
         }
 
-        return Amount::getTransactionCurrencyById((int)$result->data);
+        return Amount::getTransactionCurrencyById((int) $result->data);
     }
 
     public function getHostName(string $ipAddress): string
@@ -561,11 +572,11 @@ class Steam
             $hostName = $ipAddress;
         }
 
-        if ('' !== (string)$hostName && $hostName !== $ipAddress) {
+        if ('' !== (string) $hostName && $hostName !== $ipAddress) {
             $host = $hostName;
         }
 
-        return (string)$host;
+        return (string) $host;
     }
 
     /**
@@ -589,7 +600,9 @@ class Steam
     {
         $list = [];
 
-        $set  = auth()->user()->transactions()
+        $set  = auth()
+            ->user()
+            ->transactions()
             ->whereIn('transactions.account_id', $accounts)
             ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
             ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
@@ -597,9 +610,9 @@ class Steam
 
         /** @var Transaction $entry */
         foreach ($set as $entry) {
-            $date                          = new Carbon($entry->max_date, config('app.timezone'));
+            $date                           = new Carbon($entry->max_date, config('app.timezone'));
             $date->setTimezone(config('app.timezone'));
-            $list[(int)$entry->account_id] = $date;
+            $list[(int) $entry->account_id] = $date;
         }
 
         return $list;
@@ -622,7 +635,7 @@ class Steam
         if ('equal' === $locale) {
             $locale = $this->getLanguage();
         }
-        $locale    = (string)$locale;
+        $locale    = (string) $locale;
 
         // Check for Windows to replace the locale correctly.
         if ('WIN' === strtoupper(substr(PHP_OS, 0, 3))) {
@@ -648,10 +661,7 @@ class Steam
 
     public function getLocaleArray(string $locale): array
     {
-        return [
-            sprintf('%s.utf8', $locale),
-            sprintf('%s.UTF-8', $locale),
-        ];
+        return [sprintf('%s.utf8', $locale), sprintf('%s.UTF-8', $locale)];
     }
 
     /**
@@ -741,24 +751,24 @@ class Steam
             // has a K in it, remove the K and multiply by 1024.
             $bytes = bcmul(rtrim($string, 'k'), '1024');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
         if (false !== stripos($string, 'm')) {
             // has a M in it, remove the M and multiply by 1048576.
             $bytes = bcmul(rtrim($string, 'm'), '1048576');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
         if (false !== stripos($string, 'g')) {
             // has a G in it, remove the G and multiply by (1024)^3.
             $bytes = bcmul(rtrim($string, 'g'), '1073741824');
 
-            return (int)$bytes;
+            return (int) $bytes;
         }
 
-        return (int)$string;
+        return (int) $string;
     }
 
     public function positive(string $amount): string
@@ -802,7 +812,7 @@ class Steam
                 $current = $converter->convert($currency, $primary, $date, $amount);
                 Log::debug(sprintf('Convert %s %s to %s %s', $currency->code, $amount, $primary->code, $current));
             }
-            $total      = bcadd((string)$current, $total);
+            $total      = bcadd((string) $current, $total);
         }
 
         return $total;
@@ -821,9 +831,9 @@ class Steam
 
         /** @var AccountMeta $item */
         foreach ($result as $item) {
-            $integer = (int)$item->data;
+            $integer = (int) $item->data;
             if (0 !== $integer) {
-                $accountPreferences[(int)$item->account_id] = $integer;
+                $accountPreferences[(int) $item->account_id] = $integer;
             }
         }
         // collect those currencies, skip primary because we already have it.
@@ -858,7 +868,7 @@ class Steam
 
         foreach ($array as $item) {
             $groupKey          = $item[$group] ?? 'unknown';
-            $return[$groupKey] = bcadd($return[$groupKey] ?? '0', (string)$item[$field]);
+            $return[$groupKey] = bcadd($return[$groupKey] ?? '0', (string) $item[$field]);
         }
 
         return $return;

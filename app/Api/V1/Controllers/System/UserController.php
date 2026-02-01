@@ -51,14 +51,14 @@ class UserController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
+
+    public function finishBatch(): JsonResponse {}
 
     /**
      * This endpoint is documented at:

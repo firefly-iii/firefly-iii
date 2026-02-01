@@ -39,13 +39,15 @@ use Illuminate\Support\Facades\Log;
 class RemoteUserGuard implements Guard
 {
     protected Application $application;
-    protected ?User       $user = null;
+    protected ?User $user = null;
 
     /**
      * Create a new authentication guard.
      */
-    public function __construct(protected UserProvider $provider, Application $app)
-    {
+    public function __construct(
+        protected UserProvider $provider,
+        Application $app
+    ) {
         $app->get('request');
         // Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
         $this->application = $app;
@@ -83,7 +85,7 @@ class RemoteUserGuard implements Guard
         $header        = config('auth.guard_email');
 
         if (null !== $header) {
-            $emailAddress = (string)(request()->server($header) ?? apache_request_headers()[$header] ?? null);
+            $emailAddress = (string) (request()->server($header) ?? apache_request_headers()[$header] ?? null);
             $preference   = Preferences::getForUser($retrievedUser, 'remote_guard_alt_email');
 
             if ('' !== $emailAddress && null === $preference && $emailAddress !== $userID) {

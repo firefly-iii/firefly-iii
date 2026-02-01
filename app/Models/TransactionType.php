@@ -36,40 +36,35 @@ class TransactionType extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string DEPOSIT          = 'Deposit';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string INVALID          = 'Invalid';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string LIABILITY_CREDIT = 'Liability credit';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string OPENING_BALANCE  = 'Opening balance';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string RECONCILIATION   = 'Reconciliation';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string TRANSFER         = 'Transfer';
 
-    #[Deprecated]
     /** @deprecated */
+    #[Deprecated]
     public const string WITHDRAWAL       = 'Withdrawal';
 
-    protected $casts
-                                         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
+    protected $casts                     = ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     protected $fillable                  = ['type'];
 
     /**
@@ -77,12 +72,15 @@ class TransactionType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $type): self
+    public static function routeBinder(self|string $value): self
     {
         if (!auth()->check()) {
             throw new NotFoundHttpException();
         }
-        $transactionType = self::where('type', ucfirst($type))->first();
+        if ($value instanceof self) {
+            $value = (string) $value->type;
+        }
+        $transactionType = self::where('type', ucfirst($value))->first();
         if (null !== $transactionType) {
             return $transactionType;
         }

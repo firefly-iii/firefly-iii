@@ -23,17 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Events\Security\System\SystemRequestedVersionCheck;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -91,7 +91,7 @@ class HomeController extends Controller
         $label         = $request->get('label');
         $isCustomRange = false;
 
-        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end' => $stringEnd, 'label' => $request->get('label')]);
+        Log::debug('dateRange: Received dateRange', ['start' => $stringStart, 'end'   => $stringEnd, 'label' => $request->get('label')]);
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string) trans('firefly.everything') || $label === (string) trans('firefly.customRange')) {
@@ -173,14 +173,23 @@ class HomeController extends Controller
             $collector      = app(GroupCollectorInterface::class);
             $collector->setAccounts(new Collection()->push($account))->withAccountInformation()->setRange($start, $end)->setLimit(10)->setPage(1);
             $set            = $collector->getExtractedJournals();
-            $transactions[] = ['transactions' => $set, 'account' => $account];
+            $transactions[] = ['transactions' => $set, 'account'      => $account];
         }
 
         /** @var User $user */
         $user           = auth()->user();
-        event(new RequestedVersionCheckStatus($user));
+        event(new SystemRequestedVersionCheck($user));
 
-        return view('index', ['count' => $count, 'subTitle' => $subTitle, 'transactions' => $transactions, 'billCount' => $billCount, 'start' => $start, 'end' => $end, 'today' => $today, 'pageTitle' => $pageTitle]);
+        return view('index', [
+            'count'        => $count,
+            'subTitle'     => $subTitle,
+            'transactions' => $transactions,
+            'billCount'    => $billCount,
+            'start'        => $start,
+            'end'          => $end,
+            'today'        => $today,
+            'pageTitle'    => $pageTitle,
+        ]);
     }
 
     private function indexV2(): mixed
@@ -193,8 +202,8 @@ class HomeController extends Controller
 
         /** @var User $user */
         $user      = auth()->user();
-        event(new RequestedVersionCheckStatus($user));
+        event(new SystemRequestedVersionCheck($user));
 
-        return view('index', ['subTitle' => $subTitle, 'start' => $start, 'end' => $end, 'pageTitle' => $pageTitle]);
+        return view('index', ['subTitle'  => $subTitle, 'start'     => $start, 'end'       => $end, 'pageTitle' => $pageTitle]);
     }
 }

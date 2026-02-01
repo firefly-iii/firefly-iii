@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\Rule\RuleActionFailedOnArray;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class SetDestinationToCashAccount
@@ -43,7 +43,9 @@ class SetDestinationToCashAccount implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -89,20 +91,18 @@ class SetDestinationToCashAccount implements ActionInterface
             return false;
         }
         if ($cashAccount->id === $source->account_id) {
-            Log::error(
-                sprintf(
-                    'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
-                    $cashAccount->id,
-                    $source->account_id
-                )
-            );
+            Log::error(sprintf(
+                'New destination account ID #%d and current source account ID #%d are the same. Do nothing.',
+                $cashAccount->id,
+                $source->account_id
+            ));
 
             event(new RuleActionFailedOnArray($this->action, $journal, trans('rules.already_has_destination', ['name' => $cashAccount->name])));
 
             return false;
         }
 
-        event(new TriggeredAuditLog($this->action->rule, $object, 'set_destination', null, $cashAccount->name));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'set_destination', null, $cashAccount->name));
 
         // update destination transaction with new destination account:
         DB::table('transactions')

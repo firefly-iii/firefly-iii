@@ -41,8 +41,7 @@ class UserRegistration extends Notification
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**

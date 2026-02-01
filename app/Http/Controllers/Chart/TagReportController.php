@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
@@ -58,13 +58,11 @@ class TagReportController extends Controller
         // create chart generator:
         $this->generator = app(GeneratorInterface::class);
 
-        $this->middleware(
-            function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function budgetExpense(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): JsonResponse
@@ -224,7 +222,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
+                    (string) trans('firefly.spent_in_specific_tag', ['tag'           => $tag->tag]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',
@@ -251,7 +249,7 @@ class TagReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
+                    (string) trans('firefly.earned_in_specific_tag', ['tag'           => $tag->tag]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',

@@ -45,13 +45,11 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(UserGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(UserGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function update(UpdateRequest $request, UserGroup $userGroup): JsonResponse
@@ -65,9 +63,6 @@ class UpdateController extends Controller
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);
 
-        return response()
-            ->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

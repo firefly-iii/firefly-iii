@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * TriggerController.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -50,14 +51,12 @@ class TriggerController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(RecurringRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(RecurringRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function trigger(SingleDateRequest $request, Recurrence $recurrence): JsonResponse
@@ -95,11 +94,7 @@ class TriggerController extends Controller
             // use new group collector:
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
-            $collector
-                ->setUser($admin)
-                ->setIds($groups->pluck('id')->toArray())
-                ->withAPIInformation()
-            ;
+            $collector->setUser($admin)->setIds($groups->pluck('id')->toArray())->withAPIInformation();
             $paginator = $collector->getPaginatedGroups();
         }
 

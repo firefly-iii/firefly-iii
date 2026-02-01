@@ -40,11 +40,7 @@ class Configuration extends Model
 
     protected function casts(): array
     {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-        ];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
     /**
@@ -52,6 +48,6 @@ class Configuration extends Model
      */
     protected function data(): Attribute
     {
-        return Attribute::make(get: static fn ($value): mixed => json_decode((string)$value), set: static fn ($value): array => ['data' => json_encode($value)]);
+        return Attribute::make(get: static fn ($value): mixed => json_decode((string) $value), set: static fn ($value): array => ['data' => json_encode($value)]);
     }
 }

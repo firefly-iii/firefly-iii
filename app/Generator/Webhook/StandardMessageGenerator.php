@@ -55,11 +55,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class StandardMessageGenerator implements MessageGeneratorInterface
 {
-    private Collection     $objects;
+    private Collection $objects;
     private WebhookTrigger $trigger;
-    private User           $user;
-    private int            $version = 0;
-    private Collection     $webhooks;
+    private User $user;
+    private int $version = 0;
+    private Collection $webhooks;
 
     public function __construct()
     {
@@ -76,13 +76,18 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         // do some debugging
-        Log::debug(sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count()));
+        Log::debug(sprintf(
+            'StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).',
+            $this->objects->count(),
+            $this->webhooks->count()
+        ));
         $this->run();
     }
 
     private function getWebhooks(): Collection
     {
-        return $this->user->webhooks()
+        return $this->user
+            ->webhooks()
             ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
             ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
             ->where('active', true)
@@ -175,7 +180,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         switch ($responseTitle) {
             default:
-                Log::error(sprintf('The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
+                Log::error(sprintf(
+                    'The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.',
+                    $webhook->id,
+                    $webhook->response
+                ));
 
                 return;
 
@@ -220,9 +229,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
-                    Log::error(
-                        sprintf('The transformer could not include the requested transaction group for webhook #%d: %s', $webhook->id, $e->getMessage())
-                    );
+                    Log::error(sprintf(
+                        'The transformer could not include the requested transaction group for webhook #%d: %s',
+                        $webhook->id,
+                        $e->getMessage()
+                    ));
                     Log::error($e->getTraceAsString());
 
                     return;

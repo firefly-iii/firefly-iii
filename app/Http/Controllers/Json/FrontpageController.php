@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -45,7 +45,6 @@ class FrontpageController extends Controller
     {
         $set  = $repository->getPiggyBanks();
         $info = [];
-
 
         /** @var PiggyBank $piggyBank */
         foreach ($set as $piggyBank) {
@@ -71,7 +70,6 @@ class FrontpageController extends Controller
                     'currency_decimal_places'         => $piggyBank->transactionCurrency->decimal_places,
                     'primary_currency_symbol'         => $this->primaryCurrency->symbol,
                     'primary_currency_decimal_places' => $this->primaryCurrency->decimal_places,
-
                 ];
 
                 $info[] = $entry;
@@ -79,17 +77,18 @@ class FrontpageController extends Controller
         }
 
         // sort by current percentage (lowest at the top)
-        uasort(
-            $info,
-            static fn (array $a, array $b): int => $a['percentage'] <=> $b['percentage']
-        );
+        uasort($info, static fn (array $a, array $b): int => $a['percentage'] <=> $b['percentage']);
 
         $html = '';
         if (0 !== count($info)) {
             try {
                 $convertToPrimary = $this->convertToPrimary;
                 $primary          = $this->primaryCurrency;
-                $html             = view('json.piggy-banks', ['info' => $info, 'convertToPrimary' => $convertToPrimary, 'primary' => $primary])->render();
+                $html             = view('json.piggy-banks', [
+                    'info'             => $info,
+                    'convertToPrimary' => $convertToPrimary,
+                    'primary'          => $primary,
+                ])->render();
             } catch (Throwable $e) {
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 Log::error($e->getTraceAsString());

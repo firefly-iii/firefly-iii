@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -71,10 +71,7 @@ class JournalLinkRequest extends FormRequest
         $string       = implode(',', $combinations);
 
         // fixed
-        return [
-            'link_type' => sprintf('required|in:%s', $string),
-            'opposing'  => 'belongsToUser:transaction_journals',
-        ];
+        return ['link_type' => sprintf('required|in:%s', $string), 'opposing'  => 'belongsToUser:transaction_journals'];
     }
 
     public function withValidator(Validator $validator): void

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * RemovesLinksToDeletedObjects.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -54,10 +55,30 @@ class RemovesLinksToDeletedObjects extends Command
      */
     public function handle(): void
     {
-        $deletedTags       = Tag::withTrashed()->whereNotNull('deleted_at')->get('tags.id')->pluck('id')->toArray();
-        $deletedJournals   = TransactionJournal::withTrashed()->whereNotNull('deleted_at')->get('transaction_journals.id')->pluck('id')->toArray();
-        $deletedBudgets    = Budget::withTrashed()->whereNotNull('deleted_at')->get('budgets.id')->pluck('id')->toArray();
-        $deletedCategories = Category::withTrashed()->whereNotNull('deleted_at')->get('categories.id')->pluck('id')->toArray();
+        $deletedTags       = Tag::withTrashed()
+            ->whereNotNull('deleted_at')
+            ->get('tags.id')
+            ->pluck('id')
+            ->toArray()
+        ;
+        $deletedJournals   = TransactionJournal::withTrashed()
+            ->whereNotNull('deleted_at')
+            ->get('transaction_journals.id')
+            ->pluck('id')
+            ->toArray()
+        ;
+        $deletedBudgets    = Budget::withTrashed()
+            ->whereNotNull('deleted_at')
+            ->get('budgets.id')
+            ->pluck('id')
+            ->toArray()
+        ;
+        $deletedCategories = Category::withTrashed()
+            ->whereNotNull('deleted_at')
+            ->get('categories.id')
+            ->pluck('id')
+            ->toArray()
+        ;
 
         if (count($deletedTags) > 0) {
             $this->cleanupTags($deletedTags);
@@ -72,8 +93,6 @@ class RemovesLinksToDeletedObjects extends Command
             $this->cleanupCategories($deletedCategories);
         }
         $this->friendlyNeutral('Validated links to deleted objects.');
-
-
     }
 
     private function cleanupTags(array $tags): void
@@ -91,12 +110,10 @@ class RemovesLinksToDeletedObjects extends Command
         $countCategories = 0;
         // #11333
         foreach (array_chunk($journals, 1337) as $set) {
-            $countTags += DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
-            $countBudgets += DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
+            $countTags       += DB::table('tag_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
+            $countBudgets    += DB::table('budget_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
             $countCategories += DB::table('category_transaction_journal')->whereIn('transaction_journal_id', $set)->delete();
         }
-
-
 
         if ($countTags > 0) {
             $this->friendlyInfo(sprintf('Removed %d old relationship(s) between tags and transactions.', $countTags));

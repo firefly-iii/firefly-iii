@@ -31,15 +31,16 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesLiabilities extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '560_upgrade_liabilities';
+
     protected $description          = 'Upgrade liabilities to new 5.6.0 structure.';
     protected $signature            = 'upgrade:560-liabilities {--F|force : Force the execution of this command.}';
 
@@ -64,8 +65,7 @@ class UpgradesLiabilities extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function upgradeLiabilities(): void
@@ -80,7 +80,8 @@ class UpgradesLiabilities extends Command
 
     private function upgradeForUser(User $user): void
     {
-        $accounts = $user->accounts()
+        $accounts = $user
+            ->accounts()
             ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
             ->whereIn('account_types.type', config('firefly.valid_liabilities'))
             ->get(['accounts.*'])

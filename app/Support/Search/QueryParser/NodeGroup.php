@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * NodeGroup.php
  * Copyright (c) 2025 https://github.com/Sobuno
@@ -35,8 +34,10 @@ class NodeGroup extends Node
     /**
      * @param Node[] $nodes
      */
-    public function __construct(private readonly array $nodes, bool $prohibited = false)
-    {
+    public function __construct(
+        private readonly array $nodes,
+        bool $prohibited = false
+    ) {
         $this->prohibited = $prohibited;
     }
 

@@ -33,8 +33,9 @@ class UserGroupChangedPrimaryCurrency extends Event
 {
     use SerializesModels;
 
-    public function __construct(public UserGroup $userGroup)
-    {
+    public function __construct(
+        public UserGroup $userGroup
+    ) {
         Log::debug('User group changed primary currency.');
     }
 }

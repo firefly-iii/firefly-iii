@@ -51,48 +51,46 @@ class ChangesForV470 extends Migration
     {
         if (!Schema::hasTable('link_types')) {
             try {
-                Schema::create(
-                    'link_types',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->timestamps();
-                        $table->softDeletes();
-                        $table->string('name');
-                        $table->string('outward');
-                        $table->string('inward');
-                        $table->boolean('editable');
+                Schema::create('link_types', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->string('name');
+                    $table->string('outward');
+                    $table->string('inward');
+                    $table->boolean('editable');
 
-                        $table->unique(['name', 'outward', 'inward']);
-                    }
-                );
+                    $table->unique(['name', 'outward', 'inward']);
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "link_types": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
 
         if (!Schema::hasTable('journal_links')) {
             try {
-                Schema::create(
-                    'journal_links',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->timestamps();
-                        $table->integer('link_type_id', false, true);
-                        $table->integer('source_id', false, true);
-                        $table->integer('destination_id', false, true);
-                        $table->text('comment')->nullable();
+                Schema::create('journal_links', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('link_type_id', false, true);
+                    $table->integer('source_id', false, true);
+                    $table->integer('destination_id', false, true);
+                    $table->text('comment')->nullable();
 
-                        $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
-                        $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
-                        $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                    $table->foreign('link_type_id')->references('id')->on('link_types')->onDelete('cascade');
+                    $table->foreign('source_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                    $table->foreign('destination_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                        $table->unique(['link_type_id', 'source_id', 'destination_id']);
-                    }
-                );
+                    $table->unique(['link_type_id', 'source_id', 'destination_id']);
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "journal_links": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

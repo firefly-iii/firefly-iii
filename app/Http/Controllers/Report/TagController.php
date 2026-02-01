@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
@@ -33,6 +32,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\OperationsRepositoryInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
 
@@ -49,13 +49,11 @@ class TagController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,12 +70,7 @@ class TagController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= [
-                'name'       => $account->name,
-                'id'         => $account->id,
-                'iban'       => $account->iban,
-                'currencies' => [],
-            ];
+            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -89,7 +82,7 @@ class TagController extends Controller
                 $tagId = $tag['id'];
                 foreach ($tag['transaction_journals'] as $journal) {
                     $sourceAccountId                                                              = $journal['source_account_id'];
-                    $report[$sourceAccountId]['currencies'][$currencyId]                          ??= [
+                    $report[$sourceAccountId]['currencies'][$currencyId]                 ??= [
                         'currency_id'             => $currency['currency_id'],
                         'currency_symbol'         => $currency['currency_symbol'],
                         'currency_name'           => $currency['currency_name'],
@@ -97,12 +90,7 @@ class TagController extends Controller
                         'tags'                    => [],
                     ];
 
-                    $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tagId]
-                                                                                                  ??= [
-                                                                                                      'spent'  => '0',
-                                                                                                      'earned' => '0',
-                                                                                                      'sum'    => '0',
-                                                                                                  ];
+                    $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tagId] ??= ['spent'  => '0', 'earned' => '0', 'sum'    => '0'];
                     $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tagId]['spent'] = bcadd(
                         $report[$sourceAccountId]['currencies'][$currencyId]['tags'][$tagId]['spent'],
                         (string) $journal['amount']
@@ -123,20 +111,14 @@ class TagController extends Controller
                 $tagId = $tag['id'];
                 foreach ($tag['transaction_journals'] as $journal) {
                     $destinationId                                                               = $journal['destination_account_id'];
-                    $report[$destinationId]['currencies'][$currencyId]
-                                                                                                 ??= [
-                                                                                                     'currency_id'             => $currency['currency_id'],
-                                                                                                     'currency_symbol'         => $currency['currency_symbol'],
-                                                                                                     'currency_name'           => $currency['currency_name'],
-                                                                                                     'currency_decimal_places' => $currency['currency_decimal_places'],
-                                                                                                     'tags'                    => [],
-                                                                                                 ];
-                    $report[$destinationId]['currencies'][$currencyId]['tags'][$tagId]
-                                                                                                 ??= [
-                                                                                                     'spent'  => '0',
-                                                                                                     'earned' => '0',
-                                                                                                     'sum'    => '0',
-                                                                                                 ];
+                    $report[$destinationId]['currencies'][$currencyId]                 ??= [
+                        'currency_id'             => $currency['currency_id'],
+                        'currency_symbol'         => $currency['currency_symbol'],
+                        'currency_name'           => $currency['currency_name'],
+                        'currency_decimal_places' => $currency['currency_decimal_places'],
+                        'tags'                    => [],
+                    ];
+                    $report[$destinationId]['currencies'][$currencyId]['tags'][$tagId] ??= ['spent'  => '0', 'earned' => '0', 'sum'    => '0'];
                     $report[$destinationId]['currencies'][$currencyId]['tags'][$tagId]['earned'] = bcadd(
                         $report[$destinationId]['currencies'][$currencyId]['tags'][$tagId]['earned'],
                         (string) $journal['amount']
@@ -149,7 +131,7 @@ class TagController extends Controller
             }
         }
 
-        return view('reports.tag.partials.account-per-tag', ['report' => $report, 'tags' => $tags]);
+        return view('reports.tag.partials.account-per-tag', ['report' => $report, 'tags'   => $tags]);
     }
 
     /**
@@ -167,12 +149,7 @@ class TagController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= [
-                'name'       => $account->name,
-                'id'         => $account->id,
-                'iban'       => $account->iban,
-                'currencies' => [],
-            ];
+            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -251,7 +228,7 @@ class TagController extends Controller
             }
         }
 
-        return view('reports.tag.partials.accounts', ['sums' => $sums, 'report' => $report]);
+        return view('reports.tag.partials.accounts', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**
@@ -369,11 +346,7 @@ class TagController extends Controller
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $tagId = $tag->id;
-            $report[$tagId] ??= [
-                'name'       => $tag->tag,
-                'id'         => $tag->id,
-                'currencies' => [],
-            ];
+            $report[$tagId] ??= ['name'       => $tag->tag, 'id'         => $tag->id, 'currencies' => []];
         }
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
@@ -405,8 +378,14 @@ class TagController extends Controller
                         'currency_name'           => $currency['currency_name'],
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                     ];
-                    $report[$tagId]['currencies'][$currencyId]['spent'] = bcadd((string) $report[$tagId]['currencies'][$currencyId]['spent'], (string) $journal['amount']);
-                    $report[$tagId]['currencies'][$currencyId]['sum']   = bcadd((string) $report[$tagId]['currencies'][$currencyId]['sum'], (string) $journal['amount']);
+                    $report[$tagId]['currencies'][$currencyId]['spent'] = bcadd(
+                        (string) $report[$tagId]['currencies'][$currencyId]['spent'],
+                        (string) $journal['amount']
+                    );
+                    $report[$tagId]['currencies'][$currencyId]['sum']   = bcadd(
+                        (string) $report[$tagId]['currencies'][$currencyId]['sum'],
+                        (string) $journal['amount']
+                    );
                     $sums[$currencyId]['spent_sum']                     = bcadd($sums[$currencyId]['spent_sum'], (string) $journal['amount']);
                     $sums[$currencyId]['total_sum']                     = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
@@ -443,15 +422,21 @@ class TagController extends Controller
                         'currency_name'           => $currency['currency_name'],
                         'currency_decimal_places' => $currency['currency_decimal_places'],
                     ];
-                    $report[$tagId]['currencies'][$currencyId]['earned'] = bcadd((string) $report[$tagId]['currencies'][$currencyId]['earned'], (string) $journal['amount']);
-                    $report[$tagId]['currencies'][$currencyId]['sum']    = bcadd((string) $report[$tagId]['currencies'][$currencyId]['sum'], (string) $journal['amount']);
+                    $report[$tagId]['currencies'][$currencyId]['earned'] = bcadd(
+                        (string) $report[$tagId]['currencies'][$currencyId]['earned'],
+                        (string) $journal['amount']
+                    );
+                    $report[$tagId]['currencies'][$currencyId]['sum']    = bcadd(
+                        (string) $report[$tagId]['currencies'][$currencyId]['sum'],
+                        (string) $journal['amount']
+                    );
                     $sums[$currencyId]['earned_sum']                     = bcadd($sums[$currencyId]['earned_sum'], (string) $journal['amount']);
                     $sums[$currencyId]['total_sum']                      = bcadd($sums[$currencyId]['total_sum'], (string) $journal['amount']);
                 }
             }
         }
 
-        return view('reports.tag.partials.tags', ['sums' => $sums, 'report' => $report]);
+        return view('reports.tag.partials.tags', ['sums'   => $sums, 'report' => $report]);
     }
 
     /**

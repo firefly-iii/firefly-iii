@@ -33,10 +33,10 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Facades\Amount;
 
 class UpgradesAccountCurrencies extends Command
 {
@@ -47,8 +47,8 @@ class UpgradesAccountCurrencies extends Command
     protected $description          = 'Give all accounts proper currency info.';
     protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
-    private int                        $count;
-    private UserRepositoryInterface    $userRepos;
+    private int $count;
+    private UserRepositoryInterface $userRepos;
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's
@@ -124,7 +124,7 @@ class UpgradesAccountCurrencies extends Command
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
+            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $currency->id]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
             ++$this->count;
 
@@ -133,7 +133,7 @@ class UpgradesAccountCurrencies extends Command
 
         // account is set to 0, opening balance is not?
         if (0 === $accountCurrency && $obCurrency > 0) {
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
+            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $obCurrency]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
             ++$this->count;
 
@@ -144,12 +144,10 @@ class UpgradesAccountCurrencies extends Command
             // update opening balance:
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();
-            $openingBalance->transactions->each(
-                static function (Transaction $transaction) use ($accountCurrency): void {
-                    $transaction->transaction_currency_id = $accountCurrency;
-                    $transaction->save();
-                }
-            );
+            $openingBalance->transactions->each(static function (Transaction $transaction) use ($accountCurrency): void {
+                $transaction->transaction_currency_id = $accountCurrency;
+                $transaction->save();
+            });
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
             ++$this->count;
         }

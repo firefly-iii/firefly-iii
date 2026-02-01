@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
@@ -35,6 +34,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BelongsUserGroup
@@ -47,7 +47,9 @@ class BelongsUserGroup implements ValidationRule
     /**
      * Create a new rule instance.
      */
-    public function __construct(private readonly UserGroup $userGroup) {}
+    public function __construct(
+        private readonly UserGroup $userGroup
+    ) {}
 
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
@@ -60,16 +62,16 @@ class BelongsUserGroup implements ValidationRule
         Log::debug(sprintf('Group: Going to validate "%s"', $attribute));
 
         $result    = match ($attribute) {
-            'piggy_bank_id'               => $this->validatePiggyBankId((int) $value),
-            'piggy_bank_name'             => $this->validatePiggyBankName($value),
-            'bill_id'                     => $this->validateBillId((int) $value),
-            'transaction_journal_id'      => $this->validateJournalId((int) $value),
-            'bill_name'                   => $this->validateBillName($value),
-            'budget_id'                   => $this->validateBudgetId((int) $value),
-            'category_id'                 => $this->validateCategoryId((int) $value),
-            'budget_name'                 => $this->validateBudgetName($value),
+            'piggy_bank_id'          => $this->validatePiggyBankId((int) $value),
+            'piggy_bank_name'        => $this->validatePiggyBankName($value),
+            'bill_id'                => $this->validateBillId((int) $value),
+            'transaction_journal_id' => $this->validateJournalId((int) $value),
+            'bill_name'              => $this->validateBillName($value),
+            'budget_id'              => $this->validateBudgetId((int) $value),
+            'category_id'            => $this->validateCategoryId((int) $value),
+            'budget_name'            => $this->validateBudgetName($value),
             'source_id', 'destination_id' => $this->validateAccountId((int) $value),
-            default                       => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute)),
+            default                  => throw new FireflyException(sprintf('Rule BelongsUser cannot handle "%s"', $attribute))
         };
         if (false === $result) {
             $fail('validation.belongs_user_or_user_group')->translate();
@@ -93,7 +95,8 @@ class BelongsUserGroup implements ValidationRule
     {
         $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
             ->where('piggy_banks.id', '=', $value)
-            ->where('accounts.user_group_id', '=', $this->userGroup->id)->count()
+            ->where('accounts.user_group_id', '=', $this->userGroup->id)
+            ->count()
         ;
 
         return 1 === $count;
@@ -112,9 +115,11 @@ class BelongsUserGroup implements ValidationRule
         $objects = [];
         // get all objects belonging to user:
         if (PiggyBank::class === $class) {
-            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                ->where('accounts.user_group_id', '=', $this->userGroup->id)->get(['piggy_banks.*'])
-            ;
+            $objects = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')->where(
+                'accounts.user_group_id',
+                '=',
+                $this->userGroup->id
+            )->get(['piggy_banks.*']);
         }
         if (PiggyBank::class !== $class) {
             $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();

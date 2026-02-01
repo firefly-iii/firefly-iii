@@ -25,9 +25,9 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Autocomplete;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\integration\TestCase;
-use FireflyIII\User;
 
 /**
  * Class BudgetControllerTest
@@ -73,7 +73,6 @@ final class BudgetControllerTest extends TestCase
         $response = $this->get(route('api.v1.autocomplete.budgets'), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
-
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointThenReturnsBudgets(): void
@@ -87,12 +86,7 @@ final class BudgetControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Budget 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name']]);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheBudgetsEndpointWithQueryThenReturnsBudgetsWithLimit(): void
@@ -101,10 +95,7 @@ final class BudgetControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestBudgets(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.budgets', ['query' => 'Budget', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
@@ -117,10 +108,7 @@ final class BudgetControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestBudgets(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.budgets', [
-            'query' => 'Budget 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.budgets', ['query' => 'Budget 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

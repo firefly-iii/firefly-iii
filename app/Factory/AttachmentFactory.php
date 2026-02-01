@@ -44,7 +44,8 @@ class AttachmentFactory
     public function create(array $data): ?Attachment
     {
         // append if necessary.
-        $model      = str_contains((string) $data['attachable_type'], 'FireflyIII') ? $data['attachable_type']
+        $model      = str_contains((string) $data['attachable_type'], 'FireflyIII')
+            ? $data['attachable_type']
             : sprintf('FireflyIII\Models\%s', $data['attachable_type']);
 
         // get journal instead of transaction.
@@ -59,20 +60,18 @@ class AttachmentFactory
         }
 
         // create attachment:
-        $attachment = Attachment::create(
-            [
-                'user_id'         => $this->user->id,
-                'attachable_id'   => $data['attachable_id'],
-                'attachable_type' => $model,
-                'md5'             => '',
-                'filename'        => $data['filename'],
-                'title'           => '' === $data['title'] ? null : $data['title'],
-                'description'     => null,
-                'mime'            => '',
-                'size'            => 0,
-                'uploaded'        => 0,
-            ]
-        );
+        $attachment = Attachment::create([
+            'user_id'         => $this->user->id,
+            'attachable_id'   => $data['attachable_id'],
+            'attachable_type' => $model,
+            'md5'             => '',
+            'filename'        => $data['filename'],
+            'title'           => '' === $data['title'] ? null : $data['title'],
+            'description'     => null,
+            'mime'            => '',
+            'size'            => 0,
+            'uploaded'        => 0,
+        ]);
         $notes      = (string) ($data['notes'] ?? '');
         if ('' !== $notes) {
             $note       = new Note();

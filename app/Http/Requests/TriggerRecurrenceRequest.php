@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -43,9 +43,7 @@ class TriggerRecurrenceRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'date' => $this->getCarbonDate('date'),
-        ];
+        return ['date' => $this->getCarbonDate('date')];
     }
 
     /**
@@ -53,9 +51,7 @@ class TriggerRecurrenceRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'date' => 'required|date',
-        ];
+        return ['date' => 'required|date'];
     }
 
     public function withValidator(Validator $validator): void

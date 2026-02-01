@@ -36,7 +36,6 @@ class IsValidAccountTypeList implements ValidationRule
     #[Override]
     public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-
         // only check the type.
         $values = [];
         if (is_string($value)) {

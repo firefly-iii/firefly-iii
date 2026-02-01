@@ -43,7 +43,7 @@ trait CalculateXOccurrences
         $attempts = 0;
         while ($total < $count) {
             $mutator->addDay();
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $mutator;
                 ++$total;
             }
@@ -63,7 +63,7 @@ trait CalculateXOccurrences
         $mutator    = clone $date;
         $total      = 0;
         $attempts   = 0;
-        $dayOfMonth = (int)$moment;
+        $dayOfMonth = (int) $moment;
         if ($mutator->day > $dayOfMonth) {
             // day has passed already, add a month.
             $mutator->addMonth();
@@ -72,7 +72,7 @@ trait CalculateXOccurrences
         while ($total < $count) {
             $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
             $mutator->day = $domCorrected;
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $mutator;
                 ++$total;
             }
@@ -103,7 +103,7 @@ trait CalculateXOccurrences
         while ($total < $count) {
             $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
             $newCarbon = new Carbon($string);
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $newCarbon;
                 ++$total;
             }
@@ -127,7 +127,7 @@ trait CalculateXOccurrences
         // monday = 1
         // sunday = 7
         $mutator->addDay(); // always assume today has passed.
-        $dayOfWeek     = (int)$moment;
+        $dayOfWeek     = (int) $moment;
         if ($mutator->dayOfWeekIso > $dayOfWeek) {
             // day has already passed this week, add one week:
             $mutator->addWeek();
@@ -138,7 +138,7 @@ trait CalculateXOccurrences
         $mutator->addDays($dayDifference);
 
         while ($total < $count) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $mutator;
                 ++$total;
             }
@@ -166,7 +166,7 @@ trait CalculateXOccurrences
         }
         $obj        = clone $date;
         while ($total < $count) {
-            if (0 === $attempts % $skipMod) {
+            if (0 === ($attempts % $skipMod)) {
                 $return[] = clone $obj;
                 ++$total;
             }

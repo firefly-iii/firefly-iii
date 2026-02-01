@@ -58,16 +58,14 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
+            $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -89,7 +87,6 @@ class IndexController extends Controller
         // $parameters         = new ParameterBag();
         // $parameters->set('end', $end);
 
-
         // /** @var AccountTransformer $accountTransformer */
         // $accountTransformer = app(AccountTransformer::class);
         // $accountTransformer->setParameters($parameters);
@@ -102,7 +99,7 @@ class IndexController extends Controller
 
         ksort($piggyBanks);
 
-        return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts' => $accounts]);
+        return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts'   => $accounts]);
     }
 
     private function groupPiggyBanks(Collection $collection): array
@@ -195,7 +192,10 @@ class IndexController extends Controller
                         $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
                         $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
                         $accounts[$accountId]['target']  = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
-                        $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub((string) $piggyBank['target_amount'], (string) $piggyAccount['current_amount']));
+                        $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub(
+                            (string) $piggyBank['target_amount'],
+                            (string) $piggyAccount['current_amount']
+                        ));
                     }
                 }
             }

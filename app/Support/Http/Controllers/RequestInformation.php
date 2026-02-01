@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\ValidationException;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Support\Binder\AccountList;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Routing\Route;
@@ -84,7 +84,7 @@ trait RequestInformation
                     'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
                     'prohibited'      => $triggerInfo['prohibited'] ?? false,
-                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
+                    'stop_processing' => 1 === (int) ($triggerInfo['stop_processing'] ?? '0'),
                 ];
                 $current    = RuleFormRequest::replaceAmountTrigger($current);
                 $triggers[] = $current;
@@ -167,14 +167,14 @@ trait RequestInformation
      *
      * @throws ValidationException
      */
-    final protected function validatePassword(User $user, string $current, string $new): bool // get request info
-    {
+    final protected function validatePassword(User $user, string $current, string $new): bool
+    { // get request info
         if (!Hash::check($current, $user->password)) {
-            throw new ValidationException((string)trans('firefly.invalid_current_password'));
+            throw new ValidationException((string) trans('firefly.invalid_current_password'));
         }
 
         if ($current === $new) {
-            throw new ValidationException((string)trans('firefly.should_change'));
+            throw new ValidationException((string) trans('firefly.should_change'));
         }
 
         return true;
@@ -185,12 +185,9 @@ trait RequestInformation
      */
     final protected function validator(array $data): ValidatorContract
     {
-        return Validator::make(
-            $data,
-            [
-                'email'    => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|min:16|secure_password|confirmed',
-            ]
-        );
+        return Validator::make($data, [
+            'email'    => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:16|secure_password|confirmed',
+        ]);
     }
 }

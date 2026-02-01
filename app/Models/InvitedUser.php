@@ -42,10 +42,13 @@ class InvitedUser extends Model
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $attemptId = (int)$value;
+            $attemptId = (int) $value;
 
             /** @var null|InvitedUser $attempt */
             $attempt   = self::find($attemptId);
@@ -64,11 +67,6 @@ class InvitedUser extends Model
 
     protected function casts(): array
     {
-        return [
-            'expires'       => SeparateTimezoneCaster::class,
-            'redeemed'      => 'boolean',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
+        return ['expires'       => SeparateTimezoneCaster::class, 'redeemed'      => 'boolean', 'user_id'       => 'integer', 'user_group_id' => 'integer'];
     }
 }

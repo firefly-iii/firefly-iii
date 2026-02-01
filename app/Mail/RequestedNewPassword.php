@@ -39,7 +39,9 @@ class RequestedNewPassword extends Mailable
     /**
      * RequestedNewPassword constructor.
      */
-    public function __construct(public string $url) {}
+    public function __construct(
+        public string $url
+    ) {}
 
     /**
      * Build the message.
@@ -48,9 +50,6 @@ class RequestedNewPassword extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.password')
-            ->subject((string) trans('email.reset_pw_subject'))
-        ;
+        return $this->markdown('emails.password')->subject((string) trans('email.reset_pw_subject'));
     }
 }

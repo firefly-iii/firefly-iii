@@ -28,8 +28,10 @@ use Brick\Math\Exception\NumberFormatException;
 use Carbon\Carbon;
 use ErrorException;
 use FireflyIII\Jobs\MailError;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
@@ -50,7 +52,6 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
-use FireflyIII\Support\Facades\Steam;
 
 use function Safe\json_encode;
 use function Safe\parse_url;
@@ -67,19 +68,19 @@ class Handler extends ExceptionHandler
     /**
      * @var array<int, class-string<Throwable>>
      */
-    protected $dontReport
-                                        = [
-            AuthenticationException::class,
-            LaravelValidationException::class,
-            NotFoundHttpException::class,
-            GoneHttpException::class,
-            OAuthServerException::class,
-            LaravelOAuthException::class,
-            TokenMismatchException::class,
-            HttpException::class,
-            SuspiciousOperationException::class,
-            BadHttpHeaderException::class,
-        ];
+    protected $dontReport               = [
+        AuthenticationException::class,
+        LaravelValidationException::class,
+        NotFoundHttpException::class,
+        ModelNotFoundException::class,
+        GoneHttpException::class,
+        OAuthServerException::class,
+        LaravelOAuthException::class,
+        TokenMismatchException::class,
+        HttpException::class,
+        SuspiciousOperationException::class,
+        BadHttpHeaderException::class,
+    ];
 
     /**
      * Register the exception handling callbacks for the application.
@@ -116,75 +117,72 @@ class Handler extends ExceptionHandler
             // JSON error:
             Log::debug('Return JSON not found error.');
 
-            return response()->json(['message' => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
+            return response()->json(['message'   => 'Resource not found', 'exception' => 'NotFoundHttpException'], 404);
         }
 
         if ($e instanceof AuthorizationException && $expectsJson) {
             // somehow Laravel handler does not catch this:
             Log::debug('Return JSON unauthorized error.');
 
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthorizationException'], 401);
+            return response()->json(['message'   => $e->getMessage(), 'exception' => 'AuthorizationException'], 401);
         }
 
         if ($e instanceof AuthenticationException && $expectsJson) {
             // somehow Laravel handler does not catch this:
             Log::debug('Return JSON unauthenticated error.');
 
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'AuthenticationException'], 401);
+            return response()->json(['message'   => $e->getMessage(), 'exception' => 'AuthenticationException'], 401);
         }
 
         if ($e instanceof OAuthServerException && $expectsJson) {
             Log::debug('Return JSON OAuthServerException.');
 
             // somehow Laravel handler does not catch this:
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
+            return response()->json(['message'   => $e->getMessage(), 'exception' => 'OAuthServerException'], 401);
         }
         if ($e instanceof BadRequestHttpException) {
             Log::debug('Return JSON BadRequestHttpException.');
 
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'HttpException'], 400);
+            return response()->json(['message'   => $e->getMessage(), 'exception' => 'HttpException'], 400);
         }
 
         if ($e instanceof BadHttpHeaderException) {
             // is always API exception.
             Log::debug('Return JSON BadHttpHeaderException.');
 
-            return response()->json(['message' => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
+            return response()->json(['message'   => $e->getMessage(), 'exception' => 'BadHttpHeaderException'], $e->statusCode);
         }
         if (($e instanceof ValidationException || $e instanceof NumberFormatException) && $expectsJson) {
             $errorCode = 422;
 
-            return response()->json(
-                ['message' => sprintf('Validation exception: %s', $e->getMessage()), 'errors' => ['field' => 'Field is invalid']],
-                $errorCode
-            );
+            return response()->json([
+                'message' => sprintf('Validation exception: %s', $e->getMessage()),
+                'errors'  => ['field'  => 'Field is invalid'],
+            ], $errorCode);
         }
 
         if ($expectsJson) {
             $errorCode = 500;
             $errorCode = $e instanceof MethodNotAllowedHttpException ? 405 : $errorCode;
 
-            $isDebug   = (bool)config('app.debug', false);
+            $isDebug   = (bool) config('app.debug', false);
             if ($isDebug) {
                 Log::debug(sprintf('Return JSON %s with debug.', $e::class));
 
-                return response()->json(
-                    [
-                        'message'   => $e->getMessage(),
-                        'exception' => $e::class,
-                        'line'      => $e->getLine(),
-                        'file'      => $e->getFile(),
-                        'trace'     => $e->getTrace(),
-                    ],
-                    $errorCode
-                );
+                return response()->json([
+                    'message'   => $e->getMessage(),
+                    'exception' => $e::class,
+                    'line'      => $e->getLine(),
+                    'file'      => $e->getFile(),
+                    'trace'     => $e->getTrace(),
+                ], $errorCode);
             }
             Log::debug(sprintf('Return JSON %s.', $e::class));
 
-            return response()->json(
-                ['message' => sprintf('Internal Firefly III Exception: %s', $e->getMessage()), 'exception' => 'UndisclosedException'],
-                $errorCode
-            );
+            return response()->json([
+                'message'   => sprintf('Internal Firefly III Exception: %s', $e->getMessage()),
+                'exception' => 'UndisclosedException',
+            ], $errorCode);
         }
 
         if ($e instanceof NotFoundHttpException) {
@@ -199,14 +197,14 @@ class Handler extends ExceptionHandler
             Log::debug('Return Firefly III database exception view.');
             $isDebug = config('app.debug');
 
-            return response()->view('errors.DatabaseException', ['exception' => $e, 'debug' => $isDebug], 500);
+            return response()->view('errors.DatabaseException', ['exception' => $e, 'debug'     => $isDebug], 500);
         }
 
         if ($e instanceof FireflyException || $e instanceof ErrorException || $e instanceof OAuthServerException) {
             Log::debug('Return Firefly III error view.');
             $isDebug = config('app.debug');
 
-            return response()->view('errors.FireflyException', ['exception' => $e, 'debug' => $isDebug], 500);
+            return response()->view('errors.FireflyException', ['exception' => $e, 'debug'     => $isDebug], 500);
         }
 
         Log::debug(sprintf('Error "%s" has no Firefly III treatment, parent will handle.', $e::class));
@@ -223,16 +221,13 @@ class Handler extends ExceptionHandler
     public function report(Throwable $e): void
     {
         self::$lastError = $e;
-        $doMailError     = (bool)config('firefly.send_error_message');
+        $doMailError     = (bool) config('firefly.send_error_message');
         if ($this->shouldntReportLocal($e) || !$doMailError) {
             parent::report($e);
 
             return;
         }
-        $userData        = [
-            'id'    => 0,
-            'email' => 'unknown@example.com',
-        ];
+        $userData        = ['id'    => 0, 'email' => 'unknown@example.com'];
         if (auth()->check()) {
             $userData['id']    = auth()->user()->id;
             $userData['email'] = auth()->user()->email;
@@ -259,7 +254,7 @@ class Handler extends ExceptionHandler
 
         // create job that will mail.
         $ipAddress       = request()->ip() ?? '0.0.0.0';
-        $job             = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
+        $job             = new MailError($userData, (string) config('firefly.site_owner'), $ipAddress, $data);
         dispatch($job);
 
         parent::report($e);
@@ -267,10 +262,7 @@ class Handler extends ExceptionHandler
 
     private function shouldntReportLocal(Throwable $e): bool
     {
-        return null !== Arr::first(
-            $this->dontReport,
-            static fn ($type): bool => $e instanceof $type
-        );
+        return null !== Arr::first($this->dontReport, static fn ($type): bool => $e instanceof $type);
     }
 
     /**

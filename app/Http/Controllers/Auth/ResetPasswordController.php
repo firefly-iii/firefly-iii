@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\ResetsPasswords;
@@ -36,7 +37,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
-use FireflyIII\Support\Facades\FireflyConfig;
 use SensitiveParameter;
 
 /**
@@ -85,30 +85,21 @@ class ResetPasswordController extends Controller
             return view('errors.error', ['message' => $message]);
         }
 
-        $rules    = [
-            'token'    => 'required',
-            'email'    => 'required|email',
-            'password' => 'required|confirmed|min:16|secure_password',
-        ];
+        $rules    = ['token'    => 'required', 'email'    => 'required|email', 'password' => 'required|confirmed|min:16|secure_password'];
 
         $this->validate($request, $rules, $this->validationErrorMessages());
 
         // Here we will attempt to reset the user's password. If it is successful we
         // will update the password on an actual user model and persist it to the
         // database. Otherwise, we will parse the error and return the response.
-        $response = $this->broker()->reset(
-            $this->credentials($request),
-            function ($user, #[SensitiveParameter] $password): void {
-                $this->resetPassword($user, $password);
-            }
-        );
+        $response = $this->broker()->reset($this->credentials($request), function ($user, #[SensitiveParameter] $password): void {
+            $this->resetPassword($user, $password);
+        });
 
         // If the password was successfully reset, we will redirect the user back to
         // the application's home authenticated view. If there is an error we can
         // redirect them back to where they came from with their error message.
-        return Password::PASSWORD_RESET === $response
-            ? $this->sendResetResponse($request, $response)
-            : $this->sendResetFailedResponse($request, $response);
+        return Password::PASSWORD_RESET === $response ? $this->sendResetResponse($request, $response) : $this->sendResetFailedResponse($request, $response);
     }
 
     /**
@@ -141,8 +132,11 @@ class ResetPasswordController extends Controller
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration, 'pageTitle' => $pageTitle]
-        );
+        return view('auth.passwords.reset')->with([
+            'token'             => $token,
+            'email'             => $request->email,
+            'allowRegistration' => $allowRegistration,
+            'pageTitle'         => $pageTitle,
+        ]);
     }
 }

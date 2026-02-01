@@ -47,30 +47,26 @@ class TagServiceProvider extends ServiceProvider
     #[Override]
     public function register(): void
     {
-        $this->app->bind(
-            static function (Application $app): TagRepositoryInterface {
-                /** @var TagRepository $repository */
-                $repository = app(TagRepository::class);
+        $this->app->bind(static function (Application $app): TagRepositoryInterface {
+            /** @var TagRepository $repository */
+            $repository = app(TagRepository::class);
 
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
             }
-        );
 
-        $this->app->bind(
-            static function (Application $app): OperationsRepositoryInterface {
-                /** @var OperationsRepository $repository */
-                $repository = app(OperationsRepository::class);
+            return $repository;
+        });
 
-                if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                    $repository->setUser(auth()->user());
-                }
+        $this->app->bind(static function (Application $app): OperationsRepositoryInterface {
+            /** @var OperationsRepository $repository */
+            $repository = app(OperationsRepository::class);
 
-                return $repository;
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

@@ -38,8 +38,6 @@ trait ReturnsIntegerIdTrait
      */
     protected function id(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

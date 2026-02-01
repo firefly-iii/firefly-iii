@@ -44,28 +44,26 @@ final class RuleControllerTest extends TestCase
 
     private function createTestRules(int $count, User $user): void
     {
-        $ruleGroup = RuleGroup::create(
-            [
-                'user_id'             => $user->id,
-                'user_group_id'       => $user->user_group_id,
-                'title'               => 'RuleGroup 1',
-                'description'         => 'RuleGroup 1',
-                'order'               => 1,
-                'active'              => 1,
-                'stop_processing'     => 0,
-            ]
-        );
+        $ruleGroup = RuleGroup::create([
+            'user_id'         => $user->id,
+            'user_group_id'   => $user->user_group_id,
+            'title'           => 'RuleGroup 1',
+            'description'     => 'RuleGroup 1',
+            'order'           => 1,
+            'active'          => 1,
+            'stop_processing' => 0,
+        ]);
         for ($i = 1; $i <= $count; ++$i) {
             $rule = Rule::create([
-                'user_id'             => $user->id,
-                'user_group_id'       => $user->user_group_id,
-                'rule_group_id'       => $ruleGroup->id,
-                'title'               => 'Rule '.$i,
-                'description'         => 'Rule '.$i,
-                'order'               => 1,
-                'active'              => 1,
-                'stop_processing'     => 0,
-                'strict'              => 0,
+                'user_id'         => $user->id,
+                'user_group_id'   => $user->user_group_id,
+                'rule_group_id'   => $ruleGroup->id,
+                'title'           => 'Rule '.$i,
+                'description'     => 'Rule '.$i,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'strict'          => 0,
             ]);
         }
     }
@@ -101,14 +99,7 @@ final class RuleControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(5);
         $response->assertJsonFragment(['name' => 'Rule 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLimited(): void
@@ -117,23 +108,13 @@ final class RuleControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRules(5, $user);
-        $response = $this->get(route('api.v1.autocomplete.rules', [
-            'query' => 'Rule',
-            'limit' => 3,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.rules', ['query' => 'Rule', 'limit' => 3]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonCount(3);
         $response->assertJsonFragment(['name' => 'Rule 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'active',
-            ],
-        ]);
-
+        $response->assertJsonStructure(['*' => ['id', 'name', 'active']]);
     }
 
     public function testGivenAuthenticatedRequestWithItemsLots(): void
@@ -142,10 +123,7 @@ final class RuleControllerTest extends TestCase
         $this->actingAs($user);
 
         $this->createTestRules(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.rules', [
-            'query' => 'Rule 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
+        $response = $this->get(route('api.v1.autocomplete.rules', ['query' => 'Rule 1', 'limit' => 20]), ['Accept' => 'application/json']);
 
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');

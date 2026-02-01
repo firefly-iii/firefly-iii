@@ -28,10 +28,10 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Facades\Amount;
 
 class UpgradesBudgetLimits extends Command
 {
@@ -71,9 +71,12 @@ class UpgradesBudgetLimits extends Command
                         $currency                             = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
-                        $this->friendlyInfo(
-                            sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
-                        );
+                        $this->friendlyInfo(sprintf(
+                            'Budget limit #%d (part of budget "%s") now has a currency setting (%s).',
+                            $budgetLimit->id,
+                            $budget->name,
+                            $currency->name
+                        ));
                         ++$count;
                     }
                 }
@@ -88,8 +91,7 @@ class UpgradesBudgetLimits extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
-
+        return (bool) $configVar?->data;
     }
 
     private function markAsExecuted(): void

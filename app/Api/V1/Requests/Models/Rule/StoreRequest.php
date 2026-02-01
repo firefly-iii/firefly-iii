@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Rule;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -139,14 +139,12 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                $this->atLeastOneTrigger($validator);
-                $this->atLeastOneAction($validator);
-                $this->atLeastOneActiveTrigger($validator);
-                $this->atLeastOneActiveAction($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            $this->atLeastOneTrigger($validator);
+            $this->atLeastOneAction($validator);
+            $this->atLeastOneActiveTrigger($validator);
+            $this->atLeastOneActiveAction($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

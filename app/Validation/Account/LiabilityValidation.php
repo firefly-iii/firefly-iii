@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Account;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait LiabilityValidation

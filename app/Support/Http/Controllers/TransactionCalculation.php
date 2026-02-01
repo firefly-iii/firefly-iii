@@ -43,11 +43,7 @@ trait TransactionCalculation
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($total)
-            ->setRange($start, $end)
-            ->withAccountInformation()
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
-        ;
+        $collector->setAccounts($total)->setRange($start, $end)->withAccountInformation()->setTypes([TransactionTypeEnum::WITHDRAWAL->value]);
 
         return $collector->getExtractedJournals();
     }
@@ -60,8 +56,12 @@ trait TransactionCalculation
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
-            ->setTags($tags)->withAccountInformation()
+        $collector
+            ->setAccounts($accounts)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
+            ->setTags($tags)
+            ->withAccountInformation()
         ;
 
         return $collector->getExtractedJournals();
@@ -74,8 +74,12 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
-            ->setBudgets($budgets)->withAccountInformation()
+        $collector
+            ->setAccounts($accounts)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value])
+            ->setBudgets($budgets)
+            ->withAccountInformation()
         ;
 
         return $collector->getExtractedJournals();
@@ -106,8 +110,12 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
-            ->setCategories($categories)->withAccountInformation()
+        $collector
+            ->setAccounts($accounts)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
+            ->setCategories($categories)
+            ->withAccountInformation()
         ;
 
         return $collector->getExtractedJournals();
@@ -134,8 +142,12 @@ trait TransactionCalculation
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
-            ->setTags($tags)->withAccountInformation()
+        $collector
+            ->setAccounts($accounts)
+            ->setRange($start, $end)
+            ->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
+            ->setTags($tags)
+            ->withAccountInformation()
         ;
 
         return $collector->getExtractedJournals();

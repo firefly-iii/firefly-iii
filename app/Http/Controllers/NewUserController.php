@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Http\Requests\NewUserFormRequest;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
@@ -51,13 +51,11 @@ class NewUserController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(AccountRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(AccountRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -103,15 +101,19 @@ class NewUserController extends Controller
         }
         $currencyRepository->enable($currency);
 
-        $this->createAssetAccount($request, $currency);              // create normal asset account
+        $this->createAssetAccount($request, $currency); // create normal asset account
         $this->createSavingsAccount($request, $currency, $language); // create savings account
-        $this->createCashWalletAccount($currency, $language);        // create cash wallet account
+        $this->createCashWalletAccount($currency, $language); // create cash wallet account
 
         // store currency preference:
         $currencyRepository->makePrimary($currency);
 
         // store frontpage preferences:
-        $accounts      = $this->repository->getAccountsByType([AccountTypeEnum::ASSET->value])->pluck('id')->toArray();
+        $accounts      = $this->repository
+            ->getAccountsByType([AccountTypeEnum::ASSET->value])
+            ->pluck('id')
+            ->toArray()
+        ;
         Preferences::set('frontpageAccounts', $accounts);
 
         // mark.

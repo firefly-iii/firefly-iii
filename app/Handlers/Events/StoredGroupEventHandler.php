@@ -25,7 +25,7 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\TriggeredStoredTransactionGroup;
-use FireflyIII\Events\RequestedSendWebhookMessages;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\RuleGroup;
@@ -47,16 +47,16 @@ class StoredGroupEventHandler
 {
     public function runAllHandlers(StoredTransactionGroup $event): void
     {
-        $this->processRules($event, null);
-        $this->recalculateCredit($event);
-        $this->triggerWebhooks($event);
+        // $this->processRules($event, null);
+        // $this->recalculateCredit($event);
+        // $this->triggerWebhooks($event);
         $this->removePeriodStatistics($event);
     }
 
     public function triggerRulesManually(TriggeredStoredTransactionGroup $event): void
     {
-        $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
-        $this->processRules($newEvent, $event->ruleGroup);
+        //        $newEvent = new StoredTransactionGroup($event->transactionGroup, true, false);
+        //        $this->processRules($newEvent, $event->ruleGroup);
     }
 
     /**
@@ -99,7 +99,7 @@ class StoredGroupEventHandler
         // create and fire rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($storedGroupEvent->transactionGroup->user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
@@ -181,7 +181,7 @@ class StoredGroupEventHandler
         $engine->generateMessages();
 
         // trigger event to send them:
-        Log::debug(sprintf('send event RequestedSendWebhookMessages from %s', __METHOD__));
-        event(new RequestedSendWebhookMessages());
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
     }
 }

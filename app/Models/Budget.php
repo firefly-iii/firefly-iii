@@ -53,10 +53,13 @@ class Budget extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $budgetId = (int)$value;
+            $budgetId = (int) $value;
 
             /** @var User $user */
             $user     = auth()->user();
@@ -124,9 +127,7 @@ class Budget extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     public function primaryPeriodStatistics(): MorphMany

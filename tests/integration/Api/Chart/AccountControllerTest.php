@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * AccountControllerTest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -26,8 +25,8 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Chart;
 
 use FireflyIII\User;
-use Override;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Override;
 use Tests\integration\TestCase;
 
 /**
@@ -38,6 +37,7 @@ use Tests\integration\TestCase;
 final class AccountControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private ?User $user = null;
 
     #[Override]
@@ -56,18 +56,13 @@ final class AccountControllerTest extends TestCase
         $this->actingAs($this->user);
         $response = $this->getJson(route('api.v1.chart.account.overview'));
         $response->assertStatus(422);
-
     }
 
     public function testGetOverviewChart(): void
     {
         $this->actingAs($this->user);
-        $params   = [
-            'start' => '2024-01-01',
-            'end'   => '2024-01-31',
-        ];
+        $params   = ['start' => '2024-01-01', 'end'   => '2024-01-31'];
         $response = $this->getJson(route('api.v1.chart.account.overview').'?'.http_build_query($params));
         $response->assertStatus(200);
-
     }
 }

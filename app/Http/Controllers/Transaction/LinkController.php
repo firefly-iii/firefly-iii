@@ -23,27 +23,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalLinkRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class LinkController.
  */
 class LinkController extends Controller
 {
-    private JournalRepositoryInterface  $journalRepository;
+    private JournalRepositoryInterface $journalRepository;
     private LinkTypeRepositoryInterface $repository;
 
     /**
@@ -53,17 +53,15 @@ class LinkController extends Controller
     {
         parent::__construct();
         // some useful repositories:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
 
-                $this->journalRepository = app(JournalRepositoryInterface::class);
-                $this->repository        = app(LinkTypeRepositoryInterface::class);
+            $this->journalRepository = app(JournalRepositoryInterface::class);
+            $this->repository        = app(LinkTypeRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -77,7 +75,7 @@ class LinkController extends Controller
         $subTitle     = (string) trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUrl('journal_links.delete.url');
 
-        return view('transactions.links.delete', ['link' => $link, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('transactions.links.delete', ['link'         => $link, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -100,7 +98,7 @@ class LinkController extends Controller
     {
         $linkTypes = $this->repository->get();
 
-        return view('transactions.links.modal', ['journal' => $journal, 'linkTypes' => $linkTypes]);
+        return view('transactions.links.modal', ['journal'   => $journal, 'linkTypes' => $linkTypes]);
     }
 
     /**

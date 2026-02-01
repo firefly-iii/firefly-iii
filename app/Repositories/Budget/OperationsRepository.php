@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Budget;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use Deprecated;
 use FireflyIII\Enums\TransactionTypeEnum;
@@ -34,6 +33,8 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Report\Summarizer\TransactionSummarizer;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -41,7 +42,6 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class OperationsRepository
@@ -153,9 +153,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $currencySymbol        = $primaryCurrency->symbol;
         $currencyDecimalPlaces = $primaryCurrency->decimal_places;
         $converter             = new ExchangeRateConverter();
-        $currencies            = [
-            $currencyId => $primaryCurrency,
-        ];
+        $currencies            = [$currencyId            => $primaryCurrency];
 
         foreach ($journals as $journal) {
             $amount                                                                       = Steam::negative($journal['amount']);
@@ -231,12 +229,12 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $budgets = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
         ?TransactionCurrency $currency = null,
-        bool                 $convertToPrimary = false
+        bool $convertToPrimary = false
     ): array {
         Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToPrimary, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
@@ -257,7 +255,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)
+        $collector
+            ->setUser($this->user)
             ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
@@ -289,14 +288,22 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }
 
-    public function sumCollectedExpenses(array $expenses, Carbon $start, Carbon $end, TransactionCurrency $transactionCurrency, bool $convertToPrimary = false): array
-    {
+    public function sumCollectedExpenses(
+        array $expenses,
+        Carbon $start,
+        Carbon $end,
+        TransactionCurrency $transactionCurrency,
+        bool $convertToPrimary = false
+    ): array {
         Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
         // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id);
+        $expenses   = array_filter(
+            $expenses,
+            static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id
+        );
 
         return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
@@ -314,8 +321,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     }
 
     #[Override]
-    public function collectExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null, ?TransactionCurrency $currency = null): array
-    {
+    public function collectExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
+    ): array {
         Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
@@ -335,7 +347,8 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
-        $collector->setUser($this->user)
+        $collector
+            ->setUser($this->user)
             ->setRange($start, $end)
             // ->excludeDestinationAccounts($selection)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])

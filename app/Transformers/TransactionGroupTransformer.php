@@ -46,8 +46,8 @@ use Illuminate\Support\Facades\Log;
 class TransactionGroupTransformer extends AbstractTransformer
 {
     private readonly TransactionGroupRepositoryInterface $groupRepos;
-    private readonly array                               $metaDateFields;
-    private readonly array                               $metaFields;
+    private readonly array $metaDateFields;
+    private readonly array $metaFields;
 
     /**
      * Constructor.
@@ -91,12 +91,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             'user_group'   => (string) $data['user_group_id'],
             'group_title'  => $data['title'],
             'transactions' => $this->transformTransactions($data),
-            'links'        => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/transactions/'.$first['transaction_group_id'],
-                ],
-            ],
+            'links'        => [['rel' => 'self', 'uri' => '/transactions/'.$first['transaction_group_id']]],
         ];
     }
 
@@ -276,12 +271,7 @@ class TransactionGroupTransformer extends AbstractTransformer
                 'user'         => $group->user_id,
                 'group_title'  => $group->title,
                 'transactions' => $this->transformJournals($group->transactionJournals),
-                'links'        => [
-                    [
-                        'rel' => 'self',
-                        'uri' => '/transactions/'.$group->id,
-                    ],
-                ],
+                'links'        => [['rel' => 'self', 'uri' => '/transactions/'.$group->id]],
             ];
         } catch (FireflyException $e) {
             Log::error($e->getMessage());
@@ -424,9 +414,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
-        $result = $journal->transactions->first(
-            static fn (Transaction $transaction): bool => (float) $transaction->amount < 0
-        );
+        $result = $journal->transactions->first(static fn (Transaction $transaction): bool => (float) $transaction->amount < 0);
         if (null === $result) {
             throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));
         }
@@ -439,9 +427,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        $result = $journal->transactions->first(
-            static fn (Transaction $transaction): bool => (float) $transaction->amount > 0
-        );
+        $result = $journal->transactions->first(static fn (Transaction $transaction): bool => (float) $transaction->amount > 0);
         if (null === $result) {
             throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
         }
@@ -465,14 +451,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getDates(NullArrayObject $dates): array
     {
-        $fields = [
-            'interest_date',
-            'book_date',
-            'process_date',
-            'due_date',
-            'payment_date',
-            'invoice_date',
-        ];
+        $fields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
         $return = [];
         foreach ($fields as $field) {
             $return[$field] = null;
@@ -486,12 +465,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getForeignCurrency(?TransactionCurrency $currency): array
     {
-        $array                   = [
-            'id'             => null,
-            'code'           => null,
-            'symbol'         => null,
-            'decimal_places' => null,
-        ];
+        $array                   = ['id'             => null, 'code'           => null, 'symbol'         => null, 'decimal_places' => null];
         if (!$currency instanceof TransactionCurrency) {
             return $array;
         }
@@ -505,10 +479,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getBudget(?Budget $budget): array
     {
-        $array         = [
-            'id'   => null,
-            'name' => null,
-        ];
+        $array         = ['id'   => null, 'name' => null];
         if (!$budget instanceof Budget) {
             return $array;
         }
@@ -520,10 +491,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getCategory(?Category $category): array
     {
-        $array         = [
-            'id'   => null,
-            'name' => null,
-        ];
+        $array         = ['id'   => null, 'name' => null];
         if (!$category instanceof Category) {
             return $array;
         }
@@ -535,10 +503,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
     private function getBill(?Bill $bill): array
     {
-        $array         = [
-            'id'   => null,
-            'name' => null,
-        ];
+        $array         = ['id'   => null, 'name' => null];
         if (!$bill instanceof Bill) {
             return $array;
         }
