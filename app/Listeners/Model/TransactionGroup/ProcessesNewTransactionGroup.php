@@ -141,12 +141,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
     private function removePeriodStatistics(Collection $set): void
     {
-        if(auth()->check()) {
-        Log::debug('Always remove period statistics');
+        if (auth()->check()) {
+            Log::debug('Always remove period statistics');
 
-        /** @var PeriodStatisticRepositoryInterface $repository */
-        $repository = app(PeriodStatisticRepositoryInterface::class);
-        $repository->deleteStatisticsForCollection($set);
+            /** @var PeriodStatisticRepositoryInterface $repository */
+            $repository = app(PeriodStatisticRepositoryInterface::class);
+            $repository->deleteStatisticsForCollection($set);
         }
     }
 
