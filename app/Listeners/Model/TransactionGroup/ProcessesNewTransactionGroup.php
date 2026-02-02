@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesNewTransactionGroup implements ShouldQueue
 {
-    public function handle(CreatedSingleTransactionGroup | UserRequestedBatchProcessing $event): void
+    public function handle(CreatedSingleTransactionGroup|UserRequestedBatchProcessing $event): void
     {
         $groupId    = 0;
         $collection = new Collection();
@@ -60,7 +60,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             Log::debug('User called UserRequestedBatchProcessing');
         }
 
-        $setting = FireflyConfig::get('enable_batch_processing', false)->data;
+        $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
             Log::debug(sprintf('Will do nothing for group #%d because it is part of a batch.', $groupId));
 
@@ -68,7 +68,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         }
         Log::debug(sprintf('Will (joined with group #%d) collect all open transaction groups and process them.', $groupId));
         $repository = app(JournalRepositoryInterface::class);
-        $set        = $collection->merge($repository->getUncompletedJournals());
+        $set        = $collection->merge($repository->getAllUncompletedJournals());
         if (0 === $set->count()) {
             Log::debug('Set is empty, never mind.');
 
@@ -109,7 +109,9 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         Log::debug('Now in recalculateRunningBalance');
         // find the earliest date in the set, based on date and _internal_previous_date
         $earliest = $set->pluck('date')->sort()->first();
-        $entries  = TransactionJournalMeta::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->where('name', '_internal_previous_date')->get(['journal_meta.*']);
+        $entries  = TransactionJournalMeta::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->where('name', '_internal_previous_date')->get([
+            'journal_meta.*',
+        ]);
         $array    = $entries->toArray();
         if (count($array) > 0) {
             usort($array, function (array $a, array $b) {
@@ -118,6 +120,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
             /** @var Carbon $date */
             $date     = Carbon::parse($array[0]['data']);
+
             /** @var Carbon $earliest */
             $earliest = $date->lt($earliest) ? $date : $earliest;
         }
@@ -125,10 +128,11 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
         // get accounts
         $accounts = Account::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
-                           ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-                           ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
-                           ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
-                           ->get(['accounts.*']);
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+            ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
+            ->get(['accounts.*'])
+        ;
 
         Log::debug('Found accounts to process', $accounts->pluck('id')->toArray());
 
@@ -137,11 +141,13 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
     private function removePeriodStatistics(Collection $set): void
     {
-        Log::debug('Always remove period statistics');
+        if (auth()->check()) {
+            Log::debug('Always remove period statistics');
 
-        /** @var PeriodStatisticRepositoryInterface $repository */
-        $repository = app(PeriodStatisticRepositoryInterface::class);
-        $repository->deleteStatisticsForCollection($set);
+            /** @var PeriodStatisticRepositoryInterface $repository */
+            $repository = app(PeriodStatisticRepositoryInterface::class);
+            $repository->deleteStatisticsForCollection($set);
+        }
     }
 
     private function fireWebhooks(Collection $set): void
@@ -150,9 +156,10 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         $groups = TransactionGroup::whereIn('id', array_unique($set->pluck('transaction_group_id')->toArray()))->get();
 
         Log::debug(__METHOD__);
+
         /** @var TransactionJournal $first */
-        $first = $set->first();
-        $user  = $first->user;
+        $first  = $set->first();
+        $user   = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -183,11 +190,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     private function processRules(Collection $set): void
     {
         Log::debug(sprintf('Will now processRules for %d journal(s)', $set->count()));
-        $array = $set->pluck('id')->toArray();
+        $array               = $set->pluck('id')->toArray();
+
         /** @var TransactionJournal $first */
-        $first      = $set->first();
-        $journalIds = implode(',', $array);
-        $user       = $first->user;
+        $first               = $set->first();
+        $journalIds          = implode(',', $array);
+        $user                = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -197,12 +205,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug('Fire processRules with ALL store-journal rule groups.');
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
 
         // create and fire rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }

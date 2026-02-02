@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdatedExistingAccount.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,5 +35,7 @@ class UpdatedExistingAccount extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public Account $account) {}
+    public function __construct(
+        public Account $account
+    ) {}
 }

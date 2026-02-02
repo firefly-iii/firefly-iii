@@ -263,6 +263,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
     }
 
     #[Override]
+    public function getAllUncompletedJournals(): Collection
+    {
+        return TransactionJournal::where('completed', false)->get(['transaction_journals.*']);
+    }
+
+    #[Override]
     public function markAsCompleted(Collection $set): void
     {
         TransactionJournal::whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);

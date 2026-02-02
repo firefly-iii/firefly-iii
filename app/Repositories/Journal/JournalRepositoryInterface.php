@@ -54,6 +54,8 @@ interface JournalRepositoryInterface
 
     public function getUncompletedJournals(): Collection;
 
+    public function getAllUncompletedJournals(): Collection;
+
     public function markAsCompleted(Collection $set): void;
 
     /**
