@@ -46,6 +46,7 @@ class BatchController extends Controller
         $this->middleware(function ($request, $next) {
             $this->repository = app(JournalRepositoryInterface::class);
             $this->repository->setUser(auth()->user()); // should not have to do this.
+
             return $next($request);
         });
     }
