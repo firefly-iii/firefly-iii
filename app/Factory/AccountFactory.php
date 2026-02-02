@@ -47,12 +47,12 @@ class AccountFactory
     use LocationServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
-    protected array                      $validAssetFields;
-    protected array                      $validCCFields;
-    protected array                      $validFields;
-    private array                        $canHaveOpeningBalance;
-    private array                        $canHaveVirtual;
-    private User                         $user;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array $canHaveOpeningBalance;
+    private array $canHaveVirtual;
+    private User $user;
 
     /**
      * AccountFactory constructor.
@@ -74,7 +74,7 @@ class AccountFactory
     {
         Log::debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
 
-        $type = $this->accountRepository->getAccountTypeByType($accountType);
+        $type   = $this->accountRepository->getAccountTypeByType($accountType);
         if (!$type instanceof AccountType) {
             throw new FireflyException(sprintf('Cannot find account type "%s"', $accountType));
         }
@@ -84,20 +84,21 @@ class AccountFactory
             ->accounts
             ->where('account_type_id', $type->id)
             ->where('name', $accountName)
-            ->first();
+            ->first()
+        ;
 
         if (null === $return) {
             Log::debug('Found nothing. Will create a new one.');
             $return = $this->create([
-                                        'user_id'           => $this->user->id,
-                                        'user_group_id'     => $this->user->user_group_id,
-                                        'name'              => $accountName,
-                                        'account_type_id'   => $type->id,
-                                        'account_type_name' => null,
-                                        'virtual_balance'   => '0',
-                                        'iban'              => null,
-                                        'active'            => true,
-                                    ]);
+                'user_id'           => $this->user->id,
+                'user_group_id'     => $this->user->user_group_id,
+                'name'              => $accountName,
+                'account_type_id'   => $type->id,
+                'account_type_name' => null,
+                'virtual_balance'   => '0',
+                'iban'              => null,
+                'active'            => true,
+            ]);
         }
 
         return $return;
@@ -113,13 +114,13 @@ class AccountFactory
         $data['iban'] = $this->filterIban($data['iban'] ?? null);
 
         // account may exist already:
-        $return = $this->find($data['name'], $type->type);
+        $return       = $this->find($data['name'], $type->type);
 
         if ($return instanceof Account) {
             return $return;
         }
 
-        $return = $this->createAccount($type, $data);
+        $return       = $this->createAccount($type, $data);
 
         event(new CreatedNewAccount($return));
 
@@ -131,7 +132,7 @@ class AccountFactory
      */
     protected function getAccountType(array $data): ?AccountType
     {
-        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int)$data['account_type_id'] : 0;
+        $accountTypeId   = array_key_exists('account_type_id', $data) ? (int) $data['account_type_id'] : 0;
         $accountTypeName = $data['account_type_name'] ?? null;
         $result          = null;
         // find by name or ID
@@ -169,7 +170,8 @@ class AccountFactory
             ->accounts()
             ->where('account_type_id', $type->id)
             ->where('name', $accountName)
-            ->first();
+            ->first()
+        ;
     }
 
     /**
@@ -193,7 +195,7 @@ class AccountFactory
             'iban'            => $data['iban'],
         ];
         // fix virtual balance when it's empty
-        if ('' === (string)$databaseData['virtual_balance']) {
+        if ('' === (string) $databaseData['virtual_balance']) {
             $databaseData['virtual_balance'] = null;
         }
         // remove virtual balance when not an asset account
@@ -201,11 +203,11 @@ class AccountFactory
             $databaseData['virtual_balance'] = null;
         }
         // create account!
-        $account = Account::create($databaseData);
+        $account        = Account::create($databaseData);
         Log::channel('audit')->info(sprintf('Account #%d ("%s") has been created.', $account->id, $account->name));
 
         // update meta data:
-        $data = $this->cleanMetaDataArray($account, $data);
+        $data           = $this->cleanMetaDataArray($account, $data);
         $this->storeMetaData($account, $data);
 
         // create opening balance (only asset accounts)
@@ -225,7 +227,7 @@ class AccountFactory
         }
 
         // create notes
-        $notes = array_key_exists('notes', $data) ? $data['notes'] : '';
+        $notes          = array_key_exists('notes', $data) ? $data['notes'] : '';
         $this->updateNote($account, $notes);
 
         // create location
@@ -245,10 +247,10 @@ class AccountFactory
      */
     private function cleanMetaDataArray(Account $account, array $data): array
     {
-        $currencyId   = array_key_exists('currency_id', $data) ? (int)$data['currency_id'] : 0;
-        $currencyCode = array_key_exists('currency_code', $data) ? (string)$data['currency_code'] : '';
-        $accountRole  = array_key_exists('account_role', $data) ? (string)$data['account_role'] : null;
-        $currency     = $this->getCurrency($currencyId, $currencyCode);
+        $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
+        $currencyCode         = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
+        $accountRole          = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
+        $currency             = $this->getCurrency($currencyId, $currencyCode);
 
         // only asset account may have a role:
         if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
@@ -266,7 +268,7 @@ class AccountFactory
 
     private function storeMetaData(Account $account, array $data): void
     {
-        $fields = $this->validFields;
+        $fields  = $this->validFields;
         if (AccountTypeEnum::ASSET->value === $account->accountType->type) {
             $fields = $this->validAssetFields;
         }
@@ -275,8 +277,8 @@ class AccountFactory
         }
 
         // remove currency_id if necessary.
-        $type = $account->accountType->type;
-        $list = config('firefly.valid_currency_account_types');
+        $type    = $account->accountType->type;
+        $list    = config('firefly.valid_currency_account_types');
         if (!in_array($type, $list, true)) {
             $pos = array_search('currency_id', $fields, true);
             if (false !== $pos) {
@@ -298,7 +300,7 @@ class AccountFactory
                     $data[$field] = 1;
                 }
 
-                $factory->crud($account, $field, (string)$data[$field]);
+                $factory->crud($account, $field, (string) $data[$field]);
             }
         }
     }
@@ -353,14 +355,14 @@ class AccountFactory
      */
     private function storeOrder(Account $account, array $data): void
     {
-        $accountType = $account->accountType->type;
-        $maxOrder    = $this->accountRepository->maxOrder($accountType);
-        $order       = null;
+        $accountType   = $account->accountType->type;
+        $maxOrder      = $this->accountRepository->maxOrder($accountType);
+        $order         = null;
         if (!array_key_exists('order', $data)) {
             $order = $maxOrder + 1;
         }
         if (array_key_exists('order', $data)) {
-            $order = (int)($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
+            $order = (int) ($data['order'] > $maxOrder ? $maxOrder + 1 : $data['order']);
             $order = 0 === $order ? $maxOrder + 1 : $order;
         }
 
