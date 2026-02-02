@@ -27,9 +27,9 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
 use FireflyIII\Support\Singleton\PreferencesSingleton;
 use Illuminate\Support\Collection;
@@ -44,23 +44,7 @@ class BudgetLimitObserver
         Log::debug('Observe "created" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
         $this->updateAvailableBudget($budgetLimit);
-
-        // this is a lame trick to communicate with the observer.
-        $singleton = PreferencesSingleton::getInstance();
-
-        if (true === $singleton->getPreference('fire_webhooks_bl_store')) {
-            $user = $budgetLimit->budget->user;
-
-            /** @var MessageGeneratorInterface $engine */
-            $engine = app(MessageGeneratorInterface::class);
-            $engine->setUser($user);
-            $engine->setObjects(new Collection()->push($budgetLimit));
-            $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
-            $engine->generateMessages();
-
-            Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
-            event(new WebhookMessagesRequestSending());
-        }
+        $this->sendWebhookMessages('fire_webhooks_bl_store', WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT, $budgetLimit);
     }
 
     public function updated(BudgetLimit $budgetLimit): void
@@ -68,18 +52,22 @@ class BudgetLimitObserver
         Log::debug('Observe "updated" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
         $this->updateAvailableBudget($budgetLimit);
+        $this->sendWebhookMessages('fire_webhooks_bl_update', WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT, $budgetLimit);
+    }
 
+    private function sendWebhookMessages(string $key, WebhookTrigger $trigger, BudgetLimit $budgetLimit): void
+    {
         // this is a lame trick to communicate with the observer.
         $singleton = PreferencesSingleton::getInstance();
 
-        if (true === $singleton->getPreference('fire_webhooks_bl_update')) {
+        if (true === $singleton->getPreference($key)) {
             $user = $budgetLimit->budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);
             $engine->setUser($user);
             $engine->setObjects(new Collection()->push($budgetLimit));
-            $engine->setTrigger(WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT);
+            $engine->setTrigger($trigger);
             $engine->generateMessages();
 
             Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
@@ -89,20 +77,12 @@ class BudgetLimitObserver
 
     private function updatePrimaryCurrencyAmount(BudgetLimit $budgetLimit): void
     {
-        if (!Amount::convertToPrimary($budgetLimit->budget->user)) {
-            // Log::debug('Do not update primary currency amount of the budget limit.');
-
-            return;
-        }
-        $userCurrency               = Amount::getPrimaryCurrencyByUserGroup($budgetLimit->budget->user->userGroup);
-        $budgetLimit->native_amount = null;
-        if ($budgetLimit->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
-            $converter->setUserGroup($budgetLimit->budget->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $budgetLimit->native_amount = $converter->convert($budgetLimit->transactionCurrency, $userCurrency, today(), $budgetLimit->amount);
-        }
-        $budgetLimit->saveQuietly();
-        Log::debug('Budget limit primary currency amounts are updated.');
+        $params                     = new ConversionParameters();
+        $params->user               = $budgetLimit->budget->user;
+        $params->model              = $budgetLimit;
+        $params->originalCurrency   = $budgetLimit->transactionCurrency;
+        $params->amountField        = 'amount';
+        $params->primaryAmountField = 'native_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }
