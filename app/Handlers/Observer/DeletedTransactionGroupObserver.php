@@ -29,7 +29,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TransactionGroup
  */
-class TransactionGroupObserver
+class DeletedTransactionGroupObserver
 {
     public function deleting(TransactionGroup $transactionGroup): void
     {

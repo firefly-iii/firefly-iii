@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\TransactionGroupObserver;
+use FireflyIII\Handlers\Observer\DeletedTransactionGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -41,7 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property UserGroup                      $userGroup
  * @property Collection<TransactionJournal> $transactionJournals
  */
-#[ObservedBy([TransactionGroupObserver::class])]
+#[ObservedBy([DeletedTransactionGroupObserver::class])]
 class TransactionGroup extends Model
 {
     use ReturnsIntegerIdTrait;
