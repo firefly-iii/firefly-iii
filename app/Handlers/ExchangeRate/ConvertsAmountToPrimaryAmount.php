@@ -21,41 +21,44 @@
 
 namespace FireflyIII\Handlers\ExchangeRate;
 
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use FireflyIII\User;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 class ConvertsAmountToPrimaryAmount
 {
-    public static function convert(User $user, Model $model, TransactionCurrency $originalCurrency, string $amountField, string $primaryAmountField): void
+    public static function convert(ConversionParameters $params): void
     {
-        if (!Amount::convertToPrimary($user)) {
+        if (!Amount::convertToPrimary($params->user)) {
             Log::debug(sprintf('User does not want to do conversion, no need to convert %s and store it in field %s.', $amountField, $primaryAmountField));
             return;
         }
-        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
-        Log::debug(sprintf('Will convert amount in field %s from %s to %s and store it in %s', $originalCurrency->code, $primaryCurrency->code, $amountField, $primaryAmountField));
-        if ($originalCurrency->id === $primaryCurrency->id) {
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($params->user->userGroup);
+        Log::debug(sprintf('Will convert amount in field %s from %s to %s and store it in %s', $params->originalCurrency->code, $primaryCurrency->code, $params->amountField, $params->primaryAmountField));
+        if ($params->originalCurrency->id === $primaryCurrency->id) {
             Log::debug('Both currencies are the same, do nothing.');
             return;
         }
+        $amountField        = $params->amountField;
+        $primaryAmountField = $params->primaryAmountField;
+
+
         // field is empty or zero, do nothing.
-        $amount = (string)$model->$amountField;
-        if ('' === $amount || 0 !== bccomp($amount, '0')) {
+        $amount = (string)$params->model->$amountField;
+        if ('' === $amount || 0 === bccomp($amount, '0')) {
             Log::debug(sprintf('Amount "%s" in field "%s" cannot be used, do nothing.', $amount, $amountField));
-            $model->$amountField        = null;
-            $model->$primaryAmountField = null;
-            $model->saveQuietly();
+            $params->model->$amountField        = null;
+            $params->model->$primaryAmountField = null;
+            $params->model->saveQuietly();
             return;
         }
         $converter = new ExchangeRateConverter();
-        $converter->setUserGroup($user->userGroup);
+        $newAmount = $converter->convert($params->originalCurrency, $primaryCurrency, now(), $amount);
+        $converter->setUserGroup($params->user->userGroup);
         $converter->setIgnoreSettings(true);
-        $model->$primaryAmountField = $converter->convert($originalCurrency, $primaryCurrency, today(), $amount);
-        $model->saveQuietly();
+        $params->model->$primaryAmountField = $newAmount;
+        $params->model->saveQuietly();
+        Log::debug(sprintf('Converted field "%s" of %s #%d from %s %s to %s %s (in field "%s")', $amountField, get_class($params->model), $params->model->id, $params->originalCurrency->code, $amount, $primaryCurrency->code, $newAmount, $primaryAmountField));
     }
 
 }
