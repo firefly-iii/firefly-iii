@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * TriggersCreditRecalculation.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdatesAccountInformation
 {
-    public function handle(CreatedNewAccount | UpdatedExistingAccount $event): void
+    public function handle(CreatedNewAccount|UpdatedExistingAccount $event): void
     {
         $this->recalculateCredit($event->account);
         $this->updateVirtualBalance($event->account);
@@ -41,6 +44,7 @@ class UpdatesAccountInformation
     private function recalculateCredit(Account $account): void
     {
         Log::debug('Will call CreditRecalculateService because a new account was created.');
+
         /** @var CreditRecalculateService $object */
         $object = app(CreditRecalculateService::class);
         $object->setAccount($account);
@@ -51,6 +55,7 @@ class UpdatesAccountInformation
     {
         if (!Amount::convertToPrimary($account->user)) {
             Log::debug('After account creation, no need to convert virtual balance.');
+
             return;
         }
         Log::debug('After account creation, convert virtual balance.');
@@ -60,15 +65,15 @@ class UpdatesAccountInformation
         if (
             null !== $currency
             && $currency->id !== $userCurrency->id
-            && '' !== (string)$account->virtual_balance
+            && '' !== (string) $account->virtual_balance
             && 0 !== bccomp($account->virtual_balance, '0')
         ) {
-            $converter = new ExchangeRateConverter();
+            $converter                       = new ExchangeRateConverter();
             $converter->setUserGroup($account->user->userGroup);
             $converter->setIgnoreSettings(true);
             $account->native_virtual_balance = $converter->convert($currency, $userCurrency, today(), $account->virtual_balance);
         }
-        if ('' === (string)$account->virtual_balance || 0 === bccomp($account->virtual_balance, '0')) {
+        if ('' === (string) $account->virtual_balance || 0 === bccomp($account->virtual_balance, '0')) {
             $account->virtual_balance        = null;
             $account->native_virtual_balance = null;
         }
@@ -76,6 +81,4 @@ class UpdatesAccountInformation
 
         // Log::debug('Account primary currency virtual balance is updated.');
     }
-
-
 }

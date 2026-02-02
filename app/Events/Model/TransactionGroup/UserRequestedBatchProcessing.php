@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UserRequestedBatchProcessing.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -26,9 +29,9 @@ use Illuminate\Support\Facades\Log;
 
 class UserRequestedBatchProcessing extends Event
 {
-    public function __construct(public TransactionGroupEventFlags $flags)
-    {
+    public function __construct(
+        public TransactionGroupEventFlags $flags
+    ) {
         Log::debug(__METHOD__);
     }
-
 }
