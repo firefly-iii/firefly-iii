@@ -23,6 +23,7 @@ namespace FireflyIII\Listeners\Model\Account;
 
 use FireflyIII\Events\Model\Account\CreatedNewAccount;
 use FireflyIII\Events\Model\Account\UpdatedExistingAccount;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\CreditRecalculateService;
@@ -49,6 +50,16 @@ class UpdatesAccountInformation
 
     private function updateVirtualBalance(Account $account): void
     {
+         $repository   = app(AccountRepositoryInterface::class);
+         $currency     = $repository->getAccountCurrency($account);
+
+        if(null !== $currency) {
+            // moet dit alleen als het NIET null is?
+            ConvertsAmountToPrimaryAmount::convert($account->user, $account, $currency, 'virtual_balance', 'native_virtual_balance');
+
+        }
+        return;
+
         if (!Amount::convertToPrimary($account->user)) {
             Log::debug('After account creation, no need to convert virtual balance.');
             return;
