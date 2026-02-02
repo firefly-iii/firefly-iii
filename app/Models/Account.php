@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Enums\AccountTypeEnum;
-use FireflyIII\Handlers\Observer\AccountObserver;
+use FireflyIII\Handlers\Observer\DeletedAccountObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -42,7 +42,7 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([AccountObserver::class])]
+#[ObservedBy([DeletedAccountObserver::class])]
 class Account extends Model
 {
     use HasFactory;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * RuleObserver.php
+ * RecurrenceTransactionObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,18 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Rule;
+use FireflyIII\Models\RecurrenceTransaction;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class RuleObserver
+ * Class RecurrenceTransactionObserver
  */
-class RuleObserver
+class DeletedRecurrenceTransactionObserver
 {
-    public function deleting(Rule $rule): void
+    public function deleting(RecurrenceTransaction $transaction): void
     {
-        Log::debug('Observe "deleting" of a rule.');
-        $rule->ruleActions()->delete();
-        $rule->ruleTriggers()->delete();
+        Log::debug('Observe "deleting" of a recurrence transaction.');
+        $transaction->recurrenceTransactionMeta()->delete();
     }
 }

@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\RuleObserver;
+use FireflyIII\Handlers\Observer\DeletedRuleObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -38,7 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * @property User $user
  */
-#[ObservedBy([RuleObserver::class])]
+#[ObservedBy([DeletedRuleObserver::class])]
 class Rule extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -36,6 +36,7 @@ class AutoBudgetObserver
         Log::debug('Observe "created" of an auto budget.');
         $this->updatePrimaryCurrencyAmount($autoBudget);
     }
+
     public function updated(AutoBudget $autoBudget): void
     {
         Log::debug('Observe "updated" of an auto budget.');

@@ -26,7 +26,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
-use FireflyIII\Handlers\Observer\RecurrenceObserver;
+use FireflyIII\Handlers\Observer\DeletedRecurrenceObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -43,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon      $first_date
  * @property null|Carbon $latest_date
  */
-#[ObservedBy([RecurrenceObserver::class])]
+#[ObservedBy([DeletedRecurrenceObserver::class])]
 class Recurrence extends Model
 {
     use ReturnsIntegerIdTrait;

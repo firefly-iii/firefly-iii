@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\RuleGroupObserver;
+use FireflyIII\Handlers\Observer\DeletedRuleGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -40,7 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User       $user
  * @property Collection $rules
  */
-#[ObservedBy([RuleGroupObserver::class])]
+#[ObservedBy([DeletedRuleGroupObserver::class])]
 class RuleGroup extends Model
 {
     use ReturnsIntegerIdTrait;

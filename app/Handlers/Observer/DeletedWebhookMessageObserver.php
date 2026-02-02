@@ -1,7 +1,7 @@
 <?php
 
 /*
- * TagObserver.php
+ * WebhookMessageObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,28 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Tag;
-use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Models\WebhookMessage;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class TagObserver
+ * Class WebhookMessageObserver
  */
-class TagObserver
+class DeletedWebhookMessageObserver
 {
-    public function deleting(Tag $tag): void
+    public function deleting(WebhookMessage $webhookMessage): void
     {
-        Log::debug('Observe "deleting" of a tag.');
-
-        $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($tag->user);
-
-        /** @var Attachment $attachment */
-        foreach ($tag->attachments()->get() as $attachment) {
-            $repository->destroy($attachment);
-        }
-
-        $tag->locations()->delete();
+        Log::debug('Observe "deleting" of a webhook message.');
+        $webhookMessage->webhookAttempts()->delete();
     }
 }

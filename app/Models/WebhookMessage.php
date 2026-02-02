@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\WebhookMessageObserver;
+use FireflyIII\Handlers\Observer\DeletedWebhookMessageObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([WebhookMessageObserver::class])]
+#[ObservedBy([DeletedWebhookMessageObserver::class])]
 class WebhookMessage extends Model
 {
     use ReturnsIntegerIdTrait;

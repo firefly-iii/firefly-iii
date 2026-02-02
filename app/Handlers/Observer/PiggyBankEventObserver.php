@@ -37,9 +37,15 @@ class PiggyBankEventObserver
         $this->updatePrimaryCurrencyAmount($event);
     }
 
+    public function updated(PiggyBankEvent $event): void
+    {
+        Log::debug('Observe "updated" of a piggy bank event.');
+        $this->updatePrimaryCurrencyAmount($event);
+    }
+
     private function updatePrimaryCurrencyAmount(PiggyBankEvent $event): void
     {
-        $user                 = $event->piggyBank->accounts()->first()?->user;
+        $user = $event->piggyBank->accounts()->first()?->user;
         if (null === $user) {
             Log::warning('Piggy bank seems to have no accounts. Break.');
 
@@ -51,18 +57,12 @@ class PiggyBankEventObserver
         $userCurrency         = Amount::getPrimaryCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
         $event->native_amount = null;
         if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {
-            $converter            = new ExchangeRateConverter();
+            $converter = new ExchangeRateConverter();
             $converter->setUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
             $converter->setIgnoreSettings(true);
             $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
         }
         $event->saveQuietly();
         Log::debug('Piggy bank event primary currency amount is updated.');
-    }
-
-    public function updated(PiggyBankEvent $event): void
-    {
-        Log::debug('Observe "updated" of a piggy bank event.');
-        $this->updatePrimaryCurrencyAmount($event);
     }
 }

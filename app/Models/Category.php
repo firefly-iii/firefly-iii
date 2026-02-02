@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\CategoryObserver;
+use FireflyIII\Handlers\Observer\DeletedCategoryObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([CategoryObserver::class])]
+#[ObservedBy([DeletedCategoryObserver::class])]
 class Category extends Model
 {
     use ReturnsIntegerIdTrait;

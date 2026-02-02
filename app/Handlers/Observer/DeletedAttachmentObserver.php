@@ -1,7 +1,7 @@
 <?php
 
 /*
- * RuleGroupObserver.php
+ * AttachmentObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,19 +23,17 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\Attachment;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class RuleGroupObserver
+ * Class AttachmentObserver
  */
-class RuleGroupObserver
+class DeletedAttachmentObserver
 {
-    public function deleting(RuleGroup $ruleGroup): void
+    public function deleting(Attachment $attachment): void
     {
-        Log::debug('Observe "deleting" of a rule group.');
-        foreach ($ruleGroup->rules()->get() as $rule) {
-            $rule->delete();
-        }
+        Log::debug('Observe "deleting" of an attachment.');
+        $attachment->notes()->delete();
     }
 }

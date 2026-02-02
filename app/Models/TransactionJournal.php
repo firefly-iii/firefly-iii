@@ -26,7 +26,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Handlers\Observer\TransactionJournalObserver;
+use FireflyIII\Handlers\Observer\DeletedTransactionJournalObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -50,7 +50,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property TransactionGroup $transactionGroup
  */
-#[ObservedBy([TransactionJournalObserver::class])]
+#[ObservedBy([DeletedTransactionJournalObserver::class])]
 class TransactionJournal extends Model
 {
     use HasFactory;

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * RecurrenceObserver.php
+ * TagObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -24,32 +24,27 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class RecurrenceObserver
+ * Class TagObserver
  */
-class RecurrenceObserver
+class DeletedTagObserver
 {
-    public function deleting(Recurrence $recurrence): void
+    public function deleting(Tag $tag): void
     {
-        Log::debug('Observe "deleting" of a recurrence.');
+        Log::debug('Observe "deleting" of a tag.');
 
         $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($recurrence->user);
+        $repository->setUser($tag->user);
 
         /** @var Attachment $attachment */
-        foreach ($recurrence->attachments()->get() as $attachment) {
+        foreach ($tag->attachments()->get() as $attachment) {
             $repository->destroy($attachment);
         }
 
-        $recurrence->recurrenceRepetitions()->delete();
-        $recurrence->recurrenceMeta()->delete();
-        foreach ($recurrence->recurrenceTransactions()->get() as $transaction) {
-            $transaction->delete();
-        }
-        $recurrence->notes()->delete();
+        $tag->locations()->delete();
     }
 }

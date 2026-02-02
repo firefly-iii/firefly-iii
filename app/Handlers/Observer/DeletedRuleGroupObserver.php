@@ -1,7 +1,7 @@
 <?php
 
 /*
- * CategoryObserver.php
+ * RuleGroupObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,27 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Models\RuleGroup;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class CategoryObserver
+ * Class RuleGroupObserver
  */
-class CategoryObserver
+class DeletedRuleGroupObserver
 {
-    public function deleting(Category $category): void
+    public function deleting(RuleGroup $ruleGroup): void
     {
-        Log::debug('Observe "deleting" of a category.');
-
-        $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($category->user);
-
-        /** @var Attachment $attachment */
-        foreach ($category->attachments()->get() as $attachment) {
-            $repository->destroy($attachment);
+        Log::debug('Observe "deleting" of a rule group.');
+        foreach ($ruleGroup->rules()->get() as $rule) {
+            $rule->delete();
         }
-        $category->notes()->delete();
     }
 }

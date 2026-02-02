@@ -1,7 +1,7 @@
 <?php
 
 /*
- * WebhookMessageObserver.php
+ * WebhookObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,17 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\WebhookMessage;
+use FireflyIII\Models\Webhook;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class WebhookMessageObserver
+ * Class WebhookObserver
  */
-class WebhookMessageObserver
+class DeletedWebhookObserver
 {
-    public function deleting(WebhookMessage $webhookMessage): void
+    public function deleting(Webhook $webhook): void
     {
-        Log::debug('Observe "deleting" of a webhook message.');
-        $webhookMessage->webhookAttempts()->delete();
+        Log::debug('Observe "deleting" of a webhook.');
+        foreach ($webhook->webhookMessages()->get() as $message) {
+            $message->delete();
+        }
     }
 }

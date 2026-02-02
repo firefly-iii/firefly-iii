@@ -1,7 +1,7 @@
 <?php
 
 /*
- * WebhookObserver.php
+ * CategoryObserver.php
  * Copyright (c) 2023 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
@@ -23,19 +23,27 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Webhook;
+use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Support\Facades\Log;
 
 /**
- * Class WebhookObserver
+ * Class CategoryObserver
  */
-class WebhookObserver
+class DeletedCategoryObserver
 {
-    public function deleting(Webhook $webhook): void
+    public function deleting(Category $category): void
     {
-        Log::debug('Observe "deleting" of a webhook.');
-        foreach ($webhook->webhookMessages()->get() as $message) {
-            $message->delete();
+        Log::debug('Observe "deleting" of a category.');
+
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($category->user);
+
+        /** @var Attachment $attachment */
+        foreach ($category->attachments()->get() as $attachment) {
+            $repository->destroy($attachment);
         }
+        $category->notes()->delete();
     }
 }

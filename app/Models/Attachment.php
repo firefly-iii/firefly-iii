@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AttachmentObserver;
+use FireflyIII\Handlers\Observer\DeletedAttachmentObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([AttachmentObserver::class])]
+#[ObservedBy([DeletedAttachmentObserver::class])]
 class Attachment extends Model
 {
     use ReturnsIntegerIdTrait;

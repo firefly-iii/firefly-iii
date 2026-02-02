@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 
-class AccountObserver
+class DeletedAccountObserver
 {
     public function deleting(Account $account): void
     {
@@ -51,14 +51,13 @@ class AccountObserver
         }
 
         $journalIds = Transaction::where('account_id', $account->id)
-            ->get(['transactions.transaction_journal_id'])
-            ->pluck('transaction_journal_id')
-            ->toArray()
-        ;
+                                 ->get(['transactions.transaction_journal_id'])
+                                 ->pluck('transaction_journal_id')
+                                 ->toArray();
         $groupIds   = TransactionJournal::whereIn('id', $journalIds)
-            ->get(['transaction_journals.transaction_group_id'])
-            ->pluck('transaction_group_id')
-            ->toArray() // @phpstan-ignore-line
+                                        ->get(['transaction_journals.transaction_group_id'])
+                                        ->pluck('transaction_group_id')
+                                        ->toArray() // @phpstan-ignore-line
         ;
 
         if (count($journalIds) > 0) {

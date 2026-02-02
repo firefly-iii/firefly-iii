@@ -27,7 +27,7 @@ namespace FireflyIII\Models;
 use FireflyIII\Enums\WebhookDelivery as WebhookDeliveryEnum;
 use FireflyIII\Enums\WebhookResponse as WebhookResponseEnum;
 use FireflyIII\Enums\WebhookTrigger as WebhookTriggerEnum;
-use FireflyIII\Handlers\Observer\WebhookObserver;
+use FireflyIII\Handlers\Observer\DeletedWebhookObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -39,7 +39,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([WebhookObserver::class])]
+#[ObservedBy([DeletedWebhookObserver::class])]
 class Webhook extends Model
 {
     use ReturnsIntegerIdTrait;
