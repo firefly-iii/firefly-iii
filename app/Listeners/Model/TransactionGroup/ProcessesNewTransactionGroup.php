@@ -68,7 +68,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         }
         Log::debug(sprintf('Will (joined with group #%d) collect all open transaction groups and process them.', $groupId));
         $repository = app(JournalRepositoryInterface::class);
-        $set        = $collection->merge($repository->getUncompletedJournals());
+        $set        = $collection->merge($repository->getAllUncompletedJournals());
         if (0 === $set->count()) {
             Log::debug('Set is empty, never mind.');
 
@@ -141,11 +141,13 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
     private function removePeriodStatistics(Collection $set): void
     {
+        if(auth()->check()) {
         Log::debug('Always remove period statistics');
 
         /** @var PeriodStatisticRepositoryInterface $repository */
         $repository = app(PeriodStatisticRepositoryInterface::class);
         $repository->deleteStatisticsForCollection($set);
+        }
     }
 
     private function fireWebhooks(Collection $set): void
