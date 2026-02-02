@@ -33,14 +33,9 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class AccountObserver
- */
+
 class AccountObserver
 {
-    /**
-     * Also delete related objects.
-     */
     public function deleting(Account $account): void
     {
         Log::debug('Observe "deleting" of an account.');
