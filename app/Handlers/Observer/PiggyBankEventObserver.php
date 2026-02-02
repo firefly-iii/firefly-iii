@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\PiggyBankEvent;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventObserver
@@ -51,18 +51,13 @@ class PiggyBankEventObserver
 
             return;
         }
-        if (!Amount::convertToPrimary($user)) {
-            return;
-        }
-        $userCurrency         = Amount::getPrimaryCurrencyByUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
-        $event->native_amount = null;
-        if ($event->piggyBank->transactionCurrency->id !== $userCurrency->id) {
-            $converter = new ExchangeRateConverter();
-            $converter->setUserGroup($event->piggyBank->accounts()->first()->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $event->native_amount = $converter->convert($event->piggyBank->transactionCurrency, $userCurrency, today(), $event->amount);
-        }
-        $event->saveQuietly();
-        Log::debug('Piggy bank event primary currency amount is updated.');
+
+        $params                     = new ConversionParameters();
+        $params->user               = $user;
+        $params->model              = $event;
+        $params->originalCurrency   = $event->piggyBank->transactionCurrency;
+        $params->amountField        = 'amount';
+        $params->primaryAmountField = 'native_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }
