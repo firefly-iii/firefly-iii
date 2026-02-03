@@ -1,8 +1,7 @@
 <?php
-
-/**
- * APIEventHandler.php
- * Copyright (c) 2019 james@firefly-iii.org
+/*
+ * NotifiesUserAboutNewAccessToken.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,33 +19,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace FireflyIII\Listeners\Security\User;
 
-namespace FireflyIII\Handlers\Events;
-
-use Exception;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\NewAccessToken;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 use Laravel\Passport\Events\AccessTokenCreated;
 
-/**
- * Class APIEventHandler
- */
-class APIEventHandler
+class NotifiesUserAboutNewAccessToken
 {
-    /**
-     * Respond to the creation of an access token.
-     */
-    public function accessTokenCreated(AccessTokenCreated $event): void
+    public function handle(AccessTokenCreated $event): void
     {
-        Log::debug(__METHOD__);
-
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find((int) $event->userId);
+        $user       = $repository->find((int)$event->userId);
 
         if (null !== $user) {
             NotificationSender::send($user, new NewAccessToken());
