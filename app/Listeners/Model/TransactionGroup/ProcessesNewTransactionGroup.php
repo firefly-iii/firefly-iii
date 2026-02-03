@@ -141,7 +141,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         AccountBalanceCalculator::optimizedCalculation($accounts, $earliest);
     }
 
-    private function removePeriodStatistics(Collection $set): void
+    public static function removePeriodStatistics(Collection $set): void
     {
         if (auth()->check()) {
             Log::debug('Always remove period statistics');

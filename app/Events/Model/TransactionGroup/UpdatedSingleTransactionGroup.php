@@ -1,10 +1,7 @@
 <?php
-
-declare(strict_types=1);
-
 /*
- * TriggeredStoredTransactionGroup.php
- * Copyright (c) 2025 james@firefly-iii.org
+ * UpdatedSingleTransactionGroup.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -25,26 +22,15 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
 
-/**
- * @deprecated
- */
-class TriggeredStoredTransactionGroup extends Event
+class UpdatedSingleTransactionGroup extends Event
 {
     use SerializesModels;
-
-    public ?RuleGroup $ruleGroup = null;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public TransactionGroup $transactionGroup,
-        ?RuleGroup $ruleGroup = null
-    ) {
-        $this->ruleGroup = $ruleGroup;
-    }
+    public function __construct(public TransactionGroup $transactionGroup, public TransactionGroupEventFlags $flags) {}
 }
