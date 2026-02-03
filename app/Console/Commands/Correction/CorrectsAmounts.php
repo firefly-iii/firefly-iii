@@ -38,6 +38,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\GenericDestroyService;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Console\Command;
@@ -51,9 +53,13 @@ class CorrectsAmounts extends Command
 
     protected $description = 'This command makes sure positive and negative amounts are recorded correctly.';
     protected $signature   = 'correction:amounts';
+    private JournalDestroyService $service;
+    private GenericDestroyService $genericService;
 
     public function handle(): int
     {
+        $this->service = new JournalDestroyService();
+        $this->genericService = new GenericDestroyService();
         // transfers must not have foreign currency info if both accounts have the same currency.
         $this->correctTransfers();
         // auto budgets must be positive
@@ -177,8 +183,7 @@ class CorrectsAmounts extends Command
 
     private function deleteJournal(TransactionJournal $journal): void
     {
-        $journal->transactionGroup?->delete();
-        $journal->delete();
+        $this->service->destroy($journal);
     }
 
     private function fixAutoBudgets(): void
@@ -282,7 +287,7 @@ class CorrectsAmounts extends Command
             ));
             $item->rule->active = false;
             $item->rule->save();
-            $item->forceDelete();
+            $this->genericService->deleteRuleTrigger($item);
 
             return false;
         }

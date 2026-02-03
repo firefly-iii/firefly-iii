@@ -37,6 +37,7 @@ class TransactionObserver
 
     public function created(Transaction $transaction): void
     {
+        Log::debug(sprintf('Observed creation of Transaction #%d.', $transaction->id));
         $this->updatePrimaryCurrencyAmount($transaction);
     }
 
