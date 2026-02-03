@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
-use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
@@ -47,7 +46,6 @@ class CorrectsTimezoneInformation extends Command
     use ShowsFriendlyMessages;
 
     public static array $models = [
-        AccountBalance::class       => ['date'], // done
         AvailableBudget::class      => ['start_date', 'end_date'], // done
         Bill::class                 => ['date', 'end_date', 'extension_date'], // done
         BudgetLimit::class          => ['start_date', 'end_date'], // done

@@ -48,6 +48,7 @@ use Illuminate\Support\Collection;
  */
 interface RecurringRepositoryInterface
 {
+    public function setLatestDate(Recurrence $recurrence, Carbon $date): Recurrence;
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool;
 
     /**

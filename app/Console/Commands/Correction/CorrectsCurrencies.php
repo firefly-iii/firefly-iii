@@ -74,8 +74,7 @@ class CorrectsCurrencies extends Command
             ->where('accounts.user_group_id', $userGroup->id)
             ->where('account_meta.name', 'currency_id')
             ->groupBy('data')
-            ->get(['data'])
-        ;
+            ->get(['data']);
         foreach ($meta as $entry) {
             $found[] = (int) $entry->data;
         }

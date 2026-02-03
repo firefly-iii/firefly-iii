@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests\Models\BudgetLimit;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Facades\Amount;
@@ -98,8 +99,8 @@ class StoreRequest extends FormRequest
             if (null === $currency) {
                 $currency = Amount::getPrimaryCurrency();
             }
-            $currency->enabled = true;
-            $currency->save();
+            $repository = app(CurrencyRepositoryInterface::class);
+            $repository->enable($currency);
 
             // validator already concluded start and end are valid dates:
             $start             = Carbon::parse($data['start'], config('app.timezone'));

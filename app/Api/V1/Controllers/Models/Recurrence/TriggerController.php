@@ -79,9 +79,7 @@ class TriggerController extends Controller
 
         $groups                     = $job->getGroups();
         $this->repository->markGroupsAsNow($groups);
-        $recurrence->latest_date    = $backupDate;
-        $recurrence->latest_date_tz = $backupDate?->format('e');
-        $recurrence->save();
+        $recurrence = $this->repository->setLatestDate($recurrence, $backupDate);
         Preferences::mark();
 
         // enrich groups and return them:

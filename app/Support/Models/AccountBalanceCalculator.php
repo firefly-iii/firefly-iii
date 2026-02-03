@@ -25,12 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Models;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountBalance;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Support\Collection;
@@ -58,7 +54,7 @@ class AccountBalanceCalculator
         if ($forced) {
             Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
             // also delete account balances.
-            AccountBalance::whereNotNull('created_at')->delete();
+            // AccountBalance::whereNotNull('created_at')->delete();
         }
         $object = new self();
         self::optimizedCalculation(new Collection());
@@ -70,17 +66,17 @@ class AccountBalanceCalculator
             return;
         }
         Log::debug(__METHOD__);
-        $object   = new self();
+        $object = new self();
 
-        $set      = [];
+        $set = [];
         foreach ($transactionJournal->transactions as $transaction) {
             $set[$transaction->account_id] = $transaction->account;
         }
         $accounts = new Collection()->push(...$set);
 
         // find meta value:
-        $date     = $transactionJournal->date;
-        $meta     = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
+        $date = $transactionJournal->date;
+        $meta = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
         Log::debug(sprintf('Date used is "%s"', $date->toW3cString()));
         if (null !== $meta) {
             $date = Carbon::parse($meta->data);
@@ -97,29 +93,28 @@ class AccountBalanceCalculator
 
             return '0';
         }
-        $query   = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->whereNull('transactions.deleted_at')
-            ->where('transactions.transaction_currency_id', $currencyId)
-            ->whereNull('transaction_journals.deleted_at')
+        $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->whereNull('transactions.deleted_at')
+                            ->where('transactions.transaction_currency_id', $currencyId)
+                            ->whereNull('transaction_journals.deleted_at')
             // this order is the same as GroupCollector
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('transactions.amount', 'DESC')
-            ->where('transactions.account_id', $accountId)
-        ;
+                            ->orderBy('transaction_journals.date', 'DESC')
+                            ->orderBy('transaction_journals.order', 'ASC')
+                            ->orderBy('transaction_journals.id', 'DESC')
+                            ->orderBy('transaction_journals.description', 'DESC')
+                            ->orderBy('transactions.amount', 'DESC')
+                            ->where('transactions.account_id', $accountId);
         $query->where('transaction_journals.date', '<', $notBefore);
 
-        $first   = $query->first([
-            'transactions.id',
-            'transactions.balance_dirty',
-            'transactions.transaction_currency_id',
-            'transaction_journals.date',
-            'transactions.account_id',
-            'transactions.amount',
-            'transactions.balance_after',
-        ]);
+        $first = $query->first([
+                                   'transactions.id',
+                                   'transactions.balance_dirty',
+                                   'transactions.transaction_currency_id',
+                                   'transaction_journals.date',
+                                   'transactions.account_id',
+                                   'transactions.amount',
+                                   'transactions.balance_after',
+                               ]);
 
         if (null === $first) {
             Log::debug(sprintf('Found no transactions for currency #%d and account #%d, return 0.', $currencyId, $accountId));
@@ -127,13 +122,13 @@ class AccountBalanceCalculator
             return '0';
         }
 
-        $balance = (string) ($first->balance_after ?? '0');
+        $balance = (string)($first->balance_after ?? '0');
         Log::debug(sprintf(
-            'getLatestBalance: found balance: %s in transaction #%d on moment %s',
-            Steam::bcround($balance, 2),
-            $first->id ?? 0,
-            $notBefore->format('Y-m-d H:i:s')
-        ));
+                       'getLatestBalance: found balance: %s in transaction #%d on moment %s',
+                       Steam::bcround($balance, 2),
+                       $first->id ?? 0,
+                       $notBefore->format('Y-m-d H:i:s')
+                   ));
 
         return $balance;
     }
@@ -152,15 +147,14 @@ class AccountBalanceCalculator
         $balances = [];
         $count    = 0;
         $query    = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->whereNull('transactions.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
+                               ->whereNull('transactions.deleted_at')
+                               ->whereNull('transaction_journals.deleted_at')
             // this order is the same as GroupCollector, but in the exact reverse.
-            ->orderBy('transaction_journals.date', 'asc')
-            ->orderBy('transaction_journals.order', 'desc')
-            ->orderBy('transaction_journals.id', 'asc')
-            ->orderBy('transaction_journals.description', 'asc')
-            ->orderBy('transactions.amount', 'asc')
-        ;
+                               ->orderBy('transaction_journals.date', 'asc')
+                               ->orderBy('transaction_journals.order', 'desc')
+                               ->orderBy('transaction_journals.id', 'asc')
+                               ->orderBy('transaction_journals.description', 'asc')
+                               ->orderBy('transactions.amount', 'asc');
         if ($accounts->count() > 0) {
             $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
         }
@@ -168,14 +162,14 @@ class AccountBalanceCalculator
             $query->where('transaction_journals.date', '>=', $notBefore);
         }
 
-        $set      = $query->get([
-            'transactions.id',
-            'transactions.balance_dirty',
-            'transactions.transaction_currency_id',
-            'transaction_journals.date',
-            'transactions.account_id',
-            'transactions.amount',
-        ]);
+        $set = $query->get([
+                               'transactions.id',
+                               'transactions.balance_dirty',
+                               'transactions.transaction_currency_id',
+                               'transaction_journals.date',
+                               'transactions.account_id',
+                               'transactions.amount',
+                           ]);
         Log::debug(sprintf('Found %d transaction(s)', $set->count()));
 
         // the balance value is an array.
@@ -192,8 +186,8 @@ class AccountBalanceCalculator
             ];
 
             // before and after are easy:
-            $before                                                        = $balances[$entry->account_id][$entry->transaction_currency_id][0];
-            $after                                                         = bcadd($before, (string) $entry->amount);
+            $before = $balances[$entry->account_id][$entry->transaction_currency_id][0];
+            $after  = bcadd($before, (string)$entry->amount);
 
             // Log::debug(sprintf('Before:%s, after:%s', Steam::bcround($before, 2), Steam::bcround($after, 2)));
 
@@ -214,52 +208,5 @@ class AccountBalanceCalculator
         // then update all transactions.
         // save all collected balances in their respective account objects.
         // $this->storeAccountBalances($balances);
-    }
-
-    private function storeAccountBalances(array $balances): void
-    {
-        /**
-         * @var int   $accountId
-         * @var array $currencies
-         */
-        foreach ($balances as $accountId => $currencies) {
-            /** @var null|Account $account */
-            $account = Account::find($accountId);
-            if (null === $account) {
-                Log::error(sprintf('Could not find account #%d, will not save account balance.', $accountId));
-
-                continue;
-            }
-
-            /**
-             * @var int   $currencyId
-             * @var array $balance
-             */
-            foreach ($currencies as $currencyId => $balance) {
-                try {
-                    $currency = Amount::getTransactionCurrencyById($currencyId);
-                } catch (FireflyException) {
-                    Log::error(sprintf('Could not find currency #%d, will not save account balance.', $currencyId));
-
-                    continue;
-                }
-
-                /** @var AccountBalance $object */
-                $object          = $account
-                    ->accountBalances()
-                    ->firstOrCreate([
-                        'title'                   => 'running_balance',
-                        'balance'                 => '0',
-                        'transaction_currency_id' => $currencyId,
-                        'date'                    => $balance[1],
-                        'date_tz'                 => $balance[1]?->format('e'),
-                    ])
-                ;
-                $object->balance = $balance[0];
-                $object->date    = $balance[1];
-                $object->date_tz = $balance[1]?->format('e');
-                $object->saveQuietly();
-            }
-        }
     }
 }
