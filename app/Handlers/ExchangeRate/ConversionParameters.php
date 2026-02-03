@@ -30,7 +30,7 @@ class ConversionParameters
 {
     public User                $user;
     public Model               $model;
-    public TransactionCurrency $originalCurrency;
+    public ?TransactionCurrency $originalCurrency = null;
     public string              $amountField;
     public string              $primaryAmountField;
     public Carbon              $date;

@@ -29,8 +29,17 @@ class ConvertsAmountToPrimaryAmount
 {
     public static function convert(ConversionParameters $params): void
     {
+        $amountField        = $params->amountField;
+        $primaryAmountField = $params->primaryAmountField;
+
         if (!Amount::convertToPrimary($params->user)) {
-            Log::debug(sprintf('User does not want to do conversion, no need to convert %s and store it in field %s.', $amountField, $primaryAmountField));
+            Log::debug(sprintf('User does not want to do conversion, no need to convert %s and store it in field %s for %s #%d.', $params->amountField, $params->primaryAmountField, get_class($params->model), $params->model->id));
+            $params->model->$primaryAmountField = null;
+            $params->model->saveQuietly();
+            return;
+        }
+        if(null === $params->originalCurrency) {
+            Log::debug(sprintf('Original currency field is empty, no need to convert %s and store it in field %s for %s #%d.', $params->amountField, $params->primaryAmountField, get_class($params->model), $params->model->id));
             return;
         }
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($params->user->userGroup);
@@ -39,8 +48,6 @@ class ConvertsAmountToPrimaryAmount
             Log::debug('Both currencies are the same, do nothing.');
             return;
         }
-        $amountField        = $params->amountField;
-        $primaryAmountField = $params->primaryAmountField;
 
 
         // field is empty or zero, do nothing.
