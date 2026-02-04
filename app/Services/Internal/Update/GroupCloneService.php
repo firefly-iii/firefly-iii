@@ -26,6 +26,8 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -36,6 +38,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GroupCloneService
@@ -52,7 +55,11 @@ class GroupCloneService
 
         // event!
         $flags    = new TransactionGroupEventFlags();
-        event(new CreatedSingleTransactionGroup($newGroup, $flags));
+        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($newGroup);
+        event(new CreatedSingleTransactionGroup($flags, $objects));
+
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
 
         return $newGroup;
     }

@@ -45,12 +45,14 @@ class CreditRecalculateService
     private ?Account          $account = null;
     private ?TransactionGroup $group   = null;
     private Collection $journals;
+    private Collection $accounts;
     private AccountRepositoryInterface $repository;
     private array $work                = [];
 
     public function __construct()
     {
         $this->journals = new Collection();
+        $this->accounts = new Collection();
     }
 
     public function recalculate(): void
@@ -64,6 +66,9 @@ class CreditRecalculateService
         if ($this->account instanceof Account && !$this->group instanceof TransactionGroup) {
             // work based on account.
             $this->processAccount();
+        }
+        if($this->accounts->count() > 0) {
+            $this->processAccounts();
         }
         if ($this->journals->count() > 0) {
             $this->processJournals();
@@ -206,7 +211,7 @@ class CreditRecalculateService
             ->orderBy('transaction_journals.date', 'ASC')
             ->get(['transactions.*'])
         ;
-        $transactions->count();
+        // $transactions->count();
         //        Log::debug(sprintf('Found %d transaction(s) to process.', $total));
 
         /** @var Transaction $transaction */
@@ -493,4 +498,22 @@ class CreditRecalculateService
     {
         $this->journals = $journals;
     }
+
+    private function processAccounts(): void
+    {
+        $valid = config('firefly.valid_liabilities');
+        /** @var Account $account */
+        foreach($this->accounts as $account) {
+            if (in_array($account->accountType->type, $valid, true)) {
+                $this->work[] = $account;
+            }
+        }
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+
 }

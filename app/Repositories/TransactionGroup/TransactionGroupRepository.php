@@ -29,6 +29,8 @@ use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -413,12 +415,15 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         }
 
         Preferences::mark();
+        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
         $flags                  = new TransactionGroupEventFlags();
         $flags->applyRules      = $data['apply_rules'] ?? true;
         $flags->fireWebhooks    = $data['fire_webhooks'] ?? true;
         $flags->batchSubmission = $data['batch_submission'] ?? false;
         Log::debug('CreatedSingleTransactionGroup');
-        event(new CreatedSingleTransactionGroup($transactionGroup, $flags));
+        event(new CreatedSingleTransactionGroup($flags, $objects));
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
         return $transactionGroup;
     }
 
