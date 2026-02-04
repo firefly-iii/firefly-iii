@@ -9,6 +9,9 @@ use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -41,8 +44,8 @@ trait SupportsGroupProcessingTrait
         Log::debug(__METHOD__);
 
         /** @var TransactionJournal $first */
-        $first  = $journals->first();
-        $user   = $first->user;
+        $first = $journals->first();
+        $user  = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -56,28 +59,54 @@ trait SupportsGroupProcessingTrait
         $engine->generateMessages();
     }
 
-    protected function removePeriodStatistics(TransactionGroupEventObjects $set): void
+    protected function removePeriodStatistics(TransactionGroupEventObjects $objects): void
     {
         if (auth()->check()) {
-            Log::debug('Always remove period statistics');
-
+            // since you get a bunch of journals AND a bunch of
+            // objects, this needs to be a collection
             /** @var PeriodStatisticRepositoryInterface $repository */
             $repository = app(PeriodStatisticRepositoryInterface::class);
-            $repository->deleteStatisticsForCollection($set->transactionJournals);
+            $dates      = $this->collectDatesFromJournals($objects->transactionJournals);
+            $repository->deleteStatisticsForType(Account::class, $objects->accounts, $dates);
+            $repository->deleteStatisticsForType(Budget::class, $objects->budgets, $dates);
+            $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
+            $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
 
-            // FIXME extend for categories, accounts, etc.
+            // remove if no stuff present:
+            // remove for no tag, no cat, etc.
+            if (0 === $objects->budgets->count()) {
+                Log::debug('No budgets, delete "no_category" stats.');
+                $repository->deleteStatisticsForPrefix('no_budget', $dates);
+            }
+            if (0 === $objects->categories->count()) {
+                Log::debug('No categories, delete "no_category" stats.');
+                $repository->deleteStatisticsForPrefix('no_category', $dates);
+            }
+            if (0 === $objects->tags->count()) {
+                Log::debug('No tags, delete "no_category" stats.');
+                $repository->deleteStatisticsForPrefix('no_tag', $dates);
+            }
         }
+    }
+
+    private function collectDatesFromJournals(Collection $journals): Collection
+    {
+        $collection = $journals->pluck('date');
+        if (0 === count($collection)) {
+            $collection->push(now(config('app.timezone')));
+        }
+        return $collection;
     }
 
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
-        $array               = $set->pluck('id')->toArray();
+        $array = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first               = $set->first();
-        $journalIds          = implode(',', $array);
-        $user                = $first->user;
+        $first      = $set->first();
+        $journalIds = implode(',', $array);
+        $user       = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -87,33 +116,32 @@ trait SupportsGroupProcessingTrait
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug(sprintf('Fire processRules with ALL %s rule groups.', $type));
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules($type);
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules($type);
 
         // create and fire rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
 
     protected function recalculateRunningBalance(TransactionGroupEventObjects $objects): void
     {
+        Log::debug('Now in recalculateRunningBalance');
         if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            Log::debug('Running balance is disabled.');
             return;
         }
-        Log::debug('Now in recalculateRunningBalance');
         // find the earliest date in the set, based on date and _internal_previous_date
         $earliest         = $objects->transactionJournals->pluck('date')->sort()->first();
         $fromInternalDate = $this->getFromInternalDate($objects->transactionJournals->pluck('id')->toArray());
         $earliest         = $fromInternalDate->lt($earliest) ? $fromInternalDate : $earliest;
         Log::debug(sprintf('Found earliest date: %s', $earliest->toW3cString()));
 
-        $accounts         = Account::whereIn('id', $objects->accounts->pluck('id')->toArray())->get(['accounts.*']);
+        Log::debug('Found accounts to process', $objects->accounts->pluck('id')->toArray());
 
-        Log::debug('Found accounts to process', $accounts->pluck('id')->toArray());
-
-        AccountBalanceCalculator::optimizedCalculation($accounts, $earliest);
+        AccountBalanceCalculator::optimizedCalculation($objects->accounts, $earliest);
     }
 
     private function getFromInternalDate(array $ids): Carbon

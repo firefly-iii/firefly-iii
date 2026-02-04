@@ -184,65 +184,30 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function deleteStatisticsForCollection(Collection $set): void
     {
-        Log::debug(sprintf('Delete statistics for %d transaction journals.', count($set)));
-        // collect all transactions:
-        $transactions = Transaction::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['transactions.*']);
-        Log::debug('Collected transaction IDs', $transactions->pluck('id')->toArray());
-
-        // collect all accounts and delete stats:
-        $accounts     = Account::whereIn('id', $transactions->pluck('account_id')->toArray())->get(['accounts.*']);
-        Log::debug('Collected account IDs', $accounts->pluck('id')->toArray());
-        $dates        = $set->pluck('date');
-        $this->deleteStatisticsForType(Account::class, $accounts, $dates);
-
-        // collect all categories, and remove stats.
-        $categories   = Category::whereIn(
-            'id',
-            DB::table('category_transaction_journal')
-                ->whereIn('transaction_journal_id', $set->pluck('id')->toArray())
-                ->get(['category_transaction_journal.category_id'])
-                ->pluck('category_id')
-                ->toArray()
-        )->get(['categories.*']);
-        Log::debug('Collected category IDs', $categories->pluck('id')->toArray());
-        $this->deleteStatisticsForType(Category::class, $categories, $dates);
-
-        // budgets, same thing
-        $budgets      = Budget::whereIn(
-            'id',
-            DB::table('budget_transaction_journal')
-                ->whereIn('transaction_journal_id', $set->pluck('id')->toArray())
-                ->get(['budget_transaction_journal.budget_id'])
-                ->pluck('budget_id')
-                ->toArray()
-        )->get(['budgets.*']);
-        Log::debug('Collected budget IDs', $categories->pluck('id')->toArray());
-        $this->deleteStatisticsForType(Budget::class, $budgets, $dates);
-
-        // tags
-        $tags         = Tag::whereIn(
-            'id',
-            DB::table('tag_transaction_journal')
-                ->whereIn('transaction_journal_id', $set->pluck('id')->toArray())
-                ->get(['tag_transaction_journal.tag_id'])
-                ->pluck('tag_id')
-                ->toArray()
-        )->get(['tags.*']);
-        Log::debug('Collected tag IDs', $categories->pluck('id')->toArray());
-        $this->deleteStatisticsForType(Tag::class, $tags, $dates);
-
-        // remove for no tag, no cat, etc.
-        if (0 === $categories->count()) {
-            Log::debug('No categories, delete "no_category" stats.');
-            $this->deleteStatisticsForPrefix('no_category', $dates);
-        }
-        if (0 === $budgets->count()) {
-            Log::debug('No budgets, delete "no_category" stats.');
-            $this->deleteStatisticsForPrefix('no_budget', $dates);
-        }
-        if (0 === $tags->count()) {
-            Log::debug('No tags, delete "no_category" stats.');
-            $this->deleteStatisticsForPrefix('no_tag', $dates);
-        }
+//        Log::debug(sprintf('Delete statistics for %d transaction journals.', count($set)));
+//        // collect all transactions:
+//        $transactions = Transaction::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['transactions.*']);
+//        Log::debug('Collected transaction IDs', $transactions->pluck('id')->toArray());
+//
+//        // collect all accounts and delete stats:
+//        $accounts     = Account::whereIn('id', $transactions->pluck('account_id')->toArray())->get(['accounts.*']);
+//        Log::debug('Collected account IDs', $accounts->pluck('id')->toArray());
+//        $dates        = $set->pluck('date');
+//        $this->deleteStatisticsForType(Account::class, $accounts, $dates);
+//
+//        // remove for no tag, no cat, etc.
+//        if (0 === $categories->count()) {
+//            Log::debug('No categories, delete "no_category" stats.');
+//            $this->deleteStatisticsForPrefix('no_category', $dates);
+//        }
+//        if (0 === $budgets->count()) {
+//            Log::debug('No budgets, delete "no_category" stats.');
+//            $this->deleteStatisticsForPrefix('no_budget', $dates);
+//        }
+//        if (0 === $tags->count()) {
+//            Log::debug('No tags, delete "no_category" stats.');
+//            $this->deleteStatisticsForPrefix('no_tag', $dates);
+//        }
     }
+
 }

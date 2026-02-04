@@ -8,6 +8,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 /**
  * This class collects all objects before and after the creation, removal or updating
@@ -23,6 +24,7 @@ class TransactionGroupEventObjects
     public Collection $budgets;
     public Collection $categories;
     public Collection $tags;
+    public Collection $transactionGroups;
     public Collection $transactionJournals;
 
     public function __construct()
@@ -31,12 +33,15 @@ class TransactionGroupEventObjects
         $this->budgets             = new Collection();
         $this->categories          = new Collection();
         $this->tags                = new Collection();
+        $this->transactionGroups   = new Collection();
         $this->transactionJournals = new Collection();
     }
 
     public static function collectFromTransactionGroup(TransactionGroup $transactionGroup): self
     {
+        Log::debug(sprintf('collectFromTransactionGroup(#%d)', $transactionGroup->id));
         $object = new self();
+        $object->transactionGroups->push($transactionGroup);
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
