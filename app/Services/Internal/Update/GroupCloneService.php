@@ -24,6 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -47,6 +49,10 @@ class GroupCloneService
         foreach ($group->transactionJournals as $journal) {
             $this->cloneJournal($journal, $newGroup, $group->id);
         }
+
+        // event!
+        $flags    = new TransactionGroupEventFlags();
+        event(new CreatedSingleTransactionGroup($newGroup, $flags));
 
         return $newGroup;
     }

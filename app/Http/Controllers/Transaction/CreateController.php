@@ -76,10 +76,6 @@ class CreateController extends Controller
                 $service  = app(GroupCloneService::class);
                 $newGroup = $service->cloneGroup($group);
 
-                // event!
-                $flags    = new TransactionGroupEventFlags();
-                event(new CreatedSingleTransactionGroup($group, $flags));
-
                 Preferences::mark();
 
                 $title    = $newGroup->title ?? $newGroup->transactionJournals->first()->description;

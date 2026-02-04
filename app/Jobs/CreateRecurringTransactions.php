@@ -382,18 +382,10 @@ class CreateRecurringTransactions implements ShouldQueue
         $group                      = $this->groupRepository->store($array);
         ++$this->created;
         Log::info(sprintf('Created new transaction group #%d', $group->id));
-
-        // trigger event:
-        $flags                      = new TransactionGroupEventFlags();
-        $flags->applyRules          = $recurrence->apply_rules;
-        event(new CreatedSingleTransactionGroup($group, $flags));
-        // event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
         $this->groups->push($group);
 
         // update recurring thing:
-        $recurrence->latest_date    = $date;
-        $recurrence->latest_date_tz = $date->format('e');
-        $recurrence->save();
+        $this->repository->setLatestDate($recurrence, $date);
 
         return $group;
     }

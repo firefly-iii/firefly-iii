@@ -27,6 +27,8 @@ namespace FireflyIII\Repositories\TransactionGroup;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
@@ -43,6 +45,7 @@ use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
@@ -396,7 +399,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $factory->setUserGroup($data['user_group']);
 
         try {
-            return $factory->create($data);
+            $transactionGroup = $factory->create($data);
         } catch (DuplicateTransactionException $e) {
             Log::warning('Group repository caught group factory with a duplicate exception!');
 
@@ -408,6 +411,15 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }
+
+        Preferences::mark();
+        $flags                  = new TransactionGroupEventFlags();
+        $flags->applyRules      = $data['apply_rules'] ?? true;
+        $flags->fireWebhooks    = $data['fire_webhooks'] ?? true;
+        $flags->batchSubmission = $data['batch_submission'] ?? false;
+        Log::debug('CreatedSingleTransactionGroup');
+        event(new CreatedSingleTransactionGroup($transactionGroup, $flags));
+        return $transactionGroup;
     }
 
     /**
