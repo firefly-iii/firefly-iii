@@ -26,8 +26,6 @@ namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\PeriodStatistic;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
@@ -36,7 +34,6 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Override;
 
@@ -184,30 +181,29 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function deleteStatisticsForCollection(Collection $set): void
     {
-//        Log::debug(sprintf('Delete statistics for %d transaction journals.', count($set)));
-//        // collect all transactions:
-//        $transactions = Transaction::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['transactions.*']);
-//        Log::debug('Collected transaction IDs', $transactions->pluck('id')->toArray());
-//
-//        // collect all accounts and delete stats:
-//        $accounts     = Account::whereIn('id', $transactions->pluck('account_id')->toArray())->get(['accounts.*']);
-//        Log::debug('Collected account IDs', $accounts->pluck('id')->toArray());
-//        $dates        = $set->pluck('date');
-//        $this->deleteStatisticsForType(Account::class, $accounts, $dates);
-//
-//        // remove for no tag, no cat, etc.
-//        if (0 === $categories->count()) {
-//            Log::debug('No categories, delete "no_category" stats.');
-//            $this->deleteStatisticsForPrefix('no_category', $dates);
-//        }
-//        if (0 === $budgets->count()) {
-//            Log::debug('No budgets, delete "no_category" stats.');
-//            $this->deleteStatisticsForPrefix('no_budget', $dates);
-//        }
-//        if (0 === $tags->count()) {
-//            Log::debug('No tags, delete "no_category" stats.');
-//            $this->deleteStatisticsForPrefix('no_tag', $dates);
-//        }
+        //        Log::debug(sprintf('Delete statistics for %d transaction journals.', count($set)));
+        //        // collect all transactions:
+        //        $transactions = Transaction::whereIn('transaction_journal_id', $set->pluck('id')->toArray())->get(['transactions.*']);
+        //        Log::debug('Collected transaction IDs', $transactions->pluck('id')->toArray());
+        //
+        //        // collect all accounts and delete stats:
+        //        $accounts     = Account::whereIn('id', $transactions->pluck('account_id')->toArray())->get(['accounts.*']);
+        //        Log::debug('Collected account IDs', $accounts->pluck('id')->toArray());
+        //        $dates        = $set->pluck('date');
+        //        $this->deleteStatisticsForType(Account::class, $accounts, $dates);
+        //
+        //        // remove for no tag, no cat, etc.
+        //        if (0 === $categories->count()) {
+        //            Log::debug('No categories, delete "no_category" stats.');
+        //            $this->deleteStatisticsForPrefix('no_category', $dates);
+        //        }
+        //        if (0 === $budgets->count()) {
+        //            Log::debug('No budgets, delete "no_category" stats.');
+        //            $this->deleteStatisticsForPrefix('no_budget', $dates);
+        //        }
+        //        if (0 === $tags->count()) {
+        //            Log::debug('No tags, delete "no_category" stats.');
+        //            $this->deleteStatisticsForPrefix('no_tag', $dates);
+        //        }
     }
-
 }

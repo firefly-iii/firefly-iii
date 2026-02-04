@@ -74,6 +74,7 @@ class ProcessesUpdatedTransactionGroup
     protected function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): void
     {
         Log::debug('Now in unifyAccounts()');
+
         /** @var TransactionGroup $group */
         foreach ($updatedGroupEvent->objects->transactionGroups as $group) {
             $this->unifyAccountsForGroup($group);
@@ -91,13 +92,14 @@ class ProcessesUpdatedTransactionGroup
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first = $group
+        $first         = $group
             ->transactionJournals()
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->first();
+            ->first()
+        ;
 
         if (null === $first) {
             Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
@@ -105,15 +107,15 @@ class ProcessesUpdatedTransactionGroup
             return;
         }
 
-        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
 
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
 
         /** @var Account $destAccount */
-        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
+        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
 
-        $type = $first->transactionType->type;
+        $type          = $first->transactionType->type;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
