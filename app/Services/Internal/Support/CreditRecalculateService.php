@@ -67,7 +67,7 @@ class CreditRecalculateService
             // work based on account.
             $this->processAccount();
         }
-        if($this->accounts->count() > 0) {
+        if ($this->accounts->count() > 0) {
             $this->processAccounts();
         }
         if ($this->journals->count() > 0) {
@@ -502,8 +502,9 @@ class CreditRecalculateService
     private function processAccounts(): void
     {
         $valid = config('firefly.valid_liabilities');
+
         /** @var Account $account */
-        foreach($this->accounts as $account) {
+        foreach ($this->accounts as $account) {
             if (in_array($account->accountType->type, $valid, true)) {
                 $this->work[] = $account;
             }
@@ -514,6 +515,4 @@ class CreditRecalculateService
     {
         $this->accounts = $accounts;
     }
-
-
 }

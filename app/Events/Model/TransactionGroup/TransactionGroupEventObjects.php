@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Events\Model\TransactionGroup;
 
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -24,29 +25,32 @@ class TransactionGroupEventObjects
     public Collection $tags;
     public Collection $transactionJournals;
 
-    public function __construct() {
-        $this->accounts = new Collection();
-        $this->budgets =  new Collection();
-        $this->categories = new Collection();
-        $this->tags =new Collection();
+    public function __construct()
+    {
+        $this->accounts            = new Collection();
+        $this->budgets             = new Collection();
+        $this->categories          = new Collection();
+        $this->tags                = new Collection();
         $this->transactionJournals = new Collection();
     }
 
     public static function collectFromTransactionGroup(TransactionGroup $transactionGroup): self
     {
-        $object = new self;
+        $object = new self();
+
         /** @var TransactionJournal $journal */
-        foreach($transactionGroup->transactionJournals as $journal) {
+        foreach ($transactionGroup->transactionJournals as $journal) {
             $object->transactionJournals->push($journal);
-            $object->budgets = $object->tags->merge($journal->budgets);
+            $object->budgets    = $object->tags->merge($journal->budgets);
             $object->categories = $object->tags->merge($journal->categories);
-            $object->tags = $object->tags->merge($journal->tags);
+            $object->tags       = $object->tags->merge($journal->tags);
 
             /** @var Transaction $transaction */
-            foreach($journal->transactions as $transaction) {
+            foreach ($journal->transactions as $transaction) {
                 $object->accounts->push($transaction->account);
             }
         }
+
         return $object;
     }
 }

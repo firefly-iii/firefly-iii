@@ -1,14 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use Carbon\Carbon;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
-use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -64,10 +64,10 @@ trait SupportsGroupProcessingTrait
             /** @var PeriodStatisticRepositoryInterface $repository */
             $repository = app(PeriodStatisticRepositoryInterface::class);
             $repository->deleteStatisticsForCollection($set->transactionJournals);
+
             // FIXME extend for categories, accounts, etc.
         }
     }
-
 
     protected function processRules(Collection $set, string $type): void
     {

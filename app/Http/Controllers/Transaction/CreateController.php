@@ -24,8 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
-use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
