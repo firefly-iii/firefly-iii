@@ -53,6 +53,4 @@ class AutoBudgetObserver
         $params->primaryAmountField = 'native_amount';
         ConvertsAmountToPrimaryAmount::convert($params);
     }
-
-
 }

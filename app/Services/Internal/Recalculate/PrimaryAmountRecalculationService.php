@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * RecalculatesPrimaryAmounts.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -77,7 +80,6 @@ class PrimaryAmountRecalculationService
         $this->calculateTransactions($userGroup, $currency);
     }
 
-
     private function recalculateAccounts(UserGroup $userGroup): void
     {
         $set = $userGroup
@@ -93,7 +95,8 @@ class PrimaryAmountRecalculationService
                     $q->orWhere('virtual_balance', '!=', '');
                 }
             })
-            ->get();
+            ->get()
+        ;
 
         /** @var Account $account */
         foreach ($set as $account) {
@@ -102,28 +105,27 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Recalculated %d accounts for user group #%d.', $set->count(), $userGroup->id));
     }
 
-
     private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        $converter = new ExchangeRateConverter();
+        $converter  = new ExchangeRateConverter();
         $converter->setUserGroup($userGroup);
         $converter->setIgnoreSettings(true);
         $repository = app(PiggyBankRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set = $repository->getPiggyBanks();
-        $set = $set->filter(static fn(PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
         foreach ($set as $piggyBank) {
             $piggyBank->encrypted = false;
             $piggyBank->save();
 
             foreach ($piggyBank->accounts as $account) {
                 $account->pivot->native_current_amount = null;
-                if (0 !== bccomp((string)$account->pivot->current_amount, '0')) {
+                if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
                     $account->pivot->native_current_amount = $converter->convert(
                         $piggyBank->transactionCurrency,
                         $currency,
                         today(),
-                        (string)$account->pivot->current_amount
+                        (string) $account->pivot->current_amount
                     );
                 }
                 $account->pivot->save();
@@ -132,7 +134,6 @@ class PrimaryAmountRecalculationService
         }
         Log::debug(sprintf('Recalculated %d piggy banks for user group #%d.', $set->count(), $userGroup->id));
     }
-
 
     private function recalculatePiggyBankEvents(PiggyBank $piggyBank): void
     {
@@ -154,7 +155,6 @@ class PrimaryAmountRecalculationService
         }
         Log::debug(sprintf('Recalculated %d budgets.', $set->count()));
     }
-
 
     private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
     {
@@ -192,7 +192,6 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Recalculated %d available budgets.', $set->count()));
     }
 
-
     private function recalculateBills(UserGroup $userGroup, TransactionCurrency $currency): void
     {
         $set = $userGroup->bills()->where('transaction_currency_id', '!=', $currency->id)->get();
@@ -208,21 +207,22 @@ class PrimaryAmountRecalculationService
     {
         // custom query because of the potential size of this update.
         $set                              = DB::table('transactions')
-                                              ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                                              ->where('transaction_journals.user_group_id', $userGroup->id)
-                                              ->where(static function (DatabaseBuilder $q1) use ($currency): void {
-                                                  $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
-                                                      $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                                                  })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
-                                                      $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
-                                                  });
-                                              })
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(static function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
+            })
             //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
             //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
             //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
             //                ;
             //            })
-                                              ->get(['transactions.id']);
+            ->get(['transactions.id'])
+        ;
         TransactionObserver::$recalculate = false;
         foreach ($set as $item) {
             // here we are.
@@ -233,6 +233,4 @@ class PrimaryAmountRecalculationService
         TransactionObserver::$recalculate = true;
         Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
     }
-
-
 }

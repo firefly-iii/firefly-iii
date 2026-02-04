@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdatedSingleTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,5 +35,8 @@ class UpdatedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup, public TransactionGroupEventFlags $flags) {}
+    public function __construct(
+        public TransactionGroup $transactionGroup,
+        public TransactionGroupEventFlags $flags
+    ) {}
 }

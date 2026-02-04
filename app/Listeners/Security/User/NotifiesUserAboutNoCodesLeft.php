@@ -24,13 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserHasNoMFABackupCodesLeft;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\MFABackupNoLeftNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutNoCodesLeft implements ShouldQueue
 {
@@ -40,6 +38,6 @@ class NotifiesUserAboutNoCodesLeft implements ShouldQueue
 
         $user = $event->user;
 
-            NotificationSender::send($user, new MFABackupNoLeftNotification($user));
+        NotificationSender::send($user, new MFABackupNoLeftNotification($user));
     }
 }

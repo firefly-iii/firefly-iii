@@ -90,12 +90,12 @@ class StoreRequest extends FormRequest
             if (0 !== count($validator->failed())) {
                 return;
             }
-            $data              = $validator->getData();
+            $data       = $validator->getData();
 
             // if no currency has been provided, use the user's default currency:
             /** @var TransactionCurrencyFactory $factory */
-            $factory           = app(TransactionCurrencyFactory::class);
-            $currency          = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+            $factory    = app(TransactionCurrencyFactory::class);
+            $currency   = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
             if (null === $currency) {
                 $currency = Amount::getPrimaryCurrency();
             }
@@ -103,11 +103,11 @@ class StoreRequest extends FormRequest
             $repository->enable($currency);
 
             // validator already concluded start and end are valid dates:
-            $start             = Carbon::parse($data['start'], config('app.timezone'));
-            $end               = Carbon::parse($data['end'], config('app.timezone'));
+            $start      = Carbon::parse($data['start'], config('app.timezone'));
+            $end        = Carbon::parse($data['end'], config('app.timezone'));
 
             // find limit with same date range and currency.
-            $limit             = $budget
+            $limit      = $budget
                 ->budgetlimits()
                 ->where('budget_limits.start_date', $start->format('Y-m-d'))
                 ->where('budget_limits.end_date', $end->format('Y-m-d'))

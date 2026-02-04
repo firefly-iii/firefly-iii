@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * ProcessesDestroyedTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -42,8 +45,8 @@ class ProcessesDestroyedTransactionGroup implements ShouldQueue
     private function triggerWebhooks(DestroyedSingleTransactionGroup $destroyedGroupEvent): void
     {
         Log::debug('DestroyedTransactionGroup:triggerWebhooks');
-        $group = $destroyedGroupEvent->transactionGroup;
-        $user  = $group->user;
+        $group  = $destroyedGroupEvent->transactionGroup;
+        $user   = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);

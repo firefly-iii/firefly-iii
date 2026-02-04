@@ -40,7 +40,6 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class HandlesNewUserRegistration implements ShouldQueue
 {
@@ -70,12 +69,12 @@ class HandlesNewUserRegistration implements ShouldQueue
      */
     private function createGroupMembership(User $user): void
     {
-        $groupExists = true;
-        $groupTitle  = $user->email;
-        $index       = 1;
+        $groupExists         = true;
+        $groupTitle          = $user->email;
+        $index               = 1;
 
         /** @var null|UserGroup $group */
-        $group = null;
+        $group               = null;
 
         // create a new group.
         while ($groupExists) { // @phpstan-ignore-line
@@ -85,7 +84,7 @@ class HandlesNewUserRegistration implements ShouldQueue
 
                 break;
             }
-            $groupTitle = sprintf('%s-%d', $user->email, $index);
+            $groupTitle  = sprintf('%s-%d', $user->email, $index);
             ++$index;
             if ($index > 99) {
                 throw new FireflyException('Email address can no longer be used for registrations.');
@@ -93,11 +92,11 @@ class HandlesNewUserRegistration implements ShouldQueue
         }
 
         /** @var null|UserRole $role */
-        $role = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
+        $role                = UserRole::where('title', UserRoleEnum::OWNER->value)->first();
         if (null === $role) {
             throw new FireflyException('The user role is unexpectedly empty. Did you run all migrations?');
         }
-        GroupMembership::create(['user_id' => $user->id, 'user_group_id' => $group->id, 'user_role_id' => $role->id]);
+        GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
         $user->user_group_id = $group->id;
         $user->save();
     }
@@ -113,7 +112,7 @@ class HandlesNewUserRegistration implements ShouldQueue
 
     private function sendAdminRegistrationNotification(User $user, OwnerNotifiable $owner): void
     {
-        $sendMail = (bool)FireflyConfig::get('notification_admin_new_reg', true)->data;
+        $sendMail = (bool) FireflyConfig::get('notification_admin_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }
@@ -122,7 +121,7 @@ class HandlesNewUserRegistration implements ShouldQueue
 
     private function sendRegistrationMail(User $user): void
     {
-        $sendMail = (bool)FireflyConfig::get('notification_user_new_reg', true)->data;
+        $sendMail = (bool) FireflyConfig::get('notification_user_new_reg', true)->data;
         if (!$sendMail) {
             return;
         }

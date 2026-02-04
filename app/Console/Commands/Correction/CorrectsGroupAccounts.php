@@ -49,8 +49,8 @@ class CorrectsGroupAccounts extends Command
 
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {
-            if ((int)$journal->the_count > 1) {
-                $groups[] = (int)$journal->transaction_group_id;
+            if ((int) $journal->the_count > 1) {
+                $groups[] = (int) $journal->transaction_group_id;
             }
         }
         foreach ($groups as $groupId) {

@@ -47,7 +47,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesNewTransactionGroup implements ShouldQueue
 {
-    public function handle(CreatedSingleTransactionGroup | UserRequestedBatchProcessing $event): void
+    public function handle(CreatedSingleTransactionGroup|UserRequestedBatchProcessing $event): void
     {
         $groupId    = 0;
         $collection = new Collection();
@@ -60,7 +60,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             Log::debug('User called UserRequestedBatchProcessing');
         }
 
-        $setting = FireflyConfig::get('enable_batch_processing', false)->data;
+        $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
             Log::debug(sprintf('Will do nothing for group #%d because it is part of a batch.', $groupId));
 
@@ -106,7 +106,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
     private function getFromInternalDate(array $ids): Carbon
     {
-        $entries = TransactionJournalMeta::whereIn('transaction_journal_id', $ids)->where('name', '_internal_previous_date')->get(['journal_meta.*',]);
+        $entries = TransactionJournalMeta::whereIn('transaction_journal_id', $ids)->where('name', '_internal_previous_date')->get(['journal_meta.*']);
         $array   = $entries->toArray();
         $return  = today()->subDay();
         if (count($array) > 0) {
@@ -117,6 +117,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             $date   = Carbon::parse($array[0]['data']);
             $return = $date->lt($return) ? $date : $return;
         }
+
         return $return;
     }
 
@@ -130,11 +131,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         Log::debug(sprintf('Found earliest date: %s', $earliest->toW3cString()));
 
         // get accounts
-        $accounts = Account::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
-                           ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-                           ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
-                           ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
-                           ->get(['accounts.*']);
+        $accounts         = Account::leftJoin('transactions', 'transactions.account_id', 'accounts.id')
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('account_types', 'account_types.id', 'accounts.account_type_id')
+            ->whereIn('transaction_journals.id', $set->pluck('id')->toArray())
+            ->get(['accounts.*'])
+        ;
 
         Log::debug('Found accounts to process', $accounts->pluck('id')->toArray());
 
@@ -160,8 +162,8 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         Log::debug(__METHOD__);
 
         /** @var TransactionJournal $first */
-        $first = $set->first();
-        $user  = $first->user;
+        $first  = $set->first();
+        $user   = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -192,12 +194,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
     private function processRules(Collection $set): void
     {
         Log::debug(sprintf('Will now processRules for %d journal(s)', $set->count()));
-        $array = $set->pluck('id')->toArray();
+        $array               = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first      = $set->first();
-        $journalIds = implode(',', $array);
-        $user       = $first->user;
+        $first               = $set->first();
+        $journalIds          = implode(',', $array);
+        $user                = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -207,12 +209,12 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug('Fire processRules with ALL store-journal rule groups.');
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('store-journal');
 
         // create and fire rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }

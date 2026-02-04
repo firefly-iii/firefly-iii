@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * NotifiesUserAboutNewAccessToken.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,7 +35,7 @@ class NotifiesUserAboutNewAccessToken
     {
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);
-        $user       = $repository->find((int)$event->userId);
+        $user       = $repository->find((int) $event->userId);
 
         if (null !== $user) {
             NotificationSender::send($user, new NewAccessToken());

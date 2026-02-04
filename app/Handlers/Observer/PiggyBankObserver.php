@@ -71,7 +71,7 @@ class PiggyBankObserver
 
     private function updatePrimaryCurrencyAmount(PiggyBank $piggyBank): void
     {
-        $group = $piggyBank->accounts()->first()?->user->userGroup;
+        $group                      = $piggyBank->accounts()->first()?->user->userGroup;
         if (null === $group) {
             Log::debug(sprintf('No account(s) yet for piggy bank #%d.', $piggyBank->id));
 

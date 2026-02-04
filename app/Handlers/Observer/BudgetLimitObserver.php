@@ -61,7 +61,7 @@ class BudgetLimitObserver
         $singleton = PreferencesSingleton::getInstance();
 
         if (true === $singleton->getPreference($key)) {
-            $user = $budgetLimit->budget->user;
+            $user   = $budgetLimit->budget->user;
 
             /** @var MessageGeneratorInterface $engine */
             $engine = app(MessageGeneratorInterface::class);

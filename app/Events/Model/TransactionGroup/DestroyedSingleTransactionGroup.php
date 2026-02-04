@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * DestroyedSingleTransactionGroup.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,6 +35,7 @@ class DestroyedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroup $transactionGroup) {}
+    public function __construct(
+        public TransactionGroup $transactionGroup
+    ) {}
 }
-

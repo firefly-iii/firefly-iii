@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 
 class UpdatesAccountInformation implements ShouldQueue
 {
-    public function handle(CreatedNewAccount | UpdatedExistingAccount $event): void
+    public function handle(CreatedNewAccount|UpdatedExistingAccount $event): void
     {
         $this->recalculateCredit($event->account);
         $this->updateVirtualBalance($event->account);

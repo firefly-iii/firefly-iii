@@ -24,13 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserKeepsFailingMFA;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\MFAManyFailedAttemptsNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutRepeatedMFAFailures implements ShouldQueue
 {
@@ -40,6 +38,6 @@ class NotifiesUserAboutRepeatedMFAFailures implements ShouldQueue
 
         $user  = $event->user;
         $count = $event->count;
-            NotificationSender::send($user, new MFAManyFailedAttemptsNotification($user, $count));
+        NotificationSender::send($user, new MFAManyFailedAttemptsNotification($user, $count));
     }
 }
