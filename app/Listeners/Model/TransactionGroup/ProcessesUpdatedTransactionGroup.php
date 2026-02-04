@@ -158,7 +158,7 @@ class ProcessesUpdatedTransactionGroup
     {
         Log::debug('Now in triggerWebhooks()');
         $group  = $updatedGroupEvent->transactionGroup;
-        if (false === $updatedGroupEvent->fireWebhooks) {
+        if (false === $updatedGroupEvent->flags->fireWebhooks) {
             Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
 
             return;
