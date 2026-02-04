@@ -44,8 +44,8 @@ trait SupportsGroupProcessingTrait
         Log::debug(__METHOD__);
 
         /** @var TransactionJournal $first */
-        $first = $journals->first();
-        $user  = $first->user;
+        $first  = $journals->first();
+        $user   = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -95,18 +95,19 @@ trait SupportsGroupProcessingTrait
         if (0 === count($collection)) {
             $collection->push(now(config('app.timezone')));
         }
+
         return $collection;
     }
 
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
-        $array = $set->pluck('id')->toArray();
+        $array               = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first      = $set->first();
-        $journalIds = implode(',', $array);
-        $user       = $first->user;
+        $first               = $set->first();
+        $journalIds          = implode(',', $array);
+        $user                = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -116,12 +117,12 @@ trait SupportsGroupProcessingTrait
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug(sprintf('Fire processRules with ALL %s rule groups.', $type));
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules($type);
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules($type);
 
         // create and fire rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
     }
@@ -131,6 +132,7 @@ trait SupportsGroupProcessingTrait
         Log::debug('Now in recalculateRunningBalance');
         if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             Log::debug('Running balance is disabled.');
+
             return;
         }
         // find the earliest date in the set, based on date and _internal_previous_date

@@ -58,7 +58,7 @@ class BulkController extends Controller
 
         $this->middleware(function ($request, $next) {
             $this->repository = app(JournalRepositoryInterface::class);
-            app('view')->share('title', (string)trans('firefly.transactions'));
+            app('view')->share('title', (string) trans('firefly.transactions'));
             app('view')->share('mainTitleIcon', 'fa-exchange');
 
             return $next($request);
@@ -72,9 +72,9 @@ class BulkController extends Controller
      *
      * @return Factory|View
      */
-    public function edit(array $journals): Factory | \Illuminate\Contracts\View\View
+    public function edit(array $journals): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string)trans('firefly.mass_bulk_journals');
+        $subTitle    = (string) trans('firefly.mass_bulk_journals');
 
         $this->rememberPreviousUrl('transactions.bulk-edit.url');
 
@@ -85,7 +85,7 @@ class BulkController extends Controller
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetList  = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
-        return view('transactions.bulk.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'budgetList' => $budgetList]);
+        return view('transactions.bulk.edit', ['journals'   => $journals, 'subTitle'   => $subTitle, 'budgetList' => $budgetList]);
     }
 
     /**
@@ -93,18 +93,18 @@ class BulkController extends Controller
      *
      * @return Application|Redirector|RedirectResponse
      */
-    public function update(BulkEditJournalRequest $request): Redirector | RedirectResponse
+    public function update(BulkEditJournalRequest $request): Redirector|RedirectResponse
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];
-        $ignoreCategory = 1 === (int)$request->get('ignore_category');
-        $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
+        $ignoreCategory = 1 === (int) $request->get('ignore_category');
+        $ignoreBudget   = 1 === (int) $request->get('ignore_budget');
         $tagsAction     = $request->get('tags_action');
         $collection     = new Collection();
         $count          = 0;
 
         foreach ($journalIds as $journalId) {
-            $journalId = (int)$journalId;
+            $journalId = (int) $journalId;
             $journal   = $this->repository->find($journalId);
             if (null !== $journal) {
                 $resultA = $this->updateJournalBudget($journal, $ignoreBudget, $request->integer('budget_id'));
@@ -117,8 +117,8 @@ class BulkController extends Controller
             }
         }
 
-        $flags   = new TransactionGroupEventFlags();
-        $objects = new TransactionGroupEventObjects();
+        $flags          = new TransactionGroupEventFlags();
+        $objects        = new TransactionGroupEventObjects();
 
         // run rules on changed journals:
         /** @var TransactionJournal $journal */

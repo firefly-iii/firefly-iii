@@ -36,8 +36,6 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 {
     use SupportsGroupProcessingTrait;
 
-
-
     public function handle(CreatedSingleTransactionGroup|UserRequestedBatchProcessing $event): void
     {
         Log::debug(sprintf('User called %s', get_class($event)));
