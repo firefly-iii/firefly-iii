@@ -24,14 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserLoggedInFromNewIpAddress;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\User\UserLogin;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutNewIpAddress implements ShouldQueue
 {
@@ -51,7 +48,7 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
         /** @var array $entry */
         foreach ($list as $index => $entry) {
             if (false === $entry['notified']) {
-                    NotificationSender::send($user, new UserLogin());
+                NotificationSender::send($user, new UserLogin());
             }
             $list[$index]['notified'] = true;
         }

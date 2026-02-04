@@ -36,7 +36,6 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesAboutNewInvitation implements ShouldQueue
 {
@@ -69,6 +68,6 @@ class NotifiesAboutNewInvitation implements ShouldQueue
             return;
         }
 
-            NotificationSender::send(new OwnerNotifiable(), new UserInvitation($invitee));
+        NotificationSender::send(new OwnerNotifiable(), new UserInvitation($invitee));
     }
 }

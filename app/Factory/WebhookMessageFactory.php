@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * WebhookMessageFactory.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -27,7 +30,8 @@ use Illuminate\Support\Facades\Log;
 
 class WebhookMessageFactory
 {
-    public function create(Webhook $webhook, array $data): WebhookMessage {
+    public function create(Webhook $webhook, array $data): WebhookMessage
+    {
         $webhookMessage          = new WebhookMessage();
         $webhookMessage->webhook()->associate($webhook);
         $webhookMessage->sent    = false;
@@ -36,7 +40,7 @@ class WebhookMessageFactory
         $webhookMessage->message = $data;
         $webhookMessage->save();
         Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
+
         return $webhookMessage;
     }
-
 }

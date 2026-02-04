@@ -58,7 +58,7 @@ class CorrectsAmounts extends Command
 
     public function handle(): int
     {
-        $this->service = new JournalDestroyService();
+        $this->service        = new JournalDestroyService();
         $this->genericService = new GenericDestroyService();
         // transfers must not have foreign currency info if both accounts have the same currency.
         $this->correctTransfers();

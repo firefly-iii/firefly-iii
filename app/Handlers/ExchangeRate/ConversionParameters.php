@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * ConversionParameters.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,16 +31,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class ConversionParameters
 {
-    public User                $user;
-    public Model               $model;
+    public User $user;
+    public Model $model;
     public ?TransactionCurrency $originalCurrency = null;
-    public string              $amountField;
-    public string              $primaryAmountField;
-    public Carbon              $date;
+    public string $amountField;
+    public string $primaryAmountField;
+    public Carbon $date;
 
     public function __construct()
     {
         $this->date = now();
     }
-
 }

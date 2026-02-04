@@ -40,7 +40,6 @@ class AvailableBudgetObserver
         $this->updatePrimaryCurrencyAmount($availableBudget);
     }
 
-
     private function updatePrimaryCurrencyAmount(AvailableBudget $availableBudget): void
     {
         $params                     = new ConversionParameters();
@@ -51,6 +50,4 @@ class AvailableBudgetObserver
         $params->primaryAmountField = 'native_amount';
         ConvertsAmountToPrimaryAmount::convert($params);
     }
-
-
 }

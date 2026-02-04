@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * NotificationSender.php
  * Copyright (c) 2026 james@firefly-iii.org

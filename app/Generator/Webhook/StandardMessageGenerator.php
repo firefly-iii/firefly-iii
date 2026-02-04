@@ -55,11 +55,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class StandardMessageGenerator implements MessageGeneratorInterface
 {
-    private Collection     $objects;
+    private Collection $objects;
     private WebhookTrigger $trigger;
-    private User           $user;
-    private int            $version = 0;
-    private Collection     $webhooks;
+    private User $user;
+    private int $version = 0;
+    private Collection $webhooks;
 
     public function __construct()
     {
@@ -77,10 +77,10 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         // do some debugging
         Log::debug(sprintf(
-                       'StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).',
-                       $this->objects->count(),
-                       $this->webhooks->count()
-                   ));
+            'StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).',
+            $this->objects->count(),
+            $this->webhooks->count()
+        ));
         $this->run();
     }
 
@@ -92,7 +92,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
             ->where('active', true)
             ->whereIn('webhook_triggers.title', [$this->trigger->name, WebhookTrigger::ANY->name])
-            ->get(['webhooks.*']);
+            ->get(['webhooks.*'])
+        ;
     }
 
     /**
@@ -127,15 +128,15 @@ class StandardMessageGenerator implements MessageGeneratorInterface
      */
     private function generateMessage(Webhook $webhook, Model $model): void
     {
-        $class = $model::class;
+        $class         = $model::class;
         // Line is ignored because all of Firefly III's Models have an id property.
         Log::debug(sprintf('Now in generateMessage(#%d, %s#%d)', $webhook->id, $class, $model->id));
-        $uuid = Uuid::uuid4();
+        $uuid          = Uuid::uuid4();
 
         /** @var WebhookResponseModel $response */
-        $response = $webhook->webhookResponses()->first();
+        $response      = $webhook->webhookResponses()->first();
         $this->getTriggerTitles($webhook->webhookTriggers()->get());
-        $basicMessage = [
+        $basicMessage  = [
             'uuid'          => $uuid->toString(),
             'user_id'       => 0,
             'user_group_id' => 0,
@@ -180,17 +181,17 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         switch ($responseTitle) {
             default:
                 Log::error(sprintf(
-                               'The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.',
-                               $webhook->id,
-                               $webhook->response
-                           ));
+                    'The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.',
+                    $webhook->id,
+                    $webhook->response
+                ));
 
                 return;
 
             case WebhookResponse::BUDGET->name:
                 $basicMessage['content'] = [];
                 if ($model instanceof Budget) {
-                    $enrichment = new BudgetEnrichment();
+                    $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($model->user);
 
                     /** @var Budget $model */
@@ -199,17 +200,17 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $basicMessage['content'] = $transformer->transform($model);
                 }
                 if ($model instanceof BudgetLimit) {
-                    $user       = $model->budget->user;
-                    $enrichment = new BudgetLimitEnrichment();
+                    $user                    = $model->budget->user;
+                    $enrichment              = new BudgetLimitEnrichment();
                     $enrichment->setUser($user);
 
-                    $parameters = new ParameterBag();
+                    $parameters              = new ParameterBag();
                     $parameters->set('start', $model->start_date);
                     $parameters->set('end', $model->end_date);
 
                     /** @var BudgetLimit $model */
-                    $model       = $enrichment->enrichSingle($model);
-                    $transformer = new BudgetLimitTransformer();
+                    $model                   = $enrichment->enrichSingle($model);
+                    $transformer             = new BudgetLimitTransformer();
                     $transformer->setParameters($parameters);
                     $basicMessage['content'] = $transformer->transform($model);
                 }
@@ -223,16 +224,16 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::TRANSACTIONS->name:
                 /** @var TransactionGroup $model */
-                $transformer = new TransactionGroupTransformer();
+                $transformer             = new TransactionGroupTransformer();
 
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
                     Log::error(sprintf(
-                                   'The transformer could not include the requested transaction group for webhook #%d: %s',
-                                   $webhook->id,
-                                   $e->getMessage()
-                               ));
+                        'The transformer could not include the requested transaction group for webhook #%d: %s',
+                        $webhook->id,
+                        $e->getMessage()
+                    ));
                     Log::error($e->getTraceAsString());
 
                     return;
@@ -242,18 +243,18 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::ACCOUNTS->name:
                 /** @var TransactionGroup $model */
-                $accounts   = $this->collectAccounts($model);
-                $enrichment = new AccountEnrichment();
+                $accounts                = $this->collectAccounts($model);
+                $enrichment              = new AccountEnrichment();
                 $enrichment->setDate(null);
                 $enrichment->setUser($model->user);
-                $accounts = $enrichment->enrich($accounts);
+                $accounts                = $enrichment->enrich($accounts);
                 foreach ($accounts as $account) {
-                    $transformer = new AccountTransformer();
+                    $transformer               = new AccountTransformer();
                     $transformer->setParameters(new ParameterBag());
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
         }
-        $factory = new WebhookMessageFactory();
+        $factory       = new WebhookMessageFactory();
         $factory->create($webhook, $basicMessage);
     }
 

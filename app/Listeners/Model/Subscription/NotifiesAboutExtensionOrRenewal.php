@@ -39,11 +39,12 @@ class NotifiesAboutExtensionOrRenewal implements ShouldQueue
         $subscription = $event->subscription;
 
         /** @var bool $preference */
-        $preference = Preferences::getForUser($subscription->user, 'notification_bill_reminder', true)->data;
+        $preference   = Preferences::getForUser($subscription->user, 'notification_bill_reminder', true)->data;
 
         if (true === $preference) {
             Log::debug('Subscription reminder is true!');
             NotificationSender::send($subscription->user, new BillReminder($subscription, $event->field, $event->diff));
+
             return;
         }
         Log::debug('User has disabled subscription reminders.');

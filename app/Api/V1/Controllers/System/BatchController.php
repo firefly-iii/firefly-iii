@@ -52,14 +52,14 @@ class BatchController extends Controller
 
     public function finishBatch(Request $request): JsonResponse
     {
-        $journals = $this->repository->getUncompletedJournals();
+        $journals          = $this->repository->getUncompletedJournals();
         if (0 === count($journals)) {
             return response()->json([], 204);
         }
 
         /** @var TransactionJournal $first */
-        $first = $journals->first();
-        $group = $first?->transactionGroup;
+        $first             = $journals->first();
+        $group             = $first?->transactionGroup;
         if (null === $group) {
             return response()->json([], 204);
         }

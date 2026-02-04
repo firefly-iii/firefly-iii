@@ -45,7 +45,7 @@ class PiggyBankEventObserver
 
     private function updatePrimaryCurrencyAmount(PiggyBankEvent $event): void
     {
-        $user = $event->piggyBank->accounts()->first()?->user;
+        $user                       = $event->piggyBank->accounts()->first()?->user;
         if (null === $user) {
             Log::warning('Piggy bank seems to have no accounts. Break.');
 

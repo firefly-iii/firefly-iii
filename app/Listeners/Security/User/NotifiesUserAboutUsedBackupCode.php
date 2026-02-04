@@ -24,13 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Security\User;
 
-use Exception;
 use FireflyIII\Events\Security\User\UserHasUsedBackupCode;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Notifications\Security\MFAUsedBackupCodeNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesUserAboutUsedBackupCode implements ShouldQueue
 {
@@ -39,6 +37,6 @@ class NotifiesUserAboutUsedBackupCode implements ShouldQueue
         Log::debug(sprintf('Now in %s', __METHOD__));
 
         $user = $event->user;
-            NotificationSender::send($user, new MFAUsedBackupCodeNotification($user));
+        NotificationSender::send($user, new MFAUsedBackupCodeNotification($user));
     }
 }

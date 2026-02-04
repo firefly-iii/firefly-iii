@@ -30,7 +30,6 @@ use FireflyIII\Notifications\Notifiables\OwnerNotifiable;
 use FireflyIII\Notifications\NotificationSender;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Facades\Notification;
 
 class NotifiesOwnerAboutNewVersion implements ShouldQueue
 {
@@ -41,7 +40,7 @@ class NotifiesOwnerAboutNewVersion implements ShouldQueue
             return;
         }
 
-        $owner = new OwnerNotifiable();
-        NotificationSender  ::send($owner, new VersionCheckResult($event->message));
+        $owner    = new OwnerNotifiable();
+        NotificationSender::send($owner, new VersionCheckResult($event->message));
     }
 }
