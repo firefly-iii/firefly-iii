@@ -41,21 +41,26 @@ class TransactionGroupEventObjects
     {
         Log::debug(sprintf('collectFromTransactionGroup(#%d)', $transactionGroup->id));
         $object = new self();
-        $object->transactionGroups->push($transactionGroup);
+        $object->appendFromTransactionGroup($transactionGroup);
+
+        return $object;
+    }
+
+    public function appendFromTransactionGroup(TransactionGroup $transactionGroup): void
+    {
+        $this->transactionGroups->push($transactionGroup);
 
         /** @var TransactionJournal $journal */
         foreach ($transactionGroup->transactionJournals as $journal) {
-            $object->transactionJournals->push($journal);
-            $object->budgets    = $object->tags->merge($journal->budgets);
-            $object->categories = $object->tags->merge($journal->categories);
-            $object->tags       = $object->tags->merge($journal->tags);
+            $this->transactionJournals->push($journal);
+            $this->budgets    = $this->budgets->merge($journal->budgets);
+            $this->categories = $this->categories->merge($journal->categories);
+            $this->tags       = $this->tags->merge($journal->tags);
 
             /** @var Transaction $transaction */
             foreach ($journal->transactions as $transaction) {
-                $object->accounts->push($transaction->account);
+                $this->accounts->push($transaction->account);
             }
         }
-
-        return $object;
     }
 }

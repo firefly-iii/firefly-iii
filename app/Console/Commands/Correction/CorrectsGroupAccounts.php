@@ -26,6 +26,7 @@ namespace FireflyIII\Console\Commands\Correction;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -49,18 +50,20 @@ class CorrectsGroupAccounts extends Command
 
         /** @var TransactionJournal $journal */
         foreach ($res as $journal) {
-            if ((int) $journal->the_count > 1) {
-                $groups[] = (int) $journal->transaction_group_id;
+            if ((int)$journal->the_count > 1) {
+                $groups[] = (int)$journal->transaction_group_id;
             }
         }
+        $flags                    = new TransactionGroupEventFlags();
+        $flags->applyRules        = true;
+        $flags->fireWebhooks      = true;
+        $flags->recalculateCredit = true;
+        $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
-            $group                    = TransactionGroup::find($groupId);
-            $flags                    = new TransactionGroupEventFlags();
-            $flags->applyRules        = true;
-            $flags->fireWebhooks      = true;
-            $flags->recalculateCredit = true;
-            event(new UpdatedSingleTransactionGroup($group, $flags));
+            $group = TransactionGroup::find($groupId);
+            $objects->appendFromTransactionGroup($group);
         }
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
 
         return 0;
     }

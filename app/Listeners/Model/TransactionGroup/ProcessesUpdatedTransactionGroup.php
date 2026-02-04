@@ -27,30 +27,43 @@ namespace FireflyIII\Listeners\Model\TransactionGroup;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
-use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Services\Internal\Support\CreditRecalculateService;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Models\AccountBalanceCalculator;
-use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class ProcessesUpdatedTransactionGroup
 {
+    use SupportsGroupProcessingTrait;
+
     public function handle(UpdatedSingleTransactionGroup $event): void
     {
-        Log::debug('Now in handle() for UpdatedSingleTransactionGroup');
+        Log::debug(sprintf('User called %s', get_class($event)));
         $this->unifyAccounts($event);
-        $this->processRules($event);
-        $this->recalculateCredit($event);
-        $this->triggerWebhooks($event);
-        ProcessesNewTransactionGroup::removePeriodStatistics($event->transactionGroup->transactionJournals);
-        $this->updateRunningBalance($event);
+
+        Log::debug(sprintf('Transaction journal count is %d', $event->objects->transactionJournals->count()));
+        if (!$event->flags->applyRules) {
+            Log::debug(sprintf('Will NOT process rules for %d journal(s)', $event->objects->transactionJournals->count()));
+        }
+        if (!$event->flags->recalculateCredit) {
+            Log::debug(sprintf('Will NOT recalculate credit for %d journal(s)', $event->objects->transactionJournals->count()));
+        }
+        if (!$event->flags->fireWebhooks) {
+            Log::debug(sprintf('Will NOT fire webhooks for %d journal(s)', $event->objects->transactionJournals->count()));
+        }
+
+        if ($event->flags->applyRules) {
+            $this->processRules($event->objects->transactionJournals, 'update-journal');
+        }
+        if ($event->flags->recalculateCredit) {
+            $this->recalculateCredit($event->objects->accounts);
+        }
+        if ($event->flags->fireWebhooks) {
+            $this->fireWebhooks($event->objects->transactionJournals, WebhookTrigger::UPDATE_TRANSACTION);
+        }
+        $this->removePeriodStatistics($event->objects);
+        $this->recalculateRunningBalance($event->objects);
 
         Log::debug('Done with handle() for UpdatedSingleTransactionGroup');
     }
@@ -58,10 +71,18 @@ class ProcessesUpdatedTransactionGroup
     /**
      * This method will make sure all source / destination accounts are the same.
      */
-    public function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): void
+    protected function unifyAccounts(UpdatedSingleTransactionGroup $updatedGroupEvent): void
     {
         Log::debug('Now in unifyAccounts()');
-        $group         = $updatedGroupEvent->transactionGroup;
+        /** @var TransactionGroup $group */
+        foreach ($updatedGroupEvent->objects->transactionGroups as $group) {
+            $this->unifyAccountsForGroup($group);
+        }
+        Log::debug('Done with unifyAccounts()');
+    }
+
+    private function unifyAccountsForGroup(TransactionGroup $group): void
+    {
         if (1 === $group->transactionJournals->count()) {
             Log::debug('Nothing to do in unifyAccounts()');
 
@@ -70,14 +91,13 @@ class ProcessesUpdatedTransactionGroup
 
         // first journal:
         /** @var null|TransactionJournal $first */
-        $first         = $group
+        $first = $group
             ->transactionJournals()
             ->orderBy('transaction_journals.date', 'DESC')
             ->orderBy('transaction_journals.order', 'ASC')
             ->orderBy('transaction_journals.id', 'DESC')
             ->orderBy('transaction_journals.description', 'DESC')
-            ->first()
-        ;
+            ->first();
 
         if (null === $first) {
             Log::warning(sprintf('Group #%d has no transaction journals.', $group->id));
@@ -85,15 +105,15 @@ class ProcessesUpdatedTransactionGroup
             return;
         }
 
-        $all           = $group->transactionJournals()->get()->pluck('id')->toArray();
+        $all = $group->transactionJournals()->get()->pluck('id')->toArray();
 
         /** @var Account $sourceAccount */
         $sourceAccount = $first->transactions()->where('amount', '<', '0')->first()->account;
 
         /** @var Account $destAccount */
-        $destAccount   = $first->transactions()->where('amount', '>', '0')->first()->account;
+        $destAccount = $first->transactions()->where('amount', '>', '0')->first()->account;
 
-        $type          = $first->transactionType->type;
+        $type = $first->transactionType->type;
         if (TransactionTypeEnum::TRANSFER->value === $type || TransactionTypeEnum::WITHDRAWAL->value === $type) {
             // set all source transactions to source account:
             Transaction::whereIn('transaction_journal_id', $all)->where('amount', '<', 0)->update(['account_id' => $sourceAccount->id]);
@@ -102,92 +122,5 @@ class ProcessesUpdatedTransactionGroup
             // set all destination transactions to destination account:
             Transaction::whereIn('transaction_journal_id', $all)->where('amount', '>', 0)->update(['account_id' => $destAccount->id]);
         }
-        Log::debug('Done with unifyAccounts()');
-    }
-
-    /**
-     * This method will check all the rules when a journal is updated.
-     */
-    private function processRules(UpdatedSingleTransactionGroup $updatedGroupEvent): void
-    {
-        Log::debug('Now in processRules()');
-        if (false === $updatedGroupEvent->flags->applyRules) {
-            Log::info(sprintf('Will not run rules on group #%d', $updatedGroupEvent->transactionGroup->id));
-
-            return;
-        }
-
-        $journals            = $updatedGroupEvent->transactionGroup->transactionJournals;
-        $array               = [];
-
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            $array[] = $journal->id;
-        }
-        $journalIds          = implode(',', $array);
-        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
-
-        // collect rules:
-        $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $ruleGroupRepository->setUser($updatedGroupEvent->transactionGroup->user);
-
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules('update-journal');
-
-        // file rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
-        $newRuleEngine->setUser($updatedGroupEvent->transactionGroup->user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
-        $newRuleEngine->setRuleGroups($groups);
-        $newRuleEngine->fire();
-        Log::debug('Done with processRules()');
-    }
-
-    private function recalculateCredit(UpdatedSingleTransactionGroup $event): void
-    {
-        Log::debug('Now in recalculateCredit()');
-        $group  = $event->transactionGroup;
-
-        /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
-        $object->setGroup($group);
-        $object->recalculate();
-        Log::debug('Done with recalculateCredit()');
-    }
-
-    private function triggerWebhooks(UpdatedSingleTransactionGroup $updatedGroupEvent): void
-    {
-        Log::debug('Now in triggerWebhooks()');
-        $group  = $updatedGroupEvent->transactionGroup;
-        if (false === $updatedGroupEvent->flags->fireWebhooks) {
-            Log::info(sprintf('Will not fire webhooks for transaction group #%d', $group->id));
-
-            return;
-        }
-        $user   = $group->user;
-
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($group));
-        $engine->setTrigger(WebhookTrigger::UPDATE_TRANSACTION);
-        $engine->generateMessages();
-
-        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
-        event(new WebhookMessagesRequestSending());
-        Log::debug('End of triggerWebhooks()');
-    }
-
-    private function updateRunningBalance(UpdatedSingleTransactionGroup $event): void
-    {
-        Log::debug('Now in updateRunningBalance()');
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
-            return;
-        }
-        Log::debug(__METHOD__);
-        $group = $event->transactionGroup;
-        foreach ($group->transactionJournals as $journal) {
-            AccountBalanceCalculator::recalculateForJournal($journal);
-        }
-        Log::debug('Done with updateRunningBalance()');
     }
 }

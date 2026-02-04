@@ -35,8 +35,5 @@ class UpdatedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public TransactionGroup $transactionGroup,
-        public TransactionGroupEventFlags $flags
-    ) {}
+    public function __construct(public TransactionGroupEventFlags $flags, public TransactionGroupEventObjects $objects) {}
 }
