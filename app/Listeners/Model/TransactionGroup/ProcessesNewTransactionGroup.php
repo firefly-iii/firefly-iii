@@ -24,31 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Listeners\Model\TransactionGroup;
 
-use Carbon\Carbon;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
-use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
-use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\PeriodStatistic\PeriodStatisticRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\Services\Internal\Support\CreditRecalculateService;
 use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Models\AccountBalanceCalculator;
-use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
 class ProcessesNewTransactionGroup implements ShouldQueue
 {
     use SupportsGroupProcessingTrait;
+
     public function handle(CreatedSingleTransactionGroup|UserRequestedBatchProcessing $event): void
     {
         Log::debug(sprintf('User called %s', get_class($event)));
@@ -61,7 +48,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         }
         Log::debug('Will also collect all open transaction groups and process them.');
         $repository = app(JournalRepositoryInterface::class);
-        $journals        = $event->objects->transactionJournals->merge($repository->getAllUncompletedJournals());
+        $journals   = $event->objects->transactionJournals->merge($repository->getAllUncompletedJournals());
 
         Log::debug(sprintf('Transaction journal count is %d', $journals->count()));
         if (!$event->flags->applyRules) {
@@ -75,7 +62,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
         }
 
         if ($event->flags->applyRules) {
-            $this->processRules($journals,'store-journal');
+            $this->processRules($journals, 'store-journal');
         }
         if ($event->flags->recalculateCredit) {
             $this->recalculateCredit($event->objects->accounts);

@@ -396,7 +396,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
     public function store(array $data): TransactionGroup
     {
         /** @var TransactionGroupFactory $factory */
-        $factory = app(TransactionGroupFactory::class);
+        $factory                = app(TransactionGroupFactory::class);
         $factory->setUser($data['user']);
         $factory->setUserGroup($data['user_group']);
 
@@ -415,7 +415,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         }
 
         Preferences::mark();
-        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
+        $objects                = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
         $flags                  = new TransactionGroupEventFlags();
         $flags->applyRules      = $data['apply_rules'] ?? true;
         $flags->fireWebhooks    = $data['fire_webhooks'] ?? true;
@@ -424,6 +424,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         event(new CreatedSingleTransactionGroup($flags, $objects));
         Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
         event(new WebhookMessagesRequestSending());
+
         return $transactionGroup;
     }
 

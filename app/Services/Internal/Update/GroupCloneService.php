@@ -55,7 +55,7 @@ class GroupCloneService
 
         // event!
         $flags    = new TransactionGroupEventFlags();
-        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($newGroup);
+        $objects  = TransactionGroupEventObjects::collectFromTransactionGroup($newGroup);
         event(new CreatedSingleTransactionGroup($flags, $objects));
 
         Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));

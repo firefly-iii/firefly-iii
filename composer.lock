@@ -10530,16 +10530,16 @@
         },
         {
             "name": "fruitcake/laravel-debugbar",
-            "version": "v4.0.5",
+            "version": "v4.0.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fruitcake/laravel-debugbar.git",
-                "reference": "1da86437d28f36baf3bb9841d77e74cb639372a9"
+                "reference": "0cbf2986de59f66870cee565491b81eb89f8d25e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/1da86437d28f36baf3bb9841d77e74cb639372a9",
-                "reference": "1da86437d28f36baf3bb9841d77e74cb639372a9",
+                "url": "https://api.github.com/repos/fruitcake/laravel-debugbar/zipball/0cbf2986de59f66870cee565491b81eb89f8d25e",
+                "reference": "0cbf2986de59f66870cee565491b81eb89f8d25e",
                 "shasum": ""
             },
             "require": {
@@ -10616,7 +10616,7 @@
             ],
             "support": {
                 "issues": "https://github.com/fruitcake/laravel-debugbar/issues",
-                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.0.5"
+                "source": "https://github.com/fruitcake/laravel-debugbar/tree/v4.0.6"
             },
             "funding": [
                 {
@@ -10628,7 +10628,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-01-29T19:18:02+00:00"
+            "time": "2026-02-04T11:48:53+00:00"
         },
         {
             "name": "hamcrest/hamcrest-php",

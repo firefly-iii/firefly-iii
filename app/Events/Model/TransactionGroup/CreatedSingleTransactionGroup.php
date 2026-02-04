@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
-use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 

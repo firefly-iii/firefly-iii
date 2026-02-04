@@ -25,8 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
-use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
@@ -336,7 +334,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
         // count created journals on THIS day.
-        $journalCount               = $this->repository->getJournalCount($recurrence, $date, $date);
+        $journalCount = $this->repository->getJournalCount($recurrence, $date, $date);
         if ($journalCount > 0 && false === $this->force) {
             Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
 
@@ -354,11 +352,11 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         // create transaction array and send to factory.
-        $groupTitle                 = null;
-        $count                      = $recurrence->recurrenceTransactions->count();
+        $groupTitle   = null;
+        $count        = $recurrence->recurrenceTransactions->count();
         // #8844, if there is one recurrence transaction, use the first title as the title.
         // #9305, if there is one recurrence transaction, group title must be NULL.
-        $groupTitle                 = null;
+        $groupTitle   = null;
 
         // #8844, if there are more, use the recurrence transaction itself.
         if ($count > 1) {
@@ -371,7 +369,7 @@ class CreateRecurringTransactions implements ShouldQueue
             return null;
         }
 
-        $array                      = [
+        $array        = [
             'user'         => $recurrence->user,
             'user_group'   => $recurrence->user->userGroup,
             'group_title'  => $groupTitle,
@@ -379,7 +377,7 @@ class CreateRecurringTransactions implements ShouldQueue
         ];
 
         /** @var TransactionGroup $group */
-        $group                      = $this->groupRepository->store($array);
+        $group        = $this->groupRepository->store($array);
         ++$this->created;
         Log::info(sprintf('Created new transaction group #%d', $group->id));
         $this->groups->push($group);
