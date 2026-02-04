@@ -25,7 +25,6 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -47,10 +46,8 @@ class ProcessesUpdatedTransactionGroup
         $this->processRules($event);
         $this->recalculateCredit($event);
         $this->triggerWebhooks($event);
-        $this->removePeriodStatistics($event);
-        if ($event->flags->recalculateCredit) {
-            $this->updateRunningBalance($event);
-        }
+        ProcessesNewTransactionGroup::removePeriodStatistics($event->transactionGroup->transactionJournals);
+        $this->updateRunningBalance($event);
 
         Log::debug('Done with handle() for UpdatedSingleTransactionGroup');
     }
@@ -156,7 +153,7 @@ class ProcessesUpdatedTransactionGroup
     }
 
 
-    private function triggerWebhooks(UpdatedTransactionGroup $updatedGroupEvent): void
+    private function triggerWebhooks(UpdatedSingleTransactionGroup $updatedGroupEvent): void
     {
         Log::debug('Now in triggerWebhooks()');
         $group = $updatedGroupEvent->transactionGroup;
@@ -179,7 +176,7 @@ class ProcessesUpdatedTransactionGroup
         Log::debug('End of triggerWebhooks()');
     }
 
-    private function updateRunningBalance(UpdatedTransactionGroup $event): void
+    private function updateRunningBalance(UpdatedSingleTransactionGroup $event): void
     {
         Log::debug('Now in updateRunningBalance()');
         if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {

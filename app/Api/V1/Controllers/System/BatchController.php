@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\System;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\UserRequestedBatchProcessing;
 use FireflyIII\Models\TransactionJournal;
@@ -53,14 +52,14 @@ class BatchController extends Controller
 
     public function finishBatch(Request $request): JsonResponse
     {
-        $journals          = $this->repository->getUncompletedJournals();
+        $journals = $this->repository->getUncompletedJournals();
         if (0 === count($journals)) {
             return response()->json([], 204);
         }
 
         /** @var TransactionJournal $first */
-        $first             = $journals->first();
-        $group             = $first?->transactionGroup;
+        $first = $journals->first();
+        $group = $first?->transactionGroup;
         if (null === $group) {
             return response()->json([], 204);
         }

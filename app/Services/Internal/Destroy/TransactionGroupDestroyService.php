@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Destroy;
 
 use FireflyIII\Events\DestroyedTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\DestroyedSingleTransactionGroup;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Support\Facades\Log;
 
@@ -44,6 +45,6 @@ class TransactionGroupDestroyService
         }
         $transactionGroup->delete();
         // trigger just after destruction
-        event(new DestroyedTransactionGroup($transactionGroup));
+        event(new DestroyedSingleTransactionGroup($transactionGroup));
     }
 }

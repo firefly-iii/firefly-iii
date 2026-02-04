@@ -183,7 +183,6 @@ class TransactionJournalFactory
         $carbon->setTimezone(config('app.timezone'));
 
         // 2024-11-19, overrule timezone with UTC and store it as UTC.
-
         if (true === FireflyConfig::get('utc', false)->data) {
             $carbon->setTimezone('UTC');
         }

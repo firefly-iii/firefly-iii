@@ -94,7 +94,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             $this->fireWebhooks($set);
         }
         // always remove old relevant statistics.
-        $this->removePeriodStatistics($set);
+        self::removePeriodStatistics($set);
 
         // recalculate running balance if necessary.
         if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {

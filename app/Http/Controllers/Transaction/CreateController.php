@@ -79,7 +79,6 @@ class CreateController extends Controller
                 // event!
                 $flags    = new TransactionGroupEventFlags();
                 event(new CreatedSingleTransactionGroup($group, $flags));
-                // event(new StoredTransactionGroup($newGroup, true, true));
 
                 Preferences::mark();
 

@@ -1,8 +1,7 @@
 <?php
-
 /*
- * DestroyedGroupEventHandler.php
- * Copyright (c) 2021 james@firefly-iii.org
+ * ProcessesDestroyedTransactionGroup.php
+ * Copyright (c) 2026 james@firefly-iii.org
  *
  * This file is part of Firefly III (https://github.com/firefly-iii).
  *
@@ -20,35 +19,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
-
-namespace FireflyIII\Handlers\Events;
+namespace FireflyIII\Listeners\Model\TransactionGroup;
 
 use FireflyIII\Enums\WebhookTrigger;
-use FireflyIII\Events\DestroyedTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\DestroyedSingleTransactionGroup;
 use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Class DestroyedGroupEventHandler
- */
-class DestroyedGroupEventHandler
+class ProcessesDestroyedTransactionGroup implements ShouldQueue
 {
-    public function runAllHandlers(DestroyedTransactionGroup $event): void
+    public function handle(DestroyedSingleTransactionGroup $event): void
     {
         $this->triggerWebhooks($event);
         $this->updateRunningBalance($event);
     }
 
-    private function triggerWebhooks(DestroyedTransactionGroup $destroyedGroupEvent): void
+    private function triggerWebhooks(DestroyedSingleTransactionGroup $destroyedGroupEvent): void
     {
         Log::debug('DestroyedTransactionGroup:triggerWebhooks');
-        $group  = $destroyedGroupEvent->transactionGroup;
-        $user   = $group->user;
+        $group = $destroyedGroupEvent->transactionGroup;
+        $user  = $group->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -60,7 +55,7 @@ class DestroyedGroupEventHandler
         event(new WebhookMessagesRequestSending());
     }
 
-    private function updateRunningBalance(DestroyedTransactionGroup $event): void
+    private function updateRunningBalance(DestroyedSingleTransactionGroup $event): void
     {
         if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             return;
