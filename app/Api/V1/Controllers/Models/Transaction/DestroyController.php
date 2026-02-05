@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Events\UpdatedAccount;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -76,6 +73,7 @@ class DestroyController extends Controller
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->groupRepository->destroy($transactionGroup);
         Preferences::mark();
+
         return response()->json([], 204);
     }
 

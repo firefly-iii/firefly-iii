@@ -26,7 +26,6 @@ namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 
 class CreatedSingleTransactionGroup extends Event
 {
@@ -35,5 +34,8 @@ class CreatedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroupEventFlags $flags, public TransactionGroupEventObjects $objects) {}
+    public function __construct(
+        public TransactionGroupEventFlags $flags,
+        public TransactionGroupEventObjects $objects
+    ) {}
 }
