@@ -36,37 +36,25 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesDestroyedTransactionGroup implements ShouldQueue
 {
+    use SupportsGroupProcessingTrait;
     public function handle(DestroyedSingleTransactionGroup $event): void
     {
-        $this->triggerWebhooks($event);
-        $this->updateRunningBalance($event);
-    }
+        Log::debug(sprintf('User called %s', get_class($event)));
 
-    private function triggerWebhooks(DestroyedSingleTransactionGroup $destroyedGroupEvent): void
-    {
-        Log::debug('DestroyedTransactionGroup:triggerWebhooks');
-        $group  = $destroyedGroupEvent->transactionGroup;
-        $user   = $group->user;
-
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-        $engine->setObjects(new Collection()->push($group));
-        $engine->setTrigger(WebhookTrigger::DESTROY_TRANSACTION);
-        $engine->generateMessages();
-        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
-        event(new WebhookMessagesRequestSending());
-    }
-
-    private function updateRunningBalance(DestroyedSingleTransactionGroup $event): void
-    {
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
-            return;
+        if (!$event->flags->recalculateCredit) {
+            Log::debug(sprintf('Will NOT recalculate credit for %d journal(s)', $event->objects->transactionJournals->count()));
         }
-        Log::debug(__METHOD__);
-        $group = $event->transactionGroup;
-        foreach ($group->transactionJournals as $journal) {
-            AccountBalanceCalculator::recalculateForJournal($journal);
+        if (!$event->flags->fireWebhooks) {
+            Log::debug(sprintf('Will NOT fire webhooks for %d journal(s)', $event->objects->transactionJournals->count()));
         }
+
+        if ($event->flags->recalculateCredit) {
+            $this->recalculateCredit($event->objects->accounts);
+        }
+        if ($event->flags->fireWebhooks) {
+            $this->fireWebhooks($event->objects->transactionGroups, WebhookTrigger::DESTROY_TRANSACTION);
+        }
+        $this->removePeriodStatistics($event->objects);
+        $this->recalculateRunningBalance($event->objects);
     }
 }

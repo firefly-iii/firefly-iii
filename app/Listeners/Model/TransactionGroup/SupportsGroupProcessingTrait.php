@@ -36,15 +36,12 @@ trait SupportsGroupProcessingTrait
         $object->recalculate();
     }
 
-    private function fireWebhooks(Collection $journals, WebhookTrigger $trigger): void
+    private function fireWebhooks(Collection $groups, WebhookTrigger $trigger): void
     {
-        // collect transaction groups by set ids.
-        $groups = TransactionGroup::whereIn('id', array_unique($journals->pluck('transaction_group_id')->toArray()))->get();
-
         Log::debug(__METHOD__);
 
-        /** @var TransactionJournal $first */
-        $first  = $journals->first();
+        /** @var TransactionGroup $first */
+        $first  = $groups->first();
         $user   = $first->user;
 
         /** @var MessageGeneratorInterface $engine */

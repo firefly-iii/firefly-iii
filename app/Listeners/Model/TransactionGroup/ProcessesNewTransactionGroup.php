@@ -68,7 +68,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             $this->recalculateCredit($event->objects->accounts);
         }
         if ($event->flags->fireWebhooks) {
-            $this->fireWebhooks($journals, WebhookTrigger::STORE_TRANSACTION);
+            $this->fireWebhooks($event->objects->transactionGroups, WebhookTrigger::STORE_TRANSACTION);
         }
         $this->removePeriodStatistics($event->objects);
         $this->recalculateRunningBalance($event->objects);

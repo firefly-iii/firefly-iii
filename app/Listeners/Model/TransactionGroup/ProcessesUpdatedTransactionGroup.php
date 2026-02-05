@@ -60,7 +60,7 @@ class ProcessesUpdatedTransactionGroup
             $this->recalculateCredit($event->objects->accounts);
         }
         if ($event->flags->fireWebhooks) {
-            $this->fireWebhooks($event->objects->transactionJournals, WebhookTrigger::UPDATE_TRANSACTION);
+            $this->fireWebhooks($event->objects->transactionGroups, WebhookTrigger::UPDATE_TRANSACTION);
         }
         $this->removePeriodStatistics($event->objects);
         $this->recalculateRunningBalance($event->objects);

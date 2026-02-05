@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
-use FireflyIII\Models\TransactionGroup;
 use Illuminate\Queue\SerializesModels;
 
 class DestroyedSingleTransactionGroup extends Event
@@ -35,7 +34,5 @@ class DestroyedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public TransactionGroup $transactionGroup
-    ) {}
+    public function __construct(public TransactionGroupEventFlags $flags, public TransactionGroupEventObjects $objects) {}
 }
