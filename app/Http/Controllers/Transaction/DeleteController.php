@@ -112,29 +112,7 @@ class DeleteController extends Controller
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
         session()->flash('success', (string) trans('firefly.deleted_'.strtolower($objectType), ['description' => $group->title ?? $journal->description]));
-
-        // grab asset account(s) from group:
-        $accounts   = [];
-
-        /** @var TransactionJournal $currentJournal */
-        foreach ($group->transactionJournals as $currentJournal) {
-            /** @var Transaction $transaction */
-            foreach ($currentJournal->transactions as $transaction) {
-                $type = $transaction->account->accountType->type;
-                // if is valid liability, trigger event!
-                if (in_array($type, config('firefly.valid_liabilities'), true)) {
-                    $accounts[] = $transaction->account;
-                }
-            }
-        }
-
         $this->repository->destroy($group);
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
-            event(new UpdatedAccount($account));
-        }
         Preferences::mark();
 
         return redirect($this->getPreviousUrl('transactions.delete.url'));

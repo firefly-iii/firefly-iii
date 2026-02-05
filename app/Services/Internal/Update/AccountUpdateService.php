@@ -105,7 +105,7 @@ class AccountUpdateService
         // update preferences if inactive:
         $this->updatePreferences($account);
 
-        event(new UpdatedAccount($account));
+        event(new UpdatedExistingAccount($account));
 
         return $account;
     }
@@ -150,8 +150,6 @@ class AccountUpdateService
         }
 
         $account->save();
-
-        event(new UpdatedExistingAccount($account));
 
         return $account;
     }

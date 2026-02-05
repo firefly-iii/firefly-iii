@@ -74,31 +74,8 @@ class DestroyController extends Controller
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        // grab asset account(s) from group:
-        $accounts = [];
-
-        /** @var TransactionJournal $journal */
-        foreach ($transactionGroup->transactionJournals as $journal) {
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                $type = $transaction->account->accountType->type;
-                // if is valid liability, trigger event!
-                if (in_array($type, config('firefly.valid_liabilities'), true)) {
-                    $accounts[] = $transaction->account;
-                }
-            }
-        }
-
         $this->groupRepository->destroy($transactionGroup);
-
         Preferences::mark();
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
-            event(new UpdatedAccount($account));
-        }
-
         return response()->json([], 204);
     }
 
