@@ -95,7 +95,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // register all subrequests' validators
         foreach ($this->requests as $request) {
             if (method_exists($request, 'withValidator')) {
-                Log::debug(sprintf('Process withValidator from class %s', $request::class));
+                // Log::debug(sprintf('Process withValidator from class %s', $request::class));
                 $request->withValidator($validator);
             }
         }

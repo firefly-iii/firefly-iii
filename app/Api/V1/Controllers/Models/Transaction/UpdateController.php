@@ -76,7 +76,9 @@ class UpdateController extends Controller
         Log::debug('Now in update routine for transaction group');
         $data                     = $request->getAll();
         $oldHash                  = $this->groupRepository->getCompareHash($transactionGroup);
+        $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
         $transactionGroup         = $this->groupRepository->update($transactionGroup, $data);
+        $objects->appendFromTransactionGroup($transactionGroup);
         $newHash                  = $this->groupRepository->getCompareHash($transactionGroup);
         $manager                  = $this->getManager();
 
@@ -89,7 +91,6 @@ class UpdateController extends Controller
         $flags->applyRules        = $applyRules;
         $flags->fireWebhooks      = $fireWebhooks;
         $flags->recalculateCredit = $runRecalculations;
-        $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
         event(new UpdatedSingleTransactionGroup($flags, $objects));
 
         /** @var User $admin */

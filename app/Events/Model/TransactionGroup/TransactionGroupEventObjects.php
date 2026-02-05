@@ -62,5 +62,11 @@ class TransactionGroupEventObjects
                 $this->accounts->push($transaction->account);
             }
         }
+        $this->transactionGroups   = $this->transactionGroups->unique('id');
+        $this->transactionJournals = $this->transactionJournals->unique('id');
+        $this->budgets             = $this->budgets->unique('id');
+        $this->categories          = $this->categories->unique('id');
+        $this->tags                = $this->tags->unique('id');
+        $this->accounts            = $this->accounts->unique('id');
     }
 }

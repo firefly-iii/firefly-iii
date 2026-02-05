@@ -39,7 +39,7 @@ class ProcessesUpdatedTransactionGroup
 
     public function handle(UpdatedSingleTransactionGroup $event): void
     {
-        Log::debug(sprintf('User called %s', get_class($event)));
+        Log::debug(sprintf('Now handling event %s', get_class($event)));
         $this->unifyAccounts($event);
 
         Log::debug(sprintf('Transaction journal count is %d', $event->objects->transactionJournals->count()));
