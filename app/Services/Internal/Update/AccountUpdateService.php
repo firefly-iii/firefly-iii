@@ -26,7 +26,6 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Events\Model\Account\UpdatedExistingAccount;
-use FireflyIII\Events\UpdatedAccount;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;

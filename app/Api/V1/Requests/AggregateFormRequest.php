@@ -77,6 +77,7 @@ abstract class AggregateFormRequest extends ApiRequest
                 $instance->handleConfig(is_array($config) ? $config : []);
             }
         }
+
         // Log::debug('Done initializing AggregateFormRequest.');
     }
 

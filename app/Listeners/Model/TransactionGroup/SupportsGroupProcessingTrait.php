@@ -42,8 +42,8 @@ trait SupportsGroupProcessingTrait
         Log::debug(sprintf('Will now create webhook messages for %d group(s)', $groups->count()));
 
         /** @var TransactionGroup $first */
-        $first = $groups->first();
-        $user  = $first->user;
+        $first  = $groups->first();
+        $user   = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -65,6 +65,7 @@ trait SupportsGroupProcessingTrait
             Log::debug('Will NOT remove period statistics for all objects, because no user detected.');
         }
         Log::debug('Will now remove period statistics for all objects.');
+
         // since you get a bunch of journals AND a bunch of
         // objects, this needs to be a collection
         /** @var PeriodStatisticRepositoryInterface $repository */
@@ -105,12 +106,12 @@ trait SupportsGroupProcessingTrait
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
-        $array = $set->pluck('id')->toArray();
+        $array               = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first      = $set->first();
-        $journalIds = implode(',', $array);
-        $user       = $first->user;
+        $first               = $set->first();
+        $journalIds          = implode(',', $array);
+        $user                = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -120,12 +121,12 @@ trait SupportsGroupProcessingTrait
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug(sprintf('Fire processRules with ALL %s rule groups.', $type));
-        $groups = $ruleGroupRepository->getRuleGroupsWithRules($type);
+        $groups              = $ruleGroupRepository->getRuleGroupsWithRules($type);
 
         // create and fire rule engine.
-        $newRuleEngine = app(RuleEngineInterface::class);
+        $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
         Log::debug(sprintf('Done with processRules("%s") for %d journal(s)', $type, $set->count()));
