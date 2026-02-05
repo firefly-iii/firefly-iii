@@ -53,7 +53,7 @@ abstract class AggregateFormRequest extends ApiRequest
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
-        Log::debug('Initializing AggregateFormRequest.');
+        // Log::debug('Initializing AggregateFormRequest.');
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
@@ -62,7 +62,7 @@ abstract class AggregateFormRequest extends ApiRequest
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
             }
-            Log::debug(sprintf('Initializing subrequest %s', $requestClass));
+            // Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
             $instance             = $this->requests[] = new $requestClass();
             $instance->request    = $this->request;
@@ -77,7 +77,7 @@ abstract class AggregateFormRequest extends ApiRequest
                 $instance->handleConfig(is_array($config) ? $config : []);
             }
         }
-        Log::debug('Done initializing AggregateFormRequest.');
+        // Log::debug('Done initializing AggregateFormRequest.');
     }
 
     public function rules(): array

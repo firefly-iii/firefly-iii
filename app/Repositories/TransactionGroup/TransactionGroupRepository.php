@@ -420,7 +420,6 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface,
         $flags->applyRules      = $data['apply_rules'] ?? true;
         $flags->fireWebhooks    = $data['fire_webhooks'] ?? true;
         $flags->batchSubmission = $data['batch_submission'] ?? false;
-        Log::debug('CreatedSingleTransactionGroup');
         event(new CreatedSingleTransactionGroup($flags, $objects));
         Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
         event(new WebhookMessagesRequestSending());

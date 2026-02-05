@@ -328,7 +328,7 @@ class TransactionJournalFactory
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-        Log::debug(sprintf('Is part of a batch submission? %s', var_export($row['batch_submission'], true)));
+        // Log::debug(sprintf('Is part of a batch submission? %s', var_export($row['batch_submission'], true)));
         $journal->save();
         $this->storeBudget($journal, $row);
         $this->storeCategory($journal, $row);

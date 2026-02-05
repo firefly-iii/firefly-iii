@@ -35,10 +35,5 @@ class CreatedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(
-        public TransactionGroupEventFlags $flags,
-        public TransactionGroupEventObjects $objects
-    ) {
-        Log::debug(__METHOD__);
-    }
+    public function __construct(public TransactionGroupEventFlags $flags, public TransactionGroupEventObjects $objects) {}
 }

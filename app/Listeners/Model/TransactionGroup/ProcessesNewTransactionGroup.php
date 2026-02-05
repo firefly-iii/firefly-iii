@@ -38,7 +38,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
     public function handle(CreatedSingleTransactionGroup|UserRequestedBatchProcessing $event): void
     {
-        Log::debug(sprintf('User called %s', get_class($event)));
+        Log::debug(sprintf('Running event handler for %s', get_class($event)));
 
         $setting    = FireflyConfig::get('enable_batch_processing', false)->data;
         if (true === $event->flags->batchSubmission && true === $setting) {
@@ -46,7 +46,6 @@ class ProcessesNewTransactionGroup implements ShouldQueue
 
             return;
         }
-        Log::debug('Will also collect all open transaction groups and process them as well.');
         $repository = app(JournalRepositoryInterface::class);
         $journals   = $event->objects->transactionJournals->merge($repository->getAllUncompletedJournals());
 
@@ -68,7 +67,7 @@ class ProcessesNewTransactionGroup implements ShouldQueue
             $this->recalculateCredit($event->objects->accounts);
         }
         if ($event->flags->fireWebhooks) {
-            $this->fireWebhooks($event->objects->transactionGroups, WebhookTrigger::STORE_TRANSACTION);
+            $this->createWebhookMessages($event->objects->transactionGroups, WebhookTrigger::STORE_TRANSACTION);
         }
         $this->removePeriodStatistics($event->objects);
         $this->recalculateRunningBalance($event->objects);

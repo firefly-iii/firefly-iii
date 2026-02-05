@@ -34,15 +34,16 @@ trait SupportsGroupProcessingTrait
         $object = app(CreditRecalculateService::class);
         $object->setAccounts($accounts);
         $object->recalculate();
+        Log::debug(sprintf('Done with recalculateCredit for %d account(s)', $accounts->count()));
     }
 
-    private function fireWebhooks(Collection $groups, WebhookTrigger $trigger): void
+    private function createWebhookMessages(Collection $groups, WebhookTrigger $trigger): void
     {
-        Log::debug(__METHOD__);
+        Log::debug(sprintf('Will now create webhook messages for %d group(s)', $groups->count()));
 
         /** @var TransactionGroup $first */
-        $first  = $groups->first();
-        $user   = $first->user;
+        $first = $groups->first();
+        $user  = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
@@ -54,36 +55,41 @@ trait SupportsGroupProcessingTrait
         $engine->setObjects($groups);
         // tell the generator to generate the messages
         $engine->generateMessages();
+
+        Log::debug(sprintf('Done with create webhook messages for %d group(s)', $groups->count()));
     }
 
     protected function removePeriodStatistics(TransactionGroupEventObjects $objects): void
     {
-        if (auth()->check()) {
-            // since you get a bunch of journals AND a bunch of
-            // objects, this needs to be a collection
-            /** @var PeriodStatisticRepositoryInterface $repository */
-            $repository = app(PeriodStatisticRepositoryInterface::class);
-            $dates      = $this->collectDatesFromJournals($objects->transactionJournals);
-            $repository->deleteStatisticsForType(Account::class, $objects->accounts, $dates);
-            $repository->deleteStatisticsForType(Budget::class, $objects->budgets, $dates);
-            $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
-            $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
-
-            // remove if no stuff present:
-            // remove for no tag, no cat, etc.
-            if (0 === $objects->budgets->count()) {
-                Log::debug('No budgets, delete "no_category" stats.');
-                $repository->deleteStatisticsForPrefix('no_budget', $dates);
-            }
-            if (0 === $objects->categories->count()) {
-                Log::debug('No categories, delete "no_category" stats.');
-                $repository->deleteStatisticsForPrefix('no_category', $dates);
-            }
-            if (0 === $objects->tags->count()) {
-                Log::debug('No tags, delete "no_category" stats.');
-                $repository->deleteStatisticsForPrefix('no_tag', $dates);
-            }
+        if (!auth()->check()) {
+            Log::debug('Will NOT remove period statistics for all objects, because no user detected.');
         }
+        Log::debug('Will now remove period statistics for all objects.');
+        // since you get a bunch of journals AND a bunch of
+        // objects, this needs to be a collection
+        /** @var PeriodStatisticRepositoryInterface $repository */
+        $repository = app(PeriodStatisticRepositoryInterface::class);
+        $dates      = $this->collectDatesFromJournals($objects->transactionJournals);
+        $repository->deleteStatisticsForType(Account::class, $objects->accounts, $dates);
+        $repository->deleteStatisticsForType(Budget::class, $objects->budgets, $dates);
+        $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
+        $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
+
+        // remove if no stuff present:
+        // remove for no tag, no cat, etc.
+        if (0 === $objects->budgets->count()) {
+            Log::debug('No budgets, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_budget', $dates);
+        }
+        if (0 === $objects->categories->count()) {
+            Log::debug('No categories, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_category', $dates);
+        }
+        if (0 === $objects->tags->count()) {
+            Log::debug('No tags, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_tag', $dates);
+        }
+        Log::debug('Done with remove period statistics for all objects.');
     }
 
     private function collectDatesFromJournals(Collection $journals): Collection
@@ -99,12 +105,12 @@ trait SupportsGroupProcessingTrait
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
-        $array               = $set->pluck('id')->toArray();
+        $array = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first               = $set->first();
-        $journalIds          = implode(',', $array);
-        $user                = $first->user;
+        $first      = $set->first();
+        $journalIds = implode(',', $array);
+        $user       = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -114,20 +120,21 @@ trait SupportsGroupProcessingTrait
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug(sprintf('Fire processRules with ALL %s rule groups.', $type));
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules($type);
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules($type);
 
         // create and fire rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
+        Log::debug(sprintf('Done with processRules("%s") for %d journal(s)', $type, $set->count()));
     }
 
     protected function recalculateRunningBalance(TransactionGroupEventObjects $objects): void
     {
         Log::debug('Now in recalculateRunningBalance');
-        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
             Log::debug('Running balance is disabled.');
 
             return;
