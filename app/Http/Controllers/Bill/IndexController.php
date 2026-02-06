@@ -76,13 +76,13 @@ class IndexController extends Controller
         $this->repository->correctTransfers();
         $start       = session('start');
         $end         = session('end');
-        $viewRange = Preferences::get('viewRange', '1M')->data;
+        $viewRange   = Preferences::get('viewRange', '1M')->data;
 
         // give the end some extra space when the user has last7, last30 or last90.
-        if('last7' === $viewRange || 'last30' === $viewRange) {
+        if ('last7' === $viewRange || 'last30' === $viewRange) {
             $end->addDays(30);
         }
-        if('last90') {
+        if ('last90') {
             $end->addDays(90);
         }
 

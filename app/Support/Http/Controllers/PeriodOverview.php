@@ -82,7 +82,10 @@ trait PeriodOverview
     protected PeriodStatisticRepositoryInterface $periodStatisticRepo;
     private Collection $statistics; // temp data holder
     // temp data holder
+    // temp data holder
     private array $transactions; // temp data holder
+
+    // temp data holder
 
     // temp data holder
 
