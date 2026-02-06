@@ -48,8 +48,6 @@ use Illuminate\Support\Collection;
  */
 interface RecurringRepositoryInterface
 {
-    public function setLatestDate(Recurrence $recurrence, Carbon $date): Recurrence;
-
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool;
 
     /**
@@ -149,6 +147,8 @@ interface RecurringRepositoryInterface
     public function repetitionDescription(RecurrenceRepetition $repetition): string;
 
     public function searchRecurrence(string $query, int $limit): Collection;
+
+    public function setLatestDate(Recurrence $recurrence, Carbon $date): Recurrence;
 
     /**
      * Store a new recurring transaction.

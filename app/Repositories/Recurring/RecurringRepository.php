@@ -95,21 +95,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     }
 
     /**
-     * Returns all the user's recurring transactions.
-     */
-    public function get(): Collection
-    {
-        return $this->user
-            ->recurrences()
-            ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
-            ->orderBy('active', 'DESC')
-            ->orderBy('transaction_type_id', 'ASC')
-            ->orderBy('title', 'ASC')
-            ->get()
-        ;
-    }
-
-    /**
      * Destroy a recurring transaction.
      */
     public function destroy(Recurrence $recurrence): void
@@ -123,6 +108,21 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     {
         Log::channel('audit')->info('Delete all recurring transactions through destroyAll');
         $this->user->recurrences()->delete();
+    }
+
+    /**
+     * Returns all the user's recurring transactions.
+     */
+    public function get(): Collection
+    {
+        return $this->user
+            ->recurrences()
+            ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+            ->orderBy('active', 'DESC')
+            ->orderBy('transaction_type_id', 'ASC')
+            ->orderBy('title', 'ASC')
+            ->get()
+        ;
     }
 
     /**
@@ -251,6 +251,38 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $note = $recurrence->notes()->first();
 
         return (string) $note?->text;
+    }
+
+    /**
+     * Generate events in the date range.
+     */
+    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
+    {
+        $occurrences = [];
+        $mutator     = clone $start;
+        $mutator->startOfDay();
+        $skipMod     = $repetition->repetition_skip + 1;
+        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
+
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
+        }
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+
+        // filter out all the weekend days:
+        return $this->filterWeekends($repetition, $occurrences);
     }
 
     public function getPiggyBank(RecurrenceTransaction $transaction): ?int
@@ -410,25 +442,17 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
-    private function filterMaxDate(?Carbon $max, array $occurrences): array
+    public function markGroupsAsNow(Collection $groups): void
     {
-        $filtered = [];
-        if (!$max instanceof Carbon) {
-            foreach ($occurrences as $date) {
-                if ($date->gt(today())) {
-                    $filtered[] = $date;
-                }
-            }
-
-            return $filtered;
-        }
-        foreach ($occurrences as $date) {
-            if ($date->lte($max) && $date->gt(today())) {
-                $filtered[] = $date;
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            /** @var TransactionJournal $journal */
+            foreach ($group->transactionJournals as $journal) {
+                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
+                $journal->date = now(config('app.timezone'));
+                $journal->save();
             }
         }
-
-        return $filtered;
     }
 
     /**
@@ -505,6 +529,16 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $search->take($limit)->get(['id', 'title', 'description']);
     }
 
+    #[Override]
+    public function setLatestDate(Recurrence $recurrence, ?Carbon $date): Recurrence
+    {
+        $recurrence->latest_date    = $date;
+        $recurrence->latest_date_tz = $date?->format('e');
+        $recurrence->save();
+
+        return $recurrence;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -539,38 +573,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     }
 
     /**
-     * Generate events in the date range.
-     */
-    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
-    {
-        $occurrences = [];
-        $mutator     = clone $start;
-        $mutator->startOfDay();
-        $skipMod     = $repetition->repetition_skip + 1;
-        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
-        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-
-        if ('daily' === $repetition->repetition_type) {
-            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
-        }
-        if ('weekly' === $repetition->repetition_type) {
-            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('monthly' === $repetition->repetition_type) {
-            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('ndom' === $repetition->repetition_type) {
-            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('yearly' === $repetition->repetition_type) {
-            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-
-        // filter out all the weekend days:
-        return $this->filterWeekends($repetition, $occurrences);
-    }
-
-    /**
      * Update a recurring transaction.
      *
      * @throws FireflyException
@@ -583,26 +585,24 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $service->update($recurrence, $data);
     }
 
-    public function markGroupsAsNow(Collection $groups): void
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
     {
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            /** @var TransactionJournal $journal */
-            foreach ($group->transactionJournals as $journal) {
-                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
-                $journal->date = now(config('app.timezone'));
-                $journal->save();
+        $filtered = [];
+        if (!$max instanceof Carbon) {
+            foreach ($occurrences as $date) {
+                if ($date->gt(today())) {
+                    $filtered[] = $date;
+                }
+            }
+
+            return $filtered;
+        }
+        foreach ($occurrences as $date) {
+            if ($date->lte($max) && $date->gt(today())) {
+                $filtered[] = $date;
             }
         }
-    }
 
-    #[Override]
-    public function setLatestDate(Recurrence $recurrence, ?Carbon $date): Recurrence
-    {
-        $recurrence->latest_date    = $date;
-        $recurrence->latest_date_tz = $date?->format('e');
-        $recurrence->save();
-
-        return $recurrence;
+        return $filtered;
     }
 }

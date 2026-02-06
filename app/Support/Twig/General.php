@@ -360,6 +360,14 @@ class General extends AbstractExtension
     }
 
     /**
+     * Basic example thing for some views.
+     */
+    protected function phpdate(): TwigFunction
+    {
+        return new TwigFunction('phpdate', date(...));
+    }
+
+    /**
      * Show URL host name
      */
     protected function phpHostName(): TwigFilter
@@ -376,14 +384,6 @@ class General extends AbstractExtension
 
             return e(sprintf('%s://%s', $proto, $host));
         });
-    }
-
-    /**
-     * Basic example thing for some views.
-     */
-    protected function phpdate(): TwigFunction
-    {
-        return new TwigFunction('phpdate', date(...));
     }
 
     private function fireflyIIIConfig()

@@ -63,14 +63,6 @@ class EditController extends Controller
         });
     }
 
-    public function resetHistory(PiggyBank $piggyBank): RedirectResponse
-    {
-        $this->piggyRepos->resetHistory($piggyBank);
-        session()->flash('success', (string) trans('firefly.piggy_history_reset'));
-
-        return redirect(route('piggy-banks.show', [$piggyBank->id]));
-    }
-
     /**
      * Edit a piggy bank.
      *
@@ -115,6 +107,14 @@ class EditController extends Controller
             'piggyBank'    => $piggyBank,
             'preFilled'    => $preFilled,
         ]);
+    }
+
+    public function resetHistory(PiggyBank $piggyBank): RedirectResponse
+    {
+        $this->piggyRepos->resetHistory($piggyBank);
+        session()->flash('success', (string) trans('firefly.piggy_history_reset'));
+
+        return redirect(route('piggy-banks.show', [$piggyBank->id]));
     }
 
     /**

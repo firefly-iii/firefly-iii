@@ -29,6 +29,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('notifications');
+    }
+
+    /**
      * Run the migrations.
      *
      * @SuppressWarnings("PHPMD.ShortMethodName")
@@ -52,13 +60,5 @@ return new class() extends Migration {
                 );
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('notifications');
     }
 };

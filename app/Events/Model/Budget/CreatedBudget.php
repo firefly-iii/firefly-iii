@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * CreatedBudget.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,6 +32,8 @@ class CreatedBudget extends Event
 {
     use SerializesModels;
 
-    public function __construct(public Budget $budget, public bool $createWebhookMessages) {}
-
+    public function __construct(
+        public Budget $budget,
+        public bool $createWebhookMessages
+    ) {}
 }

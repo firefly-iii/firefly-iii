@@ -42,9 +42,19 @@ class TestRequest extends FormRequest
         return ['page'     => $this->getPage(), 'start'    => $this->getDate('start'), 'end'      => $this->getDate('end'), 'accounts' => $this->getAccounts()];
     }
 
-    private function getPage(): int
+    public function rules(): array
     {
-        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
+        return [
+            'start'      => 'date|after:1970-01-02|before:2038-01-17',
+            'end'        => 'date|after_or_equal:start|after:1970-01-02|before:2038-01-17',
+            'accounts'   => '',
+            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
+        ];
+    }
+
+    private function getAccounts(): array
+    {
+        return $this->get('accounts') ?? [];
     }
 
     private function getDate(string $field): ?Carbon
@@ -58,18 +68,8 @@ class TestRequest extends FormRequest
         return null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', substr($value, 0, 10));
     }
 
-    private function getAccounts(): array
+    private function getPage(): int
     {
-        return $this->get('accounts') ?? [];
-    }
-
-    public function rules(): array
-    {
-        return [
-            'start'      => 'date|after:1970-01-02|before:2038-01-17',
-            'end'        => 'date|after_or_equal:start|after:1970-01-02|before:2038-01-17',
-            'accounts'   => '',
-            'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts',
-        ];
+        return 0 === (int) $this->query('page') ? 1 : (int) $this->query('page');
     }
 }

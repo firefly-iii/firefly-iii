@@ -60,6 +60,22 @@ class Transaction extends Model
     protected $hidden   = ['encrypted'];
 
     /**
+     * Check if a table is joined.
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Get the account this object belongs to.
      */
     public function account(): BelongsTo
@@ -124,22 +140,6 @@ class Transaction extends Model
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
         }
         $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * Check if a table is joined.
-     */
-    public static function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

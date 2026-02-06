@@ -28,6 +28,14 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('account_balances');
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -49,13 +57,5 @@ return new class() extends Migration {
                 $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id', 'date', 'title'], 'unique_account_currency');
             });
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('account_balances');
     }
 };

@@ -44,13 +44,6 @@ final class NavigationAddPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
-
     #[DataProvider('providePeriodsWithSkippingParam')]
     public function testGivenAFrequencyAndSkipIntervalWhenCalculateTheDateThenReturnsTheSkippedDateSuccessful(
         int $skip,
@@ -367,5 +360,12 @@ final class NavigationAddPeriodTest extends TestCase
         yield '2023-08-31 to 2023-09-30' => ['monthly', Carbon::parse('2023-08-31'), Carbon::parse('2023-09-30')];
 
         yield '2023-10-31 to 2023-11-30' => ['monthly', Carbon::parse('2023-10-31'), Carbon::parse('2023-11-30')];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

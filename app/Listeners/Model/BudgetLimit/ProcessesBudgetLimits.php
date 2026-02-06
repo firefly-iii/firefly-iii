@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * RecalculatesAvailableBudgets.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -35,10 +38,8 @@ use Illuminate\Support\Collection;
 
 class ProcessesBudgetLimits implements ShouldQueue
 {
-
-    public function handle(DestroyedBudgetLimit | CreatedBudgetLimit | UpdatedBudgetLimit $event): void
+    public function handle(CreatedBudgetLimit|DestroyedBudgetLimit|UpdatedBudgetLimit $event): void
     {
-
         if ($event instanceof DestroyedBudgetLimit && null !== $event->user) {
             // need to recalculate all available budgets for this user.
             $calculator = new AvailableBudgetCalculator();

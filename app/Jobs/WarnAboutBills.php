@@ -102,49 +102,6 @@ class WarnAboutBills implements ShouldQueue
         Log::debug('Done with handle()');
     }
 
-    private function hasDateFields(Bill $bill): bool
-    {
-        if (false === $bill->active) {
-            Log::debug('Bill is not active.');
-
-            return false;
-        }
-        if (null === $bill->end_date && null === $bill->extension_date) {
-            Log::debug('Bill has no date fields.');
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function needsWarning(Bill $bill, string $field): bool
-    {
-        if (null === $bill->{$field}) {
-            return false;
-        }
-        $diff = $this->getDiff($bill, $field);
-        $list = config('firefly.bill_reminder_periods');
-        Log::debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
-
-        return in_array($diff, $list, true);
-    }
-
-    private function getDiff(Bill $bill, string $field): int
-    {
-        $today  = clone $this->date;
-        $carbon = clone $bill->{$field};
-
-        return (int) $today->diffInDays($carbon);
-    }
-
-    private function sendWarning(Bill $bill, string $field): void
-    {
-        $diff = $this->getDiff($bill, $field);
-        Log::debug('Will now send warning!');
-        event(new SubscriptionNeedsExtensionOrRenewal($bill, $field, $diff));
-    }
-
     public function setDate(Carbon $date): void
     {
         $newDate    = clone $date;
@@ -174,6 +131,30 @@ class WarnAboutBills implements ShouldQueue
         return ['pay_dates'  => $single->meta['pay_dates'] ?? [], 'paid_dates' => $single->meta['paid_dates'] ?? []];
     }
 
+    private function getDiff(Bill $bill, string $field): int
+    {
+        $today  = clone $this->date;
+        $carbon = clone $bill->{$field};
+
+        return (int) $today->diffInDays($carbon);
+    }
+
+    private function hasDateFields(Bill $bill): bool
+    {
+        if (false === $bill->active) {
+            Log::debug('Bill is not active.');
+
+            return false;
+        }
+        if (null === $bill->end_date && null === $bill->extension_date) {
+            Log::debug('Bill has no date fields.');
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function needsOverdueAlert(array $dates): bool
     {
         $count    = count($dates['pay_dates']) - count($dates['paid_dates']);
@@ -190,11 +171,30 @@ class WarnAboutBills implements ShouldQueue
         return $diff >= 6; // FIXME hard coded value.
     }
 
+    private function needsWarning(Bill $bill, string $field): bool
+    {
+        if (null === $bill->{$field}) {
+            return false;
+        }
+        $diff = $this->getDiff($bill, $field);
+        $list = config('firefly.bill_reminder_periods');
+        Log::debug(sprintf('Difference in days for field "%s" ("%s") is %d day(s)', $field, $bill->{$field}->format('Y-m-d'), $diff));
+
+        return in_array($diff, $list, true);
+    }
+
     private function sendOverdueAlerts(User $user, array $overdue): void
     {
         if (count($overdue) > 0) {
             Log::debug(sprintf('Will now send warning about overdue subscription(s) for user #%d.', $user->id));
             event(new SubscriptionsAreOverdueForPayment($user, $overdue));
         }
+    }
+
+    private function sendWarning(Bill $bill, string $field): void
+    {
+        $diff = $this->getDiff($bill, $field);
+        Log::debug('Will now send warning!');
+        event(new SubscriptionNeedsExtensionOrRenewal($bill, $field, $diff));
     }
 }

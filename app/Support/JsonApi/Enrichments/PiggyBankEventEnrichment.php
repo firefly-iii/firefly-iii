@@ -38,7 +38,9 @@ use Illuminate\Support\Facades\Log;
 class PiggyBankEventEnrichment implements EnrichmentInterface
 {
     private array $accountCurrencies = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $accountIds        = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private Collection $collection;
     private array $currencies        = [];
     private array $groupIds          = [];

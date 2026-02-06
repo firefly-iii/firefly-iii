@@ -73,11 +73,6 @@ class Tag extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -88,9 +83,19 @@ class Tag extends Model
         return $this->morphMany(Location::class, 'locatable');
     }
 
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
+
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array
@@ -106,10 +111,5 @@ class Tag extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function primaryPeriodStatistics(): MorphMany
-    {
-        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
     }
 }

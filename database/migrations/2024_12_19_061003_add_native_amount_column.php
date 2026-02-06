@@ -41,6 +41,21 @@ return new class() extends Migration {
     ];
 
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        foreach ($this->tables as $table => $fields) {
+            foreach ($fields as $field) {
+                Schema::table($table, static function (Blueprint $table) use ($field): void {
+                    // add amount column
+                    $table->dropColumn($field);
+                });
+            }
+        }
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -52,21 +67,6 @@ return new class() extends Migration {
                     if (!Schema::hasColumn($table, $field)) {
                         $tableObject->decimal($field, 32, 12)->nullable();
                     }
-                });
-            }
-        }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        foreach ($this->tables as $table => $fields) {
-            foreach ($fields as $field) {
-                Schema::table($table, static function (Blueprint $table) use ($field): void {
-                    // add amount column
-                    $table->dropColumn($field);
                 });
             }
         }

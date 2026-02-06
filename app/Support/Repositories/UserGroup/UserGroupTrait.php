@@ -58,6 +58,11 @@ trait UserGroupTrait
         return $this->user;
     }
 
+    public function getUserGroup(): ?UserGroup
+    {
+        return $this->userGroup;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -75,11 +80,6 @@ trait UserGroupTrait
         $class = $user instanceof Authenticatable ? $user::class : 'NULL';
 
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
-    }
-
-    public function getUserGroup(): ?UserGroup
-    {
-        return $this->userGroup;
     }
 
     /**

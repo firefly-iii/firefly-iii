@@ -30,6 +30,8 @@ use Tests\integration\TestCase;
 
 abstract class IntervalTestCase extends TestCase
 {
+    abstract public static function factory(): Interval;
+
     abstract public static function provideIntervals(): array;
 
     #[DataProvider('provider')]
@@ -48,6 +50,4 @@ abstract class IntervalTestCase extends TestCase
             yield "{$interval->label}" => [$interval];
         }
     }
-
-    abstract public static function factory(): Interval;
 }

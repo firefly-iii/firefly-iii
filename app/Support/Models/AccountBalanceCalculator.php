@@ -46,47 +46,6 @@ class AccountBalanceCalculator
         // no-op
     }
 
-    /**
-     * Recalculate all account and transaction balances.
-     */
-    public static function recalculateAll(bool $forced): void
-    {
-        if ($forced) {
-            Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
-
-            // also delete account balances.
-            // AccountBalance::whereNotNull('created_at')->delete();
-        }
-        $object = new self();
-        self::optimizedCalculation(new Collection());
-    }
-
-    public static function recalculateForJournal(TransactionJournal $transactionJournal): void
-    {
-        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
-            return;
-        }
-        Log::debug(__METHOD__);
-        $object   = new self();
-
-        $set      = [];
-        foreach ($transactionJournal->transactions as $transaction) {
-            $set[$transaction->account_id] = $transaction->account;
-        }
-        $accounts = new Collection()->push(...$set);
-
-        // find meta value:
-        $date     = $transactionJournal->date;
-        $meta     = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
-        Log::debug(sprintf('Date used is "%s"', $date->toW3cString()));
-        if (null !== $meta) {
-            $date = Carbon::parse($meta->data);
-            Log::debug(sprintf('Date is overruled with "%s"', $date->toW3cString()));
-        }
-
-        self::optimizedCalculation($accounts, $date);
-    }
-
     public static function getLatestBalance(int $accountId, int $currencyId, ?Carbon $notBefore): string
     {
         if (!$notBefore instanceof Carbon) {
@@ -211,5 +170,46 @@ class AccountBalanceCalculator
         // then update all transactions.
         // save all collected balances in their respective account objects.
         // $this->storeAccountBalances($balances);
+    }
+
+    /**
+     * Recalculate all account and transaction balances.
+     */
+    public static function recalculateAll(bool $forced): void
+    {
+        if ($forced) {
+            Transaction::whereNull('deleted_at')->update(['balance_dirty' => true]);
+
+            // also delete account balances.
+            // AccountBalance::whereNotNull('created_at')->delete();
+        }
+        $object = new self();
+        self::optimizedCalculation(new Collection());
+    }
+
+    public static function recalculateForJournal(TransactionJournal $transactionJournal): void
+    {
+        if (false === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data) {
+            return;
+        }
+        Log::debug(__METHOD__);
+        $object   = new self();
+
+        $set      = [];
+        foreach ($transactionJournal->transactions as $transaction) {
+            $set[$transaction->account_id] = $transaction->account;
+        }
+        $accounts = new Collection()->push(...$set);
+
+        // find meta value:
+        $date     = $transactionJournal->date;
+        $meta     = $transactionJournal->transactionJournalMeta()->where('name', '_internal_previous_date')->where('data', '!=', '')->first();
+        Log::debug(sprintf('Date used is "%s"', $date->toW3cString()));
+        if (null !== $meta) {
+            $date = Carbon::parse($meta->data);
+            Log::debug(sprintf('Date is overruled with "%s"', $date->toW3cString()));
+        }
+
+        self::optimizedCalculation($accounts, $date);
     }
 }

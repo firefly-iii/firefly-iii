@@ -70,8 +70,6 @@ interface AvailableBudgetRepositoryInterface
     #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
-    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
-
     /**
      * Returns all available budget objects.
      */
@@ -83,6 +81,8 @@ interface AvailableBudgetRepositoryInterface
     public function getAvailableBudgetsByDate(?Carbon $start, ?Carbon $end): Collection;
 
     public function getAvailableBudgetsByExactDate(Carbon $start, Carbon $end): Collection;
+
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Get by transaction currency and date. Should always result in one entry or NULL.

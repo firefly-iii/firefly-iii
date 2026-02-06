@@ -65,15 +65,6 @@ class BillReminder extends Notification
         ;
     }
 
-    private function getSubject(): string
-    {
-        if (0 === $this->diff) {
-            return (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-        }
-
-        return (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
-    }
-
     //    public function toNtfy(User $notifiable): Message
     //    {
     //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -116,5 +107,14 @@ class BillReminder extends Notification
     public function via(User $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+    }
+
+    private function getSubject(): string
+    {
+        if (0 === $this->diff) {
+            return (string) trans(sprintf('email.bill_warning_subject_now_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
+        }
+
+        return (string) trans(sprintf('email.bill_warning_subject_%s', $this->field), ['diff' => $this->diff, 'name' => $this->bill->name]);
     }
 }

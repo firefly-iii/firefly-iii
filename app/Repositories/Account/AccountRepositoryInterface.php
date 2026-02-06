@@ -73,17 +73,17 @@ interface AccountRepositoryInterface
 
     public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
-    /**
-     * Return account type or null if not found.
-     */
-    public function getAccountTypeByType(string $type): ?AccountType;
-
     public function getAccountsById(array $accountIds): Collection;
 
     /**
      * @param array<int, int|string> $types
      */
     public function getAccountsByType(array $types, ?array $sort = []): Collection;
+
+    /**
+     * Return account type or null if not found.
+     */
+    public function getAccountTypeByType(string $type): ?AccountType;
 
     public function getActiveAccountsByType(array $types): Collection;
 

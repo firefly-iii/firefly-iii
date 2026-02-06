@@ -75,6 +75,11 @@ class DebugController extends Controller
         $this->middleware(IsDemoUser::class)->except(['displayError']);
     }
 
+    public function apiTest(): View
+    {
+        return view('test.api-test');
+    }
+
     /**
      * Show all possible errors.
      *
@@ -160,200 +165,6 @@ class DebugController extends Controller
         }
 
         return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
-    }
-
-    public function apiTest(): View
-    {
-        return view('test.api-test');
-    }
-
-    private function generateTable(): string
-    {
-        // system information:
-        $system = $this->getSystemInformation();
-        $docker = $this->getBuildInfo();
-        $app    = $this->getAppInfo();
-        $user   = $this->getUserInfo();
-
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
-    }
-
-    private function getSystemInformation(): array
-    {
-        $maxFileSize   = Steam::phpBytes(ini_get('upload_max_filesize'));
-        $maxPostSize   = Steam::phpBytes(ini_get('post_max_size'));
-        $drivers       = DB::availableDrivers();
-        $currentDriver = DB::getDriverName();
-
-        return [
-            'php_version'     => PHP_VERSION,
-            'php_os'          => PHP_OS,
-            'build_time'      => config('firefly.build_time'),
-            'build_time_nice' => Carbon::parse(config('firefly.build_time'), 'Europe/Amsterdam')->setTimezone('Europe/Amsterdam')->format('Y-m-d H:i:s e'),
-            'uname'           => php_uname('m'),
-            'interface'       => PHP_SAPI,
-            'bits'            => PHP_INT_SIZE * 8,
-            'bcscale'         => bcscale(),
-            'display_errors'  => ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
-            'upload_size'     => min($maxFileSize, $maxPostSize),
-            'all_drivers'     => $drivers,
-            'current_driver'  => $currentDriver,
-        ];
-    }
-
-    private function getBuildInfo(): array
-    {
-        $return = [
-            'is_docker'       => env('IS_DOCKER', false), // @phpstan-ignore-line
-            'build'           => '(unknown)',
-            'build_date'      => '(unknown)',
-            'base_build'      => '(unknown)',
-            'base_build_date' => '(unknown)',
-        ];
-
-        try {
-            if (file_exists('/var/www/counter-main.txt')) {
-                $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
-                Log::debug(sprintf('build is now "%s"', $return['build']));
-            }
-        } catch (Exception $e) {
-            Log::debug('Could not check build counter, but thats ok.');
-            Log::warning($e->getMessage());
-        }
-
-        try {
-            if (file_exists('/var/www/build-date-main.txt')) {
-                $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
-            }
-        } catch (Exception $e) {
-            Log::debug('Could not check build date, but thats ok.');
-            Log::warning($e->getMessage());
-        }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
-            $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
-        }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
-            $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
-        }
-
-        return $return;
-    }
-
-    private function getAppInfo(): array
-    {
-        $userGuard      = config('auth.defaults.guard');
-
-        $config         = FireflyConfig::get('last_rt_job', 0);
-        $lastTime       = (int) $config->data;
-        $lastCronjob    = 'never';
-        $lastCronjobAgo = 'never';
-        if ($lastTime > 0) {
-            $carbon         = Carbon::createFromTimestamp($lastTime);
-            $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans(); // @phpstan-ignore-line
-        }
-
-        return [
-            'debug'              => var_export(config('app.debug'), true),
-            'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
-            'default_language'   => (string) config('firefly.default_language'),
-            'default_locale'     => (string) config('firefly.default_locale'),
-            'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
-            'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
-            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
-
-            // the dates for the cron job are based on the recurring cron job's times.
-            // any of the cron jobs will do, they always run at the same time.
-            // but this job is the oldest, so the biggest chance it ran once
-
-            'last_cronjob'       => $lastCronjob,
-            'last_cronjob_ago'   => $lastCronjobAgo,
-        ];
-    }
-
-    private function getUserInfo(): array
-    {
-        $userFlags      = $this->getUserFlags();
-
-        // user info
-        $userAgent      = request()->header('user-agent');
-
-        // set languages, see what happens:
-        $original       = setlocale(LC_ALL, '0');
-        $localeAttempts = [];
-        $parts          = Steam::getLocaleArray(Steam::getLocale());
-        foreach ($parts as $code) {
-            $code                  = trim($code);
-            Log::debug(sprintf('Trying to set %s', $code));
-            $result                = setlocale(LC_ALL, $code);
-            $localeAttempts[$code] = $result === $code;
-        }
-        setlocale(LC_ALL, (string) $original);
-
-        return [
-            'user_id'            => auth()->user()->id,
-            'user_count'         => User::count(),
-            'user_flags'         => $userFlags,
-            'user_agent'         => $userAgent,
-            'primary'            => Amount::getPrimaryCurrency(),
-            'convert_to_primary' => Amount::convertToPrimary(),
-            'locale_attempts'    => $localeAttempts,
-            'locale'             => Steam::getLocale(),
-            'language'           => Steam::getLanguage(),
-            'view_range'         => Preferences::get('viewRange', '1M')->data,
-        ];
-    }
-
-    private function getUserFlags(): string
-    {
-        $flags      = [];
-
-        /** @var User $user */
-        $user       = auth()->user();
-
-        // has liabilities
-        if ($user->accounts()->accountTypeIn([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value])->count() > 0) {
-            $flags[] = '<span title="Has liabilities">:credit_card:</span>';
-        }
-
-        // has piggies
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUser($user);
-
-        if ($repository->getPiggyBanks()->count() > 0) {
-            $flags[] = '<span title="Has piggy banks">:pig:</span>';
-        }
-
-        // has stored reconciliations
-        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
-        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
-            $flags[] = '<span title="Has reconciled">:ledger:</span>';
-        }
-
-        // has used importer?
-
-        // has rules
-        if ($user->rules()->count() > 0) {
-            $flags[] = '<span title="Has rules">:wrench:</span>';
-        }
-
-        // has recurring transactions
-        if ($user->recurrences()->count() > 0) {
-            $flags[] = '<span title="Has recurring transactions">:clock130:</span>';
-        }
-
-        // has groups
-        if ($user->objectGroups()->count() > 0) {
-            $flags[] = '<span title="Has object groups">:bookmark_tabs:</span>';
-        }
-
-        // uses bills
-        if ($user->bills()->count() > 0) {
-            $flags[] = '<span title="Has subscriptions">:email:</span>';
-        }
-
-        return implode(' ', $flags);
     }
 
     public function routes(Request $request): never
@@ -456,6 +267,100 @@ class DebugController extends Controller
         exit;
     }
 
+    /**
+     * Flash all types of messages.
+     */
+    public function testFlash(Request $request): Redirector|RedirectResponse
+    {
+        $request->session()->flash('success', 'This is a success message.');
+        $request->session()->flash('info', 'This is an info message.');
+        $request->session()->flash('warning', 'This is a warning.');
+        $request->session()->flash('error', 'This is an error!');
+
+        return redirect(route('home'));
+    }
+
+    private function generateTable(): string
+    {
+        // system information:
+        $system = $this->getSystemInformation();
+        $docker = $this->getBuildInfo();
+        $app    = $this->getAppInfo();
+        $user   = $this->getUserInfo();
+
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
+    }
+
+    private function getAppInfo(): array
+    {
+        $userGuard      = config('auth.defaults.guard');
+
+        $config         = FireflyConfig::get('last_rt_job', 0);
+        $lastTime       = (int) $config->data;
+        $lastCronjob    = 'never';
+        $lastCronjobAgo = 'never';
+        if ($lastTime > 0) {
+            $carbon         = Carbon::createFromTimestamp($lastTime);
+            $lastCronjob    = $carbon->format('Y-m-d H:i:s');
+            $lastCronjobAgo = $carbon->locale('en')->diffForHumans(); // @phpstan-ignore-line
+        }
+
+        return [
+            'debug'              => var_export(config('app.debug'), true),
+            'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
+            'default_language'   => (string) config('firefly.default_language'),
+            'default_locale'     => (string) config('firefly.default_locale'),
+            'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
+            'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
+            'stateful_domains'   => implode(', ', config('sanctum.stateful')),
+
+            // the dates for the cron job are based on the recurring cron job's times.
+            // any of the cron jobs will do, they always run at the same time.
+            // but this job is the oldest, so the biggest chance it ran once
+
+            'last_cronjob'       => $lastCronjob,
+            'last_cronjob_ago'   => $lastCronjobAgo,
+        ];
+    }
+
+    private function getBuildInfo(): array
+    {
+        $return = [
+            'is_docker'       => env('IS_DOCKER', false), // @phpstan-ignore-line
+            'build'           => '(unknown)',
+            'build_date'      => '(unknown)',
+            'base_build'      => '(unknown)',
+            'base_build_date' => '(unknown)',
+        ];
+
+        try {
+            if (file_exists('/var/www/counter-main.txt')) {
+                $return['build'] = trim(file_get_contents('/var/www/counter-main.txt'));
+                Log::debug(sprintf('build is now "%s"', $return['build']));
+            }
+        } catch (Exception $e) {
+            Log::debug('Could not check build counter, but thats ok.');
+            Log::warning($e->getMessage());
+        }
+
+        try {
+            if (file_exists('/var/www/build-date-main.txt')) {
+                $return['build_date'] = trim(file_get_contents('/var/www/build-date-main.txt'));
+            }
+        } catch (Exception $e) {
+            Log::debug('Could not check build date, but thats ok.');
+            Log::warning($e->getMessage());
+        }
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
+            $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
+        }
+        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
+            $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
+        }
+
+        return $return;
+    }
+
     private function getParameter(string $name): string
     {
         switch ($name) {
@@ -552,16 +457,111 @@ class DebugController extends Controller
         }
     }
 
-    /**
-     * Flash all types of messages.
-     */
-    public function testFlash(Request $request): Redirector|RedirectResponse
+    private function getSystemInformation(): array
     {
-        $request->session()->flash('success', 'This is a success message.');
-        $request->session()->flash('info', 'This is an info message.');
-        $request->session()->flash('warning', 'This is a warning.');
-        $request->session()->flash('error', 'This is an error!');
+        $maxFileSize   = Steam::phpBytes(ini_get('upload_max_filesize'));
+        $maxPostSize   = Steam::phpBytes(ini_get('post_max_size'));
+        $drivers       = DB::availableDrivers();
+        $currentDriver = DB::getDriverName();
 
-        return redirect(route('home'));
+        return [
+            'php_version'     => PHP_VERSION,
+            'php_os'          => PHP_OS,
+            'build_time'      => config('firefly.build_time'),
+            'build_time_nice' => Carbon::parse(config('firefly.build_time'), 'Europe/Amsterdam')->setTimezone('Europe/Amsterdam')->format('Y-m-d H:i:s e'),
+            'uname'           => php_uname('m'),
+            'interface'       => PHP_SAPI,
+            'bits'            => PHP_INT_SIZE * 8,
+            'bcscale'         => bcscale(),
+            'display_errors'  => ini_get('display_errors'),
+            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
+            'upload_size'     => min($maxFileSize, $maxPostSize),
+            'all_drivers'     => $drivers,
+            'current_driver'  => $currentDriver,
+        ];
+    }
+
+    private function getUserFlags(): string
+    {
+        $flags      = [];
+
+        /** @var User $user */
+        $user       = auth()->user();
+
+        // has liabilities
+        if ($user->accounts()->accountTypeIn([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value])->count() > 0) {
+            $flags[] = '<span title="Has liabilities">:credit_card:</span>';
+        }
+
+        // has piggies
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUser($user);
+
+        if ($repository->getPiggyBanks()->count() > 0) {
+            $flags[] = '<span title="Has piggy banks">:pig:</span>';
+        }
+
+        // has stored reconciliations
+        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
+        if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
+            $flags[] = '<span title="Has reconciled">:ledger:</span>';
+        }
+
+        // has used importer?
+
+        // has rules
+        if ($user->rules()->count() > 0) {
+            $flags[] = '<span title="Has rules">:wrench:</span>';
+        }
+
+        // has recurring transactions
+        if ($user->recurrences()->count() > 0) {
+            $flags[] = '<span title="Has recurring transactions">:clock130:</span>';
+        }
+
+        // has groups
+        if ($user->objectGroups()->count() > 0) {
+            $flags[] = '<span title="Has object groups">:bookmark_tabs:</span>';
+        }
+
+        // uses bills
+        if ($user->bills()->count() > 0) {
+            $flags[] = '<span title="Has subscriptions">:email:</span>';
+        }
+
+        return implode(' ', $flags);
+    }
+
+    private function getUserInfo(): array
+    {
+        $userFlags      = $this->getUserFlags();
+
+        // user info
+        $userAgent      = request()->header('user-agent');
+
+        // set languages, see what happens:
+        $original       = setlocale(LC_ALL, '0');
+        $localeAttempts = [];
+        $parts          = Steam::getLocaleArray(Steam::getLocale());
+        foreach ($parts as $code) {
+            $code                  = trim($code);
+            Log::debug(sprintf('Trying to set %s', $code));
+            $result                = setlocale(LC_ALL, $code);
+            $localeAttempts[$code] = $result === $code;
+        }
+        setlocale(LC_ALL, (string) $original);
+
+        return [
+            'user_id'            => auth()->user()->id,
+            'user_count'         => User::count(),
+            'user_flags'         => $userFlags,
+            'user_agent'         => $userAgent,
+            'primary'            => Amount::getPrimaryCurrency(),
+            'convert_to_primary' => Amount::convertToPrimary(),
+            'locale_attempts'    => $localeAttempts,
+            'locale'             => Steam::getLocale(),
+            'language'           => Steam::getLanguage(),
+            'view_range'         => Preferences::get('viewRange', '1M')->data,
+        ];
     }
 }

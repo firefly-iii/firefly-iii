@@ -43,18 +43,6 @@ final class ObjectGroupControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createTestObjectGroups(int $count, User $user): void
-    {
-        for ($i = 1; $i <= $count; ++$i) {
-            $objectGroup = ObjectGroup::create([
-                'title'         => 'Object Group '.$i,
-                'order'         => $i,
-                'user_group_id' => $user->user_group_id,
-                'user_id'       => $user->id,
-            ]);
-        }
-    }
-
     public function testGivenAnUnauthenticatedRequestWhenCallingTheObjectGroupEndpointThenReturn401HttpCode(): void
     {
         $response = $this->get(route('api.v1.autocomplete.object-groups'), ['Accept' => 'application/json']);
@@ -89,6 +77,21 @@ final class ObjectGroupControllerTest extends TestCase
         $response->assertJsonStructure(['*' => ['id', 'name', 'title']]);
     }
 
+    public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsThatMatchQuery(): void
+    {
+        $user     = $this->createAuthenticatedUser();
+        $this->actingAs($user);
+
+        $this->createTestObjectGroups(20, $user);
+        $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group 1', 'limit' => 20]), ['Accept' => 'application/json']);
+
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
+        // Object Group 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
+        $response->assertJsonCount(11);
+        $response->assertJsonMissing(['name' => 'Object Group 2']);
+    }
+
     public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsWithLimit(): void
     {
         $user     = $this->createAuthenticatedUser();
@@ -104,18 +107,15 @@ final class ObjectGroupControllerTest extends TestCase
         $response->assertJsonStructure(['*' => ['id', 'name', 'title']]);
     }
 
-    public function testGivenAuthenticatedRequestWhenCallingTheObjectGroupsEndpointWithQueryThenReturnsObjectGroupsThatMatchQuery(): void
+    private function createTestObjectGroups(int $count, User $user): void
     {
-        $user     = $this->createAuthenticatedUser();
-        $this->actingAs($user);
-
-        $this->createTestObjectGroups(20, $user);
-        $response = $this->get(route('api.v1.autocomplete.object-groups', ['query' => 'Object Group 1', 'limit' => 20]), ['Accept' => 'application/json']);
-
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/json');
-        // Object Group 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
-        $response->assertJsonCount(11);
-        $response->assertJsonMissing(['name' => 'Object Group 2']);
+        for ($i = 1; $i <= $count; ++$i) {
+            $objectGroup = ObjectGroup::create([
+                'title'         => 'Object Group '.$i,
+                'order'         => $i,
+                'user_group_id' => $user->user_group_id,
+                'user_id'       => $user->id,
+            ]);
+        }
     }
 }

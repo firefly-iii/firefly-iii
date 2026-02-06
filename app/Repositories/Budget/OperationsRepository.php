@@ -77,6 +77,57 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $avg;
     }
 
+    #[Override]
+    public function collectExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
+    ): array {
+        Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
+        // this collector excludes all transfers TO liabilities (which are also withdrawals)
+        // because those expenses only become expenses once they move from the liability to the friend.
+        // 2024-12-24 disable the exclusion for now.
+
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($this->user);
+        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
+        $selection  = new Collection();
+
+        /** @var Account $account */
+        foreach ($subset as $account) {
+            if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
+                $selection->push($account);
+            }
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector  = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($this->user)
+            ->setRange($start, $end)
+            // ->excludeDestinationAccounts($selection)
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
+        ;
+
+        if ($accounts instanceof Collection) {
+            $collector->setAccounts($accounts);
+        }
+        if (!$budgets instanceof Collection) {
+            $budgets = $this->getBudgets();
+        }
+        if ($currency instanceof TransactionCurrency) {
+            Log::debug(sprintf('Limit to normal currency %s', $currency->code));
+            $collector->setNormalCurrency($currency);
+        }
+        if ($budgets->count() > 0) {
+            $collector->setBudgets($budgets);
+        }
+
+        return $collector->getExtractedJournals();
+    }
+
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
@@ -217,12 +268,36 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $array;
     }
 
-    private function getBudgets(): Collection
-    {
-        /** @var BudgetRepositoryInterface $repos */
-        $repos = app(BudgetRepositoryInterface::class);
+    public function sumCollectedExpenses(
+        array $expenses,
+        Carbon $start,
+        Carbon $end,
+        TransactionCurrency $transactionCurrency,
+        bool $convertToPrimary = false
+    ): array {
+        Log::debug(sprintf('Start of %s.', __METHOD__));
+        $summarizer = new TransactionSummarizer($this->user);
+        $summarizer->setConvertToPrimary($convertToPrimary);
 
-        return $repos->getActiveBudgets();
+        // filter $journals by range AND currency if it is present.
+        $expenses   = array_filter(
+            $expenses,
+            static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id
+        );
+
+        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
+    }
+
+    public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
+    {
+        Log::debug(sprintf('Start of %s.', __METHOD__));
+        $summarizer = new TransactionSummarizer($this->user);
+        $summarizer->setConvertToPrimary($convertToPrimary);
+
+        // filter $journals by range AND currency if it is present.
+        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['budget_id'] === $budget->id);
+
+        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
     }
 
     /**
@@ -288,86 +363,11 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $summarizer->groupByCurrencyId($journals, 'negative', false);
     }
 
-    public function sumCollectedExpenses(
-        array $expenses,
-        Carbon $start,
-        Carbon $end,
-        TransactionCurrency $transactionCurrency,
-        bool $convertToPrimary = false
-    ): array {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
-        $summarizer = new TransactionSummarizer($this->user);
-        $summarizer->setConvertToPrimary($convertToPrimary);
-
-        // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter(
-            $expenses,
-            static fn (array $expense): bool => $expense['date']->between($start, $end) && $expense['currency_id'] === $transactionCurrency->id
-        );
-
-        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
-    }
-
-    public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
+    private function getBudgets(): Collection
     {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
-        $summarizer = new TransactionSummarizer($this->user);
-        $summarizer->setConvertToPrimary($convertToPrimary);
+        /** @var BudgetRepositoryInterface $repos */
+        $repos = app(BudgetRepositoryInterface::class);
 
-        // filter $journals by range AND currency if it is present.
-        $expenses   = array_filter($expenses, static fn (array $expense): bool => $expense['budget_id'] === $budget->id);
-
-        return $summarizer->groupByCurrencyId($expenses, 'negative', false);
-    }
-
-    #[Override]
-    public function collectExpenses(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $budgets = null,
-        ?TransactionCurrency $currency = null
-    ): array {
-        Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
-        // this collector excludes all transfers TO liabilities (which are also withdrawals)
-        // because those expenses only become expenses once they move from the liability to the friend.
-        // 2024-12-24 disable the exclusion for now.
-
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser($this->user);
-        $subset     = $repository->getAccountsByType(config('firefly.valid_liabilities'));
-        $selection  = new Collection();
-
-        /** @var Account $account */
-        foreach ($subset as $account) {
-            if ('credit' === $repository->getMetaValue($account, 'liability_direction')) {
-                $selection->push($account);
-            }
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector  = app(GroupCollectorInterface::class);
-        $collector
-            ->setUser($this->user)
-            ->setRange($start, $end)
-            // ->excludeDestinationAccounts($selection)
-            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
-        ;
-
-        if ($accounts instanceof Collection) {
-            $collector->setAccounts($accounts);
-        }
-        if (!$budgets instanceof Collection) {
-            $budgets = $this->getBudgets();
-        }
-        if ($currency instanceof TransactionCurrency) {
-            Log::debug(sprintf('Limit to normal currency %s', $currency->code));
-            $collector->setNormalCurrency($currency);
-        }
-        if ($budgets->count() > 0) {
-            $collector->setBudgets($budgets);
-        }
-
-        return $collector->getExtractedJournals();
+        return $repos->getActiveBudgets();
     }
 }

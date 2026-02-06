@@ -72,52 +72,6 @@ class UpdateRequest extends FormRequest
         return $return;
     }
 
-    private function getRuleTriggers(): ?array
-    {
-        if (!$this->has('triggers')) {
-            return null;
-        }
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
-                $prohibited     = array_key_exists('prohibited', $trigger) ? $trigger['prohibited'] : false;
-                $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
-                $return[]       = [
-                    'type'            => $trigger['type'],
-                    'value'           => $trigger['value'],
-                    'prohibited'      => $prohibited,
-                    'active'          => $active,
-                    'stop_processing' => $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    private function getRuleActions(): ?array
-    {
-        if (!$this->has('actions')) {
-            return null;
-        }
-        $actions = $this->get('actions');
-        $return  = [];
-        if (is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
     /**
      * The rules that the incoming request must be matched against.
      */
@@ -173,6 +127,19 @@ class UpdateRequest extends FormRequest
     /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
+    protected function atLeastOneAction(Validator $validator): void
+    {
+        $data    = $validator->getData();
+        $actions = $data['actions'] ?? null;
+        // need at least one action
+        if (is_array($actions) && 0 === count($actions)) {
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     */
     protected function atLeastOneTrigger(Validator $validator): void
     {
         $data     = $validator->getData();
@@ -180,6 +147,34 @@ class UpdateRequest extends FormRequest
         // need at least one trigger
         if (is_array($triggers) && 0 === count($triggers)) {
             $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     */
+    protected function atLeastOneValidAction(Validator $validator): void
+    {
+        $data          = $validator->getData();
+        $actions       = $data['actions'] ?? [];
+        $allInactive   = true;
+        $inactiveIndex = 0;
+        // need at least one action
+        if (is_array($actions) && 0 === count($actions)) {
+            return;
+        }
+
+        foreach ($actions as $index => $action) {
+            $active = array_key_exists('active', $action) ? $action['active'] : true; // assume true
+            if (true === $active) {
+                $allInactive = false;
+            }
+            if (false === $active) {
+                $inactiveIndex = $index;
+            }
+        }
+        if ($allInactive) {
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
         }
     }
 
@@ -210,44 +205,49 @@ class UpdateRequest extends FormRequest
         }
     }
 
-    /**
-     * Adds an error to the validator when there are no repetitions in the array of data.
-     */
-    protected function atLeastOneAction(Validator $validator): void
+    private function getRuleActions(): ?array
     {
-        $data    = $validator->getData();
-        $actions = $data['actions'] ?? null;
-        // need at least one action
-        if (is_array($actions) && 0 === count($actions)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+        if (!$this->has('actions')) {
+            return null;
         }
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
     }
 
-    /**
-     * Adds an error to the validator when there are no repetitions in the array of data.
-     */
-    protected function atLeastOneValidAction(Validator $validator): void
+    private function getRuleTriggers(): ?array
     {
-        $data          = $validator->getData();
-        $actions       = $data['actions'] ?? [];
-        $allInactive   = true;
-        $inactiveIndex = 0;
-        // need at least one action
-        if (is_array($actions) && 0 === count($actions)) {
-            return;
+        if (!$this->has('triggers')) {
+            return null;
+        }
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $active         = array_key_exists('active', $trigger) ? $trigger['active'] : true;
+                $prohibited     = array_key_exists('prohibited', $trigger) ? $trigger['prohibited'] : false;
+                $stopProcessing = array_key_exists('stop_processing', $trigger) ? $trigger['stop_processing'] : false;
+                $return[]       = [
+                    'type'            => $trigger['type'],
+                    'value'           => $trigger['value'],
+                    'prohibited'      => $prohibited,
+                    'active'          => $active,
+                    'stop_processing' => $stopProcessing,
+                ];
+            }
         }
 
-        foreach ($actions as $index => $action) {
-            $active = array_key_exists('active', $action) ? $action['active'] : true; // assume true
-            if (true === $active) {
-                $allInactive = false;
-            }
-            if (false === $active) {
-                $inactiveIndex = $index;
-            }
-        }
-        if ($allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
-        }
+        return $return;
     }
 }

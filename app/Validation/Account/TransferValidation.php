@@ -32,6 +32,10 @@ use Illuminate\Support\Facades\Log;
  */
 trait TransferValidation
 {
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
+
     protected function validateTransferDestination(array $array): bool
     {
         $accountId   = $array['id'] ?? null;
@@ -68,10 +72,6 @@ trait TransferValidation
 
         return true;
     }
-
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     protected function validateTransferSource(array $array): bool
     {

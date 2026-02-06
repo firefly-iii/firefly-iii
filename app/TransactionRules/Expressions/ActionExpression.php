@@ -96,38 +96,13 @@ class ActionExpression
         $this->validationError    = $this->validate();
     }
 
-    private function isExpression(string $expr): bool
-    {
-        return str_starts_with($expr, '=') && strlen($expr) > 1;
-    }
-
-    private function validate(): ?SyntaxError
+    public function evaluate(array $journal): string
     {
         if (!$this->isExpression) {
-            return null;
+            return $this->expr;
         }
 
-        try {
-            $this->lint();
-
-            return null;
-        } catch (SyntaxError $e) {
-            return $e;
-        }
-    }
-
-    private function lint(): void
-    {
-        if (!$this->isExpression) {
-            return;
-        }
-
-        $this->lintExpression(substr($this->expr, 1));
-    }
-
-    private function lintExpression(string $expr): void
-    {
-        $this->expressionLanguage->lint($expr, self::$NAMES);
+        return $this->evaluateExpression(substr($this->expr, 1), $journal);
     }
 
     public function getValidationError(): ?SyntaxError
@@ -152,12 +127,37 @@ class ActionExpression
         return (string) $result;
     }
 
-    public function evaluate(array $journal): string
+    private function isExpression(string $expr): bool
+    {
+        return str_starts_with($expr, '=') && strlen($expr) > 1;
+    }
+
+    private function lint(): void
     {
         if (!$this->isExpression) {
-            return $this->expr;
+            return;
         }
 
-        return $this->evaluateExpression(substr($this->expr, 1), $journal);
+        $this->lintExpression(substr($this->expr, 1));
+    }
+
+    private function lintExpression(string $expr): void
+    {
+        $this->expressionLanguage->lint($expr, self::$NAMES);
+    }
+
+    private function validate(): ?SyntaxError
+    {
+        if (!$this->isExpression) {
+            return null;
+        }
+
+        try {
+            $this->lint();
+
+            return null;
+        } catch (SyntaxError $e) {
+            return $e;
+        }
     }
 }

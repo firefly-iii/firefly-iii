@@ -114,6 +114,20 @@ class TagController extends Controller
     }
 
     /**
+     * Destroy a tag.
+     */
+    public function destroy(Tag $tag): RedirectResponse
+    {
+        $tagName = $tag->tag;
+        $this->repository->destroy($tag);
+
+        session()->flash('success', (string) trans('firefly.deleted_tag', ['tag' => $tagName]));
+        Preferences::mark();
+
+        return redirect($this->getPreviousUrl('tags.delete.url'));
+    }
+
+    /**
      * Edit a tag.
      *
      * @return Factory|View
@@ -196,20 +210,6 @@ class TagController extends Controller
         session()->flash('success', trans_choice('firefly.deleted_x_tags', $count));
 
         return redirect(route('tags.index'));
-    }
-
-    /**
-     * Destroy a tag.
-     */
-    public function destroy(Tag $tag): RedirectResponse
-    {
-        $tagName = $tag->tag;
-        $this->repository->destroy($tag);
-
-        session()->flash('success', (string) trans('firefly.deleted_tag', ['tag' => $tagName]));
-        Preferences::mark();
-
-        return redirect($this->getPreviousUrl('tags.delete.url'));
     }
 
     /**

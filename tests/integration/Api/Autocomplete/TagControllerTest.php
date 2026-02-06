@@ -41,27 +41,6 @@ final class TagControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createTestTags(int $count, User $user): void
-    {
-        for ($i = 1; $i <= $count; ++$i) {
-            $tag = Tag::create([
-                'user_id'       => $user->id,
-                'user_group_id' => $user->user_group_id,
-                'tag'           => 'Tag '.$i,
-                'tag_mode'      => 'nothing',
-            ]);
-        }
-    }
-
-    public function testUnauthenticatedCall(): void
-    {
-        // test API
-        $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
-        $response->assertHeader('Content-Type', 'application/json');
-        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
-    }
-
     public function testAuthenticatedCall(): void
     {
         // act as a user
@@ -115,5 +94,26 @@ final class TagControllerTest extends TestCase
         // Bill 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'Tag 2']);
+    }
+
+    public function testUnauthenticatedCall(): void
+    {
+        // test API
+        $response = $this->get(route('api.v1.autocomplete.tags'), ['Accept' => 'application/json']);
+        $response->assertStatus(401);
+        $response->assertHeader('Content-Type', 'application/json');
+        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
+    }
+
+    private function createTestTags(int $count, User $user): void
+    {
+        for ($i = 1; $i <= $count; ++$i) {
+            $tag = Tag::create([
+                'user_id'       => $user->id,
+                'user_group_id' => $user->user_group_id,
+                'tag'           => 'Tag '.$i,
+                'tag_mode'      => 'nothing',
+            ]);
+        }
     }
 }

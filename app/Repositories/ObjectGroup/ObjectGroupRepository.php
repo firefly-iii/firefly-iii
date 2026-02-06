@@ -51,17 +51,6 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         }
     }
 
-    public function get(): Collection
-    {
-        return $this->user
-            ->objectGroups()
-            ->with(['piggyBanks', 'bills'])
-            ->orderBy('order', 'ASC')
-            ->orderBy('title', 'ASC')
-            ->get()
-        ;
-    }
-
     public function deleteEmpty(): void
     {
         $all = $this->get();
@@ -85,6 +74,17 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
             $piggy->save();
         }
         $objectGroup->delete();
+    }
+
+    public function get(): Collection
+    {
+        return $this->user
+            ->objectGroups()
+            ->with(['piggyBanks', 'bills'])
+            ->orderBy('order', 'ASC')
+            ->orderBy('title', 'ASC')
+            ->get()
+        ;
     }
 
     public function getBills(ObjectGroup $objectGroup): Collection
@@ -139,21 +139,6 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         return $dbQuery->take($limit)->get(['object_groups.*']);
     }
 
-    public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
-    {
-        if (array_key_exists('title', $data)) {
-            $objectGroup->title = $data['title'];
-        }
-
-        if (array_key_exists('order', $data)) {
-            $this->setOrder($objectGroup, (int) $data['order']);
-        }
-
-        $objectGroup->save();
-
-        return $objectGroup;
-    }
-
     public function setOrder(ObjectGroup $objectGroup, int $newOrder): ObjectGroup
     {
         $oldOrder = $objectGroup->order;
@@ -184,6 +169,21 @@ class ObjectGroupRepository implements ObjectGroupRepositoryInterface, UserGroup
         }
 
         Log::debug(sprintf('Objectgroup #%d order is now %d', $objectGroup->id, $newOrder));
+
+        return $objectGroup;
+    }
+
+    public function update(ObjectGroup $objectGroup, array $data): ObjectGroup
+    {
+        if (array_key_exists('title', $data)) {
+            $objectGroup->title = $data['title'];
+        }
+
+        if (array_key_exists('order', $data)) {
+            $this->setOrder($objectGroup, (int) $data['order']);
+        }
+
+        $objectGroup->save();
 
         return $objectGroup;
     }

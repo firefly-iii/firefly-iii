@@ -79,17 +79,303 @@ class UpgradesTransferCurrencies extends Command
     }
 
     /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
+     * The destination transaction must have the correct currency. If not, it will be set by
+     * taking it from the destination account's preference.
      */
-    private function stupidLaravel(): void
+    private function fixDestinationUnmatchedCurrency(): void
     {
-        $this->count             = 0;
-        $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
-        $this->accountCurrencies = [];
-        $this->resetInformation();
+        if (
+            $this->destinationCurrency instanceof TransactionCurrency
+            && null === $this->destinationTransaction->foreign_amount
+            && (int) $this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
+        ) {
+            $message                                               = sprintf(
+                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
+                $this->destinationTransaction->id,
+                $this->destinationTransaction->transaction_currency_id,
+                $this->destinationAccount->id,
+                $this->destinationTransaction->amount
+            );
+            $this->friendlyWarning($message);
+            ++$this->count;
+            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
+            $this->destinationTransaction->save();
+        }
+    }
+
+    /**
+     * The destination transaction must have a currency. If not, it will be added by
+     * taking it from the destination account's preference.
+     */
+    private function fixDestNoCurrency(): void
+    {
+        if (null === $this->destinationTransaction->transaction_currency_id && $this->destinationCurrency instanceof TransactionCurrency) {
+            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
+            $message                                               = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->destinationTransaction->id,
+                $this->destinationCurrency->code
+            );
+            $this->friendlyInfo($message);
+            ++$this->count;
+            $this->destinationTransaction->save();
+        }
+    }
+
+    /**
+     * If the foreign amount of the destination transaction is null, but that of the other isn't, use this piece of code
+     * to restore it.
+     */
+    private function fixDestNullForeignAmount(): void
+    {
+        if (null === $this->destinationTransaction->foreign_amount && null !== $this->sourceTransaction->foreign_amount) {
+            $this->destinationTransaction->foreign_amount = bcmul($this->sourceTransaction->foreign_amount, '-1');
+            $this->destinationTransaction->save();
+            ++$this->count;
+            $this->friendlyInfo(sprintf(
+                'Restored foreign amount of destination transaction #%d to %s',
+                $this->destinationTransaction->id,
+                $this->destinationTransaction->foreign_amount
+            ));
+        }
+    }
+
+    /**
+     * If the destination account currency is the same as the source currency,
+     * both foreign_amount and foreign_currency_id fields must be NULL
+     * for both transactions (because foreign currency info would not make sense)
+     */
+    private function fixInvalidForeignCurrency(): void
+    {
+        if ($this->destinationCurrency->id === $this->sourceCurrency->id) {
+            // update both transactions to match:
+            $this->sourceTransaction->foreign_amount           = null;
+            $this->sourceTransaction->foreign_currency_id      = null;
+
+            $this->destinationTransaction->foreign_amount      = null;
+            $this->destinationTransaction->foreign_currency_id = null;
+
+            $this->sourceTransaction->save();
+            $this->destinationTransaction->save();
+        }
+    }
+
+    /**
+     * If destination account currency is different from source account currency,
+     * then both transactions must get the source account's currency as normal currency
+     * and the opposing account's currency as foreign currency.
+     */
+    private function fixMismatchedForeignCurrency(): void
+    {
+        if ($this->sourceCurrency->id !== $this->destinationCurrency->id) {
+            $this->sourceTransaction->transaction_currency_id      = $this->sourceCurrency->id;
+            $this->sourceTransaction->foreign_currency_id          = $this->destinationCurrency->id;
+            $this->destinationTransaction->transaction_currency_id = $this->sourceCurrency->id;
+            $this->destinationTransaction->foreign_currency_id     = $this->destinationCurrency->id;
+
+            $this->sourceTransaction->save();
+            $this->destinationTransaction->save();
+            ++$this->count;
+            $this->friendlyInfo(sprintf(
+                'Verified foreign currency ID of transaction #%d and #%d',
+                $this->sourceTransaction->id,
+                $this->destinationTransaction->id
+            ));
+        }
+    }
+
+    /**
+     * The source transaction must have a currency. If not, it will be added by
+     * taking it from the source account's preference.
+     */
+    private function fixSourceNoCurrency(): void
+    {
+        if (null === $this->sourceTransaction->transaction_currency_id && $this->sourceCurrency instanceof TransactionCurrency) {
+            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
+            $message                                          = sprintf(
+                'Transaction #%d has no currency setting, now set to %s.',
+                $this->sourceTransaction->id,
+                $this->sourceCurrency->code
+            );
+            $this->friendlyInfo($message);
+            ++$this->count;
+            $this->sourceTransaction->save();
+        }
+    }
+
+    /**
+     * If the foreign amount of the source transaction is null, but that of the other isn't, use this piece of code
+     * to restore it.
+     */
+    private function fixSourceNullForeignAmount(): void
+    {
+        if (null === $this->sourceTransaction->foreign_amount && null !== $this->destinationTransaction->foreign_amount) {
+            $this->sourceTransaction->foreign_amount = bcmul($this->destinationTransaction->foreign_amount, '-1');
+            $this->sourceTransaction->save();
+            ++$this->count;
+            $this->friendlyInfo(sprintf(
+                'Restored foreign amount of source transaction #%d to %s',
+                $this->sourceTransaction->id,
+                $this->sourceTransaction->foreign_amount
+            ));
+        }
+    }
+
+    /**
+     * The source transaction must have the correct currency. If not, it will be set by
+     * taking it from the source account's preference.
+     */
+    private function fixSourceUnmatchedCurrency(): void
+    {
+        if (
+            $this->sourceCurrency instanceof TransactionCurrency
+            && null === $this->sourceTransaction->foreign_amount
+            && (int) $this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
+        ) {
+            $message                                          = sprintf(
+                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
+                $this->sourceTransaction->id,
+                $this->sourceTransaction->transaction_currency_id,
+                $this->sourceAccount->id,
+                $this->sourceTransaction->amount
+            );
+            $this->friendlyWarning($message);
+            ++$this->count;
+            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
+            $this->sourceTransaction->save();
+        }
+    }
+
+    /**
+     * This method makes sure that the transaction journal uses the currency given in the source transaction.
+     */
+    private function fixTransactionJournalCurrency(TransactionJournal $journal): void
+    {
+        if ((int) $journal->transaction_currency_id !== $this->sourceCurrency->id) {
+            $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
+            $journal->transaction_currency_id = $this->sourceCurrency->id;
+            $message                          = sprintf(
+                'Transfer #%d ("%s") has been updated to use %s instead of %s.',
+                $journal->id,
+                $journal->description,
+                $this->sourceCurrency->code,
+                $oldCurrencyCode
+            );
+            ++$this->count;
+            $this->friendlyInfo($message);
+            $journal->save();
+        }
+    }
+
+    private function getCurrency(Account $account): ?TransactionCurrency
+    {
+        $accountId                           = $account->id;
+        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
+            return null;
+        }
+        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
+            return $this->accountCurrencies[$accountId];
+        }
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
+        if (!$currency instanceof TransactionCurrency) {
+            $this->accountCurrencies[$accountId] = 0;
+
+            return null;
+        }
+        $this->accountCurrencies[$accountId] = $currency;
+
+        return $currency;
+    }
+
+    /**
+     * Extract destination transaction, destination account + destination account currency from the journal.
+     */
+    private function getDestinationInformation(TransactionJournal $journal): void
+    {
+        $this->destinationTransaction = $this->getDestinationTransaction($journal);
+        $this->destinationAccount     = $this->destinationTransaction?->account;
+        $this->destinationCurrency    = $this->destinationAccount instanceof Account ? $this->getCurrency($this->destinationAccount) : null;
+    }
+
+    private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
+    {
+        /** @var null|Transaction */
+        return $transfer->transactions()->where('amount', '>', 0)->first();
+    }
+
+    /**
+     * Extract source transaction, source account + source account currency from the journal.
+     */
+    private function getSourceInformation(TransactionJournal $journal): void
+    {
+        $this->sourceTransaction = $this->getSourceTransaction($journal);
+        $this->sourceAccount     = $this->sourceTransaction?->account;
+        $this->sourceCurrency    = $this->sourceAccount instanceof Account ? $this->getCurrency($this->sourceAccount) : null;
+    }
+
+    private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
+    {
+        /** @var null|Transaction */
+        return $transfer->transactions()->where('amount', '<', 0)->first();
+    }
+
+    /**
+     * Is either the source or destination transaction NULL?
+     */
+    private function isEmptyTransactions(): bool
+    {
+        return
+            !$this->sourceTransaction instanceof Transaction
+            || !$this->destinationTransaction instanceof Transaction
+            || !$this->sourceAccount instanceof Account
+            || !$this->destinationAccount instanceof Account;
+    }
+
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
+    private function isNoCurrencyPresent(): bool
+    {
+        // source account must have a currency preference.
+        if (!$this->sourceCurrency instanceof TransactionCurrency) {
+            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
+            Log::error($message);
+            $this->friendlyError($message);
+
+            return true;
+        }
+
+        // destination account must have a currency preference.
+        if (!$this->destinationCurrency instanceof TransactionCurrency) {
+            $message = sprintf(
+                'Account #%d ("%s") must have currency preference but has none.',
+                $this->destinationAccount->id,
+                $this->destinationAccount->name
+            );
+            Log::error($message);
+            $this->friendlyError($message);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Is this a split transaction journal?
+     */
+    private function isSplitJournal(TransactionJournal $transfer): bool
+    {
+        return $transfer->transactions->count() > 2;
+    }
+
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     /**
@@ -103,13 +389,6 @@ class UpgradesTransferCurrencies extends Command
         $this->destinationTransaction = null;
         $this->destinationAccount     = null;
         $this->destinationCurrency    = null;
-    }
-
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool) $configVar?->data;
     }
 
     /**
@@ -128,6 +407,20 @@ class UpgradesTransferCurrencies extends Command
         foreach ($set as $journal) {
             $this->updateTransferCurrency($journal);
         }
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count             = 0;
+        $this->accountRepos      = app(AccountRepositoryInterface::class);
+        $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
+        $this->accountCurrencies = [];
+        $this->resetInformation();
     }
 
     private function updateTransferCurrency(TransactionJournal $transfer): void
@@ -186,298 +479,5 @@ class UpgradesTransferCurrencies extends Command
 
         // fix journal itself:
         $this->fixTransactionJournalCurrency($transfer);
-    }
-
-    /**
-     * Is this a split transaction journal?
-     */
-    private function isSplitJournal(TransactionJournal $transfer): bool
-    {
-        return $transfer->transactions->count() > 2;
-    }
-
-    /**
-     * Extract source transaction, source account + source account currency from the journal.
-     */
-    private function getSourceInformation(TransactionJournal $journal): void
-    {
-        $this->sourceTransaction = $this->getSourceTransaction($journal);
-        $this->sourceAccount     = $this->sourceTransaction?->account;
-        $this->sourceCurrency    = $this->sourceAccount instanceof Account ? $this->getCurrency($this->sourceAccount) : null;
-    }
-
-    private function getSourceTransaction(TransactionJournal $transfer): ?Transaction
-    {
-        /** @var null|Transaction */
-        return $transfer->transactions()->where('amount', '<', 0)->first();
-    }
-
-    private function getCurrency(Account $account): ?TransactionCurrency
-    {
-        $accountId                           = $account->id;
-        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null;
-        }
-        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId];
-        }
-        $currency                            = $this->accountRepos->getAccountCurrency($account);
-        if (!$currency instanceof TransactionCurrency) {
-            $this->accountCurrencies[$accountId] = 0;
-
-            return null;
-        }
-        $this->accountCurrencies[$accountId] = $currency;
-
-        return $currency;
-    }
-
-    /**
-     * Extract destination transaction, destination account + destination account currency from the journal.
-     */
-    private function getDestinationInformation(TransactionJournal $journal): void
-    {
-        $this->destinationTransaction = $this->getDestinationTransaction($journal);
-        $this->destinationAccount     = $this->destinationTransaction?->account;
-        $this->destinationCurrency    = $this->destinationAccount instanceof Account ? $this->getCurrency($this->destinationAccount) : null;
-    }
-
-    private function getDestinationTransaction(TransactionJournal $transfer): ?Transaction
-    {
-        /** @var null|Transaction */
-        return $transfer->transactions()->where('amount', '>', 0)->first();
-    }
-
-    /**
-     * Is either the source or destination transaction NULL?
-     */
-    private function isEmptyTransactions(): bool
-    {
-        return
-            !$this->sourceTransaction instanceof Transaction
-            || !$this->destinationTransaction instanceof Transaction
-            || !$this->sourceAccount instanceof Account
-            || !$this->destinationAccount instanceof Account;
-    }
-
-    private function isNoCurrencyPresent(): bool
-    {
-        // source account must have a currency preference.
-        if (!$this->sourceCurrency instanceof TransactionCurrency) {
-            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $this->sourceAccount->id, $this->sourceAccount->name);
-            Log::error($message);
-            $this->friendlyError($message);
-
-            return true;
-        }
-
-        // destination account must have a currency preference.
-        if (!$this->destinationCurrency instanceof TransactionCurrency) {
-            $message = sprintf(
-                'Account #%d ("%s") must have currency preference but has none.',
-                $this->destinationAccount->id,
-                $this->destinationAccount->name
-            );
-            Log::error($message);
-            $this->friendlyError($message);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * The source transaction must have a currency. If not, it will be added by
-     * taking it from the source account's preference.
-     */
-    private function fixSourceNoCurrency(): void
-    {
-        if (null === $this->sourceTransaction->transaction_currency_id && $this->sourceCurrency instanceof TransactionCurrency) {
-            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
-            $message                                          = sprintf(
-                'Transaction #%d has no currency setting, now set to %s.',
-                $this->sourceTransaction->id,
-                $this->sourceCurrency->code
-            );
-            $this->friendlyInfo($message);
-            ++$this->count;
-            $this->sourceTransaction->save();
-        }
-    }
-
-    /**
-     * The source transaction must have the correct currency. If not, it will be set by
-     * taking it from the source account's preference.
-     */
-    private function fixSourceUnmatchedCurrency(): void
-    {
-        if (
-            $this->sourceCurrency instanceof TransactionCurrency
-            && null === $this->sourceTransaction->foreign_amount
-            && (int) $this->sourceTransaction->transaction_currency_id !== $this->sourceCurrency->id
-        ) {
-            $message                                          = sprintf(
-                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
-                $this->sourceTransaction->id,
-                $this->sourceTransaction->transaction_currency_id,
-                $this->sourceAccount->id,
-                $this->sourceTransaction->amount
-            );
-            $this->friendlyWarning($message);
-            ++$this->count;
-            $this->sourceTransaction->transaction_currency_id = $this->sourceCurrency->id;
-            $this->sourceTransaction->save();
-        }
-    }
-
-    /**
-     * The destination transaction must have a currency. If not, it will be added by
-     * taking it from the destination account's preference.
-     */
-    private function fixDestNoCurrency(): void
-    {
-        if (null === $this->destinationTransaction->transaction_currency_id && $this->destinationCurrency instanceof TransactionCurrency) {
-            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
-            $message                                               = sprintf(
-                'Transaction #%d has no currency setting, now set to %s.',
-                $this->destinationTransaction->id,
-                $this->destinationCurrency->code
-            );
-            $this->friendlyInfo($message);
-            ++$this->count;
-            $this->destinationTransaction->save();
-        }
-    }
-
-    /**
-     * The destination transaction must have the correct currency. If not, it will be set by
-     * taking it from the destination account's preference.
-     */
-    private function fixDestinationUnmatchedCurrency(): void
-    {
-        if (
-            $this->destinationCurrency instanceof TransactionCurrency
-            && null === $this->destinationTransaction->foreign_amount
-            && (int) $this->destinationTransaction->transaction_currency_id !== $this->destinationCurrency->id
-        ) {
-            $message                                               = sprintf(
-                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
-                $this->destinationTransaction->id,
-                $this->destinationTransaction->transaction_currency_id,
-                $this->destinationAccount->id,
-                $this->destinationTransaction->amount
-            );
-            $this->friendlyWarning($message);
-            ++$this->count;
-            $this->destinationTransaction->transaction_currency_id = $this->destinationCurrency->id;
-            $this->destinationTransaction->save();
-        }
-    }
-
-    /**
-     * If the destination account currency is the same as the source currency,
-     * both foreign_amount and foreign_currency_id fields must be NULL
-     * for both transactions (because foreign currency info would not make sense)
-     */
-    private function fixInvalidForeignCurrency(): void
-    {
-        if ($this->destinationCurrency->id === $this->sourceCurrency->id) {
-            // update both transactions to match:
-            $this->sourceTransaction->foreign_amount           = null;
-            $this->sourceTransaction->foreign_currency_id      = null;
-
-            $this->destinationTransaction->foreign_amount      = null;
-            $this->destinationTransaction->foreign_currency_id = null;
-
-            $this->sourceTransaction->save();
-            $this->destinationTransaction->save();
-        }
-    }
-
-    /**
-     * If destination account currency is different from source account currency,
-     * then both transactions must get the source account's currency as normal currency
-     * and the opposing account's currency as foreign currency.
-     */
-    private function fixMismatchedForeignCurrency(): void
-    {
-        if ($this->sourceCurrency->id !== $this->destinationCurrency->id) {
-            $this->sourceTransaction->transaction_currency_id      = $this->sourceCurrency->id;
-            $this->sourceTransaction->foreign_currency_id          = $this->destinationCurrency->id;
-            $this->destinationTransaction->transaction_currency_id = $this->sourceCurrency->id;
-            $this->destinationTransaction->foreign_currency_id     = $this->destinationCurrency->id;
-
-            $this->sourceTransaction->save();
-            $this->destinationTransaction->save();
-            ++$this->count;
-            $this->friendlyInfo(sprintf(
-                'Verified foreign currency ID of transaction #%d and #%d',
-                $this->sourceTransaction->id,
-                $this->destinationTransaction->id
-            ));
-        }
-    }
-
-    /**
-     * If the foreign amount of the source transaction is null, but that of the other isn't, use this piece of code
-     * to restore it.
-     */
-    private function fixSourceNullForeignAmount(): void
-    {
-        if (null === $this->sourceTransaction->foreign_amount && null !== $this->destinationTransaction->foreign_amount) {
-            $this->sourceTransaction->foreign_amount = bcmul($this->destinationTransaction->foreign_amount, '-1');
-            $this->sourceTransaction->save();
-            ++$this->count;
-            $this->friendlyInfo(sprintf(
-                'Restored foreign amount of source transaction #%d to %s',
-                $this->sourceTransaction->id,
-                $this->sourceTransaction->foreign_amount
-            ));
-        }
-    }
-
-    /**
-     * If the foreign amount of the destination transaction is null, but that of the other isn't, use this piece of code
-     * to restore it.
-     */
-    private function fixDestNullForeignAmount(): void
-    {
-        if (null === $this->destinationTransaction->foreign_amount && null !== $this->sourceTransaction->foreign_amount) {
-            $this->destinationTransaction->foreign_amount = bcmul($this->sourceTransaction->foreign_amount, '-1');
-            $this->destinationTransaction->save();
-            ++$this->count;
-            $this->friendlyInfo(sprintf(
-                'Restored foreign amount of destination transaction #%d to %s',
-                $this->destinationTransaction->id,
-                $this->destinationTransaction->foreign_amount
-            ));
-        }
-    }
-
-    /**
-     * This method makes sure that the transaction journal uses the currency given in the source transaction.
-     */
-    private function fixTransactionJournalCurrency(TransactionJournal $journal): void
-    {
-        if ((int) $journal->transaction_currency_id !== $this->sourceCurrency->id) {
-            $oldCurrencyCode                  = $journal->transactionCurrency->code ?? '(nothing)';
-            $journal->transaction_currency_id = $this->sourceCurrency->id;
-            $message                          = sprintf(
-                'Transfer #%d ("%s") has been updated to use %s instead of %s.',
-                $journal->id,
-                $journal->description,
-                $this->sourceCurrency->code,
-                $oldCurrencyCode
-            );
-            ++$this->count;
-            $this->friendlyInfo($message);
-            $journal->save();
-        }
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

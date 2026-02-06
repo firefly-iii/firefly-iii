@@ -132,48 +132,6 @@ class CreateMainTables extends Migration
         }
     }
 
-    private function createPiggyBanksTable(): void
-    {
-        if (!Schema::hasTable('piggy_banks')) {
-            try {
-                Schema::create('piggy_banks', static function (Blueprint $table): void {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->integer('account_id', false, true);
-                    $table->string('name', 1024);
-                    $table->decimal('targetamount', 32, 12);
-                    $table->date('startdate')->nullable();
-                    $table->date('targetdate')->nullable();
-                    $table->integer('order', false, true)->default(0);
-                    $table->boolean('active')->default(0);
-                    $table->boolean('encrypted')->default(1);
-                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-                });
-            } catch (QueryException $e) {
-                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_banks', $e->getMessage()));
-                app('log')->error(self::TABLE_ALREADY_EXISTS);
-            }
-        }
-
-        if (!Schema::hasTable('piggy_bank_repetitions')) {
-            try {
-                Schema::create('piggy_bank_repetitions', static function (Blueprint $table): void {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->integer('piggy_bank_id', false, true);
-                    $table->date('startdate')->nullable();
-                    $table->date('targetdate')->nullable();
-                    $table->decimal('currentamount', 32, 12);
-                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
-                });
-            } catch (QueryException $e) {
-                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_bank_repetitions', $e->getMessage()));
-                app('log')->error(self::TABLE_ALREADY_EXISTS);
-            }
-        }
-    }
-
     private function createAttachmentsTable(): void
     {
         if (!Schema::hasTable('attachments')) {
@@ -290,6 +248,48 @@ class CreateMainTables extends Migration
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf(self::TABLE_ERROR, 'categories', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
+            }
+        }
+    }
+
+    private function createPiggyBanksTable(): void
+    {
+        if (!Schema::hasTable('piggy_banks')) {
+            try {
+                Schema::create('piggy_banks', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('account_id', false, true);
+                    $table->string('name', 1024);
+                    $table->decimal('targetamount', 32, 12);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->integer('order', false, true)->default(0);
+                    $table->boolean('active')->default(0);
+                    $table->boolean('encrypted')->default(1);
+                    $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+                });
+            } catch (QueryException $e) {
+                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_banks', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
+            }
+        }
+
+        if (!Schema::hasTable('piggy_bank_repetitions')) {
+            try {
+                Schema::create('piggy_bank_repetitions', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->integer('piggy_bank_id', false, true);
+                    $table->date('startdate')->nullable();
+                    $table->date('targetdate')->nullable();
+                    $table->decimal('currentamount', 32, 12);
+                    $table->foreign('piggy_bank_id')->references('id')->on('piggy_banks')->onDelete('cascade');
+                });
+            } catch (QueryException $e) {
+                app('log')->error(sprintf(self::TABLE_ERROR, 'piggy_bank_repetitions', $e->getMessage()));
                 app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }

@@ -66,17 +66,17 @@ class TransactionCurrency extends Model
         throw new NotFoundHttpException();
     }
 
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
+
     public function refreshForUser(User $user): void
     {
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
         $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
-    }
-
-    public function budgetLimits(): HasMany
-    {
-        return $this->hasMany(BudgetLimit::class);
     }
 
     public function transactionJournals(): HasMany

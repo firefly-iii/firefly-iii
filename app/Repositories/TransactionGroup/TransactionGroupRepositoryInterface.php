@@ -49,11 +49,6 @@ interface TransactionGroupRepositoryInterface
 {
     public function countAttachments(int $journalId): int;
 
-    /**
-     * Small method that returns a hash that can be used to compare two transaction groups.
-     */
-    public function getCompareHash(TransactionGroup $group): string;
-
     public function destroy(TransactionGroup $group): void;
 
     /**
@@ -70,6 +65,11 @@ interface TransactionGroupRepositoryInterface
      * Return all attachments for all journals in the group.
      */
     public function getAttachments(TransactionGroup $group): array;
+
+    /**
+     * Small method that returns a hash that can be used to compare two transaction groups.
+     */
+    public function getCompareHash(TransactionGroup $group): string;
 
     /**
      * Return all journal links for all journals in the group.

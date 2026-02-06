@@ -196,23 +196,6 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = Navigation::preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
-    }
-
     /**
      * Chart that groups expenses by the account.
      */
@@ -241,5 +224,22 @@ class BudgetReportController extends Controller
         $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
+    }
+
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 }

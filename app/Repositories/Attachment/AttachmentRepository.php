@@ -66,6 +66,19 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         return true;
     }
 
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
+    }
+
+    public function get(): Collection
+    {
+        return $this->user->attachments()->get();
+    }
+
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
@@ -85,19 +98,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         }
 
         return $unencryptedContent;
-    }
-
-    public function exists(Attachment $attachment): bool
-    {
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $disk->exists($attachment->fileName());
-    }
-
-    public function get(): Collection
-    {
-        return $this->user->attachments()->get();
     }
 
     /**

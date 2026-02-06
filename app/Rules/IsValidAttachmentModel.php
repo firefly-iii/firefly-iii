@@ -59,15 +59,6 @@ class IsValidAttachmentModel implements ValidationRule
         $this->model = $model;
     }
 
-    private function normalizeModel(string $model): string
-    {
-        $search  = ['FireflyIII\Models\\'];
-        $replace = '';
-        $model   = str_replace($search, $replace, $model);
-
-        return sprintf('FireflyIII\Models\%s', $model);
-    }
-
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")
      */
@@ -93,6 +84,15 @@ class IsValidAttachmentModel implements ValidationRule
         if (false === $result) {
             $fail('validation.model_id_invalid')->translate();
         }
+    }
+
+    private function normalizeModel(string $model): string
+    {
+        $search  = ['FireflyIII\Models\\'];
+        $replace = '';
+        $model   = str_replace($search, $replace, $model);
+
+        return sprintf('FireflyIII\Models\%s', $model);
     }
 
     private function validateAccount(int $value): bool
@@ -131,6 +131,14 @@ class IsValidAttachmentModel implements ValidationRule
         return null !== $repository->find($value);
     }
 
+    private function validateJournal(int $value): bool
+    {
+        $repository = app(JournalRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        return null !== $repository->find($value);
+    }
+
     private function validatePiggyBank(int $value): bool
     {
         /** @var PiggyBankRepositoryInterface $repository */
@@ -156,13 +164,5 @@ class IsValidAttachmentModel implements ValidationRule
         $repository->setUser(auth()->user());
 
         return null !== $repository->findTransaction($value);
-    }
-
-    private function validateJournal(int $value): bool
-    {
-        $repository = app(JournalRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-
-        return null !== $repository->find($value);
     }
 }

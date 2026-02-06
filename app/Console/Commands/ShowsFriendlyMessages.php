@@ -39,14 +39,14 @@ trait ShowsFriendlyMessages
         $this->friendlyNeutral($message);
     }
 
-    public function friendlyNeutral(string $message): void
-    {
-        $this->line(sprintf('  [i] %s', trim($message)));
-    }
-
     public function friendlyLine(string $message): void
     {
         $this->line(sprintf('      %s', trim($message)));
+    }
+
+    public function friendlyNeutral(string $message): void
+    {
+        $this->line(sprintf('  [i] %s', trim($message)));
     }
 
     public function friendlyPositive(string $message): void

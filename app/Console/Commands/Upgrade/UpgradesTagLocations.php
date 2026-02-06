@@ -56,6 +56,11 @@ class UpgradesTagLocations extends Command
         return 0;
     }
 
+    private function hasLocationDetails(Tag $tag): bool
+    {
+        return !in_array(null, [$tag->latitude, $tag->longitude, $tag->zoomLevel], true);
+    }
+
     private function isExecuted(): bool
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
@@ -63,21 +68,9 @@ class UpgradesTagLocations extends Command
         return (bool) $configVar?->data;
     }
 
-    private function migrateTagLocations(): void
+    private function markAsExecuted(): void
     {
-        $tags = Tag::get();
-
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            if ($this->hasLocationDetails($tag)) {
-                $this->migrateLocationDetails($tag);
-            }
-        }
-    }
-
-    private function hasLocationDetails(Tag $tag): bool
-    {
-        return !in_array(null, [$tag->latitude, $tag->longitude, $tag->zoomLevel], true);
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function migrateLocationDetails(Tag $tag): void
@@ -95,8 +88,15 @@ class UpgradesTagLocations extends Command
         $tag->save();
     }
 
-    private function markAsExecuted(): void
+    private function migrateTagLocations(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        $tags = Tag::get();
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            if ($this->hasLocationDetails($tag)) {
+                $this->migrateLocationDetails($tag);
+            }
+        }
     }
 }

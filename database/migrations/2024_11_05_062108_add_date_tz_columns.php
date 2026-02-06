@@ -49,6 +49,13 @@ return new class() extends Migration {
     }
 
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+    }
+
+    /**
      * Run the migrations.
      * TODO journal_meta, all date fields?
      */
@@ -71,12 +78,5 @@ return new class() extends Migration {
                 }
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
     }
 };

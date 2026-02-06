@@ -274,6 +274,21 @@ class MfaController extends Controller
         return redirect(route('profile.mfa.backup-codes'));
     }
 
+    public function index(): Factory|RedirectResponse|View
+    {
+        if (!$this->internalAuth) {
+            request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('profile.index'));
+        }
+
+        $subTitle     = (string) trans('firefly.mfa_index_title');
+        $subTitleIcon = 'fa-calculator';
+        $enabledMFA   = null !== auth()->user()->mfa_secret;
+
+        return view('profile.mfa.index')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
+    }
+
     /**
      * TODO duplicate code.
      *
@@ -308,20 +323,5 @@ class MfaController extends Controller
             }
         }
         Preferences::set('mfa_history', $newHistory);
-    }
-
-    public function index(): Factory|RedirectResponse|View
-    {
-        if (!$this->internalAuth) {
-            request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        $subTitle     = (string) trans('firefly.mfa_index_title');
-        $subTitleIcon = 'fa-calculator';
-        $enabledMFA   = null !== auth()->user()->mfa_secret;
-
-        return view('profile.mfa.index')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
     }
 }

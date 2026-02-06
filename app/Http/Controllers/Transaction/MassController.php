@@ -192,43 +192,6 @@ class MassController extends Controller
         return redirect($this->getPreviousUrl('transactions.mass-edit.url'));
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function updateJournal(int $journalId, MassEditJournalRequest $request): void
-    {
-        $journal                  = $this->repository->find($journalId);
-        if (!$journal instanceof TransactionJournal) {
-            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
-        }
-        $service                  = app(JournalUpdateService::class);
-        // for each field, call the update service.
-        $service->setTransactionJournal($journal);
-
-        $data                     = [
-            'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
-            'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
-            'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),
-            'source_name'      => $this->getStringFromRequest($request, $journal->id, 'source_name'),
-            'destination_id'   => $this->getIntFromRequest($request, $journal->id, 'destination_id'),
-            'destination_name' => $this->getStringFromRequest($request, $journal->id, 'destination_name'),
-            'budget_id'        => $this->getIntFromRequest($request, $journal->id, 'budget_id'),
-            'category_name'    => $this->getStringFromRequest($request, $journal->id, 'category'),
-            'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
-            'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
-        ];
-        Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
-
-        // call service to update.
-        $service->setData($data);
-        $service->update();
-        $flags                    = new TransactionGroupEventFlags();
-        $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($journal->transactionGroup);
-        event(new UpdatedSingleTransactionGroup($flags, $objects));
-        event(new WebhookMessagesRequestSending());
-
-    }
-
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon
     {
         $value = $request->get($key);
@@ -251,6 +214,19 @@ class MassController extends Controller
         return $carbon;
     }
 
+    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
+    {
+        $value = $request->get($string);
+        if (!is_array($value)) {
+            return null;
+        }
+        if (!array_key_exists($journalId, $value)) {
+            return null;
+        }
+
+        return (int) $value[$journalId];
+    }
+
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
     {
         $value = $request->get($string);
@@ -264,16 +240,39 @@ class MassController extends Controller
         return (string) $value[$journalId];
     }
 
-    private function getIntFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?int
+    /**
+     * @throws FireflyException
+     */
+    private function updateJournal(int $journalId, MassEditJournalRequest $request): void
     {
-        $value = $request->get($string);
-        if (!is_array($value)) {
-            return null;
+        $journal = $this->repository->find($journalId);
+        if (!$journal instanceof TransactionJournal) {
+            throw new FireflyException(sprintf('Trying to edit non-existent or deleted journal #%d', $journalId));
         }
-        if (!array_key_exists($journalId, $value)) {
-            return null;
-        }
+        $service = app(JournalUpdateService::class);
+        // for each field, call the update service.
+        $service->setTransactionJournal($journal);
 
-        return (int) $value[$journalId];
+        $data    = [
+            'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
+            'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
+            'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),
+            'source_name'      => $this->getStringFromRequest($request, $journal->id, 'source_name'),
+            'destination_id'   => $this->getIntFromRequest($request, $journal->id, 'destination_id'),
+            'destination_name' => $this->getStringFromRequest($request, $journal->id, 'destination_name'),
+            'budget_id'        => $this->getIntFromRequest($request, $journal->id, 'budget_id'),
+            'category_name'    => $this->getStringFromRequest($request, $journal->id, 'category'),
+            'amount'           => $this->getStringFromRequest($request, $journal->id, 'amount'),
+            'foreign_amount'   => $this->getStringFromRequest($request, $journal->id, 'foreign_amount'),
+        ];
+        Log::debug(sprintf('Will update journal #%d with data.', $journal->id), $data);
+
+        // call service to update.
+        $service->setData($data);
+        $service->update();
+        $flags   = new TransactionGroupEventFlags();
+        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($journal->transactionGroup);
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
     }
 }

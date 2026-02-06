@@ -106,6 +106,23 @@ class UniqueAccountNumber implements ValidationRule
         Log::debug('Account number is valid.');
     }
 
+    private function countHits(string $type, string $accountNumber): int
+    {
+        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.user_id', auth()->user()->id)
+            ->where('account_types.type', $type)
+            ->where('account_meta.name', '=', 'account_number')
+            ->where('account_meta.data', json_encode($accountNumber))
+        ;
+
+        if ($this->account instanceof Account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
+    }
+
     private function getMaxOccurrences(): array
     {
         $maxCounts = [AccountTypeEnum::ASSET->value   => 0, AccountTypeEnum::EXPENSE->value => 0, AccountTypeEnum::REVENUE->value => 0];
@@ -122,22 +139,5 @@ class UniqueAccountNumber implements ValidationRule
         }
 
         return $maxCounts;
-    }
-
-    private function countHits(string $type, string $accountNumber): int
-    {
-        $query = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
-            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-            ->where('accounts.user_id', auth()->user()->id)
-            ->where('account_types.type', $type)
-            ->where('account_meta.name', '=', 'account_number')
-            ->where('account_meta.data', json_encode($accountNumber))
-        ;
-
-        if ($this->account instanceof Account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
     }
 }

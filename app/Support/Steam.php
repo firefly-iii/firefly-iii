@@ -52,6 +52,23 @@ use function Safe\preg_replace;
  */
 class Steam
 {
+    /**
+     * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it
+     * properly gets the balance of a range.
+     */
+    public function accountsBalancesInRange(
+        Collection $accounts,
+        Carbon $start,
+        Carbon $end,
+        ?TransactionCurrency $primary = null,
+        ?bool $convertToPrimary = null
+    ): array {
+        return [
+            $this->accountsBalancesOptimized($accounts, $start, $primary, $convertToPrimary, inclusive: false),
+            $this->accountsBalancesOptimized($accounts, $end, $primary, $convertToPrimary),
+        ];
+    }
+
     public function accountsBalancesOptimized(
         Collection $accounts,
         Carbon $date,
@@ -138,21 +155,17 @@ class Steam
         return $result;
     }
 
-    /**
-     * Calls accountsBalancesOptimized for the given accounts and makes sure that inclusive is set to false, so it
-     * properly gets the balance of a range.
-     */
-    public function accountsBalancesInRange(
-        Collection $accounts,
-        Carbon $start,
-        Carbon $end,
-        ?TransactionCurrency $primary = null,
-        ?bool $convertToPrimary = null
-    ): array {
-        return [
-            $this->accountsBalancesOptimized($accounts, $start, $primary, $convertToPrimary, inclusive: false),
-            $this->accountsBalancesOptimized($accounts, $end, $primary, $convertToPrimary),
-        ];
+    public function anonymous(): bool // get preference
+    {
+        $singleton = PreferencesSingleton::getInstance();
+        $cached    = $singleton->getPreference('anonymous');
+        if (null !== $cached) {
+            return $cached;
+        }
+        $anonymous = Preferences::get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
+        $singleton->setPreference('anonymous', $anonymous);
+
+        return $anonymous;
     }
 
     /**
@@ -644,19 +657,6 @@ class Steam
         $singleton->setPreference('locale', $locale);
 
         return $locale;
-    }
-
-    public function anonymous(): bool // get preference
-    {
-        $singleton = PreferencesSingleton::getInstance();
-        $cached    = $singleton->getPreference('anonymous');
-        if (null !== $cached) {
-            return $cached;
-        }
-        $anonymous = Preferences::get('anonymous', config('firefly.default_preferences.anonymous', false))->data;
-        $singleton->setPreference('anonymous', $anonymous);
-
-        return $anonymous;
     }
 
     public function getLocaleArray(string $locale): array

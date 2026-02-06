@@ -33,6 +33,11 @@ use FireflyIII\Support\Facades\Steam;
  */
 class AccountMetaFactory
 {
+    public function create(array $data): ?AccountMeta
+    {
+        return AccountMeta::create($data);
+    }
+
     /**
      * Create update or delete meta data.
      */
@@ -62,10 +67,5 @@ class AccountMetaFactory
         }
 
         return $entry;
-    }
-
-    public function create(array $data): ?AccountMeta
-    {
-        return AccountMeta::create($data);
     }
 }

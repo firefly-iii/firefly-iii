@@ -35,17 +35,17 @@ class AccountPolicy
         return auth()->check();
     }
 
-    public function viewAccountBalances(User $user, Account $account): bool
-    {
-        return $this->view($user, $account);
-    }
-
     /**
      * TODO needs better authentication, also for group.
      */
     public function view(User $user, Account $account): bool
     {
         return auth()->check() && $user->id === $account->user_id;
+    }
+
+    public function viewAccountBalances(User $user, Account $account): bool
+    {
+        return $this->view($user, $account);
     }
 
     /**

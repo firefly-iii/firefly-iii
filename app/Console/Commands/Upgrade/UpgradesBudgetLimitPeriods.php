@@ -57,23 +57,6 @@ class UpgradesBudgetLimitPeriods extends Command
         return 0;
     }
 
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool) $configVar->data;
-    }
-
-    private function theresNoLimit(): void
-    {
-        $limits = BudgetLimit::whereNull('period')->get();
-
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $this->fixLimit($limit);
-        }
-    }
-
     private function fixLimit(BudgetLimit $limit): void
     {
         $period        = $this->getLimitPeriod($limit);
@@ -155,8 +138,25 @@ class UpgradesBudgetLimitPeriods extends Command
         return null;
     }
 
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar->data;
+    }
+
     private function markAsExecuted(): void
     {
         FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
+    private function theresNoLimit(): void
+    {
+        $limits = BudgetLimit::whereNull('period')->get();
+
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $this->fixLimit($limit);
+        }
     }
 }
