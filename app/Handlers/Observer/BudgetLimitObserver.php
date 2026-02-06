@@ -43,7 +43,6 @@ class BudgetLimitObserver
     {
         Log::debug('Observe "created" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
-        //$this->updateAvailableBudget($budgetLimit);
         //$this->sendWebhookMessages('fire_webhooks_bl_store', WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT, $budgetLimit);
     }
 
@@ -51,7 +50,6 @@ class BudgetLimitObserver
     {
         Log::debug('Observe "updated" of a budget limit.');
         $this->updatePrimaryCurrencyAmount($budgetLimit);
-        //$this->updateAvailableBudget($budgetLimit);
         //$this->sendWebhookMessages('fire_webhooks_bl_update', WebhookTrigger::STORE_UPDATE_BUDGET_LIMIT, $budgetLimit);
     }
 

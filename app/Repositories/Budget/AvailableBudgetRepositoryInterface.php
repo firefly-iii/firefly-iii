@@ -89,6 +89,8 @@ interface AvailableBudgetRepositoryInterface
      */
     public function getByCurrencyDate(Carbon $start, Carbon $end, TransactionCurrency $currency): ?AvailableBudget;
 
+    public function recalculateAmount(AvailableBudget $availableBudget): void;
+
     #[Deprecated]
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
