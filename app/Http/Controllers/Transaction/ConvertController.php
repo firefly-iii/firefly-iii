@@ -29,6 +29,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -310,6 +311,8 @@ class ConvertController extends Controller
         $flags   = new TransactionGroupEventFlags();
         $objects = TransactionGroupEventObjects::collectFromTransactionGroup($group);
         event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
+
 
         return redirect(route('transactions.show', [$group->id]));
     }

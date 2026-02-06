@@ -29,6 +29,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
@@ -221,12 +222,11 @@ class MassController extends Controller
         // call service to update.
         $service->setData($data);
         $service->update();
-        // trigger rules
-        $runRecalculations        = $service->isCompareHashChanged();
         $flags                    = new TransactionGroupEventFlags();
-        $flags->recalculateCredit = $runRecalculations;
         $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($journal->transactionGroup);
         event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
+
     }
 
     private function getDateFromRequest(MassEditJournalRequest $request, int $journalId, string $key): ?Carbon

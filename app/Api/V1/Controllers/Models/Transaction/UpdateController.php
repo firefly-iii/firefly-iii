@@ -29,6 +29,7 @@ use FireflyIII\Api\V1\Requests\Models\Transaction\UpdateRequest;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -92,6 +93,9 @@ class UpdateController extends Controller
         $flags->fireWebhooks      = $fireWebhooks;
         $flags->recalculateCredit = $runRecalculations;
         event(new UpdatedSingleTransactionGroup($flags, $objects));
+        if($flags->fireWebhooks) {
+            event(new WebhookMessagesRequestSending());
+        }
 
         /** @var User $admin */
         $admin                    = auth()->user();

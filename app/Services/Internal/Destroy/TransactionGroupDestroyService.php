@@ -27,6 +27,7 @@ namespace FireflyIII\Services\Internal\Destroy;
 use FireflyIII\Events\Model\TransactionGroup\DestroyedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Support\Facades\Log;
 
@@ -49,5 +50,6 @@ class TransactionGroupDestroyService
         // trigger just after destruction
         $flags   = new TransactionGroupEventFlags();
         event(new DestroyedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
     }
 }

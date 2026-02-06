@@ -28,6 +28,7 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -64,7 +65,7 @@ class CorrectsGroupAccounts extends Command
             $objects->appendFromTransactionGroup($group);
         }
         event(new UpdatedSingleTransactionGroup($flags, $objects));
-
+        event(new WebhookMessagesRequestSending());
         return 0;
     }
 }
