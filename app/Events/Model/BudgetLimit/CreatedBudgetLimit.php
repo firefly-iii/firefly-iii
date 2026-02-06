@@ -23,13 +23,12 @@ namespace FireflyIII\Events\Model\BudgetLimit;
 
 use FireflyIII\Events\Event;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
 class CreatedBudgetLimit extends Event
 {
     use SerializesModels;
 
-    public function __construct(public BudgetLimit $budgetLimit) {}
+    public function __construct(public BudgetLimit $budgetLimit, public bool $createWebhookMessages) {}
 
 }

@@ -23,6 +23,7 @@ namespace FireflyIII\Events\Model\BudgetLimit;
 
 use Carbon\Carbon;
 use FireflyIII\Events\Event;
+use FireflyIII\Models\Budget;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
 
@@ -30,6 +31,6 @@ class DestroyedBudgetLimit extends Event
 {
     use SerializesModels;
 
-    public function __construct(public User $user, public Carbon $start, public Carbon $end) {}
+    public function __construct(public User $user, public Budget $budget, public Carbon $start, public Carbon $end, public bool $createWebhookMessages) {}
 
 }

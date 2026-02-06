@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Events\Model\BudgetLimit\CreatedBudgetLimit;
 use FireflyIII\Events\Model\BudgetLimit\DestroyedBudgetLimit;
 use FireflyIII\Events\Model\BudgetLimit\UpdatedBudgetLimit;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Budget;
@@ -117,8 +118,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         $user = $budgetLimit->budget->user;
         $start = $budgetLimit->start_date->clone();
         $end = $budgetLimit->end_date->clone();
+        event(new DestroyedBudgetLimit($user, $budgetLimit->budget, $start, $end, true));
         $budgetLimit->delete();
-        event(new DestroyedBudgetLimit($user, $start, $end));
+        event(new WebhookMessagesRequestSending());
     }
 
     public function getDailyAmount(BudgetLimit $budgetLimit): string
@@ -302,7 +304,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         }
 
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
-        event(new CreatedBudgetLimit($limit));
+        $createWebhookMessages = $data['fire_webhooks'] ?? true;
+        event(new CreatedBudgetLimit($limit, $createWebhookMessages));
+        event(new WebhookMessagesRequestSending());
         return $limit;
     }
 
@@ -379,7 +383,9 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         if (array_key_exists('notes', $data)) {
             $this->setNoteText($budgetLimit, (string)$data['notes']);
         }
-        event(new UpdatedBudgetLimit($budgetLimit));
+        $generateMessages = $data['fire_webhooks'] ?? true;
+        event(new UpdatedBudgetLimit($budgetLimit, $generateMessages));
+        event(new WebhookMessagesRequestSending());
         return $budgetLimit;
     }
 
