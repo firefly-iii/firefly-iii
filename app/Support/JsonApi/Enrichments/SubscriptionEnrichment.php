@@ -49,6 +49,7 @@ class SubscriptionEnrichment implements EnrichmentInterface
     private Collection $collection; // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private readonly bool $convertToPrimary;
     private ?Carbon $end             = null;
     private array   $mappedObjects   = [];
