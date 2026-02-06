@@ -25,7 +25,9 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Events\Model\BudgetLimit\CreatedBudgetLimit;
 use FireflyIII\Events\Model\BudgetLimit\DestroyedBudgetLimit;
+use FireflyIII\Events\Model\BudgetLimit\UpdatedBudgetLimit;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Budget;
@@ -40,6 +42,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Override;
+use Spatie\Period\Boundaries;
+use Spatie\Period\Period;
+use Spatie\Period\Precision;
 
 /**
  * Class BudgetLimitRepository
@@ -110,8 +115,26 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
     {
         $user = $budgetLimit->budget->user;
+        $start = $budgetLimit->start_date->clone();
+        $end = $budgetLimit->end_date->clone();
         $budgetLimit->delete();
-        event(new DestroyedBudgetLimit($user));
+        event(new DestroyedBudgetLimit($user, $start, $end));
+    }
+
+    public function getDailyAmount(BudgetLimit $budgetLimit): string
+    {
+        $limitPeriod = Period::make($budgetLimit->start_date, $budgetLimit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        $days        = $limitPeriod->length();
+        $amount      = bcdiv($budgetLimit->amount, (string) $days, 12);
+        Log::debug(sprintf(
+                       'Total amount for budget limit #%d is %s. Nr. of days is %d. Amount per day is %s',
+                       $budgetLimit->id,
+                       $budgetLimit->amount,
+                       $days,
+                       $amount
+                   ));
+
+        return $amount;
     }
 
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection
@@ -279,7 +302,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         }
 
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
-
+        event(new CreatedBudgetLimit($limit));
         return $limit;
     }
 
@@ -356,7 +379,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         if (array_key_exists('notes', $data)) {
             $this->setNoteText($budgetLimit, (string)$data['notes']);
         }
-
+        event(new UpdatedBudgetLimit($budgetLimit));
         return $budgetLimit;
     }
 
