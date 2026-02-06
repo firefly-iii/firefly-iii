@@ -195,6 +195,96 @@ trait AccountServiceTrait
 
     /**
      * @throws FireflyException
+     */
+    protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
+    {
+        Log::debug('Now going to create an createCreditTransaction.');
+
+        if (0 === bccomp($openingBalance, '0')) {
+            Log::debug('Amount is zero, so will not make an liability credit group.');
+
+            throw new FireflyException('Amount for new liability credit was unexpectedly 0.');
+        }
+
+        $language   = Preferences::getForUser($account->user, 'language', 'en_US')->data;
+        if (is_array($language)) {
+            $language = 'en_US';
+        }
+        $language   = (string) $language;
+
+        // set source and/or destination based on whether the amount is positive or negative.
+        // first, assume the amount is positive and go from there:
+        // if amount is positive ("I am owed this debt"), source is special account, destination is the liability.
+        $sourceId   = null;
+        $sourceName = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
+        $destId     = $account->id;
+        $destName   = null;
+        if (-1 === bccomp($openingBalance, '0')) {
+            // amount is negative, reverse it
+            $sourceId   = $account->id;
+            $sourceName = null;
+            $destId     = null;
+            $destName   = trans('firefly.liability_credit_description', ['account'   => $account->name], $language);
+        }
+
+        // amount must be positive for the transaction to work.
+        $amount     = Steam::positive($openingBalance);
+
+        // get or grab currency:
+        $currency   = $this->accountRepository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        }
+        // submit to factory:
+        $submission = [
+            'group_title'  => null,
+            'user'         => $account->user,
+            'user_group'   => $account->user->userGroup,
+            'transactions' => [[
+                'type'             => 'Liability credit',
+                'date'             => $openingBalanceDate,
+                'source_id'        => $sourceId,
+                'source_name'      => $sourceName,
+                'destination_id'   => $destId,
+                'destination_name' => $destName,
+                'user'             => $account->user,
+                'user_group'       => $account->user->userGroup,
+                'currency_id'      => $currency->id,
+                'order'            => 0,
+                'amount'           => $amount,
+                'foreign_amount'   => null,
+                'description'      => trans('firefly.liability_credit_description', ['account'      => $account->name]),
+                'budget_id'        => null,
+                'budget_name'      => null,
+                'category_id'      => null,
+                'category_name'    => null,
+                'piggy_bank_id'    => null,
+                'piggy_bank_name'  => null,
+                'reconciled'       => false,
+                'notes'            => null,
+                'tags'             => [],
+            ]],
+        ];
+        Log::debug('Going for submission in createCreditTransaction', $submission);
+
+        /** @var TransactionGroupFactory $factory */
+        $factory    = app(TransactionGroupFactory::class);
+        $factory->setUser($account->user);
+
+        try {
+            $group = $factory->create($submission);
+        } catch (DuplicateTransactionException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            throw new FireflyException($e->getMessage(), 0, $e);
+        }
+
+        return $group;
+    }
+
+    /**
+     * @throws FireflyException
      *                          *
      */
     #[Deprecated]
@@ -289,331 +379,6 @@ trait AccountServiceTrait
     }
 
     /**
-     * Delete TransactionGroup with liability credit in it.
-     */
-    protected function deleteCreditTransaction(Account $account): void
-    {
-        Log::debug(sprintf('deleteCreditTransaction() for account #%d', $account->id));
-        $creditGroup = $this->getCreditTransaction($account);
-
-        if (null !== $creditGroup) {
-            Log::debug('Credit journal found, delete journal.');
-
-            /** @var TransactionGroupDestroyService $service */
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($creditGroup);
-        }
-    }
-
-    /**
-     * Returns the credit transaction group, or NULL if it does not exist.
-     */
-    protected function getCreditTransaction(Account $account): ?TransactionGroup
-    {
-        Log::debug(sprintf('Now at %s', __METHOD__));
-
-        return $this->accountRepository->getCreditTransactionGroup($account);
-    }
-
-    /**
-     * Delete TransactionGroup with opening balance in it.
-     */
-    protected function deleteOBGroup(Account $account): void
-    {
-        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
-        $openingBalanceGroup = $this->getOBGroup($account);
-
-        // opening balance data? update it!
-        if (null !== $openingBalanceGroup) {
-            Log::debug('Opening balance journal found, delete journal.');
-
-            /** @var TransactionGroupDestroyService $service */
-            $service = app(TransactionGroupDestroyService::class);
-            $service->destroy($openingBalanceGroup);
-        }
-    }
-
-    /**
-     * Returns the opening balance group, or NULL if it does not exist.
-     */
-    protected function getOBGroup(Account $account): ?TransactionGroup
-    {
-        return $this->accountRepository->getOpeningBalanceGroup($account);
-    }
-
-    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
-    {
-        // find currency, or use default currency instead.
-        /** @var TransactionCurrencyFactory $factory */
-        $factory           = app(TransactionCurrencyFactory::class);
-
-        /** @var null|TransactionCurrency $currency */
-        $currency          = $factory->find($currencyId, $currencyCode);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
-        }
-        $currency->enabled = true;
-        $currency->save();
-
-        return $currency;
-    }
-
-    /**
-     * Create the opposing "credit liability" transaction for credit liabilities.
-     *
-     * @throws FireflyException
-     */
-    protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-
-        if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not update liability credit/debit group.');
-
-            throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
-        }
-        // if direction is "debit" (I owe this debt), amount is negative.
-        // which means the liability will have a negative balance which the user must fill.
-        $openingBalance                              = Steam::negative($openingBalance);
-
-        // if direction is "credit" (I am owed this debt), amount is positive.
-        // which means the liability will have a positive balance which is drained when its paid back into any asset.
-        if ('credit' === $direction) {
-            $openingBalance = Steam::positive($openingBalance);
-        }
-
-        // create if not exists:
-        $clGroup                                     = $this->getCreditTransaction($account);
-        if (null === $clGroup) {
-            return $this->createCreditTransaction($account, $openingBalance, $openingBalanceDate);
-        }
-        // if exists, update:
-        $currency                                    = $this->accountRepository->getAccountCurrency($account);
-        if (null === $currency) {
-            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
-        }
-
-        // simply grab the first journal and change it:
-        $journal                                     = $this->getObJournal($clGroup);
-        $clTransaction                               = $this->getOBTransaction($journal, $account);
-        $accountTransaction                          = $this->getNotOBTransaction($journal, $account);
-        $journal->date                               = $openingBalanceDate;
-        $journal->transactionCurrency()->associate($currency);
-
-        // account always gains money:
-        $accountTransaction->amount                  = Steam::positive($openingBalance);
-        $accountTransaction->transaction_currency_id = $currency->id;
-
-        // CL account always loses money:
-        $clTransaction->amount                       = Steam::negative($openingBalance);
-        $clTransaction->transaction_currency_id      = $currency->id;
-        // save both
-        $accountTransaction->save();
-        $clTransaction->save();
-        $journal->save();
-        $clGroup->refresh();
-
-        return $clGroup;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    protected function createCreditTransaction(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
-    {
-        Log::debug('Now going to create an createCreditTransaction.');
-
-        if (0 === bccomp($openingBalance, '0')) {
-            Log::debug('Amount is zero, so will not make an liability credit group.');
-
-            throw new FireflyException('Amount for new liability credit was unexpectedly 0.');
-        }
-
-        $language   = Preferences::getForUser($account->user, 'language', 'en_US')->data;
-        if (is_array($language)) {
-            $language = 'en_US';
-        }
-        $language   = (string) $language;
-
-        // set source and/or destination based on whether the amount is positive or negative.
-        // first, assume the amount is positive and go from there:
-        // if amount is positive ("I am owed this debt"), source is special account, destination is the liability.
-        $sourceId   = null;
-        $sourceName = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
-        $destId     = $account->id;
-        $destName   = null;
-        if (-1 === bccomp($openingBalance, '0')) {
-            // amount is negative, reverse it
-            $sourceId   = $account->id;
-            $sourceName = null;
-            $destId     = null;
-            $destName   = trans('firefly.liability_credit_description', ['account'   => $account->name], $language);
-        }
-
-        // amount must be positive for the transaction to work.
-        $amount     = Steam::positive($openingBalance);
-
-        // get or grab currency:
-        $currency   = $this->accountRepository->getAccountCurrency($account);
-        if (null === $currency) {
-            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
-        }
-        // submit to factory:
-        $submission = [
-            'group_title'  => null,
-            'user'         => $account->user,
-            'user_group'   => $account->user->userGroup,
-            'transactions' => [[
-                'type'             => 'Liability credit',
-                'date'             => $openingBalanceDate,
-                'source_id'        => $sourceId,
-                'source_name'      => $sourceName,
-                'destination_id'   => $destId,
-                'destination_name' => $destName,
-                'user'             => $account->user,
-                'user_group'       => $account->user->userGroup,
-                'currency_id'      => $currency->id,
-                'order'            => 0,
-                'amount'           => $amount,
-                'foreign_amount'   => null,
-                'description'      => trans('firefly.liability_credit_description', ['account'      => $account->name]),
-                'budget_id'        => null,
-                'budget_name'      => null,
-                'category_id'      => null,
-                'category_name'    => null,
-                'piggy_bank_id'    => null,
-                'piggy_bank_name'  => null,
-                'reconciled'       => false,
-                'notes'            => null,
-                'tags'             => [],
-            ]],
-        ];
-        Log::debug('Going for submission in createCreditTransaction', $submission);
-
-        /** @var TransactionGroupFactory $factory */
-        $factory    = app(TransactionGroupFactory::class);
-        $factory->setUser($account->user);
-
-        try {
-            $group = $factory->create($submission);
-        } catch (DuplicateTransactionException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            throw new FireflyException($e->getMessage(), 0, $e);
-        }
-
-        return $group;
-    }
-
-    /**
-     * TODO refactor to "getfirstjournal"
-     *
-     * @throws FireflyException
-     */
-    private function getObJournal(TransactionGroup $group): TransactionJournal
-    {
-        /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->first();
-        if (null === $journal) {
-            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
-        }
-
-        return $journal;
-    }
-
-    /**
-     * TODO Rename to getOpposingTransaction
-     *
-     * @throws FireflyException
-     */
-    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var null|Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
-    {
-        /** @var null|Transaction $transaction */
-        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
-        }
-
-        return $transaction;
-    }
-
-    /**
-     * Update or create the opening balance group.
-     * Since opening balance and date can still be empty strings, it may fail.
-     *
-     * @throws FireflyException
-     */
-    protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        // create if not exists:
-        $obGroup            = $this->getOBGroup($account);
-        if (null === $obGroup) {
-            return $this->createOBGroupV2($account, $openingBalance, $openingBalanceDate);
-        }
-        Log::debug('Update OB group');
-
-        // if exists, update:
-        $currency           = $this->accountRepository->getAccountCurrency($account);
-        if (null === $currency) {
-            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
-        }
-
-        // simply grab the first journal and change it:
-        $journal            = $this->getObJournal($obGroup);
-        $obTransaction      = $this->getOBTransaction($journal, $account);
-        $accountTransaction = $this->getNotOBTransaction($journal, $account);
-        $journal->date      = $openingBalanceDate;
-        $journal->transactionCurrency()->associate($currency);
-
-        // if amount is negative:
-        if (1 === bccomp('0', $openingBalance)) {
-            Log::debug('Amount is negative.');
-            // account transaction loses money:
-            $accountTransaction->amount                  = Steam::negative($openingBalance);
-            $accountTransaction->transaction_currency_id = $currency->id;
-
-            // OB account transaction gains money
-            $obTransaction->amount                       = Steam::positive($openingBalance);
-            $obTransaction->transaction_currency_id      = $currency->id;
-        }
-        if (-1 === bccomp('0', $openingBalance)) {
-            Log::debug('Amount is positive.');
-            // account gains money:
-            $accountTransaction->amount                  = Steam::positive($openingBalance);
-            $accountTransaction->transaction_currency_id = $currency->id;
-
-            // OB account loses money:
-            $obTransaction->amount                       = Steam::negative($openingBalance);
-            $obTransaction->transaction_currency_id      = $currency->id;
-        }
-        // save both
-        $accountTransaction->save();
-        $obTransaction->save();
-        $journal->save();
-        $obGroup->refresh();
-
-        return $obGroup;
-    }
-
-    /**
      * @throws FireflyException
      */
     protected function createOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
@@ -703,5 +468,240 @@ trait AccountServiceTrait
         }
 
         return $group;
+    }
+
+    /**
+     * Delete TransactionGroup with liability credit in it.
+     */
+    protected function deleteCreditTransaction(Account $account): void
+    {
+        Log::debug(sprintf('deleteCreditTransaction() for account #%d', $account->id));
+        $creditGroup = $this->getCreditTransaction($account);
+
+        if (null !== $creditGroup) {
+            Log::debug('Credit journal found, delete journal.');
+
+            /** @var TransactionGroupDestroyService $service */
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($creditGroup);
+        }
+    }
+
+    /**
+     * Delete TransactionGroup with opening balance in it.
+     */
+    protected function deleteOBGroup(Account $account): void
+    {
+        Log::debug(sprintf('deleteOB() for account #%d', $account->id));
+        $openingBalanceGroup = $this->getOBGroup($account);
+
+        // opening balance data? update it!
+        if (null !== $openingBalanceGroup) {
+            Log::debug('Opening balance journal found, delete journal.');
+
+            /** @var TransactionGroupDestroyService $service */
+            $service = app(TransactionGroupDestroyService::class);
+            $service->destroy($openingBalanceGroup);
+        }
+    }
+
+    /**
+     * Returns the credit transaction group, or NULL if it does not exist.
+     */
+    protected function getCreditTransaction(Account $account): ?TransactionGroup
+    {
+        Log::debug(sprintf('Now at %s', __METHOD__));
+
+        return $this->accountRepository->getCreditTransactionGroup($account);
+    }
+
+    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
+    {
+        // find currency, or use default currency instead.
+        /** @var TransactionCurrencyFactory $factory */
+        $factory           = app(TransactionCurrencyFactory::class);
+
+        /** @var null|TransactionCurrency $currency */
+        $currency          = $factory->find($currencyId, $currencyCode);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        }
+        $currency->enabled = true;
+        $currency->save();
+
+        return $currency;
+    }
+
+    /**
+     * Returns the opening balance group, or NULL if it does not exist.
+     */
+    protected function getOBGroup(Account $account): ?TransactionGroup
+    {
+        return $this->accountRepository->getOpeningBalanceGroup($account);
+    }
+
+    /**
+     * Create the opposing "credit liability" transaction for credit liabilities.
+     *
+     * @throws FireflyException
+     */
+    protected function updateCreditTransaction(Account $account, string $direction, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+
+        if (0 === bccomp($openingBalance, '0')) {
+            Log::debug('Amount is zero, so will not update liability credit/debit group.');
+
+            throw new FireflyException('Amount for update liability credit/debit was unexpectedly 0.');
+        }
+        // if direction is "debit" (I owe this debt), amount is negative.
+        // which means the liability will have a negative balance which the user must fill.
+        $openingBalance                              = Steam::negative($openingBalance);
+
+        // if direction is "credit" (I am owed this debt), amount is positive.
+        // which means the liability will have a positive balance which is drained when its paid back into any asset.
+        if ('credit' === $direction) {
+            $openingBalance = Steam::positive($openingBalance);
+        }
+
+        // create if not exists:
+        $clGroup                                     = $this->getCreditTransaction($account);
+        if (null === $clGroup) {
+            return $this->createCreditTransaction($account, $openingBalance, $openingBalanceDate);
+        }
+        // if exists, update:
+        $currency                                    = $this->accountRepository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        }
+
+        // simply grab the first journal and change it:
+        $journal                                     = $this->getObJournal($clGroup);
+        $clTransaction                               = $this->getOBTransaction($journal, $account);
+        $accountTransaction                          = $this->getNotOBTransaction($journal, $account);
+        $journal->date                               = $openingBalanceDate;
+        $journal->transactionCurrency()->associate($currency);
+
+        // account always gains money:
+        $accountTransaction->amount                  = Steam::positive($openingBalance);
+        $accountTransaction->transaction_currency_id = $currency->id;
+
+        // CL account always loses money:
+        $clTransaction->amount                       = Steam::negative($openingBalance);
+        $clTransaction->transaction_currency_id      = $currency->id;
+        // save both
+        $accountTransaction->save();
+        $clTransaction->save();
+        $journal->save();
+        $clGroup->refresh();
+
+        return $clGroup;
+    }
+
+    /**
+     * Update or create the opening balance group.
+     * Since opening balance and date can still be empty strings, it may fail.
+     *
+     * @throws FireflyException
+     */
+    protected function updateOBGroupV2(Account $account, string $openingBalance, Carbon $openingBalanceDate): TransactionGroup
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        // create if not exists:
+        $obGroup            = $this->getOBGroup($account);
+        if (null === $obGroup) {
+            return $this->createOBGroupV2($account, $openingBalance, $openingBalanceDate);
+        }
+        Log::debug('Update OB group');
+
+        // if exists, update:
+        $currency           = $this->accountRepository->getAccountCurrency($account);
+        if (null === $currency) {
+            $currency = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
+        }
+
+        // simply grab the first journal and change it:
+        $journal            = $this->getObJournal($obGroup);
+        $obTransaction      = $this->getOBTransaction($journal, $account);
+        $accountTransaction = $this->getNotOBTransaction($journal, $account);
+        $journal->date      = $openingBalanceDate;
+        $journal->transactionCurrency()->associate($currency);
+
+        // if amount is negative:
+        if (1 === bccomp('0', $openingBalance)) {
+            Log::debug('Amount is negative.');
+            // account transaction loses money:
+            $accountTransaction->amount                  = Steam::negative($openingBalance);
+            $accountTransaction->transaction_currency_id = $currency->id;
+
+            // OB account transaction gains money
+            $obTransaction->amount                       = Steam::positive($openingBalance);
+            $obTransaction->transaction_currency_id      = $currency->id;
+        }
+        if (-1 === bccomp('0', $openingBalance)) {
+            Log::debug('Amount is positive.');
+            // account gains money:
+            $accountTransaction->amount                  = Steam::positive($openingBalance);
+            $accountTransaction->transaction_currency_id = $currency->id;
+
+            // OB account loses money:
+            $obTransaction->amount                       = Steam::negative($openingBalance);
+            $obTransaction->transaction_currency_id      = $currency->id;
+        }
+        // save both
+        $accountTransaction->save();
+        $obTransaction->save();
+        $journal->save();
+        $obGroup->refresh();
+
+        return $obGroup;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getNotOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get non-OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
+    }
+
+    /**
+     * TODO refactor to "getfirstjournal"
+     *
+     * @throws FireflyException
+     */
+    private function getObJournal(TransactionGroup $group): TransactionJournal
+    {
+        /** @var null|TransactionJournal $journal */
+        $journal = $group->transactionJournals()->first();
+        if (null === $journal) {
+            throw new FireflyException(sprintf('Group #%d has no OB journal', $group->id));
+        }
+
+        return $journal;
+    }
+
+    /**
+     * TODO Rename to getOpposingTransaction
+     *
+     * @throws FireflyException
+     */
+    private function getOBTransaction(TransactionJournal $journal, Account $account): Transaction
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        if (null === $transaction) {
+            throw new FireflyException(sprintf('Could not get OB transaction for journal #%d', $journal->id));
+        }
+
+        return $transaction;
     }
 }

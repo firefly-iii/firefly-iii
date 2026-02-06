@@ -83,100 +83,18 @@ class UpgradesToGroups extends Command
         return 0;
     }
 
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     */
-    private function stupidLaravel(): void
+    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
-        $this->count             = 0;
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->service           = app(JournalDestroyService::class);
-        $this->groupFactory      = app(TransactionGroupFactory::class);
-        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
-    }
+        $set = $journal->transactions->filter(static function (Transaction $subject) use ($transaction): bool {
+            $amount     = ((float) $transaction->amount * -1) === (float) $subject->amount; // intentional float
+            $identifier = $transaction->identifier === $subject->identifier;
+            Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
+            Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
 
-    private function isMigrated(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+            return $amount && $identifier;
+        });
 
-        return (bool) $configVar?->data;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function makeGroupsFromSplitJournals(): void
-    {
-        $splitJournals = $this->cliRepository->getSplitJournals();
-        if ($splitJournals->count() > 0) {
-            $this->friendlyLine(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
-
-            /** @var TransactionJournal $journal */
-            foreach ($splitJournals as $journal) {
-                $this->makeMultiGroup($journal);
-            }
-        }
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function makeMultiGroup(TransactionJournal $journal): void
-    {
-        // double check transaction count.
-        if ($journal->transactions->count() <= 2) {
-            Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or fewer transactions.', $journal->id));
-
-            return;
-        }
-        Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
-
-        $this->journalRepository->setUser($journal->user);
-        $this->groupFactory->setUser($journal->user);
-        $this->cliRepository->setUser($journal->user);
-
-        $data             = [
-            // mandatory fields.
-            'group_title'  => $journal->description,
-            'transactions' => [],
-        ];
-        $destTransactions = $this->getDestinationTransactions($journal);
-
-        Log::debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
-
-        /** @var Transaction $transaction */
-        foreach ($destTransactions as $transaction) {
-            $data['transactions'][] = $this->generateTransaction($journal, $transaction);
-        }
-        Log::debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
-        $group            = $this->groupFactory->create($data);
-        Log::debug('Done calling transaction journal factory');
-
-        // delete the old transaction journal.
-        $this->service->destroy($journal);
-
-        ++$this->count;
-
-        // report on result:
-        Log::debug(sprintf(
-            'Migrated journal #%d into group #%d with these journals: #%s',
-            $journal->id,
-            $group->id,
-            implode(', #', $group->transactionJournals->pluck('id')->toArray())
-        ));
-        $this->friendlyInfo(sprintf(
-            'Migrated journal #%d into group #%d with these journals: #%s',
-            $journal->id,
-            $group->id,
-            implode(', #', $group->transactionJournals->pluck('id')->toArray())
-        ));
-    }
-
-    private function getDestinationTransactions(TransactionJournal $journal): Collection
-    {
-        return $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount > 0);
+        return $set->first();
     }
 
     /**
@@ -268,18 +186,9 @@ class UpgradesToGroups extends Command
         ];
     }
 
-    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
+    private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
-        $set = $journal->transactions->filter(static function (Transaction $subject) use ($transaction): bool {
-            $amount     = ((float) $transaction->amount * -1) === (float) $subject->amount; // intentional float
-            $identifier = $transaction->identifier === $subject->identifier;
-            Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
-            Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
-
-            return $amount && $identifier;
-        });
-
-        return $set->first();
+        return $journal->transactions->filter(static fn (Transaction $transaction): bool => $transaction->amount > 0);
     }
 
     private function getTransactionBudget(Transaction $left, Transaction $right): ?int
@@ -336,6 +245,25 @@ class UpgradesToGroups extends Command
         return null;
     }
 
+    private function giveGroup(array $array): void
+    {
+        $groupId = DB::table('transaction_groups')->insertGetId([
+            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            'title'      => null,
+            'user_id'    => $array['user_id'],
+        ]);
+        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        ++$this->count;
+    }
+
+    private function isMigrated(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
     /**
      * Gives all journals without a group a group.
      */
@@ -354,20 +282,92 @@ class UpgradesToGroups extends Command
         }
     }
 
-    private function giveGroup(array $array): void
+    /**
+     * @throws Exception
+     */
+    private function makeGroupsFromSplitJournals(): void
     {
-        $groupId = DB::table('transaction_groups')->insertGetId([
-            'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            'title'      => null,
-            'user_id'    => $array['user_id'],
-        ]);
-        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        $splitJournals = $this->cliRepository->getSplitJournals();
+        if ($splitJournals->count() > 0) {
+            $this->friendlyLine(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
+
+            /** @var TransactionJournal $journal */
+            foreach ($splitJournals as $journal) {
+                $this->makeMultiGroup($journal);
+            }
+        }
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function makeMultiGroup(TransactionJournal $journal): void
+    {
+        // double check transaction count.
+        if ($journal->transactions->count() <= 2) {
+            Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or fewer transactions.', $journal->id));
+
+            return;
+        }
+        Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
+
+        $this->journalRepository->setUser($journal->user);
+        $this->groupFactory->setUser($journal->user);
+        $this->cliRepository->setUser($journal->user);
+
+        $data             = [
+            // mandatory fields.
+            'group_title'  => $journal->description,
+            'transactions' => [],
+        ];
+        $destTransactions = $this->getDestinationTransactions($journal);
+
+        Log::debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
+
+        /** @var Transaction $transaction */
+        foreach ($destTransactions as $transaction) {
+            $data['transactions'][] = $this->generateTransaction($journal, $transaction);
+        }
+        Log::debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
+        $group            = $this->groupFactory->create($data);
+        Log::debug('Done calling transaction journal factory');
+
+        // delete the old transaction journal.
+        $this->service->destroy($journal);
+
         ++$this->count;
+
+        // report on result:
+        Log::debug(sprintf(
+            'Migrated journal #%d into group #%d with these journals: #%s',
+            $journal->id,
+            $group->id,
+            implode(', #', $group->transactionJournals->pluck('id')->toArray())
+        ));
+        $this->friendlyInfo(sprintf(
+            'Migrated journal #%d into group #%d with these journals: #%s',
+            $journal->id,
+            $group->id,
+            implode(', #', $group->transactionJournals->pluck('id')->toArray())
+        ));
     }
 
     private function markAsMigrated(): void
     {
         FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count             = 0;
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->service           = app(JournalDestroyService::class);
+        $this->groupFactory      = app(TransactionGroupFactory::class);
+        $this->cliRepository     = app(JournalCLIRepositoryInterface::class);
     }
 }

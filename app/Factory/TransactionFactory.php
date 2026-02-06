@@ -66,6 +66,56 @@ class TransactionFactory
     }
 
     /**
+     * Create transaction with positive amount (for destination accounts).
+     *
+     * @throws FireflyException
+     */
+    public function createPositive(string $amount, ?string $foreignAmount): Transaction
+    {
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
+        if (null !== $foreignAmount) {
+            $foreignAmount = Steam::positive($foreignAmount);
+        }
+
+        return $this->create(Steam::positive($amount), $foreignAmount);
+    }
+
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    public function setAccountInformation(array $accountInformation): void
+    {
+        $this->accountInformation = $accountInformation;
+    }
+
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    /**
+     * @param null|TransactionCurrency $foreignCurrency |null
+     */
+    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    {
+        $this->foreignCurrency = $foreignCurrency;
+    }
+
+    public function setJournal(TransactionJournal $journal): void
+    {
+        $this->journal = $journal;
+    }
+
+    public function setReconciled(bool $reconciled): void
+    {
+        $this->reconciled = $reconciled;
+    }
+
+    /**
      * @throws FireflyException
      */
     private function create(string $amount, ?string $foreignAmount): Transaction
@@ -155,55 +205,5 @@ class TransactionFactory
         Log::debug('Will update account with IBAN information.');
         $service   = app(AccountUpdateService::class);
         $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
-    }
-
-    /**
-     * Create transaction with positive amount (for destination accounts).
-     *
-     * @throws FireflyException
-     */
-    public function createPositive(string $amount, ?string $foreignAmount): Transaction
-    {
-        if ('' === $foreignAmount) {
-            $foreignAmount = null;
-        }
-        if (null !== $foreignAmount) {
-            $foreignAmount = Steam::positive($foreignAmount);
-        }
-
-        return $this->create(Steam::positive($amount), $foreignAmount);
-    }
-
-    public function setAccount(Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    public function setAccountInformation(array $accountInformation): void
-    {
-        $this->accountInformation = $accountInformation;
-    }
-
-    public function setCurrency(TransactionCurrency $currency): void
-    {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @param null|TransactionCurrency $foreignCurrency |null
-     */
-    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
-    {
-        $this->foreignCurrency = $foreignCurrency;
-    }
-
-    public function setJournal(TransactionJournal $journal): void
-    {
-        $this->journal = $journal;
-    }
-
-    public function setReconciled(bool $reconciled): void
-    {
-        $this->reconciled = $reconciled;
     }
 }

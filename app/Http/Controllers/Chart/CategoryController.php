@@ -97,11 +97,6 @@ class CategoryController extends Controller
         return response()->json($data);
     }
 
-    private function getDate(): Carbon
-    {
-        return today(config('app.timezone'));
-    }
-
     /**
      * Shows the category chart on the front page.
      * TODO test method for category refactor.
@@ -149,6 +144,67 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * Chart for period for transactions without a category.
+     * TODO test me.
+     */
+    public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
+    {
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('chart.category.period.no-cat');
+        $cache->addProperty($accounts->pluck('id')->toArray());
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        $data  = $this->reportPeriodChart($accounts, $start, $end, null);
+
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+    /**
+     * Chart for a specific period.
+     * TODO test me, for category refactor.
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    public function specificPeriod(Category $category, Carbon $date): JsonResponse
+    {
+        $range          = Navigation::getViewRange(false);
+        $start          = Navigation::startOfPeriod($date, $range);
+        $end            = session()->get('end');
+        if ($end < $start) {
+            [$end, $start] = [$start, $end];
+        }
+
+        $cache          = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($category->id);
+        $cache->addProperty('chart.category.period-chart');
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+
+        /** @var WholePeriodChartGenerator $chartGenerator */
+        $chartGenerator = app(WholePeriodChartGenerator::class);
+        $chartData      = $chartGenerator->generate($category, $start, $end);
+        $data           = $this->generator->multiSet($chartData);
+
+        $cache->store($data);
+
+        return response()->json($data);
+    }
+
+    private function getDate(): Carbon
+    {
+        return today(config('app.timezone'));
     }
 
     /**
@@ -226,61 +282,5 @@ class CategoryController extends Controller
         }
 
         return $this->generator->multiSet($chartData);
-    }
-
-    /**
-     * Chart for period for transactions without a category.
-     * TODO test me.
-     */
-    public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
-    {
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('chart.category.period.no-cat');
-        $cache->addProperty($accounts->pluck('id')->toArray());
-        if ($cache->has()) {
-            return response()->json($cache->get());
-        }
-        $data  = $this->reportPeriodChart($accounts, $start, $end, null);
-
-        $cache->store($data);
-
-        return response()->json($data);
-    }
-
-    /**
-     * Chart for a specific period.
-     * TODO test me, for category refactor.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function specificPeriod(Category $category, Carbon $date): JsonResponse
-    {
-        $range          = Navigation::getViewRange(false);
-        $start          = Navigation::startOfPeriod($date, $range);
-        $end            = session()->get('end');
-        if ($end < $start) {
-            [$end, $start] = [$start, $end];
-        }
-
-        $cache          = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($category->id);
-        $cache->addProperty('chart.category.period-chart');
-        if ($cache->has()) {
-            return response()->json($cache->get());
-        }
-
-        /** @var WholePeriodChartGenerator $chartGenerator */
-        $chartGenerator = app(WholePeriodChartGenerator::class);
-        $chartData      = $chartGenerator->generate($category, $start, $end);
-        $data           = $this->generator->multiSet($chartData);
-
-        $cache->store($data);
-
-        return response()->json($data);
     }
 }

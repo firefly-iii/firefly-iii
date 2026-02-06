@@ -58,6 +58,15 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
 {
     use UserGroupTrait;
 
+    public function count(array $types): int
+    {
+        return $this->user
+            ->accounts()
+            ->accountTypeIn($types)
+            ->count()
+        ;
+    }
+
     /**
      * Moved here from account CRUD.
      */
@@ -109,6 +118,12 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         }
 
         return $result;
+    }
+
+    public function find(int $accountId): ?Account
+    {
+        /** @var null|Account */
+        return $this->user->accounts()->find($accountId);
     }
 
     public function findByAccountNumber(string $number, array $types): ?Account
@@ -175,12 +190,21 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $account;
     }
 
-    /**
-     * Return account type or null if not found.
-     */
-    public function getAccountTypeByType(string $type): ?AccountType
+    public function getAccountCurrency(Account $account): ?TransactionCurrency
     {
-        return AccountType::whereType(ucfirst($type))->first();
+        $type       = $account->accountType->type;
+        $list       = config('firefly.valid_currency_account_types');
+
+        // return null if not in this list.
+        if (!in_array($type, $list, true)) {
+            return null;
+        }
+        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
+        if ($currencyId > 0) {
+            return Amount::getTransactionCurrencyById($currencyId);
+        }
+
+        return null;
     }
 
     public function getAccountsById(array $accountIds): Collection
@@ -195,6 +219,52 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $query->orderBy('accounts.name', 'ASC');
 
         return $query->get(['accounts.*']);
+    }
+
+    public function getAccountsByType(array $types, ?array $sort = []): Collection
+    {
+        $res     = array_intersect([
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+        ], $types);
+        $query   = $this->user->accounts();
+        if (0 !== count($types)) {
+            $query->accountTypeIn($types);
+        }
+
+        // add sort parameters
+        $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
+        $sorted  = 0;
+        if (0 !== count($sort)) {
+            foreach ($sort as $param) {
+                if (in_array($param[0], $allowed, true)) {
+                    $query->orderBy($param[0], $param[1]);
+                    ++$sorted;
+                }
+            }
+        }
+
+        if (0 === $sorted) {
+            if (0 !== count($res)) {
+                $query->orderBy('accounts.order', 'ASC');
+            }
+            $query->orderBy('accounts.active', 'DESC');
+            $query->orderBy('accounts.name', 'ASC');
+            $query->orderBy('accounts.account_type_id', 'ASC');
+            $query->orderBy('accounts.id', 'ASC');
+        }
+
+        return $query->get(['accounts.*']);
+    }
+
+    /**
+     * Return account type or null if not found.
+     */
+    public function getAccountTypeByType(string $type): ?AccountType
+    {
+        return AccountType::whereType(ucfirst($type))->first();
     }
 
     public function getActiveAccountsByType(array $types): Collection
@@ -287,11 +357,36 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     }
 
     /**
+     * Return meta value for account. Null if not found.
+     */
+    public function getMetaValue(Account $account, string $field): ?string
+    {
+        $result = $account->accountMeta->filter(static fn (AccountMeta $meta): bool => strtolower($meta->name) === strtolower($field));
+        if (0 === $result->count()) {
+            return null;
+        }
+        if (1 === $result->count()) {
+            return (string) $result->first()->data;
+        }
+
+        return null;
+    }
+
+    /**
      * Get note text or null.
      */
     public function getNoteText(Account $account): ?string
     {
         return $account->notes()->first()?->text;
+    }
+
+    public function getOpeningBalance(Account $account): ?TransactionJournal
+    {
+        return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionTypeEnum::OPENING_BALANCE->value])
+            ->first(['transaction_journals.*'])
+        ;
     }
 
     /**
@@ -336,15 +431,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $journal = $this->getOpeningBalance($account);
 
         return $journal?->transactionGroup;
-    }
-
-    public function getOpeningBalance(Account $account): ?TransactionJournal
-    {
-        return TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-            ->where('transactions.account_id', $account->id)
-            ->transactionTypes([TransactionTypeEnum::OPENING_BALANCE->value])
-            ->first(['transaction_journals.*'])
-        ;
     }
 
     public function getPiggyBanks(Account $account): Collection
@@ -392,54 +478,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $factory->setUser($account->user);
 
         return $factory->create($data);
-    }
-
-    public function getAccountCurrency(Account $account): ?TransactionCurrency
-    {
-        $type       = $account->accountType->type;
-        $list       = config('firefly.valid_currency_account_types');
-
-        // return null if not in this list.
-        if (!in_array($type, $list, true)) {
-            return null;
-        }
-        $currencyId = (int) $this->getMetaValue($account, 'currency_id');
-        if ($currencyId > 0) {
-            return Amount::getTransactionCurrencyById($currencyId);
-        }
-
-        return null;
-    }
-
-    /**
-     * Return meta value for account. Null if not found.
-     */
-    public function getMetaValue(Account $account, string $field): ?string
-    {
-        $result = $account->accountMeta->filter(static fn (AccountMeta $meta): bool => strtolower($meta->name) === strtolower($field));
-        if (0 === $result->count()) {
-            return null;
-        }
-        if (1 === $result->count()) {
-            return (string) $result->first()->data;
-        }
-
-        return null;
-    }
-
-    public function count(array $types): int
-    {
-        return $this->user
-            ->accounts()
-            ->accountTypeIn($types)
-            ->count()
-        ;
-    }
-
-    public function find(int $accountId): ?Account
-    {
-        /** @var null|Account */
-        return $this->user->accounts()->find($accountId);
     }
 
     public function getUsedCurrencies(Account $account): Collection
@@ -507,54 +545,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         return $order;
     }
 
-    public function getAccountsByType(array $types, ?array $sort = []): Collection
-    {
-        $res     = array_intersect([
-            AccountTypeEnum::ASSET->value,
-            AccountTypeEnum::MORTGAGE->value,
-            AccountTypeEnum::LOAN->value,
-            AccountTypeEnum::DEBT->value,
-        ], $types);
-        $query   = $this->user->accounts();
-        if (0 !== count($types)) {
-            $query->accountTypeIn($types);
-        }
-
-        // add sort parameters
-        $allowed = config('firefly.allowed_db_sort_parameters.Account', []);
-        $sorted  = 0;
-        if (0 !== count($sort)) {
-            foreach ($sort as $param) {
-                if (in_array($param[0], $allowed, true)) {
-                    $query->orderBy($param[0], $param[1]);
-                    ++$sorted;
-                }
-            }
-        }
-
-        if (0 === $sorted) {
-            if (0 !== count($res)) {
-                $query->orderBy('accounts.order', 'ASC');
-            }
-            $query->orderBy('accounts.active', 'DESC');
-            $query->orderBy('accounts.name', 'ASC');
-            $query->orderBy('accounts.account_type_id', 'ASC');
-            $query->orderBy('accounts.id', 'ASC');
-        }
-
-        return $query->get(['accounts.*']);
-    }
-
-    /**
-     * Returns the date of the very first transaction in this account.
-     */
-    public function oldestJournalDate(Account $account): ?Carbon
-    {
-        $journal = $this->oldestJournal($account);
-
-        return $journal?->date;
-    }
-
     /**
      * Returns the date of the very first transaction in this account.
      */
@@ -576,6 +566,16 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         }
 
         return null;
+    }
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     */
+    public function oldestJournalDate(Account $account): ?Carbon
+    {
+        $journal = $this->oldestJournal($account);
+
+        return $journal?->date;
     }
 
     #[Override]
@@ -661,17 +661,6 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         ;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    public function update(Account $account, array $data): Account
-    {
-        /** @var AccountUpdateService $service */
-        $service = app(AccountUpdateService::class);
-
-        return $service->update($account, $data);
-    }
-
     public function searchAccount(string $query, array $types, int $limit): Collection
     {
         $dbQuery = $this->user
@@ -742,5 +731,16 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         $factory->setUser($this->user);
 
         return $factory->create($data);
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function update(Account $account, array $data): Account
+    {
+        /** @var AccountUpdateService $service */
+        $service = app(AccountUpdateService::class);
+
+        return $service->update($account, $data);
     }
 }

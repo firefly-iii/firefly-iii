@@ -26,83 +26,6 @@ use Illuminate\Support\Facades\Log;
 
 trait SupportsGroupProcessingTrait
 {
-    private function recalculateCredit(Collection $accounts): void
-    {
-        Log::debug(sprintf('Will now recalculateCredit for %d account(s)', $accounts->count()));
-
-        /** @var CreditRecalculateService $object */
-        $object = app(CreditRecalculateService::class);
-        $object->setAccounts($accounts);
-        $object->recalculate();
-        Log::debug(sprintf('Done with recalculateCredit for %d account(s)', $accounts->count()));
-    }
-
-    private function createWebhookMessages(Collection $groups, WebhookTrigger $trigger): void
-    {
-        Log::debug(sprintf('Will now create webhook messages for %d group(s)', $groups->count()));
-
-        /** @var TransactionGroup $first */
-        $first  = $groups->first();
-        $user   = $first->user;
-
-        /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
-        $engine->setUser($user);
-
-        // tell the generator which trigger it should look for
-        $engine->setTrigger($trigger);
-        // tell the generator which objects to process
-        $engine->setObjects($groups);
-        // tell the generator to generate the messages
-        $engine->generateMessages();
-
-        Log::debug(sprintf('Done with create webhook messages for %d group(s)', $groups->count()));
-    }
-
-    protected function removePeriodStatistics(TransactionGroupEventObjects $objects): void
-    {
-        if (!auth()->check()) {
-            Log::debug('Will NOT remove period statistics for all objects, because no user detected.');
-        }
-        Log::debug('Will now remove period statistics for all objects.');
-
-        // since you get a bunch of journals AND a bunch of
-        // objects, this needs to be a collection
-        /** @var PeriodStatisticRepositoryInterface $repository */
-        $repository = app(PeriodStatisticRepositoryInterface::class);
-        $dates      = $this->collectDatesFromJournals($objects->transactionJournals);
-        $repository->deleteStatisticsForType(Account::class, $objects->accounts, $dates);
-        $repository->deleteStatisticsForType(Budget::class, $objects->budgets, $dates);
-        $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
-        $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
-
-        // remove if no stuff present:
-        // remove for no tag, no cat, etc.
-        if (0 === $objects->budgets->count()) {
-            Log::debug('No budgets, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_budget', $dates);
-        }
-        if (0 === $objects->categories->count()) {
-            Log::debug('No categories, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_category', $dates);
-        }
-        if (0 === $objects->tags->count()) {
-            Log::debug('No tags, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_tag', $dates);
-        }
-        Log::debug('Done with remove period statistics for all objects.');
-    }
-
-    private function collectDatesFromJournals(Collection $journals): Collection
-    {
-        $collection = $journals->pluck('date');
-        if (0 === count($collection)) {
-            $collection->push(now(config('app.timezone')));
-        }
-
-        return $collection;
-    }
-
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
@@ -151,6 +74,72 @@ trait SupportsGroupProcessingTrait
         AccountBalanceCalculator::optimizedCalculation($objects->accounts, $earliest);
     }
 
+    protected function removePeriodStatistics(TransactionGroupEventObjects $objects): void
+    {
+        if (!auth()->check()) {
+            Log::debug('Will NOT remove period statistics for all objects, because no user detected.');
+        }
+        Log::debug('Will now remove period statistics for all objects.');
+
+        // since you get a bunch of journals AND a bunch of
+        // objects, this needs to be a collection
+        /** @var PeriodStatisticRepositoryInterface $repository */
+        $repository = app(PeriodStatisticRepositoryInterface::class);
+        $dates      = $this->collectDatesFromJournals($objects->transactionJournals);
+        $repository->deleteStatisticsForType(Account::class, $objects->accounts, $dates);
+        $repository->deleteStatisticsForType(Budget::class, $objects->budgets, $dates);
+        $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
+        $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
+
+        // remove if no stuff present:
+        // remove for no tag, no cat, etc.
+        if (0 === $objects->budgets->count()) {
+            Log::debug('No budgets, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_budget', $dates);
+        }
+        if (0 === $objects->categories->count()) {
+            Log::debug('No categories, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_category', $dates);
+        }
+        if (0 === $objects->tags->count()) {
+            Log::debug('No tags, delete "no_category" stats.');
+            $repository->deleteStatisticsForPrefix('no_tag', $dates);
+        }
+        Log::debug('Done with remove period statistics for all objects.');
+    }
+
+    private function collectDatesFromJournals(Collection $journals): Collection
+    {
+        $collection = $journals->pluck('date');
+        if (0 === count($collection)) {
+            $collection->push(now(config('app.timezone')));
+        }
+
+        return $collection;
+    }
+
+    private function createWebhookMessages(Collection $groups, WebhookTrigger $trigger): void
+    {
+        Log::debug(sprintf('Will now create webhook messages for %d group(s)', $groups->count()));
+
+        /** @var TransactionGroup $first */
+        $first  = $groups->first();
+        $user   = $first->user;
+
+        /** @var MessageGeneratorInterface $engine */
+        $engine = app(MessageGeneratorInterface::class);
+        $engine->setUser($user);
+
+        // tell the generator which trigger it should look for
+        $engine->setTrigger($trigger);
+        // tell the generator which objects to process
+        $engine->setObjects($groups);
+        // tell the generator to generate the messages
+        $engine->generateMessages();
+
+        Log::debug(sprintf('Done with create webhook messages for %d group(s)', $groups->count()));
+    }
+
     private function getFromInternalDate(array $ids): Carbon
     {
         $entries = TransactionJournalMeta::whereIn('transaction_journal_id', $ids)->where('name', '_internal_previous_date')->get(['journal_meta.*']);
@@ -166,5 +155,16 @@ trait SupportsGroupProcessingTrait
         }
 
         return $return;
+    }
+
+    private function recalculateCredit(Collection $accounts): void
+    {
+        Log::debug(sprintf('Will now recalculateCredit for %d account(s)', $accounts->count()));
+
+        /** @var CreditRecalculateService $object */
+        $object = app(CreditRecalculateService::class);
+        $object->setAccounts($accounts);
+        $object->recalculate();
+        Log::debug(sprintf('Done with recalculateCredit for %d account(s)', $accounts->count()));
     }
 }

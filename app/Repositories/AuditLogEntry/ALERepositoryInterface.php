@@ -44,9 +44,9 @@ use Illuminate\Support\Collection;
  */
 interface ALERepositoryInterface
 {
-    public function getForObject(Model $model): Collection;
-
     public function getForId(string $model, int $modelId): Collection;
+
+    public function getForObject(Model $model): Collection;
 
     public function store(array $data): AuditLogEntry;
 }

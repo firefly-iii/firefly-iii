@@ -45,6 +45,16 @@ class NotifiesAboutNewInvitation implements ShouldQueue
         $this->sendRegistrationInvite($event->invitee);
     }
 
+    private function sendInvitationNotification(InvitedUser $invitee): void
+    {
+        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
+        if (false === $sendMail) {
+            return;
+        }
+
+        NotificationSender::send(new OwnerNotifiable(), new UserInvitation($invitee));
+    }
+
     private function sendRegistrationInvite(InvitedUser $invitee): void
     {
         $email = $invitee->email;
@@ -59,15 +69,5 @@ class NotifiesAboutNewInvitation implements ShouldQueue
 
             throw new FireflyException($e->getMessage(), 0, $e);
         }
-    }
-
-    private function sendInvitationNotification(InvitedUser $invitee): void
-    {
-        $sendMail = FireflyConfig::get('notification_invite_created', true)->data;
-        if (false === $sendMail) {
-            return;
-        }
-
-        NotificationSender::send(new OwnerNotifiable(), new UserInvitation($invitee));
     }
 }

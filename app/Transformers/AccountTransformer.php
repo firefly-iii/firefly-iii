@@ -192,6 +192,18 @@ class AccountTransformer extends AbstractTransformer
         return [$creditCardType, $monthlyPaymentDate];
     }
 
+    private function getInterest(Account $account, string $accountType): array
+    {
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $account->meta['interest'] ?? null;
+            $interestPeriod = $account->meta['interest_period'] ?? null;
+        }
+
+        return [$interest, $interestPeriod];
+    }
+
     private function getOpeningBalance(Account $account, string $accountType): ?string
     {
         $openingBalanceDate = null;
@@ -207,17 +219,5 @@ class AccountTransformer extends AbstractTransformer
         }
 
         return $openingBalanceDate;
-    }
-
-    private function getInterest(Account $account, string $accountType): array
-    {
-        $interest       = null;
-        $interestPeriod = null;
-        if ('liabilities' === $accountType) {
-            $interest       = $account->meta['interest'] ?? null;
-            $interestPeriod = $account->meta['interest_period'] ?? null;
-        }
-
-        return [$interest, $interestPeriod];
     }
 }

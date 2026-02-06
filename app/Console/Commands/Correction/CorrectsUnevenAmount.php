@@ -70,271 +70,6 @@ class CorrectsUnevenAmount extends Command
         return 0;
     }
 
-    private function convertOldStyleTransfers(): void
-    {
-        Log::debug('convertOldStyleTransfers()');
-        // select transactions with a foreign amount and a foreign currency. and it's a transfer. and they are different.
-        $transactions = Transaction::distinct()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
-            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
-            ->whereNotNull('foreign_currency_id')
-            ->whereNotNull('foreign_amount')
-            ->get(['transactions.transaction_journal_id'])
-        ;
-        $count        = 0;
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            /** @var null|TransactionJournal $journal */
-            $journal     = TransactionJournal::find($transaction->transaction_journal_id);
-            if (null === $journal) {
-                Log::debug('Found no journal, continue.');
-
-                continue;
-            }
-            // needs to be a transfer.
-            if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
-                Log::debug('Must be a transfer, continue.');
-
-                continue;
-            }
-
-            /** @var null|Transaction $destination */
-            $destination = $journal->transactions()->where('amount', '>', 0)->first();
-
-            /** @var null|Transaction $source */
-            $source      = $journal->transactions()->where('amount', '<', 0)->first();
-            if (null === $destination || null === $source) {
-                Log::debug('Source or destination transaction is NULL, continue.');
-
-                // will be picked up later.
-                continue;
-            }
-            if ($source->transaction_currency_id === $destination->transaction_currency_id) {
-                Log::debug('Ready to swap data between transactions.');
-                $destination->foreign_currency_id     = $source->transaction_currency_id;
-                $destination->foreign_amount          = Steam::positive($source->amount);
-                $destination->transaction_currency_id = $source->foreign_currency_id;
-                $destination->amount                  = Steam::positive($source->foreign_amount);
-                $destination->balance_dirty           = true;
-                $source->balance_dirty                = true;
-                $destination->save();
-                $source->save();
-                $this->friendlyWarning(sprintf('Corrected foreign amounts of transfer #%d.', $journal->id));
-                ++$count;
-            }
-        }
-        if (0 === $count) {
-            return;
-        }
-        $this->friendlyPositive(sprintf('Fixed %d transfer(s) with unbalanced amounts.', $count));
-    }
-
-    private function fixUnevenAmounts(): void
-    {
-        Log::debug('fixUnevenAmounts()');
-        $journals = DB::table('transactions')
-            ->groupBy('transaction_journal_id')
-            ->whereNull('deleted_at')
-            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
-        ;
-
-        /** @var stdClass $entry */
-        foreach ($journals as $entry) {
-            $sum = (string) $entry->the_sum;
-            $sum = Steam::floatalize($sum);
-            if (
-                !is_numeric($sum)
-                || '' === $sum // @phpstan-ignore-line
-                || str_contains($sum, 'e')
-                || str_contains($sum, ',')
-            ) {
-                $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
-                $this->friendlyWarning($message);
-                Log::warning($message);
-                ++$this->count;
-
-                continue;
-            }
-            $res = -1;
-
-            try {
-                $res = bccomp($sum, '0');
-            } catch (ValueError $e) {
-                $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-            if (0 !== $res) {
-                $this->fixJournal((int) $entry->transaction_journal_id);
-            }
-        }
-    }
-
-    private function fixJournal(int $param): void
-    {
-        // one of the transactions is bad.
-        $journal             = TransactionJournal::find($param);
-        if (null === $journal) {
-            return;
-        }
-
-        /** @var null|Transaction $source */
-        $source              = $journal->transactions()->where('amount', '<', 0)->first();
-
-        if (null === $source) {
-            $this->friendlyError(sprintf(
-                'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
-                $journal->id ?? 0,
-                $journal->description ?? ''
-            ));
-            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
-            ++$this->count;
-
-            return;
-        }
-
-        $amount              = bcmul('-1', (string) $source->amount);
-
-        // fix amount of destination:
-        /** @var null|Transaction $destination */
-        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
-
-        if (null === $destination) {
-            $this->friendlyError(sprintf(
-                'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
-                $journal->id ?? 0,
-                $journal->description ?? ''
-            ));
-
-            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
-            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
-            ++$this->count;
-
-            return;
-        }
-
-        // may still be able to salvage this journal if it is a transfer with foreign currency info
-        if ($this->isForeignCurrencyTransfer($journal) || $this->isBetweenAssetAndLiability($journal)) {
-            Log::debug(sprintf('Can skip foreign currency transfer / asset+liability transaction #%d.', $journal->id));
-
-            return;
-        }
-
-        $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
-
-        $this->friendlyWarning($message);
-        Log::warning($message);
-
-        $destination->amount = $amount;
-        $destination->save();
-
-        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
-        $this->friendlyInfo($message);
-        ++$this->count;
-    }
-
-    private function isForeignCurrencyTransfer(TransactionJournal $journal): bool
-    {
-        if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
-            return false;
-        }
-
-        /** @var Transaction $destination */
-        $destination = $journal->transactions()->where('amount', '>', 0)->first();
-
-        /** @var Transaction $source */
-        $source      = $journal->transactions()->where('amount', '<', 0)->first();
-
-        // safety catch on NULL should not be necessary, we just had that catch.
-        // source amount = dest foreign amount
-        // source currency = dest foreign currency
-        // dest amount = source foreign currency
-        // dest currency = source foreign currency
-        //        Log::debug(sprintf('[a] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($source->amount), \FireflyIII\Support\Facades\Steam::positive($destination->foreign_amount))));
-        //        Log::debug(sprintf('[b] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($destination->amount), \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount))));
-        //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
-        //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
-        return
-            0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
-            && $source->transaction_currency_id === $destination->foreign_currency_id
-            && 0 === bccomp(Steam::positive($destination->amount), Steam::positive($source->foreign_amount))
-            && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id;
-    }
-
-    private function matchCurrencies(): void
-    {
-        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')->where(
-            'transactions.transaction_currency_id',
-            '!=',
-            DB::raw('transaction_journals.transaction_currency_id')
-        )->get(['transaction_journals.*']);
-
-        $count    = 0;
-
-        /** @var TransactionJournal $journal */
-        foreach ($journals as $journal) {
-            if (!$this->isForeignCurrencyTransfer($journal) && !$this->isBetweenAssetAndLiability($journal)) {
-                Transaction::where('transaction_journal_id', $journal->id)->update(['transaction_currency_id' => $journal->transaction_currency_id]);
-                ++$count;
-
-                continue;
-            }
-            Log::debug(sprintf('Can skip foreign currency transfer or transaction between asset and liability #%d.', $journal->id));
-        }
-        if (0 === $count) {
-            return;
-        }
-
-        $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
-    }
-
-    private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
-    {
-        /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
-
-        /** @var null|Transaction $destinationTransaction */
-        $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $sourceTransaction || null === $destinationTransaction) {
-            Log::warning('Either transaction is false, stop.');
-
-            return false;
-        }
-        if (null === $sourceTransaction->foreign_amount || null === $destinationTransaction->foreign_amount) {
-            Log::warning('Either foreign amount is false, stop.');
-
-            return false;
-        }
-
-        $source                 = $sourceTransaction->account;
-        $destination            = $destinationTransaction->account;
-
-        if (null === $source || null === $destination) {
-            Log::warning('Either is false, stop.');
-
-            return false;
-        }
-        $sourceTypes            = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
-
-        // source is liability, destination is asset
-        if (in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
-            Log::debug('Source is a liability account, destination is an asset account, return TRUE.');
-
-            return true;
-        }
-        // source is asset, destination is liability
-        if (in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
-            Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
-
-            return true;
-        }
-
-        return false;
-    }
-
     private function convertOldStyleTransactions(): void
     {
         /** @var AccountRepositoryInterface $repository */
@@ -447,5 +182,270 @@ class CorrectsUnevenAmount extends Command
         }
 
         $this->friendlyPositive(sprintf('Fixed %d journal(s) with unbalanced amounts.', $count));
+    }
+
+    private function convertOldStyleTransfers(): void
+    {
+        Log::debug('convertOldStyleTransfers()');
+        // select transactions with a foreign amount and a foreign currency. and it's a transfer. and they are different.
+        $transactions = Transaction::distinct()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', 'transactions.transaction_journal_id')
+            ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
+            ->where('transaction_types.type', TransactionTypeEnum::TRANSFER->value)
+            ->whereNotNull('foreign_currency_id')
+            ->whereNotNull('foreign_amount')
+            ->get(['transactions.transaction_journal_id'])
+        ;
+        $count        = 0;
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            /** @var null|TransactionJournal $journal */
+            $journal     = TransactionJournal::find($transaction->transaction_journal_id);
+            if (null === $journal) {
+                Log::debug('Found no journal, continue.');
+
+                continue;
+            }
+            // needs to be a transfer.
+            if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
+                Log::debug('Must be a transfer, continue.');
+
+                continue;
+            }
+
+            /** @var null|Transaction $destination */
+            $destination = $journal->transactions()->where('amount', '>', 0)->first();
+
+            /** @var null|Transaction $source */
+            $source      = $journal->transactions()->where('amount', '<', 0)->first();
+            if (null === $destination || null === $source) {
+                Log::debug('Source or destination transaction is NULL, continue.');
+
+                // will be picked up later.
+                continue;
+            }
+            if ($source->transaction_currency_id === $destination->transaction_currency_id) {
+                Log::debug('Ready to swap data between transactions.');
+                $destination->foreign_currency_id     = $source->transaction_currency_id;
+                $destination->foreign_amount          = Steam::positive($source->amount);
+                $destination->transaction_currency_id = $source->foreign_currency_id;
+                $destination->amount                  = Steam::positive($source->foreign_amount);
+                $destination->balance_dirty           = true;
+                $source->balance_dirty                = true;
+                $destination->save();
+                $source->save();
+                $this->friendlyWarning(sprintf('Corrected foreign amounts of transfer #%d.', $journal->id));
+                ++$count;
+            }
+        }
+        if (0 === $count) {
+            return;
+        }
+        $this->friendlyPositive(sprintf('Fixed %d transfer(s) with unbalanced amounts.', $count));
+    }
+
+    private function fixJournal(int $param): void
+    {
+        // one of the transactions is bad.
+        $journal             = TransactionJournal::find($param);
+        if (null === $journal) {
+            return;
+        }
+
+        /** @var null|Transaction $source */
+        $source              = $journal->transactions()->where('amount', '<', 0)->first();
+
+        if (null === $source) {
+            $this->friendlyError(sprintf(
+                'Journal #%d ("%s") has no source transaction. It will be deleted to maintain database consistency.',
+                $journal->id ?? 0,
+                $journal->description ?? ''
+            ));
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
+            ++$this->count;
+
+            return;
+        }
+
+        $amount              = bcmul('-1', (string) $source->amount);
+
+        // fix amount of destination:
+        /** @var null|Transaction $destination */
+        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
+
+        if (null === $destination) {
+            $this->friendlyError(sprintf(
+                'Journal #%d ("%s") has no destination transaction. It will be deleted to maintain database consistency.',
+                $journal->id ?? 0,
+                $journal->description ?? ''
+            ));
+
+            Transaction::where('transaction_journal_id', $journal->id ?? 0)->forceDelete();
+            TransactionJournal::where('id', $journal->id ?? 0)->forceDelete();
+            ++$this->count;
+
+            return;
+        }
+
+        // may still be able to salvage this journal if it is a transfer with foreign currency info
+        if ($this->isForeignCurrencyTransfer($journal) || $this->isBetweenAssetAndLiability($journal)) {
+            Log::debug(sprintf('Can skip foreign currency transfer / asset+liability transaction #%d.', $journal->id));
+
+            return;
+        }
+
+        $message             = sprintf('Sum of journal #%d is not zero, journal is broken and now fixed.', $journal->id);
+
+        $this->friendlyWarning($message);
+        Log::warning($message);
+
+        $destination->amount = $amount;
+        $destination->save();
+
+        $message             = sprintf('Corrected amount in transaction journal #%d', $param);
+        $this->friendlyInfo($message);
+        ++$this->count;
+    }
+
+    private function fixUnevenAmounts(): void
+    {
+        Log::debug('fixUnevenAmounts()');
+        $journals = DB::table('transactions')
+            ->groupBy('transaction_journal_id')
+            ->whereNull('deleted_at')
+            ->get(['transaction_journal_id', DB::raw('SUM(amount) AS the_sum')])
+        ;
+
+        /** @var stdClass $entry */
+        foreach ($journals as $entry) {
+            $sum = (string) $entry->the_sum;
+            $sum = Steam::floatalize($sum);
+            if (
+                !is_numeric($sum)
+                || '' === $sum // @phpstan-ignore-line
+                || str_contains($sum, 'e')
+                || str_contains($sum, ',')
+            ) {
+                $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
+                $this->friendlyWarning($message);
+                Log::warning($message);
+                ++$this->count;
+
+                continue;
+            }
+            $res = -1;
+
+            try {
+                $res = bccomp($sum, '0');
+            } catch (ValueError $e) {
+                $this->friendlyError(sprintf('Could not bccomp("%s", "0").', $sum));
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
+            if (0 !== $res) {
+                $this->fixJournal((int) $entry->transaction_journal_id);
+            }
+        }
+    }
+
+    private function isBetweenAssetAndLiability(TransactionJournal $journal): bool
+    {
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
+
+        /** @var null|Transaction $destinationTransaction */
+        $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $sourceTransaction || null === $destinationTransaction) {
+            Log::warning('Either transaction is false, stop.');
+
+            return false;
+        }
+        if (null === $sourceTransaction->foreign_amount || null === $destinationTransaction->foreign_amount) {
+            Log::warning('Either foreign amount is false, stop.');
+
+            return false;
+        }
+
+        $source                 = $sourceTransaction->account;
+        $destination            = $destinationTransaction->account;
+
+        if (null === $source || null === $destination) {
+            Log::warning('Either is false, stop.');
+
+            return false;
+        }
+        $sourceTypes            = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+
+        // source is liability, destination is asset
+        if (in_array($source->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $destination->accountType->type) {
+            Log::debug('Source is a liability account, destination is an asset account, return TRUE.');
+
+            return true;
+        }
+        // source is asset, destination is liability
+        if (in_array($destination->accountType->type, $sourceTypes, true) && AccountTypeEnum::ASSET->value === $source->accountType->type) {
+            Log::debug('Destination is a liability account, source is an asset account, return TRUE.');
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function isForeignCurrencyTransfer(TransactionJournal $journal): bool
+    {
+        if (TransactionTypeEnum::TRANSFER->value !== $journal->transactionType->type) {
+            return false;
+        }
+
+        /** @var Transaction $destination */
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
+
+        /** @var Transaction $source */
+        $source      = $journal->transactions()->where('amount', '<', 0)->first();
+
+        // safety catch on NULL should not be necessary, we just had that catch.
+        // source amount = dest foreign amount
+        // source currency = dest foreign currency
+        // dest amount = source foreign currency
+        // dest currency = source foreign currency
+        //        Log::debug(sprintf('[a] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($source->amount), \FireflyIII\Support\Facades\Steam::positive($destination->foreign_amount))));
+        //        Log::debug(sprintf('[b] %s', bccomp(\FireflyIII\Support\Facades\Steam::positive($destination->amount), \FireflyIII\Support\Facades\Steam::positive($source->foreign_amount))));
+        //        Log::debug(sprintf('[c] %s', var_export($source->transaction_currency_id === $destination->foreign_currency_id,true)));
+        //        Log::debug(sprintf('[d] %s', var_export((int) $destination->transaction_currency_id ===(int)  $source->foreign_currency_id, true)));
+        return
+            0 === bccomp(Steam::positive($source->amount), Steam::positive($destination->foreign_amount))
+            && $source->transaction_currency_id === $destination->foreign_currency_id
+            && 0 === bccomp(Steam::positive($destination->amount), Steam::positive($source->foreign_amount))
+            && (int) $destination->transaction_currency_id === (int) $source->foreign_currency_id;
+    }
+
+    private function matchCurrencies(): void
+    {
+        $journals = TransactionJournal::leftJoin('transactions', 'transaction_journals.id', 'transactions.transaction_journal_id')->where(
+            'transactions.transaction_currency_id',
+            '!=',
+            DB::raw('transaction_journals.transaction_currency_id')
+        )->get(['transaction_journals.*']);
+
+        $count    = 0;
+
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            if (!$this->isForeignCurrencyTransfer($journal) && !$this->isBetweenAssetAndLiability($journal)) {
+                Transaction::where('transaction_journal_id', $journal->id)->update(['transaction_currency_id' => $journal->transaction_currency_id]);
+                ++$count;
+
+                continue;
+            }
+            Log::debug(sprintf('Can skip foreign currency transfer or transaction between asset and liability #%d.', $journal->id));
+        }
+        if (0 === $count) {
+            return;
+        }
+
+        $this->friendlyPositive(sprintf('Fixed %d journal(s) with mismatched currencies.', $journals->count()));
     }
 }

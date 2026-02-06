@@ -65,43 +65,6 @@ class StoreRequest extends FormRequest
         return $data;
     }
 
-    private function getRuleTriggers(): array
-    {
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $return[] = [
-                    'type'            => $trigger['type'] ?? '',
-                    'value'           => $trigger['value'] ?? null,
-                    'prohibited'      => $this->convertBoolean((string) ($trigger['prohibited'] ?? 'false')),
-                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    private function getRuleActions(): array
-    {
-        $actions = $this->get('actions');
-        $return  = [];
-        if (is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'true')),
-                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
     /**
      * The rules that the incoming request must be matched against.
      */
@@ -151,19 +114,6 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Adds an error to the validator when there are no triggers in the array of data.
-     */
-    protected function atLeastOneTrigger(Validator $validator): void
-    {
-        $data     = $validator->getData();
-        $triggers = $data['triggers'] ?? [];
-        // need at least one trigger
-        if (!is_countable($triggers) || 0 === count($triggers)) {
-            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
-        }
-    }
-
-    /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
     protected function atLeastOneAction(Validator $validator): void
@@ -173,6 +123,35 @@ class StoreRequest extends FormRequest
         // need at least one trigger
         if (!is_countable($actions) || 0 === count($actions)) {
             $validator->errors()->add('title', (string) trans('validation.at_least_one_action'));
+        }
+    }
+
+    /**
+     * Adds an error to the validator when there are no ACTIVE actions in the array of data.
+     */
+    protected function atLeastOneActiveAction(Validator $validator): void
+    {
+        $data          = $validator->getData();
+
+        /** @var null|array|int|string $actions */
+        $actions       = $data['actions'] ?? [];
+        // need at least one trigger
+        if (!is_countable($actions) || 0 === count($actions)) {
+            return;
+        }
+        $allInactive   = true;
+        $inactiveIndex = 0;
+        foreach ($actions as $index => $action) {
+            $active = array_key_exists('active', $action) ? $action['active'] : true; // assume true
+            if (true === $active) {
+                $allInactive = false;
+            }
+            if (false === $active) {
+                $inactiveIndex = $index;
+            }
+        }
+        if ($allInactive) {
+            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
         }
     }
 
@@ -206,31 +185,52 @@ class StoreRequest extends FormRequest
     }
 
     /**
-     * Adds an error to the validator when there are no ACTIVE actions in the array of data.
+     * Adds an error to the validator when there are no triggers in the array of data.
      */
-    protected function atLeastOneActiveAction(Validator $validator): void
+    protected function atLeastOneTrigger(Validator $validator): void
     {
-        $data          = $validator->getData();
-
-        /** @var null|array|int|string $actions */
-        $actions       = $data['actions'] ?? [];
+        $data     = $validator->getData();
+        $triggers = $data['triggers'] ?? [];
         // need at least one trigger
-        if (!is_countable($actions) || 0 === count($actions)) {
-            return;
+        if (!is_countable($triggers) || 0 === count($triggers)) {
+            $validator->errors()->add('title', (string) trans('validation.at_least_one_trigger'));
         }
-        $allInactive   = true;
-        $inactiveIndex = 0;
-        foreach ($actions as $index => $action) {
-            $active = array_key_exists('active', $action) ? $action['active'] : true; // assume true
-            if (true === $active) {
-                $allInactive = false;
+    }
+
+    private function getRuleActions(): array
+    {
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string) ($action['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string) ($action['stop_processing'] ?? 'false')),
+                ];
             }
-            if (false === $active) {
-                $inactiveIndex = $index;
+        }
+
+        return $return;
+    }
+
+    private function getRuleTriggers(): array
+    {
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $return[] = [
+                    'type'            => $trigger['type'] ?? '',
+                    'value'           => $trigger['value'] ?? null,
+                    'prohibited'      => $this->convertBoolean((string) ($trigger['prohibited'] ?? 'false')),
+                    'active'          => $this->convertBoolean((string) ($trigger['active'] ?? 'true')),
+                    'stop_processing' => $this->convertBoolean((string) ($trigger['stop_processing'] ?? 'false')),
+                ];
             }
         }
-        if ($allInactive) {
-            $validator->errors()->add(sprintf('actions.%d.active', $inactiveIndex), (string) trans('validation.at_least_one_active_action'));
-        }
+
+        return $return;
     }
 }

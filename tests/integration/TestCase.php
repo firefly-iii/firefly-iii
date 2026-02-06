@@ -57,11 +57,6 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    protected function getAuthenticatedUser(): User
-    {
-        return User::where('email', 'james@firefly')->first();
-    }
-
     protected function createAuthenticatedUser(): User
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
@@ -71,5 +66,10 @@ abstract class TestCase extends BaseTestCase
         GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
 
         return $user;
+    }
+
+    protected function getAuthenticatedUser(): User
+    {
+        return User::where('email', 'james@firefly')->first();
     }
 }

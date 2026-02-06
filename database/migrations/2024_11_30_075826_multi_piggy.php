@@ -28,6 +28,60 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
+    protected static function hasForeign(string $table, string $column): bool
+    {
+        $foreignKeysDefinitions = Schema::getForeignKeys($table);
+        foreach ($foreignKeysDefinitions as $foreignKeyDefinition) {
+            if ($foreignKeyDefinition['name'] === $column) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('piggy_banks', static function (Blueprint $table): void {
+            // 1. drop account index again.
+            $table->dropForeign('piggy_banks_account_id_foreign');
+
+            // rename columns again.
+            $table->renameColumn('target_amount', 'targetamount');
+            $table->renameColumn('start_date', 'startdate');
+            $table->renameColumn('target_date', 'targetdate');
+            $table->renameColumn('start_date_tz', 'startdate_tz');
+            $table->renameColumn('target_date_tz', 'targetdate_tz');
+
+            // 3. drop currency again + index
+            if (self::hasForeign('piggy_banks', 'unique_currency')) {
+                $table->dropForeign('unique_currency');
+            }
+            $table->dropColumn('transaction_currency_id');
+
+            // 2. make column non-nullable.
+            $table->unsignedInteger('account_id')->nullable()->change();
+
+            // 5. add new index
+            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
+        });
+
+        // rename some fields in piggy bank reps.
+        Schema::table('piggy_bank_repetitions', static function (Blueprint $table): void {
+            // 6. rename columns
+            $table->renameColumn('current_amount', 'currentamount');
+            $table->renameColumn('start_date', 'startdate');
+            $table->renameColumn('target_date', 'targetdate');
+            $table->renameColumn('start_date_tz', 'startdate_tz');
+            $table->renameColumn('target_date_tz', 'targetdate_tz');
+        });
+
+        Schema::dropIfExists('account_piggy_bank');
+    }
+
     /**
      * Run the migrations.
      */
@@ -113,59 +167,5 @@ return new class() extends Migration {
                 $table->unique(['account_id', 'piggy_bank_id'], 'unique_piggy_save');
             });
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('piggy_banks', static function (Blueprint $table): void {
-            // 1. drop account index again.
-            $table->dropForeign('piggy_banks_account_id_foreign');
-
-            // rename columns again.
-            $table->renameColumn('target_amount', 'targetamount');
-            $table->renameColumn('start_date', 'startdate');
-            $table->renameColumn('target_date', 'targetdate');
-            $table->renameColumn('start_date_tz', 'startdate_tz');
-            $table->renameColumn('target_date_tz', 'targetdate_tz');
-
-            // 3. drop currency again + index
-            if (self::hasForeign('piggy_banks', 'unique_currency')) {
-                $table->dropForeign('unique_currency');
-            }
-            $table->dropColumn('transaction_currency_id');
-
-            // 2. make column non-nullable.
-            $table->unsignedInteger('account_id')->nullable()->change();
-
-            // 5. add new index
-            $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-        });
-
-        // rename some fields in piggy bank reps.
-        Schema::table('piggy_bank_repetitions', static function (Blueprint $table): void {
-            // 6. rename columns
-            $table->renameColumn('current_amount', 'currentamount');
-            $table->renameColumn('start_date', 'startdate');
-            $table->renameColumn('target_date', 'targetdate');
-            $table->renameColumn('start_date_tz', 'startdate_tz');
-            $table->renameColumn('target_date_tz', 'targetdate_tz');
-        });
-
-        Schema::dropIfExists('account_piggy_bank');
-    }
-
-    protected static function hasForeign(string $table, string $column): bool
-    {
-        $foreignKeysDefinitions = Schema::getForeignKeys($table);
-        foreach ($foreignKeysDefinitions as $foreignKeyDefinition) {
-            if ($foreignKeyDefinition['name'] === $column) {
-                return true;
-            }
-        }
-
-        return false;
     }
 };

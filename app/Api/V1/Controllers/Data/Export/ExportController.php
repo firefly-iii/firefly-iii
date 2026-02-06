@@ -73,33 +73,6 @@ class ExportController extends Controller
     }
 
     /**
-     * @throws FireflyException
-     * @throws DatetimeException
-     */
-    private function returnExport(string $key): LaravelResponse
-    {
-        $date     = date('Y-m-d-H-i-s');
-        $fileName = sprintf('%s-export-%s.csv', $date, $key);
-        $data     = $this->exporter->export();
-
-        /** @var LaravelResponse $response */
-        $response = response($data[$key]);
-        $response
-            ->header('Content-Description', 'File Transfer')
-            ->header('Content-Type', 'application/octet-stream')
-            ->header('Content-Disposition', 'attachment; filename='.$fileName)
-            ->header('Content-Transfer-Encoding', 'binary')
-            ->header('Connection', 'Keep-Alive')
-            ->header('Expires', '0')
-            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
-            ->header('Pragma', 'public')
-            ->header('Content-Length', (string) strlen((string) $data[$key]))
-        ;
-
-        return $response;
-    }
-
-    /**
      * @throws DatetimeException
      * @throws FireflyException
      *
@@ -203,5 +176,32 @@ class ExportController extends Controller
         $this->exporter->setExportTransactions(true);
 
         return $this->returnExport('transactions');
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws DatetimeException
+     */
+    private function returnExport(string $key): LaravelResponse
+    {
+        $date     = date('Y-m-d-H-i-s');
+        $fileName = sprintf('%s-export-%s.csv', $date, $key);
+        $data     = $this->exporter->export();
+
+        /** @var LaravelResponse $response */
+        $response = response($data[$key]);
+        $response
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Type', 'application/octet-stream')
+            ->header('Content-Disposition', 'attachment; filename='.$fileName)
+            ->header('Content-Transfer-Encoding', 'binary')
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', (string) strlen((string) $data[$key]))
+        ;
+
+        return $response;
     }
 }

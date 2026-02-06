@@ -61,6 +61,30 @@ class StoreController extends Controller
         });
     }
 
+    public function store(StoreRequest $request): JsonResponse
+    {
+        $date        = $request->getDate();
+        $rate        = $request->getRate();
+        $from        = $request->getFromCurrency();
+        $to          = $request->getToCurrency();
+
+        // already has rate?
+        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
+        if ($object instanceof CurrencyExchangeRate) {
+            // just update it, no matter.
+            $rate = $this->repository->updateExchangeRate($object, $rate, $date);
+        }
+        if (!$object instanceof CurrencyExchangeRate) {
+            // store new
+            $rate = $this->repository->storeExchangeRate($from, $to, $rate, $date);
+        }
+
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
+
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
+    }
+
     public function storeByCurrencies(StoreByCurrenciesRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $data        = $request->getAll();
@@ -113,29 +137,5 @@ class StoreController extends Controller
         $transformer->setParameters($this->parameters); // give params to transformer
 
         return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
-    }
-
-    public function store(StoreRequest $request): JsonResponse
-    {
-        $date        = $request->getDate();
-        $rate        = $request->getRate();
-        $from        = $request->getFromCurrency();
-        $to          = $request->getToCurrency();
-
-        // already has rate?
-        $object      = $this->repository->getSpecificRateOnDate($from, $to, $date);
-        if ($object instanceof CurrencyExchangeRate) {
-            // just update it, no matter.
-            $rate = $this->repository->updateExchangeRate($object, $rate, $date);
-        }
-        if (!$object instanceof CurrencyExchangeRate) {
-            // store new
-            $rate = $this->repository->storeExchangeRate($from, $to, $rate, $date);
-        }
-
-        $transformer = new ExchangeRateTransformer();
-        $transformer->setParameters($this->parameters);
-
-        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $rate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

@@ -87,37 +87,6 @@ class ConfigurationController extends Controller
     }
 
     /**
-     * Get all config values.
-     *
-     * @throws FireflyException
-     */
-    private function getDynamicConfiguration(): array
-    {
-        $isDemoSite  = FireflyConfig::get('is_demo_site');
-        $updateCheck = FireflyConfig::get('permission_update_check');
-        $lastCheck   = FireflyConfig::get('last_update_check');
-        $singleUser  = FireflyConfig::get('single_user_mode');
-
-        return [
-            'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
-            'single_user_mode'        => $singleUser?->data,
-        ];
-    }
-
-    private function getStaticConfiguration(): array
-    {
-        $list   = EitherConfigKey::$static;
-        $return = [];
-        foreach ($list as $key) {
-            $return[$key] = config($key);
-        }
-
-        return $return;
-    }
-
-    /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/configuration/getSingleConfiguration
      */
@@ -168,6 +137,37 @@ class ConfigurationController extends Controller
         $data      = ['title'    => $name, 'value'    => $newConfig[$shortName], 'editable' => true];
 
         return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * Get all config values.
+     *
+     * @throws FireflyException
+     */
+    private function getDynamicConfiguration(): array
+    {
+        $isDemoSite  = FireflyConfig::get('is_demo_site');
+        $updateCheck = FireflyConfig::get('permission_update_check');
+        $lastCheck   = FireflyConfig::get('last_update_check');
+        $singleUser  = FireflyConfig::get('single_user_mode');
+
+        return [
+            'is_demo_site'            => $isDemoSite?->data,
+            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
+            'single_user_mode'        => $singleUser?->data,
+        ];
+    }
+
+    private function getStaticConfiguration(): array
+    {
+        $list   = EitherConfigKey::$static;
+        $return = [];
+        foreach ($list as $key) {
+            $return[$key] = config($key);
+        }
+
+        return $return;
     }
 
     private function getWebhookConfiguration(string $configKey): array

@@ -47,6 +47,16 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         ;
     }
 
+    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
+    {
+        $this->userGroup
+            ->currencyExchangeRates()
+            ->where('from_currency_id', $from->id)
+            ->where('to_currency_id', $to->id)
+            ->delete()
+        ;
+    }
+
     #[Override]
     public function getAll(): Collection
     {
@@ -114,14 +124,5 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $object->save();
 
         return $object;
-    }
-
-    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
-    {
-        $this->userGroup
-            ->currencyExchangeRates()
-            ->where('from_currency_id', $from->id)
-            ->where('to_currency_id', $to->id)
-            ->delete();
     }
 }

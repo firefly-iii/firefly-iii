@@ -43,7 +43,9 @@ use Illuminate\Support\Facades\Log;
 class PiggyBankEnrichment implements EnrichmentInterface
 {
     private array $accountIds    = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $accounts      = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $amounts       = [];
     private Collection $collection;
     private array $currencies    = [];
@@ -81,6 +83,11 @@ class PiggyBankEnrichment implements EnrichmentInterface
         $collection = $this->enrich($collection);
 
         return $collection->first();
+    }
+
+    public function setDate(?Carbon $date): void
+    {
+        $this->date = $date;
     }
 
     public function setUser(User $user): void
@@ -173,11 +180,6 @@ class PiggyBankEnrichment implements EnrichmentInterface
 
             return $item;
         });
-    }
-
-    public function setDate(?Carbon $date): void
-    {
-        $this->date = $date;
     }
 
     private function collectIds(): void

@@ -186,34 +186,6 @@ class ConvertToWithdrawal implements ActionInterface
     }
 
     /**
-     * @throws FireflyException
-     */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        if (null === $sourceTransaction) {
-            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
-        }
-
-        return $sourceTransaction->account;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        /** @var null|Transaction $destAccount */
-        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $destAccount) {
-            throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
-        }
-
-        return $destAccount->account;
-    }
-
-    /**
      * Input is a transfer from A to B.
      * Output is a withdrawal from A to C.
      *
@@ -259,5 +231,33 @@ class ConvertToWithdrawal implements ActionInterface
         Log::debug('Converted transfer to withdrawal.');
 
         return true;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getDestinationAccount(TransactionJournal $journal): Account
+    {
+        /** @var null|Transaction $destAccount */
+        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $destAccount) {
+            throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
+        }
+
+        return $destAccount->account;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getSourceAccount(TransactionJournal $journal): Account
+    {
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $sourceTransaction) {
+            throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
+        }
+
+        return $sourceTransaction->account;
     }
 }

@@ -42,41 +42,6 @@ final class RuleControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createTestRules(int $count, User $user): void
-    {
-        $ruleGroup = RuleGroup::create([
-            'user_id'         => $user->id,
-            'user_group_id'   => $user->user_group_id,
-            'title'           => 'RuleGroup 1',
-            'description'     => 'RuleGroup 1',
-            'order'           => 1,
-            'active'          => 1,
-            'stop_processing' => 0,
-        ]);
-        for ($i = 1; $i <= $count; ++$i) {
-            $rule = Rule::create([
-                'user_id'         => $user->id,
-                'user_group_id'   => $user->user_group_id,
-                'rule_group_id'   => $ruleGroup->id,
-                'title'           => 'Rule '.$i,
-                'description'     => 'Rule '.$i,
-                'order'           => 1,
-                'active'          => 1,
-                'stop_processing' => 0,
-                'strict'          => 0,
-            ]);
-        }
-    }
-
-    public function testUnauthenticatedCall(): void
-    {
-        // test API
-        $response = $this->get(route('api.v1.autocomplete.rules'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
-        $response->assertHeader('Content-Type', 'application/json');
-        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
-    }
-
     public function testAuthenticatedCall(): void
     {
         // act as a user
@@ -130,5 +95,40 @@ final class RuleControllerTest extends TestCase
         // Bill 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'Rule 2']);
+    }
+
+    public function testUnauthenticatedCall(): void
+    {
+        // test API
+        $response = $this->get(route('api.v1.autocomplete.rules'), ['Accept' => 'application/json']);
+        $response->assertStatus(401);
+        $response->assertHeader('Content-Type', 'application/json');
+        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
+    }
+
+    private function createTestRules(int $count, User $user): void
+    {
+        $ruleGroup = RuleGroup::create([
+            'user_id'         => $user->id,
+            'user_group_id'   => $user->user_group_id,
+            'title'           => 'RuleGroup 1',
+            'description'     => 'RuleGroup 1',
+            'order'           => 1,
+            'active'          => 1,
+            'stop_processing' => 0,
+        ]);
+        for ($i = 1; $i <= $count; ++$i) {
+            $rule = Rule::create([
+                'user_id'         => $user->id,
+                'user_group_id'   => $user->user_group_id,
+                'rule_group_id'   => $ruleGroup->id,
+                'title'           => 'Rule '.$i,
+                'description'     => 'Rule '.$i,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+                'strict'          => 0,
+            ]);
+        }
     }
 }

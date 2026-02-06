@@ -111,14 +111,6 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         return $array;
     }
 
-    private function getTags(): Collection
-    {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-
-        return $repository->get();
-    }
-
     /**
      * This method returns a list of all the deposit transaction journals (as arrays) set in that period
      * which have the specified tag(s) set to them. It's grouped per currency, with as few details in the array
@@ -213,5 +205,13 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
     public function sumIncome(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $tags = null): array
     {
         throw new FireflyException(sprintf('%s is not yet implemented.', __METHOD__));
+    }
+
+    private function getTags(): Collection
+    {
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+
+        return $repository->get();
     }
 }

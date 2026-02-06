@@ -73,11 +73,6 @@ class Rule extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function ruleActions(): HasMany
     {
         return $this->hasMany(RuleAction::class);
@@ -91,6 +86,11 @@ class Rule extends Model
     public function ruleTriggers(): HasMany
     {
         return $this->hasMany(RuleTrigger::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function userGroup(): BelongsTo

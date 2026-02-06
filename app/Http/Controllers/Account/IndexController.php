@@ -123,16 +123,6 @@ class IndexController extends Controller
         ]);
     }
 
-    private function subtract(array $startBalances, array $endBalances): array
-    {
-        $result = [];
-        foreach ($endBalances as $key => $value) {
-            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
-        }
-
-        return $result;
-    }
-
     /**
      * Show list of accounts.
      *
@@ -213,5 +203,15 @@ class IndexController extends Controller
             'page'          => $page,
             'accounts'      => $accounts,
         ]);
+    }
+
+    private function subtract(array $startBalances, array $endBalances): array
+    {
+        $result = [];
+        foreach ($endBalances as $key => $value) {
+            $result[$key] = bcsub((string) $value, $startBalances[$key] ?? '0');
+        }
+
+        return $result;
     }
 }

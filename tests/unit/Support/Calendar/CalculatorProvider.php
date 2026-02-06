@@ -41,6 +41,11 @@ readonly class CalculatorProvider
         $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
     }
 
+    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): self
+    {
+        return new self($interval, $periodicity, $skip);
+    }
+
     public static function providePeriodicityWithSkippedIntervals(): Generator
     {
         $intervals = [
@@ -113,11 +118,6 @@ readonly class CalculatorProvider
         foreach ($intervals as $index => $interval) {
             yield "#{$index} {$interval->label}" => [$interval];
         }
-    }
-
-    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): self
-    {
-        return new self($interval, $periodicity, $skip);
     }
 
     public function epoch(): Carbon

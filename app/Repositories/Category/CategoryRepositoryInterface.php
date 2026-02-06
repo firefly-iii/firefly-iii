@@ -48,8 +48,6 @@ interface CategoryRepositoryInterface
 
     public function categoryStartsWith(string $query, int $limit): Collection;
 
-    public function periodCollection(Category $category, Carbon $start, Carbon $end): array;
-
     public function destroy(Category $category): bool;
 
     /**
@@ -89,6 +87,8 @@ interface CategoryRepositoryInterface
      * Return most recent transaction(journal) date or null when never used before.
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
+
+    public function periodCollection(Category $category, Carbon $start, Carbon $end): array;
 
     /**
      * Remove notes.

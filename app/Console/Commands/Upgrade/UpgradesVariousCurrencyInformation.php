@@ -72,6 +72,99 @@ class UpgradesVariousCurrencyInformation extends Command
         return 0;
     }
 
+    private function getCurrency(Account $account): ?TransactionCurrency
+    {
+        $accountId                           = $account->id;
+        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
+            return null;
+        }
+        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
+            return $this->accountCurrencies[$accountId];
+        }
+        $currency                            = $this->accountRepos->getAccountCurrency($account);
+        if (!$currency instanceof TransactionCurrency) {
+            $this->accountCurrencies[$accountId] = 0;
+
+            return null;
+        }
+        $this->accountCurrencies[$accountId] = $currency;
+
+        return $currency;
+    }
+
+    /**
+     * Gets the transaction that determines the transaction that "leads" and will determine
+     * the currency to be used by all transactions, and the journal itself.
+     */
+    private function getLeadTransaction(TransactionJournal $journal): ?Transaction
+    {
+        /** @var null|Transaction $lead */
+        $lead = null;
+
+        switch ($journal->transactionType->type) {
+            default:
+                break;
+
+            case TransactionTypeEnum::WITHDRAWAL->value:
+                $lead = $journal->transactions()->where('amount', '<', 0)->first();
+
+                break;
+
+            case TransactionTypeEnum::DEPOSIT->value:
+                $lead = $journal->transactions()->where('amount', '>', 0)->first();
+
+                break;
+
+            case TransactionTypeEnum::OPENING_BALANCE->value:
+                // whichever isn't an initial balance account:
+                $lead = $journal
+                    ->transactions()
+                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+                    ->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)
+                    ->first(['transactions.*'])
+                ;
+
+                break;
+
+            case TransactionTypeEnum::RECONCILIATION->value:
+                // whichever isn't the reconciliation account:
+                $lead = $journal
+                    ->transactions()
+                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
+                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
+                    ->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)
+                    ->first(['transactions.*'])
+                ;
+
+                break;
+        }
+
+        return $lead;
+    }
+
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
+    private function isMultiCurrency(Account $account): bool
+    {
+        $value = $this->accountRepos->getMetaValue($account, 'is_multi_currency');
+        if (null === $value) {
+            return false;
+        }
+
+        return '1' === $value;
+    }
+
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
     /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
@@ -84,34 +177,6 @@ class UpgradesVariousCurrencyInformation extends Command
         $this->accountRepos      = app(AccountRepositoryInterface::class);
         $this->journalRepos      = app(JournalRepositoryInterface::class);
         $this->cliRepos          = app(JournalCLIRepositoryInterface::class);
-    }
-
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool) $configVar?->data;
-    }
-
-    /**
-     * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
-     * the accounts they are linked to.
-     * Both source and destination must match the respective currency preference of the related asset account.
-     * So FF3 must verify all transactions.
-     */
-    private function updateOtherJournalsCurrencies(): void
-    {
-        $set = $this->cliRepos->getAllJournals([
-            TransactionTypeEnum::WITHDRAWAL->value,
-            TransactionTypeEnum::DEPOSIT->value,
-            TransactionTypeEnum::OPENING_BALANCE->value,
-            TransactionTypeEnum::RECONCILIATION->value,
-        ]);
-
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $this->updateJournalCurrency($journal);
-        }
     }
 
     private function updateJournalCurrency(TransactionJournal $journal): void
@@ -166,88 +231,23 @@ class UpgradesVariousCurrencyInformation extends Command
     }
 
     /**
-     * Gets the transaction that determines the transaction that "leads" and will determine
-     * the currency to be used by all transactions, and the journal itself.
+     * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
+     * the accounts they are linked to.
+     * Both source and destination must match the respective currency preference of the related asset account.
+     * So FF3 must verify all transactions.
      */
-    private function getLeadTransaction(TransactionJournal $journal): ?Transaction
+    private function updateOtherJournalsCurrencies(): void
     {
-        /** @var null|Transaction $lead */
-        $lead = null;
+        $set = $this->cliRepos->getAllJournals([
+            TransactionTypeEnum::WITHDRAWAL->value,
+            TransactionTypeEnum::DEPOSIT->value,
+            TransactionTypeEnum::OPENING_BALANCE->value,
+            TransactionTypeEnum::RECONCILIATION->value,
+        ]);
 
-        switch ($journal->transactionType->type) {
-            default:
-                break;
-
-            case TransactionTypeEnum::WITHDRAWAL->value:
-                $lead = $journal->transactions()->where('amount', '<', 0)->first();
-
-                break;
-
-            case TransactionTypeEnum::DEPOSIT->value:
-                $lead = $journal->transactions()->where('amount', '>', 0)->first();
-
-                break;
-
-            case TransactionTypeEnum::OPENING_BALANCE->value:
-                // whichever isn't an initial balance account:
-                $lead = $journal
-                    ->transactions()
-                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
-                    ->where('account_types.type', '!=', AccountTypeEnum::INITIAL_BALANCE->value)
-                    ->first(['transactions.*'])
-                ;
-
-                break;
-
-            case TransactionTypeEnum::RECONCILIATION->value:
-                // whichever isn't the reconciliation account:
-                $lead = $journal
-                    ->transactions()
-                    ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
-                    ->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id')
-                    ->where('account_types.type', '!=', AccountTypeEnum::RECONCILIATION->value)
-                    ->first(['transactions.*'])
-                ;
-
-                break;
+        /** @var TransactionJournal $journal */
+        foreach ($set as $journal) {
+            $this->updateJournalCurrency($journal);
         }
-
-        return $lead;
-    }
-
-    private function getCurrency(Account $account): ?TransactionCurrency
-    {
-        $accountId                           = $account->id;
-        if (array_key_exists($accountId, $this->accountCurrencies) && 0 === $this->accountCurrencies[$accountId]) {
-            return null;
-        }
-        if (array_key_exists($accountId, $this->accountCurrencies) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
-            return $this->accountCurrencies[$accountId];
-        }
-        $currency                            = $this->accountRepos->getAccountCurrency($account);
-        if (!$currency instanceof TransactionCurrency) {
-            $this->accountCurrencies[$accountId] = 0;
-
-            return null;
-        }
-        $this->accountCurrencies[$accountId] = $currency;
-
-        return $currency;
-    }
-
-    private function isMultiCurrency(Account $account): bool
-    {
-        $value = $this->accountRepos->getMetaValue($account, 'is_multi_currency');
-        if (null === $value) {
-            return false;
-        }
-
-        return '1' === $value;
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

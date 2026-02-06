@@ -97,7 +97,7 @@ class BudgetLimitController extends Controller
             return true;
         });
 
-        return view('budgets.budget-limits.create', ['start' => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
+        return view('budgets.budget-limits.create', ['start'      => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
     }
 
     public function delete(BudgetLimit $budgetLimit): Redirector|RedirectResponse

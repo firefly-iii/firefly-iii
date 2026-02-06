@@ -42,6 +42,33 @@ final class ShowControllerTest extends TestCase
 
     private User $user;
 
+    public function testIndex(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->getJson(route('api.v1.accounts.index'));
+        $response->assertStatus(200);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 5]]]);
+    }
+
+    public function testIndexCanFilterOnAccountType(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->getJson(route('api.v1.accounts.index').'?type=asset');
+        $response->assertStatus(200);
+        $response->assertJson([
+            'data' => [['attributes' => ['type' => 'asset']], ['attributes' => ['type' => 'asset']]],
+            'meta' => ['pagination' => ['total' => 2]],
+        ]);
+    }
+
+    public function testIndexFailsOnUnknownAccountType(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->getJson(route('api.v1.accounts.index').'?type=foobar');
+        $response->assertStatus(422);
+        $response->assertJson(['errors' => ['type' => ['The selected type is invalid.']]]);
+    }
+
     #[Override]
     protected function setUp(): void
     {
@@ -73,34 +100,6 @@ final class ShowControllerTest extends TestCase
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::ASSET)
-            ->create()
-        ;
-    }
-
-    public function testIndex(): void
-    {
-        $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index'));
-        $response->assertStatus(200);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 5]]]);
-    }
-
-    public function testIndexFailsOnUnknownAccountType(): void
-    {
-        $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index').'?type=foobar');
-        $response->assertStatus(422);
-        $response->assertJson(['errors' => ['type' => ['The selected type is invalid.']]]);
-    }
-
-    public function testIndexCanFilterOnAccountType(): void
-    {
-        $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.accounts.index').'?type=asset');
-        $response->assertStatus(200);
-        $response->assertJson([
-            'data' => [['attributes' => ['type' => 'asset']], ['attributes' => ['type' => 'asset']]],
-            'meta' => ['pagination' => ['total' => 2]],
-        ]);
+            ->create();
     }
 }

@@ -126,22 +126,23 @@ class TwoFactorController extends Controller
         return redirect(route('home'));
     }
 
-    /**
-     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
-     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
-     */
-    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
+    private function addToMFAFailureCounter(): void
     {
-        $now = Carbon::now()->getTimestamp();
-        foreach ($mfaHistory as $entry) {
-            $time = $entry['time'];
-            $code = $entry['code'];
-            if ($code === $mfaCode && ($now - $time) <= 300) {
-                return true;
-            }
-        }
+        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
+        ++$preference;
+        Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
+        Preferences::set('mfa_failure_count', $preference);
+    }
 
-        return false;
+    private function addToMFAHistory(string $mfaCode): void
+    {
+        /** @var array $mfaHistory */
+        $mfaHistory   = Preferences::get('mfa_history', [])->data;
+        $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
+        $mfaHistory[] = $entry;
+
+        Preferences::set('mfa_history', $mfaHistory);
+        $this->filterMFAHistory();
     }
 
     /**
@@ -163,14 +164,6 @@ class TwoFactorController extends Controller
         Preferences::set('mfa_history', $newHistory);
     }
 
-    private function addToMFAFailureCounter(): void
-    {
-        $preference = (int) Preferences::get('mfa_failure_count', 0)->data;
-        ++$preference;
-        Log::channel('audit')->info(sprintf('MFA failure count is set to %d.', $preference));
-        Preferences::set('mfa_failure_count', $preference);
-    }
-
     private function getMFAFailureCounter(): int
     {
         $value = (int) Preferences::get('mfa_failure_count', 0)->data;
@@ -179,21 +172,22 @@ class TwoFactorController extends Controller
         return $value;
     }
 
-    private function addToMFAHistory(string $mfaCode): void
+    /**
+     * Each MFA history has a timestamp and a code, saving the MFA entries for 5 minutes. So if the
+     * submitted MFA code has been submitted in the last 5 minutes, it won't work despite being valid.
+     */
+    private function inMFAHistory(string $mfaCode, array $mfaHistory): bool
     {
-        /** @var array $mfaHistory */
-        $mfaHistory   = Preferences::get('mfa_history', [])->data;
-        $entry        = ['time' => Carbon::now()->getTimestamp(), 'code' => $mfaCode];
-        $mfaHistory[] = $entry;
+        $now = Carbon::now()->getTimestamp();
+        foreach ($mfaHistory as $entry) {
+            $time = $entry['time'];
+            $code = $entry['code'];
+            if ($code === $mfaCode && ($now - $time) <= 300) {
+                return true;
+            }
+        }
 
-        Preferences::set('mfa_history', $mfaHistory);
-        $this->filterMFAHistory();
-    }
-
-    private function resetMFAFailureCounter(): void
-    {
-        Preferences::set('mfa_failure_count', 0);
-        Log::channel('audit')->info('MFA failure count is set to zero.');
+        return false;
     }
 
     /**
@@ -234,5 +228,11 @@ class TwoFactorController extends Controller
         }
 
         Preferences::set('mfa_recovery', $newList);
+    }
+
+    private function resetMFAFailureCounter(): void
+    {
+        Preferences::set('mfa_failure_count', 0);
+        Log::channel('audit')->info('MFA failure count is set to zero.');
     }
 }

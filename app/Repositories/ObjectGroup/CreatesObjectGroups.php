@@ -31,6 +31,16 @@ use FireflyIII\Models\ObjectGroup;
  */
 trait CreatesObjectGroups
 {
+    protected function findObjectGroup(string $title): ?ObjectGroup
+    {
+        /** @var null|ObjectGroup */
+        return $this->user
+            ->objectGroups()
+            ->where('title', $title)
+            ->first()
+        ;
+    }
+
     protected function findObjectGroupById(int $groupId): ?ObjectGroup
     {
         /** @var null|ObjectGroup */
@@ -68,16 +78,6 @@ trait CreatesObjectGroups
             ->objectGroups()
             ->where('title', $title)
             ->count()
-        ;
-    }
-
-    protected function findObjectGroup(string $title): ?ObjectGroup
-    {
-        /** @var null|ObjectGroup */
-        return $this->user
-            ->objectGroups()
-            ->where('title', $title)
-            ->first()
         ;
     }
 }

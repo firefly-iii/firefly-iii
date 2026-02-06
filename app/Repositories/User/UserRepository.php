@@ -46,6 +46,30 @@ use SensitiveParameter;
  */
 class UserRepository implements UserRepositoryInterface
 {
+    public function all(): Collection
+    {
+        return User::orderBy('id', 'DESC')->get(['users.*']);
+    }
+
+    public function attachRole(User $user, string $role): bool
+    {
+        $roleObject = Role::where('name', $role)->first();
+        if (null === $roleObject) {
+            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+
+            return false;
+        }
+
+        try {
+            $user->roles()->attach($roleObject);
+        } catch (QueryException $e) {
+            // don't care
+            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+        }
+
+        return true;
+    }
+
     /**
      * This updates the users email address and records some things so it can be confirmed or undone later.
      * The user is blocked until the change is confirmed.
@@ -93,9 +117,28 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
+    public function count(): int
+    {
+        return $this->all()->count();
+    }
+
     public function createRole(string $name, string $displayName, string $description): Role
     {
         return Role::create(['name'         => $name, 'display_name' => $displayName, 'description'  => $description]);
+    }
+
+    public function deleteEmptyGroups(): void
+    {
+        $groups = UserGroup::get();
+
+        /** @var UserGroup $group */
+        foreach ($groups as $group) {
+            $count = $group->groupMemberships()->count();
+            if (0 === $count) {
+                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
+                $group->delete();
+            }
+        }
     }
 
     public function deleteInvite(InvitedUser $invite): void
@@ -118,28 +161,9 @@ class UserRepository implements UserRepositoryInterface
         return true;
     }
 
-    public function deleteEmptyGroups(): void
+    public function find(int $userId): ?User
     {
-        $groups = UserGroup::get();
-
-        /** @var UserGroup $group */
-        foreach ($groups as $group) {
-            $count = $group->groupMemberships()->count();
-            if (0 === $count) {
-                Log::info(sprintf('Deleted empty group #%d ("%s")', $group->id, $group->title));
-                $group->delete();
-            }
-        }
-    }
-
-    public function count(): int
-    {
-        return $this->all()->count();
-    }
-
-    public function all(): Collection
-    {
-        return User::orderBy('id', 'DESC')->get(['users.*']);
+        return User::find($userId);
     }
 
     public function findByEmail(string $email): ?User
@@ -158,6 +182,11 @@ class UserRepository implements UserRepositoryInterface
     public function getInvitedUsers(): Collection
     {
         return InvitedUser::with('user')->get();
+    }
+
+    public function getRole(string $role): ?Role
+    {
+        return Role::where('name', $role)->first();
     }
 
     public function getRoleByUser(User $user): ?string
@@ -190,11 +219,6 @@ class UserRepository implements UserRepositoryInterface
         return $roles;
     }
 
-    public function find(int $userId): ?User
-    {
-        return User::find($userId);
-    }
-
     /**
      * Return basic user information.
      */
@@ -225,23 +249,6 @@ class UserRepository implements UserRepositoryInterface
         ];
     }
 
-    public function hasRole(Authenticatable|User|null $user, string $role): bool
-    {
-        if (!$user instanceof Authenticatable) {
-            return false;
-        }
-        if ($user instanceof User) {
-            /** @var Role $userRole */
-            foreach ($user->roles as $userRole) {
-                if ($userRole->name === $role) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     #[Override]
     public function getUserGroups(User $user): Collection
     {
@@ -264,6 +271,23 @@ class UserRepository implements UserRepositoryInterface
         $collection->push(...$set);
 
         return $collection;
+    }
+
+    public function hasRole(Authenticatable|User|null $user, string $role): bool
+    {
+        if (!$user instanceof Authenticatable) {
+            return false;
+        }
+        if ($user instanceof User) {
+            /** @var Role $userRole */
+            foreach ($user->roles as $userRole) {
+                if ($userRole->name === $role) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function inviteUser(Authenticatable|User|null $user, string $email): InvitedUser
@@ -295,6 +319,18 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * Remove any role the user has.
+     */
+    public function removeRole(User $user, string $role): void
+    {
+        $roleObj = $this->getRole($role);
+        if (!$roleObj instanceof Role) {
+            return;
+        }
+        $user->roles()->detach($roleObj->id);
+    }
+
+    /**
      * Set MFA code.
      */
     public function setMFACode(User $user, ?string $code): void
@@ -317,25 +353,6 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return $user;
-    }
-
-    public function attachRole(User $user, string $role): bool
-    {
-        $roleObject = Role::where('name', $role)->first();
-        if (null === $roleObject) {
-            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
-
-            return false;
-        }
-
-        try {
-            $user->roles()->attach($roleObject);
-        } catch (QueryException $e) {
-            // don't care
-            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
-        }
-
-        return true;
     }
 
     public function unblockUser(User $user): void
@@ -390,23 +407,6 @@ class UserRepository implements UserRepositoryInterface
         $user->save();
 
         return true;
-    }
-
-    /**
-     * Remove any role the user has.
-     */
-    public function removeRole(User $user, string $role): void
-    {
-        $roleObj = $this->getRole($role);
-        if (!$roleObj instanceof Role) {
-            return;
-        }
-        $user->roles()->detach($roleObj->id);
-    }
-
-    public function getRole(string $role): ?Role
-    {
-        return Role::where('name', $role)->first();
     }
 
     public function validateInviteCode(string $code): bool

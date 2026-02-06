@@ -8,6 +8,14 @@ use Illuminate\Support\Facades\Schema;
  * Fixes #11620
  */
 return new class extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        //
+    }
+
     public function up(): void
     {
         Schema::table('transactions', static function (Blueprint $blueprint): void {
@@ -20,13 +28,5 @@ return new class extends Migration {
         Schema::table('transaction_journals', static function (Blueprint $blueprint): void {
             $blueprint->index(['deleted_at'], 'idx_tj_deleted');
         });
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        //
     }
 };

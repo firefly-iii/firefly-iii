@@ -73,6 +73,18 @@ class UpgradesAccountCurrencies extends Command
         return 0;
     }
 
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
     /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
@@ -83,35 +95,6 @@ class UpgradesAccountCurrencies extends Command
         $this->accountRepos = app(AccountRepositoryInterface::class);
         $this->userRepos    = app(UserRepositoryInterface::class);
         $this->count        = 0;
-    }
-
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool) $configVar?->data;
-    }
-
-    private function updateAccountCurrencies(): void
-    {
-        $users = $this->userRepos->all();
-        foreach ($users as $user) {
-            $this->updateCurrenciesForUser($user);
-        }
-    }
-
-    private function updateCurrenciesForUser(User $user): void
-    {
-        $this->accountRepos->setUser($user);
-        $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
-
-        // get user's currency preference:
-        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $this->updateAccount($account, $primaryCurrency);
-        }
     }
 
     private function updateAccount(Account $account, TransactionCurrency $currency): void
@@ -153,8 +136,25 @@ class UpgradesAccountCurrencies extends Command
         }
     }
 
-    private function markAsExecuted(): void
+    private function updateAccountCurrencies(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        $users = $this->userRepos->all();
+        foreach ($users as $user) {
+            $this->updateCurrenciesForUser($user);
+        }
+    }
+
+    private function updateCurrenciesForUser(User $user): void
+    {
+        $this->accountRepos->setUser($user);
+        $accounts        = $this->accountRepos->getAccountsByType([AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value]);
+
+        // get user's currency preference:
+        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $this->updateAccount($account, $primaryCurrency);
+        }
     }
 }

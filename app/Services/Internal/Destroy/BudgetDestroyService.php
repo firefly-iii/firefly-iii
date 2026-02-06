@@ -24,19 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Events\Model\Budget\DestroyedBudget;
 use FireflyIII\Events\Model\Budget\DestroyingBudget;
-use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
-use FireflyIII\Generator\Webhook\MessageGeneratorInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Support\Models\AvailableBudgetCalculator;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BudgetDestroyService
@@ -49,7 +44,7 @@ class BudgetDestroyService
         event(new DestroyingBudget($budget));
 
         // remove attachments
-        $repository = app(AttachmentRepositoryInterface::class);
+        $repository   = app(AttachmentRepositoryInterface::class);
         $repository->setUser($budget->user);
 
         /** @var Attachment $attachment */

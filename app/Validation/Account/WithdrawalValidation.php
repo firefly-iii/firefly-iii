@@ -33,6 +33,10 @@ use Illuminate\Support\Facades\Log;
  */
 trait WithdrawalValidation
 {
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
+
     protected function validateGenericSource(array $array): bool
     {
         $accountId   = $array['id'] ?? null;
@@ -69,10 +73,6 @@ trait WithdrawalValidation
 
         return true;
     }
-
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     protected function validateWithdrawalDestination(array $array): bool
     {

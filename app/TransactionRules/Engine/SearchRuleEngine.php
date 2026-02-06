@@ -85,128 +85,100 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
-     * Finds the transactions a strict rule will execute on.
+     * @throws FireflyException
      */
-    private function findStrictRule(Rule $rule): Collection
+    public function fire(): void
     {
-        Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
-        $searchArray  = [];
-        $triggers     = [];
-        if ($this->refreshTriggers) {
-            $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
-        }
-        if (!$this->refreshTriggers) {
-            $triggers = $rule->ruleTriggers;
-        }
+        $this->resultCount = [];
+        Log::debug('SearchRuleEngine::fire()!');
 
-        /** @var RuleTrigger $ruleTrigger */
-        foreach ($triggers as $ruleTrigger) {
-            if (false === $ruleTrigger->active) {
-                continue;
-            }
-            $contextSearch = $ruleTrigger->trigger_type;
-            if (str_starts_with((string) $ruleTrigger->trigger_type, '-')) {
-                $contextSearch = substr((string) $ruleTrigger->trigger_type, 1);
-            }
+        // if rules and no rule groups, file each rule separately.
+        if (0 !== $this->rules->count()) {
+            Log::debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
 
-            // if the trigger needs no context, value is different:
-            $needsContext  = (bool) (config(sprintf('search.operators.%s.needs_context', $contextSearch)) ?? true);
-            if (false === $needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
-                $searchArray[$ruleTrigger->trigger_type][] = 'true';
+            /** @var Rule $rule */
+            foreach ($this->rules as $rule) { // @phpstan-ignore-line
+                $result = $this->fireRule($rule);
+                if ($result && true === $rule->stop_processing) {
+                    Log::debug(sprintf(
+                        'Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.',
+                        $rule->id
+                    ));
+                }
+                if (false === $result && true === $rule->stop_processing) {
+                    Log::debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));
+                }
             }
-            if ($needsContext) {
-                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger (context): %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
-                $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
-            }
-        }
+            Log::debug('SearchRuleEngine:: done processing all rules!');
 
-        // add local operators:
-        foreach ($this->operators as $operator) {
-            Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
-            $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
+            return;
         }
-        $date         = today(config('app.timezone'));
-        if ($this->hasSpecificJournalTrigger($searchArray)) {
-            $date = $this->setDateFromJournalTrigger($searchArray);
-        }
+        if (0 !== $this->groups->count()) {
+            Log::debug(sprintf('SearchRuleEngine:: found %d rule group(s) to fire.', $this->groups->count()));
 
-        // build and run the search engine.
-        $searchEngine = app(SearchInterface::class);
-        $searchEngine->setUser($this->user);
-        $searchEngine->setPage(1);
-        $searchEngine->setLimit(31337);
-        $searchEngine->setDate($date);
-        Log::debug('Search array', $searchArray);
-        foreach ($searchArray as $type => $searches) {
-            foreach ($searches as $value) {
-                $query = sprintf('%s:%s', $type, $value);
-                Log::debug(sprintf('SearchRuleEngine:: add query "%s"', $query));
-                $searchEngine->parseQuery($query);
+            // fire each group:
+            /** @var RuleGroup $group */
+            foreach ($this->groups as $group) { // @phpstan-ignore-line
+                $this->fireGroup($group);
             }
         }
-
-        $result       = $searchEngine->searchTransactions();
-
-        return $result->getCollection();
+        Log::debug('SearchRuleEngine:: done processing all rules!');
     }
 
     /**
-     * Search in the triggers of this particular search and if it contains
-     * one search operator for "journal_id" it means the date ranges
-     * in the search may need to be updated.
+     * Return the number of changed transactions from the previous "fire" action.
      */
-    private function hasSpecificJournalTrigger(array $array): bool
+    public function getResults(): int
     {
-        Log::debug('Now in hasSpecificJournalTrigger.');
-        $journalTrigger = false;
-        $dateTrigger    = false;
-        foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                Log::debug('Found a journal_id trigger with 1 journal, true.');
-                $journalTrigger = true;
-            }
-            if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
-                Log::debug('Found a date related trigger, set to true.');
-                $dateTrigger = true;
-            }
-        }
-        $result         = $journalTrigger && $dateTrigger;
-        Log::debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
-
-        return $result;
+        return count($this->resultCount);
     }
 
-    private function setDateFromJournalTrigger(array $array): Carbon
+    public function setRefreshTriggers(bool $refreshTriggers): void
     {
-        Log::debug('Now in setDateFromJournalTrigger()');
-        $journalId = 0;
-        foreach ($array as $triggerName => $values) {
-            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
-                $journalId = (int) trim($values[0] ?? '"0"', '"'); // follows format "123".
-                Log::debug(sprintf('Found journal ID #%d', $journalId));
+        $this->refreshTriggers = $refreshTriggers;
+    }
+
+    public function setRuleGroups(Collection $ruleGroups): void
+    {
+        Log::debug(__METHOD__);
+        foreach ($ruleGroups as $group) {
+            if ($group instanceof RuleGroup) {
+                Log::debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
+                $this->groups->push($group);
             }
         }
-        if (0 !== $journalId) {
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->user);
-            $journal    = $repository->find($journalId);
-            if (null !== $journal) {
-                $date = $journal->date;
-                Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
+    }
 
-                return $date;
+    public function setRules(Collection $rules): void
+    {
+        Log::debug(__METHOD__);
+        foreach ($rules as $rule) {
+            if ($rule instanceof Rule) {
+                Log::debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
+                $this->rules->push($rule);
             }
         }
-        Log::debug('Found no journal, return default date.');
-
-        return today(config('app.timezone'));
     }
 
     public function setUser(User $user): void
     {
         $this->user      = $user;
         $this->operators = [];
+    }
+
+    private function addNotes(array $transaction): array
+    {
+        $transaction['notes'] = '';
+        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])
+            ->where('noteable_type', TransactionJournal::class)
+            ->first(['notes.*'])
+        ;
+        if (null !== $dbNote) {
+            $transaction['notes'] = $dbNote->text;
+        }
+        Log::debug(sprintf('Notes of journal #%d filled in.', $transaction['transaction_journal_id']));
+
+        return $transaction;
     }
 
     private function findNonStrictRule(Rule $rule): Collection
@@ -306,44 +278,123 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
+     * Finds the transactions a strict rule will execute on.
+     */
+    private function findStrictRule(Rule $rule): Collection
+    {
+        Log::debug(sprintf('Now in findStrictRule(#%d)', $rule->id ?? 0));
+        $searchArray  = [];
+        $triggers     = [];
+        if ($this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        }
+        if (!$this->refreshTriggers) {
+            $triggers = $rule->ruleTriggers;
+        }
+
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($triggers as $ruleTrigger) {
+            if (false === $ruleTrigger->active) {
+                continue;
+            }
+            $contextSearch = $ruleTrigger->trigger_type;
+            if (str_starts_with((string) $ruleTrigger->trigger_type, '-')) {
+                $contextSearch = substr((string) $ruleTrigger->trigger_type, 1);
+            }
+
+            // if the trigger needs no context, value is different:
+            $needsContext  = (bool) (config(sprintf('search.operators.%s.needs_context', $contextSearch)) ?? true);
+            if (false === $needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger (no context): %s:true', $ruleTrigger->trigger_type));
+                $searchArray[$ruleTrigger->trigger_type][] = 'true';
+            }
+            if ($needsContext) {
+                Log::debug(sprintf('SearchRuleEngine:: add a rule trigger (context): %s:"%s"', $ruleTrigger->trigger_type, $ruleTrigger->trigger_value));
+                $searchArray[$ruleTrigger->trigger_type][] = sprintf('"%s"', $ruleTrigger->trigger_value);
+            }
+        }
+
+        // add local operators:
+        foreach ($this->operators as $operator) {
+            Log::debug(sprintf('SearchRuleEngine:: add local added operator: %s:"%s"', $operator['type'], $operator['value']));
+            $searchArray[$operator['type']][] = sprintf('"%s"', $operator['value']);
+        }
+        $date         = today(config('app.timezone'));
+        if ($this->hasSpecificJournalTrigger($searchArray)) {
+            $date = $this->setDateFromJournalTrigger($searchArray);
+        }
+
+        // build and run the search engine.
+        $searchEngine = app(SearchInterface::class);
+        $searchEngine->setUser($this->user);
+        $searchEngine->setPage(1);
+        $searchEngine->setLimit(31337);
+        $searchEngine->setDate($date);
+        Log::debug('Search array', $searchArray);
+        foreach ($searchArray as $type => $searches) {
+            foreach ($searches as $value) {
+                $query = sprintf('%s:%s', $type, $value);
+                Log::debug(sprintf('SearchRuleEngine:: add query "%s"', $query));
+                $searchEngine->parseQuery($query);
+            }
+        }
+
+        $result       = $searchEngine->searchTransactions();
+
+        return $result->getCollection();
+    }
+
+    /**
      * @throws FireflyException
      */
-    public function fire(): void
+    private function fireGroup(RuleGroup $group): void
     {
-        $this->resultCount = [];
-        Log::debug('SearchRuleEngine::fire()!');
-
-        // if rules and no rule groups, file each rule separately.
-        if (0 !== $this->rules->count()) {
-            Log::debug(sprintf('SearchRuleEngine:: found %d rule(s) to fire.', $this->rules->count()));
-
-            /** @var Rule $rule */
-            foreach ($this->rules as $rule) { // @phpstan-ignore-line
-                $result = $this->fireRule($rule);
-                if ($result && true === $rule->stop_processing) {
-                    Log::debug(sprintf(
-                        'Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.',
-                        $rule->id
-                    ));
-                }
-                if (false === $result && true === $rule->stop_processing) {
-                    Log::debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));
-                }
-            }
-            Log::debug('SearchRuleEngine:: done processing all rules!');
-
-            return;
+        $rules = [];
+        if ($group->relationLoaded('rules')) {
+            Log::debug('Group rules have been pre-loaded, do not reload them.');
+            $rules = $group->rules;
         }
-        if (0 !== $this->groups->count()) {
-            Log::debug(sprintf('SearchRuleEngine:: found %d rule group(s) to fire.', $this->groups->count()));
+        if (!$group->relationLoaded('rules')) {
+            Log::debug('Group rules have NOT been pre-loaded, load them NOW.');
+            $rules = $group
+                ->rules()
+                ->orderBy('rules.order', 'ASC')
+                //                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
+                //                         ->where('rule_triggers.trigger_type', 'user_action')
+                //                         ->where('rule_triggers.trigger_value', 'store-journal')
+                ->where('rules.active', true)
+                ->get(['rules.*'])
+            ;
+        }
+        Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $rules->count()));
 
-            // fire each group:
-            /** @var RuleGroup $group */
-            foreach ($this->groups as $group) { // @phpstan-ignore-line
-                $this->fireGroup($group);
+        /** @var Rule $rule */
+        foreach ($rules as $rule) {
+            Log::debug(sprintf('Going to fire rule #%d with order #%d from group #%d', $rule->id, $rule->order, $group->id));
+            $result = $this->fireRule($rule);
+            if ($result && true === $rule->stop_processing) {
+                Log::debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
+
+                return;
             }
         }
-        Log::debug('SearchRuleEngine:: done processing all rules!');
+        Log::debug(sprintf('Done with rule group #%d.', $group->id));
+    }
+
+    /**
+     * Return true if the rule is fired (the collection is larger than zero).
+     *
+     * @throws FireflyException
+     */
+    private function fireNonStrictRule(Rule $rule): bool
+    {
+        Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
+        $collection = $this->findNonStrictRule($rule);
+
+        $this->processResults($rule, $collection);
+        Log::debug(sprintf('SearchRuleEngine:: Done processing non-strict rule #%d', $rule->id));
+
+        return $collection->count() > 0;
     }
 
     /**
@@ -393,6 +444,32 @@ class SearchRuleEngine implements RuleEngineInterface
     }
 
     /**
+     * Search in the triggers of this particular search and if it contains
+     * one search operator for "journal_id" it means the date ranges
+     * in the search may need to be updated.
+     */
+    private function hasSpecificJournalTrigger(array $array): bool
+    {
+        Log::debug('Now in hasSpecificJournalTrigger.');
+        $journalTrigger = false;
+        $dateTrigger    = false;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
+                Log::debug('Found a journal_id trigger with 1 journal, true.');
+                $journalTrigger = true;
+            }
+            if (in_array($triggerName, ['date_is', 'date', 'on', 'date_before', 'before', 'date_after', 'after'], true)) {
+                Log::debug('Found a date related trigger, set to true.');
+                $dateTrigger = true;
+            }
+        }
+        $result         = $journalTrigger && $dateTrigger;
+        Log::debug(sprintf('Result of hasSpecificJournalTrigger is %s.', var_export($result, true)));
+
+        return $result;
+    }
+
+    /**
      * @throws FireflyException
      */
     private function processResults(Rule $rule, Collection $collection): void
@@ -402,39 +479,6 @@ class SearchRuleEngine implements RuleEngineInterface
         /** @var array $group */
         foreach ($collection as $group) {
             $this->processTransactionGroup($rule, $group);
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function processTransactionGroup(Rule $rule, array $group): void
-    {
-        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction group #%d', $group['id']));
-
-        /** @var array $transaction */
-        foreach ($group['transactions'] as $transaction) {
-            $this->processTransactionJournal($rule, $transaction);
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function processTransactionJournal(Rule $rule, array $transaction): void
-    {
-        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
-        $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
-
-        /** @var RuleAction $ruleAction */
-        foreach ($actions as $ruleAction) {
-            if (false === $ruleAction->active) {
-                continue;
-            }
-            $break = $this->processRuleAction($ruleAction, $transaction);
-            if ($break) {
-                break;
-            }
         }
     }
 
@@ -474,106 +518,62 @@ class SearchRuleEngine implements RuleEngineInterface
         return false;
     }
 
-    private function addNotes(array $transaction): array
-    {
-        $transaction['notes'] = '';
-        $dbNote               = Note::where('noteable_id', (int) $transaction['transaction_journal_id'])
-            ->where('noteable_type', TransactionJournal::class)
-            ->first(['notes.*'])
-        ;
-        if (null !== $dbNote) {
-            $transaction['notes'] = $dbNote->text;
-        }
-        Log::debug(sprintf('Notes of journal #%d filled in.', $transaction['transaction_journal_id']));
-
-        return $transaction;
-    }
-
     /**
-     * Return true if the rule is fired (the collection is larger than zero).
-     *
      * @throws FireflyException
      */
-    private function fireNonStrictRule(Rule $rule): bool
+    private function processTransactionGroup(Rule $rule, array $group): void
     {
-        Log::debug(sprintf('SearchRuleEngine::fireNonStrictRule(%d)!', $rule->id));
-        $collection = $this->findNonStrictRule($rule);
+        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction group #%d', $group['id']));
 
-        $this->processResults($rule, $collection);
-        Log::debug(sprintf('SearchRuleEngine:: Done processing non-strict rule #%d', $rule->id));
-
-        return $collection->count() > 0;
+        /** @var array $transaction */
+        foreach ($group['transactions'] as $transaction) {
+            $this->processTransactionJournal($rule, $transaction);
+        }
     }
 
     /**
      * @throws FireflyException
      */
-    private function fireGroup(RuleGroup $group): void
+    private function processTransactionJournal(Rule $rule, array $transaction): void
     {
-        $rules = [];
-        if ($group->relationLoaded('rules')) {
-            Log::debug('Group rules have been pre-loaded, do not reload them.');
-            $rules = $group->rules;
-        }
-        if (!$group->relationLoaded('rules')) {
-            Log::debug('Group rules have NOT been pre-loaded, load them NOW.');
-            $rules = $group
-                ->rules()
-                ->orderBy('rules.order', 'ASC')
-                //                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                //                         ->where('rule_triggers.trigger_type', 'user_action')
-                //                         ->where('rule_triggers.trigger_value', 'store-journal')
-                ->where('rules.active', true)
-                ->get(['rules.*'])
-            ;
-        }
-        Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $rules->count()));
+        Log::debug(sprintf('SearchRuleEngine:: Will now execute actions on transaction journal #%d', $transaction['transaction_journal_id']));
+        $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
 
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
-            Log::debug(sprintf('Going to fire rule #%d with order #%d from group #%d', $rule->id, $rule->order, $group->id));
-            $result = $this->fireRule($rule);
-            if ($result && true === $rule->stop_processing) {
-                Log::debug(sprintf('The rule was triggered and rule->stop_processing = true, so group #%d will stop processing further rules.', $group->id));
-
-                return;
+        /** @var RuleAction $ruleAction */
+        foreach ($actions as $ruleAction) {
+            if (false === $ruleAction->active) {
+                continue;
             }
-        }
-        Log::debug(sprintf('Done with rule group #%d.', $group->id));
-    }
-
-    /**
-     * Return the number of changed transactions from the previous "fire" action.
-     */
-    public function getResults(): int
-    {
-        return count($this->resultCount);
-    }
-
-    public function setRefreshTriggers(bool $refreshTriggers): void
-    {
-        $this->refreshTriggers = $refreshTriggers;
-    }
-
-    public function setRuleGroups(Collection $ruleGroups): void
-    {
-        Log::debug(__METHOD__);
-        foreach ($ruleGroups as $group) {
-            if ($group instanceof RuleGroup) {
-                Log::debug(sprintf('Adding a rule group to the SearchRuleEngine: #%d ("%s")', $group->id, $group->title));
-                $this->groups->push($group);
+            $break = $this->processRuleAction($ruleAction, $transaction);
+            if ($break) {
+                break;
             }
         }
     }
 
-    public function setRules(Collection $rules): void
+    private function setDateFromJournalTrigger(array $array): Carbon
     {
-        Log::debug(__METHOD__);
-        foreach ($rules as $rule) {
-            if ($rule instanceof Rule) {
-                Log::debug(sprintf('Adding a rule to the SearchRuleEngine: #%d ("%s")', $rule->id, $rule->title));
-                $this->rules->push($rule);
+        Log::debug('Now in setDateFromJournalTrigger()');
+        $journalId = 0;
+        foreach ($array as $triggerName => $values) {
+            if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
+                $journalId = (int) trim($values[0] ?? '"0"', '"'); // follows format "123".
+                Log::debug(sprintf('Found journal ID #%d', $journalId));
             }
         }
+        if (0 !== $journalId) {
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->user);
+            $journal    = $repository->find($journalId);
+            if (null !== $journal) {
+                $date = $journal->date;
+                Log::debug(sprintf('Found journal #%d with date %s.', $journal->id, $journal->date->format('Y-m-d')));
+
+                return $date;
+            }
+        }
+        Log::debug('Found no journal, return default date.');
+
+        return today(config('app.timezone'));
     }
 }

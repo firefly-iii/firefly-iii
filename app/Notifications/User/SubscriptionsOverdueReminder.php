@@ -72,15 +72,6 @@ class SubscriptionsOverdueReminder extends Notification
         ;
     }
 
-    private function getSubject(): string
-    {
-        if (count($this->overdue) > 1) {
-            return (string) trans('email.subscriptions_overdue_subject_multi', ['count' => count($this->overdue)]);
-        }
-
-        return (string) trans('email.subscriptions_overdue_subject_single');
-    }
-
     //    public function toNtfy(User $notifiable): Message
     //    {
     //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
@@ -122,5 +113,14 @@ class SubscriptionsOverdueReminder extends Notification
     public function via(User $notifiable): array
     {
         return ReturnsAvailableChannels::returnChannels('user', $notifiable);
+    }
+
+    private function getSubject(): string
+    {
+        if (count($this->overdue) > 1) {
+            return (string) trans('email.subscriptions_overdue_subject_multi', ['count' => count($this->overdue)]);
+        }
+
+        return (string) trans('email.subscriptions_overdue_subject_single');
     }
 }

@@ -30,6 +30,20 @@ return new class extends Migration {
     private const TABLE_ERROR          = 'Could not create table "%s": %s';
 
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('webhook_webhook_delivery');
+        Schema::dropIfExists('webhook_webhook_trigger');
+        Schema::dropIfExists('webhook_webhook_response');
+
+        Schema::dropIfExists('webhook_triggers');
+        Schema::dropIfExists('webhook_responses');
+        Schema::dropIfExists('webhook_deliveries');
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -118,19 +132,5 @@ return new class extends Migration {
                 app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('webhook_webhook_delivery');
-        Schema::dropIfExists('webhook_webhook_trigger');
-        Schema::dropIfExists('webhook_webhook_response');
-
-        Schema::dropIfExists('webhook_triggers');
-        Schema::dropIfExists('webhook_responses');
-        Schema::dropIfExists('webhook_deliveries');
     }
 };

@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait OBValidation
 {
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
     protected function validateOBDestination(array $array): bool
     {
         $result      = null;
@@ -74,8 +76,6 @@ trait OBValidation
 
         return $result;
     }
-
-    abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
      * Source of an opening balance can either be an asset account

@@ -73,26 +73,6 @@ class UserGroupTransformer extends AbstractTransformer
         return $objects;
     }
 
-    private function mergeMemberships(): void
-    {
-        $new               = [];
-        foreach ($this->memberships as $groupId => $members) {
-            $new[$groupId] ??= [];
-
-            foreach ($members as $member) {
-                $mail                            = $member['user_email'];
-                $new[$groupId][$mail] ??= [
-                    'user_id'    => (string) $member['user_id'],
-                    'user_email' => $member['user_email'],
-                    'you'        => $member['you'],
-                    'roles'      => [],
-                ];
-                $new[$groupId][$mail]['roles'][] = $member['role'];
-            }
-        }
-        $this->memberships = $new;
-    }
-
     /**
      * Transform the user group.
      */
@@ -116,5 +96,25 @@ class UserGroupTransformer extends AbstractTransformer
         ];
 
         // if the user has a specific role in this group, then collect the memberships.
+    }
+
+    private function mergeMemberships(): void
+    {
+        $new               = [];
+        foreach ($this->memberships as $groupId => $members) {
+            $new[$groupId] ??= [];
+
+            foreach ($members as $member) {
+                $mail                            = $member['user_email'];
+                $new[$groupId][$mail] ??= [
+                    'user_id'    => (string) $member['user_id'],
+                    'user_email' => $member['user_email'],
+                    'you'        => $member['you'],
+                    'roles'      => [],
+                ];
+                $new[$groupId][$mail]['roles'][] = $member['role'];
+            }
+        }
+        $this->memberships = $new;
     }
 }

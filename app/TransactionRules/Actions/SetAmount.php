@@ -100,16 +100,6 @@ class SetAmount implements ActionInterface
         return true;
     }
 
-    private function updatePositive(TransactionJournal $object, string $amount): void
-    {
-        /** @var null|Transaction $transaction */
-        $transaction = $object->transactions()->where('amount', '>', 0)->first();
-        if (null === $transaction) {
-            return;
-        }
-        $this->updateAmount($transaction, $amount);
-    }
-
     private function updateAmount(Transaction $transaction, string $amount): void
     {
         $transaction->amount = $amount;
@@ -121,6 +111,16 @@ class SetAmount implements ActionInterface
     {
         /** @var null|Transaction $transaction */
         $transaction = $object->transactions()->where('amount', '<', 0)->first();
+        if (null === $transaction) {
+            return;
+        }
+        $this->updateAmount($transaction, $amount);
+    }
+
+    private function updatePositive(TransactionJournal $object, string $amount): void
+    {
+        /** @var null|Transaction $transaction */
+        $transaction = $object->transactions()->where('amount', '>', 0)->first();
         if (null === $transaction) {
             return;
         }

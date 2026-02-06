@@ -69,18 +69,9 @@ class UpgradesWebhooks extends Command
         return (bool) $configVar?->data;
     }
 
-    private function upgradeWebhooks(): void
+    private function markAsExecuted(): void
     {
-        $set = Webhook::where('delivery', '>', 1)
-            ->orWhere('trigger', '>', 1)
-            ->orWhere('response', '>', 1)
-            ->get()
-        ;
-
-        /** @var Webhook $webhook */
-        foreach ($set as $webhook) {
-            $this->upgradeWebhook($webhook);
-        }
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function upgradeWebhook(Webhook $webhook): void
@@ -111,8 +102,17 @@ class UpgradesWebhooks extends Command
         $this->friendlyPositive(sprintf('Webhook #%d upgraded.', $webhook->id));
     }
 
-    private function markAsExecuted(): void
+    private function upgradeWebhooks(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        $set = Webhook::where('delivery', '>', 1)
+            ->orWhere('trigger', '>', 1)
+            ->orWhere('response', '>', 1)
+            ->get()
+        ;
+
+        /** @var Webhook $webhook */
+        foreach ($set as $webhook) {
+            $this->upgradeWebhook($webhook);
+        }
     }
 }

@@ -81,6 +81,26 @@ class CreditRecalculateService
         $this->processWork();
     }
 
+    public function setAccount(?Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    public function setGroup(TransactionGroup $group): void
+    {
+        $this->group = $group;
+    }
+
+    public function setJournals(Collection $journals): void
+    {
+        $this->journals = $journals;
+    }
+
     private function collectFromJournals(Collection $transactionJournals): void
     {
         Log::debug('Now in collectFromJournals()');
@@ -98,16 +118,6 @@ class CreditRecalculateService
                 $this->work[] = $account;
             }
         }
-    }
-
-    private function processGroup(): void
-    {
-        $this->collectFromJournals($this->group->transactionJournals);
-    }
-
-    private function processJournals(): void
-    {
-        $this->collectFromJournals($this->journals);
     }
 
     /**
@@ -131,14 +141,6 @@ class CreditRecalculateService
     /**
      * @throws FireflyException
      */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '<');
-    }
-
-    /**
-     * @throws FireflyException
-     */
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
         /** @var null|Transaction $transaction */
@@ -156,12 +158,118 @@ class CreditRecalculateService
         return $foundAccount;
     }
 
+    private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
+    {
+        $usedAmount = $transaction->amount;
+        //        Log::debug(sprintf('Amount of transaction is %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
+        if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $accountCurrency->id) {
+            $usedAmount = $transaction->foreign_amount;
+
+            //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
+        }
+
+        return $usedAmount;
+    }
+
     /**
      * @throws FireflyException
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
         return $this->getAccountByDirection($journal, '>');
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function getSourceAccount(TransactionJournal $journal): Account
+    {
+        return $this->getAccountByDirection($journal, '<');
+    }
+
+    /**
+     * case 4
+     * it's a deposit into this liability (from revenue account).
+     * if it's a credit ("I am owed") this increases the amount due.
+     * because the person is having to pay more money.
+     */
+    private function isDepositIn(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::DEPOSIT->value === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a deposit out of this liability (to asset).
+     *
+     * case 3
+     * if it's a credit ("I am owed") this decreases the amount due.
+     * because the person is paying us back.
+     *
+     * case 7
+     * if it's a debit ("I owe") this increases the amount due.
+     * because we are borrowing more money.
+     */
+    private function isDepositOut(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::DEPOSIT->value === $transactionType && -1 === bccomp($amount, '0');
+    }
+
+    /**
+     * case 5: transfer into loan (from other loan).
+     * if it's a credit ("I am owed") this increases the amount due,
+     * because the person has to pay more back.
+     *
+     * case 8: transfer into loan (from other loan).
+     * if it's a debit ("I owe") this decreases the amount due.
+     * because the person has to pay more back.
+     */
+    private function isTransferIn(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a transfer out of loan (from other loan)
+     *
+     * case 9
+     * if it's a debit ("I owe") this decreases the amount due.
+     * because we remove money from the amount left to owe
+     */
+    private function isTransferOut(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::TRANSFER->value === $transactionType && -1 === bccomp($amount, '0');
+    }
+
+    /**
+     * It's a withdrawal into this liability (from asset).
+     *
+     * Case 1 = credit
+     * if it's a credit ("I am owed"), this increases the amount due,
+     * because we're lending person X more money
+     *
+     * Case 6 = debit
+     * if it's a debit ("I owe this amount"), this decreases the amount due,
+     * because we're paying off the debt
+     */
+    private function isWithdrawalIn(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && 1 === bccomp($amount, '0');
+    }
+
+    /**
+     * it's a withdrawal away from this liability (into expense account).
+     *
+     * Case 2
+     * if it's a credit ("I am owed"), this decreases the amount due,
+     * because we're sending money away from the loan (like loan forgiveness)
+     *
+     * Case 8
+     * if it's a debit ("I owe this amount") this increase the amount due.
+     * because we are paying interest.
+     */
+    private function isWithdrawalOut(string $amount, string $transactionType): bool
+    {
+        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && -1 === bccomp($amount, '0');
     }
 
     private function processAccount(): void
@@ -172,86 +280,26 @@ class CreditRecalculateService
         }
     }
 
-    private function processWork(): void
+    private function processAccounts(): void
     {
-        $this->repository = app(AccountRepositoryInterface::class);
-        foreach ($this->work as $account) {
-            $this->processWorkAccount($account);
+        $valid = config('firefly.valid_liabilities');
+
+        /** @var Account $account */
+        foreach ($this->accounts as $account) {
+            if (in_array($account->accountType->type, $valid, true)) {
+                $this->work[] = $account;
+            }
         }
     }
 
-    private function processWorkAccount(Account $account): void
+    private function processGroup(): void
     {
-        Log::debug(sprintf('Now processing account #%d ("%s").', $account->id, $account->name));
-        // get opening balance (if present)
-        $this->repository->setUser($account->user);
-        $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
-        $openingBalance = $this->repository->getOpeningBalance($account);
-        //            Log::debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
-        // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
-        if ($openingBalance instanceof TransactionJournal && 'debit' === $direction) {
-            $this->validateOpeningBalance($account, $openingBalance);
-        }
-        $startOfDebt    = $this->repository->getOpeningBalanceAmount($account, false) ?? '0';
-        $leftOfDebt     = Steam::positive($startOfDebt);
-        //        Log::debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', \FireflyIII\Support\Facades\Steam::bcround($startOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2)));
-
-        /** @var AccountMetaFactory $factory */
-        $factory        = app(AccountMetaFactory::class);
-
-        // amount is positive or negative, doesn't matter.
-        $factory->crud($account, 'start_of_debt', $startOfDebt);
-
-        //        Log::debug(sprintf('Debt direction is "%s"', $direction));
-
-        // now loop all transactions (except opening balance and credit thing)
-        $transactions   = $account
-            ->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'ASC')
-            ->get(['transactions.*'])
-        ;
-        // $transactions->count();
-        //        Log::debug(sprintf('Found %d transaction(s) to process.', $total));
-
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            //            Log::debug(sprintf('[%d/%d] Processing transaction.', $index + 1, $total));
-            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
-        }
-        $factory->crud($account, 'current_debt', $leftOfDebt);
-        Log::debug(sprintf('Done processing account #%d ("%s")', $account->id, $account->name));
+        $this->collectFromJournals($this->group->transactionJournals);
     }
 
-    /**
-     * If account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
-     */
-    private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance): void
+    private function processJournals(): void
     {
-        /** @var Transaction $source */
-        $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
-
-        /** @var Transaction $dest */
-        $dest   = $openingBalance->transactions()->where('amount', '>', 0)->first();
-        if ($source->account_id !== $account->id) {
-            Log::info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
-            Log::debug(sprintf('Source amount "%s" is now "%s"', $source->amount, Steam::positive($source->amount)));
-            Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, Steam::negative($dest->amount)));
-            $source->amount = Steam::positive($source->amount);
-            $dest->amount   = Steam::negative($source->amount);
-            if (null !== $source->foreign_amount && '' !== $source->foreign_amount) {
-                $source->foreign_amount = Steam::positive($source->foreign_amount);
-                Log::debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, Steam::positive($source->foreign_amount)));
-            }
-            if (null !== $dest->foreign_amount && '' !== $dest->foreign_amount) {
-                $dest->foreign_amount = Steam::negative($dest->foreign_amount);
-                Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->foreign_amount, Steam::negative($dest->foreign_amount)));
-            }
-            $source->save();
-            $dest->save();
-        }
-
-        // Log::debug('Opening balance is valid');
+        $this->collectFromJournals($this->journals);
     }
 
     /**
@@ -386,133 +434,85 @@ class CreditRecalculateService
         return $leftOfDebt;
     }
 
-    private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
+    private function processWork(): void
     {
-        $usedAmount = $transaction->amount;
-        //        Log::debug(sprintf('Amount of transaction is %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
-        if ($foreignCurrency instanceof TransactionCurrency && $foreignCurrency->id === $accountCurrency->id) {
-            $usedAmount = $transaction->foreign_amount;
-
-            //            Log::debug(sprintf('Overruled by foreign amount. Amount of transaction is now %s', \FireflyIII\Support\Facades\Steam::bcround($usedAmount, 2)));
+        $this->repository = app(AccountRepositoryInterface::class);
+        foreach ($this->work as $account) {
+            $this->processWorkAccount($account);
         }
+    }
 
-        return $usedAmount;
+    private function processWorkAccount(Account $account): void
+    {
+        Log::debug(sprintf('Now processing account #%d ("%s").', $account->id, $account->name));
+        // get opening balance (if present)
+        $this->repository->setUser($account->user);
+        $direction      = (string) $this->repository->getMetaValue($account, 'liability_direction');
+        $openingBalance = $this->repository->getOpeningBalance($account);
+        //            Log::debug(sprintf('Found opening balance transaction journal #%d', $openingBalance->id));
+        // if account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
+        if ($openingBalance instanceof TransactionJournal && 'debit' === $direction) {
+            $this->validateOpeningBalance($account, $openingBalance);
+        }
+        $startOfDebt    = $this->repository->getOpeningBalanceAmount($account, false) ?? '0';
+        $leftOfDebt     = Steam::positive($startOfDebt);
+        //        Log::debug(sprintf('Start of debt is "%s", so initial left of debt is "%s"', \FireflyIII\Support\Facades\Steam::bcround($startOfDebt, 2), \FireflyIII\Support\Facades\Steam::bcround($leftOfDebt, 2)));
+
+        /** @var AccountMetaFactory $factory */
+        $factory        = app(AccountMetaFactory::class);
+
+        // amount is positive or negative, doesn't matter.
+        $factory->crud($account, 'start_of_debt', $startOfDebt);
+
+        //        Log::debug(sprintf('Debt direction is "%s"', $direction));
+
+        // now loop all transactions (except opening balance and credit thing)
+        $transactions   = $account
+            ->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+            ->get(['transactions.*'])
+        ;
+        // $transactions->count();
+        //        Log::debug(sprintf('Found %d transaction(s) to process.', $total));
+
+        /** @var Transaction $transaction */
+        foreach ($transactions as $transaction) {
+            //            Log::debug(sprintf('[%d/%d] Processing transaction.', $index + 1, $total));
+            $leftOfDebt = $this->processTransaction($account, $direction, $transaction, $leftOfDebt);
+        }
+        $factory->crud($account, 'current_debt', $leftOfDebt);
+        Log::debug(sprintf('Done processing account #%d ("%s")', $account->id, $account->name));
     }
 
     /**
-     * It's a withdrawal into this liability (from asset).
-     *
-     * Case 1 = credit
-     * if it's a credit ("I am owed"), this increases the amount due,
-     * because we're lending person X more money
-     *
-     * Case 6 = debit
-     * if it's a debit ("I owe this amount"), this decreases the amount due,
-     * because we're paying off the debt
+     * If account direction is "debit" ("I owe this amount") the opening balance must always be AWAY from the account:
      */
-    private function isWithdrawalIn(string $amount, string $transactionType): bool
+    private function validateOpeningBalance(Account $account, TransactionJournal $openingBalance): void
     {
-        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && 1 === bccomp($amount, '0');
-    }
+        /** @var Transaction $source */
+        $source = $openingBalance->transactions()->where('amount', '<', 0)->first();
 
-    /**
-     * it's a withdrawal away from this liability (into expense account).
-     *
-     * Case 2
-     * if it's a credit ("I am owed"), this decreases the amount due,
-     * because we're sending money away from the loan (like loan forgiveness)
-     *
-     * Case 8
-     * if it's a debit ("I owe this amount") this increase the amount due.
-     * because we are paying interest.
-     */
-    private function isWithdrawalOut(string $amount, string $transactionType): bool
-    {
-        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && -1 === bccomp($amount, '0');
-    }
-
-    /**
-     * it's a deposit out of this liability (to asset).
-     *
-     * case 3
-     * if it's a credit ("I am owed") this decreases the amount due.
-     * because the person is paying us back.
-     *
-     * case 7
-     * if it's a debit ("I owe") this increases the amount due.
-     * because we are borrowing more money.
-     */
-    private function isDepositOut(string $amount, string $transactionType): bool
-    {
-        return TransactionTypeEnum::DEPOSIT->value === $transactionType && -1 === bccomp($amount, '0');
-    }
-
-    /**
-     * case 4
-     * it's a deposit into this liability (from revenue account).
-     * if it's a credit ("I am owed") this increases the amount due.
-     * because the person is having to pay more money.
-     */
-    private function isDepositIn(string $amount, string $transactionType): bool
-    {
-        return TransactionTypeEnum::DEPOSIT->value === $transactionType && 1 === bccomp($amount, '0');
-    }
-
-    /**
-     * case 5: transfer into loan (from other loan).
-     * if it's a credit ("I am owed") this increases the amount due,
-     * because the person has to pay more back.
-     *
-     * case 8: transfer into loan (from other loan).
-     * if it's a debit ("I owe") this decreases the amount due.
-     * because the person has to pay more back.
-     */
-    private function isTransferIn(string $amount, string $transactionType): bool
-    {
-        return TransactionTypeEnum::TRANSFER->value === $transactionType && 1 === bccomp($amount, '0');
-    }
-
-    /**
-     * it's a transfer out of loan (from other loan)
-     *
-     * case 9
-     * if it's a debit ("I owe") this decreases the amount due.
-     * because we remove money from the amount left to owe
-     */
-    private function isTransferOut(string $amount, string $transactionType): bool
-    {
-        return TransactionTypeEnum::TRANSFER->value === $transactionType && -1 === bccomp($amount, '0');
-    }
-
-    public function setAccount(?Account $account): void
-    {
-        $this->account = $account;
-    }
-
-    public function setGroup(TransactionGroup $group): void
-    {
-        $this->group = $group;
-    }
-
-    public function setJournals(Collection $journals): void
-    {
-        $this->journals = $journals;
-    }
-
-    private function processAccounts(): void
-    {
-        $valid = config('firefly.valid_liabilities');
-
-        /** @var Account $account */
-        foreach ($this->accounts as $account) {
-            if (in_array($account->accountType->type, $valid, true)) {
-                $this->work[] = $account;
+        /** @var Transaction $dest */
+        $dest   = $openingBalance->transactions()->where('amount', '>', 0)->first();
+        if ($source->account_id !== $account->id) {
+            Log::info(sprintf('Liability #%d has a reversed opening balance. Will fix this now.', $account->id));
+            Log::debug(sprintf('Source amount "%s" is now "%s"', $source->amount, Steam::positive($source->amount)));
+            Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->amount, Steam::negative($dest->amount)));
+            $source->amount = Steam::positive($source->amount);
+            $dest->amount   = Steam::negative($source->amount);
+            if (null !== $source->foreign_amount && '' !== $source->foreign_amount) {
+                $source->foreign_amount = Steam::positive($source->foreign_amount);
+                Log::debug(sprintf('Source foreign amount "%s" is now "%s"', $source->foreign_amount, Steam::positive($source->foreign_amount)));
             }
+            if (null !== $dest->foreign_amount && '' !== $dest->foreign_amount) {
+                $dest->foreign_amount = Steam::negative($dest->foreign_amount);
+                Log::debug(sprintf('Destination amount "%s" is now "%s"', $dest->foreign_amount, Steam::negative($dest->foreign_amount)));
+            }
+            $source->save();
+            $dest->save();
         }
-    }
 
-    public function setAccounts(Collection $accounts): void
-    {
-        $this->accounts = $accounts;
+        // Log::debug('Opening balance is valid');
     }
 }

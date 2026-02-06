@@ -29,6 +29,15 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transaction_currency_user');
+        Schema::dropIfExists('transaction_currency_user_group');
+    }
+
+    /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      * Run the migrations.
      */
@@ -75,14 +84,5 @@ return new class() extends Migration {
                 );
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('transaction_currency_user');
-        Schema::dropIfExists('transaction_currency_user_group');
     }
 };

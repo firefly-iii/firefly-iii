@@ -68,6 +68,11 @@ class UpgradesRuleActions extends Command
         return (bool) $configVar?->data;
     }
 
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
     private function replaceEqualSign(): void
     {
         $count   = 0;
@@ -178,10 +183,5 @@ class UpgradesRuleActions extends Command
                     break;
             }
         }
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

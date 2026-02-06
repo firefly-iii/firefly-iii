@@ -52,8 +52,6 @@ interface BudgetLimitRepositoryInterface
      */
     public function budgeted(Carbon $start, Carbon $end, TransactionCurrency $currency, ?Collection $budgets = null): string;
 
-    public function getDailyAmount(BudgetLimit $budgetLimit): string;
-
     /**
      * Destroy all budget limits.
      */
@@ -74,6 +72,8 @@ interface BudgetLimitRepositoryInterface
     public function getAllBudgetLimitsByCurrency(TransactionCurrency $currency, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
+
+    public function getDailyAmount(BudgetLimit $budgetLimit): string;
 
     public function getNoteText(BudgetLimit $budgetLimit): string;
 

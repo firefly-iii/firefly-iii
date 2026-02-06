@@ -43,13 +43,6 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
-
     #[DataProvider('providePeriods')]
     public function testGivenStartAndEndDatesWhenCallPreferredEndOfPeriodThenReturnsTheExpectedFormatSuccessful(
         Carbon $start,
@@ -85,5 +78,12 @@ final class NavigationPreferredEndOfPeriodTest extends TestCase
         yield '1 year' => [Carbon::now(), Carbon::now()->addYear(), 'endOfMonth'];
 
         yield '2 years' => [Carbon::now(), Carbon::now()->addYears(2), 'endOfYear'];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

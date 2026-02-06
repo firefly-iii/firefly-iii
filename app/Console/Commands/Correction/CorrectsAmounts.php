@@ -253,27 +253,6 @@ class CorrectsAmounts extends Command
         $this->friendlyInfo(sprintf('Corrected %d recurring transaction amount(s).', $count));
     }
 
-    /**
-     * Foreach loop is unavoidable here.
-     */
-    private function fixRuleTriggers(): void
-    {
-        $set   = RuleTrigger::whereIn('trigger_type', ['amount_less', 'amount_more', 'amount_is'])->get();
-        $fixed = 0;
-
-        /** @var RuleTrigger $item */
-        foreach ($set as $item) {
-            $result = $this->fixRuleTrigger($item);
-            if ($result) {
-                ++$fixed;
-            }
-        }
-        if (0 === $fixed) {
-            return;
-        }
-        $this->friendlyInfo(sprintf('Corrected %d rule trigger amount(s).', $fixed));
-    }
-
     private function fixRuleTrigger(RuleTrigger $item): bool
     {
         try {
@@ -299,6 +278,27 @@ class CorrectsAmounts extends Command
         }
 
         return false;
+    }
+
+    /**
+     * Foreach loop is unavoidable here.
+     */
+    private function fixRuleTriggers(): void
+    {
+        $set   = RuleTrigger::whereIn('trigger_type', ['amount_less', 'amount_more', 'amount_is'])->get();
+        $fixed = 0;
+
+        /** @var RuleTrigger $item */
+        foreach ($set as $item) {
+            $result = $this->fixRuleTrigger($item);
+            if ($result) {
+                ++$fixed;
+            }
+        }
+        if (0 === $fixed) {
+            return;
+        }
+        $this->friendlyInfo(sprintf('Corrected %d rule trigger amount(s).', $fixed));
     }
 
     private function validateJournal(TransactionJournal $journal): bool

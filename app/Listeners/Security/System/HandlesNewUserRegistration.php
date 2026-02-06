@@ -65,6 +65,15 @@ class HandlesNewUserRegistration implements ShouldQueue
     }
 
     /**
+     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
+     */
+    private function createExchangeRates(): void
+    {
+        $seeder = new ExchangeRateSeeder();
+        $seeder->run();
+    }
+
+    /**
      * @throws FireflyException
      */
     private function createGroupMembership(User $user): void
@@ -99,15 +108,6 @@ class HandlesNewUserRegistration implements ShouldQueue
         GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
         $user->user_group_id = $group->id;
         $user->save();
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    private function createExchangeRates(): void
-    {
-        $seeder = new ExchangeRateSeeder();
-        $seeder->run();
     }
 
     private function sendAdminRegistrationNotification(User $user, OwnerNotifiable $owner): void

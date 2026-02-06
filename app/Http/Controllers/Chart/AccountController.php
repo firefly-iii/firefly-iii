@@ -205,17 +205,6 @@ class AccountController extends Controller
     }
 
     /**
-     * Expenses per budget for all time, as shown on account overview.
-     */
-    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $end   = today(config('app.timezone'));
-
-        return $this->expenseBudget($account, $start, $end);
-    }
-
-    /**
      * Expenses per budget, as shown on account overview.
      */
     public function expenseBudget(Account $account, Carbon $start, Carbon $end): JsonResponse
@@ -293,14 +282,14 @@ class AccountController extends Controller
     }
 
     /**
-     * Expenses grouped by category for account.
+     * Expenses per budget for all time, as shown on account overview.
      */
-    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
         $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
         $end   = today(config('app.timezone'));
 
-        return $this->expenseCategory($account, $start, $end);
+        return $this->expenseBudget($account, $start, $end);
     }
 
     /**
@@ -376,6 +365,17 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses grouped by category for account.
+     */
+    public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
+
+        return $this->expenseCategory($account, $start, $end);
+    }
+
+    /**
      * Shows the balances for all the user's frontpage accounts.
      *
      * @throws FireflyException
@@ -399,17 +399,6 @@ class AccountController extends Controller
         $end->endOfDay();
 
         return response()->json($this->accountBalanceChart($accounts, $start, $end));
-    }
-
-    /**
-     * Shows the income grouped by category for an account, in all time.
-     */
-    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
-    {
-        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
-        $end   = today(config('app.timezone'));
-
-        return $this->incomeCategory($account, $start, $end);
     }
 
     /**
@@ -483,6 +472,17 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    /**
+     * Shows the income grouped by category for an account, in all time.
+     */
+    public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
+    {
+        $start = $repository->oldestJournalDate($account) ?? today(config('app.timezone'))->startOfMonth();
+        $end   = today(config('app.timezone'));
+
+        return $this->incomeCategory($account, $start, $end);
     }
 
     /**
@@ -615,15 +615,6 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    private function updateChartKeys(array $array, array $balances): array
-    {
-        foreach (array_keys($balances) as $key) {
-            $array[$key] ??= ['key' => $key];
-        }
-
-        return $array;
     }
 
     /**
@@ -761,5 +752,14 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
+    }
+
+    private function updateChartKeys(array $array, array $balances): array
+    {
+        foreach (array_keys($balances) as $key) {
+            $array[$key] ??= ['key' => $key];
+        }
+
+        return $array;
     }
 }

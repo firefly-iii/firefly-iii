@@ -81,14 +81,6 @@ class UserGroup extends Model
     }
 
     /**
-     * Link to accounts.
-     */
-    public function periodStatistics(): HasMany
-    {
-        return $this->hasMany(PeriodStatistic::class);
-    }
-
-    /**
      * Link to attachments.
      */
     public function attachments(): HasMany
@@ -152,6 +144,14 @@ class UserGroup extends Model
     public function objectGroups(): HasMany
     {
         return $this->hasMany(ObjectGroup::class);
+    }
+
+    /**
+     * Link to accounts.
+     */
+    public function periodStatistics(): HasMany
+    {
+        return $this->hasMany(PeriodStatistic::class);
     }
 
     /**

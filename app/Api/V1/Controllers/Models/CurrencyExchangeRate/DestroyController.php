@@ -63,13 +63,6 @@ class DestroyController extends Controller
         return response()->json([], 204);
     }
 
-    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
-    {
-        $this->repository->deleteRate($exchangeRate);
-
-        return response()->json([], 204);
-    }
-
     public function destroySingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
@@ -79,6 +72,13 @@ class DestroyController extends Controller
         if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new FireflyException('Bla');
         }
+
+        return response()->json([], 204);
+    }
+
+    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $this->repository->deleteRate($exchangeRate);
 
         return response()->json([], 204);
     }

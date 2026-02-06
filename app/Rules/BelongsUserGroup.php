@@ -78,37 +78,6 @@ class BelongsUserGroup implements ValidationRule
         }
     }
 
-    private function parseAttribute(string $attribute): string
-    {
-        $parts = explode('.', $attribute);
-        if (1 === count($parts)) {
-            return $attribute;
-        }
-        if (3 === count($parts)) {
-            return $parts[2];
-        }
-
-        return $attribute;
-    }
-
-    private function validatePiggyBankId(int $value): bool
-    {
-        $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-            ->where('piggy_banks.id', '=', $value)
-            ->where('accounts.user_group_id', '=', $this->userGroup->id)
-            ->count()
-        ;
-
-        return 1 === $count;
-    }
-
-    private function validatePiggyBankName(string $value): bool
-    {
-        $count = $this->countField(PiggyBank::class, 'name', $value);
-
-        return 1 === $count;
-    }
-
     protected function countField(string $class, string $field, string $value): int
     {
         $value   = trim($value);
@@ -137,22 +106,36 @@ class BelongsUserGroup implements ValidationRule
         return $count;
     }
 
+    private function parseAttribute(string $attribute): string
+    {
+        $parts = explode('.', $attribute);
+        if (1 === count($parts)) {
+            return $attribute;
+        }
+        if (3 === count($parts)) {
+            return $parts[2];
+        }
+
+        return $attribute;
+    }
+
+    private function validateAccountId(int $value): bool
+    {
+        if (0 === $value) {
+            // it's ok to submit 0. other checks will fail.
+            return true;
+        }
+        $count = Account::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+
+        return 1 === $count;
+    }
+
     private function validateBillId(int $value): bool
     {
         if (0 === $value) {
             return true;
         }
         $count = Bill::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
-
-        return 1 === $count;
-    }
-
-    private function validateJournalId(int $value): bool
-    {
-        if (0 === $value) {
-            return true;
-        }
-        $count = TransactionJournal::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
 
         return 1 === $count;
     }
@@ -175,13 +158,6 @@ class BelongsUserGroup implements ValidationRule
         return 1 === $count;
     }
 
-    private function validateCategoryId(int $value): bool
-    {
-        $count = Category::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
-
-        return 1 === $count;
-    }
-
     private function validateBudgetName(string $value): bool
     {
         $count = $this->countField(Budget::class, 'name', $value);
@@ -189,13 +165,37 @@ class BelongsUserGroup implements ValidationRule
         return 1 === $count;
     }
 
-    private function validateAccountId(int $value): bool
+    private function validateCategoryId(int $value): bool
+    {
+        $count = Category::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+
+        return 1 === $count;
+    }
+
+    private function validateJournalId(int $value): bool
     {
         if (0 === $value) {
-            // it's ok to submit 0. other checks will fail.
             return true;
         }
-        $count = Account::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+        $count = TransactionJournal::where('id', '=', $value)->where('user_group_id', '=', $this->userGroup->id)->count();
+
+        return 1 === $count;
+    }
+
+    private function validatePiggyBankId(int $value): bool
+    {
+        $count = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+            ->where('piggy_banks.id', '=', $value)
+            ->where('accounts.user_group_id', '=', $this->userGroup->id)
+            ->count()
+        ;
+
+        return 1 === $count;
+    }
+
+    private function validatePiggyBankName(string $value): bool
+    {
+        $count = $this->countField(PiggyBank::class, 'name', $value);
 
         return 1 === $count;
     }

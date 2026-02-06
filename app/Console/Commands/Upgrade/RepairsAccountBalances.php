@@ -58,6 +58,11 @@ class RepairsAccountBalances extends Command
         return 0;
     }
 
+    private function correctBalanceAmounts(): void
+    {
+        AccountBalanceCalculator::recalculateAll(false);
+    }
+
     private function isExecuted(): bool
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
@@ -68,10 +73,5 @@ class RepairsAccountBalances extends Command
     private function markAsExecuted(): void
     {
         FireflyConfig::set(self::CONFIG_NAME, true);
-    }
-
-    private function correctBalanceAmounts(): void
-    {
-        AccountBalanceCalculator::recalculateAll(false);
     }
 }

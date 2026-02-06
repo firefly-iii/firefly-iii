@@ -71,16 +71,6 @@ class ExchangeRateSeeder extends Seeder
         }
     }
 
-    private function getCurrency(string $code): null|TransactionCurrency
-    {
-        return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
-    }
-
-    private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
-    {
-        return $user->currencyExchangeRates()->where('from_currency_id', $from->id)->where('to_currency_id', $to->id)->where('date', $date)->count() > 0;
-    }
-
     /**
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
@@ -94,5 +84,15 @@ class ExchangeRateSeeder extends Seeder
             'date'             => $date,
             'rate'             => $rate
         ]);
+    }
+
+    private function getCurrency(string $code): null|TransactionCurrency
+    {
+        return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
+    }
+
+    private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
+    {
+        return $user->currencyExchangeRates()->where('from_currency_id', $from->id)->where('to_currency_id', $to->id)->where('date', $date)->count() > 0;
     }
 }

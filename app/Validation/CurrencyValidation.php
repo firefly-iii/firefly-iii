@@ -36,6 +36,8 @@ trait CurrencyValidation
 {
     public const string TEST = 'Test';
 
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      */
@@ -94,6 +96,4 @@ trait CurrencyValidation
             }
         }
     }
-
-    abstract protected function getTransactionsArray(Validator $validator): array;
 }

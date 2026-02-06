@@ -152,6 +152,34 @@ class EditController extends Controller
     }
 
     /**
+     * Update the rule.
+     *
+     * @return Redirector|RedirectResponse
+     */
+    public function update(RuleFormRequest $request, Rule $rule)
+    {
+        $data     = $request->getRuleData();
+
+        $this->ruleRepos->update($rule, $data);
+
+        session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
+        Preferences::mark();
+        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
+
+        if (true === $data['run_after_form']) {
+            return redirect(route('rules.select-transactions', [$rule->id]));
+        }
+
+        if (1 === (int) $request->get('return_to_edit')) {
+            session()->put('rules.edit.fromUpdate', true);
+
+            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
+        }
+
+        return $redirect;
+    }
+
+    /**
      * @throws FireflyException
      */
     private function parseFromOperators(array $submittedOperators): array
@@ -188,33 +216,5 @@ class EditController extends Controller
         }
 
         return $renderedEntries;
-    }
-
-    /**
-     * Update the rule.
-     *
-     * @return Redirector|RedirectResponse
-     */
-    public function update(RuleFormRequest $request, Rule $rule)
-    {
-        $data     = $request->getRuleData();
-
-        $this->ruleRepos->update($rule, $data);
-
-        session()->flash('success', (string) trans('firefly.updated_rule', ['title' => $rule->title]));
-        Preferences::mark();
-        $redirect = redirect($this->getPreviousUrl('rules.edit.url'));
-
-        if (true === $data['run_after_form']) {
-            return redirect(route('rules.select-transactions', [$rule->id]));
-        }
-
-        if (1 === (int) $request->get('return_to_edit')) {
-            session()->put('rules.edit.fromUpdate', true);
-
-            $redirect = redirect(route('rules.edit', [$rule->id]))->withInput(['return_to_edit' => 1]);
-        }
-
-        return $redirect;
     }
 }

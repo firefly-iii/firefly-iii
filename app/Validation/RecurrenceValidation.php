@@ -39,84 +39,6 @@ use InvalidArgumentException;
 trait RecurrenceValidation
 {
     /**
-     * Validate account information input for recurrences which are being updated.
-     *
-     * TODO Must always trigger when the type of the recurrence changes.
-     */
-    public function valUpdateAccountInfo(Validator $validator): void
-    {
-        $data             = $validator->getData();
-
-        $transactionType  = $data['type'] ?? 'invalid';
-
-        // grab model from parameter and try to set the transaction type from it
-        if ('invalid' === $transactionType) {
-            Log::debug('Type is invalid but we will search for it.');
-
-            /** @var null|Recurrence $recurrence */
-            $recurrence = $this->route()?->parameter('recurrence');
-            if (null !== $recurrence) {
-                Log::debug('There is a recurrence in the route.');
-
-                // ok so we have a recurrence should be able to extract type somehow.
-                /** @var null|RecurrenceTransaction $first */
-                $first = $recurrence->recurrenceTransactions()->first();
-                if (null !== $first) {
-                    $transactionType = null !== $first->transactionType ? $first->transactionType->type : 'withdrawal';
-                    Log::debug(sprintf('Determined type to be %s.', $transactionType));
-                }
-                if (null === $first) {
-                    Log::warning('Just going to assume type is a withdrawal.');
-                    $transactionType = 'withdrawal';
-                }
-            }
-        }
-
-        $transactions     = $data['transactions'] ?? [];
-
-        /** @var AccountValidator $accountValidator */
-        $accountValidator = app(AccountValidator::class);
-
-        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
-        foreach ($transactions as $index => $transaction) {
-            $transactionType  = $transaction['type'] ?? $transactionType;
-            $accountValidator->setTransactionType($transactionType);
-
-            if (
-                !array_key_exists('source_id', $transaction)
-                && !array_key_exists('destination_id', $transaction)
-                && !array_key_exists('source_name', $transaction)
-                && !array_key_exists('destination_name', $transaction)
-            ) {
-                continue;
-            }
-            // validate source account.
-            $sourceId         = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
-            $sourceName       = $transaction['source_name'] ?? null;
-            $validSource      = $accountValidator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
-
-            // do something with result:
-            if (false === $validSource) {
-                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
-                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
-
-                return;
-            }
-            // validate destination account
-            $destinationId    = array_key_exists('destination_id', $transaction) ? (int) $transaction['destination_id'] : null;
-            $destinationName  = $transaction['destination_name'] ?? null;
-            $validDestination = $accountValidator->validateDestination(['id'   => $destinationId, 'name' => $destinationName]);
-            // do something with result:
-            if (false === $validDestination) {
-                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
-                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
-
-                return;
-            }
-        }
-    }
-
-    /**
      * Adds an error to the validator when there are no repetitions in the array of data.
      */
     public function validateOneRepetition(Validator $validator): void
@@ -236,6 +158,84 @@ trait RecurrenceValidation
     }
 
     /**
+     * Validate account information input for recurrences which are being updated.
+     *
+     * TODO Must always trigger when the type of the recurrence changes.
+     */
+    public function valUpdateAccountInfo(Validator $validator): void
+    {
+        $data             = $validator->getData();
+
+        $transactionType  = $data['type'] ?? 'invalid';
+
+        // grab model from parameter and try to set the transaction type from it
+        if ('invalid' === $transactionType) {
+            Log::debug('Type is invalid but we will search for it.');
+
+            /** @var null|Recurrence $recurrence */
+            $recurrence = $this->route()?->parameter('recurrence');
+            if (null !== $recurrence) {
+                Log::debug('There is a recurrence in the route.');
+
+                // ok so we have a recurrence should be able to extract type somehow.
+                /** @var null|RecurrenceTransaction $first */
+                $first = $recurrence->recurrenceTransactions()->first();
+                if (null !== $first) {
+                    $transactionType = null !== $first->transactionType ? $first->transactionType->type : 'withdrawal';
+                    Log::debug(sprintf('Determined type to be %s.', $transactionType));
+                }
+                if (null === $first) {
+                    Log::warning('Just going to assume type is a withdrawal.');
+                    $transactionType = 'withdrawal';
+                }
+            }
+        }
+
+        $transactions     = $data['transactions'] ?? [];
+
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+
+        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
+        foreach ($transactions as $index => $transaction) {
+            $transactionType  = $transaction['type'] ?? $transactionType;
+            $accountValidator->setTransactionType($transactionType);
+
+            if (
+                !array_key_exists('source_id', $transaction)
+                && !array_key_exists('destination_id', $transaction)
+                && !array_key_exists('source_name', $transaction)
+                && !array_key_exists('destination_name', $transaction)
+            ) {
+                continue;
+            }
+            // validate source account.
+            $sourceId         = array_key_exists('source_id', $transaction) ? (int) $transaction['source_id'] : null;
+            $sourceName       = $transaction['source_name'] ?? null;
+            $validSource      = $accountValidator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
+
+            // do something with result:
+            if (false === $validSource) {
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+
+                return;
+            }
+            // validate destination account
+            $destinationId    = array_key_exists('destination_id', $transaction) ? (int) $transaction['destination_id'] : null;
+            $destinationName  = $transaction['destination_name'] ?? null;
+            $validDestination = $accountValidator->validateDestination(['id'   => $destinationId, 'name' => $destinationName]);
+            // do something with result:
+            if (false === $validDestination) {
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+
+                return;
+            }
+        }
+    }
+
+    /**
      * If the repetition type is daily, the moment should be empty.
      */
     protected function validateDaily(Validator $validator, int $index, string $moment): void
@@ -275,29 +275,6 @@ trait RecurrenceValidation
             return;
         }
         if ($dayOfWeek < 1 || $dayOfWeek > 7) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
-        }
-    }
-
-    /**
-     * If the repetition type is weekly, the moment should be a day between 1-7 (inclusive).
-     */
-    protected function validateWeekly(Validator $validator, int $index, int $dayOfWeek): void
-    {
-        if ($dayOfWeek < 1 || $dayOfWeek > 7) {
-            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
-        }
-    }
-
-    /**
-     * If the repetition type is yearly, the moment should be a valid date.
-     */
-    protected function validateYearly(Validator $validator, int $index, string $moment): void
-    {
-        try {
-            Carbon::createFromFormat('Y-m-d', $moment);
-        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
-            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
         }
     }
@@ -399,5 +376,28 @@ trait RecurrenceValidation
             return;
         }
         Log::debug('Done with ID validation.');
+    }
+
+    /**
+     * If the repetition type is weekly, the moment should be a day between 1-7 (inclusive).
+     */
+    protected function validateWeekly(Validator $validator, int $index, int $dayOfWeek): void
+    {
+        if ($dayOfWeek < 1 || $dayOfWeek > 7) {
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
+        }
+    }
+
+    /**
+     * If the repetition type is yearly, the moment should be a valid date.
+     */
+    protected function validateYearly(Validator $validator, int $index, string $moment): void
+    {
+        try {
+            Carbon::createFromFormat('Y-m-d', $moment);
+        } catch (InvalidArgumentException $e) { // @phpstan-ignore-line
+            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
+            $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string) trans('validation.valid_recurrence_rep_moment'));
+        }
     }
 }

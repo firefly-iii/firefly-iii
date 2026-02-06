@@ -34,8 +34,6 @@ use Tests\integration\TestCase;
 
 abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
 {
-    abstract protected function createParser(): QueryParserInterface;
-
     /**
      * @param string $query    The query string to parse
      * @param Node   $expected The expected parse result
@@ -147,4 +145,6 @@ abstract class AbstractQueryParserInterfaceParseQueryTester extends TestCase
             new NodeGroup([new NodeGroup([new FieldNode('amount', '100'), new FieldNode('category', 'food')]), new StringNode('shopping')]),
         ];
     }
+
+    abstract protected function createParser(): QueryParserInterface;
 }

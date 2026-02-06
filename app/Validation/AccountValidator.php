@@ -73,17 +73,6 @@ class AccountValidator
         return $this->source;
     }
 
-    public function setSource(?Account $account): void
-    {
-        if (!$account instanceof Account) {
-            Log::debug('AccountValidator source is set to NULL');
-        }
-        if ($account instanceof Account) {
-            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
-        }
-        $this->source = $account;
-    }
-
     public function setDestination(?Account $account): void
     {
         if (!$account instanceof Account) {
@@ -93,6 +82,17 @@ class AccountValidator
             Log::debug(sprintf('AccountValidator destination is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType->type));
         }
         $this->destination = $account;
+    }
+
+    public function setSource(?Account $account): void
+    {
+        if (!$account instanceof Account) {
+            Log::debug('AccountValidator source is set to NULL');
+        }
+        if ($account instanceof Account) {
+            Log::debug(sprintf('AccountValidator source is set to #%d: "%s" (%s)', $account->id, $account->name, $account->accountType?->type));
+        }
+        $this->source = $account;
     }
 
     public function setTransactionType(string $transactionType): void
@@ -210,6 +210,18 @@ class AccountValidator
         return $result;
     }
 
+    protected function canCreateType(string $accountType): bool
+    {
+        $canCreate = [
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::INITIAL_BALANCE->value,
+            AccountTypeEnum::LIABILITY_CREDIT->value,
+        ];
+
+        return in_array($accountType, $canCreate, true);
+    }
+
     protected function canCreateTypes(array $accountTypes): bool
     {
         Log::debug('Can we create any of these types?', $accountTypes);
@@ -225,18 +237,6 @@ class AccountValidator
         Log::debug('NO, we cant create any of those.');
 
         return false;
-    }
-
-    protected function canCreateType(string $accountType): bool
-    {
-        $canCreate = [
-            AccountTypeEnum::EXPENSE->value,
-            AccountTypeEnum::REVENUE->value,
-            AccountTypeEnum::INITIAL_BALANCE->value,
-            AccountTypeEnum::LIABILITY_CREDIT->value,
-        ];
-
-        return in_array($accountType, $canCreate, true);
     }
 
     /**

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * ProcessesBudgets.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProcessesBudgets implements ShouldQueue
 {
-    public function handle(DestroyingBudget | CreatedBudget | UpdatedBudget $event): void
+    public function handle(CreatedBudget|DestroyingBudget|UpdatedBudget $event): void
     {
         Log::debug(sprintf('Will now handle %s', get_class($event)));
         $trigger = WebhookTrigger::STORE_BUDGET;
@@ -43,13 +46,11 @@ class ProcessesBudgets implements ShouldQueue
             $trigger = WebhookTrigger::UPDATE_BUDGET;
         }
 
-
         /** @var MessageGeneratorInterface $engine */
-        $engine = app(MessageGeneratorInterface::class);
+        $engine  = app(MessageGeneratorInterface::class);
         $engine->setUser($event->budget->user);
         $engine->setObjects(new Collection()->push($event->budget));
         $engine->setTrigger($trigger);
         $engine->generateMessages();
     }
-
 }

@@ -43,7 +43,9 @@ class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
     private array $deliveries        = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $ids               = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $responses         = [];
     private array $triggers          = [];
     private array $webhookDeliveries = [];

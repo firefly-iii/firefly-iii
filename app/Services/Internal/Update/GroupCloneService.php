@@ -119,12 +119,13 @@ class GroupCloneService
         }
     }
 
-    private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
+    private function cloneMeta(TransactionJournalMeta $meta, TransactionJournal $newJournal): void
     {
-        $newTransaction                         = $transaction->replicate();
-        $newTransaction->transaction_journal_id = $newJournal->id;
-        $newTransaction->reconciled             = false;
-        $newTransaction->save();
+        $newMeta                         = $meta->replicate();
+        $newMeta->transaction_journal_id = $newJournal->id;
+        if ('recurrence_id' !== $newMeta->name) {
+            $newMeta->save();
+        }
     }
 
     private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
@@ -138,12 +139,11 @@ class GroupCloneService
         $newNote->save();
     }
 
-    private function cloneMeta(TransactionJournalMeta $meta, TransactionJournal $newJournal): void
+    private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
     {
-        $newMeta                         = $meta->replicate();
-        $newMeta->transaction_journal_id = $newJournal->id;
-        if ('recurrence_id' !== $newMeta->name) {
-            $newMeta->save();
-        }
+        $newTransaction                         = $transaction->replicate();
+        $newTransaction->transaction_journal_id = $newJournal->id;
+        $newTransaction->reconciled             = false;
+        $newTransaction->save();
     }
 }

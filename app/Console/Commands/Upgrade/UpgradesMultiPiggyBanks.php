@@ -70,17 +70,9 @@ class UpgradesMultiPiggyBanks extends Command
         return (bool) $configVar?->data;
     }
 
-    private function upgradePiggyBanks(): void
+    private function markAsExecuted(): void
     {
-        $this->repository        = app(PiggyBankRepositoryInterface::class);
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $set                     = PiggyBank::whereNotNull('account_id')->get();
-        Log::debug(sprintf('Will update %d piggy banks(s).', $set->count()));
-
-        /** @var PiggyBank $piggyBank */
-        foreach ($set as $piggyBank) {
-            $this->upgradePiggyBank($piggyBank);
-        }
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function upgradePiggyBank(PiggyBank $piggyBank): void
@@ -109,8 +101,16 @@ class UpgradesMultiPiggyBanks extends Command
         $piggyBank->piggyBankRepetitions()->delete();
     }
 
-    private function markAsExecuted(): void
+    private function upgradePiggyBanks(): void
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        $this->repository        = app(PiggyBankRepositoryInterface::class);
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $set                     = PiggyBank::whereNotNull('account_id')->get();
+        Log::debug(sprintf('Will update %d piggy banks(s).', $set->count()));
+
+        /** @var PiggyBank $piggyBank */
+        foreach ($set as $piggyBank) {
+            $this->upgradePiggyBank($piggyBank);
+        }
     }
 }
