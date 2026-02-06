@@ -144,7 +144,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface, UserGroupInte
 
     public function getActiveRules(RuleGroup $group): Collection
     {
-        return $group->rules()->where('rules.active', true)->get(['rules.*']);
+        return $group->rules()->where('rules.active', true)->orderBy('rules.order', 'ASC')->get(['rules.*']);
     }
 
     public function getActiveStoreRules(RuleGroup $group): Collection

@@ -825,7 +825,7 @@ return [
     'execute'                                             => 'Execute',
     'apply_rule_group_selection'                          => 'Apply rule group ":title" to a selection of your transactions',
     'apply_rule_group_selection_intro'                    => 'Rule groups like ":title" are normally only applied to new or updated transactions, but you can tell Firefly III to run all the rules in this group on a selection of your existing transactions. This can be useful when you have updated a group of rules and you need the changes to be applied to all of your other transactions.',
-    'applied_rule_group_selection'                        => 'Rule group ":title" has been applied to your selection.',
+    'applied_rule_group_selection'                        => '{0} No transactions in your selection were changed by the rules in rule group ":title".|[1] One transaction in your selection was changed by the rules in rule group ":title".|[2,*] :count transactions in your selection were changed by the rules in rule group ":title".',
     'rule_run_after_creation'                             => 'If you check this box, you get the opportunity to run the rule after it has been created.',
     'rule_run_after_edit'                                 => 'If you check this box, you get the opportunity to run the rule after it has been updated.',
 
