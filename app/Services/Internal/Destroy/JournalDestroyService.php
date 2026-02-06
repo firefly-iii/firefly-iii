@@ -36,7 +36,6 @@ class JournalDestroyService
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        $journal->delete();
 
         // delete group, if group is empty:
         $group = $journal->transactionGroup;
@@ -46,5 +45,8 @@ class JournalDestroyService
                 $group->delete();
             }
         }
+
+        $journal->delete();
+
     }
 }

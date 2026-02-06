@@ -30,10 +30,12 @@ use FireflyIII\Events\Model\PiggyBank\PiggyBankNameIsChanged;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
@@ -149,6 +151,19 @@ trait ModifiesPiggyBanks
     public function destroy(PiggyBank $piggyBank): bool
     {
         $piggyBank->objectGroups()->sync([]);
+
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($piggyBank->accounts()->first()->user);
+
+        /** @var Attachment $attachment */
+        foreach ($piggyBank->attachments()->get() as $attachment) {
+            $repository->destroy($attachment);
+        }
+
+        $piggyBank->piggyBankEvents()->delete();
+        $piggyBank->piggyBankRepetitions()->delete();
+
+        $piggyBank->notes()->delete();
         $piggyBank->delete();
 
         return true;

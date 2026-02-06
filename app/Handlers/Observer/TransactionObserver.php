@@ -41,12 +41,6 @@ class TransactionObserver
         $this->updatePrimaryCurrencyAmount($transaction);
     }
 
-    public function deleting(?Transaction $transaction): void
-    {
-        Log::debug('Observe "deleting" of a transaction.');
-        $transaction?->transactionJournal?->delete();
-    }
-
     public function updated(Transaction $transaction): void
     {
         $this->updatePrimaryCurrencyAmount($transaction);

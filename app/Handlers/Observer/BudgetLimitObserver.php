@@ -27,7 +27,6 @@ namespace FireflyIII\Handlers\Observer;
 use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
 use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Support\Observers\RecalculatesAvailableBudgetsTrait;
 use Illuminate\Support\Facades\Log;
 
 class BudgetLimitObserver
