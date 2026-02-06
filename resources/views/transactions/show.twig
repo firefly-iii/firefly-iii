@@ -315,8 +315,8 @@
                                     </span>
                                     {% endif %}
 
-                                    <!-- do primary currency amount -->
-                                    {% if null != journal.pc_amount and primaryCurrency.id != journal.currency_id %}
+                                    <!-- do primary currency amount, if foreign amount is not the same. -->
+                                    {% if null != journal.pc_amount and primaryCurrency.id != journal.currency_id and primaryCurrency.id != journal.foreign_currency_id %}
                                         {% if first.transaction_type_type == 'Withdrawal' %}
                                             ({{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Deposit' %}
