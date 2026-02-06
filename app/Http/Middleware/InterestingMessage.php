@@ -82,10 +82,31 @@ class InterestingMessage
         return $next($request);
     }
 
-    private function testing(): bool
+    private function accountMessage(Request $request): bool
     {
-        // ignore middleware in test environment.
-        return 'testing' === config('app.env') || !auth()->check();
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        return null !== $accountId && null !== $message;
+    }
+
+    private function billMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $billId  = $request->get('bill_id');
+        $message = $request->get('message');
+
+        return null !== $billId && null !== $message;
+    }
+
+    private function currencyMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $code    = $request->get('code');
+        $message = $request->get('message');
+
+        return null !== $code && null !== $message;
     }
 
     private function groupMessage(Request $request): bool
@@ -95,6 +116,85 @@ class InterestingMessage
         $message            = $request->get('message');
 
         return null !== $transactionGroupId && null !== $message;
+    }
+
+    private function handleAccountMessage(Request $request): void
+    {
+        // get parameters from request.
+        $accountId = $request->get('account_id');
+        $message   = $request->get('message');
+
+        /** @var User $user */
+        $user      = auth()->user();
+
+        /** @var null|Account $account */
+        $account   = $user->accounts()->withTrashed()->find($accountId);
+
+        if (null === $account) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string) trans('firefly.account_deleted', ['name' => $account->name]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
+        }
+        if ('updated' === $message) {
+            session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
+        }
+    }
+
+    private function handleBillMessage(Request $request): void
+    {
+        // get parameters from request.
+        $billId  = $request->get('bill_id');
+        $message = $request->get('message');
+
+        /** @var null|Bill $bill */
+        $bill    = auth()->user()->bills()->withTrashed()->find($billId);
+
+        if (null === $bill) {
+            return;
+        }
+        if ('deleted' === $message) {
+            session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $bill->name]));
+        }
+        if ('created' === $message) {
+            session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
+        }
+    }
+
+    private function handleCurrencyMessage(Request $request): void
+    {
+        // params:
+        // get parameters from request.
+        $code    = (string) $request->get('code');
+        $message = (string) $request->get('message');
+
+        try {
+            $currency = Amount::getTransactionCurrencyByCode($code);
+        } catch (FireflyException) {
+            return;
+        }
+
+        if ('enabled' === $message) {
+            session()->flash('success', (string) trans('firefly.currency_is_now_enabled', ['name' => $currency->name]));
+        }
+        if ('enable_failed' === $message) {
+            session()->flash('error', (string) trans('firefly.could_not_enable_currency', ['name' => $currency->name]));
+        }
+        if ('disabled' === $message) {
+            session()->flash('success', (string) trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
+        }
+        if ('disable_failed' === $message) {
+            session()->flash('error', (string) trans('firefly.could_not_disable_currency', ['name' => $currency->name]));
+        }
+        if ('default' === $message) {
+            session()->flash('success', (string) trans('firefly.new_default_currency', ['name' => $currency->name]));
+        }
+        if ('default_failed' === $message) {
+            session()->flash('error', (string) trans('firefly.default_currency_failed', ['name' => $currency->name]));
+        }
     }
 
     private function handleGroupMessage(Request $request): void
@@ -135,15 +235,6 @@ class InterestingMessage
         }
     }
 
-    private function userGroupMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $transactionGroupId = $request->get('user_group_id');
-        $message            = $request->get('message');
-
-        return null !== $transactionGroupId && null !== $message;
-    }
-
     private function handleUserGroupMessage(Request $request): void
     {
         // get parameters from request.
@@ -181,79 +272,6 @@ class InterestingMessage
         }
     }
 
-    private function accountMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
-
-        return null !== $accountId && null !== $message;
-    }
-
-    private function handleAccountMessage(Request $request): void
-    {
-        // get parameters from request.
-        $accountId = $request->get('account_id');
-        $message   = $request->get('message');
-
-        /** @var User $user */
-        $user      = auth()->user();
-
-        /** @var null|Account $account */
-        $account   = $user->accounts()->withTrashed()->find($accountId);
-
-        if (null === $account) {
-            return;
-        }
-        if ('deleted' === $message) {
-            session()->flash('success', (string) trans('firefly.account_deleted', ['name' => $account->name]));
-        }
-        if ('created' === $message) {
-            session()->flash('success', (string) trans('firefly.stored_new_account', ['name' => $account->name]));
-        }
-        if ('updated' === $message) {
-            session()->flash('success', (string) trans('firefly.updated_account', ['name' => $account->name]));
-        }
-    }
-
-    private function billMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
-
-        return null !== $billId && null !== $message;
-    }
-
-    private function handleBillMessage(Request $request): void
-    {
-        // get parameters from request.
-        $billId  = $request->get('bill_id');
-        $message = $request->get('message');
-
-        /** @var null|Bill $bill */
-        $bill    = auth()->user()->bills()->withTrashed()->find($billId);
-
-        if (null === $bill) {
-            return;
-        }
-        if ('deleted' === $message) {
-            session()->flash('success', (string) trans('firefly.deleted_bill', ['name' => $bill->name]));
-        }
-        if ('created' === $message) {
-            session()->flash('success', (string) trans('firefly.stored_new_bill', ['name' => $bill->name]));
-        }
-    }
-
-    private function webhookMessage(Request $request): bool
-    {
-        // get parameters from request.
-        $webhookId = $request->get('webhook_id');
-        $message   = $request->get('message');
-
-        return null !== $webhookId && null !== $message;
-    }
-
     private function handleWebhookMessage(Request $request): void
     {
         // get parameters from request.
@@ -277,45 +295,27 @@ class InterestingMessage
         }
     }
 
-    private function currencyMessage(Request $request): bool
+    private function testing(): bool
     {
-        // get parameters from request.
-        $code    = $request->get('code');
-        $message = $request->get('message');
-
-        return null !== $code && null !== $message;
+        // ignore middleware in test environment.
+        return 'testing' === config('app.env') || !auth()->check();
     }
 
-    private function handleCurrencyMessage(Request $request): void
+    private function userGroupMessage(Request $request): bool
     {
-        // params:
         // get parameters from request.
-        $code    = (string) $request->get('code');
-        $message = (string) $request->get('message');
+        $transactionGroupId = $request->get('user_group_id');
+        $message            = $request->get('message');
 
-        try {
-            $currency = Amount::getTransactionCurrencyByCode($code);
-        } catch (FireflyException) {
-            return;
-        }
+        return null !== $transactionGroupId && null !== $message;
+    }
 
-        if ('enabled' === $message) {
-            session()->flash('success', (string) trans('firefly.currency_is_now_enabled', ['name' => $currency->name]));
-        }
-        if ('enable_failed' === $message) {
-            session()->flash('error', (string) trans('firefly.could_not_enable_currency', ['name' => $currency->name]));
-        }
-        if ('disabled' === $message) {
-            session()->flash('success', (string) trans('firefly.currency_is_now_disabled', ['name' => $currency->name]));
-        }
-        if ('disable_failed' === $message) {
-            session()->flash('error', (string) trans('firefly.could_not_disable_currency', ['name' => $currency->name]));
-        }
-        if ('default' === $message) {
-            session()->flash('success', (string) trans('firefly.new_default_currency', ['name' => $currency->name]));
-        }
-        if ('default_failed' === $message) {
-            session()->flash('error', (string) trans('firefly.default_currency_failed', ['name' => $currency->name]));
-        }
+    private function webhookMessage(Request $request): bool
+    {
+        // get parameters from request.
+        $webhookId = $request->get('webhook_id');
+        $message   = $request->get('message');
+
+        return null !== $webhookId && null !== $message;
     }
 }

@@ -102,36 +102,22 @@ class IndexController extends Controller
         return view('piggy-banks.index', ['piggyBanks' => $piggyBanks, 'accounts'   => $accounts]);
     }
 
-    private function groupPiggyBanks(Collection $collection): array
+    /**
+     * Set the order of a piggy bank.
+     */
+    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
     {
-        /** @var PiggyBankTransformer $transformer */
-        $transformer = app(PiggyBankTransformer::class);
-        $transformer->setParameters(new ParameterBag());
-        $piggyBanks  = [];
-
-        // enrich
-        /** @var User $admin */
-        $admin       = auth()->user();
-        $enrichment  = new PiggyBankEnrichment();
-        $enrichment->setUser($admin);
-        $collection  = $enrichment->enrich($collection);
-
-        /** @var PiggyBank $piggy */
-        foreach ($collection as $piggy) {
-            $array                                    = $transformer->transform($piggy);
-            $groupOrder                               = (int) $array['object_group_order'];
-            $piggyBanks[$groupOrder] ??= [
-                'object_group_id'    => $array['object_group_id'] ?? 0,
-                'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
-                'piggy_banks'        => [],
-            ];
-            $array['attachments']                     = $this->piggyRepos->getAttachments($piggy);
-
-            // sum the total amount for the index.
-            $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
+        $objectGroupTitle = (string) $request->get('objectGroupTitle');
+        $newOrder         = (int) $request->get('order');
+        $this->piggyRepos->setOrder($piggyBank, $newOrder);
+        if ('' !== $objectGroupTitle) {
+            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
+        }
+        if ('' === $objectGroupTitle) {
+            $this->piggyRepos->removeObjectGroup($piggyBank);
         }
 
-        return $piggyBanks;
+        return response()->json(['data' => 'OK']);
     }
 
     private function collectAccounts(Collection $collection): array
@@ -178,30 +164,36 @@ class IndexController extends Controller
         return $return;
     }
 
-    private function mergeAccountsAndPiggies(array $piggyBanks, array $accounts): array
+    private function groupPiggyBanks(Collection $collection): array
     {
-        /** @var array $group */
-        foreach ($piggyBanks as $group) {
-            /** @var array $piggyBank */
-            foreach ($group['piggy_banks'] as $piggyBank) {
-                // loop all accounts in this piggy bank subtract the current amount from "left to save" in the $accounts array.
-                /** @var array $piggyAccount */
-                foreach ($piggyBank['accounts'] as $piggyAccount) {
-                    $accountId = $piggyAccount['account_id'];
-                    if (array_key_exists($accountId, $accounts)) {
-                        $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
-                        $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
-                        $accounts[$accountId]['target']  = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
-                        $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub(
-                            (string) $piggyBank['target_amount'],
-                            (string) $piggyAccount['current_amount']
-                        ));
-                    }
-                }
-            }
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters(new ParameterBag());
+        $piggyBanks  = [];
+
+        // enrich
+        /** @var User $admin */
+        $admin       = auth()->user();
+        $enrichment  = new PiggyBankEnrichment();
+        $enrichment->setUser($admin);
+        $collection  = $enrichment->enrich($collection);
+
+        /** @var PiggyBank $piggy */
+        foreach ($collection as $piggy) {
+            $array                                    = $transformer->transform($piggy);
+            $groupOrder                               = (int) $array['object_group_order'];
+            $piggyBanks[$groupOrder] ??= [
+                'object_group_id'    => $array['object_group_id'] ?? 0,
+                'object_group_title' => $array['object_group_title'] ?? trans('firefly.default_group_title_name'),
+                'piggy_banks'        => [],
+            ];
+            $array['attachments']                     = $this->piggyRepos->getAttachments($piggy);
+
+            // sum the total amount for the index.
+            $piggyBanks[$groupOrder]['piggy_banks'][] = $array;
         }
 
-        return $accounts;
+        return $piggyBanks;
     }
 
     private function makeSums(array $piggyBanks): array
@@ -239,21 +231,29 @@ class IndexController extends Controller
         return $piggyBanks;
     }
 
-    /**
-     * Set the order of a piggy bank.
-     */
-    public function setOrder(Request $request, PiggyBank $piggyBank): JsonResponse
+    private function mergeAccountsAndPiggies(array $piggyBanks, array $accounts): array
     {
-        $objectGroupTitle = (string) $request->get('objectGroupTitle');
-        $newOrder         = (int) $request->get('order');
-        $this->piggyRepos->setOrder($piggyBank, $newOrder);
-        if ('' !== $objectGroupTitle) {
-            $this->piggyRepos->setObjectGroup($piggyBank, $objectGroupTitle);
-        }
-        if ('' === $objectGroupTitle) {
-            $this->piggyRepos->removeObjectGroup($piggyBank);
+        /** @var array $group */
+        foreach ($piggyBanks as $group) {
+            /** @var array $piggyBank */
+            foreach ($group['piggy_banks'] as $piggyBank) {
+                // loop all accounts in this piggy bank subtract the current amount from "left to save" in the $accounts array.
+                /** @var array $piggyAccount */
+                foreach ($piggyBank['accounts'] as $piggyAccount) {
+                    $accountId = $piggyAccount['account_id'];
+                    if (array_key_exists($accountId, $accounts)) {
+                        $accounts[$accountId]['left']    = bcsub((string) $accounts[$accountId]['left'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['saved']   = bcadd((string) $accounts[$accountId]['saved'], (string) $piggyAccount['current_amount']);
+                        $accounts[$accountId]['target']  = bcadd((string) $accounts[$accountId]['target'], (string) $piggyBank['target_amount']);
+                        $accounts[$accountId]['to_save'] = bcadd((string) $accounts[$accountId]['to_save'], bcsub(
+                            (string) $piggyBank['target_amount'],
+                            (string) $piggyAccount['current_amount']
+                        ));
+                    }
+                }
+            }
         }
 
-        return response()->json(['data' => 'OK']);
+        return $accounts;
     }
 }

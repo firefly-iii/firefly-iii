@@ -62,6 +62,15 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         $service->destroy($journal);
     }
 
+    /**
+     * Find a specific journal.
+     */
+    public function find(int $journalId): ?TransactionJournal
+    {
+        /** @var null|TransactionJournal */
+        return $this->user->transactionJournals()->find($journalId);
+    }
+
     public function findByType(array $types): Collection
     {
         return $this->user
@@ -82,6 +91,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
             ->orderBy('date', 'ASC')
             ->first(['transaction_journals.*'])
         ;
+    }
+
+    #[Override]
+    public function getAllUncompletedJournals(): Collection
+    {
+        return TransactionJournal::where('completed', false)->get(['transaction_journals.*']);
     }
 
     public function getDestinationAccount(TransactionJournal $journal): Account
@@ -166,20 +181,27 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         return $transaction->account;
     }
 
+    #[Override]
+    public function getUncompletedJournals(): Collection
+    {
+        return $this->userGroup
+            ->transactionJournals()
+            ->where('completed', false)
+            ->get(['transaction_journals.*'])
+        ;
+    }
+
+    #[Override]
+    public function markAsCompleted(Collection $set): void
+    {
+        TransactionJournal::whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);
+    }
+
     public function reconcileById(int $journalId): void
     {
         /** @var null|TransactionJournal $journal */
         $journal = $this->user->transactionJournals()->find($journalId);
         $journal?->transactions()->update(['reconciled' => true]);
-    }
-
-    /**
-     * Find a specific journal.
-     */
-    public function find(int $journalId): ?TransactionJournal
-    {
-        /** @var null|TransactionJournal */
-        return $this->user->transactionJournals()->find($journalId);
     }
 
     /**
@@ -250,27 +272,5 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         $journal->refresh();
 
         return $journal;
-    }
-
-    #[Override]
-    public function getUncompletedJournals(): Collection
-    {
-        return $this->userGroup
-            ->transactionJournals()
-            ->where('completed', false)
-            ->get(['transaction_journals.*'])
-        ;
-    }
-
-    #[Override]
-    public function getAllUncompletedJournals(): Collection
-    {
-        return TransactionJournal::where('completed', false)->get(['transaction_journals.*']);
-    }
-
-    #[Override]
-    public function markAsCompleted(Collection $set): void
-    {
-        TransactionJournal::whereIn('id', $set->pluck('id')->toArray())->update(['completed' => true]);
     }
 }

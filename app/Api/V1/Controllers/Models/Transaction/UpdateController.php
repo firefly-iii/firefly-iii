@@ -93,7 +93,7 @@ class UpdateController extends Controller
         $flags->fireWebhooks      = $fireWebhooks;
         $flags->recalculateCredit = $runRecalculations;
         event(new UpdatedSingleTransactionGroup($flags, $objects));
-            event(new WebhookMessagesRequestSending());
+        event(new WebhookMessagesRequestSending());
 
         /** @var User $admin */
         $admin                    = auth()->user();

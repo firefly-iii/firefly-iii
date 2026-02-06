@@ -105,29 +105,6 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * @throws FireflyException
-     */
-    private function validateHost(): void
-    {
-        try {
-            $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
-        } catch (UrlException $e) {
-            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.', 0, $e);
-        }
-        if (!is_string($configuredHost)) {
-            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
-        }
-        $host = request()->host();
-        if ($configuredHost !== $host) {
-            Log::error(sprintf('Host header is "%s", APP_URL is "%s".', $host, $configuredHost));
-
-            throw new FireflyException(
-                'The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header'
-            );
-        }
-    }
-
-    /**
      * Show form for email recovery.
      *
      * @return Factory|View
@@ -154,5 +131,28 @@ class ForgotPasswordController extends Controller
         }
 
         return view('auth.passwords.email')->with(['allowRegistration' => $allowRegistration, 'pageTitle'         => $pageTitle]);
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function validateHost(): void
+    {
+        try {
+            $configuredHost = parse_url((string) config('app.url'), PHP_URL_HOST);
+        } catch (UrlException $e) {
+            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.', 0, $e);
+        }
+        if (!is_string($configuredHost)) {
+            throw new FireflyException('Please set a valid and correct Firefly III URL in the APP_URL environment variable.');
+        }
+        $host = request()->host();
+        if ($configuredHost !== $host) {
+            Log::error(sprintf('Host header is "%s", APP_URL is "%s".', $host, $configuredHost));
+
+            throw new FireflyException(
+                'The Host-header does not match the host in the APP_URL environment variable. Please make sure these match. See also: https://bit.ly/FF3-host-header'
+            );
+        }
     }
 }

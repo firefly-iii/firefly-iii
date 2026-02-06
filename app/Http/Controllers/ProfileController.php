@@ -86,6 +86,45 @@ class ProfileController extends Controller
     }
 
     /**
+     * Change your email address.
+     */
+    public function changeEmail(Request $request): Factory|RedirectResponse|View
+    {
+        if (!$this->internalAuth) {
+            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $email        = auth()->user()->email;
+        $subTitle     = (string) trans('firefly.change_your_email');
+        $subTitleIcon = 'fa-envelope';
+
+        return view('profile.change-email', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email'        => $email]);
+    }
+
+    /**
+     * Change your password.
+     *
+     * @return Factory|Redirector|RedirectResponse|View
+     */
+    public function changePassword(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
+    {
+        if (!$this->internalAuth) {
+            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
+
+            return redirect(route('profile.index'));
+        }
+
+        $title        = auth()->user()->email;
+        $subTitle     = (string) trans('firefly.change_your_password');
+        $subTitleIcon = 'fa-key';
+
+        return view('profile.change-password', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+    }
+
+    /**
      * Screen to confirm email change.
      *
      * @throws FireflyException
@@ -243,25 +282,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Change your email address.
-     */
-    public function changeEmail(Request $request): Factory|RedirectResponse|View
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        $title        = auth()->user()->email;
-        $email        = auth()->user()->email;
-        $subTitle     = (string) trans('firefly.change_your_email');
-        $subTitleIcon = 'fa-envelope';
-
-        return view('profile.change-email', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email'        => $email]);
-    }
-
-    /**
      * Submit change password form.
      */
     public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository): Redirector|RedirectResponse
@@ -291,26 +311,6 @@ class ProfileController extends Controller
         session()->flash('success', (string) trans('firefly.password_changed'));
 
         return redirect(route('profile.index'));
-    }
-
-    /**
-     * Change your password.
-     *
-     * @return Factory|Redirector|RedirectResponse|View
-     */
-    public function changePassword(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
-    {
-        if (!$this->internalAuth) {
-            $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
-
-            return redirect(route('profile.index'));
-        }
-
-        $title        = auth()->user()->email;
-        $subTitle     = (string) trans('firefly.change_your_password');
-        $subTitleIcon = 'fa-key';
-
-        return view('profile.change-password', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**

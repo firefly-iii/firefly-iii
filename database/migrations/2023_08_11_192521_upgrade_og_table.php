@@ -29,6 +29,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        try {
+            Schema::table('object_groups', static function (Blueprint $table): void {
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign(sprintf('%s_to_ugi', 'object_groups'));
+                }
+                if (Schema::hasColumn('object_groups', 'user_group_id')) {
+                    $table->dropColumn('user_group_id');
+                }
+            });
+        } catch (QueryException $e) {
+            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
+    }
+
+    /**
      * Run the migrations.
      *
      * @SuppressWarnings("PHPMD.ShortMethodName")
@@ -45,26 +65,6 @@ return new class() extends Migration {
                         ->on('user_groups')
                         ->onDelete('set null')
                         ->onUpdate('cascade');
-                }
-            });
-        } catch (QueryException $e) {
-            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
-            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
-        }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        try {
-            Schema::table('object_groups', static function (Blueprint $table): void {
-                if ('sqlite' !== config('database.default')) {
-                    $table->dropForeign(sprintf('%s_to_ugi', 'object_groups'));
-                }
-                if (Schema::hasColumn('object_groups', 'user_group_id')) {
-                    $table->dropColumn('user_group_id');
                 }
             });
         } catch (QueryException $e) {

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * DestroyingBudget.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,10 +31,11 @@ use Illuminate\Support\Facades\Log;
 
 class DestroyingBudget extends Event
 {
-    public function __construct(public Budget $budget)
-    {
+    use SerializesModels;
+
+    public function __construct(
+        public Budget $budget
+    ) {
         Log::debug(sprintf('Created event DestroyingBudget(#%d)', $budget->id));
     }
-
-    use SerializesModels;
 }

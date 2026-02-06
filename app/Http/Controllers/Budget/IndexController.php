@@ -158,6 +158,24 @@ final class IndexController extends Controller
         ]);
     }
 
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $this->abRepository->cleanup();
+        $budgetIds = $request->get('budgetIds');
+
+        foreach ($budgetIds as $index => $budgetId) {
+            $budgetId = (int) $budgetId;
+            $budget   = $repository->find($budgetId);
+            if ($budget instanceof Budget) {
+                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
+                $repository->setBudgetOrder($budget, $index + 1);
+            }
+        }
+        Preferences::mark();
+
+        return response()->json(['OK']);
+    }
+
     private function getAllAvailableBudgets(Carbon $start, Carbon $end): array
     {
         Log::debug(sprintf('Start of getAllAvailableBudgets("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
@@ -304,23 +322,5 @@ final class IndexController extends Controller
         }
 
         return $sums;
-    }
-
-    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
-    {
-        $this->abRepository->cleanup();
-        $budgetIds = $request->get('budgetIds');
-
-        foreach ($budgetIds as $index => $budgetId) {
-            $budgetId = (int) $budgetId;
-            $budget   = $repository->find($budgetId);
-            if ($budget instanceof Budget) {
-                Log::debug(sprintf('Set budget #%d ("%s") to position %d', $budget->id, $budget->name, $index + 1));
-                $repository->setBudgetOrder($budget, $index + 1);
-            }
-        }
-        Preferences::mark();
-
-        return response()->json(['OK']);
     }
 }

@@ -65,37 +65,17 @@ class Range
     }
 
     /**
-     * Set the range for the current view.
+     * Configure the list length.
      */
-    private function setRange(): void
+    private function configureList(): void
     {
-        // ignore preference. set the range to be the current month:
-        if (!app('session')->has('start') && !app('session')->has('end')) {
-            Log::debug('setRange: Session has no start or end.');
-            $viewRange = Preferences::get('viewRange', '1M')->data;
-            if (is_array($viewRange)) {
-                $viewRange = '1M';
-            }
+        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
+        app('view')->share('listLength', $pref);
 
-            $today     = today(config('app.timezone'));
-            $start     = Navigation::updateStartDate((string) $viewRange, $today);
-            $end       = Navigation::updateEndDate((string) $viewRange, $start);
-
-            app('session')->put('start', $start);
-            app('session')->put('end', $end);
-        }
-        if (!app('session')->has('first')) {
-            Log::debug('setRange: Session has no "first".');
-
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
-            $journal    = $repository->firstNull();
-            $first      = today(config('app.timezone'))->startOfYear();
-
-            if (null !== $journal) {
-                $first = $journal->date ?? $first;
-            }
-            app('session')->put('first', $first);
+        // share security message:
+        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
+            app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
+            app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
         }
     }
 
@@ -136,17 +116,37 @@ class Range
     }
 
     /**
-     * Configure the list length.
+     * Set the range for the current view.
      */
-    private function configureList(): void
+    private function setRange(): void
     {
-        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
-        app('view')->share('listLength', $pref);
+        // ignore preference. set the range to be the current month:
+        if (!app('session')->has('start') && !app('session')->has('end')) {
+            Log::debug('setRange: Session has no start or end.');
+            $viewRange = Preferences::get('viewRange', '1M')->data;
+            if (is_array($viewRange)) {
+                $viewRange = '1M';
+            }
 
-        // share security message:
-        if (FireflyConfig::has('upgrade_security_message') && FireflyConfig::has('upgrade_security_level')) {
-            app('view')->share('upgrade_security_message', FireflyConfig::get('upgrade_security_message')->data);
-            app('view')->share('upgrade_security_level', FireflyConfig::get('upgrade_security_level')->data);
+            $today     = today(config('app.timezone'));
+            $start     = Navigation::updateStartDate((string) $viewRange, $today);
+            $end       = Navigation::updateEndDate((string) $viewRange, $start);
+
+            app('session')->put('start', $start);
+            app('session')->put('end', $end);
+        }
+        if (!app('session')->has('first')) {
+            Log::debug('setRange: Session has no "first".');
+
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $journal    = $repository->firstNull();
+            $first      = today(config('app.timezone'))->startOfYear();
+
+            if (null !== $journal) {
+                $first = $journal->date ?? $first;
+            }
+            app('session')->put('first', $first);
         }
     }
 }

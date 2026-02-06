@@ -70,6 +70,43 @@ class AccountFactory
     /**
      * @throws FireflyException
      */
+    public function create(array $data): Account
+    {
+        Log::debug('Now in AccountFactory::create()');
+        $type         = $this->getAccountType($data);
+        $data['iban'] = $this->filterIban($data['iban'] ?? null);
+
+        // account may exist already:
+        $return       = $this->find($data['name'], $type->type);
+
+        if ($return instanceof Account) {
+            return $return;
+        }
+
+        $return       = $this->createAccount($type, $data);
+
+        event(new CreatedNewAccount($return));
+
+        return $return;
+    }
+
+    public function find(string $accountName, string $accountType): ?Account
+    {
+        Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
+        $type = AccountType::whereType($accountType)->first();
+
+        /** @var null|Account */
+        return $this->user
+            ->accounts()
+            ->where('account_type_id', $type->id)
+            ->where('name', $accountName)
+            ->first()
+        ;
+    }
+
+    /**
+     * @throws FireflyException
+     */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
         Log::debug(sprintf('findOrCreate("%s", "%s")', $accountName, $accountType));
@@ -104,27 +141,10 @@ class AccountFactory
         return $return;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    public function create(array $data): Account
+    public function setUser(User $user): void
     {
-        Log::debug('Now in AccountFactory::create()');
-        $type         = $this->getAccountType($data);
-        $data['iban'] = $this->filterIban($data['iban'] ?? null);
-
-        // account may exist already:
-        $return       = $this->find($data['name'], $type->type);
-
-        if ($return instanceof Account) {
-            return $return;
-        }
-
-        $return       = $this->createAccount($type, $data);
-
-        event(new CreatedNewAccount($return));
-
-        return $return;
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
     }
 
     /**
@@ -160,18 +180,28 @@ class AccountFactory
         return $result;
     }
 
-    public function find(string $accountName, string $accountType): ?Account
+    /**
+     * @throws FireflyException
+     */
+    private function cleanMetaDataArray(Account $account, array $data): array
     {
-        Log::debug(sprintf('Now in AccountFactory::find("%s", "%s")', $accountName, $accountType));
-        $type = AccountType::whereType($accountType)->first();
+        $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
+        $currencyCode         = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
+        $accountRole          = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
+        $currency             = $this->getCurrency($currencyId, $currencyCode);
 
-        /** @var null|Account */
-        return $this->user
-            ->accounts()
-            ->where('account_type_id', $type->id)
-            ->where('name', $accountName)
-            ->first()
-        ;
+        // only asset account may have a role:
+        if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
+            $accountRole = '';
+        }
+        // only liability may have direction:
+        if (array_key_exists('liability_direction', $data) && !in_array($account->accountType->type, config('firefly.valid_liabilities'), true)) {
+            $data['liability_direction'] = null;
+        }
+        $data['account_role'] = $accountRole;
+        $data['currency_id']  = $currency->id;
+
+        return $data;
     }
 
     /**
@@ -245,25 +275,27 @@ class AccountFactory
     /**
      * @throws FireflyException
      */
-    private function cleanMetaDataArray(Account $account, array $data): array
+    private function storeCreditLiability(Account $account, array $data): void
     {
-        $currencyId           = array_key_exists('currency_id', $data) ? (int) $data['currency_id'] : 0;
-        $currencyCode         = array_key_exists('currency_code', $data) ? (string) $data['currency_code'] : '';
-        $accountRole          = array_key_exists('account_role', $data) ? (string) $data['account_role'] : null;
-        $currency             = $this->getCurrency($currencyId, $currencyCode);
-
-        // only asset account may have a role:
-        if (AccountTypeEnum::ASSET->value !== $account->accountType->type) {
-            $accountRole = '';
+        Log::debug('storeCreditLiability');
+        $account->refresh();
+        $accountType = $account->accountType->type;
+        $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
+        $valid       = config('firefly.valid_liabilities');
+        if (in_array($accountType, $valid, true)) {
+            Log::debug('Is a liability with credit ("i am owed") direction.');
+            if ($this->validOBData($data)) {
+                Log::debug('Has valid CL data.');
+                $openingBalance     = $data['opening_balance'];
+                $openingBalanceDate = $data['opening_balance_date'];
+                // store credit transaction.
+                $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
+            }
+            if (!$this->validOBData($data)) {
+                Log::debug('Does NOT have valid CL data, deletr any CL transaction.');
+                $this->deleteCreditTransaction($account);
+            }
         }
-        // only liability may have direction:
-        if (array_key_exists('liability_direction', $data) && !in_array($account->accountType->type, config('firefly.valid_liabilities'), true)) {
-            $data['liability_direction'] = null;
-        }
-        $data['account_role'] = $accountRole;
-        $data['currency_id']  = $currency->id;
-
-        return $data;
     }
 
     private function storeMetaData(Account $account, array $data): void
@@ -327,32 +359,6 @@ class AccountFactory
     /**
      * @throws FireflyException
      */
-    private function storeCreditLiability(Account $account, array $data): void
-    {
-        Log::debug('storeCreditLiability');
-        $account->refresh();
-        $accountType = $account->accountType->type;
-        $direction   = $this->accountRepository->getMetaValue($account, 'liability_direction');
-        $valid       = config('firefly.valid_liabilities');
-        if (in_array($accountType, $valid, true)) {
-            Log::debug('Is a liability with credit ("i am owed") direction.');
-            if ($this->validOBData($data)) {
-                Log::debug('Has valid CL data.');
-                $openingBalance     = $data['opening_balance'];
-                $openingBalanceDate = $data['opening_balance_date'];
-                // store credit transaction.
-                $this->updateCreditTransaction($account, $direction, $openingBalance, $openingBalanceDate);
-            }
-            if (!$this->validOBData($data)) {
-                Log::debug('Does NOT have valid CL data, deletr any CL transaction.');
-                $this->deleteCreditTransaction($account);
-            }
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
     private function storeOrder(Account $account, array $data): void
     {
         $accountType   = $account->accountType->type;
@@ -369,11 +375,5 @@ class AccountFactory
         $updateService = app(AccountUpdateService::class);
         $updateService->setUser($account->user);
         $updateService->update($account, ['order' => $order]);
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
     }
 }

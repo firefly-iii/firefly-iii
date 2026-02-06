@@ -81,14 +81,14 @@ class Account extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function accountBalances(): HasMany
     {
         return $this->hasMany(AccountBalance::class);
+    }
+
+    public function accountMeta(): HasMany
+    {
+        return $this->hasMany(AccountMeta::class);
     }
 
     public function accountType(): BelongsTo
@@ -127,6 +127,11 @@ class Account extends Model
         return $this->belongsToMany(PiggyBank::class);
     }
 
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
+
     public function setVirtualBalanceAttribute(mixed $value): void
     {
         $value                               = (string) $value;
@@ -139,6 +144,11 @@ class Account extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function userGroup(): BelongsTo
@@ -162,11 +172,6 @@ class Account extends Model
 
             return null !== $metaValue ? $metaValue->data : '';
         });
-    }
-
-    public function accountMeta(): HasMany
-    {
-        return $this->hasMany(AccountMeta::class);
     }
 
     /**
@@ -230,10 +235,5 @@ class Account extends Model
     protected function virtualBalance(): Attribute
     {
         return Attribute::make(get: static fn ($value): string => (string) $value);
-    }
-
-    public function primaryPeriodStatistics(): MorphMany
-    {
-        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
     }
 }

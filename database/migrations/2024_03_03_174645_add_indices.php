@@ -32,6 +32,13 @@ return new class() extends Migration {
     private const string EXPL        = 'If the index already exists (see error), or if MySQL can\'t do it, this is not an problem. Otherwise, please open a GitHub discussion.';
 
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -69,12 +76,5 @@ return new class() extends Migration {
                 }
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
     }
 };

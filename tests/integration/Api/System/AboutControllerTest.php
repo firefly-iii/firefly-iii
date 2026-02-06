@@ -43,17 +43,6 @@ final class AboutControllerTest extends TestCase
 
     private ?User $user = null;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        if (!$this->user instanceof User) {
-            $this->user = $this->createAuthenticatedUser();
-        }
-        $this->actingAs($this->user);
-    }
-
     public function testGivenAuthenticatedRequestReturnsSystemInformation(): void
     {
         $response = $this->getJson(route('api.v1.about.index'));
@@ -71,5 +60,16 @@ final class AboutControllerTest extends TestCase
             'data.attributes.role',
             $this->user->role
         ));
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        if (!$this->user instanceof User) {
+            $this->user = $this->createAuthenticatedUser();
+        }
+        $this->actingAs($this->user);
     }
 }

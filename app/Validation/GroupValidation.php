@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait GroupValidation
 {
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
     /**
      * A catch when users submit splits with no source or destination info at all.
      *
@@ -80,8 +82,6 @@ trait GroupValidation
 
         // only an issue if there is no transaction_journal_id
     }
-
-    abstract protected function getTransactionsArray(Validator $validator): array;
 
     protected function preventUpdateReconciled(Validator $validator, TransactionGroup $transactionGroup): void
     {

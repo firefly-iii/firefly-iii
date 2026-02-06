@@ -129,7 +129,6 @@ class BulkController extends Controller
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
 
-
         Preferences::mark();
         $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
 
@@ -148,6 +147,17 @@ class BulkController extends Controller
         return true;
     }
 
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if ($ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
+
+        return true;
+    }
+
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
@@ -159,17 +169,6 @@ class BulkController extends Controller
             $new      = array_unique(array_merge($tags, $existing));
             $this->repository->updateTags($journal, $new);
         }
-
-        return true;
-    }
-
-    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
-    {
-        if ($ignoreUpdate) {
-            return false;
-        }
-        Log::debug(sprintf('Set budget to %s', $category));
-        $this->repository->updateCategory($journal, $category);
 
         return true;
     }

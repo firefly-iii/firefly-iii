@@ -71,18 +71,9 @@ class UpgradesRecurrenceMetaData extends Command
         return (bool) $configVar?->data;
     }
 
-    private function migrateMetaData(): int
+    private function markAsExecuted(): void
     {
-        $count      = 0;
-        // get all recurrence meta data:
-        $collection = RecurrenceMeta::with('recurrence')->get();
-
-        /** @var RecurrenceMeta $meta */
-        foreach ($collection as $meta) {
-            $count += $this->migrateEntry($meta);
-        }
-
-        return $count;
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function migrateEntry(RecurrenceMeta $meta): int
@@ -109,8 +100,17 @@ class UpgradesRecurrenceMetaData extends Command
         return 1;
     }
 
-    private function markAsExecuted(): void
+    private function migrateMetaData(): int
     {
-        FireflyConfig::set(self::CONFIG_NAME, true);
+        $count      = 0;
+        // get all recurrence meta data:
+        $collection = RecurrenceMeta::with('recurrence')->get();
+
+        /** @var RecurrenceMeta $meta */
+        foreach ($collection as $meta) {
+            $count += $this->migrateEntry($meta);
+        }
+
+        return $count;
     }
 }

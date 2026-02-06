@@ -72,13 +72,6 @@ class UniqueIban implements ValidationRule
         return (string) trans('validation.unique_iban_for_user');
     }
 
-    public function validate(string $attribute, mixed $value, Closure $fail): void
-    {
-        if (!$this->passes($attribute, $value)) {
-            $fail((string) trans('validation.unique_iban_for_user'));
-        }
-    }
-
     /**
      * Determine if the validation rule passes.
      *
@@ -123,27 +116,11 @@ class UniqueIban implements ValidationRule
         return true;
     }
 
-    private function getMaxOccurrences(): array
+    public function validate(string $attribute, mixed $value, Closure $fail): void
     {
-        $maxCounts = [
-            AccountTypeEnum::ASSET->value   => 0,
-            AccountTypeEnum::EXPENSE->value => 0,
-            AccountTypeEnum::REVENUE->value => 0,
-            'liabilities'                   => 0,
-        ];
-
-        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {
-            // IBAN should be unique amongst expense and asset accounts.
-            // may appear once in revenue accounts
-            $maxCounts[AccountTypeEnum::REVENUE->value] = 1;
+        if (!$this->passes($attribute, $value)) {
+            $fail((string) trans('validation.unique_iban_for_user'));
         }
-        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountTypeEnum::REVENUE->value, $this->expectedTypes, true)) {
-            // IBAN should be unique amongst revenue and asset accounts.
-            // may appear once in expense accounts
-            $maxCounts[AccountTypeEnum::EXPENSE->value] = 1;
-        }
-
-        return $maxCounts;
     }
 
     private function countHits(string $type, string $iban): int
@@ -165,5 +142,28 @@ class UniqueIban implements ValidationRule
         }
 
         return $query->count();
+    }
+
+    private function getMaxOccurrences(): array
+    {
+        $maxCounts = [
+            AccountTypeEnum::ASSET->value   => 0,
+            AccountTypeEnum::EXPENSE->value => 0,
+            AccountTypeEnum::REVENUE->value => 0,
+            'liabilities'                   => 0,
+        ];
+
+        if (in_array('expense', $this->expectedTypes, true) || in_array(AccountTypeEnum::EXPENSE->value, $this->expectedTypes, true)) {
+            // IBAN should be unique amongst expense and asset accounts.
+            // may appear once in revenue accounts
+            $maxCounts[AccountTypeEnum::REVENUE->value] = 1;
+        }
+        if (in_array('revenue', $this->expectedTypes, true) || in_array(AccountTypeEnum::REVENUE->value, $this->expectedTypes, true)) {
+            // IBAN should be unique amongst revenue and asset accounts.
+            // may appear once in expense accounts
+            $maxCounts[AccountTypeEnum::EXPENSE->value] = 1;
+        }
+
+        return $maxCounts;
     }
 }

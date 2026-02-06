@@ -41,13 +41,6 @@ final class BillDateCalculatorTest extends TestCase
 {
     private BillDateCalculator $calculator;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->calculator = new BillDateCalculator();
-    }
-
     /**
      * Stupid long method names I'm not going to do that.
      */
@@ -125,5 +118,12 @@ final class BillDateCalculatorTest extends TestCase
             Carbon::parse('2023-05-02'),
             ['2024-05-01'],
         ];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->calculator = new BillDateCalculator();
     }
 }

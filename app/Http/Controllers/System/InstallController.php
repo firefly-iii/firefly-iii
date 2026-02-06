@@ -89,6 +89,23 @@ class InstallController extends Controller
         return view('install.index');
     }
 
+    /**
+     * Create specific RSA keys.
+     */
+    public function keys(): void
+    {
+        $key                      = RSA::createKey(4096);
+
+        [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
+
+        if (file_exists($publicKey) || file_exists($privateKey)) {
+            return;
+        }
+
+        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($privateKey, $key->toString('PKCS1'));
+    }
+
     public function runCommand(Request $request): JsonResponse
     {
         $requestIndex = (int) $request->get('index');
@@ -148,22 +165,5 @@ class InstallController extends Controller
         Preferences::mark();
 
         return true;
-    }
-
-    /**
-     * Create specific RSA keys.
-     */
-    public function keys(): void
-    {
-        $key                      = RSA::createKey(4096);
-
-        [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
-
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
-        }
-
-        file_put_contents($publicKey, (string) $key->getPublicKey());
-        file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 }

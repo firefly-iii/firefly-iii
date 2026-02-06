@@ -90,6 +90,8 @@ class ExportDataGenerator
     private User $user;
     private UserGroup $userGroup; // @phpstan-ignore-line
 
+    // @phpstan-ignore-line
+
     public function __construct()
     {
         $this->accounts = new Collection();

@@ -96,15 +96,24 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
     }
 
     /**
-     * Returns a list of all the categories belonging to a user.
+     * Find a category or return NULL
      */
-    public function getCategories(): Collection
+    public function find(int $categoryId): ?Category
     {
+        /** @var null|Category */
+        return $this->user->categories()->find($categoryId);
+    }
+
+    /**
+     * Find a category.
+     */
+    public function findByName(string $name): ?Category
+    {
+        /** @var null|Category */
         return $this->user
             ->categories()
-            ->with(['attachments'])
-            ->orderBy('name', 'ASC')
-            ->get()
+            ->where('name', $name)
+            ->first(['categories.*'])
         ;
     }
 
@@ -132,69 +141,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $result;
     }
 
-    /**
-     * Find a category or return NULL
-     */
-    public function find(int $categoryId): ?Category
-    {
-        /** @var null|Category */
-        return $this->user->categories()->find($categoryId);
-    }
-
-    /**
-     * Find a category.
-     */
-    public function findByName(string $name): ?Category
-    {
-        /** @var null|Category */
-        return $this->user
-            ->categories()
-            ->where('name', $name)
-            ->first(['categories.*'])
-        ;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function store(array $data): Category
-    {
-        /** @var CategoryFactory $factory */
-        $factory  = app(CategoryFactory::class);
-        $factory->setUser($this->user);
-
-        $category = $factory->findOrCreate(null, $data['name']);
-
-        if (null === $category) {
-            throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));
-        }
-
-        if (array_key_exists('notes', $data) && '' === $data['notes']) {
-            $this->removeNotes($category);
-        }
-        if (array_key_exists('notes', $data) && '' !== $data['notes']) {
-            $this->updateNotes($category, $data['notes']);
-        }
-
-        return $category;
-    }
-
-    public function removeNotes(Category $category): void
-    {
-        $category->notes()->delete();
-    }
-
-    public function updateNotes(Category $category, string $notes): void
-    {
-        $dbNote       = $category->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note();
-            $dbNote->noteable()->associate($category);
-        }
-        $dbNote->text = trim($notes);
-        $dbNote->save();
-    }
-
     public function firstUseDate(Category $category): ?Carbon
     {
         $firstJournalDate     = $this->getFirstJournalDate($category);
@@ -215,31 +161,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         }
 
         return $firstJournalDate;
-    }
-
-    private function getFirstJournalDate(Category $category): ?Carbon
-    {
-        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
-        $result = $query->first(['transaction_journals.*']);
-
-        return $result?->date;
-    }
-
-    private function getFirstTransactionDate(Category $category): ?Carbon
-    {
-        // check transactions:
-        $query           = $category
-            ->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'ASC')
-        ;
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
     }
 
     public function getAttachments(Category $category): Collection
@@ -265,6 +186,19 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         return $this->user
             ->categories()
             ->whereIn('id', $categoryIds)
+            ->get()
+        ;
+    }
+
+    /**
+     * Returns a list of all the categories belonging to a user.
+     */
+    public function getCategories(): Collection
+    {
+        return $this->user
+            ->categories()
+            ->with(['attachments'])
+            ->orderBy('name', 'ASC')
             ->get()
         ;
     }
@@ -299,66 +233,6 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
         }
 
         return $lastJournalDate;
-    }
-
-    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
-    {
-        $query  = $category->transactionJournals()->orderBy('date', 'DESC');
-
-        if ($accounts->count() > 0) {
-            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $result = $query->first(['transaction_journals.*']);
-
-        return $result?->date;
-    }
-
-    /**
-     * @throws Exception
-     */
-    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
-    {
-        // check transactions:
-        $query           = $category
-            ->transactions()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->orderBy('transaction_journals.date', 'DESC')
-        ;
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
-    }
-
-    public function searchCategory(string $query, int $limit): Collection
-    {
-        $search = $this->user->categories()->orderBy('name', 'ASC');
-        if ('' !== $query) {
-            $search->whereLike('name', sprintf('%%%s%%', $query));
-        }
-
-        return $search->take($limit)->get();
-    }
-
-    /**
-     * @throws Exception
-     */
-    public function update(Category $category, array $data): Category
-    {
-        /** @var CategoryUpdateService $service */
-        $service = app(CategoryUpdateService::class);
-        $service->setUser($this->user);
-
-        return $service->update($category, $data);
     }
 
     public function periodCollection(Category $category, Carbon $start, Carbon $end): array
@@ -397,6 +271,133 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
                 'transactions.native_amount as pc_amount',
                 'transactions.foreign_amount',
             ])
-            ->toArray();
+            ->toArray()
+        ;
+    }
+
+    public function removeNotes(Category $category): void
+    {
+        $category->notes()->delete();
+    }
+
+    public function searchCategory(string $query, int $limit): Collection
+    {
+        $search = $this->user->categories()->orderBy('name', 'ASC');
+        if ('' !== $query) {
+            $search->whereLike('name', sprintf('%%%s%%', $query));
+        }
+
+        return $search->take($limit)->get();
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function store(array $data): Category
+    {
+        /** @var CategoryFactory $factory */
+        $factory  = app(CategoryFactory::class);
+        $factory->setUser($this->user);
+
+        $category = $factory->findOrCreate(null, $data['name']);
+
+        if (null === $category) {
+            throw new FireflyException(sprintf('400003: Could not store new category with name "%s"', $data['name']));
+        }
+
+        if (array_key_exists('notes', $data) && '' === $data['notes']) {
+            $this->removeNotes($category);
+        }
+        if (array_key_exists('notes', $data) && '' !== $data['notes']) {
+            $this->updateNotes($category, $data['notes']);
+        }
+
+        return $category;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function update(Category $category, array $data): Category
+    {
+        /** @var CategoryUpdateService $service */
+        $service = app(CategoryUpdateService::class);
+        $service->setUser($this->user);
+
+        return $service->update($category, $data);
+    }
+
+    public function updateNotes(Category $category, string $notes): void
+    {
+        $dbNote       = $category->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note();
+            $dbNote->noteable()->associate($category);
+        }
+        $dbNote->text = trim($notes);
+        $dbNote->save();
+    }
+
+    private function getFirstJournalDate(Category $category): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
+        $result = $query->first(['transaction_journals.*']);
+
+        return $result?->date;
+    }
+
+    private function getFirstTransactionDate(Category $category): ?Carbon
+    {
+        // check transactions:
+        $query           = $category
+            ->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'ASC')
+        ;
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
+    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'DESC');
+
+        if ($accounts->count() > 0) {
+            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $result = $query->first(['transaction_journals.*']);
+
+        return $result?->date;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
+    {
+        // check transactions:
+        $query           = $category
+            ->transactions()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->orderBy('transaction_journals.date', 'DESC')
+        ;
+        if ($accounts->count() > 0) {
+            // filter journals:
+            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
     }
 }

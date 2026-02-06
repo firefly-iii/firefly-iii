@@ -101,17 +101,6 @@ class ShowController extends Controller
 
     /**
      * This endpoint is documented at:
-     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransactionByJournal
-     *
-     * Show a single transaction, by transaction journal.
-     */
-    public function showJournal(TransactionJournal $transactionJournal): JsonResponse
-    {
-        return $this->show($transactionJournal->transactionGroup);
-    }
-
-    /**
-     * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransaction
      *
      * Show a single transaction.
@@ -150,5 +139,16 @@ class ShowController extends Controller
         $resource      = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * This endpoint is documented at:
+     * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/transactions/getTransactionByJournal
+     *
+     * Show a single transaction, by transaction journal.
+     */
+    public function showJournal(TransactionJournal $transactionJournal): JsonResponse
+    {
+        return $this->show($transactionJournal->transactionGroup);
     }
 }

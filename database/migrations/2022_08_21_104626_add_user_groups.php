@@ -29,26 +29,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
-     * Run the migrations.
-     *
-     * @SuppressWarnings("PHPMD.ShortMethodName")
-     */
-    public function up(): void
-    {
-        try {
-            Schema::table('currency_exchange_rates', static function (Blueprint $table): void {
-                if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                    $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
-                }
-            });
-        } catch (QueryException $e) {
-            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
-            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
-        }
-    }
-
-    /**
      * Reverse the migrations.
      */
     public function down(): void
@@ -60,6 +40,26 @@ return new class() extends Migration {
                 }
                 if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
                     $table->dropColumn('user_group_id');
+                }
+            });
+        } catch (QueryException $e) {
+            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
+    }
+
+    /**
+     * Run the migrations.
+     *
+     * @SuppressWarnings("PHPMD.ShortMethodName")
+     */
+    public function up(): void
+    {
+        try {
+            Schema::table('currency_exchange_rates', static function (Blueprint $table): void {
+                if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                    $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
                 }
             });
         } catch (QueryException $e) {

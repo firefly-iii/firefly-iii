@@ -66,6 +66,7 @@ class CorrectsGroupAccounts extends Command
         }
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
+
         return 0;
     }
 }

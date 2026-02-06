@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdatedBudgetLimit.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -29,5 +32,8 @@ class UpdatedBudgetLimit extends Event
 {
     use SerializesModels;
 
-    public function __construct(public BudgetLimit $budgetLimit, public bool $createWebhookMessages) {}
+    public function __construct(
+        public BudgetLimit $budgetLimit,
+        public bool $createWebhookMessages
+    ) {}
 }

@@ -86,14 +86,14 @@ class TransactionGroup extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     public function userGroup(): BelongsTo

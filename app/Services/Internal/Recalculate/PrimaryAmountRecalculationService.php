@@ -65,19 +65,35 @@ class PrimaryAmountRecalculationService
         }
     }
 
-    private function recalculateForGroup(UserGroup $userGroup): void
+    private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
     {
-        Log::debug(sprintf('Now recalculating primary amounts for user group #%d', $userGroup->id));
-        $this->recalculateAccounts($userGroup);
-
-        // do a check with the group's currency so we can skip some stuff.
-        $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
-
-        $this->recalculatePiggyBanks($userGroup, $currency);
-        $this->recalculateBudgets($userGroup, $currency);
-        $this->recalculateAvailableBudgets($userGroup, $currency);
-        $this->recalculateBills($userGroup, $currency);
-        $this->calculateTransactions($userGroup, $currency);
+        // custom query because of the potential size of this update.
+        $set                              = DB::table('transactions')
+            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->where('transaction_journals.user_group_id', $userGroup->id)
+            ->where(static function (DatabaseBuilder $q1) use ($currency): void {
+                $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
+                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
+                })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
+                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
+                });
+            })
+            //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
+            //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
+            //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
+            //                ;
+            //            })
+            ->get(['transactions.id'])
+        ;
+        TransactionObserver::$recalculate = false;
+        foreach ($set as $item) {
+            // here we are.
+            /** @var null|Transaction $transaction */
+            $transaction = Transaction::find($item->id);
+            $transaction?->touch();
+        }
+        TransactionObserver::$recalculate = true;
+        Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
     }
 
     private function recalculateAccounts(UserGroup $userGroup): void
@@ -103,70 +119,6 @@ class PrimaryAmountRecalculationService
             $account->touch();
         }
         Log::debug(sprintf('Recalculated %d accounts for user group #%d.', $set->count(), $userGroup->id));
-    }
-
-    private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
-    {
-        $converter  = new ExchangeRateConverter();
-        $converter->setUserGroup($userGroup);
-        $converter->setIgnoreSettings(true);
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUserGroup($userGroup);
-        $set        = $repository->getPiggyBanks();
-        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
-        foreach ($set as $piggyBank) {
-            $piggyBank->encrypted = false;
-            $piggyBank->save();
-
-            foreach ($piggyBank->accounts as $account) {
-                $account->pivot->native_current_amount = null;
-                if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
-                    $account->pivot->native_current_amount = $converter->convert(
-                        $piggyBank->transactionCurrency,
-                        $currency,
-                        today(),
-                        (string) $account->pivot->current_amount
-                    );
-                }
-                $account->pivot->save();
-            }
-            $this->recalculatePiggyBankEvents($piggyBank);
-        }
-        Log::debug(sprintf('Recalculated %d piggy banks for user group #%d.', $set->count(), $userGroup->id));
-    }
-
-    private function recalculatePiggyBankEvents(PiggyBank $piggyBank): void
-    {
-        $set = $piggyBank->piggyBankEvents()->get();
-        $set->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
-            $event->touch();
-        });
-        Log::debug(sprintf('Recalculated %d piggy bank events.', $set->count()));
-    }
-
-    private function recalculateBudgets(UserGroup $userGroup, TransactionCurrency $currency): void
-    {
-        $set = $userGroup->budgets()->get();
-
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-            $this->recalculateBudgetLimits($budget, $currency);
-            $this->recalculateAutoBudgets($budget, $currency);
-        }
-        Log::debug(sprintf('Recalculated %d budgets.', $set->count()));
-    }
-
-    private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
-    {
-        $set = $budget->budgetlimits()->where('transaction_currency_id', '!=', $currency->id)->get();
-
-        /** @var BudgetLimit $limit */
-        foreach ($set as $limit) {
-            Log::debug(sprintf('Will now touch BL #%d', $limit->id));
-            $limit->touch();
-            Log::debug(sprintf('Done with touch BL #%d', $limit->id));
-        }
-        Log::debug(sprintf('Recalculated %d budget limits for budget #%d.', $set->count(), $budget->id));
     }
 
     private function recalculateAutoBudgets(Budget $budget, TransactionCurrency $currency): void
@@ -203,34 +155,82 @@ class PrimaryAmountRecalculationService
         Log::debug(sprintf('Recalculated %d bills.', $set->count()));
     }
 
-    private function calculateTransactions(UserGroup $userGroup, TransactionCurrency $currency): void
+    private function recalculateBudgetLimits(Budget $budget, TransactionCurrency $currency): void
     {
-        // custom query because of the potential size of this update.
-        $set                              = DB::table('transactions')
-            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transaction_journals.user_group_id', $userGroup->id)
-            ->where(static function (DatabaseBuilder $q1) use ($currency): void {
-                $q1->where(static function (DatabaseBuilder $q2) use ($currency): void {
-                    $q2->whereNot('transactions.transaction_currency_id', $currency->id)->whereNull('transactions.foreign_currency_id');
-                })->orWhere(static function (DatabaseBuilder $q3) use ($currency): void {
-                    $q3->whereNot('transactions.transaction_currency_id', $currency->id)->whereNot('transactions.foreign_currency_id', $currency->id);
-                });
-            })
-            //            ->where(static function (DatabaseBuilder $q) use ($currency): void {
-            //                $q->whereNot('transactions.transaction_currency_id', $currency->id)
-            //                    ->whereNot('transactions.foreign_currency_id', $currency->id)
-            //                ;
-            //            })
-            ->get(['transactions.id'])
-        ;
-        TransactionObserver::$recalculate = false;
-        foreach ($set as $item) {
-            // here we are.
-            /** @var null|Transaction $transaction */
-            $transaction = Transaction::find($item->id);
-            $transaction?->touch();
+        $set = $budget->budgetlimits()->where('transaction_currency_id', '!=', $currency->id)->get();
+
+        /** @var BudgetLimit $limit */
+        foreach ($set as $limit) {
+            Log::debug(sprintf('Will now touch BL #%d', $limit->id));
+            $limit->touch();
+            Log::debug(sprintf('Done with touch BL #%d', $limit->id));
         }
-        TransactionObserver::$recalculate = true;
-        Log::debug(sprintf('Recalculated %d transactions.', $set->count()));
+        Log::debug(sprintf('Recalculated %d budget limits for budget #%d.', $set->count(), $budget->id));
+    }
+
+    private function recalculateBudgets(UserGroup $userGroup, TransactionCurrency $currency): void
+    {
+        $set = $userGroup->budgets()->get();
+
+        /** @var Budget $budget */
+        foreach ($set as $budget) {
+            $this->recalculateBudgetLimits($budget, $currency);
+            $this->recalculateAutoBudgets($budget, $currency);
+        }
+        Log::debug(sprintf('Recalculated %d budgets.', $set->count()));
+    }
+
+    private function recalculateForGroup(UserGroup $userGroup): void
+    {
+        Log::debug(sprintf('Now recalculating primary amounts for user group #%d', $userGroup->id));
+        $this->recalculateAccounts($userGroup);
+
+        // do a check with the group's currency so we can skip some stuff.
+        $currency = Amount::getPrimaryCurrencyByUserGroup($userGroup);
+
+        $this->recalculatePiggyBanks($userGroup, $currency);
+        $this->recalculateBudgets($userGroup, $currency);
+        $this->recalculateAvailableBudgets($userGroup, $currency);
+        $this->recalculateBills($userGroup, $currency);
+        $this->calculateTransactions($userGroup, $currency);
+    }
+
+    private function recalculatePiggyBankEvents(PiggyBank $piggyBank): void
+    {
+        $set = $piggyBank->piggyBankEvents()->get();
+        $set->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
+            $event->touch();
+        });
+        Log::debug(sprintf('Recalculated %d piggy bank events.', $set->count()));
+    }
+
+    private function recalculatePiggyBanks(UserGroup $userGroup, TransactionCurrency $currency): void
+    {
+        $converter  = new ExchangeRateConverter();
+        $converter->setUserGroup($userGroup);
+        $converter->setIgnoreSettings(true);
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUserGroup($userGroup);
+        $set        = $repository->getPiggyBanks();
+        $set        = $set->filter(static fn (PiggyBank $piggyBank): bool => $currency->id !== $piggyBank->transaction_currency_id);
+        foreach ($set as $piggyBank) {
+            $piggyBank->encrypted = false;
+            $piggyBank->save();
+
+            foreach ($piggyBank->accounts as $account) {
+                $account->pivot->native_current_amount = null;
+                if (0 !== bccomp((string) $account->pivot->current_amount, '0')) {
+                    $account->pivot->native_current_amount = $converter->convert(
+                        $piggyBank->transactionCurrency,
+                        $currency,
+                        today(),
+                        (string) $account->pivot->current_amount
+                    );
+                }
+                $account->pivot->save();
+            }
+            $this->recalculatePiggyBankEvents($piggyBank);
+        }
+        Log::debug(sprintf('Recalculated %d piggy banks for user group #%d.', $set->count(), $userGroup->id));
     }
 }

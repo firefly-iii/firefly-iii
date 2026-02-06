@@ -34,6 +34,10 @@ use Illuminate\Support\Facades\Log;
  */
 trait DepositValidation
 {
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
+    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
+
     protected function validateDepositDestination(array $array): bool
     {
         $result      = null;
@@ -76,10 +80,6 @@ trait DepositValidation
 
         return $result;
     }
-
-    abstract protected function canCreateTypes(array $accountTypes): bool;
-
-    abstract protected function findExistingAccount(array $validTypes, array $data): ?Account;
 
     /**
      * Pretty complex unfortunately.

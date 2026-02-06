@@ -58,6 +58,35 @@ class JournalServiceProvider extends ServiceProvider
         $this->registerGroupCollector();
     }
 
+    private function registerGroupCollector(): void
+    {
+        $this->app->bind(static function (Application $app): GroupCollectorInterface {
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollector::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $collector->setUser(auth()->user());
+            }
+
+            return $collector;
+        });
+    }
+
+    /**
+     * Register group repos.
+     */
+    private function registerGroupRepository(): void
+    {
+        $this->app->bind(static function (Application $app): TransactionGroupRepositoryInterface {
+            /** @var TransactionGroupRepositoryInterface $repository */
+            $repository = app(TransactionGroupRepository::class);
+            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+                $repository->setUser(auth()->user());
+            }
+
+            return $repository;
+        });
+    }
+
     /**
      * Register repository.
      */
@@ -93,35 +122,6 @@ class JournalServiceProvider extends ServiceProvider
             }
 
             return $repository;
-        });
-    }
-
-    /**
-     * Register group repos.
-     */
-    private function registerGroupRepository(): void
-    {
-        $this->app->bind(static function (Application $app): TransactionGroupRepositoryInterface {
-            /** @var TransactionGroupRepositoryInterface $repository */
-            $repository = app(TransactionGroupRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                $repository->setUser(auth()->user());
-            }
-
-            return $repository;
-        });
-    }
-
-    private function registerGroupCollector(): void
-    {
-        $this->app->bind(static function (Application $app): GroupCollectorInterface {
-            /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollector::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
-                $collector->setUser(auth()->user());
-            }
-
-            return $collector;
         });
     }
 }

@@ -66,6 +66,29 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         ;
     }
 
+    public function find(int $piggyBankId): ?PiggyBank
+    {
+        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->where('piggy_banks.id', $piggyBankId)
+            ->first(['piggy_banks.*'])
+        ;
+    }
+
+    /**
+     * Find by name or return NULL.
+     */
+    public function findByName(string $name): ?PiggyBank
+    {
+        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+            ->where('accounts.user_id', $this->user->id)
+            ->where('piggy_banks.name', $name)
+            ->first(['piggy_banks.*'])
+        ;
+    }
+
     public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         Log::debug('Searching for piggy information.');
@@ -91,29 +114,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         return null;
     }
 
-    public function find(int $piggyBankId): ?PiggyBank
-    {
-        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.id', $piggyBankId)
-            ->first(['piggy_banks.*'])
-        ;
-    }
-
-    /**
-     * Find by name or return NULL.
-     */
-    public function findByName(string $name): ?PiggyBank
-    {
-        return PiggyBank::leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-            ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-            ->where('accounts.user_id', $this->user->id)
-            ->where('piggy_banks.name', $name)
-            ->first(['piggy_banks.*'])
-        ;
-    }
-
     public function getAttachments(PiggyBank $piggyBank): Collection
     {
         $set  = $piggyBank->attachments()->get();
@@ -127,6 +127,25 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
 
             return $attachment;
         });
+    }
+
+    /**
+     * Get current amount saved in piggy bank.
+     */
+    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
+    {
+        $sum = '0';
+        foreach ($piggyBank->accounts as $current) {
+            if ($account instanceof Account && $account->id !== $current->id) {
+                continue;
+            }
+            $amount = (string) $current->pivot->current_amount;
+            $amount = '' === $amount ? '0' : $amount;
+            $sum    = bcadd($sum, $amount);
+        }
+        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
+
+        return $sum;
     }
 
     /**
@@ -262,25 +281,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
     }
 
     /**
-     * Get current amount saved in piggy bank.
-     */
-    public function getCurrentAmount(PiggyBank $piggyBank, ?Account $account = null): string
-    {
-        $sum = '0';
-        foreach ($piggyBank->accounts as $current) {
-            if ($account instanceof Account && $account->id !== $current->id) {
-                continue;
-            }
-            $amount = (string) $current->pivot->current_amount;
-            $amount = '' === $amount ? '0' : $amount;
-            $sum    = bcadd($sum, $amount);
-        }
-        Log::debug(sprintf('Current amount in piggy bank #%d ("%s") is %s', $piggyBank->id, $piggyBank->name, $sum));
-
-        return $sum;
-    }
-
-    /**
      * Return note for piggy bank.
      */
     public function getNoteText(PiggyBank $piggyBank): string
@@ -289,22 +289,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $note = $piggyBank->notes()->first();
 
         return (string) $note?->text;
-    }
-
-    /**
-     * Also add amount in name.
-     */
-    public function getPiggyBanksWithAmount(): Collection
-    {
-        $set = $this->getPiggyBanks();
-
-        /** @var PiggyBank $piggy */
-        foreach ($set as $piggy) {
-            $currentAmount = $this->getCurrentAmount($piggy);
-            $piggy->name   = sprintf('%s (%s)', $piggy->name, Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
-        }
-
-        return $set;
     }
 
     public function getPiggyBanks(): Collection
@@ -323,6 +307,22 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         }
 
         return $query->with(['objectGroups'])->orderBy('piggy_banks.order', 'ASC')->distinct()->get(['piggy_banks.*']);
+    }
+
+    /**
+     * Also add amount in name.
+     */
+    public function getPiggyBanksWithAmount(): Collection
+    {
+        $set = $this->getPiggyBanks();
+
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            $currentAmount = $this->getCurrentAmount($piggy);
+            $piggy->name   = sprintf('%s (%s)', $piggy->name, Amount::formatAnything($piggy->transactionCurrency, $currentAmount, false));
+        }
+
+        return $set;
     }
 
     public function getRepetition(PiggyBank $piggyBank, bool $overrule = false): ?PiggyBankRepetition
@@ -403,6 +403,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         ;
     }
 
+    public function resetHistory(PiggyBank $piggyBank): void
+    {
+        $piggyBank->piggyBankEvents()->delete();
+        foreach ($piggyBank->accounts as $account) {
+            if (0 !== bccomp('0', (string) $account->pivot->current_amount)) {
+                event(new PiggyBankAmountIsChanged($piggyBank, $account->pivot->current_amount, null, null));
+            }
+        }
+    }
+
     #[Override]
     public function resetOrder(): void
     {
@@ -427,15 +437,5 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface, UserGroupInte
         $search->orderBy('piggy_banks.order', 'ASC')->orderBy('piggy_banks.name', 'ASC');
 
         return $search->take($limit)->get(['piggy_banks.*']);
-    }
-
-    public function resetHistory(PiggyBank $piggyBank): void
-    {
-        $piggyBank->piggyBankEvents()->delete();
-        foreach ($piggyBank->accounts as $account) {
-            if (0 !== bccomp('0', (string) $account->pivot->current_amount)) {
-                event(new PiggyBankAmountIsChanged($piggyBank, $account->pivot->current_amount, null, null));
-            }
-        }
     }
 }

@@ -55,6 +55,45 @@ class ReportsEmptyObjects extends Command
     }
 
     /**
+     * Reports on accounts with no transactions.
+     */
+    private function reportAccounts(): void
+    {
+        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+            ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
+            ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+            ->whereNull('transactions.account_id')
+            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+        ;
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
+            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $entry->name);
+            $this->friendlyWarning($line);
+        }
+    }
+
+    /**
+     * Reports on budgets with no budget limits (which makes them pointless).
+     */
+    private function reportBudgetLimits(): void
+    {
+        $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
+            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
+            ->groupBy(['budgets.id', 'budgets.name', 'budgets.encrypted', 'budgets.user_id', 'users.email'])
+            ->whereNull('budget_limits.id')
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'budgets.encrypted', 'users.email'])
+        ;
+
+        /** @var Budget $entry */
+        foreach ($set as $entry) {
+            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no budget limits.', $entry->user_id, $entry->email, $entry->id, $entry->name);
+            $this->friendlyWarning($line);
+        }
+    }
+
+    /**
      * Report on budgets with no transactions or journals.
      */
     private function reportEmptyBudgets(): void
@@ -107,45 +146,6 @@ class ReportsEmptyObjects extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $line = sprintf('User #%d (%s) has tag #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->tag);
-            $this->friendlyWarning($line);
-        }
-    }
-
-    /**
-     * Reports on accounts with no transactions.
-     */
-    private function reportAccounts(): void
-    {
-        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-            ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
-            ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
-            ->whereNull('transactions.account_id')
-            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
-        ;
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
-            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $entry->name);
-            $this->friendlyWarning($line);
-        }
-    }
-
-    /**
-     * Reports on budgets with no budget limits (which makes them pointless).
-     */
-    private function reportBudgetLimits(): void
-    {
-        $set = Budget::leftJoin('budget_limits', 'budget_limits.budget_id', '=', 'budgets.id')
-            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-            ->groupBy(['budgets.id', 'budgets.name', 'budgets.encrypted', 'budgets.user_id', 'users.email'])
-            ->whereNull('budget_limits.id')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'budgets.encrypted', 'users.email'])
-        ;
-
-        /** @var Budget $entry */
-        foreach ($set as $entry) {
-            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no budget limits.', $entry->user_id, $entry->email, $entry->id, $entry->name);
             $this->friendlyWarning($line);
         }
     }

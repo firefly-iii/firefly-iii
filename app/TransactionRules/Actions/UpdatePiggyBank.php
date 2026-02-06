@@ -139,6 +139,54 @@ class UpdatePiggyBank implements ActionInterface
         return false;
     }
 
+    private function addAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
+    {
+        $repository        = app(PiggyBankRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $repository->setUser($journal->user);
+        $accountRepository->setUser($account->user);
+
+        // how much can we add to the piggy bank?
+        if (0 !== bccomp($piggyBank->target_amount, '0')) {
+            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
+            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
+
+            // update amount to fit:
+            $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
+            Log::debug(sprintf('Amount is now %s', $amount));
+        }
+        if (0 === bccomp($piggyBank->target_amount, '0')) {
+            Log::debug('Target amount is zero, can add anything.');
+        }
+
+        // if amount is zero, stop.
+        if (0 === bccomp('0', $amount)) {
+            Log::warning('Amount left is zero, stop.');
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_zero_piggy', ['name' => $piggyBank->name])));
+
+            return;
+        }
+
+        if (false === $repository->canAddAmount($piggyBank, $account, $amount)) {
+            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
+            $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
+            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', [
+                'amount' => Amount::formatAnything($currency, $amount, false),
+                'name'   => $piggyBank->name,
+            ])));
+
+            return;
+        }
+        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
+
+        $repository->addAmount($piggyBank, $account, $amount, $journal);
+    }
+
+    private function alreadyEventPresent(PiggyBank $piggyBank, array $journal): bool
+    {
+        return $piggyBank->piggyBankEvents()->where('transaction_journal_id', $journal['transaction_journal_id'])->exists();
+    }
+
     private function findPiggyBank(User $user, string $name): ?PiggyBank
     {
         /** @var PiggyBankRepositoryInterface $repository */
@@ -207,53 +255,5 @@ class UpdatePiggyBank implements ActionInterface
         Log::debug(sprintf('Will now remove %s from piggy bank.', $amount));
 
         $repository->removeAmount($piggyBank, $account, $amount, $journal);
-    }
-
-    private function addAmount(PiggyBank $piggyBank, array $array, TransactionJournal $journal, Account $account, string $amount): void
-    {
-        $repository        = app(PiggyBankRepositoryInterface::class);
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $repository->setUser($journal->user);
-        $accountRepository->setUser($account->user);
-
-        // how much can we add to the piggy bank?
-        if (0 !== bccomp($piggyBank->target_amount, '0')) {
-            $toAdd  = bcsub($piggyBank->target_amount, $repository->getCurrentAmount($piggyBank, $account));
-            Log::debug(sprintf('Max amount to add to piggy bank is %s, amount is %s', $toAdd, $amount));
-
-            // update amount to fit:
-            $amount = -1 === bccomp($amount, $toAdd) ? $amount : $toAdd;
-            Log::debug(sprintf('Amount is now %s', $amount));
-        }
-        if (0 === bccomp($piggyBank->target_amount, '0')) {
-            Log::debug('Target amount is zero, can add anything.');
-        }
-
-        // if amount is zero, stop.
-        if (0 === bccomp('0', $amount)) {
-            Log::warning('Amount left is zero, stop.');
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_zero_piggy', ['name' => $piggyBank->name])));
-
-            return;
-        }
-
-        if (false === $repository->canAddAmount($piggyBank, $account, $amount)) {
-            Log::warning(sprintf('Cannot add %s to piggy bank.', $amount));
-            $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-            event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_add_to_piggy', [
-                'amount' => Amount::formatAnything($currency, $amount, false),
-                'name'   => $piggyBank->name,
-            ])));
-
-            return;
-        }
-        Log::debug(sprintf('Will now add %s to piggy bank.', $amount));
-
-        $repository->addAmount($piggyBank, $account, $amount, $journal);
-    }
-
-    private function alreadyEventPresent(PiggyBank $piggyBank, array $journal): bool
-    {
-        return $piggyBank->piggyBankEvents()->where('transaction_journal_id', $journal['transaction_journal_id'])->exists();
     }
 }

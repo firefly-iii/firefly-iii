@@ -46,11 +46,11 @@ class AccountUpdateService
     use AccountServiceTrait;
 
     protected AccountRepositoryInterface $accountRepository;
-    protected array                      $validAssetFields;
-    protected array                      $validCCFields;
-    protected array                      $validFields;
-    private array                        $canHaveOpeningBalance;
-    private User                         $user;
+    protected array $validAssetFields;
+    protected array $validCCFields;
+    protected array $validFields;
+    private array $canHaveOpeningBalance;
+    private User $user;
 
     /**
      * Constructor.
@@ -62,6 +62,11 @@ class AccountUpdateService
         $this->validCCFields         = config('firefly.valid_cc_fields');
         $this->validFields           = config('firefly.valid_account_fields');
         $this->accountRepository     = app(AccountRepositoryInterface::class);
+    }
+
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -79,7 +84,7 @@ class AccountUpdateService
 
         // find currency, or use default currency instead.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
-            $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+            $currency            = $this->getCurrency((int) ($data['currency_id'] ?? null), (string) ($data['currency_code'] ?? null));
             unset($data['currency_code'], $data['currency_id']);
             $data['currency_id'] = $currency->id;
         }
@@ -98,7 +103,7 @@ class AccountUpdateService
 
         // update note:
         if (array_key_exists('notes', $data) && null !== $data['notes']) {
-            $this->updateNote($account, (string)$data['notes']);
+            $this->updateNote($account, (string) $data['notes']);
         }
 
         // update preferences if inactive:
@@ -107,62 +112,6 @@ class AccountUpdateService
         event(new UpdatedExistingAccount($account));
 
         return $account;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    private function updateAccount(Account $account, array $data): Account
-    {
-        // update the account itself:
-        if (array_key_exists('name', $data)) {
-            $account->name = $data['name'];
-        }
-        if (array_key_exists('active', $data)) {
-            $account->active = $data['active'];
-        }
-        if (array_key_exists('iban', $data)) {
-            $account->iban = Steam::filterSpaces((string)$data['iban']);
-        }
-
-        // set liability, but account must already be a liability.
-        // $liabilityType = $data['liability_type'] ?? '';
-        if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
-            $type                     = $this->getAccountType($data['liability_type']);
-            $account->account_type_id = $type->id;
-        }
-        // set liability, alternative method used in v1 layout:
-
-        if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
-            $type = AccountType::find((int)$data['account_type_id']);
-
-            if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
-                $account->account_type_id = $type->id;
-            }
-        }
-
-        // update virtual balance (could be set to zero if empty string).
-        if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {
-            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
-        }
-
-        $account->save();
-
-        return $account;
-    }
-
-    private function isLiability(Account $account): bool
-    {
-        $type = $account->accountType->type;
-
-        return in_array($type, [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value], true);
-    }
-
-    private function getAccountType(string $type): AccountType
-    {
-        return AccountType::whereType(ucfirst($type))->first();
     }
 
     public function updateAccountOrder(Account $account, array $data): Account
@@ -174,7 +123,7 @@ class AccountUpdateService
             return $account;
         }
         // skip if not of orderable type.
-        $type = $account->accountType->type;
+        $type           = $account->accountType->type;
         if (!in_array(
             $type,
             [AccountTypeEnum::ASSET->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value],
@@ -185,10 +134,10 @@ class AccountUpdateService
             return $account;
         }
         // get account type ID's because a join and an update is hard:
-        $oldOrder = $account->order;
-        $newOrder = $data['order'];
+        $oldOrder       = $account->order;
+        $newOrder       = $data['order'];
         Log::debug(sprintf('Order is set to be updated from %s to %s', $oldOrder, $newOrder));
-        $list = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
+        $list           = $this->getTypeIds([AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value]);
         if (AccountTypeEnum::ASSET->value === $type) {
             $list = $this->getTypeIds([AccountTypeEnum::ASSET->value]);
         }
@@ -200,7 +149,8 @@ class AccountUpdateService
                 ->where('accounts.order', '>', $oldOrder)
                 ->where('accounts.id', '!=', $account->id)
                 ->whereIn('accounts.account_type_id', $list)
-                ->decrement('order');
+                ->decrement('order')
+            ;
             $account->order = $newOrder;
             Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
             $account->save();
@@ -214,12 +164,18 @@ class AccountUpdateService
             ->where('accounts.order', '<', $oldOrder)
             ->where('accounts.id', '!=', $account->id)
             ->whereIn('accounts.account_type_id', $list)
-            ->increment('order');
+            ->increment('order')
+        ;
         $account->order = $newOrder;
         Log::debug(sprintf('Order of account #%d ("%s") is now %d', $account->id, $account->name, $newOrder));
         $account->save();
 
         return $account;
+    }
+
+    private function getAccountType(string $type): AccountType
+    {
+        return AccountType::whereType(ucfirst($type))->first();
     }
 
     private function getTypeIds(array $array): array
@@ -236,6 +192,52 @@ class AccountUpdateService
         return $return;
     }
 
+    private function isLiability(Account $account): bool
+    {
+        $type = $account->accountType->type;
+
+        return in_array($type, [AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value], true);
+    }
+
+    private function updateAccount(Account $account, array $data): Account
+    {
+        // update the account itself:
+        if (array_key_exists('name', $data)) {
+            $account->name = $data['name'];
+        }
+        if (array_key_exists('active', $data)) {
+            $account->active = $data['active'];
+        }
+        if (array_key_exists('iban', $data)) {
+            $account->iban = Steam::filterSpaces((string) $data['iban']);
+        }
+
+        // set liability, but account must already be a liability.
+        // $liabilityType = $data['liability_type'] ?? '';
+        if ($this->isLiability($account) && array_key_exists('liability_type', $data)) {
+            $type                     = $this->getAccountType($data['liability_type']);
+            $account->account_type_id = $type->id;
+        }
+        // set liability, alternative method used in v1 layout:
+
+        if ($this->isLiability($account) && array_key_exists('account_type_id', $data)) {
+            $type = AccountType::find((int) $data['account_type_id']);
+
+            if (null !== $type && in_array($type->type, config('firefly.valid_liabilities'), true)) {
+                $account->account_type_id = $type->id;
+            }
+        }
+
+        // update virtual balance (could be set to zero if empty string).
+        if (array_key_exists('virtual_balance', $data) && null !== $data['virtual_balance']) {
+            $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
+        }
+
+        $account->save();
+
+        return $account;
+    }
+
     private function updateLocation(Account $account, array $data): void
     {
         $updateLocation = $data['update_location'] ?? false;
@@ -248,7 +250,7 @@ class AccountUpdateService
 
             // otherwise, update or create.
             if (!(null === $data['latitude'] && null === $data['longitude'] && null === $data['zoom_level'])) {
-                $location = $this->accountRepository->getLocation($account);
+                $location             = $this->accountRepository->getLocation($account);
                 if (!$location instanceof Location) {
                     $location = new Location();
                     $location->locatable()->associate($account);
@@ -299,11 +301,11 @@ class AccountUpdateService
         if (true === $account->active) {
             return;
         }
-        $preference = Preferences::getForUser($account->user, 'frontpageAccounts');
+        $preference      = Preferences::getForUser($account->user, 'frontpageAccounts');
         if (null === $preference) {
             return;
         }
-        $array = $preference->data;
+        $array           = $preference->data;
         if (!is_array($array)) {
             $array = [$array];
         }
@@ -312,9 +314,9 @@ class AccountUpdateService
         $removeAccountId = $account->id;
         $new             = [];
         foreach ($array as $value) {
-            if ((int)$value !== $removeAccountId) {
+            if ((int) $value !== $removeAccountId) {
                 Log::debug(sprintf('Will include: %d', $value));
-                $new[] = (int)$value;
+                $new[] = (int) $value;
             }
         }
         Log::debug('Final new array is', $new);

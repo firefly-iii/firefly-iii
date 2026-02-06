@@ -62,14 +62,6 @@ class ConvertsDatesToUTC extends Command
         return Command::SUCCESS;
     }
 
-    private function ConvertModeltoUTC(string $model, array $fields): void
-    {
-        /** @var string $field */
-        foreach ($fields as $field) {
-            $this->convertFieldtoUTC($model, $field);
-        }
-    }
-
     private function convertFieldtoUTC(string $model, string $field): void
     {
         $this->info(sprintf('Converting %s.%s to UTC', $model, $field));
@@ -97,5 +89,13 @@ class ConvertsDatesToUTC extends Command
             $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
             $item->save();
         });
+    }
+
+    private function ConvertModeltoUTC(string $model, array $fields): void
+    {
+        /** @var string $field */
+        foreach ($fields as $field) {
+            $this->convertFieldtoUTC($model, $field);
+        }
     }
 }

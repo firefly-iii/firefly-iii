@@ -56,110 +56,6 @@ class OutputsInstructions extends Command
     }
 
     /**
-     * Render upgrade instructions.
-     */
-    private function updateInstructions(): void
-    {
-        $version = (string) config('firefly.version');
-
-        /** @var array $config */
-        $config  = config('upgrade.text.upgrade');
-        $text    = '';
-
-        /** @var string $compare */
-        foreach (array_keys($config) as $compare) {
-            // if string starts with:
-            if (str_starts_with($version, $compare)) {
-                $text = (string) $config[$compare];
-            }
-        }
-
-        // validate some settings.
-        if ('' === $text && 'local' === (string) config('app.env')) {
-            $text = 'Please set APP_ENV=production for a safer environment.';
-        }
-
-        $prefix  = 'v';
-        if (str_starts_with($version, 'develop') || str_starts_with($version, 'branch')) {
-            $prefix = '';
-        }
-
-        $this->newLine();
-        $this->showLogo();
-        $this->newLine();
-        $this->newLine();
-        $this->showLine();
-
-        $this->boxed('');
-        if ('' === $text) {
-            $this->boxed(sprintf('Thank you for updating to Firefly III, %s%s', $prefix, $version));
-            $this->boxedInfo('There are no extra upgrade instructions.');
-            $this->boxed('Firefly III should be ready for use.');
-            $this->boxed('');
-            $this->donationText();
-            $this->boxed('');
-            $this->showLine();
-
-            return;
-        }
-
-        $this->boxed(sprintf('Thank you for updating to Firefly III, %s%s!', $prefix, $version));
-        $this->boxedInfo($text);
-        $this->boxed('');
-        $this->donationText();
-        $this->boxed('');
-        $this->showLine();
-    }
-
-    /**
-     * The logo takes up 8 lines of code. So 8 colors can be used.
-     */
-    private function showLogo(): void
-    {
-        $today  = Carbon::now()->format('m-d');
-        $month  = Carbon::now()->format('m');
-        // variation in colors and effects just because I can!
-        // default is Ukraine flag:
-        $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
-
-        // 5th of May is Dutch liberation day and 29th of April is Dutch King's Day and September 17 is my birthday.
-        if ('05-01' === $today || '04-29' === $today || '09-17' === $today) {
-            $colors = ['red', 'red', 'red', 'white', 'white', 'blue', 'blue', 'blue'];
-        }
-
-        // National Coming Out Day, International Day Against Homophobia, Biphobia and Transphobia and Pride Month
-        if ('10-11' === $today || '05-17' === $today || '06' === $month) {
-            $colors = ['red', 'bright-red', 'yellow', 'green', 'blue', 'magenta', 'default', 'default'];
-        }
-
-        // International Transgender Day of Visibility
-        if ('03-31' === $today) {
-            $colors = ['bright-blue', 'bright-red', 'white', 'white', 'bright-red', 'bright-blue', 'default', 'default'];
-        }
-        if ('ru_RU' === config('firefly.default_language')) {
-            $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
-        }
-
-        $this->line(sprintf('<fg=%s>              ______ _           __ _            _____ _____ _____  </>', $colors[0]));
-        $this->line(sprintf('<fg=%s>             |  ____(_)         / _| |          |_   _|_   _|_   _| </>', $colors[1]));
-        $this->line(sprintf('<fg=%s>             | |__   _ _ __ ___| |_| |_   _       | |   | |   | |   </>', $colors[2]));
-        $this->line(sprintf('<fg=%s>             |  __| | | \'__/ _ \  _| | | | |      | |   | |   | |   </>', $colors[3]));
-        $this->line(sprintf('<fg=%s>             | |    | | | |  __/ | | | |_| |     _| |_ _| |_ _| |_  </>', $colors[4]));
-        $this->line(sprintf('<fg=%s>             |_|    |_|_|  \___|_| |_|\__, |    |_____|_____|_____| </>', $colors[5]));
-        $this->line(sprintf('<fg=%s>                                       __/ |                        </>', $colors[6]));
-        $this->line(sprintf('<fg=%s>                                      |___/                         </>', $colors[7]));
-        $this->someQuote();
-    }
-
-    /**
-     * Show a line.
-     */
-    private function showLine(): void
-    {
-        $this->line(sprintf('+%s+', str_repeat('-', 78)));
-    }
-
-    /**
      * Show a nice box.
      */
     private function boxed(string $text): void
@@ -242,6 +138,54 @@ class OutputsInstructions extends Command
         $this->showLine();
     }
 
+    /**
+     * Show a line.
+     */
+    private function showLine(): void
+    {
+        $this->line(sprintf('+%s+', str_repeat('-', 78)));
+    }
+
+    /**
+     * The logo takes up 8 lines of code. So 8 colors can be used.
+     */
+    private function showLogo(): void
+    {
+        $today  = Carbon::now()->format('m-d');
+        $month  = Carbon::now()->format('m');
+        // variation in colors and effects just because I can!
+        // default is Ukraine flag:
+        $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
+
+        // 5th of May is Dutch liberation day and 29th of April is Dutch King's Day and September 17 is my birthday.
+        if ('05-01' === $today || '04-29' === $today || '09-17' === $today) {
+            $colors = ['red', 'red', 'red', 'white', 'white', 'blue', 'blue', 'blue'];
+        }
+
+        // National Coming Out Day, International Day Against Homophobia, Biphobia and Transphobia and Pride Month
+        if ('10-11' === $today || '05-17' === $today || '06' === $month) {
+            $colors = ['red', 'bright-red', 'yellow', 'green', 'blue', 'magenta', 'default', 'default'];
+        }
+
+        // International Transgender Day of Visibility
+        if ('03-31' === $today) {
+            $colors = ['bright-blue', 'bright-red', 'white', 'white', 'bright-red', 'bright-blue', 'default', 'default'];
+        }
+        if ('ru_RU' === config('firefly.default_language')) {
+            $colors = ['blue', 'blue', 'blue', 'yellow', 'yellow', 'yellow', 'default', 'default'];
+        }
+
+        $this->line(sprintf('<fg=%s>              ______ _           __ _            _____ _____ _____  </>', $colors[0]));
+        $this->line(sprintf('<fg=%s>             |  ____(_)         / _| |          |_   _|_   _|_   _| </>', $colors[1]));
+        $this->line(sprintf('<fg=%s>             | |__   _ _ __ ___| |_| |_   _       | |   | |   | |   </>', $colors[2]));
+        $this->line(sprintf('<fg=%s>             |  __| | | \'__/ _ \  _| | | | |      | |   | |   | |   </>', $colors[3]));
+        $this->line(sprintf('<fg=%s>             | |    | | | |  __/ | | | |_| |     _| |_ _| |_ _| |_  </>', $colors[4]));
+        $this->line(sprintf('<fg=%s>             |_|    |_|_|  \___|_| |_|\__, |    |_____|_____|_____| </>', $colors[5]));
+        $this->line(sprintf('<fg=%s>                                       __/ |                        </>', $colors[6]));
+        $this->line(sprintf('<fg=%s>                                      |___/                         </>', $colors[7]));
+        $this->someQuote();
+    }
+
     private function someQuote(): void
     {
         $lines = [
@@ -272,5 +216,61 @@ class OutputsInstructions extends Command
             $random = 0;
         }
         $this->line(sprintf('       %s', $lines[$random]));
+    }
+
+    /**
+     * Render upgrade instructions.
+     */
+    private function updateInstructions(): void
+    {
+        $version = (string) config('firefly.version');
+
+        /** @var array $config */
+        $config  = config('upgrade.text.upgrade');
+        $text    = '';
+
+        /** @var string $compare */
+        foreach (array_keys($config) as $compare) {
+            // if string starts with:
+            if (str_starts_with($version, $compare)) {
+                $text = (string) $config[$compare];
+            }
+        }
+
+        // validate some settings.
+        if ('' === $text && 'local' === (string) config('app.env')) {
+            $text = 'Please set APP_ENV=production for a safer environment.';
+        }
+
+        $prefix  = 'v';
+        if (str_starts_with($version, 'develop') || str_starts_with($version, 'branch')) {
+            $prefix = '';
+        }
+
+        $this->newLine();
+        $this->showLogo();
+        $this->newLine();
+        $this->newLine();
+        $this->showLine();
+
+        $this->boxed('');
+        if ('' === $text) {
+            $this->boxed(sprintf('Thank you for updating to Firefly III, %s%s', $prefix, $version));
+            $this->boxedInfo('There are no extra upgrade instructions.');
+            $this->boxed('Firefly III should be ready for use.');
+            $this->boxed('');
+            $this->donationText();
+            $this->boxed('');
+            $this->showLine();
+
+            return;
+        }
+
+        $this->boxed(sprintf('Thank you for updating to Firefly III, %s%s!', $prefix, $version));
+        $this->boxedInfo($text);
+        $this->boxed('');
+        $this->donationText();
+        $this->boxed('');
+        $this->showLine();
     }
 }

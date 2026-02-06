@@ -148,35 +148,6 @@ class RecurrenceFormRequest extends FormRequest
     }
 
     /**
-     * Parses repetition data.
-     */
-    private function parseRepetitionData(): array
-    {
-        $value  = $this->convertString('repetition_type');
-        $return = ['type'   => '', 'moment' => ''];
-
-        if ('daily' === $value) {
-            $return['type'] = $value;
-        }
-        // monthly,17
-        // ndom,3,7
-        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
-            $return['type']   = substr($value, 0, 6);
-            $return['moment'] = substr($value, 7);
-        }
-        if (str_starts_with($value, 'monthly')) {
-            $return['type']   = substr($value, 0, 7);
-            $return['moment'] = substr($value, 8);
-        }
-        if (str_starts_with($value, 'ndom')) {
-            $return['type']   = substr($value, 0, 4);
-            $return['moment'] = substr($value, 5);
-        }
-
-        return $return;
-    }
-
-    /**
      * The rules for this request.
      */
     public function rules(): array
@@ -263,20 +234,6 @@ class RecurrenceFormRequest extends FormRequest
     }
 
     /**
-     * Configure the validator instance with special rules for after the basic validation rules.
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(function (Validator $validator): void {
-            // validate all account info
-            $this->validateAccountInformation($validator);
-        });
-        if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
-        }
-    }
-
-    /**
      * Validates the given account information. Switches on given transaction type.
      *
      * @throws FireflyException
@@ -339,5 +296,48 @@ class RecurrenceFormRequest extends FormRequest
             $validator->errors()->add('destination_id', $message);
             $validator->errors()->add('withdrawal_destination_id', $message);
         }
+    }
+
+    /**
+     * Configure the validator instance with special rules for after the basic validation rules.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            // validate all account info
+            $this->validateAccountInformation($validator);
+        });
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
+        }
+    }
+
+    /**
+     * Parses repetition data.
+     */
+    private function parseRepetitionData(): array
+    {
+        $value  = $this->convertString('repetition_type');
+        $return = ['type'   => '', 'moment' => ''];
+
+        if ('daily' === $value) {
+            $return['type'] = $value;
+        }
+        // monthly,17
+        // ndom,3,7
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'], true)) {
+            $return['type']   = substr($value, 0, 6);
+            $return['moment'] = substr($value, 7);
+        }
+        if (str_starts_with($value, 'monthly')) {
+            $return['type']   = substr($value, 0, 7);
+            $return['moment'] = substr($value, 8);
+        }
+        if (str_starts_with($value, 'ndom')) {
+            $return['type']   = substr($value, 0, 4);
+            $return['moment'] = substr($value, 5);
+        }
+
+        return $return;
     }
 }

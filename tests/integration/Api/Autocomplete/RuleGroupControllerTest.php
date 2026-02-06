@@ -41,30 +41,6 @@ final class RuleGroupControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createTestRuleGroups(int $count, User $user): void
-    {
-        for ($i = 1; $i <= $count; ++$i) {
-            $ruleGroup = RuleGroup::create([
-                'user_id'         => $user->id,
-                'user_group_id'   => $user->user_group_id,
-                'title'           => 'RuleGroup '.$i,
-                'description'     => 'RuleGroup '.$i,
-                'order'           => 1,
-                'active'          => 1,
-                'stop_processing' => 0,
-            ]);
-        }
-    }
-
-    public function testUnauthenticatedCall(): void
-    {
-        // test API
-        $response = $this->get(route('api.v1.autocomplete.rule-groups'), ['Accept' => 'application/json']);
-        $response->assertStatus(401);
-        $response->assertHeader('Content-Type', 'application/json');
-        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
-    }
-
     public function testAuthenticatedCall(): void
     {
         // act as a user
@@ -118,5 +94,29 @@ final class RuleGroupControllerTest extends TestCase
         // Bill 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
         $response->assertJsonCount(11);
         $response->assertJsonMissing(['name' => 'RuleGroup 2']);
+    }
+
+    public function testUnauthenticatedCall(): void
+    {
+        // test API
+        $response = $this->get(route('api.v1.autocomplete.rule-groups'), ['Accept' => 'application/json']);
+        $response->assertStatus(401);
+        $response->assertHeader('Content-Type', 'application/json');
+        $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
+    }
+
+    private function createTestRuleGroups(int $count, User $user): void
+    {
+        for ($i = 1; $i <= $count; ++$i) {
+            $ruleGroup = RuleGroup::create([
+                'user_id'         => $user->id,
+                'user_group_id'   => $user->user_group_id,
+                'title'           => 'RuleGroup '.$i,
+                'description'     => 'RuleGroup '.$i,
+                'order'           => 1,
+                'active'          => 1,
+                'stop_processing' => 0,
+            ]);
+        }
     }
 }

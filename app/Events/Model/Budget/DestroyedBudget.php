@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * DestroyedBudget.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -22,15 +25,15 @@
 namespace FireflyIII\Events\Model\Budget;
 
 use FireflyIII\Events\Event;
-use FireflyIII\Models\Budget;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 
 class DestroyedBudget extends Event
 {
-    public function __construct() {
-        Log::debug('Created event DestroyedBudget');
-    }
     use SerializesModels;
 
+    public function __construct()
+    {
+        Log::debug('Created event DestroyedBudget');
+    }
 }

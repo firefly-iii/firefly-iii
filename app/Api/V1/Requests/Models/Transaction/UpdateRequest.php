@@ -134,158 +134,6 @@ class UpdateRequest extends FormRequest
     }
 
     /**
-     * Get transaction data.
-     *
-     * @throws FireflyException
-     */
-    private function getTransactionData(): array
-    {
-        Log::debug(sprintf('Now in %s', __METHOD__));
-        $return       = [];
-
-        /** @var null|array $transactions */
-        $transactions = $this->get('transactions');
-
-        if (!is_countable($transactions)) {
-            return $return;
-        }
-
-        /** @var null|array $transaction */
-        foreach ($transactions as $transaction) {
-            if (!is_array($transaction)) {
-                throw new FireflyException('Invalid data submitted: transaction is not array.');
-            }
-            // default response is to update nothing in the transaction:
-            $current  = [];
-            $current  = $this->getIntegerData($current, $transaction);
-            $current  = $this->getStringData($current, $transaction);
-            $current  = $this->getNlStringData($current, $transaction);
-            $current  = $this->getDateData($current, $transaction);
-            $current  = $this->getBooleanData($current, $transaction);
-            $current  = $this->getArrayData($current, $transaction);
-            $current  = $this->getFloatData($current, $transaction);
-            $return[] = $current;
-        }
-
-        return $return;
-    }
-
-    /**
-     * For each field, add it to the array if a reference is present in the request:
-     *
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getIntegerData(array $current, array $transaction): array
-    {
-        foreach ($this->integerFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getStringData(array $current, array $transaction): array
-    {
-        foreach ($this->stringFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getNlStringData(array $current, array $transaction): array
-    {
-        foreach ($this->textareaFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->clearStringKeepNewlines((string) $transaction[$fieldName]); // keep newlines
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getDateData(array $current, array $transaction): array
-    {
-        foreach ($this->dateFields as $fieldName) {
-            Log::debug(sprintf('Now at date field %s', $fieldName));
-            if (array_key_exists($fieldName, $transaction)) {
-                Log::debug(sprintf('New value: "%s"', $transaction[$fieldName]));
-                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getBooleanData(array $current, array $transaction): array
-    {
-        foreach ($this->booleanFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getArrayData(array $current, array $transaction): array
-    {
-        foreach ($this->arrayFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
-            }
-        }
-
-        return $current;
-    }
-
-    /**
-     * @param array<string, string> $current
-     * @param array<string, mixed>  $transaction
-     */
-    private function getFloatData(array $current, array $transaction): array
-    {
-        foreach ($this->floatFields as $fieldName) {
-            if (array_key_exists($fieldName, $transaction)) {
-                $value = $transaction[$fieldName];
-                if (is_float($value)) {
-                    $current[$fieldName] = sprintf('%.12f', $value);
-                }
-                if (!is_float($value)) {
-                    $current[$fieldName] = (string) $value;
-                }
-            }
-        }
-
-        return $current;
-    }
-
-    /**
      * The rules that the incoming request must be matched against.
      */
     public function rules(): array
@@ -405,5 +253,157 @@ class UpdateRequest extends FormRequest
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getArrayData(array $current, array $transaction): array
+    {
+        foreach ($this->arrayFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getBooleanData(array $current, array $transaction): array
+    {
+        foreach ($this->booleanFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->convertBoolean((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getDateData(array $current, array $transaction): array
+    {
+        foreach ($this->dateFields as $fieldName) {
+            Log::debug(sprintf('Now at date field %s', $fieldName));
+            if (array_key_exists($fieldName, $transaction)) {
+                Log::debug(sprintf('New value: "%s"', $transaction[$fieldName]));
+                $current[$fieldName] = $this->dateFromValue((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getFloatData(array $current, array $transaction): array
+    {
+        foreach ($this->floatFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $value = $transaction[$fieldName];
+                if (is_float($value)) {
+                    $current[$fieldName] = sprintf('%.12f', $value);
+                }
+                if (!is_float($value)) {
+                    $current[$fieldName] = (string) $value;
+                }
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * For each field, add it to the array if a reference is present in the request:
+     *
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getIntegerData(array $current, array $transaction): array
+    {
+        foreach ($this->integerFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->integerFromValue((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getNlStringData(array $current, array $transaction): array
+    {
+        foreach ($this->textareaFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->clearStringKeepNewlines((string) $transaction[$fieldName]); // keep newlines
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * @param array<string, string> $current
+     * @param array<string, mixed>  $transaction
+     */
+    private function getStringData(array $current, array $transaction): array
+    {
+        foreach ($this->stringFields as $fieldName) {
+            if (array_key_exists($fieldName, $transaction)) {
+                $current[$fieldName] = $this->clearString((string) $transaction[$fieldName]);
+            }
+        }
+
+        return $current;
+    }
+
+    /**
+     * Get transaction data.
+     *
+     * @throws FireflyException
+     */
+    private function getTransactionData(): array
+    {
+        Log::debug(sprintf('Now in %s', __METHOD__));
+        $return       = [];
+
+        /** @var null|array $transactions */
+        $transactions = $this->get('transactions');
+
+        if (!is_countable($transactions)) {
+            return $return;
+        }
+
+        /** @var null|array $transaction */
+        foreach ($transactions as $transaction) {
+            if (!is_array($transaction)) {
+                throw new FireflyException('Invalid data submitted: transaction is not array.');
+            }
+            // default response is to update nothing in the transaction:
+            $current  = [];
+            $current  = $this->getIntegerData($current, $transaction);
+            $current  = $this->getStringData($current, $transaction);
+            $current  = $this->getNlStringData($current, $transaction);
+            $current  = $this->getDateData($current, $transaction);
+            $current  = $this->getBooleanData($current, $transaction);
+            $current  = $this->getArrayData($current, $transaction);
+            $current  = $this->getFloatData($current, $transaction);
+            $return[] = $current;
+        }
+
+        return $return;
     }
 }

@@ -43,31 +43,6 @@ class CreatesGroupMemberships extends Command
     protected $signature            = 'correction:create-group-memberships';
 
     /**
-     * Execute the console command.
-     *
-     * @throws FireflyException
-     */
-    public function handle(): int
-    {
-        $this->createGroupMemberships();
-
-        return 0;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function createGroupMemberships(): void
-    {
-        $users = User::get();
-
-        /** @var User $user */
-        foreach ($users as $user) {
-            self::createGroupMembership($user);
-        }
-    }
-
-    /**
      * TODO move to helper.
      *
      * @throws FireflyException
@@ -96,6 +71,31 @@ class CreatesGroupMemberships extends Command
         if (null === $user->user_group_id) {
             $user->user_group_id = $userGroup->id;
             $user->save();
+        }
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @throws FireflyException
+     */
+    public function handle(): int
+    {
+        $this->createGroupMemberships();
+
+        return 0;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function createGroupMemberships(): void
+    {
+        $users = User::get();
+
+        /** @var User $user */
+        foreach ($users as $user) {
+            self::createGroupMembership($user);
         }
     }
 }

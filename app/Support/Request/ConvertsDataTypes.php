@@ -91,6 +91,22 @@ trait ConvertsDataTypes
         "\r", // carriage return
     ];
 
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     */
+    abstract public function get(string $key, mixed $default = null): mixed;
+
+    /**
+     * Abstract method that always exists in the Request classes that use this
+     * trait, OR a stub needs to be added by any other class that uses this train.
+     *
+     * @param mixed $key
+     *
+     * @return mixed
+     */
+    abstract public function has($key);
+
     public function clearIban(?string $string): ?string
     {
         $string = $this->clearString($string);
@@ -180,12 +196,6 @@ trait ConvertsDataTypes
     }
 
     /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     */
-    abstract public function get(string $key, mixed $default = null): mixed;
-
-    /**
      * TODO duplicate, see SelectTransactionsRequest
      *
      * Validate list of accounts. This one is for V2 endpoints, so it searches for groups, not users.
@@ -216,16 +226,6 @@ trait ConvertsDataTypes
 
         return $collection;
     }
-
-    /**
-     * Abstract method that always exists in the Request classes that use this
-     * trait, OR a stub needs to be added by any other class that uses this train.
-     *
-     * @param mixed $key
-     *
-     * @return mixed
-     */
-    abstract public function has($key);
 
     /**
      * Return string value with newlines.

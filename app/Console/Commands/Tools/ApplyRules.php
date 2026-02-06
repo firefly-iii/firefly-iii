@@ -140,6 +140,44 @@ class ApplyRules extends Command
         return 0;
     }
 
+    private function getRulesToApply(): Collection
+    {
+        Log::debug('getRulesToApply()');
+        $rulesToApply = new Collection();
+
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            Log::debug(sprintf('Scanning rule group #%d', $group->id));
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if ($test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply->push($rule);
+                }
+                if (!$test) {
+                    Log::debug(sprintf('Will not include rule #%d', $rule->id));
+                }
+            }
+        }
+        Log::debug(sprintf('Found %d rules to apply.', $rulesToApply->count()));
+
+        return $rulesToApply;
+    }
+
+    private function grabAllRules(): void
+    {
+        $this->groups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    private function includeRule(Rule $rule, RuleGroup $group): bool
+    {
+        return in_array((int) $group->id, $this->ruleGroupSelection, true) || in_array((int) $rule->id, $this->ruleSelection, true) || $this->allRules;
+    }
+
     /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
@@ -234,6 +272,47 @@ class ApplyRules extends Command
         return true;
     }
 
+    /**
+     * @throws FireflyException
+     */
+    private function verifyInputDates(): void
+    {
+        // parse start date.
+        $inputStart      = today(config('app.timezone'))->startOfMonth();
+        $startString     = $this->option('start_date');
+        if (null === $startString) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->getUser());
+            $first      = $repository->firstNull();
+            if (null !== $first) {
+                $inputStart = $first->date;
+            }
+        }
+        if (null !== $startString && '' !== $startString) {
+            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
+        }
+
+        // parse end date
+        $inputEnd        = today(config('app.timezone'));
+        $endString       = $this->option('end_date');
+        if (null !== $endString && '' !== $endString) {
+            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
+        }
+        if (!$inputEnd instanceof Carbon || null === $inputStart) {
+            Log::error('Could not parse start or end date in verifyInputDate().');
+
+            return;
+        }
+
+        if ($inputStart > $inputEnd) {
+            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
+        }
+
+        $this->startDate = $inputStart;
+        $this->endDate   = $inputEnd;
+    }
+
     private function verifyInputRuleGroups(): bool
     {
         $ruleGroupString = $this->option('rule_groups');
@@ -301,84 +380,5 @@ class ApplyRules extends Command
         }
 
         return true;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function verifyInputDates(): void
-    {
-        // parse start date.
-        $inputStart      = today(config('app.timezone'))->startOfMonth();
-        $startString     = $this->option('start_date');
-        if (null === $startString) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->getUser());
-            $first      = $repository->firstNull();
-            if (null !== $first) {
-                $inputStart = $first->date;
-            }
-        }
-        if (null !== $startString && '' !== $startString) {
-            $inputStart = Carbon::createFromFormat('Y-m-d', $startString);
-        }
-
-        // parse end date
-        $inputEnd        = today(config('app.timezone'));
-        $endString       = $this->option('end_date');
-        if (null !== $endString && '' !== $endString) {
-            $inputEnd = Carbon::createFromFormat('Y-m-d', $endString);
-        }
-        if (!$inputEnd instanceof Carbon || null === $inputStart) {
-            Log::error('Could not parse start or end date in verifyInputDate().');
-
-            return;
-        }
-
-        if ($inputStart > $inputEnd) {
-            [$inputEnd, $inputStart] = [$inputStart, $inputEnd];
-        }
-
-        $this->startDate = $inputStart;
-        $this->endDate   = $inputEnd;
-    }
-
-    private function grabAllRules(): void
-    {
-        $this->groups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    private function getRulesToApply(): Collection
-    {
-        Log::debug('getRulesToApply()');
-        $rulesToApply = new Collection();
-
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            Log::debug(sprintf('Scanning rule group #%d', $group->id));
-            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
-
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if ($test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $rulesToApply->push($rule);
-                }
-                if (!$test) {
-                    Log::debug(sprintf('Will not include rule #%d', $rule->id));
-                }
-            }
-        }
-        Log::debug(sprintf('Found %d rules to apply.', $rulesToApply->count()));
-
-        return $rulesToApply;
-    }
-
-    private function includeRule(Rule $rule, RuleGroup $group): bool
-    {
-        return in_array((int) $group->id, $this->ruleGroupSelection, true) || in_array((int) $rule->id, $this->ruleSelection, true) || $this->allRules;
     }
 }

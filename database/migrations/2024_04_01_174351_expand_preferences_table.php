@@ -29,6 +29,13 @@ use Illuminate\Support\Facades\Schema;
 
 return new class() extends Migration {
     /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+    }
+
+    /**
      * Run the migrations.
      */
     public function up(): void
@@ -44,12 +51,5 @@ return new class() extends Migration {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
     }
 };

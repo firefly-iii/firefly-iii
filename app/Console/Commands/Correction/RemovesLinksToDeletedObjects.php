@@ -95,11 +95,19 @@ class RemovesLinksToDeletedObjects extends Command
         $this->friendlyNeutral('Validated links to deleted objects.');
     }
 
-    private function cleanupTags(array $tags): void
+    private function cleanupBudgets(array $budgets): void
     {
-        $count = DB::table('tag_transaction_journal')->whereIn('tag_id', $tags)->delete();
+        $count = DB::table('budget_transaction_journal')->whereIn('budget_id', $budgets)->delete();
         if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories transactions and tags.', $count));
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
+        }
+    }
+
+    private function cleanupCategories(array $categories): void
+    {
+        $count = DB::table('category_transaction_journal')->whereIn('category_id', $categories)->delete();
+        if ($count > 0) {
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories categories and transactions.', $count));
         }
     }
 
@@ -127,19 +135,11 @@ class RemovesLinksToDeletedObjects extends Command
         }
     }
 
-    private function cleanupBudgets(array $budgets): void
+    private function cleanupTags(array $tags): void
     {
-        $count = DB::table('budget_transaction_journal')->whereIn('budget_id', $budgets)->delete();
+        $count = DB::table('tag_transaction_journal')->whereIn('tag_id', $tags)->delete();
         if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) between budgets and transactions.', $count));
-        }
-    }
-
-    private function cleanupCategories(array $categories): void
-    {
-        $count = DB::table('category_transaction_journal')->whereIn('category_id', $categories)->delete();
-        if ($count > 0) {
-            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories categories and transactions.', $count));
+            $this->friendlyInfo(sprintf('Removed %d old relationship(s) categories transactions and tags.', $count));
         }
     }
 }

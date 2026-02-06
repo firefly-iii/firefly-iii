@@ -25,9 +25,7 @@ namespace FireflyIII\Handlers\Observer;
 
 use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
 use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
-use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
 /**
  * Class BillObserver

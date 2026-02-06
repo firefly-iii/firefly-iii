@@ -43,13 +43,6 @@ final class NavigationPreferredRangeFormatTest extends TestCase
 {
     private Navigation $navigation;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
-
     #[DataProvider('providePeriods')]
     public function testGivenStartAndEndDatesWhenCallPreferredRangeFormatThenReturnsTheExpectedFormatSuccessful(
         Carbon $start,
@@ -85,5 +78,12 @@ final class NavigationPreferredRangeFormatTest extends TestCase
         yield '1 year' => [Carbon::now(), Carbon::now()->addYear(), '1M'];
 
         yield '2 years' => [Carbon::now(), Carbon::now()->addYears(2), '1Y'];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

@@ -37,9 +37,6 @@ abstract class AggregateFormRequest extends ApiRequest
      */
     protected array $requests = [];
 
-    /** @return array<array|string> */
-    abstract protected function getRequests(): array;
-
     #[Override]
     public function initialize(
         array $query = [],
@@ -101,4 +98,7 @@ abstract class AggregateFormRequest extends ApiRequest
             }
         }
     }
+
+    /** @return array<array|string> */
+    abstract protected function getRequests(): array;
 }

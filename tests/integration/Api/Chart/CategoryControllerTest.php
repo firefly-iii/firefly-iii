@@ -40,15 +40,12 @@ final class CategoryControllerTest extends TestCase
 
     private ?User $user = null;
 
-    #[Override]
-    protected function setUp(): void
+    public function testGetOverviewChart(): void
     {
-        parent::setUp();
-
-        if (!$this->user instanceof User) {
-            $this->user = $this->createAuthenticatedUser();
-        }
         $this->actingAs($this->user);
+        $params   = ['start' => '2024-01-01', 'end'   => '2024-01-31'];
+        $response = $this->getJson(route('api.v1.chart.category.overview').'?'.http_build_query($params));
+        $response->assertStatus(200);
     }
 
     public function testGetOverviewChartFails(): void
@@ -58,11 +55,14 @@ final class CategoryControllerTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function testGetOverviewChart(): void
+    #[Override]
+    protected function setUp(): void
     {
+        parent::setUp();
+
+        if (!$this->user instanceof User) {
+            $this->user = $this->createAuthenticatedUser();
+        }
         $this->actingAs($this->user);
-        $params   = ['start' => '2024-01-01', 'end'   => '2024-01-31'];
-        $response = $this->getJson(route('api.v1.chart.category.overview').'?'.http_build_query($params));
-        $response->assertStatus(200);
     }
 }

@@ -43,13 +43,6 @@ final class NavigationEndOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
-
     #[DataProvider('provideDates')]
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
     {
@@ -214,5 +207,12 @@ final class NavigationEndOfPeriodTest extends TestCase
         yield 'unknown' => ['unknown', Carbon::now(), Carbon::now()->startOfDay()];
 
         yield 'empty' => ['', Carbon::now(), Carbon::now()->startOfDay()];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

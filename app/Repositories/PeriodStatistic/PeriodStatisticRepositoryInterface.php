@@ -31,13 +31,19 @@ use Illuminate\Support\Collection;
 
 interface PeriodStatisticRepositoryInterface
 {
+    public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection;
+
+    public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
+
     public function deleteStatisticsForCollection(Collection $set);
 
-    public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection;
+    public function deleteStatisticsForModel(Model $model, Carbon $date): void;
+
+    public function deleteStatisticsForPrefix(string $prefix, Collection $dates): void;
 
     public function findPeriodStatistic(Model $model, Carbon $start, Carbon $end, string $type): Collection;
 
-    public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
+    public function findPeriodStatistics(Model $model, Carbon $start, Carbon $end, array $types): Collection;
 
     public function savePrefixedStatistic(
         string $prefix,
@@ -49,11 +55,5 @@ interface PeriodStatisticRepositoryInterface
         string $amount
     ): PeriodStatistic;
 
-    public function allInRangeForModel(Model $model, Carbon $start, Carbon $end): Collection;
-
-    public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
-
-    public function deleteStatisticsForModel(Model $model, Carbon $date): void;
-
-    public function deleteStatisticsForPrefix(string $prefix, Collection $dates): void;
+    public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic;
 }

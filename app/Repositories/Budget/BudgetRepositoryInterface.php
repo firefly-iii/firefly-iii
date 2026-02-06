@@ -45,10 +45,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-    public function budgetEndsWith(string $query, int $limit): Collection;
-
-    public function budgetStartsWith(string $query, int $limit): Collection;
-
     /**
      * Returns the amount that is budgeted in a period.
      */
@@ -58,6 +54,10 @@ interface BudgetRepositoryInterface
      * Returns the amount that is budgeted in a period.
      */
     public function budgetedInPeriodForBudget(Budget $budget, Carbon $start, Carbon $end): array;
+
+    public function budgetEndsWith(string $query, int $limit): Collection;
+
+    public function budgetStartsWith(string $query, int $limit): Collection;
 
     public function cleanupBudgets(): bool;
 

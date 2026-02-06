@@ -91,6 +91,24 @@ class CreateSupportTables extends Migration
         }
     }
 
+    private function createConfigurationTable(): void
+    {
+        if (!Schema::hasTable('configuration')) {
+            try {
+                Schema::create('configuration', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->string('name', 50);
+                    $table->text('data');
+                });
+            } catch (QueryException $e) {
+                app('log')->error(sprintf(self::TABLE_ERROR, 'configuration', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
+            }
+        }
+    }
+
     private function createCurrencyTable(): void
     {
         if (!Schema::hasTable('transaction_currencies')) {
@@ -108,26 +126,6 @@ class CreateSupportTables extends Migration
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_currencies', $e->getMessage()));
-                app('log')->error(self::TABLE_ALREADY_EXISTS);
-            }
-        }
-    }
-
-    private function createTransactionTypeTable(): void
-    {
-        if (!Schema::hasTable('transaction_types')) {
-            try {
-                Schema::create('transaction_types', static function (Blueprint $table): void {
-                    $table->increments('id');
-                    $table->timestamps();
-                    $table->softDeletes();
-                    $table->string('type', 50);
-
-                    // type must be unique.
-                    $table->unique(['type']);
-                });
-            } catch (QueryException $e) {
-                app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_types', $e->getMessage()));
                 app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }
@@ -173,6 +171,26 @@ class CreateSupportTables extends Migration
         }
     }
 
+    private function createPermissionRoleTable(): void
+    {
+        if (!Schema::hasTable('permission_role')) {
+            try {
+                Schema::create('permission_role', static function (Blueprint $table): void {
+                    $table->integer('permission_id')->unsigned();
+                    $table->integer('role_id')->unsigned();
+
+                    $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
+                    $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
+
+                    $table->primary(['permission_id', 'role_id']);
+                });
+            } catch (QueryException $e) {
+                app('log')->error(sprintf(self::TABLE_ERROR, 'permission_role', $e->getMessage()));
+                app('log')->error(self::TABLE_ALREADY_EXISTS);
+            }
+        }
+    }
+
     private function createPermissionsTable(): void
     {
         if (!Schema::hasTable('permissions')) {
@@ -209,26 +227,6 @@ class CreateSupportTables extends Migration
         }
     }
 
-    private function createPermissionRoleTable(): void
-    {
-        if (!Schema::hasTable('permission_role')) {
-            try {
-                Schema::create('permission_role', static function (Blueprint $table): void {
-                    $table->integer('permission_id')->unsigned();
-                    $table->integer('role_id')->unsigned();
-
-                    $table->foreign('permission_id')->references('id')->on('permissions')->onUpdate('cascade')->onDelete('cascade');
-                    $table->foreign('role_id')->references('id')->on('roles')->onUpdate('cascade')->onDelete('cascade');
-
-                    $table->primary(['permission_id', 'role_id']);
-                });
-            } catch (QueryException $e) {
-                app('log')->error(sprintf(self::TABLE_ERROR, 'permission_role', $e->getMessage()));
-                app('log')->error(self::TABLE_ALREADY_EXISTS);
-            }
-        }
-    }
-
     private function createSessionsTable(): void
     {
         if (!Schema::hasTable('sessions')) {
@@ -248,19 +246,21 @@ class CreateSupportTables extends Migration
         }
     }
 
-    private function createConfigurationTable(): void
+    private function createTransactionTypeTable(): void
     {
-        if (!Schema::hasTable('configuration')) {
+        if (!Schema::hasTable('transaction_types')) {
             try {
-                Schema::create('configuration', static function (Blueprint $table): void {
+                Schema::create('transaction_types', static function (Blueprint $table): void {
                     $table->increments('id');
                     $table->timestamps();
                     $table->softDeletes();
-                    $table->string('name', 50);
-                    $table->text('data');
+                    $table->string('type', 50);
+
+                    // type must be unique.
+                    $table->unique(['type']);
                 });
             } catch (QueryException $e) {
-                app('log')->error(sprintf(self::TABLE_ERROR, 'configuration', $e->getMessage()));
+                app('log')->error(sprintf(self::TABLE_ERROR, 'transaction_types', $e->getMessage()));
                 app('log')->error(self::TABLE_ALREADY_EXISTS);
             }
         }

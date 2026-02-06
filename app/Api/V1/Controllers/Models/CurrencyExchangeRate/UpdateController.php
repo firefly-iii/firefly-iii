@@ -57,17 +57,6 @@ class UpdateController extends Controller
         });
     }
 
-    public function updateById(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
-    {
-        $date         = $request->getDate();
-        $rate         = $request->getRate();
-        $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
-        $transformer  = new ExchangeRateTransformer();
-        $transformer->setParameters($this->parameters);
-
-        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
-    }
-
     public function updateByDate(UpdateRequest $request, TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $exchangeRate = $this->repository->getSpecificRateOnDate($from, $to, $date);
@@ -79,6 +68,17 @@ class UpdateController extends Controller
         $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
 
         $transformer  = new ExchangeRateTransformer();
+
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    public function updateById(UpdateRequest $request, CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $date         = $request->getDate();
+        $rate         = $request->getRate();
+        $exchangeRate = $this->repository->updateExchangeRate($exchangeRate, $rate, $date);
+        $transformer  = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
 
         return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }

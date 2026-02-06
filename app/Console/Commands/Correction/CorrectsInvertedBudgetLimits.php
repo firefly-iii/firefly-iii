@@ -69,7 +69,7 @@ class CorrectsInvertedBudgetLimits extends Command
             $budgetLimit->saveQuietly();
         }
 
-        if($set->count() > 0) {
+        if ($set->count() > 0) {
             // FIXME here be a available budget event.
         }
 

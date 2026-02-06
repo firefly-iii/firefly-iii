@@ -71,11 +71,6 @@ class Budget extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -99,6 +94,11 @@ class Budget extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
+
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'budget_transaction_journal', 'budget_id');
@@ -107,6 +107,11 @@ class Budget extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array
@@ -125,10 +130,5 @@ class Budget extends Model
     protected function order(): Attribute
     {
         return Attribute::make(get: static fn ($value): int => (int) $value);
-    }
-
-    public function primaryPeriodStatistics(): MorphMany
-    {
-        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
     }
 }

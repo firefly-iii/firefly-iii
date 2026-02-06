@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * DestroyedBudgetLimit.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -31,6 +34,11 @@ class DestroyedBudgetLimit extends Event
 {
     use SerializesModels;
 
-    public function __construct(public User $user, public Budget $budget, public Carbon $start, public Carbon $end, public bool $createWebhookMessages) {}
-
+    public function __construct(
+        public User $user,
+        public Budget $budget,
+        public Carbon $start,
+        public Carbon $end,
+        public bool $createWebhookMessages
+    ) {}
 }

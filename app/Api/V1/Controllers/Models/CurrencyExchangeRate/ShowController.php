@@ -75,14 +75,6 @@ class ShowController extends Controller
         return response()->json($this->jsonApiList(self::RESOURCE_KEY, $paginator, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    public function showSingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
-    {
-        $transformer = new ExchangeRateTransformer();
-        $transformer->setParameters($this->parameters);
-
-        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
-    }
-
     public function showSingleByDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): JsonResponse
     {
         $transformer  = new ExchangeRateTransformer();
@@ -92,6 +84,14 @@ class ShowController extends Controller
         if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new NotFoundHttpException();
         }
+
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    public function showSingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $transformer = new ExchangeRateTransformer();
+        $transformer->setParameters($this->parameters);
 
         return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $exchangeRate, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }

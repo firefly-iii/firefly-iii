@@ -44,7 +44,6 @@ class BillDestroyService
         }
         $bill->notes()->delete();
 
-
         $bill->delete();
     }
 }

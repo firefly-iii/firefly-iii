@@ -52,6 +52,14 @@ interface OperationsRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string;
 
+    public function collectExpenses(
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $budgets = null,
+        ?TransactionCurrency $currency = null
+    ): array;
+
     #[Deprecated]
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
@@ -61,18 +69,6 @@ interface OperationsRepositoryInterface
      * as possible. Amounts are always negative.
      */
     public function listExpenses(Carbon $start, Carbon $end, ?Collection $accounts = null, ?Collection $budgets = null): array;
-
-    /**
-     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
-     */
-    public function sumExpenses(
-        Carbon $start,
-        Carbon $end,
-        ?Collection $accounts = null,
-        ?Collection $budgets = null,
-        ?TransactionCurrency $currency = null,
-        bool $convertToPrimary = false
-    ): array;
 
     public function sumCollectedExpenses(
         array $expenses,
@@ -84,11 +80,15 @@ interface OperationsRepositoryInterface
 
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array;
 
-    public function collectExpenses(
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     */
+    public function sumExpenses(
         Carbon $start,
         Carbon $end,
         ?Collection $accounts = null,
         ?Collection $budgets = null,
-        ?TransactionCurrency $currency = null
+        ?TransactionCurrency $currency = null,
+        bool $convertToPrimary = false
     ): array;
 }

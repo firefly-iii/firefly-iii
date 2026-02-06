@@ -92,6 +92,20 @@ class RecalculatesPrimaryCurrencyAmounts
         }
     }
 
+    private function resetBudgets(UserGroup $userGroup): void
+    {
+        $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUserGroup($userGroup);
+        $set        = $repository->getBudgets();
+
+        Log::debug(sprintf('Reset primary currency of %d budget(s).', $set->count()));
+
+        /** @var Budget $budget */
+        foreach ($set as $budget) {
+            $this->resetBudget($budget);
+        }
+    }
+
     private function resetPiggyBank(PiggyBank $piggyBank): void
     {
         if ('' !== (string) $piggyBank->native_target_amount) {
@@ -115,6 +129,19 @@ class RecalculatesPrimaryCurrencyAmounts
         }
     }
 
+    private function resetPiggyBanks(UserGroup $userGroup): void
+    {
+        $repository = app(PiggyBankRepositoryInterface::class);
+        $repository->setUserGroup($userGroup);
+        $piggyBanks = $repository->getPiggyBanks();
+        Log::debug(sprintf('Reset primary currency of %d piggy bank(s).', $piggyBanks->count()));
+
+        /** @var PiggyBank $piggyBank */
+        foreach ($piggyBanks as $piggyBank) {
+            $this->resetPiggyBank($piggyBank);
+        }
+    }
+
     private function resetTransactions(UserGroup $userGroup): void
     {
         // custom query because of the potential size of this update.
@@ -132,32 +159,5 @@ class RecalculatesPrimaryCurrencyAmounts
             ->update(['native_amount'         => null, 'native_foreign_amount' => null])
         ;
         Log::debug(sprintf('Reset %d transactions.', $success));
-    }
-
-    private function resetPiggyBanks(UserGroup $userGroup): void
-    {
-        $repository = app(PiggyBankRepositoryInterface::class);
-        $repository->setUserGroup($userGroup);
-        $piggyBanks = $repository->getPiggyBanks();
-        Log::debug(sprintf('Reset primary currency of %d piggy bank(s).', $piggyBanks->count()));
-
-        /** @var PiggyBank $piggyBank */
-        foreach ($piggyBanks as $piggyBank) {
-            $this->resetPiggyBank($piggyBank);
-        }
-    }
-
-    private function resetBudgets(UserGroup $userGroup): void
-    {
-        $repository = app(BudgetRepositoryInterface::class);
-        $repository->setUserGroup($userGroup);
-        $set        = $repository->getBudgets();
-
-        Log::debug(sprintf('Reset primary currency of %d budget(s).', $set->count()));
-
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-            $this->resetBudget($budget);
-        }
     }
 }

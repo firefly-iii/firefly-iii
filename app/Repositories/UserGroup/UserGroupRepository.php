@@ -109,6 +109,11 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         Log::debug('Done!');
     }
 
+    public function findByName(string $title): ?UserGroup
+    {
+        return UserGroup::whereTitle($title)->first();
+    }
+
     /**
      * Returns all groups the user is member in.
      */
@@ -136,48 +141,6 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
     }
 
     /**
-     * Because there is the chance that a group with this name already exists,
-     * Firefly III runs a little loop of combinations to make sure the group name is unique.
-     */
-    private function createNewUserGroup(User $user): UserGroup
-    {
-        $loop          = 0;
-        $groupName     = $user->email;
-        $exists        = true;
-        $existingGroup = null;
-        while ($exists && $loop < 10) {
-            $existingGroup = $this->findByName($groupName);
-            if (!$existingGroup instanceof UserGroup) {
-                $exists        = false;
-
-                $existingGroup = $this->store(['user'  => $user, 'title' => $groupName]);
-            }
-            $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
-            ++$loop;
-        }
-
-        return $existingGroup;
-    }
-
-    public function findByName(string $title): ?UserGroup
-    {
-        return UserGroup::whereTitle($title)->first();
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    public function store(array $data): UserGroup
-    {
-        $data['user'] = $this->user;
-
-        /** @var UserGroupFactory $factory */
-        $factory      = app(UserGroupFactory::class);
-
-        return $factory->create($data);
-    }
-
-    /**
      * Returns all groups.
      */
     public function getAll(): Collection
@@ -199,6 +162,19 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             ->where('user_group_id', $groupId)
             ->get()
         ;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    public function store(array $data): UserGroup
+    {
+        $data['user'] = $this->user;
+
+        /** @var UserGroupFactory $factory */
+        $factory      = app(UserGroupFactory::class);
+
+        return $factory->create($data);
     }
 
     public function update(UserGroup $userGroup, array $data): UserGroup
@@ -309,6 +285,37 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         return $userGroup;
     }
 
+    #[Override]
+    public function useUserGroup(UserGroup $userGroup): void
+    {
+        $this->user->user_group_id = $userGroup->id;
+        $this->user->save();
+    }
+
+    /**
+     * Because there is the chance that a group with this name already exists,
+     * Firefly III runs a little loop of combinations to make sure the group name is unique.
+     */
+    private function createNewUserGroup(User $user): UserGroup
+    {
+        $loop          = 0;
+        $groupName     = $user->email;
+        $exists        = true;
+        $existingGroup = null;
+        while ($exists && $loop < 10) {
+            $existingGroup = $this->findByName($groupName);
+            if (!$existingGroup instanceof UserGroup) {
+                $exists        = false;
+
+                $existingGroup = $this->store(['user'  => $user, 'title' => $groupName]);
+            }
+            $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
+            ++$loop;
+        }
+
+        return $existingGroup;
+    }
+
     private function simplifyListByName(array $roles): array
     {
         if (in_array(UserRoleEnum::OWNER->value, $roles, true)) {
@@ -323,12 +330,5 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
         }
 
         return $roles;
-    }
-
-    #[Override]
-    public function useUserGroup(UserGroup $userGroup): void
-    {
-        $this->user->user_group_id = $userGroup->id;
-        $this->user->save();
     }
 }

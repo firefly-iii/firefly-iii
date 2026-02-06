@@ -75,34 +75,6 @@ class RemovesDatabaseDecryption extends Command
         return 0;
     }
 
-    private function decryptTable(string $table, array $fields): void
-    {
-        if ($this->isDecrypted($table)) {
-            return;
-        }
-        foreach ($fields as $field) {
-            $this->decryptField($table, $field);
-        }
-        $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
-        // mark as decrypted:
-        $configName = sprintf('is_decrypted_%s', $table);
-        FireflyConfig::set($configName, true);
-    }
-
-    private function isDecrypted(string $table): bool
-    {
-        $configName = sprintf('is_decrypted_%s', $table);
-        $configVar  = null;
-
-        try {
-            $configVar = FireflyConfig::get($configName, false);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-        }
-
-        return (bool) $configVar?->data;
-    }
-
     private function decryptField(string $table, string $field): void
     {
         $rows = DB::table($table)->get(['id', $field]);
@@ -110,6 +82,29 @@ class RemovesDatabaseDecryption extends Command
         /** @var stdClass $row */
         foreach ($rows as $row) {
             $this->decryptRow($table, $field, $row);
+        }
+    }
+
+    private function decryptPreferencesRow(int $id, string $value): void
+    {
+        // try to json_decrypt the value.
+        try {
+            $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
+        } catch (JsonException $e) {
+            $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
+            $this->friendlyError($message);
+            Log::warning($message);
+            Log::warning($value);
+            Log::warning($e->getTraceAsString());
+
+            return;
+        }
+
+        /** @var null|Preference $object */
+        $object = Preference::find($id);
+        if (null !== $object) {
+            $object->data = $newValue;
+            $object->save();
         }
     }
 
@@ -143,6 +138,34 @@ class RemovesDatabaseDecryption extends Command
         }
     }
 
+    private function decryptTable(string $table, array $fields): void
+    {
+        if ($this->isDecrypted($table)) {
+            return;
+        }
+        foreach ($fields as $field) {
+            $this->decryptField($table, $field);
+        }
+        $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
+        // mark as decrypted:
+        $configName = sprintf('is_decrypted_%s', $table);
+        FireflyConfig::set($configName, true);
+    }
+
+    private function isDecrypted(string $table): bool
+    {
+        $configName = sprintf('is_decrypted_%s', $table);
+        $configVar  = null;
+
+        try {
+            $configVar = FireflyConfig::get($configName, false);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return (bool) $configVar?->data;
+    }
+
     /**
      * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
      *
@@ -163,28 +186,5 @@ class RemovesDatabaseDecryption extends Command
         }
 
         return $value;
-    }
-
-    private function decryptPreferencesRow(int $id, string $value): void
-    {
-        // try to json_decrypt the value.
-        try {
-            $newValue = json_decode($value, true, 512, JSON_THROW_ON_ERROR) ?? $value;
-        } catch (JsonException $e) {
-            $message = sprintf('Could not JSON decode preference row #%d: %s. This does not have to be a problem.', $id, $e->getMessage());
-            $this->friendlyError($message);
-            Log::warning($message);
-            Log::warning($value);
-            Log::warning($e->getTraceAsString());
-
-            return;
-        }
-
-        /** @var null|Preference $object */
-        $object = Preference::find($id);
-        if (null !== $object) {
-            $object->data = $newValue;
-            $object->save();
-        }
     }
 }

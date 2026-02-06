@@ -65,16 +65,6 @@ class CorrectsOpeningBalanceCurrencies extends Command
         return 0;
     }
 
-    private function getJournals(): Collection
-    {
-        /** @var Collection */
-        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereNull('transaction_journals.deleted_at')
-            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
-            ->get(['transaction_journals.*'])
-        ;
-    }
-
     private function correctJournal(TransactionJournal $journal): int
     {
         // get the asset account for this opening balance:
@@ -107,6 +97,25 @@ class CorrectsOpeningBalanceCurrencies extends Command
         return null;
     }
 
+    private function getCurrency(Account $account): TransactionCurrency
+    {
+        /** @var AccountRepositoryInterface $repos */
+        $repos = app(AccountRepositoryInterface::class);
+        $repos->setUser($account->user);
+
+        return $repos->getAccountCurrency($account) ?? Amount::getPrimaryCurrencyByUserGroup($account->userGroup);
+    }
+
+    private function getJournals(): Collection
+    {
+        /** @var Collection */
+        return TransactionJournal::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereNull('transaction_journals.deleted_at')
+            ->where('transaction_types.type', TransactionTypeEnum::OPENING_BALANCE->value)
+            ->get(['transaction_journals.*'])
+        ;
+    }
+
     private function setCorrectCurrency(Account $account, TransactionJournal $journal): int
     {
         $currency = $this->getCurrency($account);
@@ -127,14 +136,5 @@ class CorrectsOpeningBalanceCurrencies extends Command
         }
 
         return $count;
-    }
-
-    private function getCurrency(Account $account): TransactionCurrency
-    {
-        /** @var AccountRepositoryInterface $repos */
-        $repos = app(AccountRepositoryInterface::class);
-        $repos->setUser($account->user);
-
-        return $repos->getAccountCurrency($account) ?? Amount::getPrimaryCurrencyByUserGroup($account->userGroup);
     }
 }

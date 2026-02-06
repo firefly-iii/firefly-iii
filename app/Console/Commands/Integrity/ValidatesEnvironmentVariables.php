@@ -55,6 +55,20 @@ class ValidatesEnvironmentVariables extends Command
         return Command::SUCCESS;
     }
 
+    private function validateGuard(): bool
+    {
+        $guard = config('auth.defaults.guard');
+        if ('web' !== $guard && 'remote_user_guard' !== $guard) {
+            $this->friendlyError(sprintf('AUTHENTICATION_GUARD "%s" is not a valid guard for Firefly III.', $guard));
+            $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
+            $this->friendlyError('Valid guards are: web, remote_user_guard');
+
+            return false;
+        }
+
+        return true;
+    }
+
     private function validateLanguage(): bool
     {
         $language  = config('firefly.default_language');
@@ -73,20 +87,6 @@ class ValidatesEnvironmentVariables extends Command
             $this->friendlyError(sprintf('DEFAULT_LOCALE "%s" is not a valid local for Firefly III.', $locale));
             $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
             $this->friendlyError(sprintf('Valid locales are: %s', implode(', ', $options)));
-
-            return false;
-        }
-
-        return true;
-    }
-
-    private function validateGuard(): bool
-    {
-        $guard = config('auth.defaults.guard');
-        if ('web' !== $guard && 'remote_user_guard' !== $guard) {
-            $this->friendlyError(sprintf('AUTHENTICATION_GUARD "%s" is not a valid guard for Firefly III.', $guard));
-            $this->friendlyError('Please check your .env file and make sure you use a valid setting.');
-            $this->friendlyError('Valid guards are: web, remote_user_guard');
 
             return false;
         }

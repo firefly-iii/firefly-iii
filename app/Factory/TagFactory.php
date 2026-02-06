@@ -38,6 +38,38 @@ class TagFactory
     private User $user;
     private UserGroup $userGroup;
 
+    public function create(array $data): ?Tag
+    {
+        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
+        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
+        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
+        $array     = [
+            'user_id'       => $this->user->id,
+            'user_group_id' => $this->userGroup->id,
+            'tag'           => trim((string) $data['tag']),
+            'tag_mode'      => 'nothing',
+            'date'          => $data['date'],
+            'description'   => $data['description'],
+            'latitude'      => null,
+            'longitude'     => null,
+            'zoomLevel'     => null,
+        ];
+
+        /** @var null|Tag $tag */
+        $tag       = Tag::create($array);
+        if (!in_array(null, [$tag, $latitude, $longitude], true)) {
+            // create location object.
+            $location             = new Location();
+            $location->latitude   = $latitude;
+            $location->longitude  = $longitude;
+            $location->zoom_level = $zoomLevel;
+            $location->locatable()->associate($tag);
+            $location->save();
+        }
+
+        return $tag;
+    }
+
     public function findOrCreate(string $tag): ?Tag
     {
         $tag    = trim($tag);
@@ -70,38 +102,6 @@ class TagFactory
         Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
 
         return $newTag;
-    }
-
-    public function create(array $data): ?Tag
-    {
-        $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
-        $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
-        $array     = [
-            'user_id'       => $this->user->id,
-            'user_group_id' => $this->userGroup->id,
-            'tag'           => trim((string) $data['tag']),
-            'tag_mode'      => 'nothing',
-            'date'          => $data['date'],
-            'description'   => $data['description'],
-            'latitude'      => null,
-            'longitude'     => null,
-            'zoomLevel'     => null,
-        ];
-
-        /** @var null|Tag $tag */
-        $tag       = Tag::create($array);
-        if (!in_array(null, [$tag, $latitude, $longitude], true)) {
-            // create location object.
-            $location             = new Location();
-            $location->latitude   = $latitude;
-            $location->longitude  = $longitude;
-            $location->zoom_level = $zoomLevel;
-            $location->locatable()->associate($tag);
-            $location->save();
-        }
-
-        return $tag;
     }
 
     public function setUser(User $user): void
