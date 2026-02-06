@@ -75,6 +75,17 @@ class Preferences
         return true;
     }
 
+    public function deleteForUser(User $user, string $name): bool
+    {
+        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
+        if (Cache::has($fullName)) {
+            Cache::forget($fullName);
+        }
+        Preference::where('user_id', $user->id)->where('name', $name)->delete();
+
+        return true;
+    }
+
     /**
      * Find by name, has no user ID in it, because the method is called from an unauthenticated route any way.
      */

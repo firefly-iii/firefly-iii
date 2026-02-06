@@ -152,7 +152,7 @@ class ProfileController extends Controller
         }
         $repository->unblockUser($user);
         // also remove the "remote_guard_alt_email" preference.
-        Preferences::delete('remote_guard_alt_email');
+        Preferences::deleteForUser($user, 'remote_guard_alt_email');
 
         // return to log in.
         session()->flash('success', (string) trans('firefly.login_with_new_email'));

@@ -32,6 +32,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #11614
 - #11620
 - #11632
+- Confirming your new email address would result in an error.
 
 ### Security
 
