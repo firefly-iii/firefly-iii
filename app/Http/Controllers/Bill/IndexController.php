@@ -29,6 +29,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\OrganisesObjectGroups;
 use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\User;
@@ -75,6 +76,16 @@ class IndexController extends Controller
         $this->repository->correctTransfers();
         $start       = session('start');
         $end         = session('end');
+        $viewRange = Preferences::get('viewRange', '1M')->data;
+
+        // give the end some extra space when the user has last7, last30 or last90.
+        if('last7' === $viewRange || 'last30' === $viewRange) {
+            $end->addDays(30);
+        }
+        if('last90') {
+            $end->addDays(90);
+        }
+
         $collection  = $this->repository->getBills();
         $total       = $collection->count();
 
