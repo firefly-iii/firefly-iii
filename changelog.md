@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.17 - 2026-02-06
+
+### Added
+
+- Batch processing. Firefly III now has a setting (under `/settings`) that allows you to send `"batch_processing": true` with new transactions over the API. If this setting is enabled and the value is `true`, Firefly III will not fire rules, webhooks or other events untill you either send `false` with a transaction OR use the [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`. This should speed up (large) data imports. It's a little experimental, use at your own risk.
+
+### Changed
+
+- A lot of code in Firefly III is code responding to changes made by other code. These lines of code are called events, listeners, observers, handlers, etc. They were a bit of a mess and I cleaned them all up. This should greatly improve the reliability of debt amounts and running balance consistency. Bugs are always possible, let me know.
+
+### Deprecated
+
+- PHP 8.4 is still on my list to be disabled, beware.
+
+### Fixed
+
+- #11589
+- #11541
+- #11544
+- #11546
+- #11431
+- #11399
+- #11569
+- #11563
+- #11589
+- #11601
+- #11614
+- #11620
+- #11632
+
+### Security
+
+- Initial release.
+
+### API
+
+- [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`.
+
+
 ## v6.4.16 - 2026-01-18
 
 > [!WARNING]
