@@ -169,7 +169,7 @@ trait RecalculatesAvailableBudgetsTrait
             [$start, $end]           = [$end, $start];
             $budgetLimit->start_date = $start;
             $budgetLimit->end_date   = $end;
-            $budgetLimit->saveQuietly();
+            $budgetLimit->saveQuietly(); // FIXME needs to be removed here, put in repository.
         }
 
         // limit period in total is:

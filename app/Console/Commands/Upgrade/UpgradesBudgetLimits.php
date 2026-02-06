@@ -70,7 +70,7 @@ class UpgradesBudgetLimits extends Command
                     if (null !== $user) {
                         $currency                             = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
                         $budgetLimit->transaction_currency_id = $currency->id;
-                        $budgetLimit->save();
+                        $budgetLimit->saveQuietly();
                         $this->friendlyInfo(sprintf(
                             'Budget limit #%d (part of budget "%s") now has a currency setting (%s).',
                             $budgetLimit->id,

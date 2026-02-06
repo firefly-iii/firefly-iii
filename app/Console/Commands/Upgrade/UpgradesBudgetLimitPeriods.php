@@ -91,7 +91,7 @@ class UpgradesBudgetLimitPeriods extends Command
             return;
         }
         $limit->period = $period;
-        $limit->save();
+        $limit->saveQuietly();
 
         $msg           = sprintf(
             'Budget limit #%d (%s - %s) period is "%s".',

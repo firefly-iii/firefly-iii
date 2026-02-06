@@ -68,6 +68,11 @@ class CorrectsInvertedBudgetLimits extends Command
             $budgetLimit->end_date   = $start;
             $budgetLimit->saveQuietly();
         }
+
+        if($set->count() > 0) {
+            // FIXME here be a available budget event.
+        }
+
         if (1 === $set->count()) {
             $this->friendlyInfo('Corrected one budget limit to have the right start/end dates.');
 

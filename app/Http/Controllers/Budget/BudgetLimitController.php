@@ -97,7 +97,7 @@ class BudgetLimitController extends Controller
             return true;
         });
 
-        return view('budgets.budget-limits.create', ['start'      => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
+        return view('budgets.budget-limits.create', ['start' => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
     }
 
     public function delete(BudgetLimit $budgetLimit): Redirector|RedirectResponse
@@ -167,8 +167,8 @@ class BudgetLimitController extends Controller
                 $this->blRepository->destroyBudgetLimit($limit);
             }
 
-            // return empty=ish array:
-            return response()->json();
+            // return empty array:
+            return response()->json([]);
         }
         if ((int) $amount > 268435456) { // intentional cast to integer
             $amount = '268435456';
@@ -178,8 +178,7 @@ class BudgetLimitController extends Controller
         }
 
         if ($limit instanceof BudgetLimit) {
-            $limit->amount = $amount;
-            $limit->save();
+            $this->blRepository->update($limit, ['amount' => $amount]);
         }
         if (!$limit instanceof BudgetLimit) {
             $limit = $this->blRepository->store([
