@@ -26,6 +26,9 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use FireflyIII\Enums\AutoBudgetType;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Events\Model\Budget\CreatedBudget;
+use FireflyIII\Events\Model\Budget\UpdatedBudget;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -302,6 +305,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $this->setNoteText($budget, (string) $data['notes']);
         }
         $budget->save();
+
+        $createWebhookMessages = $data['fire_webhooks'] ?? true;
+        event(new UpdatedBudget($budget, $createWebhookMessages));
+        event(new WebhookMessagesRequestSending());
 
         // update or create auto-budget:
         $autoBudget     = $this->getAutoBudget($budget);
@@ -592,7 +599,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
     public function setBudgetOrder(Budget $budget, int $order): void
     {
         $budget->order = $order;
-        $budget->save();
+        $budget->saveQuietly();
     }
 
     public function spentInPeriod(Carbon $start, Carbon $end): array
@@ -754,6 +761,10 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             $this->setNoteText($newBudget, (string) $data['notes']);
         }
 
+        $createWebhookMessages = $data['fire_webhooks'] ?? true;
+        event(new CreatedBudget($newBudget, $createWebhookMessages));
+        event(new WebhookMessagesRequestSending());
+
         if (!array_key_exists('auto_budget_type', $data) || !array_key_exists('auto_budget_amount', $data) || !array_key_exists('auto_budget_period', $data)) {
             return $newBudget;
         }
@@ -809,6 +820,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
             'start_date'  => $start,
             'end_date'    => $end,
             'amount'      => $autoBudget->amount,
+            'fire_webhooks' => false,
         ]);
 
         return $newBudget;
