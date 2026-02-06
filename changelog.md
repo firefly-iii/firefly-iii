@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Batch processing. Firefly III now has a setting (under `/settings`) that allows you to send `"batch_processing": true` with new transactions over the API. If this setting is enabled and the value is `true`, Firefly III will not fire rules, webhooks or other events untill you either send `false` with a transaction OR use the [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`. This should speed up (large) data imports. It's a little experimental, use at your own risk.
+- [Issue 11614](https://github.com/firefly-iii/firefly-iii/issues/11614) (Add New Taiwan Dollar to Currency Seeder) reported by @nick322
 
 ### Changed
 
@@ -27,16 +28,10 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11399](https://github.com/firefly-iii/firefly-iii/issues/11399) (Unusual behavior in audit logs (multi-currency)) reported by @jgmm81
 - [PR 11569](https://github.com/firefly-iii/firefly-iii/pull/11569) (Fix layout overflow issues with long content in v1 and v2 layouts) reported by @gian21391
 - [Issue 11563](https://github.com/firefly-iii/firefly-iii/issues/11563) (Tag Report/Insight API Endpoint for Tags Non Functional) reported by @Unsantae
-- [PR 11589](https://github.com/firefly-iii/firefly-iii/pull/11589) (apply user-selected light/dark mode to form elements (checkboxes, date picker) #8613 #7620) reported by @mateuszkulapl
 - [Issue 11601](https://github.com/firefly-iii/firefly-iii/issues/11601) (Only ungrouped piggy banks are listed when creating a transaction) reported by @jgmm81
-- [Issue 11614](https://github.com/firefly-iii/firefly-iii/issues/11614) (Add New Taiwan Dollar to Currency Seeder) reported by @nick322
 - [Issue 11620](https://github.com/firefly-iii/firefly-iii/issues/11620) (Add database indexes to improve reporting query performance) reported by @Zakmaf
 - [PR 11632](https://github.com/firefly-iii/firefly-iii/pull/11632) (fix v2 layout dashboard transactions load) reported by @mateuszkulapl
 - Confirming your new email address would result in an error.
-
-### Security
-
-- Initial release.
 
 ### API
 
