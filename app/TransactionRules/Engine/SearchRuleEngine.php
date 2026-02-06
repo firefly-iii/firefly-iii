@@ -100,7 +100,10 @@ class SearchRuleEngine implements RuleEngineInterface
             foreach ($this->rules as $rule) { // @phpstan-ignore-line
                 $result = $this->fireRule($rule);
                 if ($result && true === $rule->stop_processing) {
-                    Log::debug(sprintf('Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.', $rule->id));
+                    Log::debug(sprintf(
+                        'Rule #%d has triggered and executed, but calls to stop processing. Since not in the context of a group, do not stop.',
+                        $rule->id
+                    ));
                 }
                 if (false === $result && true === $rule->stop_processing) {
                     Log::debug(sprintf('Rule #%d has triggered and changed nothing, but calls to stop processing. Do not stop.', $rule->id));

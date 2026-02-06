@@ -19,19 +19,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11589
-- #11541
-- #11544
-- #11546
-- #11431
-- #11399
-- #11569
-- #11563
-- #11589
-- #11601
-- #11614
-- #11620
-- #11632
+- [PR 11589](https://github.com/firefly-iii/firefly-iii/pull/11589) (apply user-selected light/dark mode to form elements (checkboxes, date picker) #8613 #7620) reported by @mateuszkulapl
+- [Issue 11541](https://github.com/firefly-iii/firefly-iii/issues/11541) (Display running balance fails for transactions between accounts with different currencies) reported by @SledgehammerPL
+- [Issue 11544](https://github.com/firefly-iii/firefly-iii/issues/11544) (Clean up events and handlers) reported by @JC5
+- [Issue 11546](https://github.com/firefly-iii/firefly-iii/issues/11546) (Wrong invitation expiry time) reported by @GunoH
+- [Discussion 11431](https://github.com/orgs/firefly-iii/discussions/11431) (Settings don't get saved) started by @PVTejas
+- [Issue 11399](https://github.com/firefly-iii/firefly-iii/issues/11399) (Unusual behavior in audit logs (multi-currency)) reported by @jgmm81
+- [PR 11569](https://github.com/firefly-iii/firefly-iii/pull/11569) (Fix layout overflow issues with long content in v1 and v2 layouts) reported by @gian21391
+- [Issue 11563](https://github.com/firefly-iii/firefly-iii/issues/11563) (Tag Report/Insight API Endpoint for Tags Non Functional) reported by @Unsantae
+- [PR 11589](https://github.com/firefly-iii/firefly-iii/pull/11589) (apply user-selected light/dark mode to form elements (checkboxes, date picker) #8613 #7620) reported by @mateuszkulapl
+- [Issue 11601](https://github.com/firefly-iii/firefly-iii/issues/11601) (Only ungrouped piggy banks are listed when creating a transaction) reported by @jgmm81
+- [Issue 11614](https://github.com/firefly-iii/firefly-iii/issues/11614) (Add New Taiwan Dollar to Currency Seeder) reported by @nick322
+- [Issue 11620](https://github.com/firefly-iii/firefly-iii/issues/11620) (Add database indexes to improve reporting query performance) reported by @Zakmaf
+- [PR 11632](https://github.com/firefly-iii/firefly-iii/pull/11632) (fix v2 layout dashboard transactions load) reported by @mateuszkulapl
 - Confirming your new email address would result in an error.
 
 ### Security

@@ -59,6 +59,8 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     // @phpstan-ignore-line
 
+    // @phpstan-ignore-line
+
     public function __construct()
     {
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];

@@ -43,7 +43,7 @@ use Illuminate\View\View;
  */
 class ExecutionController extends Controller
 {
-    private readonly AccountRepositoryInterface   $repository;
+    private readonly AccountRepositoryInterface $repository;
     private readonly RuleGroupRepositoryInterface $ruleGroupRepository;
 
     /**
@@ -55,7 +55,7 @@ class ExecutionController extends Controller
         $this->repository          = app(AccountRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $this->middleware(function ($request, $next) {
-            app('view')->share('title', (string)trans('firefly.rules'));
+            app('view')->share('title', (string) trans('firefly.rules'));
             app('view')->share('mainTitleIcon', 'fa-random');
             $this->repository->setUser(auth()->user());
             $this->ruleGroupRepository->setUser(auth()->user());
@@ -75,8 +75,8 @@ class ExecutionController extends Controller
 
         // start code
         /** @var User $user */
-        $user     = auth()->user();
-        $accounts = implode(',', $request->get('accounts'));
+        $user          = auth()->user();
+        $accounts      = implode(',', $request->get('accounts'));
         // create new rule engine:
         $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
@@ -84,22 +84,22 @@ class ExecutionController extends Controller
         // add date operators.
         if (null !== $request->get('start')) {
             $startDate = new Carbon($request->get('start'));
-            $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type'  => 'date_after', 'value' => $startDate->format('Y-m-d')]);
         }
         if (null !== $request->get('end')) {
             $endDate = new Carbon($request->get('end'));
-            $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type'  => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         }
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
+        $newRuleEngine->addOperator(['type'  => 'account_id', 'value' => $accounts]);
 
         // set rules:
-        $rules = $this->ruleGroupRepository->getActiveRules($ruleGroup);
+        $rules         = $this->ruleGroupRepository->getActiveRules($ruleGroup);
 
         $newRuleEngine->setRules($rules);
         $newRuleEngine->fire();
-        $resultCount = $newRuleEngine->getResults();
+        $resultCount   = $newRuleEngine->getResults();
 
         // Tell the user that the job is queued
         session()->flash('success', trans_choice('firefly.applied_rule_group_selection', $resultCount, ['title' => $ruleGroup->title]));
@@ -112,10 +112,10 @@ class ExecutionController extends Controller
      *
      * @return Factory|View
      */
-    public function selectTransactions(RuleGroup $ruleGroup): Factory | \Illuminate\Contracts\View\View
+    public function selectTransactions(RuleGroup $ruleGroup): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
+        $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
+        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
     }
 }

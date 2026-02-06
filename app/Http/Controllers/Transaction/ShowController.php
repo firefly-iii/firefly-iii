@@ -192,7 +192,6 @@ class ShowController extends Controller
     {
         $amounts = [];
         foreach ($group['transactions'] as $transaction) {
-
             // add normal amount:
             $symbol                     = $transaction['currency_symbol'];
             $amounts[$symbol] ??= ['amount'         => '0', 'symbol'         => $symbol, 'decimal_places' => $transaction['currency_decimal_places']];
@@ -214,7 +213,11 @@ class ShowController extends Controller
                 $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], (string) $transaction['foreign_amount']);
             }
             // add primary currency amount, but only if it is not the foreign amount or the current one.
-            if (null !== $transaction['pc_amount'] && $transaction['currency_id'] !== $this->primaryCurrency->id && $transaction['foreign_currency_code'] !== $this->primaryCurrency->code) {
+            if (
+                null !== $transaction['pc_amount']
+                && $transaction['currency_id'] !== $this->primaryCurrency->id
+                && $transaction['foreign_currency_code'] !== $this->primaryCurrency->code
+            ) {
                 // same for foreign currency:
                 $primarySymbol                     = $this->primaryCurrency->symbol;
                 $amounts[$primarySymbol] ??= [
