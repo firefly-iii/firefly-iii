@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 
 /**
  * Class BillDestroyService
@@ -33,6 +35,16 @@ class BillDestroyService
 {
     public function destroy(Bill $bill): void
     {
+        $repository = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($bill->user);
+
+        /** @var Attachment $attachment */
+        foreach ($bill->attachments()->get() as $attachment) {
+            $repository->destroy($attachment);
+        }
+        $bill->notes()->delete();
+
+
         $bill->delete();
     }
 }

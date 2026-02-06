@@ -45,7 +45,7 @@ class UniqueAccountNumber implements ValidationRule
         private readonly ?Account $account,
         private ?string $expectedType
     ) {
-        app('log')->debug('Constructed UniqueAccountNumber');
+        Log::debug('Constructed UniqueAccountNumber');
         // a very basic fix to make sure we get the correct account type:
         if ('expense' === $this->expectedType) {
             $this->expectedType = AccountTypeEnum::EXPENSE->value;

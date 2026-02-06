@@ -39,18 +39,6 @@ class BillObserver
         $this->updatePrimaryCurrencyAmount($bill);
     }
 
-    public function deleting(Bill $bill): void
-    {
-        $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($bill->user);
-
-        /** @var Attachment $attachment */
-        foreach ($bill->attachments()->get() as $attachment) {
-            $repository->destroy($attachment);
-        }
-        $bill->notes()->delete();
-    }
-
     public function updated(Bill $bill): void
     {
         //        Log::debug('Observe "updated" of a bill.');
