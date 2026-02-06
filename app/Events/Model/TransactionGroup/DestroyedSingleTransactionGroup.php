@@ -34,5 +34,8 @@ class DestroyedSingleTransactionGroup extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public TransactionGroupEventFlags $flags, public TransactionGroupEventObjects $objects) {}
+    public function __construct(
+        public TransactionGroupEventFlags $flags,
+        public TransactionGroupEventObjects $objects
+    ) {}
 }

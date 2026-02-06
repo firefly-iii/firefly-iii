@@ -73,6 +73,7 @@ class DestroyController extends Controller
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->groupRepository->destroy($transactionGroup);
         Preferences::mark();
+
         return response()->json([], 204);
     }
 

@@ -47,7 +47,7 @@ class TransactionGroupDestroyService
         }
         $transactionGroup->delete();
         // trigger just after destruction
-        $flags = new TransactionGroupEventFlags();
+        $flags   = new TransactionGroupEventFlags();
         event(new DestroyedSingleTransactionGroup($flags, $objects));
     }
 }
