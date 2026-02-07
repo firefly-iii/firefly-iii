@@ -9,6 +9,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 - Batch processing. Firefly III now has a setting (under `/settings`) that allows you to send `"batch_processing": true` with new transactions over the API. If this setting is enabled and the value is `true`, Firefly III will not fire rules, webhooks or other events untill you either send `false` with a transaction OR use the [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`. This should speed up (large) data imports. It's a little experimental, use at your own risk.
 - [Issue 11614](https://github.com/firefly-iii/firefly-iii/issues/11614) (Add New Taiwan Dollar to Currency Seeder) reported by @nick322
+- #11246
 
 ### Changed
 

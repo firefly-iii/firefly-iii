@@ -164,13 +164,12 @@
                             <td>
                                 {% for amount in amounts %}
                                     {% if first.transaction_type_type == 'Withdrawal' %}
-                                        {{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     {% elseif first.transaction_type_type == 'Deposit' %}
-                                        {{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount*-1,amount.symbol, amount.decimal_places) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     {% elseif first.transaction_type_type == 'Transfer' %}
                                         <span class="text-info money-transfer">
-
-                                        {{ formatAmountBySymbol(amount.amount*-1, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
+                                        {% if amount.approximate %}~ {% endif %}{{ formatAmountBySymbol(amount.amount*-1, amount.symbol, amount.decimal_places, false) }}{% if loop.index0 != amounts|length -1 %}, {% endif %}
                                     </span>
                                     {% elseif first.transaction_type_type == 'Opening balance' %}
                                         {# Opening balance stored amount is always negative: find out which way the money goes #}
@@ -318,12 +317,12 @@
                                     <!-- do primary currency amount, if foreign amount is not the same. -->
                                     {% if null != journal.pc_amount and primaryCurrency.id != journal.currency_id and primaryCurrency.id != journal.foreign_currency_id %}
                                         {% if first.transaction_type_type == 'Withdrawal' %}
-                                            ({{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            (~ {{ formatAmountBySymbol(journal.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Deposit' %}
-                                            ({{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                            (~ {{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                         {% elseif first.transaction_type_type == 'Transfer' %}
                                             <span class="text-info money-transfer">
-                                        ({{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
+                                        (~ {{ formatAmountBySymbol(journal.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places, false) }})
                                     </span>
                                         {% endif %}
                                     {% endif %}
