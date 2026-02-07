@@ -194,7 +194,12 @@ class ShowController extends Controller
         foreach ($group['transactions'] as $transaction) {
             // add normal amount:
             $symbol                     = $transaction['currency_symbol'];
-            $amounts[$symbol] ??= ['amount'         => '0', 'symbol'         => $symbol, 'decimal_places' => $transaction['currency_decimal_places'],'approximate' =>false];
+            $amounts[$symbol] ??= [
+                'amount'         => '0',
+                'symbol'         => $symbol,
+                'decimal_places' => $transaction['currency_decimal_places'],
+                'approximate'    => false,
+            ];
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], (string) $transaction['amount']);
 
             // add foreign amount:
@@ -207,7 +212,7 @@ class ShowController extends Controller
                 $foreignSymbol                     = $transaction['foreign_currency_symbol'];
                 $amounts[$foreignSymbol] ??= [
                     'amount'         => '0',
-                    'approximate' =>false,
+                    'approximate'    => false,
                     'symbol'         => $foreignSymbol,
                     'decimal_places' => $transaction['foreign_currency_decimal_places'],
                 ];
@@ -223,7 +228,7 @@ class ShowController extends Controller
                 $primarySymbol                     = $this->primaryCurrency->symbol;
                 $amounts[$primarySymbol] ??= [
                     'amount'         => '0',
-                    'approximate' =>true,
+                    'approximate'    => true,
                     'symbol'         => $this->primaryCurrency->symbol,
                     'decimal_places' => $this->primaryCurrency->decimal_places,
                 ];
