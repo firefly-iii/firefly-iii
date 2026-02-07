@@ -31,6 +31,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11601](https://github.com/firefly-iii/firefly-iii/issues/11601) (Only ungrouped piggy banks are listed when creating a transaction) reported by @jgmm81
 - [Issue 11620](https://github.com/firefly-iii/firefly-iii/issues/11620) (Add database indexes to improve reporting query performance) reported by @Zakmaf
 - [PR 11632](https://github.com/firefly-iii/firefly-iii/pull/11632) (fix v2 layout dashboard transactions load) reported by @mateuszkulapl
+- #11657
 - #11660
 - Confirming your new email address would result in an error.
 

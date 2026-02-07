@@ -54,15 +54,17 @@ class QueryParser implements QueryParserInterface
         $prohibited             = false;
         $chrArray               = preg_split('//u', $this->query, -1, PREG_SPLIT_NO_EMPTY);
         $count                  = count($chrArray);
+        $prevChar = null;
         while ($this->position < $count) {
             $char     = $chrArray[$this->position];
             $nextChar = $chrArray[$this->position + 1] ?? '';
-            // Log::debug(sprintf('Char #%d: %s', $this->position, $char));
+            $prevChar = $chrArray[$this->position - 1] ?? '';
+            Log::debug(sprintf('Char #%d: %s', $this->position, $char));
 
             // If we're in a quoted string, we treat all characters except another quote as ordinary characters
             if ($inQuotes) {
-                if ('\\' === $char && '"' === $nextChar) {
-                    // Log::debug('BACKSLASH!');
+                if ('\\' === $char && '"' === $nextChar && '\\' !== $prevChar) {
+                    Log::debug('Found a backslash and the next one is a double quote.');
                     // escaped quote, pretend it's a normal char and continue two places (skipping the actual character).
                     $tokenUnderConstruction .= '\\'.$nextChar;
                     $this->position         += 2;

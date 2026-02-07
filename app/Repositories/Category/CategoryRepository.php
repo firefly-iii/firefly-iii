@@ -60,6 +60,7 @@ class CategoryRepository implements CategoryRepositoryInterface, UserGroupInterf
 
     public function categoryStartsWith(string $query, int $limit): Collection
     {
+        Log::debug(sprintf('Find a category that starts with "%s"', $query));
         $search = $this->user->categories();
         if ('' !== $query) {
             $search->whereLike('name', sprintf('%s%%', $query));
