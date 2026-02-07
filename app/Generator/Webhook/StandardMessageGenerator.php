@@ -27,13 +27,13 @@ namespace FireflyIII\Generator\Webhook;
 use FireflyIII\Enums\WebhookResponse;
 use FireflyIII\Enums\WebhookTrigger;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\WebhookMessageFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\Webhook;
-use FireflyIII\Models\WebhookMessage;
 use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
 use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use FireflyIII\Support\JsonApi\Enrichments\AccountEnrichment;
@@ -55,11 +55,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class StandardMessageGenerator implements MessageGeneratorInterface
 {
-    private Collection     $objects;
+    private Collection $objects;
     private WebhookTrigger $trigger;
-    private User           $user;
-    private int            $version = 0;
-    private Collection     $webhooks;
+    private User $user;
+    private int $version = 0;
+    private Collection $webhooks;
 
     public function __construct()
     {
@@ -76,46 +76,52 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         // do some debugging
-        Log::debug(sprintf('StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).', $this->objects->count(), $this->webhooks->count()));
+        Log::debug(sprintf(
+            'StandardMessageGenerator will generate messages for %d object(s) and %d webhook(s).',
+            $this->objects->count(),
+            $this->webhooks->count()
+        ));
         $this->run();
     }
 
-    private function getWebhooks(): Collection
+    public function getVersion(): int
     {
-        return $this->user->webhooks()
-            ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
-            ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
-            ->where('active', true)
-            ->whereIn('webhook_triggers.title', [$this->trigger->name, WebhookTrigger::ANY->name])
-            ->get(['webhooks.*'])
-        ;
+        return $this->version;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function run(): void
+    public function setObjects(Collection $objects): void
     {
-        Log::debug('Now in StandardMessageGenerator::run');
-
-        /** @var Webhook $webhook */
-        foreach ($this->webhooks as $webhook) {
-            $this->runWebhook($webhook);
-        }
-        Log::debug('Done with StandardMessageGenerator::run');
+        $this->objects = $objects;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function runWebhook(Webhook $webhook): void
+    public function setTrigger(WebhookTrigger $trigger): void
     {
-        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
+        $this->trigger = $trigger;
+    }
 
-        /** @var Model $object */
-        foreach ($this->objects as $object) {
-            $this->generateMessage($webhook, $object);
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function setWebhooks(Collection $webhooks): void
+    {
+        $this->webhooks = $webhooks;
+    }
+
+    private function collectAccounts(TransactionGroup $transactionGroup): Collection
+    {
+        $accounts = new Collection();
+
+        /** @var TransactionJournal $journal */
+        foreach ($transactionGroup->transactionJournals as $journal) {
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                $accounts->push($transaction->account);
+            }
         }
+
+        return $accounts->unique();
     }
 
     /**
@@ -175,7 +181,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
         switch ($responseTitle) {
             default:
-                Log::error(sprintf('The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.', $webhook->id, $webhook->response));
+                Log::error(sprintf(
+                    'The response code for webhook #%d is "%s" and the message generator cant handle it. Soft fail.',
+                    $webhook->id,
+                    $webhook->response
+                ));
 
                 return;
 
@@ -220,9 +230,11 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 try {
                     $basicMessage['content'] = $transformer->transformObject($model);
                 } catch (FireflyException $e) {
-                    Log::error(
-                        sprintf('The transformer could not include the requested transaction group for webhook #%d: %s', $webhook->id, $e->getMessage())
-                    );
+                    Log::error(sprintf(
+                        'The transformer could not include the requested transaction group for webhook #%d: %s',
+                        $webhook->id,
+                        $e->getMessage()
+                    ));
                     Log::error($e->getTraceAsString());
 
                     return;
@@ -243,59 +255,8 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $basicMessage['content'][] = $transformer->transform($account);
                 }
         }
-        $this->storeMessage($webhook, $basicMessage);
-    }
-
-    public function getVersion(): int
-    {
-        return $this->version;
-    }
-
-    private function collectAccounts(TransactionGroup $transactionGroup): Collection
-    {
-        $accounts = new Collection();
-
-        /** @var TransactionJournal $journal */
-        foreach ($transactionGroup->transactionJournals as $journal) {
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                $accounts->push($transaction->account);
-            }
-        }
-
-        return $accounts->unique();
-    }
-
-    private function storeMessage(Webhook $webhook, array $message): void
-    {
-        $webhookMessage          = new WebhookMessage();
-        $webhookMessage->webhook()->associate($webhook);
-        $webhookMessage->sent    = false;
-        $webhookMessage->errored = false;
-        $webhookMessage->uuid    = $message['uuid'];
-        $webhookMessage->message = $message;
-        $webhookMessage->save();
-        Log::debug(sprintf('Stored new webhook message #%d', $webhookMessage->id));
-    }
-
-    public function setObjects(Collection $objects): void
-    {
-        $this->objects = $objects;
-    }
-
-    public function setTrigger(WebhookTrigger $trigger): void
-    {
-        $this->trigger = $trigger;
-    }
-
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-    }
-
-    public function setWebhooks(Collection $webhooks): void
-    {
-        $this->webhooks = $webhooks;
+        $factory       = new WebhookMessageFactory();
+        $factory->create($webhook, $basicMessage);
     }
 
     private function getRelevantResponse(WebhookResponseModel $response, string $class): string
@@ -342,5 +303,44 @@ class StandardMessageGenerator implements MessageGeneratorInterface
         }
 
         return array_unique($return);
+    }
+
+    private function getWebhooks(): Collection
+    {
+        return $this->user
+            ->webhooks()
+            ->leftJoin('webhook_webhook_trigger', 'webhook_webhook_trigger.webhook_id', 'webhooks.id')
+            ->leftJoin('webhook_triggers', 'webhook_webhook_trigger.webhook_trigger_id', 'webhook_triggers.id')
+            ->where('active', true)
+            ->whereIn('webhook_triggers.title', [$this->trigger->name, WebhookTrigger::ANY->name])
+            ->get(['webhooks.*'])
+        ;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function run(): void
+    {
+        Log::debug('Now in StandardMessageGenerator::run');
+
+        /** @var Webhook $webhook */
+        foreach ($this->webhooks as $webhook) {
+            $this->runWebhook($webhook);
+        }
+        Log::debug('Done with StandardMessageGenerator::run');
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function runWebhook(Webhook $webhook): void
+    {
+        Log::debug(sprintf('Now in runWebhook(#%d)', $webhook->id));
+
+        /** @var Model $object */
+        foreach ($this->objects as $object) {
+            $this->generateMessage($webhook, $object);
+        }
     }
 }

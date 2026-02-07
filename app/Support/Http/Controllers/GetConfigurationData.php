@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Facades\FireflyConfig;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -49,7 +49,7 @@ trait GetConfigurationData
             E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
         ];
 
-        return $array[$value] ?? (string)$value;
+        return $array[$value] ?? (string) $value;
     }
 
     /**
@@ -65,7 +65,7 @@ trait GetConfigurationData
                 $currentStep          = $options;
 
                 // get the text:
-                $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$key);
+                $currentStep['intro'] = (string) trans('intro.'.$route.'_'.$key);
 
                 // save in array:
                 $steps[]              = $currentStep;
@@ -98,10 +98,8 @@ trait GetConfigurationData
         $title          = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
         $isCustom       = true === session('is_custom_range', false);
         $today          = today(config('app.timezone'));
-        $ranges         = [
-            // first range is the current range:
-            $title => [$start, $end],
-        ];
+        $ranges         = [// first range is the current range:
+            $title   => [$start, $end]];
         Log::debug(sprintf('dateRange: the date range in the session is"%s" - "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // when current range is a custom range, add the current period as the next range.
@@ -134,46 +132,46 @@ trait GetConfigurationData
         $todayEnd       = Navigation::endOfPeriod($todayStart, $viewRange);
 
         if ($todayStart->ne($start) || $todayEnd->ne($end)) {
-            $ranges[ucfirst((string)trans('firefly.today'))] = [$todayStart, $todayEnd];
+            $ranges[ucfirst((string) trans('firefly.today'))] = [$todayStart, $todayEnd];
         }
 
         // last seven days:
         $seven          = today(config('app.timezone'))->subDays(7);
-        $index          = (string)trans('firefly.last_seven_days');
+        $index          = (string) trans('firefly.last_seven_days');
         $ranges[$index] = [$seven, new Carbon()];
 
         // last 30 days:
         $thirty         = today(config('app.timezone'))->subDays(30);
-        $index          = (string)trans('firefly.last_thirty_days');
+        $index          = (string) trans('firefly.last_thirty_days');
         $ranges[$index] = [$thirty, new Carbon()];
 
         // month to date:
         $monthBegin     = today(config('app.timezone'))->startOfMonth();
-        $index          = (string)trans('firefly.month_to_date');
+        $index          = (string) trans('firefly.month_to_date');
         $ranges[$index] = [$monthBegin, new Carbon()];
 
         // year to date:
         $yearBegin      = today(config('app.timezone'))->startOfYear();
-        $index          = (string)trans('firefly.year_to_date');
+        $index          = (string) trans('firefly.year_to_date');
         $ranges[$index] = [$yearBegin, new Carbon()];
 
         // previous year:
         $yearBegin      = today(config('app.timezone'))->subYear()->startOfYear();
-        $index          = (string)trans('firefly.previous_year', ['year' => $yearBegin->year]);
+        $index          = (string) trans('firefly.previous_year', ['year'          => $yearBegin->year]);
         $ranges[$index] = [$yearBegin, $yearBegin->clone()->endOfYear()];
 
         // everything
-        $index          = (string)trans('firefly.everything');
+        $index          = (string) trans('firefly.everything');
         $ranges[$index] = [$first, new Carbon()];
 
         return [
             'title'         => $title,
             'configuration' => [
-                'apply'       => (string)trans('firefly.apply'),
-                'cancel'      => (string)trans('firefly.cancel'),
-                'from'        => (string)trans('firefly.from'),
-                'to'          => (string)trans('firefly.to'),
-                'customRange' => (string)trans('firefly.customRange'),
+                'apply'       => (string) trans('firefly.apply'),
+                'cancel'      => (string) trans('firefly.cancel'),
+                'from'        => (string) trans('firefly.from'),
+                'to'          => (string) trans('firefly.to'),
+                'customRange' => (string) trans('firefly.customRange'),
                 'start'       => $start->format('Y-m-d'),
                 'end'         => $end->format('Y-m-d'),
                 'ranges'      => $ranges,
@@ -184,8 +182,8 @@ trait GetConfigurationData
     /**
      * Get specific info for special routes.
      */
-    protected function getSpecificSteps(string $route, string $specificPage): array // get config values
-    {
+    protected function getSpecificSteps(string $route, string $specificPage): array
+    { // get config values
         $steps    = [];
         $routeKey = '';
 
@@ -198,7 +196,7 @@ trait GetConfigurationData
                     $currentStep          = $options;
 
                     // get the text:
-                    $currentStep['intro'] = (string)trans('intro.'.$route.'_'.$specificPage.'_'.$key);
+                    $currentStep['intro'] = (string) trans('intro.'.$route.'_'.$specificPage.'_'.$key);
 
                     // save in array:
                     $steps[]              = $currentStep;
@@ -213,7 +211,7 @@ trait GetConfigurationData
     protected function verifyRecurringCronJob(): void
     {
         $config   = FireflyConfig::get('last_rt_job', 0);
-        $lastTime = (int)$config?->data;
+        $lastTime = (int) $config?->data;
         $now      = Carbon::now()->getTimestamp();
         Log::debug(sprintf('verifyRecurringCronJob: last time is %d ("%s"), now is %d', $lastTime, $config?->data, $now));
         if (0 === $lastTime) {
@@ -221,7 +219,7 @@ trait GetConfigurationData
 
             return;
         }
-        if ($now - $lastTime > 129600) {
+        if (($now - $lastTime) > 129600) {
             request()->session()->flash('warning', trans('firefly.recurring_cron_long_ago'));
         }
     }

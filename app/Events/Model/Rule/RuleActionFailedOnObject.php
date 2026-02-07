@@ -36,8 +36,11 @@ class RuleActionFailedOnObject
 {
     use SerializesModels;
 
-    public function __construct(public RuleAction $ruleAction, public TransactionJournal $journal, public string $error)
-    {
+    public function __construct(
+        public RuleAction $ruleAction,
+        public TransactionJournal $journal,
+        public string $error
+    ) {
         Log::debug('Created new RuleActionFailedOnObject');
     }
 }

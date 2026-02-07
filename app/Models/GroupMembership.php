@@ -55,18 +55,11 @@ class GroupMembership extends Model
 
     protected function casts(): array
     {
-        return [
-            'created_at'    => 'datetime',
-            'updated_at'    => 'datetime',
-            'user_id'       => 'integer',
-            'user_group_id' => 'integer',
-        ];
+        return ['created_at'    => 'datetime', 'updated_at'    => 'datetime', 'user_id'       => 'integer', 'user_group_id' => 'integer'];
     }
 
     protected function userRoleId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillStoreRequest;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -42,7 +42,7 @@ use Illuminate\Support\Facades\Log;
 class CreateController extends Controller
 {
     private AttachmentHelperInterface $attachments;
-    private BillRepositoryInterface   $repository;
+    private BillRepositoryInterface $repository;
 
     /**
      * BillController constructor.
@@ -51,16 +51,14 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->repository  = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->repository  = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -83,7 +81,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', ['periods' => $periods, 'subTitle' => $subTitle]);
+        return view('bills.create', ['periods'  => $periods, 'subTitle' => $subTitle]);
     }
 
     /**

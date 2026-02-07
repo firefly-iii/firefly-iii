@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\AttachmentObserver;
+use FireflyIII\Handlers\Observer\DeletedAttachmentObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -36,24 +36,39 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([AttachmentObserver::class])]
+#[ObservedBy([DeletedAttachmentObserver::class])]
 class Attachment extends Model
 {
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable = ['attachable_id', 'attachable_type', 'user_id', 'user_group_id', 'md5', 'filename', 'mime', 'title', 'description', 'size', 'uploaded'];
+    protected $fillable = [
+        'attachable_id',
+        'attachable_type',
+        'user_id',
+        'user_group_id',
+        'md5',
+        'filename',
+        'mime',
+        'title',
+        'description',
+        'size',
+        'uploaded',
+    ];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $attachmentId = (int)$value;
+            $attachmentId = (int) $value;
 
             /** @var User $user */
             $user         = auth()->user();
@@ -66,11 +81,6 @@ class Attachment extends Model
         }
 
         throw new NotFoundHttpException();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**
@@ -86,7 +96,7 @@ class Attachment extends Model
      */
     public function fileName(): string
     {
-        return sprintf('at-%s.data', (string)$this->id);
+        return sprintf('at-%s.data', (string) $this->id);
     }
 
     /**
@@ -97,11 +107,14 @@ class Attachment extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected function attachableId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array

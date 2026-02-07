@@ -40,10 +40,7 @@ class CategoryList implements BinderInterface
     {
         if (auth()->check()) {
             if ('allCategories' === $value) {
-                return auth()->user()->categories()
-                    ->orderBy('name', 'ASC')
-                    ->get()
-                ;
+                return auth()->user()->categories()->orderBy('name', 'ASC')->get();
             }
 
             $list       = array_unique(array_map(\intval(...), explode(',', $value)));
@@ -52,10 +49,7 @@ class CategoryList implements BinderInterface
             }
 
             /** @var Collection $collection */
-            $collection = auth()->user()->categories()
-                ->whereIn('id', $list)
-                ->get()
-            ;
+            $collection = auth()->user()->categories()->whereIn('id', $list)->get();
 
             // add empty category if applicable.
             if (in_array(0, $list, true)) {

@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
@@ -33,6 +32,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -48,15 +48,12 @@ trait ModelInformation
     protected function getActionsForBill(Bill $bill): array // get info and argument
     {
         try {
-            $result = view(
-                'rules.partials.action',
-                [
-                    'oldAction'  => 'link_to_bill',
-                    'oldValue'   => $bill->name,
-                    'oldChecked' => false,
-                    'count'      => 1,
-                ]
-            )->render();
+            $result = view('rules.partials.action', [
+                'oldAction'  => 'link_to_bill',
+                'oldValue'   => $bill->name,
+                'oldChecked' => false,
+                'count'      => 1,
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -88,9 +85,9 @@ trait ModelInformation
         /** @var AccountType $mortgage */
         $mortgage       = $repository->getAccountTypeByType(AccountTypeEnum::MORTGAGE->value);
         $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountTypeEnum::MORTGAGE->value)),
+            $debt->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::DEBT->value)),
+            $loan->id     => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::LOAN->value)),
+            $mortgage->id => (string) trans(sprintf('firefly.account_type_%s', AccountTypeEnum::MORTGAGE->value)),
         ];
         asort($liabilityTypes);
 
@@ -101,7 +98,7 @@ trait ModelInformation
     {
         $roles = [];
         foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+            $roles[$role] = (string) trans(sprintf('firefly.account_role_%s', $role));
         }
 
         return $roles;
@@ -119,31 +116,23 @@ trait ModelInformation
         $triggers     = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);
 
         $result       = [];
         $billTriggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
-        $values       = [
-            $bill->transactionCurrency()->first()?->name,
-            $bill->amount_min,
-            $bill->amount_max,
-            $bill->name,
-        ];
+        $values       = [$bill->transactionCurrency()->first()?->name, $bill->amount_min, $bill->amount_max, $bill->name];
         foreach ($billTriggers as $index => $trigger) {
             try {
-                $string = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $trigger,
-                        'oldValue'   => $values[$index],
-                        'oldChecked' => false,
-                        'count'      => $index + 1,
-                        'triggers'   => $triggers,
-                    ]
-                )->render();
+                $string = view('rules.partials.trigger', [
+                    'oldTrigger' => $trigger,
+                    'oldValue'   => $values[$index],
+                    'oldChecked' => false,
+                    'count'      => $index + 1,
+                    'triggers'   => $triggers,
+                ])->render();
             } catch (Throwable $e) {
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
@@ -170,7 +159,7 @@ trait ModelInformation
         $triggers                = [];
         foreach ($operators as $key => $operator) {
             if ('user_action' !== $key && false === $operator['alias']) {
-                $triggers[$key] = (string)trans(sprintf('firefly.rule_trigger_%s_choice', $key));
+                $triggers[$key] = (string) trans(sprintf('firefly.rule_trigger_%s_choice', $key));
             }
         }
         asort($triggers);

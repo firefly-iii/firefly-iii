@@ -56,12 +56,7 @@ class CreatesFirstUser extends Command
 
             return 1;
         }
-        $data           = [
-            'blocked'      => false,
-            'blocked_code' => null,
-            'email'        => $this->argument('email'),
-            'role'         => 'owner',
-        ];
+        $data           = ['blocked'      => false, 'blocked_code' => null, 'email'        => $this->argument('email'), 'role'         => 'owner'];
         $password       = Str::random(24);
         $user           = $this->repository->store($data);
         $user->password = Hash::make($password);

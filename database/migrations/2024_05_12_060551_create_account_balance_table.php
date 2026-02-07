@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * 2024_05_12_060551_create_account_balance_table.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -27,7 +26,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('account_balances');
+    }
+
     /**
      * Run the migrations.
      */
@@ -50,13 +57,5 @@ return new class () extends Migration {
                 $table->unique(['account_id', 'transaction_currency_id', 'transaction_journal_id', 'date', 'title'], 'unique_account_currency');
             });
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('account_balances');
     }
 };

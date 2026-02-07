@@ -39,16 +39,16 @@ use Illuminate\Support\Facades\Log;
  */
 class AccountBalanceGrouped
 {
-    private array                          $accountIds = [];
-    private string                         $carbonFormat;
+    private array $accountIds = [];
+    private string $carbonFormat;
     private readonly ExchangeRateConverter $converter;
-    private array                          $currencies = [];
-    private array                          $data       = [];
-    private Carbon                         $end;
-    private array                          $journals   = [];
-    private string                         $preferredRange;
-    private TransactionCurrency            $primary;
-    private Carbon                         $start;
+    private array $currencies = [];
+    private array $data       = [];
+    private Carbon $end;
+    private array $journals   = [];
+    private string $preferredRange;
+    private TransactionCurrency $primary;
+    private Carbon $start;
 
     public function __construct()
     {
@@ -68,11 +68,11 @@ class AccountBalanceGrouped
             // income and expense array prepped:
             $income       = [
                 'label'                           => 'earned',
-                'currency_id'                     => (string)$currency['currency_id'],
+                'currency_id'                     => (string) $currency['currency_id'],
                 'currency_symbol'                 => $currency['currency_symbol'],
                 'currency_code'                   => $currency['currency_code'],
                 'currency_decimal_places'         => $currency['currency_decimal_places'],
-                'primary_currency_id'             => (string)$currency['primary_currency_id'],
+                'primary_currency_id'             => (string) $currency['primary_currency_id'],
                 'primary_currency_symbol'         => $currency['primary_currency_symbol'],
                 'primary_currency_code'           => $currency['primary_currency_code'],
                 'primary_currency_decimal_places' => $currency['primary_currency_decimal_places'],
@@ -87,11 +87,11 @@ class AccountBalanceGrouped
             ];
             $expense      = [
                 'label'                           => 'spent',
-                'currency_id'                     => (string)$currency['currency_id'],
+                'currency_id'                     => (string) $currency['currency_id'],
                 'currency_symbol'                 => $currency['currency_symbol'],
                 'currency_code'                   => $currency['currency_code'],
                 'currency_decimal_places'         => $currency['currency_decimal_places'],
-                'primary_currency_id'             => (string)$currency['primary_currency_id'],
+                'primary_currency_id'             => (string) $currency['primary_currency_id'],
                 'primary_currency_symbol'         => $currency['primary_currency_symbol'],
                 'primary_currency_code'           => $currency['primary_currency_code'],
                 'primary_currency_decimal_places' => $currency['primary_currency_decimal_places'],
@@ -170,14 +170,14 @@ class AccountBalanceGrouped
     {
         $this->primary                  = $primary;
         $primaryCurrencyId              = $primary->id;
-        $this->currencies               = [$primary->id => $primary]; // currency cache
+        $this->currencies               = [$primary->id  => $primary]; // currency cache
         $this->data[$primaryCurrencyId] = [
-            'currency_id'                     => (string)$primaryCurrencyId,
+            'currency_id'                     => (string) $primaryCurrencyId,
             'currency_symbol'                 => $primary->symbol,
             'currency_code'                   => $primary->code,
             'currency_name'                   => $primary->name,
             'currency_decimal_places'         => $primary->decimal_places,
-            'primary_currency_id'             => (string)$primaryCurrencyId,
+            'primary_currency_id'             => (string) $primaryCurrencyId,
             'primary_currency_symbol'         => $primary->symbol,
             'primary_currency_code'           => $primary->code,
             'primary_currency_name'           => $primary->name,
@@ -192,15 +192,15 @@ class AccountBalanceGrouped
 
     private function createDefaultDataEntry(array $journal): void
     {
-        $currencyId = (int)$journal['currency_id'];
+        $currencyId = (int) $journal['currency_id'];
         $this->data[$currencyId] ??= [
-            'currency_id'                     => (string)$currencyId,
+            'currency_id'                     => (string) $currencyId,
             'currency_symbol'                 => $journal['currency_symbol'],
             'currency_code'                   => $journal['currency_code'],
             'currency_name'                   => $journal['currency_name'],
             'currency_decimal_places'         => $journal['currency_decimal_places'],
             // primary currency info (could be the same)
-            'primary_currency_id'             => (string)$this->primary->id,
+            'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
             'primary_currency_decimal_places' => $this->primary->decimal_places,
@@ -209,15 +209,9 @@ class AccountBalanceGrouped
 
     private function createDefaultPeriodEntry(array $journal): void
     {
-        $currencyId = (int)$journal['currency_id'];
+        $currencyId = (int) $journal['currency_id'];
         $period     = $journal['date']->format($this->carbonFormat);
-        $this->data[$currencyId][$period] ??= [
-            'period'    => $period,
-            'spent'     => '0',
-            'earned'    => '0',
-            'pc_spent'  => '0',
-            'pc_earned' => '0',
-        ];
+        $this->data[$currencyId][$period] ??= ['period'    => $period, 'spent'     => '0', 'earned'    => '0', 'pc_spent'  => '0', 'pc_earned' => '0'];
     }
 
     private function findCurrency(int $currencyId): TransactionCurrency
@@ -236,15 +230,12 @@ class AccountBalanceGrouped
         // transfer or reconcile or opening balance, and these accounts are the destination.
         if (
             TransactionTypeEnum::DEPOSIT->value === $journal['transaction_type_type']
-
             || (
-                (
-                    TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type']
-                    || TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type']
-                    || TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
-                )
-                && in_array($journal['destination_account_id'], $this->accountIds, true)
+                TransactionTypeEnum::TRANSFER->value === $journal['transaction_type_type']
+                || TransactionTypeEnum::RECONCILIATION->value === $journal['transaction_type_type']
+                || TransactionTypeEnum::OPENING_BALANCE->value === $journal['transaction_type_type']
             )
+            && in_array($journal['destination_account_id'], $this->accountIds, true)
         ) {
             return 'earned';
         }
@@ -268,7 +259,7 @@ class AccountBalanceGrouped
     {
         // format the date according to the period
         $period                                          = $journal['date']->format($this->carbonFormat);
-        $currencyId                                      = (int)$journal['currency_id'];
+        $currencyId                                      = (int) $journal['currency_id'];
         $currency                                        = $this->findCurrency($currencyId);
 
         // set the array with monetary info, if it does not exist.
@@ -285,16 +276,16 @@ class AccountBalanceGrouped
         $amountConverted                                 = bcmul($amount, $rate);
 
         // perhaps transaction already has the foreign amount in the primary currency.
-        if ((int)$journal['foreign_currency_id'] === $this->primary->id) {
+        if ((int) $journal['foreign_currency_id'] === $this->primary->id) {
             $amountConverted = $journal['foreign_amount'] ?? '0';
             $amountConverted = 'earned' === $key ? Steam::positive($amountConverted) : Steam::negative($amountConverted);
         }
 
         // add normal entry
-        $this->data[$currencyId][$period][$key]          = bcadd((string)$this->data[$currencyId][$period][$key], $amount);
+        $this->data[$currencyId][$period][$key]          = bcadd((string) $this->data[$currencyId][$period][$key], $amount);
 
         // add converted entry
         $convertedKey                                    = sprintf('pc_%s', $key);
-        $this->data[$currencyId][$period][$convertedKey] = bcadd((string)$this->data[$currencyId][$period][$convertedKey], $amountConverted);
+        $this->data[$currencyId][$period][$convertedKey] = bcadd((string) $this->data[$currencyId][$period][$convertedKey], $amountConverted);
     }
 }

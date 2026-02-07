@@ -23,12 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -40,60 +37,35 @@ class TransactionObserver
 
     public function created(Transaction $transaction): void
     {
-        Log::debug('Observe "created" of a transaction.');
-        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data && (1 === bccomp($transaction->amount, '0') && self::$recalculate)) {
-            Log::debug('Trigger recalculateForJournal');
-            $journal = $transaction->transactionJournal;
-            if ($journal instanceof TransactionJournal) {
-                AccountBalanceCalculator::recalculateForJournal($journal);
-            }
-        }
+        Log::debug(sprintf('Observed creation of Transaction #%d.', $transaction->id));
+        $this->updatePrimaryCurrencyAmount($transaction);
+    }
+
+    public function updated(Transaction $transaction): void
+    {
         $this->updatePrimaryCurrencyAmount($transaction);
     }
 
     private function updatePrimaryCurrencyAmount(Transaction $transaction): void
     {
-        if (!Amount::convertToPrimary($transaction->transactionJournal->user)) {
-            return;
-        }
-        $userCurrency                       = Amount::getPrimaryCurrencyByUserGroup($transaction->transactionJournal->user->userGroup);
-        $transaction->native_amount         = null;
-        $transaction->native_foreign_amount = null;
-        // first normal amount
-        if ($transaction->transactionCurrency->id !== $userCurrency->id
-            && (null === $transaction->foreign_currency_id
-             || (null !== $transaction->foreign_currency_id
-              && $transaction->foreign_currency_id !== $userCurrency->id))) {
-            $converter                  = new ExchangeRateConverter();
-            $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $transaction->native_amount = $converter->convert($transaction->transactionCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->amount);
-        }
-        // then foreign amount
-        if ($transaction->foreignCurrency?->id !== $userCurrency->id && null !== $transaction->foreign_amount && null !== $transaction->foreignCurrency) {
-            $converter                          = new ExchangeRateConverter();
-            $converter->setUserGroup($transaction->transactionJournal->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $transaction->native_foreign_amount = $converter->convert($transaction->foreignCurrency, $userCurrency, $transaction->transactionJournal->date, $transaction->foreign_amount);
-        }
+        // convert "amount" to "native_amount"
+        $params                     = new ConversionParameters();
+        $params->user               = $transaction->transactionJournal->user;
+        $params->model              = $transaction;
+        $params->originalCurrency   = $transaction->transactionCurrency;
+        $params->amountField        = 'amount';
+        $params->date               = $transaction->transactionJournal->date;
+        $params->primaryAmountField = 'native_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
 
-        $transaction->saveQuietly();
-        Log::debug(sprintf('Transaction #%d primary currency amounts are updated.', $transaction->id));
-    }
-
-    public function deleting(?Transaction $transaction): void
-    {
-        Log::debug('Observe "deleting" of a transaction.');
-        $transaction?->transactionJournal?->delete();
-    }
-
-    public function updated(Transaction $transaction): void
-    {
-        //        Log::debug('Observe "updated" of a transaction.');
-        if (true === FireflyConfig::get('use_running_balance', config('firefly.feature_flags.running_balance_column'))->data && self::$recalculate && 1 === bccomp($transaction->amount, '0')) {
-            Log::debug('Trigger recalculateForJournal');
-            AccountBalanceCalculator::recalculateForJournal($transaction->transactionJournal);
-        }
-        $this->updatePrimaryCurrencyAmount($transaction);
+        // convert "foreign_amount" to "native_foreign_amount"
+        $params                     = new ConversionParameters();
+        $params->user               = $transaction->transactionJournal->user;
+        $params->model              = $transaction;
+        $params->originalCurrency   = $transaction->foreignCurrency;
+        $params->date               = $transaction->transactionJournal->date;
+        $params->amountField        = 'foreign_amount';
+        $params->primaryAmountField = 'native_foreign_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }

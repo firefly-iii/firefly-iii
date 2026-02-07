@@ -24,22 +24,20 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
-use Illuminate\Http\Request;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\StoreRequest;
 use FireflyIII\Enums\UserRoleEnum;
-use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Rules\IsDuplicateTransaction;
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Support\JsonApi\Enrichments\TransactionGroupEnrichment;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
@@ -63,19 +61,17 @@ class StoreController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                /** @var User $admin */
-                $admin                 = auth()->user();
-                $userGroup             = $this->validateUserGroup($request);
+        $this->middleware(function (Request $request, $next) {
+            /** @var User $admin */
+            $admin                 = auth()->user();
+            $userGroup             = $this->validateUserGroup($request);
 
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-                $this->groupRepository->setUser($admin);
-                $this->groupRepository->setUserGroup($userGroup);
+            $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+            $this->groupRepository->setUser($admin);
+            $this->groupRepository->setUserGroup($userGroup);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -92,7 +88,6 @@ class StoreController extends Controller
         $data               = $request->getAll();
         $data['user']       = auth()->user();
         $data['user_group'] = $this->userGroup;
-
 
         Log::channel('audit')->info('Store new transaction over API.', $data);
 
@@ -111,10 +106,6 @@ class StoreController extends Controller
 
             throw new ValidationException($validator);
         }
-        Preferences::mark();
-        $applyRules         = $data['apply_rules'] ?? true;
-        $fireWebhooks       = $data['fire_webhooks'] ?? true;
-        event(new StoredTransactionGroup($transactionGroup, $applyRules, $fireWebhooks));
 
         $manager            = $this->getManager();
 

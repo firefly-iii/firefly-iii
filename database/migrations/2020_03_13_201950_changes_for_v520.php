@@ -52,25 +52,24 @@ class ChangesForV520 extends Migration
     {
         if (!Schema::hasTable('auto_budgets')) {
             try {
-                Schema::create(
-                    'auto_budgets',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->timestamps();
-                        $table->softDeletes();
-                        $table->integer('budget_id', false, true);
-                        $table->integer('transaction_currency_id', false, true);
-                        $table->tinyInteger('auto_budget_type', false, true)->default(1);
-                        $table->decimal('amount', 32, 12);
-                        $table->string('period', 50);
+                Schema::create('auto_budgets', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('budget_id', false, true);
+                    $table->integer('transaction_currency_id', false, true);
+                    $table->tinyInteger('auto_budget_type', false, true)->default(1);
+                    $table->decimal('amount', 32, 12);
+                    $table->string('period', 50);
 
-                        $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
-                        $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
-                    }
-                );
+                    $table->foreign('transaction_currency_id')->references('id')->on('transaction_currencies')->onDelete('cascade');
+                    $table->foreign('budget_id')->references('id')->on('budgets')->onDelete('cascade');
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "auto_budgets": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

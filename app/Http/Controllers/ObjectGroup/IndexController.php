@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\ObjectGroup;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
@@ -32,6 +31,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IndexController
@@ -48,15 +48,13 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-envelope-o');
-                app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
-                $this->repository = app(ObjectGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-envelope-o');
+            app('view')->share('title', (string) trans('firefly.object_groups_page_title'));
+            $this->repository = app(ObjectGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function index(): Factory|View
@@ -66,7 +64,7 @@ class IndexController extends Controller
         $subTitle     = (string) trans('firefly.object_groups_index');
         $objectGroups = $this->repository->get();
 
-        return view('object-groups.index', ['subTitle' => $subTitle, 'objectGroups' => $objectGroups]);
+        return view('object-groups.index', ['subTitle'     => $subTitle, 'objectGroups' => $objectGroups]);
     }
 
     /**

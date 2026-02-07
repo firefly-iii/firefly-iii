@@ -26,7 +26,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use FireflyIII\Casts\SeparateTimezoneCaster;
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Handlers\Observer\TransactionJournalObserver;
+use FireflyIII\Handlers\Observer\DeletedTransactionJournalObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -50,7 +50,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  *
  * @property TransactionGroup $transactionGroup
  */
-#[ObservedBy([TransactionJournalObserver::class])]
+#[ObservedBy([DeletedTransactionJournalObserver::class])]
 class TransactionJournal extends Model
 {
     use HasFactory;
@@ -58,32 +58,49 @@ class TransactionJournal extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-                      = [
-            'user_id',
-            'user_group_id',
-            'transaction_type_id',
-            'bill_id',
-            'tag_count',
-            'transaction_currency_id',
-            'description',
-            'completed',
-            'order',
-            'date',
-            'date_tz',
-        ];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'bill_id',
+        'tag_count',
+        'transaction_currency_id',
+        'description',
+        'completed',
+        'order',
+        'date',
+        'date_tz',
+    ];
 
-    protected $hidden = ['encrypted'];
+    protected $hidden   = ['encrypted'];
+
+    /**
+     * Checks if tables are joined.
+     */
+    public static function isJoined(EloquentBuilder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $journalId = (int)$value;
+            $journalId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -96,11 +113,6 @@ class TransactionJournal extends Model
         }
 
         throw new NotFoundHttpException();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function attachments(): MorphMany
@@ -195,14 +207,19 @@ class TransactionJournal extends Model
         return $this->hasMany(TransactionJournalMeta::class);
     }
 
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
     public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
     }
 
-    public function transactions(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Transaction::class);
+        return $this->belongsTo(User::class);
     }
 
     public function userGroup(): BelongsTo
@@ -231,16 +248,12 @@ class TransactionJournal extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     #[Scope]
@@ -252,20 +265,5 @@ class TransactionJournal extends Model
         if (0 !== count($types)) {
             $query->whereIn('transaction_types.type', $types);
         }
-    }
-
-    /**
-     * Checks if tables are joined.
-     */
-    public static function isJoined(EloquentBuilder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

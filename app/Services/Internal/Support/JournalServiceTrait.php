@@ -47,10 +47,10 @@ use function Safe\json_encode;
  */
 trait JournalServiceTrait
 {
-    private AccountRepositoryInterface  $accountRepository;
-    private BudgetRepositoryInterface   $budgetRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private BudgetRepositoryInterface $budgetRepository;
     private CategoryRepositoryInterface $categoryRepository;
-    private TagFactory                  $tagFactory;
+    private TagFactory $tagFactory;
 
     /**
      * @throws FireflyException
@@ -96,12 +96,7 @@ trait JournalServiceTrait
             Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
             $temp = $this->findAccountById(['id' => $data['id']], []);
             if (null !== $temp) {
-                $tempData = [
-                    'name'   => $temp->name,
-                    'iban'   => $temp->iban,
-                    'number' => null,
-                    'bic'    => null,
-                ];
+                $tempData = ['name'   => $temp->name, 'iban'   => $temp->iban, 'number' => null, 'bic'    => null];
                 $result   = $this->createAccount(null, $tempData, $creatableType);
             }
         }
@@ -115,247 +110,6 @@ trait JournalServiceTrait
         }
 
         return $result;
-    }
-
-    private function findAccountById(array $data, array $types, ?Account $opposite = null): ?Account
-    {
-        // first attempt, find by ID.
-        if (null !== $data['id']) {
-            $search = $this->accountRepository->find((int) $data['id']);
-            if (null !== $search && in_array($search->accountType->type, $types, true)) {
-                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type));
-
-                if ($opposite?->id === $search->id) {
-                    Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $search->id, $opposite->id));
-
-                    return null;
-                }
-
-                return $search;
-            }
-            if (null !== $search && 0 === count($types)) {
-                Log::debug(
-                    sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type)
-                );
-
-                return $search;
-            }
-        }
-        Log::debug(sprintf('Found no account by ID #%d of types', $data['id']), $types);
-
-        return null;
-    }
-
-    private function findAccountByIban(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
-    {
-        if ($account instanceof Account) {
-            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
-
-            return $account;
-        }
-        if (null === $data['iban'] || '' === $data['iban']) {
-            Log::debug('IBAN is empty, will not search for IBAN.');
-
-            return null;
-        }
-        // find by preferred type.
-        $result = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
-        // or any expected type.
-        $result ??= $this->accountRepository->findByIbanNull($data['iban'], $types);
-
-        if (null !== $result) {
-            Log::debug(sprintf('Found "account_iban" object: #%d, %s', $result->id, $result->name));
-
-            if ($opposite?->id === $result->id) {
-                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
-
-                return null;
-            }
-
-            return $result;
-        }
-        Log::debug(sprintf('Found no account with IBAN "%s" of expected types', $data['iban']), $types);
-
-        return null;
-    }
-
-    private function findAccountByNumber(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
-    {
-        if ($account instanceof Account) {
-            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
-
-            return $account;
-        }
-        if (null === $data['number'] || '' === $data['number']) {
-            Log::debug('Account number is empty, will not search for account number.');
-
-            return null;
-        }
-        // find by preferred type.
-        $result = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
-
-        // or any expected type.
-        $result ??= $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
-
-        if (null !== $result) {
-            Log::debug(sprintf('Found account: #%d, %s', $result->id, $result->name));
-
-            if ($opposite?->id === $result->id) {
-                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
-
-                return null;
-            }
-
-            return $result;
-        }
-
-        Log::debug(sprintf('Found no account with account number "%s" of expected types', $data['number']), $types);
-
-        return null;
-    }
-
-    private function findAccountByName(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
-    {
-        if ($account instanceof Account) {
-            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
-
-            return $account;
-        }
-        if (null === $data['name'] || '' === $data['name']) {
-            Log::debug('Account name is empty, will not search for account name.');
-
-            return null;
-        }
-
-        // find by preferred type.
-        Log::debug('Find by preferred type.');
-        $result = $this->accountRepository->findByName($data['name'], [$types[0]]);
-
-        // or any expected type.
-        Log::debug('Find by any expected type.');
-        $result ??= $this->accountRepository->findByName($data['name'], $types);
-
-        if (null !== $result) {
-            Log::debug(sprintf('Found "account_name" object: #%d, %s', $result->id, $result->name));
-
-            if ($opposite?->id === $result->id) {
-                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
-
-                return null;
-            }
-
-            return $result;
-        }
-        Log::debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
-
-        return null;
-    }
-
-    private function getCreatableType(array $types): ?string
-    {
-        $result = null;
-        $list   = config('firefly.dynamic_creation_allowed');
-
-        /** @var string $type */
-        foreach ($types as $type) {
-            if (in_array($type, $list, true)) {
-                $result = $type;
-
-                break;
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @throws FireflyException
-     * @throws JsonException
-     */
-    private function createAccount(?Account $account, array $data, string $preferredType): ?Account
-    {
-        Log::debug('Now in createAccount()', $data);
-        // return new account.
-        if ($account instanceof Account) {
-            Log::debug(
-                sprintf(
-                    'Was given %s account #%d ("%s") so will simply return that.',
-                    $account->accountType->type,
-                    $account->id,
-                    $account->name
-                )
-            );
-        }
-        if (!$account instanceof Account) {
-            // final attempt, create it.
-            if (AccountTypeEnum::ASSET->value === $preferredType) {
-                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
-            }
-            // fix name of account if only IBAN is given:
-            if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
-                Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
-                $data['name'] = $data['iban'];
-            }
-            // fix name of account if only number is given:
-            if ('' === (string) $data['name'] && '' !== (string) $data['number']) {
-                Log::debug(sprintf('Account name is now account number ("%s")', $data['number']));
-                $data['name'] = $data['number'];
-            }
-            // if name is still NULL, return NULL.
-            if ('' === (string) $data['name']) {
-                Log::debug('Account name is still NULL, return NULL.');
-
-                return null;
-            }
-            // 2025-04-19 sanity check on IBAN.
-            $validator = new UniqueIban(null, $preferredType);
-            if ('' !== (string) $data['iban'] && !$validator->passes('iban', $data['iban'])) {
-                Log::warning(sprintf('IBAN "%s" is already in use, quietly ignore it.', $data['iban']));
-                $data['iban'] = null;
-            }
-
-
-            // $data['name'] = $data['name'] ?? '(no name)';
-
-            $account   = $this->accountRepository->store(
-                [
-                    'account_type_id'   => null,
-                    'account_type_name' => $preferredType,
-                    'name'              => $data['name'],
-                    'virtual_balance'   => null,
-                    'active'            => true,
-                    'iban'              => $data['iban'],
-                    'currency_id'       => $data['currency_id'] ?? null,
-                    'order'             => $this->accountRepository->maxOrder($preferredType),
-                ]
-            );
-            // store BIC
-            if (null !== $data['bic']) {
-                /** @var AccountMetaFactory $metaFactory */
-                $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'BIC', 'data' => $data['bic']]);
-            }
-            // store account number
-            if (null !== $data['number']) {
-                /** @var AccountMetaFactory $metaFactory */
-                $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
-            }
-        }
-
-        return $account;
-    }
-
-    private function getCashAccount(?Account $account, array $data, array $types): ?Account
-    {
-        // return cash account.
-        if (!$account instanceof Account && '' === (string) $data['name']
-            && in_array(AccountTypeEnum::CASH->value, $types, true)) {
-            $account = $this->accountRepository->getCashAccount();
-        }
-        Log::debug('Cannot return cash account, return input instead.');
-
-        return $account;
     }
 
     /**
@@ -474,5 +228,233 @@ trait JournalServiceTrait
         Log::debug('End of loop.');
         Log::debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
         $journal->tags()->sync($set);
+    }
+
+    /**
+     * @throws FireflyException
+     * @throws JsonException
+     */
+    private function createAccount(?Account $account, array $data, string $preferredType): ?Account
+    {
+        Log::debug('Now in createAccount()', $data);
+        // return new account.
+        if ($account instanceof Account) {
+            Log::debug(sprintf('Was given %s account #%d ("%s") so will simply return that.', $account->accountType->type, $account->id, $account->name));
+        }
+        if (!$account instanceof Account) {
+            // final attempt, create it.
+            if (AccountTypeEnum::ASSET->value === $preferredType) {
+                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with these values: %s', json_encode($data)));
+            }
+            // fix name of account if only IBAN is given:
+            if ('' === (string) $data['name'] && '' !== (string) $data['iban']) {
+                Log::debug(sprintf('Account name is now IBAN ("%s")', $data['iban']));
+                $data['name'] = $data['iban'];
+            }
+            // fix name of account if only number is given:
+            if ('' === (string) $data['name'] && '' !== (string) $data['number']) {
+                Log::debug(sprintf('Account name is now account number ("%s")', $data['number']));
+                $data['name'] = $data['number'];
+            }
+            // if name is still NULL, return NULL.
+            if ('' === (string) $data['name']) {
+                Log::debug('Account name is still NULL, return NULL.');
+
+                return null;
+            }
+            // 2025-04-19 sanity check on IBAN.
+            $validator = new UniqueIban(null, $preferredType);
+            if ('' !== (string) $data['iban'] && !$validator->passes('iban', $data['iban'])) {
+                Log::warning(sprintf('IBAN "%s" is already in use, quietly ignore it.', $data['iban']));
+                $data['iban'] = null;
+            }
+
+            // $data['name'] = $data['name'] ?? '(no name)';
+
+            $account   = $this->accountRepository->store([
+                'account_type_id'   => null,
+                'account_type_name' => $preferredType,
+                'name'              => $data['name'],
+                'virtual_balance'   => null,
+                'active'            => true,
+                'iban'              => $data['iban'],
+                'currency_id'       => $data['currency_id'] ?? null,
+                'order'             => $this->accountRepository->maxOrder($preferredType),
+            ]);
+            // store BIC
+            if (null !== $data['bic']) {
+                /** @var AccountMetaFactory $metaFactory */
+                $metaFactory = app(AccountMetaFactory::class);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'BIC', 'data'       => $data['bic']]);
+            }
+            // store account number
+            if (null !== $data['number']) {
+                /** @var AccountMetaFactory $metaFactory */
+                $metaFactory = app(AccountMetaFactory::class);
+                $metaFactory->create(['account_id' => $account->id, 'name'       => 'account_number', 'data'       => $data['number']]);
+            }
+        }
+
+        return $account;
+    }
+
+    private function findAccountByIban(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    {
+        if ($account instanceof Account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
+            return $account;
+        }
+        if (null === $data['iban'] || '' === $data['iban']) {
+            Log::debug('IBAN is empty, will not search for IBAN.');
+
+            return null;
+        }
+        // find by preferred type.
+        $result = $this->accountRepository->findByIbanNull($data['iban'], [$types[0]]);
+        // or any expected type.
+        $result ??= $this->accountRepository->findByIbanNull($data['iban'], $types);
+
+        if (null !== $result) {
+            Log::debug(sprintf('Found "account_iban" object: #%d, %s', $result->id, $result->name));
+
+            if ($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
+                return null;
+            }
+
+            return $result;
+        }
+        Log::debug(sprintf('Found no account with IBAN "%s" of expected types', $data['iban']), $types);
+
+        return null;
+    }
+
+    private function findAccountById(array $data, array $types, ?Account $opposite = null): ?Account
+    {
+        // first attempt, find by ID.
+        if (null !== $data['id']) {
+            $search = $this->accountRepository->find((int) $data['id']);
+            if (null !== $search && in_array($search->accountType->type, $types, true)) {
+                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (1)', $search->id, $search->name, $search->accountType->type));
+
+                if ($opposite?->id === $search->id) {
+                    Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $search->id, $opposite->id));
+
+                    return null;
+                }
+
+                return $search;
+            }
+            if (null !== $search && 0 === count($types)) {
+                Log::debug(sprintf('Found "account_id" object: #%d, "%s" of type %s (2)', $search->id, $search->name, $search->accountType->type));
+
+                return $search;
+            }
+        }
+        Log::debug(sprintf('Found no account by ID #%d of types', $data['id']), $types);
+
+        return null;
+    }
+
+    private function findAccountByName(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    {
+        if ($account instanceof Account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
+            return $account;
+        }
+        if (null === $data['name'] || '' === $data['name']) {
+            Log::debug('Account name is empty, will not search for account name.');
+
+            return null;
+        }
+
+        // find by preferred type.
+        Log::debug('Find by preferred type.');
+        $result = $this->accountRepository->findByName($data['name'], [$types[0]]);
+
+        // or any expected type.
+        Log::debug('Find by any expected type.');
+        $result ??= $this->accountRepository->findByName($data['name'], $types);
+
+        if (null !== $result) {
+            Log::debug(sprintf('Found "account_name" object: #%d, %s', $result->id, $result->name));
+
+            if ($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
+                return null;
+            }
+
+            return $result;
+        }
+        Log::debug(sprintf('Found no account with account name "%s" of expected types', $data['name']), $types);
+
+        return null;
+    }
+
+    private function findAccountByNumber(?Account $account, array $data, array $types, ?Account $opposite = null): ?Account
+    {
+        if ($account instanceof Account) {
+            Log::debug(sprintf('Already have account #%d ("%s"), return that.', $account->id, $account->name));
+
+            return $account;
+        }
+        if (null === $data['number'] || '' === $data['number']) {
+            Log::debug('Account number is empty, will not search for account number.');
+
+            return null;
+        }
+        // find by preferred type.
+        $result = $this->accountRepository->findByAccountNumber((string) $data['number'], [$types[0]]);
+
+        // or any expected type.
+        $result ??= $this->accountRepository->findByAccountNumber((string) $data['number'], $types);
+
+        if (null !== $result) {
+            Log::debug(sprintf('Found account: #%d, %s', $result->id, $result->name));
+
+            if ($opposite?->id === $result->id) {
+                Log::debug(sprintf('Account #%d is the same as opposite account #%d, returning NULL.', $result->id, $opposite->id));
+
+                return null;
+            }
+
+            return $result;
+        }
+
+        Log::debug(sprintf('Found no account with account number "%s" of expected types', $data['number']), $types);
+
+        return null;
+    }
+
+    private function getCashAccount(?Account $account, array $data, array $types): ?Account
+    {
+        // return cash account.
+        if (!$account instanceof Account && '' === (string) $data['name'] && in_array(AccountTypeEnum::CASH->value, $types, true)) {
+            $account = $this->accountRepository->getCashAccount();
+        }
+        Log::debug('Cannot return cash account, return input instead.');
+
+        return $account;
+    }
+
+    private function getCreatableType(array $types): ?string
+    {
+        $result = null;
+        $list   = config('firefly.dynamic_creation_allowed');
+
+        /** @var string $type */
+        foreach ($types as $type) {
+            if (in_array($type, $list, true)) {
+                $result = $type;
+
+                break;
+            }
+        }
+
+        return $result;
     }
 }

@@ -29,8 +29,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Support\Collection;
-use Throwable;
 use Illuminate\Support\Facades\Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -40,9 +40,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
 {
     private Collection $accounts;
     private Collection $budgets;
-    private Carbon     $end;
-    private array      $expenses = [];
-    private Carbon     $start;
+    private Carbon $end;
+    private array $expenses = [];
+    private Carbon $start;
 
     /**
      * Generates the report.
@@ -55,11 +55,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $budgetIds  = implode(',', $this->budgets->pluck('id')->toArray());
 
         try {
-            $result = view(
-                'reports.budget.month',
-                ['accountIds' => $accountIds, 'budgetIds' => $budgetIds]
-            )
-                ->with('start', $this->start)->with('end', $this->end)
+            $result = view('reports.budget.month', ['accountIds' => $accountIds, 'budgetIds'  => $budgetIds])
+                ->with('start', $this->start)
+                ->with('end', $this->end)
                 ->with('budgets', $this->budgets)
                 ->with('accounts', $this->accounts)
                 ->render()
@@ -73,6 +71,26 @@ class MonthReportGenerator implements ReportGeneratorInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Set the involved accounts.
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Set the involved budgets.
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        $this->budgets = $budgets;
+
+        return $this;
     }
 
     /**
@@ -132,7 +150,9 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         /** @var GroupCollectorInterface $collector */
         $collector      = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+        $collector
+            ->setAccounts($this->accounts)
+            ->setRange($this->start, $this->end)
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
             ->withAccountInformation()
             ->withBudgetInformation()
@@ -143,25 +163,5 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $this->expenses = $journals;
 
         return $journals;
-    }
-
-    /**
-     * Set the involved budgets.
-     */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface
-    {
-        $this->budgets = $budgets;
-
-        return $this;
-    }
-
-    /**
-     * Set the involved accounts.
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
     }
 }

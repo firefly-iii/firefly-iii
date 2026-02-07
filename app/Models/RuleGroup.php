@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\RuleGroupObserver;
+use FireflyIII\Handlers\Observer\DeletedRuleGroupObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -40,7 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User       $user
  * @property Collection $rules
  */
-#[ObservedBy([RuleGroupObserver::class])]
+#[ObservedBy([DeletedRuleGroupObserver::class])]
 class RuleGroup extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -54,10 +54,13 @@ class RuleGroup extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $ruleGroupId = (int)$value;
+            $ruleGroupId = (int) $value;
 
             /** @var User $user */
             $user        = auth()->user();
@@ -72,14 +75,14 @@ class RuleGroup extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array
@@ -98,8 +101,6 @@ class RuleGroup extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

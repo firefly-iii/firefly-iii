@@ -43,7 +43,7 @@ use function Safe\json_encode;
 class StandardWebhookSender implements WebhookSenderInterface
 {
     private WebhookMessage $message;
-    private int            $version = 1;
+    private int $version = 1;
 
     public function getVersion(): int
     {

@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class JournalDestroyService
@@ -36,8 +36,6 @@ class JournalDestroyService
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
 
-        $journal->delete();
-
         // delete group, if group is empty:
         $group = $journal->transactionGroup;
         if (null !== $group) {
@@ -46,5 +44,7 @@ class JournalDestroyService
                 $group->delete();
             }
         }
+
+        $journal->delete();
     }
 }

@@ -33,10 +33,10 @@ use FireflyIII\Support\Cronjobs\ExchangeRatesCronjob;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Cronjobs\UpdateCheckCronjob;
 use FireflyIII\Support\Cronjobs\WebhookCronjob;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class Cron extends Command
 {
@@ -58,11 +58,11 @@ class Cron extends Command
     public function handle(): int
     {
         $doAll = !$this->option('download-cer')
-                 && !$this->option('create-recurring')
-                 && !$this->option('create-auto-budgets')
-                 && !$this->option('send-subscription-warnings')
-                 && !$this->option('check-version')
-                 && !$this->option('send-webhook-messages');
+        && !$this->option('create-recurring')
+        && !$this->option('create-auto-budgets')
+        && !$this->option('send-subscription-warnings')
+        && !$this->option('check-version')
+        && !$this->option('send-webhook-messages');
         $date  = null;
 
         try {
@@ -142,6 +142,45 @@ class Cron extends Command
         return 0;
     }
 
+    private function autoBudgetCronJob(bool $force, ?Carbon $date): void
+    {
+        $autoBudget = new AutoBudgetCronjob();
+        $autoBudget->setForce($force);
+        // set date in cron job:
+        if ($date instanceof Carbon) {
+            $autoBudget->setDate($date);
+        }
+
+        $autoBudget->fire();
+
+        if ($autoBudget->jobErrored) {
+            $this->friendlyError(sprintf('Error in "create auto budgets" cron: %s', $autoBudget->message));
+        }
+        if ($autoBudget->jobFired) {
+            $this->friendlyInfo(sprintf('"Create auto budgets" cron fired: %s', $autoBudget->message));
+        }
+        if ($autoBudget->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
+        }
+    }
+
+    private function checkForUpdates(bool $force): void
+    {
+        $updateCheck = new UpdateCheckCronjob();
+        $updateCheck->setForce($force);
+        $updateCheck->fire();
+
+        if ($updateCheck->jobErrored) {
+            $this->friendlyError(sprintf('Error in "update check" cron: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobFired) {
+            $this->friendlyInfo(sprintf('"Update check" cron fired: %s', $updateCheck->message));
+        }
+        if ($updateCheck->jobSucceeded) {
+            $this->friendlyPositive(sprintf('"Update check" cron ran with success: %s', $updateCheck->message));
+        }
+    }
+
     private function exchangeRatesCronJob(bool $force, ?Carbon $date): void
     {
         Log::debug(sprintf('Created new ExchangeRateConverter in %s', __METHOD__));
@@ -162,23 +201,6 @@ class Cron extends Command
         }
         if ($exchangeRates->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Exchange rates" cron ran with success: %s', $exchangeRates->message));
-        }
-    }
-
-    private function checkForUpdates(bool $force): void
-    {
-        $updateCheck = new UpdateCheckCronjob();
-        $updateCheck->setForce($force);
-        $updateCheck->fire();
-
-        if ($updateCheck->jobErrored) {
-            $this->friendlyError(sprintf('Error in "update check" cron: %s', $updateCheck->message));
-        }
-        if ($updateCheck->jobFired) {
-            $this->friendlyInfo(sprintf('"Update check" cron fired: %s', $updateCheck->message));
-        }
-        if ($updateCheck->jobSucceeded) {
-            $this->friendlyPositive(sprintf('"Update check" cron ran with success: %s', $updateCheck->message));
         }
     }
 
@@ -204,28 +226,6 @@ class Cron extends Command
         }
         if ($recurring->jobSucceeded) {
             $this->friendlyPositive(sprintf('"Create recurring transactions" cron ran with success: %s', $recurring->message));
-        }
-    }
-
-    private function autoBudgetCronJob(bool $force, ?Carbon $date): void
-    {
-        $autoBudget = new AutoBudgetCronjob();
-        $autoBudget->setForce($force);
-        // set date in cron job:
-        if ($date instanceof Carbon) {
-            $autoBudget->setDate($date);
-        }
-
-        $autoBudget->fire();
-
-        if ($autoBudget->jobErrored) {
-            $this->friendlyError(sprintf('Error in "create auto budgets" cron: %s', $autoBudget->message));
-        }
-        if ($autoBudget->jobFired) {
-            $this->friendlyInfo(sprintf('"Create auto budgets" cron fired: %s', $autoBudget->message));
-        }
-        if ($autoBudget->jobSucceeded) {
-            $this->friendlyPositive(sprintf('"Create auto budgets" cron ran with success: %s', $autoBudget->message));
         }
     }
 

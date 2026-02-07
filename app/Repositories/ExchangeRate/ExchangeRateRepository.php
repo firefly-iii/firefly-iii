@@ -40,48 +40,61 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
     #[Override]
     public function deleteRate(CurrencyExchangeRate $rate): void
     {
-        $this->userGroup->currencyExchangeRates()->where('id', $rate->id)->delete();
+        $this->userGroup
+            ->currencyExchangeRates()
+            ->where('id', $rate->id)
+            ->delete()
+        ;
+    }
+
+    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
+    {
+        $this->userGroup
+            ->currencyExchangeRates()
+            ->where('from_currency_id', $from->id)
+            ->where('to_currency_id', $to->id)
+            ->delete()
+        ;
     }
 
     #[Override]
     public function getAll(): Collection
     {
-        return $this->userGroup->currencyExchangeRates()->orderBy('date', 'ASC')->get();
+        return $this->userGroup
+            ->currencyExchangeRates()
+            ->orderBy('date', 'ASC')
+            ->get()
+        ;
     }
 
     #[Override]
     public function getRates(TransactionCurrency $from, TransactionCurrency $to): Collection
     {
         // orderBy('date', 'DESC')->toRawSql();
-        return
-            $this->userGroup->currencyExchangeRates()
-                ->where(static function (Builder $q1) use ($from, $to): void {
-                    $q1->where(static function (Builder $q) use ($from, $to): void {
-                        $q->where('from_currency_id', $from->id)
-                            ->where('to_currency_id', $to->id)
-                        ;
-                    })->orWhere(static function (Builder $q) use ($from, $to): void {
-                        $q->where('from_currency_id', $to->id)
-                            ->where('to_currency_id', $from->id)
-                        ;
-                    });
-                })
-                ->orderBy('date', 'DESC')
-                ->get(['currency_exchange_rates.*'])
+        return $this->userGroup
+            ->currencyExchangeRates()
+            ->where(static function (Builder $q1) use ($from, $to): void {
+                $q1->where(static function (Builder $q) use ($from, $to): void {
+                    $q->where('from_currency_id', $from->id)->where('to_currency_id', $to->id);
+                })->orWhere(static function (Builder $q) use ($from, $to): void {
+                    $q->where('from_currency_id', $to->id)->where('to_currency_id', $from->id);
+                });
+            })
+            ->orderBy('date', 'DESC')
+            ->get(['currency_exchange_rates.*'])
         ;
-
     }
 
     #[Override]
     public function getSpecificRateOnDate(TransactionCurrency $from, TransactionCurrency $to, Carbon $date): ?CurrencyExchangeRate
     {
         /** @var null|CurrencyExchangeRate */
-        return
-            $this->userGroup->currencyExchangeRates()
-                ->where('from_currency_id', $from->id)
-                ->where('to_currency_id', $to->id)
-                ->where('date', $date->format('Y-m-d'))
-                ->first()
+        return $this->userGroup
+            ->currencyExchangeRates()
+            ->where('from_currency_id', $from->id)
+            ->where('to_currency_id', $to->id)
+            ->where('date', $date->format('Y-m-d'))
+            ->first()
         ;
     }
 
@@ -111,14 +124,5 @@ class ExchangeRateRepository implements ExchangeRateRepositoryInterface, UserGro
         $object->save();
 
         return $object;
-    }
-
-    public function deleteRates(TransactionCurrency $from, TransactionCurrency $to): void
-    {
-        $this->userGroup->currencyExchangeRates()
-            ->where('from_currency_id', $from->id)
-            ->where('to_currency_id', $to->id)
-            ->delete()
-        ;
     }
 }

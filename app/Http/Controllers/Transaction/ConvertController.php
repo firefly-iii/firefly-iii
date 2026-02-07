@@ -26,7 +26,10 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use Exception;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -69,15 +72,13 @@ class ConvertController extends Controller
         parent::__construct();
 
         // some useful repositories:
-        $this->middleware(
-            function ($request, $next) {
-                $this->accountRepository = app(AccountRepositoryInterface::class);
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
+        $this->middleware(function ($request, $next) {
+            $this->accountRepository = app(AccountRepositoryInterface::class);
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -102,7 +103,7 @@ class ConvertController extends Controller
 
         $groupTitle           = $group->title ?? $first->description;
         $groupArray           = $transformer->transformObject($group);
-        $subTitle             = (string) trans('firefly.convert_to_'.$destinationType->type, ['description' => $groupTitle]);
+        $subTitle             = (string) trans('firefly.convert_to_'.$destinationType->type, ['description'     => $groupTitle]);
         $subTitleIcon         = 'fa-exchange';
 
         // get a list of asset accounts and liabilities and stuff, in various combinations:
@@ -112,9 +113,7 @@ class ConvertController extends Controller
         $assets               = $this->getAssetAccounts();
 
         // old input variables:
-        $preFilled            = [
-            'source_name' => old('source_name'),
-        ];
+        $preFilled            = ['source_name' => old('source_name')];
 
         if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
             Log::debug('This is already a transaction of the expected type..');
@@ -123,110 +122,143 @@ class ConvertController extends Controller
             return redirect(route('transactions.show', [$group->id]));
         }
 
-        return view(
-            'transactions.convert',
-            ['sourceType' => $sourceType, 'destinationType' => $destinationType, 'group' => $group, 'groupTitle' => $groupTitle, 'groupArray' => $groupArray, 'assets' => $assets, 'validDepositSources' => $validDepositSources, 'liabilities' => $liabilities, 'validWithdrawalDests' => $validWithdrawalDests, 'preFilled' => $preFilled, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]
-        );
-    }
-
-    private function getValidDepositSources(): array
-    {
-        // make repositories
-        $liabilityTypes = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value];
-        $accountList    = $this->accountRepository
-            ->getActiveAccountsByType([AccountTypeEnum::REVENUE->value, AccountTypeEnum::CASH->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value])
-        ;
-        $grouped        = [];
-
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
-            $name                        = $account->name;
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            // maybe it's a liability thing:
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_'.$account->accountType->type;
-            }
-            if (AccountTypeEnum::CASH->value === $account->accountType->type) {
-                $role = 'cash_account';
-                $name = sprintf('(%s)', trans('firefly.cash'));
-            }
-            if (AccountTypeEnum::REVENUE->value === $account->accountType->type) {
-                $role = 'revenue_account';
-            }
-
-            $key                         = (string) trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $name;
-        }
-
-        return $grouped;
-    }
-
-    private function getValidWithdrawalDests(): array
-    {
-        // make repositories
-        $liabilityTypes = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value];
-        $accountList    = $this->accountRepository->getActiveAccountsByType(
-            [AccountTypeEnum::EXPENSE->value, AccountTypeEnum::CASH->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]
-        );
-        $grouped        = [];
-
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
-            $name                        = $account->name;
-            if ('' === $role) {
-                $role = 'no_account_type';
-            }
-
-            // maybe it's a liability thing:
-            if (in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_'.$account->accountType->type;
-            }
-            if (AccountTypeEnum::CASH->value === $account->accountType->type) {
-                $role = 'cash_account';
-                $name = sprintf('(%s)', trans('firefly.cash'));
-            }
-            if (AccountTypeEnum::EXPENSE->value === $account->accountType->type) {
-                $role = 'expense_account';
-            }
-
-            $key                         = (string) trans('firefly.opt_group_'.$role);
-            $grouped[$key][$account->id] = $name;
-        }
-
-        return $grouped;
+        return view('transactions.convert', [
+            'sourceType'           => $sourceType,
+            'destinationType'      => $destinationType,
+            'group'                => $group,
+            'groupTitle'           => $groupTitle,
+            'groupArray'           => $groupArray,
+            'assets'               => $assets,
+            'validDepositSources'  => $validDepositSources,
+            'liabilities'          => $liabilities,
+            'validWithdrawalDests' => $validWithdrawalDests,
+            'preFilled'            => $preFilled,
+            'subTitle'             => $subTitle,
+            'subTitleIcon'         => $subTitleIcon,
+        ]);
     }
 
     /**
-     * @throws Exception
+     * Do the conversion.
+     *
+     * @return Redirector|RedirectResponse
      */
-    private function getLiabilities(): array
+    public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {
-        // make repositories
-        $accountList = $this->accountRepository->getActiveAccountsByType([AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value]);
-        $grouped     = [];
-
-        // group accounts:
-        /** @var Account $account */
-        foreach ($accountList as $account) {
-            $date                        = today()->endOfDay();
-            Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-            // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-            // $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
-            $balance                     = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
-            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
-            $role                        = sprintf('l_%s', $account->accountType->type);
-            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
-            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, Amount::formatAnything($currency, $balance, false));
+        if (!$this->isEditableGroup($group)) {
+            return $this->redirectGroupToAccount($group);
         }
 
-        return $grouped;
+        /** @var TransactionJournal $journal */
+        foreach ($group->transactionJournals as $journal) {
+            // catch FF exception.
+            try {
+                $this->convertJournal($journal, $destinationType, $request->all());
+            } catch (FireflyException $e) {
+                session()->flash('error', $e->getMessage());
+
+                return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
+            }
+        }
+
+        // correct transfers:
+        $group->refresh();
+
+        session()->flash('success', (string) trans('firefly.converted_to_'.$destinationType->type));
+        $flags   = new TransactionGroupEventFlags();
+        $objects = TransactionGroupEventObjects::collectFromTransactionGroup($group);
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
+
+        return redirect(route('transactions.show', [$group->id]));
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
+    {
+        /** @var AccountValidator $validator */
+        $validator         = app(AccountValidator::class);
+        $validator->setUser(auth()->user());
+        $validator->setTransactionType($transactionType->type);
+
+        $sourceId          = $data['source_id'][$journal->id] ?? null;
+        $sourceName        = $data['source_name'][$journal->id] ?? null;
+        $destinationId     = $data['destination_id'][$journal->id] ?? null;
+        $destinationName   = $data['destination_name'][$journal->id] ?? null;
+
+        // double check it's not an empty string.
+        $sourceId          = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
+        $sourceName        = '' === $sourceName ? null : (string) $sourceName;
+        $destinationId     = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
+        $destinationName   = '' === $destinationName ? null : (string) $destinationName;
+        $validSource       = $validator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
+        $validDestination  = $validator->validateDestination(['id'   => $destinationId, 'name' => $destinationName]);
+
+        if (false === $validSource) {
+            throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
+        }
+        if (false === $validDestination) {
+            throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
+        }
+
+        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
+
+        $update            = [
+            'source_id'        => $sourceId,
+            'source_name'      => $sourceName,
+            'destination_id'   => $destinationId,
+            'destination_name' => $destinationName,
+            'type'             => $transactionType->type,
+        ];
+
+        /** @var null|Transaction $sourceTransaction */
+        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        $amount            = $sourceTransaction->amount ?? '0';
+
+        // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
+        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {
+            $source         = $this->accountRepository->find((int) $sourceId);
+            $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
+            $dest           = $this->accountRepository->find((int) $destinationId);
+            $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
+            if (
+                $sourceCurrency instanceof TransactionCurrency
+                && $destCurrency instanceof TransactionCurrency
+                && $sourceCurrency->code !== $destCurrency->code
+            ) {
+                $update['currency_id']         = $sourceCurrency->id;
+                $update['foreign_currency_id'] = $destCurrency->id;
+                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
+            }
+        }
+
+        // same thing for converting a withdrawal into a transfer, but with the currency of the destination account.
+        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::WITHDRAWAL->value === $journal->transactionType->type) {
+            $source         = $this->accountRepository->find((int) $sourceId);
+            $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
+            $dest           = $this->accountRepository->find((int) $destinationId);
+            $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
+            if (
+                $sourceCurrency instanceof TransactionCurrency
+                && $destCurrency instanceof TransactionCurrency
+                && $sourceCurrency->code !== $destCurrency->code
+            ) {
+                $update['currency_id']         = $sourceCurrency->id;
+                $update['foreign_currency_id'] = $destCurrency->id;
+                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
+            }
+        }
+
+        /** @var JournalUpdateService $service */
+        $service           = app(JournalUpdateService::class);
+        $service->setTransactionJournal($journal);
+        $service->setData($update);
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
     }
 
     /**
@@ -261,114 +293,114 @@ class ConvertController extends Controller
     }
 
     /**
-     * Do the conversion.
-     *
-     * @return Redirector|RedirectResponse
+     * @throws Exception
      */
-    public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
+    private function getLiabilities(): array
     {
-        if (!$this->isEditableGroup($group)) {
-            return $this->redirectGroupToAccount($group);
+        // make repositories
+        $accountList = $this->accountRepository->getActiveAccountsByType([
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ]);
+        $grouped     = [];
+
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $date                        = today()->endOfDay();
+            Log::debug(sprintf('getLiabilities: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+            // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+            // $balance                     = Steam::finalAccountBalance($account, $date)['balance'];
+            $balance                     = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id]['balance'] ?? '0';
+            $currency                    = $this->accountRepository->getAccountCurrency($account) ?? $this->primaryCurrency;
+            $role                        = sprintf('l_%s', $account->accountType->type);
+            $key                         = (string) trans(sprintf('firefly.opt_group_%s', $role));
+            $grouped[$key][$account->id] = sprintf('%s (%s)', $account->name, Amount::formatAnything($currency, $balance, false));
         }
 
-        /** @var TransactionJournal $journal */
-        foreach ($group->transactionJournals as $journal) {
-            // catch FF exception.
-            try {
-                $this->convertJournal($journal, $destinationType, $request->all());
-            } catch (FireflyException $e) {
-                session()->flash('error', $e->getMessage());
-
-                return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
-            }
-        }
-
-        // correct transfers:
-        $group->refresh();
-
-        session()->flash('success', (string) trans('firefly.converted_to_'.$destinationType->type));
-        event(new UpdatedTransactionGroup($group, true, true, true));
-
-        return redirect(route('transactions.show', [$group->id]));
+        return $grouped;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
+    private function getValidDepositSources(): array
     {
-        /** @var AccountValidator $validator */
-        $validator         = app(AccountValidator::class);
-        $validator->setUser(auth()->user());
-        $validator->setTransactionType($transactionType->type);
+        // make repositories
+        $liabilityTypes = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value];
+        $accountList    = $this->accountRepository->getActiveAccountsByType([
+            AccountTypeEnum::REVENUE->value,
+            AccountTypeEnum::CASH->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ]);
+        $grouped        = [];
 
-        $sourceId          = $data['source_id'][$journal->id] ?? null;
-        $sourceName        = $data['source_name'][$journal->id] ?? null;
-        $destinationId     = $data['destination_id'][$journal->id] ?? null;
-        $destinationName   = $data['destination_name'][$journal->id] ?? null;
-
-        // double check it's not an empty string.
-        $sourceId          = '' === $sourceId || null === $sourceId ? null : (int) $sourceId;
-        $sourceName        = '' === $sourceName ? null : (string) $sourceName;
-        $destinationId     = '' === $destinationId || null === $destinationId ? null : (int) $destinationId;
-        $destinationName   = '' === $destinationName ? null : (string) $destinationName;
-        $validSource       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
-        $validDestination  = $validator->validateDestination(['id' => $destinationId, 'name' => $destinationName]);
-
-        if (false === $validSource) {
-            throw new FireflyException(sprintf(trans('firefly.convert_invalid_source'), $journal->id));
-        }
-        if (false === $validDestination) {
-            throw new FireflyException(sprintf(trans('firefly.convert_invalid_destination'), $journal->id));
-        }
-
-        // TODO typeOverrule: the account validator may have another opinion on the transaction type.
-
-        $update            = [
-            'source_id'        => $sourceId,
-            'source_name'      => $sourceName,
-            'destination_id'   => $destinationId,
-            'destination_name' => $destinationName,
-            'type'             => $transactionType->type,
-        ];
-
-        /** @var null|Transaction $sourceTransaction */
-        $sourceTransaction = $journal->transactions()->where('amount', '<', 0)->first();
-        $amount            = $sourceTransaction->amount ?? '0';
-
-        // also set the currency to the currency of the source account, in case you're converting a deposit into a transfer.
-        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::DEPOSIT->value === $journal->transactionType->type) {
-            $source         = $this->accountRepository->find((int) $sourceId);
-            $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
-            $dest           = $this->accountRepository->find((int) $destinationId);
-            $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
-            if ($sourceCurrency instanceof TransactionCurrency && $destCurrency instanceof TransactionCurrency && $sourceCurrency->code !== $destCurrency->code) {
-                $update['currency_id']         = $sourceCurrency->id;
-                $update['foreign_currency_id'] = $destCurrency->id;
-                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
+            $name                        = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type';
             }
-        }
 
-        // same thing for converting a withdrawal into a transfer, but with the currency of the destination account.
-        if (TransactionTypeEnum::TRANSFER->value === $transactionType->type && TransactionTypeEnum::WITHDRAWAL->value === $journal->transactionType->type) {
-            $source         = $this->accountRepository->find((int) $sourceId);
-            $sourceCurrency = $this->accountRepository->getAccountCurrency($source);
-            $dest           = $this->accountRepository->find((int) $destinationId);
-            $destCurrency   = $this->accountRepository->getAccountCurrency($dest);
-            if ($sourceCurrency instanceof TransactionCurrency && $destCurrency instanceof TransactionCurrency && $sourceCurrency->code !== $destCurrency->code) {
-                $update['currency_id']         = $sourceCurrency->id;
-                $update['foreign_currency_id'] = $destCurrency->id;
-                $update['foreign_amount']      = Steam::positive($amount); // not the best solution but at this point the amount is hard to get.
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_'.$account->accountType->type;
             }
+            if (AccountTypeEnum::CASH->value === $account->accountType->type) {
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+            }
+            if (AccountTypeEnum::REVENUE->value === $account->accountType->type) {
+                $role = 'revenue_account';
+            }
+
+            $key                         = (string) trans('firefly.opt_group_'.$role);
+            $grouped[$key][$account->id] = $name;
         }
 
-        /** @var JournalUpdateService $service */
-        $service           = app(JournalUpdateService::class);
-        $service->setTransactionJournal($journal);
-        $service->setData($update);
-        $service->update();
-        $journal->refresh();
+        return $grouped;
+    }
 
-        return $journal;
+    private function getValidWithdrawalDests(): array
+    {
+        // make repositories
+        $liabilityTypes = [AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::CREDITCARD->value, AccountTypeEnum::LOAN->value];
+        $accountList    = $this->accountRepository->getActiveAccountsByType([
+            AccountTypeEnum::EXPENSE->value,
+            AccountTypeEnum::CASH->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ]);
+        $grouped        = [];
+
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $role                        = (string) $this->accountRepository->getMetaValue($account, 'account_role');
+            $name                        = $account->name;
+            if ('' === $role) {
+                $role = 'no_account_type';
+            }
+
+            // maybe it's a liability thing:
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_'.$account->accountType->type;
+            }
+            if (AccountTypeEnum::CASH->value === $account->accountType->type) {
+                $role = 'cash_account';
+                $name = sprintf('(%s)', trans('firefly.cash'));
+            }
+            if (AccountTypeEnum::EXPENSE->value === $account->accountType->type) {
+                $role = 'expense_account';
+            }
+
+            $key                         = (string) trans('firefly.opt_group_'.$role);
+            $grouped[$key][$account->id] = $name;
+        }
+
+        return $grouped;
     }
 }

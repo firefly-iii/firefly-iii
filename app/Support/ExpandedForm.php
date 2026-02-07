@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Form\FormSupport;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 /**
@@ -57,7 +57,13 @@ class ExpandedForm
         // $value = round((float)$value, 8);
         // }
         try {
-            $html = view('form.amount-no-currency', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.amount-no-currency', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
             $html = 'Could not render amountNoCurrency.';
@@ -92,7 +98,13 @@ class ExpandedForm
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
 
         try {
-            $html = view('form.checkbox', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.checkbox', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
             $html = 'Could not render checkbox.';
@@ -117,7 +129,7 @@ class ExpandedForm
         unset($options['placeholder']);
 
         try {
-            $html = view('form.date', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.date', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
             $html = 'Could not render date.';
@@ -139,7 +151,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.file', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.file', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = 'Could not render file.';
@@ -165,7 +177,13 @@ class ExpandedForm
         $options['step'] ??= '1';
 
         try {
-            $html = view('form.integer', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.integer', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render integer(): %s', $e->getMessage()));
             $html = 'Could not render integer.';
@@ -190,7 +208,13 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         try {
-            $html = view('form.location', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.location', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render location(): %s', $e->getMessage()));
             $html = 'Could not render location.';
@@ -243,7 +267,13 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.object_group', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.object_group', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render objectGroup(): %s', $e->getMessage()));
             $html = 'Could not render objectGroup.';
@@ -281,7 +311,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.password', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
@@ -302,7 +332,13 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', ['classes' => $classes, 'value' => $value, 'name' => $name, 'label' => $label, 'options' => $options])->render();
+            $html = view('form.password', [
+                'classes' => $classes,
+                'value'   => $value,
+                'name'    => $name,
+                'label'   => $label,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render passwordWithValue(): %s', $e->getMessage()));
             $html = 'Could not render passwordWithValue.';
@@ -330,7 +366,13 @@ class ExpandedForm
         unset($options['placeholder']);
 
         try {
-            $html = view('form.percentage', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.percentage', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
             $html = 'Could not render percentage.';
@@ -353,7 +395,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.static', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.static', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
             $html = 'Could not render staticText.';
@@ -377,7 +419,7 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         try {
-            $html = view('form.text', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.text', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
             $html = 'Could not render text.';
@@ -406,7 +448,13 @@ class ExpandedForm
         }
 
         try {
-            $html = view('form.textarea', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
+            $html = view('form.textarea', [
+                'classes' => $classes,
+                'name'    => $name,
+                'label'   => $label,
+                'value'   => $value,
+                'options' => $options,
+            ])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
             $html = 'Could not render textarea.';

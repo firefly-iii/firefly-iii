@@ -23,9 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -43,9 +43,7 @@ class EmailFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return [
-            'email' => 'required|email',
-        ];
+        return ['email' => 'required|email'];
     }
 
     public function withValidator(Validator $validator): void

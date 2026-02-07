@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\TransactionCalculation;
@@ -57,14 +57,12 @@ class CategoryReportController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->generator     = app(GeneratorInterface::class);
-                $this->opsRepository = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->generator     = app(GeneratorInterface::class);
+            $this->opsRepository = app(OperationsRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function budgetExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
@@ -124,7 +122,6 @@ class CategoryReportController extends Controller
 
     public function categoryIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
     {
-
         $result = [];
         $earned = $this->opsRepository->listIncome($start, $end, $accounts, $categories);
 
@@ -219,7 +216,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_category', ['category' => $category->name]),
+                    (string) trans('firefly.spent_in_specific_category', ['category'           => $category->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',
@@ -246,7 +243,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.earned_in_specific_category', ['category' => $category->name]),
+                    (string) trans('firefly.earned_in_specific_category', ['category'           => $category->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',
@@ -269,26 +266,6 @@ class CategoryReportController extends Controller
         $data      = $this->generator->multiSet($chartData);
 
         return response()->json($data);
-    }
-
-    /**
-     * TODO duplicate function
-     */
-    private function makeEntries(Carbon $start, Carbon $end): array
-    {
-        $return         = [];
-        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
-        $preferredRange = Navigation::preferredRangeFormat($start, $end);
-        $currentStart   = clone $start;
-        while ($currentStart <= $end) {
-            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
-            $key          = $currentStart->isoFormat($format);
-            $return[$key] = '0';
-            $currentStart = clone $currentEnd;
-            $currentStart->addDay()->startOfDay();
-        }
-
-        return $return;
     }
 
     public function sourceExpense(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): JsonResponse
@@ -345,5 +322,25 @@ class CategoryReportController extends Controller
         $data   = $this->generator->multiCurrencyPieChart($result);
 
         return response()->json($data);
+    }
+
+    /**
+     * TODO duplicate function
+     */
+    private function makeEntries(Carbon $start, Carbon $end): array
+    {
+        $return         = [];
+        $format         = Navigation::preferredCarbonLocalizedFormat($start, $end);
+        $preferredRange = Navigation::preferredRangeFormat($start, $end);
+        $currentStart   = clone $start;
+        while ($currentStart <= $end) {
+            $currentEnd   = Navigation::endOfPeriod($currentStart, $preferredRange);
+            $key          = $currentStart->isoFormat($format);
+            $return[$key] = '0';
+            $currentStart = clone $currentEnd;
+            $currentStart->addDay()->startOfDay();
+        }
+
+        return $return;
     }
 }

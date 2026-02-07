@@ -31,7 +31,6 @@ use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Support\Debug\Timer;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Http\Api\AccountFilter;
@@ -80,7 +79,7 @@ class AccountController extends Controller
      */
     public function accounts(AutocompleteApiRequest $request): JsonResponse
     {
-        Log::debug('Before All.');
+        // Log::debug('Before All.');
         ['types' => $types, 'query' => $query, 'date'  => $date, 'limit' => $limit] = $request->attributes->all();
 
         $date ??= today(config('app.timezone'));
@@ -89,8 +88,6 @@ class AccountController extends Controller
         $date->endOfDay();
 
         $return                                                                     = [];
-        $timer                                                                      = Timer::getInstance();
-        $timer->start(sprintf('AC accounts "%s"', $query));
         $result                                                                     = $this->repository->searchAccount((string) $query, $types, $limit);
         $allBalances                                                                = Steam::accountsBalancesOptimized($result, $date, $this->primaryCurrency, $this->convertToPrimary);
 
@@ -136,7 +133,6 @@ class AccountController extends Controller
 
             return $posA - $posB;
         });
-        $timer->stop(sprintf('AC accounts "%s"', $query));
 
         return response()->api($return);
     }

@@ -26,16 +26,24 @@ namespace Tests\unit\Support\Calendar;
 
 use Carbon\Carbon;
 use FireflyIII\Support\Calendar\Periodicity;
-use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 use Generator;
+use Tests\unit\Support\Calendar\Periodicity\IntervalProvider;
 
 readonly class CalculatorProvider
 {
-    public string           $label;
+    public string $label;
 
-    private function __construct(public IntervalProvider $intervalProvider, public Periodicity $periodicity, public int $skip = 0)
-    {
+    private function __construct(
+        public IntervalProvider $intervalProvider,
+        public Periodicity $periodicity,
+        public int $skip = 0
+    ) {
         $this->label = "{$this->periodicity->name} {$this->intervalProvider->label}";
+    }
+
+    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): self
+    {
+        return new self($interval, $periodicity, $skip);
     }
 
     public static function providePeriodicityWithSkippedIntervals(): Generator
@@ -110,11 +118,6 @@ readonly class CalculatorProvider
         foreach ($intervals as $index => $interval) {
             yield "#{$index} {$interval->label}" => [$interval];
         }
-    }
-
-    public static function from(Periodicity $periodicity, IntervalProvider $interval, int $skip = 0): self
-    {
-        return new self($interval, $periodicity, $skip);
     }
 
     public function epoch(): Carbon

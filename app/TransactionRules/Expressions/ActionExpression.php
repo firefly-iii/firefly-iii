@@ -31,103 +31,78 @@ use Symfony\Component\ExpressionLanguage\SyntaxError;
 
 class ActionExpression
 {
-    private static array                $NAMES
-        = [
-            //        'transaction_group_id',
-            //        'user_id',
-            //        'user_group_id',
-            'created_at',
-            'updated_at',
-            'transaction_group_title',
-            'group_created_at',
-            'group_updated_at',
-            //        'transaction_journal_id',
-            //        'transaction_type_id',
-            'description',
-            'date',
-            //        'order',
-            'transaction_type_type',
-            //        'source_transaction_id',
-            'source_account_id',
-            //        'reconciled',
-            'amount',
-            //        'currency_id',
-            'currency_code',
-            'currency_name',
-            'currency_symbol',
-            'currency_decimal_places',
-            'foreign_amount',
-            //        'foreign_currency_id',
-            'foreign_currency_code',
-            'foreign_currency_name',
-            'foreign_currency_symbol',
-            'foreign_currency_decimal_places',
-            'destination_account_id',
-            'source_account_name',
-            'source_account_iban',
-            'source_account_type',
-            'destination_account_name',
-            'destination_account_iban',
-            'destination_account_type',
-            'category_id',
-            'category_name',
-            'budget_id',
-            'budget_name',
-            'tags',
-            //        'attachments',
-            'interest_date',
-            'payment_date',
-            'invoice_date',
-            'book_date',
-            'due_date',
-            'process_date',
-            //        'destination_transaction_id',
-            'notes',
-        ];
+    private static array $NAMES = [
+        //        'transaction_group_id',
+        //        'user_id',
+        //        'user_group_id',
+        'created_at',
+        'updated_at',
+        'transaction_group_title',
+        'group_created_at',
+        'group_updated_at',
+        //        'transaction_journal_id',
+        //        'transaction_type_id',
+        'description',
+        'date',
+        //        'order',
+        'transaction_type_type',
+        //        'source_transaction_id',
+        'source_account_id',
+        //        'reconciled',
+        'amount',
+        //        'currency_id',
+        'currency_code',
+        'currency_name',
+        'currency_symbol',
+        'currency_decimal_places',
+        'foreign_amount',
+        //        'foreign_currency_id',
+        'foreign_currency_code',
+        'foreign_currency_name',
+        'foreign_currency_symbol',
+        'foreign_currency_decimal_places',
+        'destination_account_id',
+        'source_account_name',
+        'source_account_iban',
+        'source_account_type',
+        'destination_account_name',
+        'destination_account_iban',
+        'destination_account_type',
+        'category_id',
+        'category_name',
+        'budget_id',
+        'budget_name',
+        'tags',
+        //        'attachments',
+        'interest_date',
+        'payment_date',
+        'invoice_date',
+        'book_date',
+        'due_date',
+        'process_date',
+        //        'destination_transaction_id',
+        'notes',
+    ];
     private readonly ExpressionLanguage $expressionLanguage;
-    private readonly bool               $isExpression;
-    private readonly ?SyntaxError       $validationError;
+    private readonly bool $isExpression;
+    private readonly ?SyntaxError $validationError;
 
-    public function __construct(private readonly string $expr)
-    {
+    public function __construct(
+        private readonly string $expr
+    ) {
         $this->expressionLanguage = app(ExpressionLanguage::class);
 
         $this->isExpression       = $this->isExpression($this->expr);
         $this->validationError    = $this->validate();
     }
 
-    private function isExpression(string $expr): bool
-    {
-        return str_starts_with($expr, '=') && strlen($expr) > 1;
-    }
-
-    private function validate(): ?SyntaxError
+    public function evaluate(array $journal): string
     {
         if (!$this->isExpression) {
-            return null;
+            return $this->expr;
         }
 
-        try {
-            $this->lint();
-
-            return null;
-        } catch (SyntaxError $e) {
-            return $e;
-        }
-    }
-
-    private function lint(): void
-    {
-        if (!$this->isExpression) {
-            return;
-        }
-
-        $this->lintExpression(substr($this->expr, 1));
-    }
-
-    private function lintExpression(string $expr): void
-    {
-        $this->expressionLanguage->lint($expr, self::$NAMES);
+        return $this->evaluateExpression(substr($this->expr, 1), $journal);
     }
 
     public function getValidationError(): ?SyntaxError
@@ -152,12 +127,37 @@ class ActionExpression
         return (string) $result;
     }
 
-    public function evaluate(array $journal): string
+    private function isExpression(string $expr): bool
+    {
+        return str_starts_with($expr, '=') && strlen($expr) > 1;
+    }
+
+    private function lint(): void
     {
         if (!$this->isExpression) {
-            return $this->expr;
+            return;
         }
 
-        return $this->evaluateExpression(substr($this->expr, 1), $journal);
+        $this->lintExpression(substr($this->expr, 1));
+    }
+
+    private function lintExpression(string $expr): void
+    {
+        $this->expressionLanguage->lint($expr, self::$NAMES);
+    }
+
+    private function validate(): ?SyntaxError
+    {
+        if (!$this->isExpression) {
+            return null;
+        }
+
+        try {
+            $this->lint();
+
+            return null;
+        } catch (SyntaxError $e) {
+            return $e;
+        }
     }
 }

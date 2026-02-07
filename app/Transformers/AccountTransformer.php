@@ -36,8 +36,8 @@ use FireflyIII\Support\Facades\Amount;
  */
 class AccountTransformer extends AbstractTransformer
 {
-    protected bool                       $convertToPrimary;
-    protected TransactionCurrency        $primary;
+    protected bool $convertToPrimary;
+    protected TransactionCurrency $primary;
     protected AccountRepositoryInterface $repository;
 
     /**
@@ -58,19 +58,17 @@ class AccountTransformer extends AbstractTransformer
     public function transform(Account $account): array
     {
         if (null === $account->meta) {
-            $account->meta = [
-                'currency' => null,
-            ];
+            $account->meta = ['currency' => null];
         }
 
         // get account type:
-        $accountType                           = (string)config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
-        $liabilityType                         = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
+        $accountType                           = (string) config(sprintf('firefly.shortNamesByFullName.%s', $account->full_account_type));
+        $liabilityType                         = (string) config(sprintf('firefly.shortLiabilityNameByFullName.%s', $account->full_account_type));
         $liabilityType                         = '' === $liabilityType ? null : strtolower($liabilityType);
         $liabilityDirection                    = $account->meta['liability_direction'] ?? null;
         $accountRole                           = $this->getAccountRole($account, $accountType);
         $hasCurrencySettings                   = null !== $account->meta['currency'];
-        $includeNetWorth                       = 1 === (int)($account->meta['include_net_worth'] ?? 0);
+        $includeNetWorth                       = 1 === (int) ($account->meta['include_net_worth'] ?? 0);
         $longitude                             = $account->meta['location']['longitude'] ?? null;
         $latitude                              = $account->meta['location']['latitude'] ?? null;
         $zoomLevel                             = $account->meta['location']['zoom_level'] ?? null;
@@ -93,7 +91,7 @@ class AccountTransformer extends AbstractTransformer
         [$interest, $interestPeriod]           = $this->getInterest($account, $accountType);
 
         return [
-            'id'                              => (string)$account->id,
+            'id'                              => (string) $account->id,
             'created_at'                      => $account->created_at->toAtomString(),
             'updated_at'                      => $account->updated_at->toAtomString(),
             'active'                          => $account->active,
@@ -110,13 +108,13 @@ class AccountTransformer extends AbstractTransformer
             'object_has_currency_setting'     => $hasCurrencySettings,
 
             // currency is object specific or primary, already determined above.
-            'currency_id'                     => (string)$currency['id'],
+            'currency_id'                     => (string) $currency['id'],
             'currency_name'                   => $currency['name'],
             'currency_code'                   => $currency['code'],
             'currency_symbol'                 => $currency['symbol'],
             'currency_decimal_places'         => $currency['decimal_places'],
 
-            'primary_currency_id'             => (string)$this->primary->id,
+            'primary_currency_id'             => (string) $this->primary->id,
             'primary_currency_name'           => $this->primary->name,
             'primary_currency_code'           => $this->primary->code,
             'primary_currency_symbol'         => $this->primary->symbol,
@@ -155,19 +153,14 @@ class AccountTransformer extends AbstractTransformer
             'latitude'                        => $latitude,
             'zoom_level'                      => $zoomLevel,
             'last_activity'                   => $account->meta['last_activity']?->toAtomString(),
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => sprintf('/accounts/%d', $account->id),
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => sprintf('/accounts/%d', $account->id)]],
         ];
     }
 
     private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $account->meta['account_role'] ?? null;
-        if ('asset' !== $accountType || '' === (string)$accountRole) {
+        if ('asset' !== $accountType || '' === (string) $accountRole) {
             return null;
         }
 
@@ -191,12 +184,24 @@ class AccountTransformer extends AbstractTransformer
                 }
                 $monthlyPaymentDate = $object->toAtomString();
             }
-            if (10 !== strlen((string)$monthlyPaymentDate)) {
+            if (10 !== strlen((string) $monthlyPaymentDate)) {
                 $monthlyPaymentDate = Carbon::parse($monthlyPaymentDate, config('app.timezone'))->toAtomString();
             }
         }
 
         return [$creditCardType, $monthlyPaymentDate];
+    }
+
+    private function getInterest(Account $account, string $accountType): array
+    {
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $account->meta['interest'] ?? null;
+            $interestPeriod = $account->meta['interest_period'] ?? null;
+        }
+
+        return [$interest, $interestPeriod];
     }
 
     private function getOpeningBalance(Account $account, string $accountType): ?string
@@ -211,21 +216,8 @@ class AccountTransformer extends AbstractTransformer
                 $object = today(config('app.timezone'));
             }
             $openingBalanceDate = $object->toAtomString();
-
         }
 
         return $openingBalanceDate;
-    }
-
-    private function getInterest(Account $account, string $accountType): array
-    {
-        $interest       = null;
-        $interestPeriod = null;
-        if ('liabilities' === $accountType) {
-            $interest       = $account->meta['interest'] ?? null;
-            $interestPeriod = $account->meta['interest_period'] ?? null;
-        }
-
-        return [$interest, $interestPeriod];
     }
 }

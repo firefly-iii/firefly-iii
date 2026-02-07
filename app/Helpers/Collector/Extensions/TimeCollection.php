@@ -88,15 +88,6 @@ trait TimeCollection
         return $this;
     }
 
-    public function withMetaDate(string $field): GroupCollectorInterface
-    {
-        $this->joinMetaDataTables();
-        $this->query->where('journal_meta.name', '=', $field);
-        $this->query->whereNotNull('journal_meta.data');
-
-        return $this;
-    }
-
     public function excludeObjectRange(Carbon $start, Carbon $end, string $field): GroupCollectorInterface
     {
         $after  = $start->format('Y-m-d 00:00:00');
@@ -127,8 +118,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->day >= (int) $day;
                 }
             }
@@ -145,8 +135,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->day <= (int) $day;
                 }
             }
@@ -163,8 +152,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $day === $transaction[$field]->day;
                 }
             }
@@ -181,8 +169,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $day): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $day !== $transaction[$field]->day;
                 }
             }
@@ -199,8 +186,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->month >= (int) $month;
                 }
             }
@@ -217,8 +203,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->month <= (int) $month;
                 }
             }
@@ -235,8 +220,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $month === $transaction[$field]->month;
                 }
             }
@@ -253,8 +237,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $month): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return (int) $month !== $transaction[$field]->month;
                 }
             }
@@ -271,8 +254,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->year >= (int) $year;
                 }
             }
@@ -289,8 +271,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->year <= (int) $year;
                 }
             }
@@ -307,8 +288,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $year === (string) $transaction[$field]->year;
                 }
             }
@@ -325,8 +305,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $year): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $year !== (string) $transaction[$field]->year;
                 }
             }
@@ -504,8 +483,7 @@ trait TimeCollection
         $date->startOfDay();
         $filter              = static function (array $object) use ($field, $date): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->gte($date);
                 }
             }
@@ -522,8 +500,7 @@ trait TimeCollection
         $this->withMetaDate($field);
         $filter              = static function (array $object) use ($field, $date): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->lte($date);
                 }
             }
@@ -547,8 +524,7 @@ trait TimeCollection
 
         $filter              = static function (array $object) use ($field, $start, $end): bool {
             foreach ($object['transactions'] as $transaction) {
-                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon
-                ) {
+                if (array_key_exists($field, $transaction) && $transaction[$field] instanceof Carbon) {
                     return $transaction[$field]->gte($start) && $transaction[$field]->lte($end);
                 }
             }
@@ -631,6 +607,15 @@ trait TimeCollection
         $before = $date->format('Y-m-d 23:59:59');
         $this->query->where('transaction_journals.updated_at', '>=', $after);
         $this->query->where('transaction_journals.updated_at', '<=', $before);
+
+        return $this;
+    }
+
+    public function withMetaDate(string $field): GroupCollectorInterface
+    {
+        $this->joinMetaDataTables();
+        $this->query->where('journal_meta.name', '=', $field);
+        $this->query->whereNotNull('journal_meta.data');
 
         return $this;
     }

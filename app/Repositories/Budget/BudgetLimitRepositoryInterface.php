@@ -73,6 +73,8 @@ interface BudgetLimitRepositoryInterface
 
     public function getBudgetLimits(Budget $budget, ?Carbon $start = null, ?Carbon $end = null): Collection;
 
+    public function getDailyAmount(BudgetLimit $budgetLimit): string;
+
     public function getNoteText(BudgetLimit $budgetLimit): string;
 
     public function setNoteText(BudgetLimit $budgetLimit, string $text): void;

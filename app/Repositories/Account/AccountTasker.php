@@ -29,12 +29,12 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Facades\Steam;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class AccountTasker.
@@ -48,24 +48,18 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        $yesterday       = clone $start;
+        $yesterday           = clone $start;
         $yesterday->subDay()->endOfDay(); // exactly up until $start but NOT including.
-        $end->endOfDay();                 // needs to be end of day to be correct.
+        $end->endOfDay(); // needs to be end of day to be correct.
         Log::debug(sprintf('getAccountReport: accountsBalancesInRange("%s", "%s")', $yesterday->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
-        [
-            $startSet,
-            $endSet,
-        ]                = Steam::accountsBalancesInRange($accounts, $yesterday, $end);
+        [$startSet, $endSet] = Steam::accountsBalancesInRange($accounts, $yesterday, $end);
         Log::debug('Start of accountreport');
 
         /** @var AccountRepositoryInterface $repository */
-        $repository      = app(AccountRepositoryInterface::class);
-        $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
+        $repository          = app(AccountRepositoryInterface::class);
+        $primaryCurrency     = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
-        $return          = [
-            'accounts' => [],
-            'sums'     => [],
-        ];
+        $return              = ['accounts' => [], 'sums'     => []];
 
         /** @var Account $account */
         foreach ($accounts as $account) {
@@ -100,7 +94,12 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
             if (null !== $first && $first->date->isSameDay($yesterday) && TransactionTypeEnum::OPENING_BALANCE->value === $first->transactionType->type) {
                 Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
-                Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $yesterday->format('Y-m-d'), $entry['start_balance']));
+                Log::debug(sprintf(
+                    'Account %s was opened on %s, so opening balance is %f',
+                    $account->name,
+                    $yesterday->format('Y-m-d'),
+                    $entry['start_balance']
+                ));
             }
             $return['sums'][$currency->id]['start'] = bcadd($return['sums'][$currency->id]['start'], (string) $entry['start_balance']);
             $return['sums'][$currency->id]['end']   = bcadd($return['sums'][$currency->id]['end'], $entry['end_balance']);
@@ -145,17 +144,42 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         return $report;
     }
 
+    /**
+     * @throws FireflyException
+     */
+    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
+    {
+        // get all incomes for the given accounts in the given period!
+        // also transfers!
+        // get all transactions:
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setDestinationAccounts($accounts)->setRange($start, $end);
+        $collector->excludeSourceAccounts($accounts);
+        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
+        $report    = $this->groupIncomeBySource($collector->getExtractedJournals());
+
+        // sort the result
+        // Obtain a list of columns
+        $sum       = [];
+        foreach ($report['accounts'] as $accountId => $row) {
+            $sum[$accountId] = (float) $row['sum']; // intentional float
+        }
+
+        array_multisort($sum, SORT_DESC, $report['accounts']);
+
+        return $report;
+    }
+
     private function groupExpenseByDestination(array $array): array
     {
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$primaryCurrency->id => $primaryCurrency];
-        $report          = [
-            'accounts' => [],
-            'sums'     => [],
-        ];
+        $currencies      = [$primaryCurrency->id    => $primaryCurrency];
+        $report          = ['accounts' => [], 'sums'     => []];
 
         /** @var array $journal */
         foreach ($array as $journal) {
@@ -202,45 +226,14 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
         return $report;
     }
 
-    /**
-     * @throws FireflyException
-     */
-    public function getIncomeReport(Carbon $start, Carbon $end, Collection $accounts): array
-    {
-        // get all incomes for the given accounts in the given period!
-        // also transfers!
-        // get all transactions:
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setDestinationAccounts($accounts)->setRange($start, $end);
-        $collector->excludeSourceAccounts($accounts);
-        $collector->setTypes([TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])->withAccountInformation();
-        $report    = $this->groupIncomeBySource($collector->getExtractedJournals());
-
-        // sort the result
-        // Obtain a list of columns
-        $sum       = [];
-        foreach ($report['accounts'] as $accountId => $row) {
-            $sum[$accountId] = (float) $row['sum']; // intentional float
-        }
-
-        array_multisort($sum, SORT_DESC, $report['accounts']);
-
-        return $report;
-    }
-
     private function groupIncomeBySource(array $array): array
     {
         $primaryCurrency = Amount::getPrimaryCurrencyByUserGroup($this->user->userGroup);
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$primaryCurrency->id => $primaryCurrency];
-        $report          = [
-            'accounts' => [],
-            'sums'     => [],
-        ];
+        $currencies      = [$primaryCurrency->id    => $primaryCurrency];
+        $report          = ['accounts' => [], 'sums'     => []];
 
         /** @var array $journal */
         foreach ($array as $journal) {

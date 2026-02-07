@@ -27,6 +27,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Facades\Crypt;
@@ -34,7 +35,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use JsonException;
 use stdClass;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\json_decode;
 
@@ -75,36 +75,6 @@ class RemovesDatabaseDecryption extends Command
         return 0;
     }
 
-    private function decryptTable(string $table, array $fields): void
-    {
-        if ($this->isDecrypted($table)) {
-
-            return;
-        }
-        foreach ($fields as $field) {
-            $this->decryptField($table, $field);
-        }
-        $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
-        // mark as decrypted:
-        $configName = sprintf('is_decrypted_%s', $table);
-        FireflyConfig::set($configName, true);
-    }
-
-    private function isDecrypted(string $table): bool
-    {
-        $configName = sprintf('is_decrypted_%s', $table);
-        $configVar  = null;
-
-        try {
-            $configVar = FireflyConfig::get($configName, false);
-        } catch (FireflyException $e) {
-            Log::error($e->getMessage());
-        }
-
-        return (bool)$configVar?->data;
-
-    }
-
     private function decryptField(string $table, string $field): void
     {
         $rows = DB::table($table)->get(['id', $field]);
@@ -113,58 +83,6 @@ class RemovesDatabaseDecryption extends Command
         foreach ($rows as $row) {
             $this->decryptRow($table, $field, $row);
         }
-    }
-
-    private function decryptRow(string $table, string $field, stdClass $row): void
-    {
-        $original = $row->{$field};
-        if (null === $original) {
-            return;
-        }
-        $id       = (int)$row->id;
-        $value    = '';
-
-        try {
-            $value = $this->tryDecrypt($original);
-        } catch (FireflyException $e) {
-            $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
-            $this->friendlyError($message);
-            Log::error($message);
-            Log::error($e->getTraceAsString());
-        }
-
-        // A separate routine for preferences table:
-        if ('preferences' === $table && is_string($value)) {
-            $this->decryptPreferencesRow($id, $value);
-
-            return;
-        }
-
-        if ($value !== $original) {
-            DB::table($table)->where('id', $id)->update([$field => $value]);
-        }
-    }
-
-    /**
-     * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
-     *
-     * @param mixed $value
-     *
-     * @return string
-     *
-     * @throws FireflyException
-     */
-    private function tryDecrypt($value)
-    {
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            if ('The MAC is invalid.' === $e->getMessage()) {
-                throw new FireflyException($e->getMessage(), 0, $e);
-            }
-        }
-
-        return $value;
     }
 
     private function decryptPreferencesRow(int $id, string $value): void
@@ -188,5 +106,85 @@ class RemovesDatabaseDecryption extends Command
             $object->data = $newValue;
             $object->save();
         }
+    }
+
+    private function decryptRow(string $table, string $field, stdClass $row): void
+    {
+        $original = $row->{$field};
+        if (null === $original) {
+            return;
+        }
+        $id       = (int) $row->id;
+        $value    = '';
+
+        try {
+            $value = $this->tryDecrypt($original);
+        } catch (FireflyException $e) {
+            $message = sprintf('Could not decrypt field "%s" in row #%d of table "%s": %s', $field, $id, $table, $e->getMessage());
+            $this->friendlyError($message);
+            Log::error($message);
+            Log::error($e->getTraceAsString());
+        }
+
+        // A separate routine for preferences table:
+        if ('preferences' === $table && is_string($value)) {
+            $this->decryptPreferencesRow($id, $value);
+
+            return;
+        }
+
+        if ($value !== $original) {
+            DB::table($table)->where('id', $id)->update([$field => $value]);
+        }
+    }
+
+    private function decryptTable(string $table, array $fields): void
+    {
+        if ($this->isDecrypted($table)) {
+            return;
+        }
+        foreach ($fields as $field) {
+            $this->decryptField($table, $field);
+        }
+        $this->friendlyPositive(sprintf('Decrypted the data in table "%s".', $table));
+        // mark as decrypted:
+        $configName = sprintf('is_decrypted_%s', $table);
+        FireflyConfig::set($configName, true);
+    }
+
+    private function isDecrypted(string $table): bool
+    {
+        $configName = sprintf('is_decrypted_%s', $table);
+        $configVar  = null;
+
+        try {
+            $configVar = FireflyConfig::get($configName, false);
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+        }
+
+        return (bool) $configVar?->data;
+    }
+
+    /**
+     * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
+     *
+     * @param mixed $value
+     *
+     * @return string
+     *
+     * @throws FireflyException
+     */
+    private function tryDecrypt($value)
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            if ('The MAC is invalid.' === $e->getMessage()) {
+                throw new FireflyException($e->getMessage(), 0, $e);
+            }
+        }
+
+        return $value;
     }
 }

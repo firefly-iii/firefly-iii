@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\AutoBudget;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
 
 class AutoBudgetObserver
@@ -37,26 +37,20 @@ class AutoBudgetObserver
         $this->updatePrimaryCurrencyAmount($autoBudget);
     }
 
-    private function updatePrimaryCurrencyAmount(AutoBudget $autoBudget): void
-    {
-        if (!Amount::convertToPrimary($autoBudget->budget->user)) {
-            return;
-        }
-        $userCurrency              = Amount::getPrimaryCurrencyByUserGroup($autoBudget->budget->user->userGroup);
-        $autoBudget->native_amount = null;
-        if ($autoBudget->transactionCurrency->id !== $userCurrency->id) {
-            $converter                 = new ExchangeRateConverter();
-            $converter->setUserGroup($autoBudget->budget->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $autoBudget->native_amount = $converter->convert($autoBudget->transactionCurrency, $userCurrency, today(), $autoBudget->amount);
-        }
-        $autoBudget->saveQuietly();
-        Log::debug('Auto budget primary currency amount is updated.');
-    }
-
     public function updated(AutoBudget $autoBudget): void
     {
         Log::debug('Observe "updated" of an auto budget.');
         $this->updatePrimaryCurrencyAmount($autoBudget);
+    }
+
+    private function updatePrimaryCurrencyAmount(AutoBudget $autoBudget): void
+    {
+        $params                     = new ConversionParameters();
+        $params->user               = $autoBudget->budget->user;
+        $params->model              = $autoBudget;
+        $params->originalCurrency   = $autoBudget->transactionCurrency;
+        $params->amountField        = 'amount';
+        $params->primaryAmountField = 'native_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }

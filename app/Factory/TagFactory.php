@@ -35,56 +35,24 @@ use Illuminate\Support\Facades\Log;
  */
 class TagFactory
 {
-    private User      $user;
+    private User $user;
     private UserGroup $userGroup;
-
-    public function findOrCreate(string $tag): ?Tag
-    {
-        $tag    = trim($tag);
-        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
-
-        /** @var null|Tag $dbTag */
-        $dbTag  = $this->user->tags()->where('tag', $tag)->first();
-        if (null !== $dbTag) {
-            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
-
-            return $dbTag;
-        }
-        $newTag = $this->create(
-            [
-                'tag'         => $tag,
-                'date'        => null,
-                'description' => null,
-                'latitude'    => null,
-                'longitude'   => null,
-                'zoom_level'  => null,
-            ]
-        );
-        if (!$newTag instanceof Tag) {
-            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
-
-            return null;
-        }
-        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
-
-        return $newTag;
-    }
 
     public function create(array $data): ?Tag
     {
         $zoomLevel = 0 === (int) $data['zoom_level'] ? null : (int) $data['zoom_level'];
-        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude'];   // intentional float
+        $latitude  = 0.0 === (float) $data['latitude'] ? null : (float) $data['latitude']; // intentional float
         $longitude = 0.0 === (float) $data['longitude'] ? null : (float) $data['longitude']; // intentional float
         $array     = [
-            'user_id'        => $this->user->id,
-            'user_group_id'  => $this->userGroup->id,
-            'tag'            => trim((string) $data['tag']),
-            'tag_mode'       => 'nothing',
-            'date'           => $data['date'],
-            'description'    => $data['description'],
-            'latitude'       => null,
-            'longitude'      => null,
-            'zoomLevel'      => null,
+            'user_id'       => $this->user->id,
+            'user_group_id' => $this->userGroup->id,
+            'tag'           => trim((string) $data['tag']),
+            'tag_mode'      => 'nothing',
+            'date'          => $data['date'],
+            'description'   => $data['description'],
+            'latitude'      => null,
+            'longitude'     => null,
+            'zoomLevel'     => null,
         ];
 
         /** @var null|Tag $tag */
@@ -100,6 +68,40 @@ class TagFactory
         }
 
         return $tag;
+    }
+
+    public function findOrCreate(string $tag): ?Tag
+    {
+        $tag    = trim($tag);
+        Log::debug(sprintf('Now in TagFactory::findOrCreate("%s")', $tag));
+
+        /** @var null|Tag $dbTag */
+        $dbTag  = $this->user
+            ->tags()
+            ->where('tag', $tag)
+            ->first()
+        ;
+        if (null !== $dbTag) {
+            Log::debug(sprintf('Tag exists (#%d), return it.', $dbTag->id));
+
+            return $dbTag;
+        }
+        $newTag = $this->create([
+            'tag'         => $tag,
+            'date'        => null,
+            'description' => null,
+            'latitude'    => null,
+            'longitude'   => null,
+            'zoom_level'  => null,
+        ]);
+        if (!$newTag instanceof Tag) {
+            Log::error(sprintf('TagFactory::findOrCreate("%s") but tag is unexpectedly NULL!', $tag));
+
+            return null;
+        }
+        Log::debug(sprintf('Created new tag #%d ("%s")', $newTag->id, $newTag->tag));
+
+        return $newTag;
     }
 
     public function setUser(User $user): void

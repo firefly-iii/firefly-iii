@@ -26,7 +26,10 @@ namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\Transaction\UpdateRequest;
-use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
@@ -52,17 +55,15 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $admin */
-                $admin                 = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $admin */
+            $admin                 = auth()->user();
 
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
-                $this->groupRepository->setUser($admin);
+            $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+            $this->groupRepository->setUser($admin);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -74,24 +75,32 @@ class UpdateController extends Controller
     public function update(UpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
         Log::debug('Now in update routine for transaction group');
-        $data              = $request->getAll();
-        $oldHash           = $this->groupRepository->getCompareHash($transactionGroup);
-        $transactionGroup  = $this->groupRepository->update($transactionGroup, $data);
-        $newHash           = $this->groupRepository->getCompareHash($transactionGroup);
-        $manager           = $this->getManager();
+        $data                     = $request->getAll();
+        $oldHash                  = $this->groupRepository->getCompareHash($transactionGroup);
+        $objects                  = TransactionGroupEventObjects::collectFromTransactionGroup($transactionGroup);
+        $transactionGroup         = $this->groupRepository->update($transactionGroup, $data);
+        $objects->appendFromTransactionGroup($transactionGroup);
+        $newHash                  = $this->groupRepository->getCompareHash($transactionGroup);
+        $manager                  = $this->getManager();
 
         Preferences::mark();
-        $applyRules        = $data['apply_rules'] ?? true;
-        $fireWebhooks      = $data['fire_webhooks'] ?? true;
-        $runRecalculations = $oldHash !== $newHash;
-        event(new UpdatedTransactionGroup($transactionGroup, $applyRules, $fireWebhooks, $runRecalculations));
+        $applyRules               = $data['apply_rules'] ?? true;
+        $fireWebhooks             = $data['fire_webhooks'] ?? true;
+        $runRecalculations        = $oldHash !== $newHash;
+
+        $flags                    = new TransactionGroupEventFlags();
+        $flags->applyRules        = $applyRules;
+        $flags->fireWebhooks      = $fireWebhooks;
+        $flags->recalculateCredit = $runRecalculations;
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
 
         /** @var User $admin */
-        $admin             = auth()->user();
+        $admin                    = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector         = app(GroupCollectorInterface::class);
+        $collector                = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // filter on transaction group.
@@ -100,20 +109,20 @@ class UpdateController extends Controller
             ->withAPIInformation()
         ;
 
-        $selectedGroup     = $collector->getGroups()->first();
+        $selectedGroup            = $collector->getGroups()->first();
         if (null === $selectedGroup) {
             throw new NotFoundHttpException();
         }
 
         // enrich
-        $enrichment        = new TransactionGroupEnrichment();
+        $enrichment               = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $selectedGroup     = $enrichment->enrichSingle($selectedGroup);
+        $selectedGroup            = $enrichment->enrichSingle($selectedGroup);
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer       = app(TransactionGroupTransformer::class);
+        $transformer              = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
-        $resource          = new Item($selectedGroup, $transformer, 'transactions');
+        $resource                 = new Item($selectedGroup, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }

@@ -38,12 +38,12 @@ trait GetRecurrenceData
 
         foreach ($stringKeys as $key) {
             if (array_key_exists($key, $transaction)) {
-                $return[$key] = (string)$transaction[$key];
+                $return[$key] = (string) $transaction[$key];
             }
         }
         foreach ($intKeys as $key) {
             if (array_key_exists($key, $transaction)) {
-                $return[$key] = (int)$transaction[$key];
+                $return[$key] = (int) $transaction[$key];
             }
         }
         foreach ($keys as $key) {

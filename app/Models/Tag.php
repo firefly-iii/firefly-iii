@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use FireflyIII\Casts\SeparateTimezoneCaster;
-use FireflyIII\Handlers\Observer\TagObserver;
+use FireflyIII\Handlers\Observer\DeletedTagObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([TagObserver::class])]
+#[ObservedBy([DeletedTagObserver::class])]
 class Tag extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -52,10 +52,13 @@ class Tag extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $tagId = (int)$value;
+            $tagId = (int) $value;
 
             /** @var User $user */
             $user  = auth()->user();
@@ -70,11 +73,6 @@ class Tag extends Model
         throw new NotFoundHttpException();
     }
 
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
     public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
@@ -85,9 +83,19 @@ class Tag extends Model
         return $this->morphMany(Location::class, 'locatable');
     }
 
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
+
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array
@@ -103,10 +111,5 @@ class Tag extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function primaryPeriodStatistics(): MorphMany
-    {
-        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
     }
 }

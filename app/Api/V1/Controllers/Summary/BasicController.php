@@ -53,11 +53,11 @@ use Illuminate\Support\Facades\Log;
 class BasicController extends Controller
 {
     private AvailableBudgetRepositoryInterface $abRepository;
-    private AccountRepositoryInterface         $accountRepository;
-    private BillRepositoryInterface            $billRepository;
-    private BudgetRepositoryInterface          $budgetRepository;
-    private CurrencyRepositoryInterface        $currencyRepos;
-    private OperationsRepositoryInterface      $opsRepository;
+    private AccountRepositoryInterface $accountRepository;
+    private BillRepositoryInterface $billRepository;
+    private BudgetRepositoryInterface $budgetRepository;
+    private CurrencyRepositoryInterface $currencyRepos;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * BasicController constructor.
@@ -65,53 +65,64 @@ class BasicController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user                    = auth()->user();
-                $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-                $this->billRepository    = app(BillRepositoryInterface::class);
-                $this->budgetRepository  = app(BudgetRepositoryInterface::class);
-                $this->accountRepository = app(AccountRepositoryInterface::class);
-                $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
-                $this->opsRepository     = app(OperationsRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user                    = auth()->user();
+            $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
+            $this->billRepository    = app(BillRepositoryInterface::class);
+            $this->budgetRepository  = app(BudgetRepositoryInterface::class);
+            $this->accountRepository = app(AccountRepositoryInterface::class);
+            $this->abRepository      = app(AvailableBudgetRepositoryInterface::class);
+            $this->opsRepository     = app(OperationsRepositoryInterface::class);
 
-                $this->billRepository->setUser($user);
-                $this->currencyRepos->setUser($user);
-                $this->budgetRepository->setUser($user);
-                $this->accountRepository->setUser($user);
-                $this->abRepository->setUser($user);
-                $this->opsRepository->setUser($user);
+            $this->billRepository->setUser($user);
+            $this->currencyRepos->setUser($user);
+            $this->budgetRepository->setUser($user);
+            $this->accountRepository->setUser($user);
+            $this->abRepository->setUser($user);
+            $this->opsRepository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function basic(BasicRequest $request): JsonResponse
     {
         // parameters for boxes:
-        ['start' => $start, 'end' => $end, 'code' => $code] = $request->attributes->all();
+        ['start' => $start, 'end'   => $end, 'code'  => $code] = $request->attributes->all();
         // balance information:
-        $balanceData                                        = $this->getBalanceInformation($start, $end);
-        $billData                                           = $this->getSubscriptionInformation($start, $end);
-        $spentData                                          = $this->getLeftToSpendInfo($start, $end);
-        $netWorthData                                       = $this->getNetWorthInfo($end);
+        $balanceData                                           = $this->getBalanceInformation($start, $end);
+        $billData                                              = $this->getSubscriptionInformation($start, $end);
+        $spentData                                             = $this->getLeftToSpendInfo($start, $end);
+        $netWorthData                                          = $this->getNetWorthInfo($end);
         //                        $balanceData  = [];
         //                        $billData     = [];
         //                $spentData    = [];
         //                        $netWorthData = [];
-        $total                                              = array_merge($balanceData, $billData, $spentData, $netWorthData);
+        $total                                                 = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
-        $return                                             = [];
+        $return                                                = [];
         foreach ($total as $entry) {
-            if ('' === $code || ($code === $entry['currency_code'])) {
+            if ('' === $code || $code === $entry['currency_code']) {
                 $return[$entry['key']] = $entry;
             }
         }
 
         return response()->json($return);
+    }
+
+    /**
+     * Check if date is outside session range.
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool
+    { // Validate a preference
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            return true;
+        }
+
+        // start and end in the past? use $end
+        return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
     }
 
     private function getBalanceInformation(Carbon $start, Carbon $end): array
@@ -123,9 +134,7 @@ class BasicController extends Controller
         // prep some arrays:
         $sums             = [];
         $return           = [];
-        $currencies       = [
-            $primary->id => $primary,
-        ];
+        $currencies       = [$primary->id => $primary];
 
         // collect income of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
@@ -134,12 +143,16 @@ class BasicController extends Controller
         $set              = $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->getExtractedJournals();
         $incomes          = $summarizer->groupByCurrencyId($set, 'positive', false);
 
-
         // collect expenses of user.
         // collect expenses of user using the new group collector.
         /** @var GroupCollectorInterface $collector */
         $collector        = app(GroupCollectorInterface::class);
-        $set              = $collector->setRange($start, $end)->setPage($this->parameters->get('page'))->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->getExtractedJournals();
+        $set              = $collector
+            ->setRange($start, $end)
+            ->setPage($this->parameters->get('page'))
+            ->setTypes([TransactionTypeEnum::WITHDRAWAL->value])
+            ->getExtractedJournals()
+        ;
         $expenses         = $summarizer->groupByCurrencyId($set, 'negative', false);
 
         // if convert to primary, do so right now.
@@ -154,7 +167,7 @@ class BasicController extends Controller
                 ],
             ];
             $newIncomes  = [
-                $primary->id => [
+                $primary->id  => [
                     'currency_id'             => $primary->id,
                     'currency_code'           => $primary->code,
                     'currency_symbol'         => $primary->symbol,
@@ -163,7 +176,7 @@ class BasicController extends Controller
                 ],
             ];
             $sums        = [
-                $primary->id => [
+                $primary->id        => [
                     'currency_id'             => $primary->id,
                     'currency_code'           => $primary->code,
                     'currency_symbol'         => $primary->symbol,
@@ -175,10 +188,8 @@ class BasicController extends Controller
             $converter   = new ExchangeRateConverter();
             // loop over income and expenses
             foreach ([$expenses, $incomes] as $index => $array) {
-
                 // loop over either one.
                 foreach ($array as $entry) {
-
                     // if it is the primary currency already.
                     if ($entry['currency_id'] === $primary->id) {
                         $sums[$primary->id]['sum'] = bcadd((string) $entry['sum'], $sums[$primary->id]['sum']);
@@ -233,7 +244,7 @@ class BasicController extends Controller
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_balance_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => $sums[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -242,11 +253,12 @@ class BasicController extends Controller
                 'value_parsed'            => Amount::formatAnything($currency, $sums[$currencyId]['sum'] ?? '0', false),
                 'local_icon'              => 'balance-scale',
                 'sub_title'               => Amount::formatAnything($currency, $expenses[$currencyId]['sum'] ?? '0', false)
-                                             .' + '.Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
+                    .' + '
+                    .Amount::formatAnything($currency, $incomes[$currencyId]['sum'] ?? '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_spent_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => $expenses[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -258,7 +270,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_earned_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => $incomes[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -274,7 +286,7 @@ class BasicController extends Controller
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_balance_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -282,12 +294,11 @@ class BasicController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'value_parsed'            => Amount::formatAnything($currency, '0', false),
                 'local_icon'              => 'balance-scale',
-                'sub_title'               => Amount::formatAnything($currency, '0', false)
-                                             .' + '.Amount::formatAnything($currency, '0', false),
+                'sub_title'               => Amount::formatAnything($currency, '0', false).' + '.Amount::formatAnything($currency, '0', false),
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_spent_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -299,7 +310,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
+                'title'                   => trans('firefly.box_earned_in_currency', ['currency'                   => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -314,154 +325,11 @@ class BasicController extends Controller
         return $return;
     }
 
-    private function getSubscriptionInformation(Carbon $start, Carbon $end): array
-    {
-        Log::debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
-        /*
-         * Since both this method and the chart use the exact same data, we can suffice
-         * with calling the one method in the bill repository that will get this amount.
-         */
-        $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
-        $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
-        $currencies   = [
-            $this->primaryCurrency->id => $this->primaryCurrency,
-        ];
-
-        if ($this->convertToPrimary) {
-            $converter       = new ExchangeRateConverter();
-            $newPaidAmount   = [[
-                'id'             => $this->primaryCurrency->id,
-                'name'           => $this->primaryCurrency->name,
-                'symbol'         => $this->primaryCurrency->symbol,
-                'code'           => $this->primaryCurrency->code,
-                'decimal_places' => $this->primaryCurrency->decimal_places,
-                'sum'            => '0',
-            ]];
-
-            $newUnpaidAmount = [[
-                'id'             => $this->primaryCurrency->id,
-                'name'           => $this->primaryCurrency->name,
-                'symbol'         => $this->primaryCurrency->symbol,
-                'code'           => $this->primaryCurrency->code,
-                'decimal_places' => $this->primaryCurrency->decimal_places,
-                'sum'            => '0',
-            ]];
-            foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
-                foreach ($array as $item) {
-                    $currencyId                = (int) $item['id'];
-                    if (0 === $index) {
-                        // paid amount
-                        if ($currencyId === $this->primaryCurrency->id) {
-                            $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], (string) $item['sum']);
-
-                            continue;
-                        }
-                        $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
-                        $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
-
-                        continue;
-                    }
-                    // unpaid amount
-                    if ($currencyId === $this->primaryCurrency->id) {
-                        $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], (string) $item['sum']);
-
-                        continue;
-                    }
-                    $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
-                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
-                    $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
-                }
-            }
-            $paidAmount      = $newPaidAmount;
-            $unpaidAmount    = $newUnpaidAmount;
-        }
-
-        //        var_dump($paidAmount);
-        //        var_dump($unpaidAmount);
-        //        exit;
-
-        $return       = [];
-
-        /**
-         * @var array $info
-         */
-        foreach ($paidAmount as $info) {
-            $amount   = bcmul((string) $info['sum'], '-1');
-            $return[] = [
-                'key'                     => sprintf('bills-paid-in-%s', $info['code']),
-                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $info['symbol']]),
-                'monetary_value'          => $amount,
-                'currency_id'             => (string) $info['id'],
-                'currency_code'           => $info['code'],
-                'currency_symbol'         => $info['symbol'],
-                'currency_decimal_places' => $info['decimal_places'],
-                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
-                'local_icon'              => 'check',
-                'sub_title'               => '',
-            ];
-        }
-
-        /**
-         * @var array $info
-         */
-        foreach ($unpaidAmount as $info) {
-            $amount   = bcmul((string) $info['sum'], '-1');
-            $return[] = [
-                'key'                     => sprintf('bills-unpaid-in-%s', $info['code']),
-                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $info['symbol']]),
-                'monetary_value'          => $amount,
-                'currency_id'             => (string) $info['id'],
-                'currency_code'           => $info['code'],
-                'currency_symbol'         => $info['symbol'],
-                'currency_decimal_places' => $info['decimal_places'],
-                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
-                'local_icon'              => 'calendar-o',
-                'sub_title'               => '',
-            ];
-        }
-        Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
-
-        if (0 === count($return)) {
-            $currency = $this->primaryCurrency;
-            unset($info, $amount);
-
-            $return[] = [
-                'key'                     => sprintf('bills-paid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => '0',
-                'currency_id'             => (string) $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
-                'local_icon'              => 'check',
-                'sub_title'               => '',
-            ];
-            $return[] = [
-                'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $currency->symbol]),
-                'monetary_value'          => '0',
-                'currency_id'             => (string) $currency->id,
-                'currency_code'           => $currency->code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
-                'local_icon'              => 'calendar-o',
-                'sub_title'               => '',
-            ];
-        }
-
-
-        return $return;
-    }
-
     /**
      * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {
-
         Log::debug(sprintf('Now in getLeftToSpendInfo("%s", "%s")', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
         $return     = [];
         $today      = today(config('app.timezone'));
@@ -477,16 +345,26 @@ class BasicController extends Controller
             $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
             $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),
-                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currencies[$currencyId]->symbol]),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency'                   => $currencies[$currencyId]->symbol]),
                 'no_available_budgets'    => false,
                 'monetary_value'          => $availableBudget,
                 'currency_id'             => (string) $currencies[$currencyId]->id,
                 'currency_code'           => $currencies[$currencyId]->code,
                 'currency_symbol'         => $currencies[$currencyId]->symbol,
                 'currency_decimal_places' => $currencies[$currencyId]->decimal_places,
-                'value_parsed'            => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, $availableBudget, false),
+                'value_parsed'            => Amount::formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    $availableBudget,
+                    false
+                ),
                 'local_icon'              => 'money',
-                'sub_title'               => Amount::formatFlat($currencies[$currencyId]->symbol, $currencies[$currencyId]->decimal_places, bcdiv($availableBudget, (string)$days), false),
+                'sub_title'               => Amount::formatFlat(
+                    $currencies[$currencyId]->symbol,
+                    $currencies[$currencyId]->decimal_places,
+                    bcdiv($availableBudget, (string) $days),
+                    false
+                ),
             ];
         }
         foreach ($spent as $row) {
@@ -508,7 +386,7 @@ class BasicController extends Controller
 
             $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
-                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency'                   => $row['currency_symbol']]),
                 'no_available_budgets'    => false,
                 'monetary_value'          => $leftToSpend,
                 'currency_id'             => (string) $row['currency_id'],
@@ -587,16 +465,20 @@ class BasicController extends Controller
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
         $netWorthHelper->setUser($user);
-        $allAccounts    = $this->accountRepository->getActiveAccountsByType([AccountTypeEnum::ASSET->value, AccountTypeEnum::DEFAULT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value, AccountTypeEnum::DEBT->value]);
+        $allAccounts    = $this->accountRepository->getActiveAccountsByType([
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+            AccountTypeEnum::DEBT->value,
+        ]);
 
         // filter list on preference of being included.
-        $filtered       = $allAccounts->filter(
-            function (Account $account): bool {
-                $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
+        $filtered       = $allAccounts->filter(function (Account $account): bool {
+            $includeNetWorth = $this->accountRepository->getMetaValue($account, 'include_net_worth');
 
-                return null === $includeNetWorth || '1' === $includeNetWorth;
-            }
-        );
+            return null === $includeNetWorth || '1' === $includeNetWorth;
+        });
 
         $netWorthSet    = $netWorthHelper->byAccounts($filtered, $end);
         $return         = [];
@@ -611,7 +493,7 @@ class BasicController extends Controller
             // return stuff
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $data['currency_symbol']]),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency'                   => $data['currency_symbol']]),
                 'monetary_value'          => $amount,
                 'currency_id'             => (string) $data['currency_id'],
                 'currency_code'           => $data['currency_code'],
@@ -625,7 +507,7 @@ class BasicController extends Controller
         if (0 === count($return)) {
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $this->primaryCurrency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->primaryCurrency->symbol]),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency'                   => $this->primaryCurrency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $this->primaryCurrency->id,
                 'currency_code'           => $this->primaryCurrency->code,
@@ -637,22 +519,147 @@ class BasicController extends Controller
             ];
         }
 
-
         Log::debug('End of getNetWorthInfo');
 
         return $return;
     }
 
-    /**
-     * Check if date is outside session range.
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    private function getSubscriptionInformation(Carbon $start, Carbon $end): array
     {
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            return true;
+        Log::debug(sprintf('Now in getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+        /*
+         * Since both this method and the chart use the exact same data, we can suffice
+         * with calling the one method in the bill repository that will get this amount.
+         */
+        $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
+        $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
+        $currencies   = [$this->primaryCurrency->id   => $this->primaryCurrency];
+
+        if ($this->convertToPrimary) {
+            $converter       = new ExchangeRateConverter();
+            $newPaidAmount   = [[
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
+                'sum'            => '0',
+            ]];
+
+            $newUnpaidAmount = [[
+                'id'             => $this->primaryCurrency->id,
+                'name'           => $this->primaryCurrency->name,
+                'symbol'         => $this->primaryCurrency->symbol,
+                'code'           => $this->primaryCurrency->code,
+                'decimal_places' => $this->primaryCurrency->decimal_places,
+                'sum'            => '0',
+            ]];
+            foreach ([$paidAmount, $unpaidAmount] as $index => $array) {
+                foreach ($array as $item) {
+                    $currencyId                = (int) $item['id'];
+                    if (0 === $index) {
+                        // paid amount
+                        if ($currencyId === $this->primaryCurrency->id) {
+                            $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], (string) $item['sum']);
+
+                            continue;
+                        }
+                        $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                        $convertedAmount         = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
+                        $newPaidAmount[0]['sum'] = bcadd($newPaidAmount[0]['sum'], $convertedAmount);
+
+                        continue;
+                    }
+                    // unpaid amount
+                    if ($currencyId === $this->primaryCurrency->id) {
+                        $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], (string) $item['sum']);
+
+                        continue;
+                    }
+                    $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
+                    $convertedAmount           = $converter->convert($currencies[$currencyId], $this->primaryCurrency, $start, $item['sum']);
+                    $newUnpaidAmount[0]['sum'] = bcadd($newUnpaidAmount[0]['sum'], $convertedAmount);
+                }
+            }
+            $paidAmount      = $newPaidAmount;
+            $unpaidAmount    = $newUnpaidAmount;
         }
 
-        // start and end in the past? use $end
-        return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
+        //        var_dump($paidAmount);
+        //        var_dump($unpaidAmount);
+        //        exit;
+
+        $return       = [];
+
+        /**
+         * @var array $info
+         */
+        foreach ($paidAmount as $info) {
+            $amount   = bcmul((string) $info['sum'], '-1');
+            $return[] = [
+                'key'                     => sprintf('bills-paid-in-%s', $info['code']),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency'                   => $info['symbol']]),
+                'monetary_value'          => $amount,
+                'currency_id'             => (string) $info['id'],
+                'currency_code'           => $info['code'],
+                'currency_symbol'         => $info['symbol'],
+                'currency_decimal_places' => $info['decimal_places'],
+                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
+                'local_icon'              => 'check',
+                'sub_title'               => '',
+            ];
+        }
+
+        /**
+         * @var array $info
+         */
+        foreach ($unpaidAmount as $info) {
+            $amount   = bcmul((string) $info['sum'], '-1');
+            $return[] = [
+                'key'                     => sprintf('bills-unpaid-in-%s', $info['code']),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency'                   => $info['symbol']]),
+                'monetary_value'          => $amount,
+                'currency_id'             => (string) $info['id'],
+                'currency_code'           => $info['code'],
+                'currency_symbol'         => $info['symbol'],
+                'currency_decimal_places' => $info['decimal_places'],
+                'value_parsed'            => Amount::formatFlat($info['symbol'], $info['decimal_places'], $amount, false),
+                'local_icon'              => 'calendar-o',
+                'sub_title'               => '',
+            ];
+        }
+        Log::debug(sprintf('Done with getBillInformation("%s", "%s")', $start->format('Y-m-d'), $end->format('Y-m-d-')));
+
+        if (0 === count($return)) {
+            $currency = $this->primaryCurrency;
+            unset($info, $amount);
+
+            $return[] = [
+                'key'                     => sprintf('bills-paid-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency'                   => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'local_icon'              => 'check',
+                'sub_title'               => '',
+            ];
+            $return[] = [
+                'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency'                   => $currency->symbol]),
+                'monetary_value'          => '0',
+                'currency_id'             => (string) $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'value_parsed'            => Amount::formatFlat($currency->symbol, $currency->decimal_places, '0', false),
+                'local_icon'              => 'calendar-o',
+                'sub_title'               => '',
+            ];
+        }
+
+        return $return;
     }
 }

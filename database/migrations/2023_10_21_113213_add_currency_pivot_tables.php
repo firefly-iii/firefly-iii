@@ -27,7 +27,16 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('transaction_currency_user');
+        Schema::dropIfExists('transaction_currency_user_group');
+    }
+
     /**
      * @SuppressWarnings("PHPMD.ShortMethodName")
      * Run the migrations.
@@ -49,7 +58,9 @@ return new class () extends Migration {
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_currency_user": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
 
@@ -68,17 +79,10 @@ return new class () extends Migration {
                 });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_currency_user_group": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('transaction_currency_user');
-        Schema::dropIfExists('transaction_currency_user_group');
     }
 };

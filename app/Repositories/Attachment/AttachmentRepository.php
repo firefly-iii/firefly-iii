@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Attachment;
 
-use Illuminate\Support\Facades\Log;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AttachmentFactory;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use League\Flysystem\UnableToDeleteFile;
 use LogicException;
@@ -66,6 +66,19 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         return true;
     }
 
+    public function exists(Attachment $attachment): bool
+    {
+        /** @var Storage $disk */
+        $disk = Storage::disk('upload');
+
+        return $disk->exists($attachment->fileName());
+    }
+
+    public function get(): Collection
+    {
+        return $this->user->attachments()->get();
+    }
+
     public function getContent(Attachment $attachment): string
     {
         // create a disk.
@@ -85,19 +98,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface, UserGroupIn
         }
 
         return $unencryptedContent;
-    }
-
-    public function exists(Attachment $attachment): bool
-    {
-        /** @var Storage $disk */
-        $disk = Storage::disk('upload');
-
-        return $disk->exists($attachment->fileName());
-    }
-
-    public function get(): Collection
-    {
-        return $this->user->attachments()->get();
     }
 
     /**

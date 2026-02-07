@@ -36,19 +36,18 @@ use Illuminate\Http\JsonResponse;
 class ShowController extends Controller
 {
     public const string RESOURCE_KEY = 'user_groups';
+
     private WebhookRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(WebhookRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(WebhookRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function show(UserGroup $userGroup): JsonResponse
@@ -56,9 +55,6 @@ class ShowController extends Controller
         $transformer = new UserGroupTransformer();
         $transformer->setParameters($this->parameters);
 
-        return response()
-            ->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))
-            ->header('Content-Type', self::CONTENT_TYPE)
-        ;
+        return response()->api($this->jsonApiObject(self::RESOURCE_KEY, $userGroup, $transformer))->header('Content-Type', self::CONTENT_TYPE);
     }
 }

@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\JsonApi\Enrichments\SubscriptionEnrichment;
 use FireflyIII\TransactionRules\Engine\RuleEngineInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
@@ -65,15 +65,13 @@ class ShowController extends Controller
 
         app('view')->share('showBudget', true);
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->repository = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->repository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -170,9 +168,7 @@ class ShowController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector                  = app(GroupCollectorInterface::class);
-        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-            ->withCategoryInformation()->withAccountInformation()
-        ;
+        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
         $groups                     = $collector->getPaginatedGroups();
         $groups->setPath(route('bills.show', [$bill->id]));
 
@@ -183,11 +179,19 @@ class ShowController extends Controller
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
-            $attachments = $collection->each(
-                $transformer->transform(...)
-            );
+            $attachments = $collection->each($transformer->transform(...));
         }
 
-        return view('bills.show', ['attachments' => $attachments, 'groups' => $groups, 'rules' => $rules, 'yearAverage' => $yearAverage, 'overallAverage' => $overallAverage, 'year' => $year, 'object' => $object, 'bill' => $bill, 'subTitle' => $subTitle]);
+        return view('bills.show', [
+            'attachments'    => $attachments,
+            'groups'         => $groups,
+            'rules'          => $rules,
+            'yearAverage'    => $yearAverage,
+            'overallAverage' => $overallAverage,
+            'year'           => $year,
+            'object'         => $object,
+            'bill'           => $bill,
+            'subTitle'       => $subTitle,
+        ]);
     }
 }

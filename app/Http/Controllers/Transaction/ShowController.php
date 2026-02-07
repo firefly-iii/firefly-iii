@@ -45,7 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ShowController extends Controller
 {
-    private ALERepositoryInterface              $aleRepository;
+    private ALERepositoryInterface $aleRepository;
     private TransactionGroupRepositoryInterface $repository;
 
     /**
@@ -56,17 +56,15 @@ class ShowController extends Controller
         parent::__construct();
 
         // some useful repositories:
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository    = app(TransactionGroupRepositoryInterface::class);
-                $this->aleRepository = app(ALERepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository    = app(TransactionGroupRepositoryInterface::class);
+            $this->aleRepository = app(ALERepositoryInterface::class);
 
-                app('view')->share('title', (string)trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -103,7 +101,6 @@ class ShowController extends Controller
         $enrichment->setUser($admin);
         $selectedGroup   = $enrichment->enrichSingle($selectedGroup);
 
-
         $splits          = count($selectedGroup['transactions']);
         $keys            = array_keys($selectedGroup['transactions']);
         $first           = $selectedGroup['transactions'][array_shift($keys)];
@@ -112,7 +109,7 @@ class ShowController extends Controller
         if (null === $first) {
             throw new FireflyException('This transaction is broken :(.');
         }
-        $type            = (string)trans(sprintf('firefly.%s', $first['transaction_type_type']));
+        $type            = (string) trans(sprintf('firefly.%s', $first['transaction_type_type']));
         $title           = 1 === $splits ? $first['description'] : $selectedGroup['title'];
         $subTitle        = sprintf('%s: "%s"', $type, $title);
 
@@ -133,7 +130,9 @@ class ShowController extends Controller
         $accounts        = $this->getAccounts($selectedGroup);
 
         foreach (array_keys($selectedGroup['transactions']) as $index) {
-            $selectedGroup['transactions'][$index]['tags'] = $this->repository->getTagObjects((int)$selectedGroup['transactions'][$index]['transaction_journal_id']);
+            $selectedGroup['transactions'][$index]['tags'] = $this->repository->getTagObjects(
+                (int) $selectedGroup['transactions'][$index]['transaction_journal_id']
+            );
         }
         // get audit log entries:
         $groupLogEntries = $this->aleRepository->getForObject($transactionGroup);
@@ -146,56 +145,27 @@ class ShowController extends Controller
         $attachments     = $this->repository->getAttachments($transactionGroup);
         $links           = $this->repository->getLinks($transactionGroup);
 
-        return view('transactions.show', ['transactionGroup' => $transactionGroup, 'amounts' => $amounts, 'first' => $first, 'type' => $type, 'logEntries' => $logEntries, 'groupLogEntries' => $groupLogEntries, 'subTitle' => $subTitle, 'splits' => $splits, 'selectedGroup' => $selectedGroup, 'groupArray' => $groupArray, 'events' => $events, 'attachments' => $attachments, 'links' => $links, 'accounts' => $accounts]);
-    }
-
-    private function getAmounts(array $group): array
-    {
-        $amounts = [];
-        foreach ($group['transactions'] as $transaction) {
-            // add normal amount:
-            $symbol                     = $transaction['currency_symbol'];
-            $amounts[$symbol] ??= [
-                'amount'         => '0',
-                'symbol'         => $symbol,
-                'decimal_places' => $transaction['currency_decimal_places'],
-            ];
-            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], (string)$transaction['amount']);
-
-            // add foreign amount:
-            if (null !== $transaction['foreign_amount'] && '' !== $transaction['foreign_amount'] && 0 !== bccomp('0', (string)$transaction['foreign_amount'])) {
-                // same for foreign currency:
-                $foreignSymbol                     = $transaction['foreign_currency_symbol'];
-                $amounts[$foreignSymbol] ??= [
-                    'amount'         => '0',
-                    'symbol'         => $foreignSymbol,
-                    'decimal_places' => $transaction['foreign_currency_decimal_places'],
-                ];
-                $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], (string)$transaction['foreign_amount']);
-            }
-            // add primary currency amount
-            if (null !== $transaction['pc_amount'] && $transaction['currency_id'] !== $this->primaryCurrency->id) {
-                // same for foreign currency:
-                $primarySymbol                     = $this->primaryCurrency->symbol;
-                $amounts[$primarySymbol] ??= [
-                    'amount'         => '0',
-                    'symbol'         => $this->primaryCurrency->symbol,
-                    'decimal_places' => $this->primaryCurrency->decimal_places,
-                ];
-                $amounts[$primarySymbol]['amount'] = bcadd($amounts[$primarySymbol]['amount'], (string)$transaction['pc_amount']);
-            }
-
-        }
-
-        return $amounts;
+        return view('transactions.show', [
+            'transactionGroup' => $transactionGroup,
+            'amounts'          => $amounts,
+            'first'            => $first,
+            'type'             => $type,
+            'logEntries'       => $logEntries,
+            'groupLogEntries'  => $groupLogEntries,
+            'subTitle'         => $subTitle,
+            'splits'           => $splits,
+            'selectedGroup'    => $selectedGroup,
+            'groupArray'       => $groupArray,
+            'events'           => $events,
+            'attachments'      => $attachments,
+            'links'            => $links,
+            'accounts'         => $accounts,
+        ]);
     }
 
     private function getAccounts(array $group): array
     {
-        $accounts                = [
-            'source'      => [],
-            'destination' => [],
-        ];
+        $accounts                = ['source'      => [], 'destination' => []];
 
         foreach ($group['transactions'] as $transaction) {
             $accounts['source'][]      = [
@@ -216,5 +186,56 @@ class ShowController extends Controller
         $accounts['destination'] = array_unique($accounts['destination'], SORT_REGULAR);
 
         return $accounts;
+    }
+
+    private function getAmounts(array $group): array
+    {
+        $amounts = [];
+        foreach ($group['transactions'] as $transaction) {
+            // add normal amount:
+            $symbol                     = $transaction['currency_symbol'];
+            $amounts[$symbol] ??= [
+                'amount'         => '0',
+                'symbol'         => $symbol,
+                'decimal_places' => $transaction['currency_decimal_places'],
+                'approximate'    => false,
+            ];
+            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], (string) $transaction['amount']);
+
+            // add foreign amount:
+            if (
+                null !== $transaction['foreign_amount']
+                && '' !== $transaction['foreign_amount']
+                && 0 !== bccomp('0', (string) $transaction['foreign_amount'])
+            ) {
+                // same for foreign currency:
+                $foreignSymbol                     = $transaction['foreign_currency_symbol'];
+                $amounts[$foreignSymbol] ??= [
+                    'amount'         => '0',
+                    'approximate'    => false,
+                    'symbol'         => $foreignSymbol,
+                    'decimal_places' => $transaction['foreign_currency_decimal_places'],
+                ];
+                $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], (string) $transaction['foreign_amount']);
+            }
+            // add primary currency amount, but only if it is not the foreign amount or the current one.
+            if (
+                null !== $transaction['pc_amount']
+                && $transaction['currency_id'] !== $this->primaryCurrency->id
+                && $transaction['foreign_currency_code'] !== $this->primaryCurrency->code
+            ) {
+                // same for foreign currency:
+                $primarySymbol                     = $this->primaryCurrency->symbol;
+                $amounts[$primarySymbol] ??= [
+                    'amount'         => '0',
+                    'approximate'    => true,
+                    'symbol'         => $this->primaryCurrency->symbol,
+                    'decimal_places' => $this->primaryCurrency->decimal_places,
+                ];
+                $amounts[$primarySymbol]['amount'] = bcadd($amounts[$primarySymbol]['amount'], (string) $transaction['pc_amount']);
+            }
+        }
+
+        return $amounts;
     }
 }

@@ -55,81 +55,6 @@ class ReportsEmptyObjects extends Command
     }
 
     /**
-     * Report on budgets with no transactions or journals.
-     */
-    private function reportEmptyBudgets(): void
-    {
-        $set = Budget::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
-            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('budget_transaction_journal.budget_id')
-            ->whereNull('budgets.deleted_at')
-            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
-        ;
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
-            $this->friendlyWarning($line);
-        }
-    }
-
-    /**
-     * Report on categories with no transactions or journals.
-     */
-    private function reportEmptyCategories(): void
-    {
-        $set = Category::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
-            ->leftJoin('users', 'categories.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('category_transaction_journal.category_id')
-            ->whereNull('categories.deleted_at')
-            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email'])
-        ;
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has category #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
-            $this->friendlyWarning($line);
-        }
-    }
-
-    private function reportEmptyTags(): void
-    {
-        $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
-            ->leftJoin('users', 'tags.user_id', '=', 'users.id')
-            ->distinct()
-            ->whereNull('tag_transaction_journal.tag_id')
-            ->whereNull('tags.deleted_at')
-            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email'])
-        ;
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has tag #%d ("%s") which has no transactions.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->tag
-            );
-            $this->friendlyWarning($line);
-        }
-    }
-
-    /**
      * Reports on accounts with no transactions.
      */
     private function reportAccounts(): void
@@ -138,9 +63,7 @@ class ReportsEmptyObjects extends Command
             ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
             ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
             ->whereNull('transactions.account_id')
-            ->get(
-                ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
-            )
+            ->get(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
         ;
 
         /** @var stdClass $entry */
@@ -165,13 +88,64 @@ class ReportsEmptyObjects extends Command
 
         /** @var Budget $entry */
         foreach ($set as $entry) {
-            $line = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no budget limits.',
-                $entry->user_id,
-                $entry->email,
-                $entry->id,
-                $entry->name
-            );
+            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no budget limits.', $entry->user_id, $entry->email, $entry->id, $entry->name);
+            $this->friendlyWarning($line);
+        }
+    }
+
+    /**
+     * Report on budgets with no transactions or journals.
+     */
+    private function reportEmptyBudgets(): void
+    {
+        $set = Budget::leftJoin('budget_transaction_journal', 'budgets.id', '=', 'budget_transaction_journal.budget_id')
+            ->leftJoin('users', 'budgets.user_id', '=', 'users.id')
+            ->distinct()
+            ->whereNull('budget_transaction_journal.budget_id')
+            ->whereNull('budgets.deleted_at')
+            ->get(['budgets.id', 'budgets.name', 'budgets.user_id', 'users.email'])
+        ;
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $line = sprintf('User #%d (%s) has budget #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->name);
+            $this->friendlyWarning($line);
+        }
+    }
+
+    /**
+     * Report on categories with no transactions or journals.
+     */
+    private function reportEmptyCategories(): void
+    {
+        $set = Category::leftJoin('category_transaction_journal', 'categories.id', '=', 'category_transaction_journal.category_id')
+            ->leftJoin('users', 'categories.user_id', '=', 'users.id')
+            ->distinct()
+            ->whereNull('category_transaction_journal.category_id')
+            ->whereNull('categories.deleted_at')
+            ->get(['categories.id', 'categories.name', 'categories.user_id', 'users.email'])
+        ;
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $line = sprintf('User #%d (%s) has category #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->name);
+            $this->friendlyWarning($line);
+        }
+    }
+
+    private function reportEmptyTags(): void
+    {
+        $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+            ->leftJoin('users', 'tags.user_id', '=', 'users.id')
+            ->distinct()
+            ->whereNull('tag_transaction_journal.tag_id')
+            ->whereNull('tags.deleted_at')
+            ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email'])
+        ;
+
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $line = sprintf('User #%d (%s) has tag #%d ("%s") which has no transactions.', $entry->user_id, $entry->email, $entry->id, $entry->tag);
             $this->friendlyWarning($line);
         }
     }

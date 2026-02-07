@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\TransactionCurrency;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -40,7 +40,7 @@ use Psr\Container\NotFoundExceptionInterface;
 class IndexController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
-    protected UserRepositoryInterface     $userRepository;
+    protected UserRepositoryInterface $userRepository;
 
     /**
      * CurrencyController constructor.
@@ -49,16 +49,14 @@ class IndexController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.currencies'));
-                app('view')->share('mainTitleIcon', 'fa-usd');
-                $this->repository     = app(CurrencyRepositoryInterface::class);
-                $this->userRepository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.currencies'));
+            app('view')->share('mainTitleIcon', 'fa-usd');
+            $this->repository     = app(CurrencyRepositoryInterface::class);
+            $this->userRepository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -78,14 +76,12 @@ class IndexController extends Controller
         $collection = $this->repository->getAll();
 
         // order so default and enabled are on top:
-        $collection = $collection->sortBy(
-            static function (TransactionCurrency $currency): string {
-                $primary = true === $currency->userGroupNative ? 0 : 1;
-                $enabled = true === $currency->userGroupEnabled ? 0 : 1;
+        $collection = $collection->sortBy(static function (TransactionCurrency $currency): string {
+            $primary = true === $currency->userGroupNative ? 0 : 1;
+            $enabled = true === $currency->userGroupEnabled ? 0 : 1;
 
-                return sprintf('%s-%s-%s', $primary, $enabled, $currency->code);
-            }
-        );
+            return sprintf('%s-%s-%s', $primary, $enabled, $currency->code);
+        });
         $total      = $collection->count();
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
@@ -97,6 +93,6 @@ class IndexController extends Controller
             $isOwner = false;
         }
 
-        return view('currencies.index', ['currencies' => $currencies, 'isOwner' => $isOwner]);
+        return view('currencies.index', ['currencies' => $currencies, 'isOwner'    => $isOwner]);
     }
 }

@@ -31,22 +31,22 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
-use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class TransactionFactory
  */
 class TransactionFactory
 {
-    private Account              $account;
-    private array                $accountInformation = [];
-    private TransactionCurrency  $currency;
-    private ?TransactionCurrency $foreignCurrency    = null;
-    private TransactionJournal   $journal;
-    private bool                 $reconciled         = false;
+    private Account $account;
+    private array $accountInformation             = [];
+    private TransactionCurrency $currency;
+    private ?TransactionCurrency $foreignCurrency = null;
+    private TransactionJournal $journal;
+    private bool $reconciled                      = false;
 
     /**
      * Create transaction with negative amount (for source accounts).
@@ -63,101 +63,6 @@ class TransactionFactory
         }
 
         return $this->create(Steam::negative($amount), $foreignAmount);
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function create(string $amount, ?string $foreignAmount): Transaction
-    {
-        if ('' === $foreignAmount) {
-            $foreignAmount = null;
-        }
-        $data = [
-            'reconciled'              => $this->reconciled,
-            'account_id'              => $this->account->id,
-            'transaction_journal_id'  => $this->journal->id,
-            'description'             => null,
-            'transaction_currency_id' => $this->currency->id,
-            'amount'                  => $amount,
-            'foreign_amount'          => null,
-            'foreign_currency_id'     => null,
-            'identifier'              => 0,
-        ];
-
-        try {
-            /** @var null|Transaction $result */
-            $result = Transaction::create($data);
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-
-            throw new FireflyException(sprintf('Query exception when creating transaction: %s', $e->getMessage()), 0, $e);
-        }
-        if (null === $result) {
-            throw new FireflyException('Transaction is NULL.');
-        }
-
-        Log::debug(
-            sprintf(
-                'Created transaction #%d (%s %s, account %s), part of journal #%d',
-                $result->id,
-                $this->currency->code,
-                $amount,
-                $this->account->name,
-                $this->journal->id
-            )
-        );
-
-        // do foreign currency thing: add foreign currency info to $one and $two if necessary.
-        if ($this->foreignCurrency instanceof TransactionCurrency
-            && null !== $foreignAmount
-            && $this->foreignCurrency->id !== $this->currency->id) {
-            $result->foreign_currency_id = $this->foreignCurrency->id;
-            $result->foreign_amount      = $foreignAmount;
-        }
-        $result->save();
-
-        // if present, update account with relevant account information from the array
-        $this->updateAccountInformation();
-
-        return $result;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function updateAccountInformation(): void
-    {
-        if (!array_key_exists('iban', $this->accountInformation)) {
-            Log::debug('No IBAN information in array, will not update.');
-
-            return;
-        }
-        if ('' !== (string) $this->account->iban) {
-            Log::debug('Account already has IBAN information, will not update.');
-
-            return;
-        }
-        if ($this->account->iban === $this->accountInformation['iban']) {
-            Log::debug('Account already has this IBAN, will not update.');
-
-            return;
-        }
-        // validate info:
-        $validator = Validator::make(['iban' => $this->accountInformation['iban']], [
-            'iban' => ['required', new UniqueIban($this->account, $this->account->accountType->type)],
-        ]);
-        if ($validator->fails()) {
-            Log::debug('Invalid or non-unique IBAN, will not update.');
-
-            return;
-        }
-
-        Log::debug('Will update account with IBAN information.');
-        $service   = app(AccountUpdateService::class);
-        $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 
     /**
@@ -208,5 +113,97 @@ class TransactionFactory
     public function setReconciled(bool $reconciled): void
     {
         $this->reconciled = $reconciled;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function create(string $amount, ?string $foreignAmount): Transaction
+    {
+        if ('' === $foreignAmount) {
+            $foreignAmount = null;
+        }
+        $data = [
+            'reconciled'              => $this->reconciled,
+            'account_id'              => $this->account->id,
+            'transaction_journal_id'  => $this->journal->id,
+            'description'             => null,
+            'transaction_currency_id' => $this->currency->id,
+            'amount'                  => $amount,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => null,
+            'identifier'              => 0,
+        ];
+
+        try {
+            /** @var null|Transaction $result */
+            $result = Transaction::create($data);
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+
+            throw new FireflyException(sprintf('Query exception when creating transaction: %s', $e->getMessage()), 0, $e);
+        }
+        if (null === $result) {
+            throw new FireflyException('Transaction is NULL.');
+        }
+
+        Log::debug(sprintf(
+            'Created transaction #%d (%s %s, account %s), part of journal #%d',
+            $result->id,
+            $this->currency->code,
+            $amount,
+            $this->account->name,
+            $this->journal->id
+        ));
+
+        // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+        if ($this->foreignCurrency instanceof TransactionCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
+            $result->foreign_currency_id = $this->foreignCurrency->id;
+            $result->foreign_amount      = $foreignAmount;
+        }
+        $result->save();
+
+        // if present, update account with relevant account information from the array
+        $this->updateAccountInformation();
+
+        return $result;
+    }
+
+    /**
+     * @throws FireflyException
+     */
+    private function updateAccountInformation(): void
+    {
+        if (!array_key_exists('iban', $this->accountInformation)) {
+            Log::debug('No IBAN information in array, will not update.');
+
+            return;
+        }
+        if ('' !== (string) $this->account->iban) {
+            Log::debug('Account already has IBAN information, will not update.');
+
+            return;
+        }
+        if ($this->account->iban === $this->accountInformation['iban']) {
+            Log::debug('Account already has this IBAN, will not update.');
+
+            return;
+        }
+        // validate info:
+        $validator = Validator::make(['iban' => $this->accountInformation['iban']], ['iban' => [
+            'required',
+            new UniqueIban($this->account, $this->account->accountType->type),
+        ]]);
+        if ($validator->fails()) {
+            Log::debug('Invalid or non-unique IBAN, will not update.');
+
+            return;
+        }
+
+        Log::debug('Will update account with IBAN information.');
+        $service   = app(AccountUpdateService::class);
+        $service->update($this->account, ['iban' => $this->accountInformation['iban']]);
     }
 }

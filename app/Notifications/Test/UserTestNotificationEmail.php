@@ -42,8 +42,7 @@ class UserTestNotificationEmail extends Notification
      */
     public function toArray(User $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     public function toMail(User $notifiable): MailMessage

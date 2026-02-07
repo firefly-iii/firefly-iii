@@ -40,7 +40,9 @@ class RegisteredUser extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $address) {}
+    public function __construct(
+        public string $address
+    ) {}
 
     /**
      * Build the message.
@@ -49,9 +51,6 @@ class RegisteredUser extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.registered')
-            ->subject((string) trans('email.registered_subject'))
-        ;
+        return $this->markdown('emails.registered')->subject((string) trans('email.registered_subject'));
     }
 }

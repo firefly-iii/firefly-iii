@@ -47,8 +47,7 @@ class ApplyRules extends Command
 
     protected $description = 'This command will apply your rules and rule groups on a selection of your transactions.';
 
-    protected $signature
-                           = 'firefly-iii:apply-rules
+    protected $signature   = 'firefly-iii:apply-rules
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}
                             {--accounts= : A comma-separated list of asset accounts or liabilities to apply your rules to.}
@@ -57,16 +56,16 @@ class ApplyRules extends Command
                             {--all_rules : If set, will overrule both settings and simply apply ALL of your rules.}
                             {--start_date= : The date of the earliest transaction to be included (inclusive). If omitted, will be your very first transaction ever. Format: YYYY-MM-DD}
                             {--end_date= : The date of the latest transaction to be included (inclusive). If omitted, will be your latest transaction ever. Format: YYYY-MM-DD}';
-    private array                        $acceptedAccounts;
-    private Collection                   $accounts;
-    private bool                         $allRules;
-    private Carbon                       $endDate;
-    private Collection                   $groups;
+    private array $acceptedAccounts;
+    private Collection $accounts;
+    private bool $allRules;
+    private Carbon $endDate;
+    private Collection $groups;
     private RuleGroupRepositoryInterface $ruleGroupRepository;
-    private array                        $ruleGroupSelection;
-    private RuleRepositoryInterface      $ruleRepository;
-    private array                        $ruleSelection;
-    private Carbon                       $startDate;
+    private array $ruleGroupSelection;
+    private RuleRepositoryInterface $ruleRepository;
+    private array $ruleSelection;
+    private Carbon $startDate;
 
     /**
      * Execute the console command.
@@ -122,11 +121,11 @@ class ApplyRules extends Command
             $filterAccountList[] = $account->id;
         }
         $list              = implode(',', $filterAccountList);
-        $ruleEngine->addOperator(['type' => 'account_id', 'value' => $list]);
+        $ruleEngine->addOperator(['type'  => 'account_id', 'value' => $list]);
 
         // add the date as a filter:
-        $ruleEngine->addOperator(['type' => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
-        $ruleEngine->addOperator(['type' => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type'  => 'date_after', 'value' => $this->startDate->format('Y-m-d')]);
+        $ruleEngine->addOperator(['type'  => 'date_before', 'value' => $this->endDate->format('Y-m-d')]);
 
         // start running rules.
         $this->friendlyLine(sprintf('Will apply %d rule(s) to your transaction(s).', $count));
@@ -139,6 +138,44 @@ class ApplyRules extends Command
         $this->friendlyPositive(sprintf('Done in %s seconds!', $end));
 
         return 0;
+    }
+
+    private function getRulesToApply(): Collection
+    {
+        Log::debug('getRulesToApply()');
+        $rulesToApply = new Collection();
+
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            Log::debug(sprintf('Scanning rule group #%d', $group->id));
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if ($test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply->push($rule);
+                }
+                if (!$test) {
+                    Log::debug(sprintf('Will not include rule #%d', $rule->id));
+                }
+            }
+        }
+        Log::debug(sprintf('Found %d rules to apply.', $rulesToApply->count()));
+
+        return $rulesToApply;
+    }
+
+    private function grabAllRules(): void
+    {
+        $this->groups = $this->ruleGroupRepository->getActiveGroups();
+    }
+
+    private function includeRule(Rule $rule, RuleGroup $group): bool
+    {
+        return in_array((int) $group->id, $this->ruleGroupSelection, true) || in_array((int) $rule->id, $this->ruleSelection, true) || $this->allRules;
     }
 
     /**
@@ -154,7 +191,13 @@ class ApplyRules extends Command
         $this->ruleGroupSelection  = [];
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->acceptedAccounts    = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value];
+        $this->acceptedAccounts    = [
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ];
         $this->groups              = new Collection();
     }
 
@@ -198,7 +241,7 @@ class ApplyRules extends Command
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($this->getUser());
         foreach ($accountList as $accountId) {
-            $accountId = (int)$accountId;
+            $accountId = (int) $accountId;
             if (0 === $accountId) {
                 $this->friendlyWarning('You provided an account with ID 0 (zero). It will be ignored.');
 
@@ -225,75 +268,6 @@ class ApplyRules extends Command
             return false;
         }
         $this->accounts    = $finalList;
-
-        return true;
-    }
-
-    private function verifyInputRuleGroups(): bool
-    {
-        $ruleGroupString = $this->option('rule_groups');
-        if (null === $ruleGroupString || '' === $ruleGroupString) {
-            // can be empty.
-            return true;
-        }
-        $ruleGroupList   = explode(',', $ruleGroupString);
-
-        foreach ($ruleGroupList as $ruleGroupId) {
-            $ruleGroupId                = (int)$ruleGroupId;
-
-            if (0 === $ruleGroupId) {
-                $this->friendlyWarning('You added a rule group with ID 0 (zero). It will be skipped.');
-
-                continue;
-            }
-
-            $ruleGroup                  = $this->ruleGroupRepository->find($ruleGroupId);
-
-            if (null === $ruleGroup) {
-                $this->friendlyWarning(sprintf('There is no rule group with ID #%d, this ID will be ignored.', $ruleGroupId));
-
-                continue;
-            }
-            if (false === $ruleGroup->active) {
-                $this->friendlyWarning(sprintf('Rule group with ID #%d is not active, so this ID will be ignored.', $ruleGroupId));
-
-                continue;
-            }
-            $this->ruleGroupSelection[] = $ruleGroupId;
-        }
-
-        return true;
-    }
-
-    private function verifyInputRules(): bool
-    {
-        $ruleString = $this->option('rules');
-        if (null === $ruleString || '' === $ruleString) {
-            // can be empty.
-            return true;
-        }
-        $ruleList   = explode(',', $ruleString);
-
-        foreach ($ruleList as $ruleId) {
-            $ruleId                = (int)$ruleId;
-            if (0 === $ruleId) {
-                $this->friendlyWarning('You added a rule with ID 0 (zero). It will be skipped.');
-
-                continue;
-            }
-            $rule                  = $this->ruleRepository->find($ruleId);
-            if (null === $rule) {
-                $this->friendlyWarning(sprintf('There is no rule with ID #%d, this ID will be ignored.', $ruleId));
-
-                continue;
-            }
-            if (false === $rule->active) {
-                $this->friendlyWarning(sprintf('Rule with ID #%d is not active, so this ID will be ignored.', $ruleId));
-
-                continue;
-            }
-            $this->ruleSelection[] = $ruleId;
-        }
 
         return true;
     }
@@ -339,43 +313,72 @@ class ApplyRules extends Command
         $this->endDate   = $inputEnd;
     }
 
-    private function grabAllRules(): void
+    private function verifyInputRuleGroups(): bool
     {
-        $this->groups = $this->ruleGroupRepository->getActiveGroups();
-    }
-
-    private function getRulesToApply(): Collection
-    {
-        Log::debug('getRulesToApply()');
-        $rulesToApply = new Collection();
-
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            Log::debug(sprintf('Scanning rule group #%d', $group->id));
-            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
-
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if ($test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $rulesToApply->push($rule);
-                }
-                if (!$test) {
-                    Log::debug(sprintf('Will not include rule #%d', $rule->id));
-                }
-            }
+        $ruleGroupString = $this->option('rule_groups');
+        if (null === $ruleGroupString || '' === $ruleGroupString) {
+            // can be empty.
+            return true;
         }
-        Log::debug(sprintf('Found %d rules to apply.', $rulesToApply->count()));
+        $ruleGroupList   = explode(',', $ruleGroupString);
 
-        return $rulesToApply;
+        foreach ($ruleGroupList as $ruleGroupId) {
+            $ruleGroupId                = (int) $ruleGroupId;
+
+            if (0 === $ruleGroupId) {
+                $this->friendlyWarning('You added a rule group with ID 0 (zero). It will be skipped.');
+
+                continue;
+            }
+
+            $ruleGroup                  = $this->ruleGroupRepository->find($ruleGroupId);
+
+            if (null === $ruleGroup) {
+                $this->friendlyWarning(sprintf('There is no rule group with ID #%d, this ID will be ignored.', $ruleGroupId));
+
+                continue;
+            }
+            if (false === $ruleGroup->active) {
+                $this->friendlyWarning(sprintf('Rule group with ID #%d is not active, so this ID will be ignored.', $ruleGroupId));
+
+                continue;
+            }
+            $this->ruleGroupSelection[] = $ruleGroupId;
+        }
+
+        return true;
     }
 
-    private function includeRule(Rule $rule, RuleGroup $group): bool
+    private function verifyInputRules(): bool
     {
-        return in_array((int)$group->id, $this->ruleGroupSelection, true)
-               || in_array((int)$rule->id, $this->ruleSelection, true)
-               || $this->allRules;
+        $ruleString = $this->option('rules');
+        if (null === $ruleString || '' === $ruleString) {
+            // can be empty.
+            return true;
+        }
+        $ruleList   = explode(',', $ruleString);
+
+        foreach ($ruleList as $ruleId) {
+            $ruleId                = (int) $ruleId;
+            if (0 === $ruleId) {
+                $this->friendlyWarning('You added a rule with ID 0 (zero). It will be skipped.');
+
+                continue;
+            }
+            $rule                  = $this->ruleRepository->find($ruleId);
+            if (null === $rule) {
+                $this->friendlyWarning(sprintf('There is no rule with ID #%d, this ID will be ignored.', $ruleId));
+
+                continue;
+            }
+            if (false === $rule->active) {
+                $this->friendlyWarning(sprintf('Rule with ID #%d is not active, so this ID will be ignored.', $ruleId));
+
+                continue;
+            }
+            $this->ruleSelection[] = $ruleId;
+        }
+
+        return true;
     }
 }

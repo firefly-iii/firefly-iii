@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Models;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 
@@ -48,7 +48,13 @@ class BillDateCalculator
         $billStart->startOfDay();
         Log::debug('Now in BillDateCalculator::getPayDates()');
         Log::debug(sprintf('Dates must be between %s and %s.', $earliest->format('Y-m-d'), $latest->format('Y-m-d')));
-        Log::debug(sprintf('Bill started on %s, period is "%s", skip is %d, last paid = "%s".', $billStart->format('Y-m-d'), $period, $skip, $lastPaid?->format('Y-m-d')));
+        Log::debug(sprintf(
+            'Bill started on %s, period is "%s", skip is %d, last paid = "%s".',
+            $billStart->format('Y-m-d'),
+            $period,
+            $skip,
+            $lastPaid?->format('Y-m-d')
+        ));
 
         $daysUntilEOM       = Navigation::daysUntilEndOfMonth($billStart);
         Log::debug(sprintf('For bill start, days until end of month is %d', $daysUntilEOM));
@@ -98,7 +104,11 @@ class BillDateCalculator
                 $nextUntilEOM = Navigation::daysUntilEndOfMonth($nextExpectedMatch);
                 $diffEOM      = $daysUntilEOM - $nextUntilEOM;
                 if ($diffEOM > 0) {
-                    Log::debug(sprintf('Bill start is %d days from the end of the month. nextExceptedMatch is %d days from the end of the month.', $daysUntilEOM, $nextUntilEOM));
+                    Log::debug(sprintf(
+                        'Bill start is %d days from the end of the month. nextExceptedMatch is %d days from the end of the month.',
+                        $daysUntilEOM,
+                        $nextUntilEOM
+                    ));
                     $nextExpectedMatch->subDays();
                     Log::debug(sprintf('Subtract %d days from next expected match, which is now %s', $diffEOM, $nextExpectedMatch->format('Y-m-d')));
                 }

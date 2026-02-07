@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\Handler;
@@ -32,6 +31,7 @@ use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use League\OAuth2\Server\Exception\OAuthServerException;
 
 /**

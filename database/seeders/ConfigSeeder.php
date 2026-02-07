@@ -37,14 +37,9 @@ class ConfigSeeder extends Seeder
      */
     public function run(): void
     {
-        $entry       = Configuration::where('name', 'db_version')->first();
+        $entry = Configuration::where('name', 'db_version')->first();
         if (null === $entry) {
-            Configuration::create(
-                [
-                    'name' => 'db_version',
-                    'data' => 1,
-                ]
-            );
+            Configuration::create(['name' => 'db_version', 'data' => 1]);
 
             return;
         }

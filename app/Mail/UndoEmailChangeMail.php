@@ -38,7 +38,11 @@ class UndoEmailChangeMail extends Mailable
     /**
      * UndoEmailChangeMail constructor.
      */
-    public function __construct(public string $newEmail, public string $oldEmail, public string $url) {}
+    public function __construct(
+        public string $newEmail,
+        public string $oldEmail,
+        public string $url
+    ) {}
 
     /**
      * Build the message.
@@ -47,9 +51,6 @@ class UndoEmailChangeMail extends Mailable
      */
     public function build(): self
     {
-        return $this
-            ->markdown('emails.undo-email-change')
-            ->subject((string) trans('email.email_change_subject'))
-        ;
+        return $this->markdown('emails.undo-email-change')->subject((string) trans('email.email_change_subject'));
     }
 }

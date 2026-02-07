@@ -41,10 +41,13 @@ class LinkType extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $linkTypeId = (int)$value;
+            $linkTypeId = (int) $value;
             $linkType   = self::find($linkTypeId);
             if (null !== $linkType) {
                 return $linkType;
@@ -61,11 +64,6 @@ class LinkType extends Model
 
     protected function casts(): array
     {
-        return [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'editable'   => 'boolean',
-        ];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime', 'editable'   => 'boolean'];
     }
 }

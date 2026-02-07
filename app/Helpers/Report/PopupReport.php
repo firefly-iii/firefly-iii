@@ -45,11 +45,13 @@ class PopupReport implements PopupReportInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection()->push($account))
+        $collector
+            ->setAccounts(new Collection()->push($account))
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget)
+            ->setRange($attributes['startDate'], $attributes['endDate'])
+            ->setBudget($budget)
         ;
 
         return $collector->getExtractedJournals();
@@ -66,7 +68,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -98,7 +100,7 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
@@ -135,18 +137,20 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
 
         /** @var GroupCollectorInterface $collector */
         $collector  = app(GroupCollectorInterface::class);
 
-        $collector->setAccounts($attributes['accounts'])
+        $collector
+            ->setAccounts($attributes['accounts'])
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::TRANSFER->value, TransactionTypeEnum::DEPOSIT->value])
             ->withAccountInformation()
             ->withBudgetInformation()
             ->withCategoryInformation()
-            ->setRange($attributes['startDate'], $attributes['endDate'])->withAccountInformation()
+            ->setRange($attributes['startDate'], $attributes['endDate'])
+            ->withAccountInformation()
         ;
 
         if ($category instanceof Category) {
@@ -174,9 +178,8 @@ class PopupReport implements PopupReportInterface
         if (null !== $currencyId) {
             /** @var CurrencyRepositoryInterface $repos */
             $repos    = app(CurrencyRepositoryInterface::class);
-            $currency = $repos->find((int)$currencyId);
+            $currency = $repos->find((int) $currencyId);
         }
-
 
         /** @var JournalRepositoryInterface $repository */
         $repository        = app(JournalRepositoryInterface::class);
@@ -191,7 +194,8 @@ class PopupReport implements PopupReportInterface
         // the source account must be in the set.
         $set               = $attributes['accounts'] ?? new Collection();
 
-        $collector->setDestinationAccounts(new Collection()->push($account))
+        $collector
+            ->setDestinationAccounts(new Collection()->push($account))
             ->setSourceAccounts($set)
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withAccountInformation()

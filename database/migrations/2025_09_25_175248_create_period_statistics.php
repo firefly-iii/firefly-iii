@@ -4,8 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('period_statistics');
+    }
+
     /**
      * Run the migrations.
      */
@@ -41,13 +48,5 @@ return new class extends Migration
                 $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
             });
         }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('period_statistics');
     }
 };

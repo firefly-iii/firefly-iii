@@ -23,11 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 use Override;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class StartFireflySession.

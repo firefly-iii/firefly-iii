@@ -148,6 +148,8 @@ interface RecurringRepositoryInterface
 
     public function searchRecurrence(string $query, int $limit): Collection;
 
+    public function setLatestDate(Recurrence $recurrence, Carbon $date): Recurrence;
+
     /**
      * Store a new recurring transaction.
      *

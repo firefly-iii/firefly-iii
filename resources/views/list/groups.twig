@@ -64,7 +64,7 @@
                         {% if group.transaction_type == 'Deposit' %}
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             {% if loop.index != group.sums|length %},{% endif %}
 
@@ -72,14 +72,14 @@
                             <span class="text-info money-transfer">
                             {{ formatAmountBySymbol(sum.amount*-1, sum.currency_symbol, sum.currency_decimal_places, false) }}
                                 {% if convertToPrimary and 0 != sum.pc_amount %}
-                                    ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                    (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                                 {% endif %}
                                 {% if loop.index != group.sums|length %},{% endif %}
                             </span>
                         {% else %}
                             {{ formatAmountBySymbol(sum.amount, sum.currency_symbol, sum.currency_decimal_places) }}
                             {% if convertToPrimary and 0 != sum.pc_amount %}
-                                ({{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(sum.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             {% if loop.index != group.sums|length %},{% endif %}
                         {% endif %}
@@ -174,13 +174,18 @@
                         {% endif %}
                         {# primary currency amount of deposit #}
                         {% if convertToPrimary and 0 != transaction.pc_amount %}
-                            ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                            (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         {% endif %}
                         {# transfer #}
                     {% elseif transaction.transaction_type_type == 'Transfer' %}
                         <span class="text-info money-transfer">
                             {# amount of transfer #}
+                            {% if transaction.source_account_id == account.id %}
+                                {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                            {% endif %}
+                            {% if transaction.source_account_id != account.id %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                            {% endif %}
 
                             {# foreign amount of transfer #}
                             {% if null != transaction.foreign_amount %}
@@ -189,7 +194,7 @@
 
                             {# primary currency amount of transfer #}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                             </span>
                         {# opening balance #}
@@ -200,7 +205,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -208,7 +213,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
                         {# reconciliation #}
@@ -219,7 +224,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -227,7 +232,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
                         {# liability credit #}
@@ -238,7 +243,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% else %}
                             {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places) }}
@@ -246,7 +251,7 @@
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                             {% endif %}
                             {% if convertToPrimary and 0 != transaction.pc_amount %}
-                                ({{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                                (~ {{ formatAmountBySymbol(transaction.pc_amount*-1, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                             {% endif %}
                         {% endif %}
 
@@ -260,14 +265,14 @@
                         {% if null != transaction.foreign_amount %}
                             ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }})
                         {% endif %}
-                        {# primary currency amount of withdrawal #}
-                        {% if convertToPrimary and 0 != transaction.pc_amount %}
-                            ({{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
+                        {# primary currency amount of withdrawal, if not in foreign currency #}
+                        {% if convertToPrimary and 0 != transaction.pc_amount and primaryCurrency.id != transaction.foreign_currency_id %}
+                            (~ {{ formatAmountBySymbol(transaction.pc_amount, primaryCurrency.symbol, primaryCurrency.decimal_places) }})
                         {% endif %}
                     {% endif %}
                 </td>
                 {% if (fireflyiiiconfig('use_running_balance', true)) %}
-                <td>
+                <td style="{{ style|raw }};text-align:right">
                     {# RUNNING BALANCE #}
                     {% if (null == transaction.balance_dirty or false == transaction.balance_dirty) and null != transaction.destination_balance_after and null != transaction.source_balance_after %}
                         {% if transaction.transaction_type_type == 'Deposit' %}
@@ -304,9 +309,9 @@
                             {% endif %}
                         {% elseif transaction.transaction_type_type == 'Opening balance' %}
                             {% if account.id == transaction.source_account_id %}
-                                <span title="Opening balance, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
-                            {% elseif account.id == transaction.destination_account_id %}
                                 <span title="Opening balance, src">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                            {% elseif account.id == transaction.destination_account_id %}
+                                <span title="Opening balance, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
                                 -
                             {% endif %}
@@ -314,7 +319,12 @@
                             {% if account.id == transaction.source_account_id %}
                                 <span title="Transfer, source">{{ formatAmountBySymbol(transaction.source_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
                             {% else %}
-                                <span title="Transfer, dest">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% if null == transaction.foreign_currency_id %}
+                                    <span title="Transfer, dest, normal currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.currency_symbol, transaction.currency_decimal_places) }}</span>
+                                {% endif %}
+                                {% if null != transaction.foreign_currency_id %}
+                                    <span title="Transfer, dest, foreign currency">{{ formatAmountBySymbol(transaction.destination_balance_after, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places) }}</span>
+                                {% endif %}
                             {% endif %}
                         {% else %}
                             &nbsp;

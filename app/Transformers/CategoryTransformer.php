@@ -49,7 +49,6 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
-
         return [
             'id'                              => $category->id,
             'created_at'                      => $category->created_at->toAtomString(),
@@ -59,23 +58,18 @@ class CategoryTransformer extends AbstractTransformer
 
             // category never has currency settings.
             'object_has_currency_setting'     => false,
-            'primary_currency_id'             => (string)$this->primaryCurrency->id,
+            'primary_currency_id'             => (string) $this->primaryCurrency->id,
             'primary_currency_name'           => $this->primaryCurrency->name,
             'primary_currency_code'           => $this->primaryCurrency->code,
             'primary_currency_symbol'         => $this->primaryCurrency->symbol,
-            'primary_currency_decimal_places' => (int)$this->primaryCurrency->decimal_places,
+            'primary_currency_decimal_places' => (int) $this->primaryCurrency->decimal_places,
             'spent'                           => $this->beautify($category->meta['spent']),
             'pc_spent'                        => $this->beautify($category->meta['pc_spent']),
             'earned'                          => $this->beautify($category->meta['earned']),
             'pc_earned'                       => $this->beautify($category->meta['pc_earned']),
             'transferred'                     => $this->beautify($category->meta['transfers']),
             'pc_transferred'                  => $this->beautify($category->meta['pc_transfers']),
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/categories/'.$category->id,
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => '/categories/'.$category->id]],
         ];
     }
 
@@ -86,7 +80,7 @@ class CategoryTransformer extends AbstractTransformer
         }
         $return = [];
         foreach ($array as $data) {
-            $data['sum'] = Steam::bcround($data['sum'], (int)$data['currency_decimal_places']);
+            $data['sum'] = Steam::bcround($data['sum'], (int) $data['currency_decimal_places']);
             $return[]    = $data;
         }
 

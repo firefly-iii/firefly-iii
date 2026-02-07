@@ -38,10 +38,7 @@ class PreferenceUpdateRequest extends FormRequest
 
     public function getAll(): array
     {
-        $array = [
-            'name' => $this->convertString('name'),
-            'data' => $this->get('data'),
-        ];
+        $array = ['name' => $this->convertString('name'), 'data' => $this->get('data')];
         if ('true' === $array['data']) {
             $array['data'] = true;
         }
@@ -60,8 +57,6 @@ class PreferenceUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'data' => 'required',
-        ];
+        return ['data' => 'required'];
     }
 }

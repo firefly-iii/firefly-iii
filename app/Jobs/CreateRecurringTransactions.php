@@ -24,10 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Jobs;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
-use FireflyIII\Events\RequestedReportOnJournals;
-use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupsRequestedReporting;
 use FireflyIII\Exceptions\DuplicateTransactionException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
@@ -37,6 +35,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -55,16 +54,16 @@ class CreateRecurringTransactions implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int                                  $created;
-    public int                                  $executed;
-    public int                                  $submitted;
-    private Carbon                              $date;
-    private bool                                $force;
+    public int $created;
+    public int $executed;
+    public int $submitted;
+    private Carbon $date;
+    private bool $force;
     private TransactionGroupRepositoryInterface $groupRepository;
-    private Collection                          $groups;
-    private JournalRepositoryInterface          $journalRepository;
-    private Collection                          $recurrences;
-    private RecurringRepositoryInterface        $repository;
+    private Collection $groups;
+    private JournalRepositoryInterface $journalRepository;
+    private Collection $recurrences;
+    private RecurringRepositoryInterface $repository;
 
     /**
      * Create a new job instance.
@@ -145,7 +144,7 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Now running report thing.');
         // will now send email to users.
         foreach ($result as $userId => $journals) {
-            event(new RequestedReportOnJournals($userId, $journals));
+            event(new TransactionGroupsRequestedReporting($userId, $journals));
         }
 
         Log::debug('Done with handle()');
@@ -154,11 +153,257 @@ class CreateRecurringTransactions implements ShouldQueue
         Preferences::mark();
     }
 
+    public function setDate(Carbon $date): void
+    {
+        $newDate    = clone $date;
+        $newDate->startOfDay();
+        Log::debug(sprintf('Overruled date to "%s', $newDate->format('Y-m-d H:i:s')));
+        $this->date = $newDate;
+    }
+
+    public function setForce(bool $force): void
+    {
+        $this->force = $force;
+    }
+
+    public function setRecurrences(Collection $recurrences): void
+    {
+        $this->recurrences = $recurrences;
+    }
+
+    /**
+     * Return recurring transaction is active.
+     */
+    private function active(Recurrence $recurrence): bool
+    {
+        return $recurrence->active;
+    }
+
     private function filterRecurrences(Collection $recurrences): Collection
     {
-        return $recurrences->filter(
-            $this->validRecurrence(...)
-        );
+        return $recurrences->filter($this->validRecurrence(...));
+    }
+
+    /**
+     * Get the start date of a recurrence.
+     */
+    private function getStartDate(Recurrence $recurrence): Carbon
+    {
+        $startDate = clone $recurrence->first_date;
+        if (null !== $recurrence->latest_date && $recurrence->latest_date->gte($startDate)) {
+            return clone $recurrence->latest_date;
+        }
+
+        return $startDate;
+    }
+
+    /**
+     * Get transaction information from a recurring transaction.
+     */
+    private function getTransactionData(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): array
+    {
+        // total transactions expected for this recurrence:
+        $total        = $this->repository->totalTransactions($recurrence, $repetition);
+        $count        = $this->repository->getJournalCount($recurrence) + 1;
+        $transactions = $recurrence->recurrenceTransactions()->get();
+
+        $transactions->first();
+        $return       = [];
+
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($transactions as $index => $transaction) {
+            $single   = [
+                'type'                  => null === $transaction?->transactionType?->type
+                    ? strtolower((string) $recurrence->transactionType->type)
+                    : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
+                'date'                  => $date,
+                'user'                  => $recurrence->user,
+                'user_group'            => $recurrence->user->userGroup,
+                'currency_id'           => $transaction->transaction_currency_id,
+                'currency_code'         => null,
+                'description'           => $transaction->description,
+                'amount'                => $transaction->amount,
+                'budget_id'             => $this->repository->getBudget($transaction),
+                'budget_name'           => null,
+                'category_id'           => $this->repository->getCategoryId($transaction),
+                'category_name'         => $this->repository->getCategoryName($transaction),
+                'source_id'             => $transaction->source_id,
+                'source_name'           => null,
+                'destination_id'        => $transaction->destination_id,
+                'destination_name'      => null,
+                'foreign_currency_id'   => $transaction->foreign_currency_id,
+                'foreign_currency_code' => null,
+                'foreign_amount'        => $transaction->foreign_amount,
+                'reconciled'            => false,
+                'identifier'            => $index,
+                'recurrence_id'         => $recurrence->id,
+                'order'                 => $index,
+                'notes'                 => (string) trans('firefly.created_from_recurrence', ['id'    => $recurrence->id, 'title' => $recurrence->title]),
+                'tags'                  => $this->repository->getTags($transaction),
+                'piggy_bank_id'         => $this->repository->getPiggyBank($transaction),
+                'piggy_bank_name'       => null,
+                'bill_id'               => $this->repository->getBillId($transaction),
+                'bill_name'             => null,
+                'recurrence_total'      => $total,
+                'recurrence_count'      => $count,
+                'recurrence_date'       => $date,
+            ];
+            $return[] = $single;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     */
+    private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
+    {
+        $date->startOfDay();
+        if ($date->ne($this->date)) {
+            return null;
+        }
+        Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
+
+        // count created journals on THIS day.
+        $journalCount = $this->repository->getJournalCount($recurrence, $date, $date);
+        if ($journalCount > 0 && false === $this->force) {
+            Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
+
+            return null;
+        }
+
+        if ($this->repository->createdPreviously($recurrence, $date) && false === $this->force) {
+            Log::info('There is a transaction already made for this date, so will not be created now');
+
+            return null;
+        }
+
+        if ($journalCount > 0 && $this->force) {
+            Log::warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
+        }
+
+        // create transaction array and send to factory.
+        $groupTitle   = null;
+        $count        = $recurrence->recurrenceTransactions->count();
+        // #8844, if there is one recurrence transaction, use the first title as the title.
+        // #9305, if there is one recurrence transaction, group title must be NULL.
+        $groupTitle   = null;
+
+        // #8844, if there are more, use the recurrence transaction itself.
+        if ($count > 1) {
+            $groupTitle = $recurrence->title;
+        }
+
+        if (0 === $count) {
+            Log::error('No transactions to be created in this recurrence. Cannot continue.');
+
+            return null;
+        }
+
+        $array        = [
+            'user'         => $recurrence->user,
+            'user_group'   => $recurrence->user->userGroup,
+            'group_title'  => $groupTitle,
+            'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
+        ];
+
+        /** @var TransactionGroup $group */
+        $group        = $this->groupRepository->store($array);
+        ++$this->created;
+        Log::info(sprintf('Created new transaction group #%d', $group->id));
+        $this->groups->push($group);
+
+        // update recurring thing:
+        $this->repository->setLatestDate($recurrence, $date);
+
+        return $group;
+    }
+
+    /**
+     * Check if the occurrences should be executed.
+     *
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     */
+    private function handleOccurrences(Recurrence $recurrence, RecurrenceRepetition $repetition, array $occurrences): Collection
+    {
+        $collection = new Collection();
+
+        /** @var Carbon $date */
+        foreach ($occurrences as $date) {
+            $result = $this->handleOccurrence($recurrence, $repetition, $date);
+            if ($result instanceof TransactionGroup) {
+                $collection->push($result);
+            }
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Separate method that will loop all repetitions and do something with it. Will return
+     * all created transaction journals.
+     *
+     * @throws DuplicateTransactionException
+     * @throws FireflyException
+     */
+    private function handleRepetitions(Recurrence $recurrence): Collection
+    {
+        $collection = new Collection();
+
+        /** @var RecurrenceRepetition $repetition */
+        foreach ($recurrence->recurrenceRepetitions as $repetition) {
+            Log::debug(sprintf(
+                'Now repeating %s with value "%s", skips every %d time(s)',
+                $repetition->repetition_type,
+                $repetition->repetition_moment,
+                $repetition->repetition_skip
+            ));
+
+            // start looping from $startDate to today perhaps we have a hit?
+            // add two days to $this->date, so we always include the weekend.
+            $includeWeekend = clone $this->date;
+            $includeWeekend->addDays(2);
+            $occurrences    = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
+
+            unset($includeWeekend);
+
+            $result         = $this->handleOccurrences($recurrence, $repetition, $occurrences);
+            $collection     = $collection->merge($result);
+        }
+
+        return $collection;
+    }
+
+    /**
+     * Has the recurrence fired today.
+     */
+    private function hasFiredToday(Recurrence $recurrence): bool
+    {
+        return null !== $recurrence->latest_date && $recurrence->latest_date->eq($this->date);
+    }
+
+    /**
+     * Has the recurrence started yet?
+     */
+    private function hasNotStartedYet(Recurrence $recurrence): bool
+    {
+        $startDate = $this->getStartDate($recurrence);
+        Log::debug(sprintf('Start date is %s', $startDate->toW3cString()));
+        Log::debug(sprintf('Ask   date is %s', $this->date->toW3cString()));
+
+        return $startDate->gt($this->date);
+    }
+
+    /**
+     * Return true if the $repeat_until date is in the past.
+     */
+    private function repeatUntilHasPassed(Recurrence $recurrence): bool
+    {
+        // date has passed
+        return null !== $recurrence->repeat_until && $recurrence->repeat_until->lt($this->date);
     }
 
     /**
@@ -185,28 +430,24 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // is no longer running
         if ($this->repeatUntilHasPassed($recurrence)) {
-            Log::info(
-                sprintf(
-                    'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
-                    $recurrence->id,
-                    $recurrence->repeat_until->format('Y-m-d'),
-                    $this->date->format('Y-m-d')
-                )
-            );
+            Log::info(sprintf(
+                'Recurrence #%d was set to run until %s, and today\'s date is %s. Skipped.',
+                $recurrence->id,
+                $recurrence->repeat_until->format('Y-m-d'),
+                $this->date->format('Y-m-d')
+            ));
 
             return false;
         }
 
         // first_date is in the future
         if ($this->hasNotStartedYet($recurrence)) {
-            Log::info(
-                sprintf(
-                    'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
-                    $recurrence->id,
-                    $recurrence->first_date->format('Y-m-d H:i:s'),
-                    $this->date->format('Y-m-d H:i:s')
-                )
-            );
+            Log::info(sprintf(
+                'Recurrence #%d is set to run on %s, and today\'s date is %s. Skipped.',
+                $recurrence->id,
+                $recurrence->first_date->format('Y-m-d H:i:s'),
+                $this->date->format('Y-m-d H:i:s')
+            ));
 
             return false;
         }
@@ -220,261 +461,5 @@ class CreateRecurringTransactions implements ShouldQueue
         Log::debug('Will be included.');
 
         return true;
-    }
-
-    /**
-     * Return recurring transaction is active.
-     */
-    private function active(Recurrence $recurrence): bool
-    {
-        return $recurrence->active;
-    }
-
-    /**
-     * Return true if the $repeat_until date is in the past.
-     */
-    private function repeatUntilHasPassed(Recurrence $recurrence): bool
-    {
-        // date has passed
-        return null !== $recurrence->repeat_until && $recurrence->repeat_until->lt($this->date);
-    }
-
-    /**
-     * Has the recurrence started yet?
-     */
-    private function hasNotStartedYet(Recurrence $recurrence): bool
-    {
-        $startDate = $this->getStartDate($recurrence);
-        Log::debug(sprintf('Start date is %s', $startDate->toW3cString()));
-        Log::debug(sprintf('Ask   date is %s', $this->date->toW3cString()));
-
-        return $startDate->gt($this->date);
-    }
-
-    /**
-     * Get the start date of a recurrence.
-     */
-    private function getStartDate(Recurrence $recurrence): Carbon
-    {
-        $startDate = clone $recurrence->first_date;
-        if (null !== $recurrence->latest_date && $recurrence->latest_date->gte($startDate)) {
-            return clone $recurrence->latest_date;
-        }
-
-        return $startDate;
-    }
-
-    /**
-     * Has the recurrence fired today.
-     */
-    private function hasFiredToday(Recurrence $recurrence): bool
-    {
-        return null !== $recurrence->latest_date && $recurrence->latest_date->eq($this->date);
-    }
-
-    /**
-     * Separate method that will loop all repetitions and do something with it. Will return
-     * all created transaction journals.
-     *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     */
-    private function handleRepetitions(Recurrence $recurrence): Collection
-    {
-        $collection = new Collection();
-
-        /** @var RecurrenceRepetition $repetition */
-        foreach ($recurrence->recurrenceRepetitions as $repetition) {
-            Log::debug(
-                sprintf(
-                    'Now repeating %s with value "%s", skips every %d time(s)',
-                    $repetition->repetition_type,
-                    $repetition->repetition_moment,
-                    $repetition->repetition_skip
-                )
-            );
-
-            // start looping from $startDate to today perhaps we have a hit?
-            // add two days to $this->date, so we always include the weekend.
-            $includeWeekend = clone $this->date;
-            $includeWeekend->addDays(2);
-            $occurrences    = $this->repository->getOccurrencesInRange($repetition, $recurrence->first_date, $includeWeekend);
-
-            unset($includeWeekend);
-
-            $result         = $this->handleOccurrences($recurrence, $repetition, $occurrences);
-            $collection     = $collection->merge($result);
-        }
-
-        return $collection;
-    }
-
-    /**
-     * Check if the occurrences should be executed.
-     *
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     */
-    private function handleOccurrences(Recurrence $recurrence, RecurrenceRepetition $repetition, array $occurrences): Collection
-    {
-        $collection = new Collection();
-
-        /** @var Carbon $date */
-        foreach ($occurrences as $date) {
-            $result = $this->handleOccurrence($recurrence, $repetition, $date);
-            if ($result instanceof TransactionGroup) {
-                $collection->push($result);
-            }
-        }
-
-        return $collection;
-    }
-
-    /**
-     * @throws DuplicateTransactionException
-     * @throws FireflyException
-     */
-    private function handleOccurrence(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): ?TransactionGroup
-    {
-        $date->startOfDay();
-        if ($date->ne($this->date)) {
-            return null;
-        }
-        Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
-
-        // count created journals on THIS day.
-        $journalCount               = $this->repository->getJournalCount($recurrence, $date, $date);
-        if ($journalCount > 0 && false === $this->force) {
-            Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
-
-            return null;
-        }
-
-        if ($this->repository->createdPreviously($recurrence, $date) && false === $this->force) {
-            Log::info('There is a transaction already made for this date, so will not be created now');
-
-            return null;
-        }
-
-        if ($journalCount > 0 && $this->force) {
-            Log::warning(sprintf('Already created %d groups for date %s but FORCED to continue.', $journalCount, $date->format('Y-m-d')));
-        }
-
-        // create transaction array and send to factory.
-        $groupTitle                 = null;
-        $count                      = $recurrence->recurrenceTransactions->count();
-        // #8844, if there is one recurrence transaction, use the first title as the title.
-        // #9305, if there is one recurrence transaction, group title must be NULL.
-        $groupTitle                 = null;
-
-        // #8844, if there are more, use the recurrence transaction itself.
-        if ($count > 1) {
-            $groupTitle = $recurrence->title;
-        }
-
-        if (0 === $count) {
-            Log::error('No transactions to be created in this recurrence. Cannot continue.');
-
-            return null;
-        }
-
-        $array                      = [
-            'user'         => $recurrence->user,
-            'user_group'   => $recurrence->user->userGroup,
-            'group_title'  => $groupTitle,
-            'transactions' => $this->getTransactionData($recurrence, $repetition, $date),
-        ];
-
-        /** @var TransactionGroup $group */
-        $group                      = $this->groupRepository->store($array);
-        ++$this->created;
-        Log::info(sprintf('Created new transaction group #%d', $group->id));
-
-        // trigger event:
-        event(new StoredTransactionGroup($group, $recurrence->apply_rules, true));
-        $this->groups->push($group);
-
-        // update recurring thing:
-        $recurrence->latest_date    = $date;
-        $recurrence->latest_date_tz = $date->format('e');
-        $recurrence->save();
-
-        return $group;
-    }
-
-    /**
-     * Get transaction information from a recurring transaction.
-     */
-    private function getTransactionData(Recurrence $recurrence, RecurrenceRepetition $repetition, Carbon $date): array
-    {
-        // total transactions expected for this recurrence:
-        $total        = $this->repository->totalTransactions($recurrence, $repetition);
-        $count        = $this->repository->getJournalCount($recurrence) + 1;
-        $transactions = $recurrence->recurrenceTransactions()->get();
-
-        $transactions->first();
-        $return       = [];
-
-
-
-
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($transactions as $index => $transaction) {
-            $single   = [
-                'type'                  => null === $transaction?->transactionType?->type ? strtolower((string) $recurrence->transactionType->type) : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
-                'date'                  => $date,
-                'user'                  => $recurrence->user,
-                'user_group'            => $recurrence->user->userGroup,
-                'currency_id'           => $transaction->transaction_currency_id,
-                'currency_code'         => null,
-                'description'           => $transaction->description,
-                'amount'                => $transaction->amount,
-                'budget_id'             => $this->repository->getBudget($transaction),
-                'budget_name'           => null,
-                'category_id'           => $this->repository->getCategoryId($transaction),
-                'category_name'         => $this->repository->getCategoryName($transaction),
-                'source_id'             => $transaction->source_id,
-                'source_name'           => null,
-                'destination_id'        => $transaction->destination_id,
-                'destination_name'      => null,
-                'foreign_currency_id'   => $transaction->foreign_currency_id,
-                'foreign_currency_code' => null,
-                'foreign_amount'        => $transaction->foreign_amount,
-                'reconciled'            => false,
-                'identifier'            => $index,
-                'recurrence_id'         => $recurrence->id,
-                'order'                 => $index,
-                'notes'                 => (string) trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
-                'tags'                  => $this->repository->getTags($transaction),
-                'piggy_bank_id'         => $this->repository->getPiggyBank($transaction),
-                'piggy_bank_name'       => null,
-                'bill_id'               => $this->repository->getBillId($transaction),
-                'bill_name'             => null,
-                'recurrence_total'      => $total,
-                'recurrence_count'      => $count,
-                'recurrence_date'       => $date,
-            ];
-            $return[] = $single;
-        }
-
-        return $return;
-    }
-
-    public function setDate(Carbon $date): void
-    {
-        $newDate    = clone $date;
-        $newDate->startOfDay();
-        Log::debug(sprintf('Overruled date to "%s', $newDate->format('Y-m-d H:i:s')));
-        $this->date = $newDate;
-    }
-
-    public function setForce(bool $force): void
-    {
-        $this->force = $force;
-    }
-
-    public function setRecurrences(Collection $recurrences): void
-    {
-        $this->recurrences = $recurrences;
     }
 }

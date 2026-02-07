@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\Recurring;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
@@ -41,6 +40,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Services\Internal\Destroy\RecurrenceDestroyService;
 use FireflyIII\Services\Internal\Update\RecurrenceUpdateService;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Repositories\Recurring\CalculateRangeOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrences;
 use FireflyIII\Support\Repositories\Recurring\CalculateXOccurrencesSince;
@@ -51,6 +51,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 use function Safe\json_decode;
 use function Safe\json_encode;
@@ -70,11 +71,10 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     public function createdPreviously(Recurrence $recurrence, Carbon $date): bool
     {
         // if not, loop set and try to read the recurrence_date. If it matches start or end, return it as well.
-        $set
-            = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence): void {
-                $q1->where('name', 'recurrence_id');
-                $q1->where('data', json_encode((string) $recurrence->id));
-            })->get(['journal_meta.transaction_journal_id']);
+        $set = TransactionJournalMeta::where(static function (Builder $q1) use ($recurrence): void {
+            $q1->where('name', 'recurrence_id');
+            $q1->where('data', json_encode((string) $recurrence->id));
+        })->get(['journal_meta.transaction_journal_id']);
 
         // there are X journals made for this recurrence. Any of them meant for today?
         foreach ($set as $journalMeta) {
@@ -83,10 +83,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
                 Log::debug(sprintf('Search for date: %s', json_encode($string)));
                 $q2->where('name', 'recurrence_date');
                 $q2->where('data', json_encode($string));
-            })
-                ->where('transaction_journal_id', $journalMeta->transaction_journal_id)
-                ->count()
-            ;
+            })->where('transaction_journal_id', $journalMeta->transaction_journal_id)->count();
             if ($count > 0) {
                 Log::debug(sprintf('Looks like journal #%d was already created', $journalMeta->transaction_journal_id));
 
@@ -95,20 +92,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         }
 
         return false;
-    }
-
-    /**
-     * Returns all the user's recurring transactions.
-     */
-    public function get(): Collection
-    {
-        return $this->user->recurrences()
-            ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
-            ->orderBy('active', 'DESC')
-            ->orderBy('transaction_type_id', 'ASC')
-            ->orderBy('title', 'ASC')
-            ->get()
-        ;
     }
 
     /**
@@ -125,6 +108,21 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     {
         Log::channel('audit')->info('Delete all recurring transactions through destroyAll');
         $this->user->recurrences()->delete();
+    }
+
+    /**
+     * Returns all the user's recurring transactions.
+     */
+    public function get(): Collection
+    {
+        return $this->user
+            ->recurrences()
+            ->with(['TransactionCurrency', 'TransactionType', 'RecurrenceRepetitions', 'RecurrenceTransactions'])
+            ->orderBy('active', 'DESC')
+            ->orderBy('transaction_type_id', 'ASC')
+            ->orderBy('title', 'ASC')
+            ->get()
+        ;
     }
 
     /**
@@ -238,7 +236,9 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('journal_meta.name', '=', 'recurrence_id')
             ->where('journal_meta.data', '=', json_encode((string) $recurrence->id))
-            ->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray()
+            ->get(['journal_meta.transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray()
         ;
     }
 
@@ -251,6 +251,38 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $note = $recurrence->notes()->first();
 
         return (string) $note?->text;
+    }
+
+    /**
+     * Generate events in the date range.
+     */
+    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
+    {
+        $occurrences = [];
+        $mutator     = clone $start;
+        $mutator->startOfDay();
+        $skipMod     = $repetition->repetition_skip + 1;
+        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
+        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
+
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
+        }
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+
+        // filter out all the weekend days:
+        return $this->filterWeekends($repetition, $occurrences);
     }
 
     public function getPiggyBank(RecurrenceTransaction $transaction): ?int
@@ -291,7 +323,9 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
             ->where('data', json_encode((string) $recurrence->id))
-            ->get()->pluck('transaction_journal_id')->toArray()
+            ->get()
+            ->pluck('transaction_journal_id')
+            ->toArray()
         ;
         $search      = [];
         foreach ($journalMeta as $journalId) {
@@ -302,9 +336,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         $collector   = app(GroupCollectorInterface::class);
 
         $collector->setUser($recurrence->user);
-        $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)
-            ->withAccountInformation()
-        ;
+        $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)->withAccountInformation();
         $collector->setJournalIds($search);
 
         return $collector->getPaginatedGroups();
@@ -317,7 +349,9 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             ->where('transaction_journals.user_id', $this->user->id)
             ->where('name', 'recurrence_id')
             ->where('data', json_encode((string) $recurrence->id))
-            ->get()->pluck('transaction_journal_id')->toArray()
+            ->get()
+            ->pluck('transaction_journal_id')
+            ->toArray()
         ;
         $search      = [];
 
@@ -408,25 +442,17 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $this->filterMaxDate($repeatUntil, $occurrences);
     }
 
-    private function filterMaxDate(?Carbon $max, array $occurrences): array
+    public function markGroupsAsNow(Collection $groups): void
     {
-        $filtered = [];
-        if (!$max instanceof Carbon) {
-            foreach ($occurrences as $date) {
-                if ($date->gt(today())) {
-                    $filtered[] = $date;
-                }
-            }
-
-            return $filtered;
-        }
-        foreach ($occurrences as $date) {
-            if ($date->lte($max) && $date->gt(today())) {
-                $filtered[] = $date;
+        /** @var TransactionGroup $group */
+        foreach ($groups as $group) {
+            /** @var TransactionJournal $journal */
+            foreach ($group->transactionJournals as $journal) {
+                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
+                $journal->date = now(config('app.timezone'));
+                $journal->save();
             }
         }
-
-        return $filtered;
     }
 
     /**
@@ -449,7 +475,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         if ('weekly' === $repetition->repetition_type) {
             $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
             if ($repetition->repetition_skip > 0) {
-                return (string) trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $language);
+                return (string) trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip'    => $repetition->repetition_skip + 1], $language);
             }
 
             return (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
@@ -458,14 +484,14 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             if ($repetition->repetition_skip > 0) {
                 return (string) trans(
                     'firefly.recurring_monthly_skip',
-                    ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1],
+                    ['dayOfMonth' => $repetition->repetition_moment, 'skip'       => $repetition->repetition_skip + 1],
                     $language
                 );
             }
 
             return (string) trans(
                 'firefly.recurring_monthly',
-                ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1],
+                ['dayOfMonth' => $repetition->repetition_moment, 'skip'       => $repetition->repetition_skip - 1],
                 $language
             );
         }
@@ -474,7 +500,7 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
             // first part is number of week, second is weekday.
             $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
 
-            return (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
+            return (string) trans('firefly.recurring_ndom', ['weekday'    => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
         }
         if ('yearly' === $repetition->repetition_type) {
             $today       = today(config('app.timezone'))->endOfYear();
@@ -498,11 +524,19 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         if ('' !== $query) {
             $search->whereLike('recurrences.title', sprintf('%%%s%%', $query));
         }
-        $search
-            ->orderBy('recurrences.title', 'ASC')
-        ;
+        $search->orderBy('recurrences.title', 'ASC');
 
         return $search->take($limit)->get(['id', 'title', 'description']);
+    }
+
+    #[Override]
+    public function setLatestDate(Recurrence $recurrence, ?Carbon $date): Recurrence
+    {
+        $recurrence->latest_date    = $date;
+        $recurrence->latest_date_tz = $date?->format('e');
+        $recurrence->save();
+
+        return $recurrence;
     }
 
     /**
@@ -539,38 +573,6 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
     }
 
     /**
-     * Generate events in the date range.
-     */
-    public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
-    {
-        $occurrences = [];
-        $mutator     = clone $start;
-        $mutator->startOfDay();
-        $skipMod     = $repetition->repetition_skip + 1;
-        Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
-        Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-
-        if ('daily' === $repetition->repetition_type) {
-            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
-        }
-        if ('weekly' === $repetition->repetition_type) {
-            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('monthly' === $repetition->repetition_type) {
-            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('ndom' === $repetition->repetition_type) {
-            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-        if ('yearly' === $repetition->repetition_type) {
-            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
-        }
-
-        // filter out all the weekend days:
-        return $this->filterWeekends($repetition, $occurrences);
-    }
-
-    /**
      * Update a recurring transaction.
      *
      * @throws FireflyException
@@ -583,16 +585,24 @@ class RecurringRepository implements RecurringRepositoryInterface, UserGroupInte
         return $service->update($recurrence, $data);
     }
 
-    public function markGroupsAsNow(Collection $groups): void
+    private function filterMaxDate(?Carbon $max, array $occurrences): array
     {
-        /** @var TransactionGroup $group */
-        foreach ($groups as $group) {
-            /** @var TransactionJournal $journal */
-            foreach ($group->transactionJournals as $journal) {
-                Log::debug(sprintf('Set date of journal #%d to today!', $journal->id));
-                $journal->date = now(config('app.timezone'));
-                $journal->save();
+        $filtered = [];
+        if (!$max instanceof Carbon) {
+            foreach ($occurrences as $date) {
+                if ($date->gt(today())) {
+                    $filtered[] = $date;
+                }
+            }
+
+            return $filtered;
+        }
+        foreach ($occurrences as $date) {
+            if ($date->lte($max) && $date->gt(today())) {
+                $filtered[] = $date;
             }
         }
+
+        return $filtered;
     }
 }

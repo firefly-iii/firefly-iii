@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.17 - 2026-02-06
+
+### Added
+
+- Batch processing. Firefly III now has a setting (under `/settings`) that allows you to send `"batch_processing": true` with new transactions over the API. If this setting is enabled and the value is `true`, Firefly III will not fire rules, webhooks or other events untill you either send `false` with a transaction OR use the [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`. This should speed up (large) data imports. It's a little experimental, use at your own risk.
+- [Issue 11614](https://github.com/firefly-iii/firefly-iii/issues/11614) (Add New Taiwan Dollar to Currency Seeder) reported by @nick322
+- [Issue 11246](https://github.com/firefly-iii/firefly-iii/issues/11246) (Distinguish automatically converted amount from foreign amount) reported by @jfpedroza
+
+### Changed
+
+- A lot of code in Firefly III is code responding to changes made by other code. These lines of code are called events, listeners, observers, handlers, etc. They were a bit of a mess and I cleaned them all up. This should greatly improve the reliability of debt amounts and running balance consistency. Bugs are always possible, let me know.
+
+### Deprecated
+
+- PHP 8.4 is still on my list to be disabled, beware.
+
+### Fixed
+
+- [Issue 11399](https://github.com/firefly-iii/firefly-iii/issues/11399) (Unusual behavior in audit logs (multi-currency)) reported by @jgmm81
+- [Discussion 11431](https://github.com/orgs/firefly-iii/discussions/11431) (Settings don't get saved) started by @PVTejas
+- [Issue 11541](https://github.com/firefly-iii/firefly-iii/issues/11541) (Display running balance fails for transactions between accounts with different currencies) reported by @SledgehammerPL
+- [Issue 11544](https://github.com/firefly-iii/firefly-iii/issues/11544) (Clean up events and handlers) reported by @JC5
+- [Issue 11546](https://github.com/firefly-iii/firefly-iii/issues/11546) (Wrong invitation expiry time) reported by @GunoH
+- [Issue 11563](https://github.com/firefly-iii/firefly-iii/issues/11563) (Tag Report/Insight API Endpoint for Tags Non Functional) reported by @Unsantae
+- [PR 11569](https://github.com/firefly-iii/firefly-iii/pull/11569) (Fix layout overflow issues with long content in v1 and v2 layouts) reported by @gian21391
+- [PR 11589](https://github.com/firefly-iii/firefly-iii/pull/11589) (apply user-selected light/dark mode to form elements (checkboxes, date picker) [Issue 8613](https://github.com/firefly-iii/firefly-iii/issues/8613) (Some minor color issues) reported by @rumpff [Issue 7620](https://github.com/firefly-iii/firefly-iii/issues/7620) (Issues with light mode) reported by @rchl) reported by @mateuszkulapl
+- [Issue 11597](https://github.com/firefly-iii/firefly-iii/issues/11597) (Changing category doesn't recompute stats) reported by @jlauwers
+- [Issue 11601](https://github.com/firefly-iii/firefly-iii/issues/11601) (Only ungrouped piggy banks are listed when creating a transaction) reported by @jgmm81
+- [Issue 11620](https://github.com/firefly-iii/firefly-iii/issues/11620) (Add database indexes to improve reporting query performance) reported by @Zakmaf
+- [PR 11632](https://github.com/firefly-iii/firefly-iii/pull/11632) (fix v2 layout dashboard transactions load) reported by @mateuszkulapl
+- [Issue 11657](https://github.com/firefly-iii/firefly-iii/issues/11657) (since v6.4.16: Backslash in category names cannot be matched in rules) reported by @37-b-j
+- [Issue 11660](https://github.com/firefly-iii/firefly-iii/issues/11660) (Display of negative values of transfers) reported by @Robubble
+- Confirming your new email address would result in an error.
+
+### API
+
+- [API end point](https://api-docs.firefly-iii.org/) `/v1/api/batch/finish`.
+
+
 ## v6.4.16 - 2026-01-18
 
 > [!WARNING]

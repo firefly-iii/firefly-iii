@@ -45,26 +45,22 @@ class ObjectGroup extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $objectGroupId = (int)$value;
+            $objectGroupId = (int) $value;
 
             /** @var null|ObjectGroup $objectGroup */
-            $objectGroup   = self::where('object_groups.id', $objectGroupId)
-                ->where('object_groups.user_id', auth()->user()->id)->first()
-            ;
+            $objectGroup   = self::where('object_groups.id', $objectGroupId)->where('object_groups.user_id', auth()->user()->id)->first();
             if (null !== $objectGroup) {
                 return $objectGroup;
             }
         }
 
         throw new NotFoundHttpException();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     /**
@@ -91,6 +87,11 @@ class ObjectGroup extends Model
         return $this->morphedByMany(PiggyBank::class, 'object_groupable');
     }
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     protected function casts(): array
     {
         return [
@@ -104,8 +105,6 @@ class ObjectGroup extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

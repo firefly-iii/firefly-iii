@@ -24,19 +24,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Support\Facades\Log;
-use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 /**
@@ -54,15 +57,13 @@ class BulkController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(JournalRepositoryInterface::class);
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -85,7 +86,7 @@ class BulkController extends Controller
         $budgetRepos = app(BudgetRepositoryInterface::class);
         $budgetList  = app('expandedform')->makeSelectListWithEmpty($budgetRepos->getActiveBudgets());
 
-        return view('transactions.bulk.edit', ['journals' => $journals, 'subTitle' => $subTitle, 'budgetList' => $budgetList]);
+        return view('transactions.bulk.edit', ['journals'   => $journals, 'subTitle'   => $subTitle, 'budgetList' => $budgetList]);
     }
 
     /**
@@ -117,11 +118,16 @@ class BulkController extends Controller
             }
         }
 
+        $flags          = new TransactionGroupEventFlags();
+        $objects        = new TransactionGroupEventObjects();
+
         // run rules on changed journals:
         /** @var TransactionJournal $journal */
-        foreach ($collection as $journal) { // @phpstan-ignore-line
-            event(new UpdatedTransactionGroup($journal->transactionGroup, true, true, false));
+        foreach ($collection as $journal) {
+            $objects->appendFromTransactionGroup($journal->transactionGroup);
         }
+        event(new UpdatedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
 
         Preferences::mark();
         $request->session()->flash('success', trans_choice('firefly.mass_edited_transactions_success', $count));
@@ -141,6 +147,17 @@ class BulkController extends Controller
         return true;
     }
 
+    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
+    {
+        if ($ignoreUpdate) {
+            return false;
+        }
+        Log::debug(sprintf('Set budget to %s', $category));
+        $this->repository->updateCategory($journal, $category);
+
+        return true;
+    }
+
     private function updateJournalTags(TransactionJournal $journal, string $action, array $tags): bool
     {
         if ('do_replace' === $action) {
@@ -152,17 +169,6 @@ class BulkController extends Controller
             $new      = array_unique(array_merge($tags, $existing));
             $this->repository->updateTags($journal, $new);
         }
-
-        return true;
-    }
-
-    private function updateJournalCategory(TransactionJournal $journal, bool $ignoreUpdate, string $category): bool
-    {
-        if ($ignoreUpdate) {
-            return false;
-        }
-        Log::debug(sprintf('Set budget to %s', $category));
-        $this->repository->updateCategory($journal, $category);
 
         return true;
     }

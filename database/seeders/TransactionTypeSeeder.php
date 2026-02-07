@@ -45,7 +45,5 @@ class TransactionTypeSeeder extends Seeder
                 }
             }
         }
-
-
     }
 }

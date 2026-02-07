@@ -35,16 +35,8 @@ class PermissionSeeder extends Seeder
     public function run(): void
     {
         $roles = [
-            [
-                'name'         => 'owner',
-                'display_name' => 'Site Owner',
-                'description'  => 'User runs this instance of FF3',
-            ],
-            [
-                'name'         => 'demo',
-                'display_name' => 'Demo User',
-                'description'  => 'User is a demo user',
-            ],
+            ['name'         => 'owner', 'display_name' => 'Site Owner', 'description'  => 'User runs this instance of FF3'],
+            ['name'         => 'demo', 'display_name' => 'Demo User', 'description'  => 'User is a demo user']
         ];
         foreach ($roles as $role) {
             if (null === Role::where('name', $role['name'])->first()) {

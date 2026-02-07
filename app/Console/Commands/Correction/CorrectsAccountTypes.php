@@ -45,8 +45,8 @@ class CorrectsAccountTypes extends Command
 
     protected $description = 'Make sure all journals have the correct from/to account types.';
     protected $signature   = 'correction:account-types';
-    private int            $count;
-    private array          $expected;
+    private int $count;
+    private array $expected;
     private AccountFactory $factory;
     private AccountRepositoryInterface $repository;
 
@@ -63,18 +63,12 @@ class CorrectsAccountTypes extends Command
         $expected       = config('firefly.source_dests');
 
         $query          = TransactionJournal::leftJoin('transaction_types', 'transaction_journals.transaction_type_id', '=', 'transaction_types.id')
-            ->leftJoin(
-                'transactions as source',
-                static function (JoinClause $join): void {
-                    $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
-                }
-            )
-            ->leftJoin(
-                'transactions as destination',
-                static function (JoinClause $join): void {
-                    $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where('destination.amount', '>', 0);
-                }
-            )
+            ->leftJoin('transactions as source', static function (JoinClause $join): void {
+                $join->on('transaction_journals.id', '=', 'source.transaction_journal_id')->where('source.amount', '<', 0);
+            })
+            ->leftJoin('transactions as destination', static function (JoinClause $join): void {
+                $join->on('transaction_journals.id', '=', 'destination.transaction_journal_id')->where('destination.amount', '>', 0);
+            })
             ->leftJoin('accounts as source_account', 'source.account_id', '=', 'source_account.id')
             ->leftJoin('accounts as destination_account', 'destination.account_id', '=', 'destination_account.id')
             ->leftJoin('account_types as source_account_type', 'source_account.account_type_id', '=', 'source_account_type.id')
@@ -96,21 +90,19 @@ class CorrectsAccountTypes extends Command
             }
         });
 
-        $resultSet      = $query->get(
-            [
-                'transaction_journals.id',
-                // 'transaction_type_id as type_id',
-                'transaction_types.type as journal_type',
-                // 'source.id as source_transaction_id',
-                // 'source_account.id as source_account_id',
-                // 'source_account_type.id as source_account_type_id',
-                'source_account_type.type as source_account_type',
-                // 'destination.id as destination_transaction_id',
-                // 'destination_account.id as destination_account_id',
-                // 'destination_account_type.id as destination_account_type_id',
-                'destination_account_type.type as destination_account_type',
-            ]
-        );
+        $resultSet      = $query->get([
+            'transaction_journals.id',
+            // 'transaction_type_id as type_id',
+            'transaction_types.type as journal_type',
+            // 'source.id as source_transaction_id',
+            // 'source_account.id as source_account_id',
+            // 'source_account_type.id as source_account_type_id',
+            'source_account_type.type as source_account_type',
+            // 'destination.id as destination_transaction_id',
+            // 'destination_account.id as destination_account_id',
+            // 'destination_account_type.id as destination_account_type_id',
+            'destination_account_type.type as destination_account_type',
+        ]);
         if ($resultSet->count() > 0) {
             $this->friendlyLine(sprintf('Found %d journals that need to be fixed.', $resultSet->count()));
             foreach ($resultSet as $entry) {
@@ -131,56 +123,17 @@ class CorrectsAccountTypes extends Command
         return 0;
     }
 
-    private function stupidLaravel(): void
+    private function canCreateDestination(array $validDestinations): bool
     {
-        $this->count = 0;
+        return in_array(AccountTypeEnum::EXPENSE->value, $validDestinations, true);
     }
 
-    private function inspectJournal(TransactionJournal $journal): void
+    /**
+     * Can only create revenue accounts out of the blue.
+     */
+    private function canCreateSource(array $validSources): bool
     {
-        Log::debug(sprintf('Now inspecting journal #%d', $journal->id));
-        $transactions      = $journal->transactions()->count();
-        if (2 !== $transactions) {
-            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
-            $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
-
-            return;
-        }
-        $type              = $journal->transactionType->type;
-        $sourceTransaction = $this->getSourceTransaction($journal);
-        $destTransaction   = $this->getDestinationTransaction($journal);
-        $sourceAccount     = $sourceTransaction->account;
-        $sourceAccountType = $sourceAccount->accountType->type;
-        $destAccount       = $destTransaction->account;
-        $destAccountType   = $destAccount->accountType->type;
-
-        if (!array_key_exists($type, $this->expected)) {
-            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
-            $this->friendlyError(sprintf('No source/destination info for transaction type %s.', $type));
-
-            return;
-        }
-        if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
-            Log::debug(sprintf('[a] Going to fix journal #%d', $journal->id));
-            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
-
-            return;
-        }
-        $expectedTypes     = $this->expected[$type][$sourceAccountType];
-        if (!in_array($destAccountType, $expectedTypes, true)) {
-            Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
-            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
-        }
-    }
-
-    private function getSourceTransaction(TransactionJournal $journal): Transaction
-    {
-        return $journal->transactions->firstWhere('amount', '<', 0);
-    }
-
-    private function getDestinationTransaction(TransactionJournal $journal): Transaction
-    {
-        return $journal->transactions->firstWhere('amount', '>', 0);
+        return in_array(AccountTypeEnum::REVENUE->value, $validSources, true);
     }
 
     private function fixJournal(TransactionJournal $journal, string $transactionType, Transaction $source, Transaction $dest): void
@@ -227,7 +180,12 @@ class CorrectsAccountTypes extends Command
         }
         if (!$canCreateSource && !$hasValidSource) {
             Log::debug('This transaction type has no source we can create. Just give error.');
-            $message = sprintf('The source account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.', $transactionType, $journal->id, $source->account->accountType->type);
+            $message = sprintf(
+                'The source account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.',
+                $transactionType,
+                $journal->id,
+                $source->account->accountType->type
+            );
             $this->friendlyError($message);
             Log::debug($message);
 
@@ -246,45 +204,144 @@ class CorrectsAccountTypes extends Command
         }
         if (!$canCreateDestination && !$hasValidDestination && null === $alternativeDestination) {
             Log::debug('This transaction type has no destination we can create. Just give error.');
-            $message = sprintf('The destination account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.', $transactionType, $journal->id, $dest->account->accountType->type);
+            $message = sprintf(
+                'The destination account of %s #%d cannot be of type "%s". Firefly III cannot fix this. You may have to remove the transaction yourself.',
+                $transactionType,
+                $journal->id,
+                $dest->account->accountType->type
+            );
             $this->friendlyError($message);
             Log::debug($message);
         }
         if (!$canCreateDestination && !$hasValidDestination && null !== $alternativeDestination) {
             Log::debug('This transaction type has no destination we can create, but found alternative with the same name.');
-            $message = sprintf('The destination account of %s #%d cannot be of type "%s". Firefly III found an alternative account. Please make sure this transaction is correct.', $transactionType, $journal->transaction_group_id, $dest->account->accountType->type);
+            $message = sprintf(
+                'The destination account of %s #%d cannot be of type "%s". Firefly III found an alternative account. Please make sure this transaction is correct.',
+                $transactionType,
+                $journal->transaction_group_id,
+                $dest->account->accountType->type
+            );
             $this->friendlyInfo($message);
             Log::debug($message);
             $this->giveNewDestinationAccount($journal, $alternativeDestination);
         }
     }
 
-    private function shouldBeTransfer(string $transactionType, string $sourceType, string $destinationType): bool
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        return TransactionTypeEnum::TRANSFER->value === $transactionType && AccountTypeEnum::ASSET->value === $sourceType && $this->isLiability($destinationType);
+        return $journal->transactions->firstWhere('amount', '>', 0);
+    }
+
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
+    {
+        return $journal->transactions->firstWhere('amount', '<', 0);
+    }
+
+    private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void
+    {
+        $destTransaction             = $this->getDestinationTransaction($journal);
+        $oldDest                     = $destTransaction->account;
+        $destTransaction->account_id = $newDestination->id;
+        $destTransaction->save();
+        $message                     = sprintf(
+            'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
+            $journal->id,
+            $oldDest->id,
+            $oldDest->name,
+            $newDestination->id,
+            $newDestination->name
+        );
+        $this->friendlyInfo($message);
+        $journal->refresh();
+        Log::debug($message);
+    }
+
+    private function giveNewExpense(TransactionJournal $journal, Transaction $destination): void
+    {
+        Log::debug(sprintf('An account of type "%s" could be a valid destination.', AccountTypeEnum::EXPENSE->value));
+        $this->factory->setUser($journal->user);
+        $name           = $destination->account->name;
+        $newDestination = $this->factory->findOrCreate($name, AccountTypeEnum::EXPENSE->value);
+        $destination->account()->associate($newDestination);
+        $destination->save();
+        $this->friendlyPositive(sprintf(
+            'Firefly III gave transaction #%d a new destination %s: #%d ("%s").',
+            $journal->transaction_group_id,
+            AccountTypeEnum::EXPENSE->value,
+            $newDestination->id,
+            $newDestination->name
+        ));
+        Log::debug(sprintf('Associated account #%d with transaction #%d', $newDestination->id, $destination->id));
+        $this->inspectJournal($journal);
+    }
+
+    private function giveNewRevenue(TransactionJournal $journal, Transaction $source): void
+    {
+        Log::debug(sprintf('An account of type "%s" could be a valid source.', AccountTypeEnum::REVENUE->value));
+        $this->factory->setUser($journal->user);
+        $name      = $source->account->name;
+        $newSource = $this->factory->findOrCreate($name, AccountTypeEnum::REVENUE->value);
+        $source->account()->associate($newSource);
+        $source->save();
+        $this->friendlyPositive(sprintf(
+            'Firefly III gave transaction #%d a new source %s: #%d ("%s").',
+            $journal->transaction_group_id,
+            AccountTypeEnum::REVENUE->value,
+            $newSource->id,
+            $newSource->name
+        ));
+        Log::debug(sprintf('Associated account #%d with transaction #%d', $newSource->id, $source->id));
+        $this->inspectJournal($journal);
+    }
+
+    private function hasValidAccountType(array $validTypes, string $accountType): bool
+    {
+        return in_array($accountType, $validTypes, true);
+    }
+
+    private function inspectJournal(TransactionJournal $journal): void
+    {
+        Log::debug(sprintf('Now inspecting journal #%d', $journal->id));
+        $transactions      = $journal->transactions()->count();
+        if (2 !== $transactions) {
+            Log::debug(sprintf('Journal has %d transactions, so can\'t fix.', $transactions));
+            $this->friendlyError(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $transactions));
+
+            return;
+        }
+        $type              = $journal->transactionType->type;
+        $sourceTransaction = $this->getSourceTransaction($journal);
+        $destTransaction   = $this->getDestinationTransaction($journal);
+        $sourceAccount     = $sourceTransaction->account;
+        $sourceAccountType = $sourceAccount->accountType->type;
+        $destAccount       = $destTransaction->account;
+        $destAccountType   = $destAccount->accountType->type;
+
+        if (!array_key_exists($type, $this->expected)) {
+            Log::info(sprintf('No source/destination info for transaction type %s.', $type));
+            $this->friendlyError(sprintf('No source/destination info for transaction type %s.', $type));
+
+            return;
+        }
+        if (!array_key_exists($sourceAccountType, $this->expected[$type])) {
+            Log::debug(sprintf('[a] Going to fix journal #%d', $journal->id));
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
+
+            return;
+        }
+        $expectedTypes     = $this->expected[$type][$sourceAccountType];
+        if (!in_array($destAccountType, $expectedTypes, true)) {
+            Log::debug(sprintf('[b] Going to fix journal #%d', $journal->id));
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
+        }
     }
 
     private function isLiability(string $destinationType): bool
     {
-        return AccountTypeEnum::LOAN->value === $destinationType || AccountTypeEnum::DEBT->value === $destinationType || AccountTypeEnum::MORTGAGE->value === $destinationType;
-    }
-
-    private function makeTransfer(TransactionJournal $journal): void
-    {
-        // from an asset to a liability should be a withdrawal:
-        $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
-        $journal->transactionType()->associate($withdrawal);
-        $journal->save();
-        $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
-        $this->friendlyInfo($message);
-        Log::debug($message);
-        // check it again:
-        $this->inspectJournal($journal);
-    }
-
-    private function shouldBeDeposit(string $transactionType, string $sourceType, string $destinationType): bool
-    {
-        return TransactionTypeEnum::TRANSFER->value === $transactionType && $this->isLiability($sourceType) && AccountTypeEnum::ASSET->value === $destinationType;
+        return
+            AccountTypeEnum::LOAN->value === $destinationType
+            || AccountTypeEnum::DEBT->value === $destinationType
+            || AccountTypeEnum::MORTGAGE->value === $destinationType;
     }
 
     private function makeDeposit(TransactionJournal $journal): void
@@ -298,11 +355,6 @@ class CorrectsAccountTypes extends Command
         Log::debug($message);
         // check it again:
         $this->inspectJournal($journal);
-    }
-
-    private function shouldGoToExpenseAccount(string $transactionType, string $sourceType, string $destinationType): bool
-    {
-        return TransactionTypeEnum::WITHDRAWAL->value === $transactionType && AccountTypeEnum::ASSET->value === $sourceType && AccountTypeEnum::REVENUE->value === $destinationType;
     }
 
     private function makeExpenseDestination(TransactionJournal $journal, Transaction $destination): void
@@ -324,11 +376,6 @@ class CorrectsAccountTypes extends Command
         $this->friendlyWarning($message);
         Log::debug($message);
         $this->inspectJournal($journal);
-    }
-
-    private function shouldComeFromRevenueAccount(string $transactionType, string $sourceType, string $destinationType): bool
-    {
-        return TransactionTypeEnum::DEPOSIT->value === $transactionType && AccountTypeEnum::EXPENSE->value === $sourceType && AccountTypeEnum::ASSET->value === $destinationType;
     }
 
     private function makeRevenueSource(TransactionJournal $journal, Transaction $source): void
@@ -353,66 +400,53 @@ class CorrectsAccountTypes extends Command
         $this->inspectJournal($journal);
     }
 
-    /**
-     * Can only create revenue accounts out of the blue.
-     */
-    private function canCreateSource(array $validSources): bool
+    private function makeTransfer(TransactionJournal $journal): void
     {
-        return in_array(AccountTypeEnum::REVENUE->value, $validSources, true);
-    }
-
-    private function hasValidAccountType(array $validTypes, string $accountType): bool
-    {
-        return in_array($accountType, $validTypes, true);
-    }
-
-    private function giveNewRevenue(TransactionJournal $journal, Transaction $source): void
-    {
-        Log::debug(sprintf('An account of type "%s" could be a valid source.', AccountTypeEnum::REVENUE->value));
-        $this->factory->setUser($journal->user);
-        $name      = $source->account->name;
-        $newSource = $this->factory->findOrCreate($name, AccountTypeEnum::REVENUE->value);
-        $source->account()->associate($newSource);
-        $source->save();
-        $this->friendlyPositive(sprintf('Firefly III gave transaction #%d a new source %s: #%d ("%s").', $journal->transaction_group_id, AccountTypeEnum::REVENUE->value, $newSource->id, $newSource->name));
-        Log::debug(sprintf('Associated account #%d with transaction #%d', $newSource->id, $source->id));
-        $this->inspectJournal($journal);
-    }
-
-    private function canCreateDestination(array $validDestinations): bool
-    {
-        return in_array(AccountTypeEnum::EXPENSE->value, $validDestinations, true);
-    }
-
-    private function giveNewExpense(TransactionJournal $journal, Transaction $destination): void
-    {
-        Log::debug(sprintf('An account of type "%s" could be a valid destination.', AccountTypeEnum::EXPENSE->value));
-        $this->factory->setUser($journal->user);
-        $name           = $destination->account->name;
-        $newDestination = $this->factory->findOrCreate($name, AccountTypeEnum::EXPENSE->value);
-        $destination->account()->associate($newDestination);
-        $destination->save();
-        $this->friendlyPositive(sprintf('Firefly III gave transaction #%d a new destination %s: #%d ("%s").', $journal->transaction_group_id, AccountTypeEnum::EXPENSE->value, $newDestination->id, $newDestination->name));
-        Log::debug(sprintf('Associated account #%d with transaction #%d', $newDestination->id, $destination->id));
-        $this->inspectJournal($journal);
-    }
-
-    private function giveNewDestinationAccount(TransactionJournal $journal, Account $newDestination): void
-    {
-        $destTransaction             = $this->getDestinationTransaction($journal);
-        $oldDest                     = $destTransaction->account;
-        $destTransaction->account_id = $newDestination->id;
-        $destTransaction->save();
-        $message                     = sprintf(
-            'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").',
-            $journal->id,
-            $oldDest->id,
-            $oldDest->name,
-            $newDestination->id,
-            $newDestination->name
-        );
+        // from an asset to a liability should be a withdrawal:
+        $withdrawal = TransactionType::whereType(TransactionTypeEnum::WITHDRAWAL->value)->first();
+        $journal->transactionType()->associate($withdrawal);
+        $journal->save();
+        $message    = sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id);
         $this->friendlyInfo($message);
-        $journal->refresh();
         Log::debug($message);
+        // check it again:
+        $this->inspectJournal($journal);
+    }
+
+    private function shouldBeDeposit(string $transactionType, string $sourceType, string $destinationType): bool
+    {
+        return
+            TransactionTypeEnum::TRANSFER->value === $transactionType
+            && $this->isLiability($sourceType)
+            && AccountTypeEnum::ASSET->value === $destinationType;
+    }
+
+    private function shouldBeTransfer(string $transactionType, string $sourceType, string $destinationType): bool
+    {
+        return
+            TransactionTypeEnum::TRANSFER->value === $transactionType
+            && AccountTypeEnum::ASSET->value === $sourceType
+            && $this->isLiability($destinationType);
+    }
+
+    private function shouldComeFromRevenueAccount(string $transactionType, string $sourceType, string $destinationType): bool
+    {
+        return
+            TransactionTypeEnum::DEPOSIT->value === $transactionType
+            && AccountTypeEnum::EXPENSE->value === $sourceType
+            && AccountTypeEnum::ASSET->value === $destinationType;
+    }
+
+    private function shouldGoToExpenseAccount(string $transactionType, string $sourceType, string $destinationType): bool
+    {
+        return
+            TransactionTypeEnum::WITHDRAWAL->value === $transactionType
+            && AccountTypeEnum::ASSET->value === $sourceType
+            && AccountTypeEnum::REVENUE->value === $destinationType;
+    }
+
+    private function stupidLaravel(): void
+    {
+        $this->count = 0;
     }
 }

@@ -50,7 +50,7 @@ class PiggyBankEvent extends Model
      */
     public function setAmountAttribute($value): void
     {
-        $this->attributes['amount'] = (string)$value;
+        $this->attributes['amount'] = (string) $value;
     }
 
     public function transactionJournal(): BelongsTo
@@ -63,9 +63,7 @@ class PiggyBankEvent extends Model
      */
     protected function amount(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): string => (string)$value,
-        );
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function casts(): array
@@ -81,8 +79,6 @@ class PiggyBankEvent extends Model
 
     protected function piggyBankId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

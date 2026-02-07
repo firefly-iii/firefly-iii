@@ -41,10 +41,7 @@ class StoreRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'name'  => $this->convertString('name'),
-            'notes' => $this->stringWithNewlines('notes'),
-        ];
+        return ['name'  => $this->convertString('name'), 'notes' => $this->stringWithNewlines('notes')];
     }
 
     /**
@@ -52,8 +49,6 @@ class StoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'name' => 'required|min:1|max:100|uniqueObjectForUser:categories,name',
-        ];
+        return ['name' => 'required|min:1|max:100|uniqueObjectForUser:categories,name'];
     }
 }

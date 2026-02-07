@@ -64,10 +64,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpenses(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array;
 
@@ -78,10 +78,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array;
 
@@ -92,10 +92,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumExpensesBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $expense = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $expense = null,
         ?TransactionCurrency $currency = null
     ): array;
 
@@ -105,10 +105,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncome(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array;
 
@@ -119,10 +119,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeByDestination(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array;
 
@@ -133,10 +133,10 @@ interface OperationsRepositoryInterface
      * @SuppressWarnings("PHPMD.ExcessiveParameterList")
      */
     public function sumIncomeBySource(
-        Carbon               $start,
-        Carbon               $end,
-        ?Collection          $accounts = null,
-        ?Collection          $revenue = null,
+        Carbon $start,
+        Carbon $end,
+        ?Collection $accounts = null,
+        ?Collection $revenue = null,
         ?TransactionCurrency $currency = null
     ): array;
 

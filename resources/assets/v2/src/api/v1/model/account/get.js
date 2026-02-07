@@ -78,10 +78,10 @@ export default class Get {
     /**
      *
      * @param identifier
-     * @param page
+     * @param params
      * @returns {Promise<AxiosResponse<any>>}
      */
-    transactions(identifier, page) {
-        return api.get('/api/v1/accounts/' + identifier + '/transactions', {params: {page: page}});
+    transactions(identifier, params) {
+        return api.get('/api/v1/accounts/' + identifier + '/transactions', {params: params});
     }
 }

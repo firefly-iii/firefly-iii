@@ -50,7 +50,6 @@ class BillTransformer extends AbstractTransformer
     {
         $currency = $bill->transactionCurrency;
 
-
         return [
             'id'                              => $bill->id,
             'created_at'                      => $bill->created_at->toAtomString(),
@@ -98,12 +97,7 @@ class BillTransformer extends AbstractTransformer
             'next_expected_match'             => $bill->meta['nem']?->toAtomString(),
             'next_expected_match_diff'        => $bill->meta['nem_diff'],
 
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/bills/'.$bill->id,
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => '/bills/'.$bill->id]],
         ];
     }
 }

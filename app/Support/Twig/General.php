@@ -50,13 +50,7 @@ class General extends AbstractExtension
     #[Override]
     public function getFilters(): array
     {
-        return [
-            $this->balance(),
-            $this->formatFilesize(),
-            $this->mimeIcon(),
-            $this->markdown(),
-            $this->phpHostName(),
-        ];
+        return [$this->balance(), $this->formatFilesize(), $this->mimeIcon(), $this->markdown(), $this->phpHostName()];
     }
 
     #[Override]
@@ -83,19 +77,16 @@ class General extends AbstractExtension
      */
     protected function activeRoutePartial(): TwigFunction
     {
-        return new TwigFunction(
-            'activeRoutePartial',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (str_contains($name, $route)) {
-                    return 'active';
-                }
-
-                return '';
+        return new TwigFunction('activeRoutePartial', static function (): string {
+            $args  = func_get_args();
+            $route = $args[0]; // name of the route.
+            $name  = Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return 'active';
             }
-        );
+
+            return '';
+        });
     }
 
     /**
@@ -110,11 +101,7 @@ class General extends AbstractExtension
                 [, $route, $objectType] = func_get_args();
                 $activeObjectType       = $context['objectType'] ?? false;
 
-                if ($objectType === $activeObjectType
-                    && false !== stripos(
-                        (string)Route::getCurrentRoute()->getName(),
-                        (string)$route
-                    )) {
+                if ($objectType === $activeObjectType && false !== stripos((string) Route::getCurrentRoute()->getName(), (string) $route)) {
                     return 'active';
                 }
 
@@ -130,19 +117,16 @@ class General extends AbstractExtension
      */
     protected function activeRouteStrict(): TwigFunction
     {
-        return new TwigFunction(
-            'activeRouteStrict',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
+        return new TwigFunction('activeRouteStrict', static function (): string {
+            $args  = func_get_args();
+            $route = $args[0]; // name of the route.
 
-                if (\Route::getCurrentRoute()->getName() === $route) {
-                    return 'active';
-                }
-
-                return '';
+            if (\Route::getCurrentRoute()->getName() === $route) {
+                return 'active';
             }
-        );
+
+            return '';
+        });
     }
 
     /**
@@ -150,69 +134,64 @@ class General extends AbstractExtension
      */
     protected function balance(): TwigFilter
     {
-        return new TwigFilter(
-            'balance',
-            static function (?Account $account): string {
-                if (!$account instanceof Account) {
-                    return '0';
-                }
-
-                /** @var Carbon $date */
-                $date             = now();
-
-                // get the date from the current session. If it's in the future, keep `now()`.
-                /** @var Carbon $session */
-                $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
-                if ($session->lt($date)) {
-                    $date = $session->copy();
-                    $date->endOfDay();
-                }
-                Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
-
-                // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
-                $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
-                // $info             = Steam::finalAccountBalance($account, $date);
-                $currency         = Steam::getAccountCurrency($account);
-                $primary          = Amount::getPrimaryCurrency();
-                $convertToPrimary = Amount::convertToPrimary();
-                $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
-                $currency ??= $primary;
-                $strings          = [];
-                foreach ($info as $key => $balance) {
-                    if ('balance' === $key) {
-                        // balance in account currency.
-                        if (!$usePrimary) {
-                            $strings[] = Amount::formatAnything($currency, $balance, false);
-                        }
-
-                        continue;
-                    }
-                    if ('pc_balance' === $key) {
-                        // balance in primary currency.
-                        if ($usePrimary) {
-                            $strings[] = Amount::formatAnything($primary, $balance, false);
-                        }
-
-                        continue;
-                    }
-                    // for multi currency accounts.
-                    if ($usePrimary && $key !== $primary->code) {
-                        $strings[] = Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
-                    }
-                }
-
-                return implode(', ', $strings);
-                // return \FireflyIII\Support\Facades\Steam::balance($account, $date);
+        return new TwigFilter('balance', static function (?Account $account): string {
+            if (!$account instanceof Account) {
+                return '0';
             }
-        );
+
+            /** @var Carbon $date */
+            $date             = now();
+
+            // get the date from the current session. If it's in the future, keep `now()`.
+            /** @var Carbon $session */
+            $session          = clone session('end', today(config('app.timezone'))->endOfMonth());
+            if ($session->lt($date)) {
+                $date = $session->copy();
+                $date->endOfDay();
+            }
+            Log::debug(sprintf('twig balance: Call finalAccountBalance with date/time "%s"', $date->toIso8601String()));
+
+            // 2025-10-08 replace finalAccountBalance with accountsBalancesOptimized.
+            $info             = Steam::accountsBalancesOptimized(new Collection()->push($account), $date)[$account->id];
+            // $info             = Steam::finalAccountBalance($account, $date);
+            $currency         = Steam::getAccountCurrency($account);
+            $primary          = Amount::getPrimaryCurrency();
+            $convertToPrimary = Amount::convertToPrimary();
+            $usePrimary       = $convertToPrimary && $primary->id !== $currency->id;
+            $currency ??= $primary;
+            $strings          = [];
+            foreach ($info as $key => $balance) {
+                if ('balance' === $key) {
+                    // balance in account currency.
+                    if (!$usePrimary) {
+                        $strings[] = Amount::formatAnything($currency, $balance, false);
+                    }
+
+                    continue;
+                }
+                if ('pc_balance' === $key) {
+                    // balance in primary currency.
+                    if ($usePrimary) {
+                        $strings[] = Amount::formatAnything($primary, $balance, false);
+                    }
+
+                    continue;
+                }
+                // for multi currency accounts.
+                if ($usePrimary && $key !== $primary->code) {
+                    $strings[] = Amount::formatAnything(Amount::getTransactionCurrencyByCode($key), $balance, false);
+                }
+            }
+
+            return implode(', ', $strings);
+
+            // return \FireflyIII\Support\Facades\Steam::balance($account, $date);
+        });
     }
 
     protected function carbonize(): TwigFunction
     {
-        return new TwigFunction(
-            'carbonize',
-            static fn (string $date): Carbon => new Carbon($date, config('app.timezone'))
-        );
+        return new TwigFunction('carbonize', static fn (string $date): Carbon => new Carbon($date, config('app.timezone')));
     }
 
     /**
@@ -220,14 +199,11 @@ class General extends AbstractExtension
      */
     protected function formatDate(): TwigFunction
     {
-        return new TwigFunction(
-            'formatDate',
-            static function (string $date, string $format): string {
-                $carbon = new Carbon($date);
+        return new TwigFunction('formatDate', static function (string $date, string $format): string {
+            $carbon = new Carbon($date);
 
-                return $carbon->isoFormat($format);
-            }
-        );
+            return $carbon->isoFormat($format);
+        });
     }
 
     /**
@@ -235,22 +211,19 @@ class General extends AbstractExtension
      */
     protected function formatFilesize(): TwigFilter
     {
-        return new TwigFilter(
-            'filesize',
-            static function (int $size): string {
-                // less than one GB, more than one MB
-                if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
-                    return round($size / (1024 * 1024), 2).' MB';
-                }
-
-                // less than one MB
-                if ($size < (1024 * 1024)) {
-                    return round($size / 1024, 2).' KB';
-                }
-
-                return $size.' bytes';
+        return new TwigFilter('filesize', static function (int $size): string {
+            // less than one GB, more than one MB
+            if ($size < (1024 * 1024 * 2014) && $size >= (1024 * 1024)) {
+                return round($size / (1024 * 1024), 2).' MB';
             }
-        );
+
+            // less than one MB
+            if ($size < (1024 * 1024)) {
+                return round($size / 1024, 2).' KB';
+            }
+
+            return $size.' bytes';
+        });
     }
 
     /**
@@ -258,31 +231,25 @@ class General extends AbstractExtension
      */
     protected function getMetaField(): TwigFunction
     {
-        return new TwigFunction(
-            'accountGetMetaField',
-            static function (Account $account, string $field): string {
-                /** @var AccountRepositoryInterface $repository */
-                $repository = app(AccountRepositoryInterface::class);
-                $result     = $repository->getMetaValue($account, $field);
-                if (null === $result) {
-                    return '';
-                }
-
-                return $result;
+        return new TwigFunction('accountGetMetaField', static function (Account $account, string $field): string {
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class);
+            $result     = $repository->getMetaValue($account, $field);
+            if (null === $result) {
+                return '';
             }
-        );
+
+            return $result;
+        });
     }
 
     protected function getRootSearchOperator(): TwigFunction
     {
-        return new TwigFunction(
-            'getRootSearchOperator',
-            static function (string $operator): string {
-                $result = OperatorQuerySearch::getRootOperator($operator);
+        return new TwigFunction('getRootSearchOperator', static function (string $operator): string {
+            $result = OperatorQuerySearch::getRootOperator($operator);
 
-                return str_replace('-', 'not_', $result);
-            }
-        );
+            return str_replace('-', 'not_', $result);
+        });
     }
 
     /**
@@ -290,14 +257,11 @@ class General extends AbstractExtension
      */
     protected function hasRole(): TwigFunction
     {
-        return new TwigFunction(
-            'hasRole',
-            static function (string $role): bool {
-                $repository = app(UserRepositoryInterface::class);
+        return new TwigFunction('hasRole', static function (string $role): bool {
+            $repository = app(UserRepositoryInterface::class);
 
-                return $repository->hasRole(auth()->user(), $role);
-            }
-        );
+            return $repository->hasRole(auth()->user(), $role);
+        });
     }
 
     protected function markdown(): TwigFilter
@@ -305,15 +269,9 @@ class General extends AbstractExtension
         return new TwigFilter(
             'markdown',
             static function (string $text): string {
-                $converter = new GithubFlavoredMarkdownConverter(
-                    [
-                        'allow_unsafe_links' => false,
-                        'max_nesting_level'  => 5,
-                        'html_input'         => 'escape',
-                    ]
-                );
+                $converter = new GithubFlavoredMarkdownConverter(['allow_unsafe_links' => false, 'max_nesting_level'  => 5, 'html_input'         => 'escape']);
 
-                return (string)$converter->convert($text);
+                return (string) $converter->convert($text);
             },
             ['is_safe' => ['html']]
         );
@@ -325,19 +283,16 @@ class General extends AbstractExtension
      */
     protected function menuOpenRoutePartial(): TwigFunction
     {
-        return new TwigFunction(
-            'menuOpenRoutePartial',
-            static function (): string {
-                $args  = func_get_args();
-                $route = $args[0]; // name of the route.
-                $name  = Route::getCurrentRoute()->getName() ?? '';
-                if (str_contains($name, $route)) {
-                    return 'menu-open';
-                }
-
-                return '';
+        return new TwigFunction('menuOpenRoutePartial', static function (): string {
+            $args  = func_get_args();
+            $route = $args[0]; // name of the route.
+            $name  = Route::getCurrentRoute()->getName() ?? '';
+            if (str_contains($name, $route)) {
+                return 'menu-open';
             }
-        );
+
+            return '';
+        });
     }
 
     /**
@@ -350,38 +305,57 @@ class General extends AbstractExtension
         return new TwigFilter(
             'mimeIcon',
             static fn (string $string): string => match ($string) {
-                'application/pdf'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           => 'fa-file-pdf-o',
-                'image/webp', 'image/png', 'image/jpeg', 'image/svg+xml', 'image/heic', 'image/heic-sequence', 'application/vnd.oasis.opendocument.image'                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   => 'fa-file-image-o',
-                'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/vnd.openxmlformats-officedocument.wordprocessingml.template', 'application/x-iwork-pages-sffpages', 'application/vnd.sun.xml.writer', 'application/vnd.sun.xml.writer.template', 'application/vnd.sun.xml.writer.global', 'application/vnd.stardivision.writer', 'application/vnd.stardivision.writer-global', 'application/vnd.oasis.opendocument.text', 'application/vnd.oasis.opendocument.text-template', 'application/vnd.oasis.opendocument.text-web', 'application/vnd.oasis.opendocument.text-master' => 'fa-file-word-o',
-                'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.openxmlformats-officedocument.spreadsheetml.template', 'application/vnd.sun.xml.calc', 'application/vnd.sun.xml.calc.template', 'application/vnd.stardivision.calc', 'application/vnd.oasis.opendocument.spreadsheet', 'application/vnd.oasis.opendocument.spreadsheet-template'                                                                                                                                                                                                                          => 'fa-file-excel-o',
-                'application/vnd.ms-powerpoint', 'application/vnd.openxmlformats-officedocument.presentationml.presentation', 'application/vnd.openxmlformats-officedocument.presentationml.template', 'application/vnd.openxmlformats-officedocument.presentationml.slideshow', 'application/vnd.sun.xml.impress', 'application/vnd.sun.xml.impress.template', 'application/vnd.stardivision.impress', 'application/vnd.oasis.opendocument.presentation', 'application/vnd.oasis.opendocument.presentation-template'                                                                                                                       => 'fa-file-powerpoint-o',
-                'application/vnd.sun.xml.draw', 'application/vnd.sun.xml.draw.template', 'application/vnd.stardivision.draw', 'application/vnd.oasis.opendocument.chart'                                                                                                                                                                                                                                                                                                                                                                                                                                                                    => 'fa-paint-brush',
-                'application/vnd.oasis.opendocument.graphics', 'application/vnd.oasis.opendocument.graphics-template', 'application/vnd.sun.xml.math', 'application/vnd.stardivision.math', 'application/vnd.oasis.opendocument.formula', 'application/vnd.oasis.opendocument.database'                                                                                                                                                                                                                                                                                                                                                     => 'fa-calculator',
-                default                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     => 'fa-file-o',
+                'application/pdf'                                          => 'fa-file-pdf-o',
+                'image/webp',
+                'image/png',
+                'image/jpeg',
+                'image/svg+xml',
+                'image/heic',
+                'image/heic-sequence',
+                'application/vnd.oasis.opendocument.image'                 => 'fa-file-image-o',
+                'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+                'application/x-iwork-pages-sffpages',
+                'application/vnd.sun.xml.writer',
+                'application/vnd.sun.xml.writer.template',
+                'application/vnd.sun.xml.writer.global',
+                'application/vnd.stardivision.writer',
+                'application/vnd.stardivision.writer-global',
+                'application/vnd.oasis.opendocument.text',
+                'application/vnd.oasis.opendocument.text-template',
+                'application/vnd.oasis.opendocument.text-web',
+                'application/vnd.oasis.opendocument.text-master'           => 'fa-file-word-o',
+                'application/vnd.ms-excel',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+                'application/vnd.sun.xml.calc',
+                'application/vnd.sun.xml.calc.template',
+                'application/vnd.stardivision.calc',
+                'application/vnd.oasis.opendocument.spreadsheet',
+                'application/vnd.oasis.opendocument.spreadsheet-template'  => 'fa-file-excel-o',
+                'application/vnd.ms-powerpoint',
+                'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+                'application/vnd.openxmlformats-officedocument.presentationml.template',
+                'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+                'application/vnd.sun.xml.impress',
+                'application/vnd.sun.xml.impress.template',
+                'application/vnd.stardivision.impress',
+                'application/vnd.oasis.opendocument.presentation',
+                'application/vnd.oasis.opendocument.presentation-template' => 'fa-file-powerpoint-o',
+                'application/vnd.sun.xml.draw',
+                'application/vnd.sun.xml.draw.template',
+                'application/vnd.stardivision.draw',
+                'application/vnd.oasis.opendocument.chart'                 => 'fa-paint-brush',
+                'application/vnd.oasis.opendocument.graphics',
+                'application/vnd.oasis.opendocument.graphics-template',
+                'application/vnd.sun.xml.math',
+                'application/vnd.stardivision.math',
+                'application/vnd.oasis.opendocument.formula',
+                'application/vnd.oasis.opendocument.database'              => 'fa-calculator',
+                default                                                    => 'fa-file-o'
             },
             ['is_safe' => ['html']]
-        );
-    }
-
-    /**
-     * Show URL host name
-     */
-    protected function phpHostName(): TwigFilter
-    {
-        return new TwigFilter(
-            'phphost',
-            static function (string $string): string {
-                $proto = parse_url($string, PHP_URL_SCHEME);
-                $host  = parse_url($string, PHP_URL_HOST);
-                if (is_array($host)) {
-                    $host = implode(' ', $host);
-                }
-                if (is_array($proto)) {
-                    $proto = implode(' ', $proto);
-                }
-
-                return e(sprintf('%s://%s', $proto, $host));
-            }
         );
     }
 
@@ -390,17 +364,30 @@ class General extends AbstractExtension
      */
     protected function phpdate(): TwigFunction
     {
-        return new TwigFunction(
-            'phpdate',
-            date(...)
-        );
+        return new TwigFunction('phpdate', date(...));
+    }
+
+    /**
+     * Show URL host name
+     */
+    protected function phpHostName(): TwigFilter
+    {
+        return new TwigFilter('phphost', static function (string $string): string {
+            $proto = parse_url($string, PHP_URL_SCHEME);
+            $host  = parse_url($string, PHP_URL_HOST);
+            if (is_array($host)) {
+                $host = implode(' ', $host);
+            }
+            if (is_array($proto)) {
+                $proto = implode(' ', $proto);
+            }
+
+            return e(sprintf('%s://%s', $proto, $host));
+        });
     }
 
     private function fireflyIIIConfig()
     {
-        return new TwigFunction(
-            'fireflyiiiconfig',
-            static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data
-        );
+        return new TwigFunction('fireflyiiiconfig', static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data);
     }
 }

@@ -42,8 +42,7 @@ class OwnerTestNotificationNtfy extends Notification
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     //    public function toNtfy(OwnerNotifiable $notifiable): Message
@@ -57,7 +56,6 @@ class OwnerTestNotificationNtfy extends Notification
     //
     //        return $message;
     //    }
-
     //    public function via(OwnerNotifiable $notifiable): array
     //    {
     //        return [NtfyChannel::class];

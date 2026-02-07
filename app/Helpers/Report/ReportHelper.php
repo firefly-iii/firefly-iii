@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Facades\Navigation;
 use Illuminate\Support\Collection;
 
 /**
@@ -56,9 +56,7 @@ class ReportHelper implements ReportHelperInterface
         /** @var BillRepositoryInterface $repository */
         $repository = app(BillRepositoryInterface::class);
         $bills      = $repository->getBillsForAccounts($accounts);
-        $report     = [
-            'bills' => [],
-        ];
+        $report     = ['bills'     => []];
 
         /** @var Bill $bill */
         foreach ($bills as $bill) {

@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Rule;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -47,16 +47,14 @@ class DeleteController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->ruleRepos = app(RuleRepositoryInterface::class);
+            $this->ruleRepos = app(RuleRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -71,7 +69,7 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('rules.delete.url');
 
-        return view('rules.rule.delete', ['rule' => $rule, 'subTitle' => $subTitle]);
+        return view('rules.rule.delete', ['rule'     => $rule, 'subTitle' => $subTitle]);
     }
 
     /**

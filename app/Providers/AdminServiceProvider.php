@@ -53,17 +53,15 @@ class AdminServiceProvider extends ServiceProvider
      */
     private function linkType(): void
     {
-        $this->app->bind(
-            static function (Application $app): LinkTypeRepositoryInterface {
-                /** @var LinkTypeRepository $repository */
-                $repository = app(LinkTypeRepository::class);
-                // reference to auth is not understood by phpstan.
-                if ($app->auth->check()) { // @phpstan-ignore-line
-                    $repository->setUser(auth()->user());
-                }
-
-                return $repository;
+        $this->app->bind(static function (Application $app): LinkTypeRepositoryInterface {
+            /** @var LinkTypeRepository $repository */
+            $repository = app(LinkTypeRepository::class);
+            // reference to auth is not understood by phpstan.
+            if ($app->auth->check()) { // @phpstan-ignore-line
+                $repository->setUser(auth()->user());
             }
-        );
+
+            return $repository;
+        });
     }
 }

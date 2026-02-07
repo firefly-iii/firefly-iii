@@ -36,11 +36,8 @@ use League\Fractal\Resource\Item;
  */
 class BudgetLimitTransformer extends AbstractTransformer
 {
-    protected array               $availableIncludes
-        = [
-            'budget',
-        ];
-    protected bool                $convertToPrimary;
+    protected array $availableIncludes = ['budget'];
+    protected bool $convertToPrimary;
     protected TransactionCurrency $primaryCurrency;
 
     public function __construct()
@@ -70,7 +67,6 @@ class BudgetLimitTransformer extends AbstractTransformer
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
-
         $currency = $budgetLimit->meta['currency'];
         $amount   = Steam::bcround($budgetLimit->amount, $currency->decimal_places);
         $pcAmount = null;
@@ -82,17 +78,17 @@ class BudgetLimitTransformer extends AbstractTransformer
         }
 
         return [
-            'id'                              => (string)$budgetLimit->id,
+            'id'                              => (string) $budgetLimit->id,
             'created_at'                      => $budgetLimit->created_at->toAtomString(),
             'updated_at'                      => $budgetLimit->updated_at->toAtomString(),
             'start'                           => $budgetLimit->start_date->toAtomString(),
             'end'                             => $budgetLimit->end_date->endOfDay()->toAtomString(),
-            'budget_id'                       => (string)$budgetLimit->budget_id,
+            'budget_id'                       => (string) $budgetLimit->budget_id,
 
             // currency settings according to 6.3.0
             'object_has_currency_setting'     => true,
 
-            'currency_id'                     => (string)$currency->id,
+            'currency_id'                     => (string) $currency->id,
             'currency_name'                   => $currency->name,
             'currency_code'                   => $currency->code,
             'currency_symbol'                 => $currency->symbol,
@@ -110,12 +106,7 @@ class BudgetLimitTransformer extends AbstractTransformer
             'spent'                           => $budgetLimit->meta['spent'],
             'pc_spent'                        => $budgetLimit->meta['pc_spent'],
             'notes'                           => $budgetLimit->meta['notes'],
-            'links'                           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/budgets/limits/'.$budgetLimit->id,
-                ],
-            ],
+            'links'                           => [['rel' => 'self', 'uri' => '/budgets/limits/'.$budgetLimit->id]],
         ];
     }
 }

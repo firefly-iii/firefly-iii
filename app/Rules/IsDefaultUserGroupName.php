@@ -24,19 +24,21 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class IsDefaultUserGroupName
  */
 class IsDefaultUserGroupName implements ValidationRule
 {
-    public function __construct(private readonly UserGroup $userGroup) {}
+    public function __construct(
+        private readonly UserGroup $userGroup
+    ) {}
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

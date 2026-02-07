@@ -42,7 +42,11 @@ class RemovesZeroAmount extends Command
      */
     public function handle(): int
     {
-        $set      = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set      = Transaction::where('amount', 0)
+            ->get(['transaction_journal_id'])
+            ->pluck('transaction_journal_id')
+            ->toArray()
+        ;
         $set      = array_unique($set);
         $journals = TransactionJournal::whereIn('id', $set)->get();
 

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * WebhookEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -43,13 +42,25 @@ use stdClass;
 class WebhookEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private array      $deliveries        = [];      // @phpstan-ignore-line
-    private array      $ids               = [];      // @phpstan-ignore-line
-    private array      $responses         = [];
-    private array      $triggers          = [];
-    private array      $webhookDeliveries = [];
-    private array      $webhookResponses  = [];
-    private array      $webhookTriggers   = [];
+    private array $deliveries        = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    private array $ids               = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    private array $responses         = [];
+    private array $triggers          = [];
+    private array $webhookDeliveries = [];
+    private array $webhookResponses  = [];
+    private array $webhookTriggers   = [];
 
     public function enrich(Collection $collection): Collection
     {
@@ -120,7 +131,6 @@ class WebhookEnrichment implements EnrichmentInterface
         foreach ($all as $item) {
             $this->triggers[$item->id] = $item->key;
         }
-
     }
 
     private function collectWebhookInfo(): void

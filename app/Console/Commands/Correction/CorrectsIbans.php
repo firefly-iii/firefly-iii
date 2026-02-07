@@ -27,9 +27,9 @@ namespace FireflyIII\Console\Commands\Correction;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use FireflyIII\Support\Facades\Steam;
 
 class CorrectsIbans extends Command
 {
@@ -49,6 +49,48 @@ class CorrectsIbans extends Command
         $this->countAndCorrectIbans($accounts);
 
         return 0;
+    }
+
+    private function countAndCorrectIbans(Collection $accounts): void
+    {
+        $set = [];
+
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $userId = $account->user_id;
+            $set[$userId] ??= [];
+            $iban   = (string) $account->iban;
+            if ('' === $iban) {
+                continue;
+            }
+            $type   = $account->accountType->type;
+            if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
+                $type = 'liabilities';
+            }
+            // iban already in use! two exceptions exist:
+            if (
+                array_key_exists($iban, $set[$userId]) && (
+                    !AccountTypeEnum::EXPENSE->value === $set[$userId][$iban]
+                    && AccountTypeEnum::REVENUE->value === $type
+                    && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type)
+                )
+            ) {
+                $this->friendlyWarning(sprintf(
+                    'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
+                    $iban,
+                    $account->accountType->type,
+                    $account->id,
+                    $account->name
+                ));
+                $account->iban = null;
+                $account->save();
+                ++$this->count;
+            }
+
+            if (!array_key_exists($iban, $set[$userId])) {
+                $set[$userId][$iban] = $type;
+            }
+        }
     }
 
     private function filterIbans(Collection $accounts): void
@@ -74,44 +116,6 @@ class CorrectsIbans extends Command
                     $this->friendlyInfo(sprintf('Removed spaces from account number of account #%d', $account->id));
                     ++$this->count;
                 }
-            }
-        }
-    }
-
-    private function countAndCorrectIbans(Collection $accounts): void
-    {
-        $set = [];
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $userId = $account->user_id;
-            $set[$userId] ??= [];
-            $iban   = (string) $account->iban;
-            if ('' === $iban) {
-                continue;
-            }
-            $type   = $account->accountType->type;
-            if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
-                $type = 'liabilities';
-            }
-            // iban already in use! two exceptions exist:
-            if (array_key_exists($iban, $set[$userId]) && (!AccountTypeEnum::EXPENSE->value === $set[$userId][$iban] && AccountTypeEnum::REVENUE->value === $type && !(AccountTypeEnum::REVENUE->value === $set[$userId][$iban] && AccountTypeEnum::EXPENSE->value === $type))) {
-                $this->friendlyWarning(
-                    sprintf(
-                        'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
-                        $iban,
-                        $account->accountType->type,
-                        $account->id,
-                        $account->name
-                    )
-                );
-                $account->iban = null;
-                $account->save();
-                ++$this->count;
-            }
-
-            if (!array_key_exists($iban, $set[$userId])) {
-                $set[$userId][$iban] = $type;
             }
         }
     }

@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * AccountTypeApiRequest.php
  * Copyright (c) 2025 https://github.com/ctrl-f5
@@ -23,9 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Account;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Api\V1\Requests\ApiRequest;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use Illuminate\Contracts\Validation\Validator;
 
 class AccountTypeApiRequest extends ApiRequest
 {
@@ -33,25 +34,18 @@ class AccountTypeApiRequest extends ApiRequest
 
     public function rules(): array
     {
-        return [
-            'type'  => sprintf('in:%s', implode(',', array_keys($this->types))),
-        ];
+        return ['type' => sprintf('in:%s', implode(',', array_keys($this->types)))];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-
-                $type = $this->convertString('type', 'all');
-                $this->attributes->add([
-                    'type'  => $type,
-                    'types' => $this->mapAccountTypes($type),
-                ]);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+
+            $type = $this->convertString('type', 'all');
+            $this->attributes->add(['type'  => $type, 'types' => $this->mapAccountTypes($type)]);
+        });
     }
 }

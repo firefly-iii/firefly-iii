@@ -26,12 +26,12 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class EditController
@@ -46,15 +46,13 @@ class EditController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-bolt');
-                app('view')->share('subTitleIcon', 'fa-pencil');
-                app('view')->share('title', (string) trans('firefly.webhooks'));
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-bolt');
+            app('view')->share('subTitleIcon', 'fa-pencil');
+            app('view')->share('title', (string) trans('firefly.webhooks'));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -73,6 +71,6 @@ class EditController extends Controller
         $subTitle = (string) trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.edit.url');
 
-        return view('webhooks.edit', ['webhook' => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.edit', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
     }
 }

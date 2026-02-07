@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Rule;
 use FireflyIII\Rules\IsValidActionExpression;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Support\Request\GetRuleConfiguration;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -40,47 +40,6 @@ class RuleFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
-
-    /**
-     * Get all data for controller.
-     */
-    public function getRuleData(): array
-    {
-        return [
-            'title'           => $this->convertString('title'),
-            'rule_group_id'   => $this->convertInteger('rule_group_id'),
-            'active'          => $this->boolean('active'),
-            'trigger'         => $this->convertString('trigger'),
-            'description'     => $this->stringWithNewlines('description'),
-            'stop_processing' => $this->boolean('stop_processing'),
-            'strict'          => $this->boolean('strict'),
-            'run_after_form'  => $this->boolean('run_after_form'),
-            'triggers'        => $this->getRuleTriggerData(),
-            'actions'         => $this->getRuleActionData(),
-        ];
-    }
-
-    private function getRuleTriggerData(): array
-    {
-        $return      = [];
-        $triggerData = $this->get('triggers');
-        if (is_array($triggerData)) {
-            foreach ($triggerData as $trigger) {
-                $stopProcessing = $trigger['stop_processing'] ?? '0';
-                $prohibited     = $trigger['prohibited'] ?? '0';
-                $set            = [
-                    'type'            => $trigger['type'] ?? 'invalid',
-                    'value'           => $trigger['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                    'prohibited'      => 1 === (int) $prohibited,
-                ];
-                $set            = self::replaceAmountTrigger($set);
-                $return[]       = $set;
-            }
-        }
-
-        return $return;
-    }
 
     public static function replaceAmountTrigger(array $array): array
     {
@@ -107,22 +66,23 @@ class RuleFormRequest extends FormRequest
         return $array;
     }
 
-    private function getRuleActionData(): array
+    /**
+     * Get all data for controller.
+     */
+    public function getRuleData(): array
     {
-        $return     = [];
-        $actionData = $this->get('actions');
-        if (is_array($actionData)) {
-            foreach ($actionData as $action) {
-                $stopProcessing = $action['stop_processing'] ?? '0';
-                $return[]       = [
-                    'type'            => $action['type'] ?? 'invalid',
-                    'value'           => $action['value'] ?? '',
-                    'stop_processing' => 1 === (int) $stopProcessing,
-                ];
-            }
-        }
-
-        return $return;
+        return [
+            'title'           => $this->convertString('title'),
+            'rule_group_id'   => $this->convertInteger('rule_group_id'),
+            'active'          => $this->boolean('active'),
+            'trigger'         => $this->convertString('trigger'),
+            'description'     => $this->stringWithNewlines('description'),
+            'stop_processing' => $this->boolean('stop_processing'),
+            'strict'          => $this->boolean('strict'),
+            'run_after_form'  => $this->boolean('run_after_form'),
+            'triggers'        => $this->getRuleTriggerData(),
+            'actions'         => $this->getRuleActionData(),
+        ];
     }
 
     /**
@@ -141,17 +101,17 @@ class RuleFormRequest extends FormRequest
 
         // initial set of rules:
         $rules           = [
-            'title'                    => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
-            'description'              => 'min:1|max:32768|nullable',
-            'stop_processing'          => 'boolean',
-            'rule_group_id'            => 'required|belongsToUser:rule_groups',
-            'trigger'                  => 'required|in:store-journal,update-journal,manual-activation',
-            'triggers.*.type'          => 'required|in:'.implode(',', $validTriggers),
-            'triggers.*.value'         => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.type'           => 'required|in:'.implode(',', $validActions),
-            'actions.*.value'          => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
-            'strict'                   => 'in:0,1',
-            'run_after_form'           => 'in:0,1',
+            'title'            => 'required|min:1|max:255|uniqueObjectForUser:rules,title',
+            'description'      => 'min:1|max:32768|nullable',
+            'stop_processing'  => 'boolean',
+            'rule_group_id'    => 'required|belongsToUser:rule_groups',
+            'trigger'          => 'required|in:store-journal,update-journal,manual-activation',
+            'triggers.*.type'  => 'required|in:'.implode(',', $validTriggers),
+            'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|max:1024|min:1|ruleTriggerValue', $contextTriggers),
+            'actions.*.type'   => 'required|in:'.implode(',', $validActions),
+            'actions.*.value'  => [sprintf('required_if:actions.*.type,%s|min:0|max:1024', $contextActions), new IsValidActionExpression(), 'ruleActionValue'],
+            'strict'           => 'in:0,1',
+            'run_after_form'   => 'in:0,1',
         ];
 
         /** @var null|Rule $rule */
@@ -169,5 +129,45 @@ class RuleFormRequest extends FormRequest
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
+    }
+
+    private function getRuleActionData(): array
+    {
+        $return     = [];
+        $actionData = $this->get('actions');
+        if (is_array($actionData)) {
+            foreach ($actionData as $action) {
+                $stopProcessing = $action['stop_processing'] ?? '0';
+                $return[]       = [
+                    'type'            => $action['type'] ?? 'invalid',
+                    'value'           => $action['value'] ?? '',
+                    'stop_processing' => 1 === (int) $stopProcessing,
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    private function getRuleTriggerData(): array
+    {
+        $return      = [];
+        $triggerData = $this->get('triggers');
+        if (is_array($triggerData)) {
+            foreach ($triggerData as $trigger) {
+                $stopProcessing = $trigger['stop_processing'] ?? '0';
+                $prohibited     = $trigger['prohibited'] ?? '0';
+                $set            = [
+                    'type'            => $trigger['type'] ?? 'invalid',
+                    'value'           => $trigger['value'] ?? '',
+                    'stop_processing' => 1 === (int) $stopProcessing,
+                    'prohibited'      => 1 === (int) $prohibited,
+                ];
+                $set            = self::replaceAmountTrigger($set);
+                $return[]       = $set;
+            }
+        }
+
+        return $return;
     }
 }

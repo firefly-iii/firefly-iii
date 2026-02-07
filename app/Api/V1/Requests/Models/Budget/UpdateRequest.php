@@ -24,13 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Budget;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Budget;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\Validation\AutoBudget\ValidatesAutoBudgetRequest;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -50,27 +50,22 @@ class UpdateRequest extends FormRequest
     {
         // this is the way:
         $fields  = [
-            'name'                    => ['name', 'convertString'],
-            'active'                  => ['active', 'boolean'],
-            'order'                   => ['order', 'convertInteger'],
-            'notes'                   => ['notes', 'convertString'],
-            'currency_id'             => ['auto_budget_currency_id', 'convertInteger'],
-            'currency_code'           => ['auto_budget_currency_code', 'convertString'],
-            'auto_budget_type'        => ['auto_budget_type', 'convertString'],
-            'auto_budget_amount'      => ['auto_budget_amount', 'convertString'],
-            'auto_budget_period'      => ['auto_budget_period', 'convertString'],
+            'name'               => ['name', 'convertString'],
+            'active'             => ['active', 'boolean'],
+            'order'              => ['order', 'convertInteger'],
+            'notes'              => ['notes', 'convertString'],
+            'currency_id'        => ['auto_budget_currency_id', 'convertInteger'],
+            'currency_code'      => ['auto_budget_currency_code', 'convertString'],
+            'auto_budget_type'   => ['auto_budget_type', 'convertString'],
+            'auto_budget_amount' => ['auto_budget_amount', 'convertString'],
+            'auto_budget_period' => ['auto_budget_period', 'convertString'],
 
             // webhooks
-            'fire_webhooks'           => ['fire_webhooks', 'boolean'],
+            'fire_webhooks'      => ['fire_webhooks', 'boolean'],
         ];
         $allData = $this->getAllData($fields);
         if (array_key_exists('auto_budget_type', $allData)) {
-            $types                       = [
-                'none'     => 0,
-                'reset'    => 1,
-                'rollover' => 2,
-                'adjusted' => 3,
-            ];
+            $types                       = ['none'     => 0, 'reset'    => 1, 'rollover' => 2, 'adjusted' => 3];
             $allData['auto_budget_type'] = $types[$allData['auto_budget_type']] ?? 0;
         }
 
@@ -86,17 +81,17 @@ class UpdateRequest extends FormRequest
         $budget = $this->route()->parameter('budget');
 
         return [
-            'name'                       => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
-            'active'                     => [new IsBoolean()],
-            'notes'                      => 'nullable|min:1|max:32768',
-            'auto_budget_type'           => 'in:reset,rollover,adjusted,none',
-            'auto_budget_currency_id'    => 'exists:transaction_currencies,id',
-            'auto_budget_currency_code'  => 'exists:transaction_currencies,code',
-            'auto_budget_amount'         => ['nullable', new IsValidPositiveAmount()],
-            'auto_budget_period'         => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
+            'name'                      => sprintf('min:1|max:100|uniqueObjectForUser:budgets,name,%d', $budget->id),
+            'active'                    => [new IsBoolean()],
+            'notes'                     => 'nullable|min:1|max:32768',
+            'auto_budget_type'          => 'in:reset,rollover,adjusted,none',
+            'auto_budget_currency_id'   => 'exists:transaction_currencies,id',
+            'auto_budget_currency_code' => 'exists:transaction_currencies,code',
+            'auto_budget_amount'        => ['nullable', new IsValidPositiveAmount()],
+            'auto_budget_period'        => 'in:daily,weekly,monthly,quarterly,half_year,yearly',
 
             // webhooks
-            'fire_webhooks'              => [new IsBoolean()],
+            'fire_webhooks'             => [new IsBoolean()],
         ];
     }
 
@@ -105,12 +100,10 @@ class UpdateRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                // validate all account info
-                $this->validateAutoBudgetAmount($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            // validate all account info
+            $this->validateAutoBudgetAmount($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

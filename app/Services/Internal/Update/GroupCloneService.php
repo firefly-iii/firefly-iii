@@ -24,6 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Events\Model\TransactionGroup\CreatedSingleTransactionGroup;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
+use FireflyIII\Events\Model\Webhook\WebhookMessagesRequestSending;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -34,6 +38,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class GroupCloneService
@@ -47,6 +52,14 @@ class GroupCloneService
         foreach ($group->transactionJournals as $journal) {
             $this->cloneJournal($journal, $newGroup, $group->id);
         }
+
+        // event!
+        $flags    = new TransactionGroupEventFlags();
+        $objects  = TransactionGroupEventObjects::collectFromTransactionGroup($newGroup);
+        event(new CreatedSingleTransactionGroup($flags, $objects));
+
+        Log::debug(sprintf('send event WebhookMessagesRequestSending from %s', __METHOD__));
+        event(new WebhookMessagesRequestSending());
 
         return $newGroup;
     }
@@ -106,22 +119,6 @@ class GroupCloneService
         }
     }
 
-    private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
-    {
-        $newTransaction                         = $transaction->replicate();
-        $newTransaction->transaction_journal_id = $newJournal->id;
-        $newTransaction->reconciled             = false;
-        $newTransaction->save();
-    }
-
-    private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
-    {
-        $newNote              = $note->replicate();
-        $newNote->text        = sprintf("%s\n\n%s", $newNote->text, trans('firefly.clones_journal_x', ['description' => $newJournal->description, 'id' => $oldGroupId]));
-        $newNote->noteable_id = $newJournal->id;
-        $newNote->save();
-    }
-
     private function cloneMeta(TransactionJournalMeta $meta, TransactionJournal $newJournal): void
     {
         $newMeta                         = $meta->replicate();
@@ -129,5 +126,24 @@ class GroupCloneService
         if ('recurrence_id' !== $newMeta->name) {
             $newMeta->save();
         }
+    }
+
+    private function cloneNote(Note $note, TransactionJournal $newJournal, int $oldGroupId): void
+    {
+        $newNote              = $note->replicate();
+        $newNote->text        = sprintf("%s\n\n%s", $newNote->text, trans('firefly.clones_journal_x', [
+            'description' => $newJournal->description,
+            'id'          => $oldGroupId,
+        ]));
+        $newNote->noteable_id = $newJournal->id;
+        $newNote->save();
+    }
+
+    private function cloneTransaction(Transaction $transaction, TransactionJournal $newJournal): void
+    {
+        $newTransaction                         = $transaction->replicate();
+        $newTransaction->transaction_journal_id = $newJournal->id;
+        $newTransaction->reconciled             = false;
+        $newTransaction->save();
     }
 }

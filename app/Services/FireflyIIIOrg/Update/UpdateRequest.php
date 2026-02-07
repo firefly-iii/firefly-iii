@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
 use Carbon\Carbon;
-use FireflyIII\Events\NewVersionAvailable;
+use FireflyIII\Events\Security\System\SystemFoundNewVersionOnline;
 use FireflyIII\Support\System\IsOldVersion;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
@@ -44,10 +44,7 @@ class UpdateRequest implements UpdateRequestInterface
     public function getUpdateInformation(string $channel): array
     {
         Log::debug(sprintf('Now in getUpdateInformation(%s)', $channel));
-        $information = [
-            'level'   => 'error',
-            'message' => (string) trans('firefly.unknown_error'),
-        ];
+        $information = ['level'   => 'error', 'message' => (string) trans('firefly.unknown_error')];
 
         // try to get array from update server:
         $updateInfo  = $this->contactServer($channel);
@@ -79,12 +76,7 @@ class UpdateRequest implements UpdateRequestInterface
 
         try {
             $client  = new Client();
-            $options = [
-                'headers' => [
-                    'User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel),
-                ],
-                'timeout' => 3.1415,
-            ];
+            $options = ['headers' => ['User-Agent' => sprintf('FireflyIII/%s/%s', config('firefly.version'), $channel)], 'timeout' => 3.1415];
             $res     = $client->request('GET', $url, $options);
         } catch (GuzzleException $e) {
             Log::error('Ran into Guzzle error.');
@@ -191,21 +183,59 @@ class UpdateRequest implements UpdateRequestInterface
 
         if (-1 === $compare) {
             $return['level']   = 'info';
-            $return['message'] = (string) trans('firefly.update_current_dev_older', ['version' => $current, 'new_version' => $latest]);
+            $return['message'] = (string) trans('firefly.update_current_dev_older', ['version'     => $current, 'new_version' => $latest]);
 
             return $return;
         }
         $return['level']   = 'info';
-        $return['message'] = (string) trans('firefly.update_current_dev_newer', ['version' => $current, 'new_version' => $latest]);
+        $return['message'] = (string) trans('firefly.update_current_dev_newer', ['version'     => $current, 'new_version' => $latest]);
 
         return $return;
+    }
+
+    private function releasedNewAlpha(string $current, string $latest, Carbon $date): array
+    {
+        Log::debug('New release is also a alpha!');
+        $message = (string) trans('firefly.update_new_version_alert', [
+            'your_version' => $current,
+            'new_version'  => $latest,
+            'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
+        ]);
+
+        return ['level'   => 'success', 'message' => sprintf('%s %s', $message, trans('firefly.update_version_alpha'))];
+    }
+
+    private function releasedNewBeta(string $current, string $latest, Carbon $date): array
+    {
+        Log::debug('New release is also a beta!');
+        $message = (string) trans('firefly.update_new_version_alert', [
+            'your_version' => $current,
+            'new_version'  => $latest,
+            'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
+        ]);
+
+        return ['level'   => 'success', 'message' => sprintf('%s %s', $message, trans('firefly.update_version_beta'))];
+    }
+
+    private function releasedNewVersion(string $current, string $latest, Carbon $date): array
+    {
+        Log::debug('New release is old enough.');
+        $message = (string) trans('firefly.update_new_version_alert', [
+            'your_version' => $current,
+            'new_version'  => $latest,
+            'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
+        ]);
+        Log::debug('New release is here!', [$message]);
+        event(new SystemFoundNewVersionOnline($message));
+
+        return ['level'   => 'success', 'message' => $message];
     }
 
     private function runsNewerVersion(string $current, string $latest): array
     {
         $return = [
             'level'   => 'info',
-            'message' => (string) trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $latest]),
+            'message' => (string) trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version'  => $latest]),
         ];
         Log::debug('User is running a newer version', $return);
 
@@ -214,68 +244,9 @@ class UpdateRequest implements UpdateRequestInterface
 
     private function runsSameVersion(string $current): array
     {
-        $return = [
-            'level'   => 'info',
-            'message' => (string) trans('firefly.update_current_version_alert', ['version' => $current]),
-        ];
+        $return = ['level'   => 'info', 'message' => (string) trans('firefly.update_current_version_alert', ['version' => $current])];
         Log::debug('User is the current version.', $return);
 
         return $return;
-    }
-
-    private function releasedNewAlpha(string $current, string $latest, Carbon $date): array
-    {
-        Log::debug('New release is also a alpha!');
-        $message = (string) trans(
-            'firefly.update_new_version_alert',
-            [
-                'your_version' => $current,
-                'new_version'  => $latest,
-                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
-            ]
-        );
-
-        return [
-            'level'   => 'success',
-            'message' => sprintf('%s %s', $message, trans('firefly.update_version_alpha')),
-        ];
-    }
-
-    private function releasedNewBeta(string $current, string $latest, Carbon $date): array
-    {
-        Log::debug('New release is also a beta!');
-        $message = (string) trans(
-            'firefly.update_new_version_alert',
-            [
-                'your_version' => $current,
-                'new_version'  => $latest,
-                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
-            ]
-        );
-
-        return [
-            'level'   => 'success',
-            'message' => sprintf('%s %s', $message, trans('firefly.update_version_beta')),
-        ];
-    }
-
-    private function releasedNewVersion(string $current, string $latest, Carbon $date): array
-    {
-        Log::debug('New release is old enough.');
-        $message = (string) trans(
-            'firefly.update_new_version_alert',
-            [
-                'your_version' => $current,
-                'new_version'  => $latest,
-                'date'         => $date->isoFormat((string) trans('config.month_and_day_js')),
-            ]
-        );
-        Log::debug('New release is here!', [$message]);
-        event(new NewVersionAvailable($message));
-
-        return [
-            'level'   => 'success',
-            'message' => $message,
-        ];
     }
 }

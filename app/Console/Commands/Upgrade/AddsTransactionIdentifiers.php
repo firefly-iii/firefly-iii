@@ -28,21 +28,22 @@ use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalCLIRepositoryInterface;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class AddsTransactionIdentifiers extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '480_transaction_identifier';
+
     protected $description          = 'Fixes transaction identifiers.';
     protected $signature            = 'upgrade:480-transaction-identifiers {--F|force : Force the execution of this command.}';
     private JournalCLIRepositoryInterface $cliRepository;
-    private int                           $count;
+    private int $count;
 
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they
@@ -85,6 +86,44 @@ class AddsTransactionIdentifiers extends Command
         return 0;
     }
 
+    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
+    {
+        // find opposing:
+        $amount = bcmul($transaction->amount, '-1');
+
+        try {
+            /** @var Transaction $opposing */
+            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
+                ->where('amount', $amount)
+                ->where('identifier', '=', 0)
+                ->whereNotIn('id', $exclude)
+                ->first()
+            ;
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
+            $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
+            $this->friendlyError('Please run "php artisan migrate --force" to add this field to the table.');
+            $this->friendlyError('Then, run "php artisan firefly:upgrade-database" to try again.');
+
+            return null;
+        }
+
+        return $opposing;
+    }
+
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
     /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
@@ -94,14 +133,6 @@ class AddsTransactionIdentifiers extends Command
     {
         $this->cliRepository = app(JournalCLIRepositoryInterface::class);
         $this->count         = 0;
-    }
-
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool)$configVar?->data;
-
     }
 
     /**
@@ -129,35 +160,5 @@ class AddsTransactionIdentifiers extends Command
             }
             ++$identifier;
         }
-    }
-
-    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
-    {
-        // find opposing:
-        $amount = bcmul($transaction->amount, '-1');
-
-        try {
-            /** @var Transaction $opposing */
-            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
-                ->where('amount', $amount)->where('identifier', '=', 0)
-                ->whereNotIn('id', $exclude)
-                ->first()
-            ;
-        } catch (QueryException $e) {
-            Log::error($e->getMessage());
-            $this->friendlyError('Firefly III could not find the "identifier" field in the "transactions" table.');
-            $this->friendlyError(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-            $this->friendlyError('Please run "php artisan migrate --force" to add this field to the table.');
-            $this->friendlyError('Then, run "php artisan firefly:upgrade-database" to try again.');
-
-            return null;
-        }
-
-        return $opposing;
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

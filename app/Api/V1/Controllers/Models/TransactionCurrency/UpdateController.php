@@ -54,14 +54,12 @@ class UpdateController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(CurrencyRepositoryInterface::class);
-                $this->repository->setUser(auth()->user());
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(CurrencyRepositoryInterface::class);
+            $this->repository->setUser(auth()->user());
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -99,27 +97,6 @@ class UpdateController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
     }
 
-    public function makePrimary(TransactionCurrency $currency): JsonResponse
-    {
-        /** @var User $user */
-        $user        = auth()->user();
-        $this->repository->enable($currency);
-        $this->repository->makePrimary($currency);
-
-        Preferences::mark();
-
-        $manager     = $this->getManager();
-        $currency->refreshForUser($user);
-
-        /** @var CurrencyTransformer $transformer */
-        $transformer = app(CurrencyTransformer::class);
-        $transformer->setParameters($this->parameters);
-
-        $resource    = new Item($currency, $transformer, 'currencies');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/currencies/enableCurrency
@@ -134,6 +111,27 @@ class UpdateController extends Controller
         /** @var User $user */
         $user        = auth()->user();
 
+        $currency->refreshForUser($user);
+
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource    = new Item($currency, $transformer, 'currencies');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    public function makePrimary(TransactionCurrency $currency): JsonResponse
+    {
+        /** @var User $user */
+        $user        = auth()->user();
+        $this->repository->enable($currency);
+        $this->repository->makePrimary($currency);
+
+        Preferences::mark();
+
+        $manager     = $this->getManager();
         $currency->refreshForUser($user);
 
         /** @var CurrencyTransformer $transformer */

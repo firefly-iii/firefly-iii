@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * UpgradesRuleActions.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -27,8 +26,8 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\RuleAction;
-use Illuminate\Console\Command;
 use FireflyIII\Support\Facades\FireflyConfig;
+use Illuminate\Console\Command;
 
 class UpgradesRuleActions extends Command
 {
@@ -66,8 +65,12 @@ class UpgradesRuleActions extends Command
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
 
-        return (bool)$configVar?->data;
+        return (bool) $configVar?->data;
+    }
 
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 
     private function replaceEqualSign(): void
@@ -180,10 +183,5 @@ class UpgradesRuleActions extends Command
                     break;
             }
         }
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

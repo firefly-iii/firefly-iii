@@ -4,7 +4,7 @@ php-version = "8.4.0"
 
 [source]
 workspace = "."
-paths = ["app/", "database/factories/", "database/seeders/", "tests/", "resources/lang/en_US"]
+paths = ["app/", "database/factories/", "database/migrations/", "database/seeders/", "tests/", "resources/lang/en_US"]
 includes = ["vendor"]
 excludes = []
 
@@ -17,6 +17,7 @@ method-chain-breaking-style = "same_line"
 preserve-breaking-array-like = false
 align-assignment-like = true
 null-type-hint = "null_pipe"
+sort-class-methods = true
 
 [linter]
 integrations = ["symfony", "laravel", "phpunit"]
@@ -41,3 +42,17 @@ strict-list-index-checks = false
 no-boolean-literal-comparison = false
 check-missing-type-hints = false
 register-super-globals = true
+
+# deze mag iedereen
+[[guard.perimeter.rules]]
+namespace = "FireflyIII\\"
+permit = ["Carbon\\Carbon"]
+
+# guard rules
+[[guard.perimeter.rules]]
+namespace = "FireflyIII\\Services"
+permit = ["@self", "@native","FireflyIII\\Models"]
+
+[[guard.perimeter.rules]]
+namespace = "FireflyIII\\Transformers"
+permit = ["@self", "@native","FireflyIII\\Models"]

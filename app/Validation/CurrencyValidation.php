@@ -36,6 +36,8 @@ trait CurrencyValidation
 {
     public const string TEST = 'Test';
 
+    abstract protected function getTransactionsArray(Validator $validator): array;
+
     /**
      * If the transactions contain foreign amounts, there must also be foreign currency information.
      */
@@ -52,7 +54,11 @@ trait CurrencyValidation
                 continue;
             }
 
-            if (!array_key_exists('foreign_amount', $transaction) && !array_key_exists('foreign_currency_id', $transaction) && !array_key_exists('foreign_currency_code', $transaction)) {
+            if (
+                !array_key_exists('foreign_amount', $transaction)
+                && !array_key_exists('foreign_currency_id', $transaction)
+                && !array_key_exists('foreign_currency_code', $transaction)
+            ) {
                 Log::debug('validateForeignCurrencyInformation: no foreign currency information present at all.');
 
                 continue;
@@ -90,6 +96,4 @@ trait CurrencyValidation
             }
         }
     }
-
-    abstract protected function getTransactionsArray(Validator $validator): array;
 }

@@ -26,9 +26,9 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class UpgradesBudgetLimitPeriods extends Command
 {
@@ -57,23 +57,6 @@ class UpgradesBudgetLimitPeriods extends Command
         return 0;
     }
 
-    private function isExecuted(): bool
-    {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
-
-        return (bool) $configVar->data;
-    }
-
-    private function theresNoLimit(): void
-    {
-        $limits = BudgetLimit::whereNull('period')->get();
-
-        /** @var BudgetLimit $limit */
-        foreach ($limits as $limit) {
-            $this->fixLimit($limit);
-        }
-    }
-
     private function fixLimit(BudgetLimit $limit): void
     {
         $period        = $this->getLimitPeriod($limit);
@@ -91,7 +74,7 @@ class UpgradesBudgetLimitPeriods extends Command
             return;
         }
         $limit->period = $period;
-        $limit->save();
+        $limit->saveQuietly();
 
         $msg           = sprintf(
             'Budget limit #%d (%s - %s) period is "%s".',
@@ -110,7 +93,11 @@ class UpgradesBudgetLimitPeriods extends Command
             return 'daily';
         }
         // is weekly
-        if ('1' === $limit->start_date->format('N') && '7' === $limit->end_date->format('N') && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)) {
+        if (
+            '1' === $limit->start_date->format('N')
+            && '7' === $limit->end_date->format('N')
+            && 6 === (int) $limit->end_date->diffInDays($limit->start_date, true)
+        ) {
             return 'weekly';
         }
 
@@ -151,8 +138,25 @@ class UpgradesBudgetLimitPeriods extends Command
         return null;
     }
 
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar->data;
+    }
+
     private function markAsExecuted(): void
     {
         FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
+    private function theresNoLimit(): void
+    {
+        $limits = BudgetLimit::whereNull('period')->get();
+
+        /** @var BudgetLimit $limit */
+        foreach ($limits as $limit) {
+            $this->fixLimit($limit);
+        }
     }
 }

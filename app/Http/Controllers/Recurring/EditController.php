@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Recurring;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Enums\RecurrenceRepetitionWeekend;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -36,6 +35,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Facades\ExpandedForm;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\JsonApi\Enrichments\RecurringEnrichment;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\User;
@@ -51,9 +51,9 @@ use Illuminate\View\View;
  */
 class EditController extends Controller
 {
-    private AttachmentHelperInterface    $attachments;
-    private BillRepositoryInterface      $billRepository;
-    private BudgetRepositoryInterface    $budgetRepos;
+    private AttachmentHelperInterface $attachments;
+    private BillRepositoryInterface $billRepository;
+    private BudgetRepositoryInterface $budgetRepos;
     private RecurringRepositoryInterface $repository;
 
     /**
@@ -64,20 +64,18 @@ class EditController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', (string) trans('firefly.recurrences'));
-                app('view')->share('subTitle', (string) trans('firefly.recurrences'));
+        $this->middleware(function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-paint-brush');
+            app('view')->share('title', (string) trans('firefly.recurrences'));
+            app('view')->share('subTitle', (string) trans('firefly.recurrences'));
 
-                $this->repository     = app(RecurringRepositoryInterface::class);
-                $this->budgetRepos    = app(BudgetRepositoryInterface::class);
-                $this->attachments    = app(AttachmentHelperInterface::class);
-                $this->billRepository = app(BillRepositoryInterface::class);
+            $this->repository     = app(RecurringRepositoryInterface::class);
+            $this->budgetRepos    = app(BudgetRepositoryInterface::class);
+            $this->attachments    = app(AttachmentHelperInterface::class);
+            $this->billRepository = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -156,13 +154,23 @@ class EditController extends Controller
         $array['transactions'][0]['tags']   = implode(',', $array['transactions'][0]['tags'] ?? []);
         $array['transactions'][0]['amount'] = round((float) $array['transactions'][0]['amount'], $array['transactions'][0]['currency_decimal_places']);
         if (null !== $array['transactions'][0]['foreign_amount'] && '' !== $array['transactions'][0]['foreign_amount']) {
-            $array['transactions'][0]['foreign_amount'] = round((float) $array['transactions'][0]['foreign_amount'], $array['transactions'][0]['foreign_currency_decimal_places'] ?? 2);
+            $array['transactions'][0]['foreign_amount'] = round(
+                (float) $array['transactions'][0]['foreign_amount'],
+                $array['transactions'][0]['foreign_currency_decimal_places'] ?? 2
+            );
         }
 
-        return view(
-            'recurring.edit',
-            ['recurrence' => $recurrence, 'array' => $array, 'bills' => $bills, 'weekendResponses' => $weekendResponses, 'budgets' => $budgets, 'preFilled' => $preFilled, 'currentRepType' => $currentRepType, 'repetitionEnd' => $repetitionEnd, 'repetitionEnds' => $repetitionEnds]
-        );
+        return view('recurring.edit', [
+            'recurrence'       => $recurrence,
+            'array'            => $array,
+            'bills'            => $bills,
+            'weekendResponses' => $weekendResponses,
+            'budgets'          => $budgets,
+            'preFilled'        => $preFilled,
+            'currentRepType'   => $currentRepType,
+            'repetitionEnd'    => $repetitionEnd,
+            'repetitionEnds'   => $repetitionEnds,
+        ]);
     }
 
     /**

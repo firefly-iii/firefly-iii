@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class PiggyBankObserver
@@ -40,26 +40,6 @@ class PiggyBankObserver
     {
         Log::debug('Observe "created" of a piggy bank.');
         $this->updatePrimaryCurrencyAmount($piggyBank);
-    }
-
-    private function updatePrimaryCurrencyAmount(PiggyBank $piggyBank): void
-    {
-        $group                           = $piggyBank->accounts()->first()?->user->userGroup;
-        if (null === $group) {
-            Log::debug(sprintf('No account(s) yet for piggy bank #%d.', $piggyBank->id));
-
-            return;
-        }
-        $userCurrency                    = Amount::getPrimaryCurrencyByUserGroup($group);
-        $piggyBank->native_target_amount = null;
-        if ($piggyBank->transactionCurrency->id !== $userCurrency->id) {
-            $converter                       = new ExchangeRateConverter();
-            $converter->setIgnoreSettings(true);
-            $converter->setUserGroup($group);
-            $piggyBank->native_target_amount = $converter->convert($piggyBank->transactionCurrency, $userCurrency, today(), $piggyBank->target_amount);
-        }
-        $piggyBank->saveQuietly();
-        Log::debug('Piggy bank primary currency target amount is updated.');
     }
 
     /**
@@ -87,5 +67,23 @@ class PiggyBankObserver
     {
         Log::debug('Observe "updated" of a piggy bank.');
         $this->updatePrimaryCurrencyAmount($piggyBank);
+    }
+
+    private function updatePrimaryCurrencyAmount(PiggyBank $piggyBank): void
+    {
+        $group                      = $piggyBank->accounts()->first()?->user->userGroup;
+        if (null === $group) {
+            Log::debug(sprintf('No account(s) yet for piggy bank #%d.', $piggyBank->id));
+
+            return;
+        }
+
+        $params                     = new ConversionParameters();
+        $params->user               = $piggyBank->accounts()->first()?->user;
+        $params->model              = $piggyBank;
+        $params->originalCurrency   = $piggyBank->transactionCurrency;
+        $params->amountField        = 'target_amount';
+        $params->primaryAmountField = 'native_target_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }

@@ -42,15 +42,18 @@ class Preference extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
             /** @var User $user */
             $user        = auth()->user();
 
             // some preferences do not have an administration ID.
             // some need it, to make sure the correct one is selected.
-            $userGroupId = (int)$user->user_group_id;
+            $userGroupId = (int) $user->user_group_id;
             $userGroupId = 0 === $userGroupId ? null : $userGroupId;
 
             /** @var null|Preference $preference */
@@ -67,7 +70,7 @@ class Preference extends Model
 
             // try again with ID, but this time don't care about the preferred user_group_id
             if (null === $preference) {
-                $preference = $user->preferences()->where('id', (int)$value)->first();
+                $preference = $user->preferences()->where('id', (int) $value)->first();
             }
             if (null !== $preference) {
                 /** @var Preference $preference */
@@ -78,7 +81,7 @@ class Preference extends Model
                 $preference                = new self();
                 $preference->name          = $value;
                 $preference->data          = $default[$value];
-                $preference->user_id       = (int)$user->id;
+                $preference->user_id       = (int) $user->id;
                 $preference->user_group_id = in_array($value, $items, true) ? $userGroupId : null;
                 $preference->save();
 

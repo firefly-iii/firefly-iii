@@ -24,7 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Destroy;
 
+use FireflyIII\Events\Model\Budget\DestroyedBudget;
+use FireflyIII\Events\Model\Budget\DestroyingBudget;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Support\Models\AvailableBudgetCalculator;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -34,12 +40,38 @@ class BudgetDestroyService
 {
     public function destroy(Budget $budget): void
     {
-        $budget->delete();
+        // first trigger delete event so the webhook messages can get generated.
+        event(new DestroyingBudget($budget));
 
-        // also delete auto budget:
-        foreach ($budget->autoBudgets()->get() as $autoBudget) {
-            $autoBudget->delete();
+        // remove attachments
+        $repository   = app(AttachmentRepositoryInterface::class);
+        $repository->setUser($budget->user);
+
+        /** @var Attachment $attachment */
+        foreach ($budget->attachments()->get() as $attachment) {
+            $repository->destroy($attachment);
         }
+
+        // get budget limits, recalculate for period each time, then delete .
+        $budgetLimits = $budget->budgetlimits()->get();
+
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($budgetLimits as $budgetLimit) {
+            // need to recalculate all available budgets for this user.
+            $calculator = new AvailableBudgetCalculator();
+            $calculator->setUser($budget->user);
+            $calculator->setStart($budgetLimit->start_date);
+            $calculator->setEnd($budgetLimit->end_date);
+            $calculator->setCreate(false);
+            $calculator->setCurrency($budgetLimit->transactionCurrency);
+
+            // delete budget limit so the recalculation ignores it.
+            $budgetLimit->delete();
+            $calculator->recalculateByRange();
+        }
+        // delete notes and other objects.
+        $budget->notes()->delete();
+        $budget->autoBudgets()->delete();
 
         // also delete all relations between categories and transaction journals:
         DB::table('budget_transaction_journal')->where('budget_id', $budget->id)->delete();
@@ -47,9 +79,7 @@ class BudgetDestroyService
         // also delete all relations between categories and transactions:
         DB::table('budget_transaction')->where('budget_id', $budget->id)->delete();
 
-        // also delete all budget limits
-        foreach ($budget->budgetlimits()->get() as $limit) {
-            $limit->delete();
-        }
+        $budget->delete();
+        event(new DestroyedBudget());
     }
 }

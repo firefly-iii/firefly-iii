@@ -34,28 +34,15 @@ use SplObjectStorage;
 class Calculator
 {
     public const int DEFAULT_INTERVAL             = 1;
+
     private static ?SplObjectStorage $intervalMap = null; // @phpstan-ignore-line
-    private static array             $intervals   = [];
-
-    private function containsInterval(Periodicity $periodicity): bool
-    {
-        return $this->loadIntervalMap()->contains($periodicity);
-    }
-
-    private function loadIntervalMap(): SplObjectStorage
-    {
-        if (self::$intervalMap instanceof SplObjectStorage) {
-            return self::$intervalMap;
-        }
-        self::$intervalMap = new SplObjectStorage();
-        foreach (Periodicity::cases() as $interval) {
-            $periodicityClass  = sprintf('%s\Periodicity\%s', __NAMESPACE__, $interval->name);
-            self::$intervals[] = $interval->name;
-            self::$intervalMap->attach($interval, new $periodicityClass());
-        }
-
-        return self::$intervalMap;
-    }
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    private static array $intervals               = [];
 
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
     {
@@ -76,6 +63,26 @@ class Calculator
         $interval    = $this->skipInterval($skipInterval);
 
         return $periodicity->nextDate($epoch->clone(), $interval);
+    }
+
+    private function containsInterval(Periodicity $periodicity): bool
+    {
+        return $this->loadIntervalMap()->contains($periodicity);
+    }
+
+    private function loadIntervalMap(): SplObjectStorage
+    {
+        if (self::$intervalMap instanceof SplObjectStorage) {
+            return self::$intervalMap;
+        }
+        self::$intervalMap = new SplObjectStorage();
+        foreach (Periodicity::cases() as $interval) {
+            $periodicityClass  = sprintf('%s\Periodicity\%s', __NAMESPACE__, $interval->name);
+            self::$intervals[] = $interval->name;
+            self::$intervalMap->attach($interval, new $periodicityClass());
+        }
+
+        return self::$intervalMap;
     }
 
     private function skipInterval(int $skip): int

@@ -27,8 +27,8 @@ namespace Tests\integration\Api\System;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Testing\Fluent\AssertableJson;
-use Tests\integration\TestCase;
 use Override;
+use Tests\integration\TestCase;
 
 /**
  * Class AboutControllerTest
@@ -40,7 +40,27 @@ use Override;
 final class AboutControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private ?User $user = null;
+
+    public function testGivenAuthenticatedRequestReturnsSystemInformation(): void
+    {
+        $response = $this->getJson(route('api.v1.about.index'));
+
+        $response->assertOk();
+        $response->assertJsonStructure(['data' => ['version', 'api_version', 'php_version', 'os', 'driver']]);
+    }
+
+    public function testGivenAuthenticatedRequestReturnsUserInformation(): void
+    {
+        $response = $this->getJson(route('api.v1.about.user'));
+
+        $response->assertOk();
+        $response->assertJson(fn (AssertableJson $json): AssertableJson => $json->where('data.attributes.email', $this->user->email)->where(
+            'data.attributes.role',
+            $this->user->role
+        ));
+    }
 
     #[Override]
     protected function setUp(): void
@@ -51,33 +71,5 @@ final class AboutControllerTest extends TestCase
             $this->user = $this->createAuthenticatedUser();
         }
         $this->actingAs($this->user);
-    }
-
-    public function testGivenAuthenticatedRequestReturnsSystemInformation(): void
-    {
-        $response = $this->getJson(route('api.v1.about.index'));
-
-        $response->assertOk();
-        $response->assertJsonStructure([
-            'data' => [
-                'version',
-                'api_version',
-                'php_version',
-                'os',
-                'driver',
-            ],
-        ]);
-    }
-
-    public function testGivenAuthenticatedRequestReturnsUserInformation(): void
-    {
-        $response = $this->getJson(route('api.v1.about.user'));
-
-        $response->assertOk();
-        $response->assertJson(
-            fn (AssertableJson $json): AssertableJson => $json
-                ->where('data.attributes.email', $this->user->email)
-                ->where('data.attributes.role', $this->user->role)
-        );
     }
 }

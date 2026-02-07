@@ -24,25 +24,25 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\PiggyBankUpdateRequest;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
  */
 class EditController extends Controller
 {
-    private AttachmentHelperInterface    $attachments;
+    private AttachmentHelperInterface $attachments;
     private PiggyBankRepositoryInterface $piggyRepos;
 
     /**
@@ -52,25 +52,15 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
-    }
-
-    public function resetHistory(PiggyBank $piggyBank): RedirectResponse
-    {
-        $this->piggyRepos->resetHistory($piggyBank);
-        session()->flash('success', (string) trans('firefly.piggy_history_reset'));
-
-        return redirect(route('piggy-banks.show', [$piggyBank->id]));
+            return $next($request);
+        });
     }
 
     /**
@@ -80,7 +70,7 @@ class EditController extends Controller
      */
     public function edit(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
+        $subTitle     = (string) trans('firefly.update_piggy_title', ['name'     => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.
@@ -111,7 +101,20 @@ class EditController extends Controller
         }
         session()->forget('piggy-banks.edit.fromUpdate');
 
-        return view('piggy-banks.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'piggyBank' => $piggyBank, 'preFilled' => $preFilled]);
+        return view('piggy-banks.edit', [
+            'subTitle'     => $subTitle,
+            'subTitleIcon' => $subTitleIcon,
+            'piggyBank'    => $piggyBank,
+            'preFilled'    => $preFilled,
+        ]);
+    }
+
+    public function resetHistory(PiggyBank $piggyBank): RedirectResponse
+    {
+        $this->piggyRepos->resetHistory($piggyBank);
+        session()->flash('success', (string) trans('firefly.piggy_history_reset'));
+
+        return redirect(route('piggy-banks.show', [$piggyBank->id]));
     }
 
     /**

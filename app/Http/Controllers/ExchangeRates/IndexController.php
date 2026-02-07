@@ -26,9 +26,9 @@ namespace FireflyIII\Http\Controllers\ExchangeRates;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class IndexController extends Controller
 {
@@ -40,14 +40,12 @@ class IndexController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-exchange');
-                app('view')->share('title', (string) trans('firefly.header_exchange_rates'));
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-exchange');
+            app('view')->share('title', (string) trans('firefly.header_exchange_rates'));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
         if (false === FireflyConfig::get('enable_exchange_rates', config('cer.enabled'))->data) {
             throw new NotFoundHttpException();
         }
@@ -60,6 +58,6 @@ class IndexController extends Controller
 
     public function rates(TransactionCurrency $from, TransactionCurrency $to): View
     {
-        return view('exchange-rates.rates', ['from' => $from, 'to' => $to]);
+        return view('exchange-rates.rates', ['from' => $from, 'to'   => $to]);
     }
 }

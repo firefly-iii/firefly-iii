@@ -27,7 +27,27 @@ use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class () extends Migration {
+return new class() extends Migration {
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        try {
+            Schema::table('currency_exchange_rates', static function (Blueprint $table): void {
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign('cer_to_ugi');
+                }
+                if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    $table->dropColumn('user_group_id');
+                }
+            });
+        } catch (QueryException $e) {
+            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
+            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
+        }
+    }
+
     /**
      * Run the migrations.
      *
@@ -36,38 +56,12 @@ return new class () extends Migration {
     public function up(): void
     {
         try {
-            Schema::table(
-                'currency_exchange_rates',
-                static function (Blueprint $table): void {
-                    if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                        $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
-                        $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
-                    }
+            Schema::table('currency_exchange_rates', static function (Blueprint $table): void {
+                if (!Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
+                    $table->bigInteger('user_group_id', false, true)->nullable()->after('user_id');
+                    $table->foreign('user_group_id', 'cer_to_ugi')->references('id')->on('user_groups')->onDelete('set null')->onUpdate('cascade');
                 }
-            );
-        } catch (QueryException $e) {
-            app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
-            app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
-        }
-    }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        try {
-            Schema::table(
-                'currency_exchange_rates',
-                static function (Blueprint $table): void {
-                    if ('sqlite' !== config('database.default')) {
-                        $table->dropForeign('cer_to_ugi');
-                    }
-                    if (Schema::hasColumn('currency_exchange_rates', 'user_group_id')) {
-                        $table->dropColumn('user_group_id');
-                    }
-                }
-            );
+            });
         } catch (QueryException $e) {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');

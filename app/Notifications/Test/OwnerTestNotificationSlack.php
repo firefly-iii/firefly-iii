@@ -43,8 +43,7 @@ class OwnerTestNotificationSlack extends Notification
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -53,6 +52,7 @@ class OwnerTestNotificationSlack extends Notification
     public function toSlack(OwnerNotifiable $notifiable): SlackMessage
     {
         return new SlackMessage()->content((string) trans('email.admin_test_subject'));
+
         // return new SlackMessage()->text((string) trans('email.admin_test_subject'))->to($url);
     }
 

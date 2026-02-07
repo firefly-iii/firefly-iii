@@ -57,10 +57,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         $models = config('firefly.valid_attachment_models');
-        $models = array_map(
-            static fn (string $className): string => str_replace('FireflyIII\Models\\', '', $className),
-            $models
-        );
+        $models = array_map(static fn (string $className): string => str_replace('FireflyIII\Models\\', '', $className), $models);
         $models = implode(',', $models);
         $model  = $this->convertString('attachable_type');
 

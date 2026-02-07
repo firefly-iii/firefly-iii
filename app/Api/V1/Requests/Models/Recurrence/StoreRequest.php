@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
@@ -34,6 +33,7 @@ use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -67,70 +67,7 @@ class StoreRequest extends FormRequest
         ];
         $recurrence = $this->getAllData($fields);
 
-        return [
-            'recurrence'   => $recurrence,
-            'transactions' => $this->getTransactionData(),
-            'repetitions'  => $this->getRepetitionData(),
-        ];
-    }
-
-    /**
-     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
-     * standards, but it just has a lot of ??-statements because of the fields that may or may not exist.
-     */
-    private function getTransactionData(): array
-    {
-        $return       = [];
-
-        // transaction data:
-        /** @var null|array $transactions */
-        $transactions = $this->get('transactions');
-        if (null === $transactions) {
-            return [];
-        }
-
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = $this->getSingleTransactionData($transaction);
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the repetition data as it is found in the submitted data.
-     */
-    private function getRepetitionData(): array
-    {
-        $return      = [];
-
-        // repetition data:
-        /** @var null|array $repetitions */
-        $repetitions = $this->get('repetitions');
-        if (null === $repetitions) {
-            return [];
-        }
-
-        /** @var array $repetition */
-        foreach ($repetitions as $repetition) {
-            $current  = [];
-            if (array_key_exists('type', $repetition)) {
-                $current['type'] = $repetition['type'];
-            }
-            if (array_key_exists('moment', $repetition)) {
-                $current['moment'] = $repetition['moment'];
-            }
-            if (array_key_exists('skip', $repetition)) {
-                $current['skip'] = (int) $repetition['skip'];
-            }
-            if (array_key_exists('weekend', $repetition)) {
-                $current['weekend'] = (int) $repetition['weekend'];
-            }
-
-            $return[] = $current;
-        }
-
-        return $return;
+        return ['recurrence'   => $recurrence, 'transactions' => $this->getTransactionData(), 'repetitions'  => $this->getRepetitionData()];
     }
 
     /**
@@ -181,19 +118,76 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                $this->validateRecurringConfig($validator);
-                $this->validateOneRecurrenceTransaction($validator);
-                $this->validateOneRepetition($validator);
-                $this->validateRecurrenceRepetition($validator);
-                $this->validateRepetitionMoment($validator);
-                $this->validateForeignCurrencyInformation($validator);
-                $this->validateAccountInformation($validator);
-            }
-        );
+        $validator->after(function (Validator $validator): void {
+            $this->validateRecurringConfig($validator);
+            $this->validateOneRecurrenceTransaction($validator);
+            $this->validateOneRepetition($validator);
+            $this->validateRecurrenceRepetition($validator);
+            $this->validateRepetitionMoment($validator);
+            $this->validateForeignCurrencyInformation($validator);
+            $this->validateAccountInformation($validator);
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }
+    }
+
+    /**
+     * Returns the repetition data as it is found in the submitted data.
+     */
+    private function getRepetitionData(): array
+    {
+        $return      = [];
+
+        // repetition data:
+        /** @var null|array $repetitions */
+        $repetitions = $this->get('repetitions');
+        if (null === $repetitions) {
+            return [];
+        }
+
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $current  = [];
+            if (array_key_exists('type', $repetition)) {
+                $current['type'] = $repetition['type'];
+            }
+            if (array_key_exists('moment', $repetition)) {
+                $current['moment'] = $repetition['moment'];
+            }
+            if (array_key_exists('skip', $repetition)) {
+                $current['skip'] = (int) $repetition['skip'];
+            }
+            if (array_key_exists('weekend', $repetition)) {
+                $current['weekend'] = (int) $repetition['weekend'];
+            }
+
+            $return[] = $current;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
+     * standards, but it just has a lot of ??-statements because of the fields that may or may not exist.
+     */
+    private function getTransactionData(): array
+    {
+        $return       = [];
+
+        // transaction data:
+        /** @var null|array $transactions */
+        $transactions = $this->get('transactions');
+        if (null === $transactions) {
+            return [];
+        }
+
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = $this->getSingleTransactionData($transaction);
+        }
+
+        return $return;
     }
 }

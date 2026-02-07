@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -31,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\Amount;
 
 class TransactionCurrency extends Model
 {
@@ -48,10 +48,13 @@ class TransactionCurrency extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $currencyId = (int)$value;
+            $currencyId = (int) $value;
             $currency   = self::find($currencyId);
             if (null !== $currency) {
                 $currency->refreshForUser(auth()->user());
@@ -63,17 +66,17 @@ class TransactionCurrency extends Model
         throw new NotFoundHttpException();
     }
 
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
+
     public function refreshForUser(User $user): void
     {
         $current                = $user->userGroup->currencies()->where('transaction_currencies.id', $this->id)->first();
         $native                 = Amount::getPrimaryCurrencyByUserGroup($user->userGroup);
         $this->userGroupNative  = $native->id === $this->id;
         $this->userGroupEnabled = null !== $current;
-    }
-
-    public function budgetLimits(): HasMany
-    {
-        return $this->hasMany(BudgetLimit::class);
     }
 
     public function transactionJournals(): HasMany
@@ -115,8 +118,6 @@ class TransactionCurrency extends Model
 
     protected function decimalPlaces(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

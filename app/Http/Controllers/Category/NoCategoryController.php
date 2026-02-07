@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Category;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -32,6 +31,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\Request;
@@ -58,15 +58,13 @@ class NoCategoryController extends Controller
         parent::__construct();
         app('view')->share('showBudget', true);
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.categories'));
-                app('view')->share('mainTitleIcon', 'fa-bookmark');
-                $this->journalRepos = app(JournalRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.categories'));
+            app('view')->share('mainTitleIcon', 'fa-bookmark');
+            $this->journalRepos = app(JournalRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -88,7 +86,10 @@ class NoCategoryController extends Controller
         /** @var Carbon $end */
         $page      = (int) $request->get('page');
         $pageSize  = (int) Preferences::get('listPageSize', 50)->data;
-        $subTitle  = trans('firefly.without_category_between', ['start' => $start->isoFormat($this->monthAndDayFormat), 'end' => $end->isoFormat($this->monthAndDayFormat)]);
+        $subTitle  = trans('firefly.without_category_between', [
+            'start' => $start->isoFormat($this->monthAndDayFormat),
+            'end'   => $end->isoFormat($this->monthAndDayFormat),
+        ]);
         $first     = $this->journalRepos->firstNull()->date ?? clone $start;
         $periods   = $this->getNoModelPeriodOverview('category', $first, $end);
 
@@ -97,15 +98,25 @@ class NoCategoryController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)
-            ->setLimit($pageSize)->setPage($page)->withoutCategory()
-            ->withAccountInformation()->withBudgetInformation()
+        $collector
+            ->setRange($start, $end)
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->withoutCategory()
+            ->withAccountInformation()
+            ->withBudgetInformation()
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category', [$start->format('Y-m-d'), $end->format('Y-m-d')]));
 
-        return view('categories.no-category', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
+        return view('categories.no-category', [
+            'groups'   => $groups,
+            'subTitle' => $subTitle,
+            'periods'  => $periods,
+            'start'    => $start,
+            'end'      => $end,
+        ]);
     }
 
     /**
@@ -134,13 +145,24 @@ class NoCategoryController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
-            ->withAccountInformation()->withBudgetInformation()
+        $collector
+            ->setRange($start, $end)
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->withoutCategory()
+            ->withAccountInformation()
+            ->withBudgetInformation()
             ->setTypes([TransactionTypeEnum::WITHDRAWAL->value, TransactionTypeEnum::DEPOSIT->value, TransactionTypeEnum::TRANSFER->value])
         ;
         $groups    = $collector->getPaginatedGroups();
         $groups->setPath(route('categories.no-category.all'));
 
-        return view('categories.no-category', ['groups' => $groups, 'subTitle' => $subTitle, 'periods' => $periods, 'start' => $start, 'end' => $end]);
+        return view('categories.no-category', [
+            'groups'   => $groups,
+            'subTitle' => $subTitle,
+            'periods'  => $periods,
+            'start'    => $start,
+            'end'      => $end,
+        ]);
     }
 }

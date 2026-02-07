@@ -36,7 +36,7 @@ class ExchangeRateSeeder extends Seeder
 {
     public function run(): void
     {
-        $count  = User::count();
+        $count = User::count();
         if (0 === $count) {
             app('log')->debug('Will not seed exchange rates yet.');
 
@@ -71,35 +71,28 @@ class ExchangeRateSeeder extends Seeder
         }
     }
 
-    private function getCurrency(string $code): ?TransactionCurrency
+    /**
+     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
+     */
+    private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
+    {
+        CurrencyExchangeRate::create([
+            'user_id'          => $user->id,
+            'user_group_id'    => $user->user_group_id ?? null,
+            'from_currency_id' => $from->id,
+            'to_currency_id'   => $to->id,
+            'date'             => $date,
+            'rate'             => $rate
+        ]);
+    }
+
+    private function getCurrency(string $code): null|TransactionCurrency
     {
         return TransactionCurrency::whereNull('deleted_at')->where('code', $code)->first();
     }
 
     private function hasRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date): bool
     {
-        return $user->currencyExchangeRates()
-            ->where('from_currency_id', $from->id)
-            ->where('to_currency_id', $to->id)
-            ->where('date', $date)
-            ->count() > 0
-        ;
-    }
-
-    /**
-     * @SuppressWarnings("PHPMD.ExcessiveParameterList")
-     */
-    private function addRate(User $user, TransactionCurrency $from, TransactionCurrency $to, string $date, float $rate): void
-    {
-        CurrencyExchangeRate::create(
-            [
-                'user_id'          => $user->id,
-                'user_group_id'    => $user->user_group_id ?? null,
-                'from_currency_id' => $from->id,
-                'to_currency_id'   => $to->id,
-                'date'             => $date,
-                'rate'             => $rate,
-            ]
-        );
+        return $user->currencyExchangeRates()->where('from_currency_id', $from->id)->where('to_currency_id', $to->id)->where('date', $date)->count() > 0;
     }
 }

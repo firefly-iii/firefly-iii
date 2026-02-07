@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Chart;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -67,24 +67,21 @@ class ChartRequest extends FormRequest
             'accounts'    => 'nullable|array',
             'accounts.*'  => 'exists:accounts,id',
         ];
-
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            static function (Validator $validator): void {
-                // validate transaction query data.
-                $data = $validator->getData();
-                if (!array_key_exists('accounts', $data)) {
-                    // $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
-                    return;
-                }
-                if (!is_array($data['accounts'])) {
-                    $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
-                }
+        $validator->after(static function (Validator $validator): void {
+            // validate transaction query data.
+            $data = $validator->getData();
+            if (!array_key_exists('accounts', $data)) {
+                // $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
+                return;
             }
-        );
+            if (!is_array($data['accounts'])) {
+                $validator->errors()->add('accounts', trans('validation.filled', ['attribute' => 'accounts']));
+            }
+        });
         if ($validator->fails()) {
             Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
         }

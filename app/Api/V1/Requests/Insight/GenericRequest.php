@@ -56,10 +56,7 @@ class GenericRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'start' => $this->getCarbonDate('start'),
-            'end'   => $this->getCarbonDate('end'),
-        ];
+        return ['start' => $this->getCarbonDate('start'), 'end'   => $this->getCarbonDate('end')];
     }
 
     public function getAssetAccounts(): Collection
@@ -70,31 +67,16 @@ class GenericRequest extends FormRequest
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $type = $account->accountType->type;
-            if (in_array($type, [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
+            if (in_array(
+                $type,
+                [AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value],
+                true
+            )) {
                 $return->push($account);
             }
         }
 
         return $return;
-    }
-
-    private function parseAccounts(): void
-    {
-        if (0 !== $this->accounts->count()) {
-            return;
-        }
-        $repository = app(AccountRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-        $array      = $this->get('accounts');
-        if (is_array($array)) {
-            foreach ($array as $accountId) {
-                $accountId = (int) $accountId;
-                $account   = $repository->find($accountId);
-                if (null !== $account) {
-                    $this->accounts->push($account);
-                }
-            }
-        }
     }
 
     public function getBills(): Collection
@@ -104,25 +86,6 @@ class GenericRequest extends FormRequest
         return $this->bills;
     }
 
-    private function parseBills(): void
-    {
-        if (0 !== $this->bills->count()) {
-            return;
-        }
-        $repository = app(BillRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-        $array      = $this->get('bills');
-        if (is_array($array)) {
-            foreach ($array as $billId) {
-                $billId = (int) $billId;
-                $bill   = $repository->find($billId);
-                if (null !== $bill) {
-                    $this->bills->push($bill);
-                }
-            }
-        }
-    }
-
     public function getBudgets(): Collection
     {
         $this->parseBudgets();
@@ -130,49 +93,11 @@ class GenericRequest extends FormRequest
         return $this->budgets;
     }
 
-    private function parseBudgets(): void
-    {
-        if (0 !== $this->budgets->count()) {
-            return;
-        }
-        $repository = app(BudgetRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-        $array      = $this->get('budgets');
-        if (is_array($array)) {
-            foreach ($array as $budgetId) {
-                $budgetId = (int) $budgetId;
-                $budget   = $repository->find($budgetId);
-                if (null !== $budget) {
-                    $this->budgets->push($budget);
-                }
-            }
-        }
-    }
-
     public function getCategories(): Collection
     {
         $this->parseCategories();
 
         return $this->categories;
-    }
-
-    private function parseCategories(): void
-    {
-        if (0 !== $this->categories->count()) {
-            return;
-        }
-        $repository = app(CategoryRepositoryInterface::class);
-        $repository->setUser(auth()->user());
-        $array      = $this->get('categories');
-        if (is_array($array)) {
-            foreach ($array as $categoryId) {
-                $categoryId = (int) $categoryId;
-                $category   = $repository->find($categoryId);
-                if (null !== $category) {
-                    $this->categories->push($category);
-                }
-            }
-        }
     }
 
     public function getEnd(): Carbon
@@ -230,6 +155,97 @@ class GenericRequest extends FormRequest
         return $this->tags;
     }
 
+    /**
+     * The rules that the incoming request must be matched against.
+     */
+    public function rules(): array
+    {
+        // this is cheating, but it works to initialize the collections.
+        $this->accounts   = new Collection();
+        $this->budgets    = new Collection();
+        $this->categories = new Collection();
+        $this->bills      = new Collection();
+        $this->tags       = new Collection();
+
+        return ['start' => 'required|date', 'end'   => 'required|date|after_or_equal:start'];
+    }
+
+    private function parseAccounts(): void
+    {
+        if (0 !== $this->accounts->count()) {
+            return;
+        }
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+        $array      = $this->get('accounts');
+        if (is_array($array)) {
+            foreach ($array as $accountId) {
+                $accountId = (int) $accountId;
+                $account   = $repository->find($accountId);
+                if (null !== $account) {
+                    $this->accounts->push($account);
+                }
+            }
+        }
+    }
+
+    private function parseBills(): void
+    {
+        if (0 !== $this->bills->count()) {
+            return;
+        }
+        $repository = app(BillRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+        $array      = $this->get('bills');
+        if (is_array($array)) {
+            foreach ($array as $billId) {
+                $billId = (int) $billId;
+                $bill   = $repository->find($billId);
+                if (null !== $bill) {
+                    $this->bills->push($bill);
+                }
+            }
+        }
+    }
+
+    private function parseBudgets(): void
+    {
+        if (0 !== $this->budgets->count()) {
+            return;
+        }
+        $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+        $array      = $this->get('budgets');
+        if (is_array($array)) {
+            foreach ($array as $budgetId) {
+                $budgetId = (int) $budgetId;
+                $budget   = $repository->find($budgetId);
+                if (null !== $budget) {
+                    $this->budgets->push($budget);
+                }
+            }
+        }
+    }
+
+    private function parseCategories(): void
+    {
+        if (0 !== $this->categories->count()) {
+            return;
+        }
+        $repository = app(CategoryRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+        $array      = $this->get('categories');
+        if (is_array($array)) {
+            foreach ($array as $categoryId) {
+                $categoryId = (int) $categoryId;
+                $category   = $repository->find($categoryId);
+                if (null !== $category) {
+                    $this->categories->push($category);
+                }
+            }
+        }
+    }
+
     private function parseTags(): void
     {
         if (0 !== $this->tags->count()) {
@@ -247,23 +263,5 @@ class GenericRequest extends FormRequest
                 }
             }
         }
-    }
-
-    /**
-     * The rules that the incoming request must be matched against.
-     */
-    public function rules(): array
-    {
-        // this is cheating, but it works to initialize the collections.
-        $this->accounts   = new Collection();
-        $this->budgets    = new Collection();
-        $this->categories = new Collection();
-        $this->bills      = new Collection();
-        $this->tags       = new Collection();
-
-        return [
-            'start' => 'required|date',
-            'end'   => 'required|date|after_or_equal:start',
-        ];
     }
 }

@@ -24,41 +24,30 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\AvailableBudget;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use Illuminate\Support\Facades\Log;
 
 class AvailableBudgetObserver
 {
     public function created(AvailableBudget $availableBudget): void
     {
-        // Log::debug('Observe "created" of an available budget.');
+        $this->updatePrimaryCurrencyAmount($availableBudget);
+    }
+
+    public function updated(AvailableBudget $availableBudget): void
+    {
         $this->updatePrimaryCurrencyAmount($availableBudget);
     }
 
     private function updatePrimaryCurrencyAmount(AvailableBudget $availableBudget): void
     {
-        if (!Amount::convertToPrimary($availableBudget->user)) {
-            // Log::debug('Do not update primary currency available amount of the available budget.');
-
-            return;
-        }
-        $userCurrency                   = Amount::getPrimaryCurrencyByUserGroup($availableBudget->user->userGroup);
-        $availableBudget->native_amount = null;
-        if ($availableBudget->transactionCurrency->id !== $userCurrency->id) {
-            $converter                      = new ExchangeRateConverter();
-            $converter->setUserGroup($availableBudget->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $availableBudget->native_amount = $converter->convert($availableBudget->transactionCurrency, $userCurrency, today(), $availableBudget->amount);
-        }
-        $availableBudget->saveQuietly();
-        Log::debug('Available budget primary currency amount is updated.');
-    }
-
-    public function updated(AvailableBudget $availableBudget): void
-    {
-        // Log::debug('Observe "updated" of an available budget.');
-        $this->updatePrimaryCurrencyAmount($availableBudget);
+        $params                     = new ConversionParameters();
+        $params->user               = $availableBudget->user;
+        $params->model              = $availableBudget;
+        $params->originalCurrency   = $availableBudget->transactionCurrency;
+        $params->amountField        = 'amount';
+        $params->primaryAmountField = 'native_amount';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }

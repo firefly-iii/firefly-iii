@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
@@ -33,9 +32,10 @@ use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
+use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
-use FireflyIII\Support\Facades\Amount;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillUpdateService
@@ -53,8 +53,10 @@ class BillUpdateService
 
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $factory                       = app(TransactionCurrencyFactory::class);
-            $currency                      = $factory->find((int) ($data['currency_id'] ?? null), $data['currency_code'] ?? null)
-                        ?? Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
+            $currency                      = $factory->find(
+                (int) ($data['currency_id'] ?? null),
+                $data['currency_code'] ?? null
+            ) ?? Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
 
             // enable the currency if it isn't.
             $currency->enabled             = true;
@@ -129,6 +131,12 @@ class BillUpdateService
         return $bill;
     }
 
+    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
+    {
+        /** @var null|RuleTrigger */
+        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
+    }
+
     /**
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
@@ -173,26 +181,6 @@ class BillUpdateService
         return $bill;
     }
 
-    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
-    {
-        if ($newOrder > $oldOrder) {
-            $this->user->bills()->where('order', '<=', $newOrder)->where('order', '>', $oldOrder)
-                ->where('bills.id', '!=', $bill->id)
-                ->decrement('bills.order')
-            ;
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-        if ($newOrder < $oldOrder) {
-            $this->user->bills()->where('order', '>=', $newOrder)->where('order', '<', $oldOrder)
-                ->where('bills.id', '!=', $bill->id)
-                ->increment('bills.order')
-            ;
-            $bill->order = $newOrder;
-            $bill->save();
-        }
-    }
-
     private function updateBillTriggers(Bill $bill, array $oldData, array $newData): void
     {
         Log::debug(sprintf('Now in updateBillTriggers(%d, "%s")', $bill->id, $bill->name));
@@ -226,6 +214,32 @@ class BillUpdateService
         }
     }
 
+    private function updateOrder(Bill $bill, int $oldOrder, int $newOrder): void
+    {
+        if ($newOrder > $oldOrder) {
+            $this->user
+                ->bills()
+                ->where('order', '<=', $newOrder)
+                ->where('order', '>', $oldOrder)
+                ->where('bills.id', '!=', $bill->id)
+                ->decrement('bills.order')
+            ;
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+        if ($newOrder < $oldOrder) {
+            $this->user
+                ->bills()
+                ->where('order', '>=', $newOrder)
+                ->where('order', '<', $oldOrder)
+                ->where('bills.id', '!=', $bill->id)
+                ->increment('bills.order')
+            ;
+            $bill->order = $newOrder;
+            $bill->save();
+        }
+    }
+
     private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
     {
         /** @var Rule $rule */
@@ -238,18 +252,16 @@ class BillUpdateService
 
                 continue;
             }
-            if ($trigger instanceof RuleTrigger && $trigger->trigger_value !== $oldValue && in_array($key, ['amount_more', 'amount_less'], true)
-                && 0 === bccomp($trigger->trigger_value, $oldValue)) {
+            if (
+                $trigger instanceof RuleTrigger
+                && $trigger->trigger_value !== $oldValue
+                && in_array($key, ['amount_more', 'amount_less'], true)
+                && 0 === bccomp($trigger->trigger_value, $oldValue)
+            ) {
                 Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
                 $trigger->trigger_value = $newValue;
                 $trigger->save();
             }
         }
-    }
-
-    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
-    {
-        /** @var null|RuleTrigger */
-        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
     }
 }

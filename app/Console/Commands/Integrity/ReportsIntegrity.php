@@ -45,11 +45,7 @@ class ReportsIntegrity extends Command
         if (!Schema::hasTable('users')) {
             return 1;
         }
-        $commands = [
-            'integrity:empty-objects',
-            'integrity:total-sums',
-            'integrity:file-permissions',
-        ];
+        $commands = ['integrity:empty-objects', 'integrity:total-sums', 'integrity:file-permissions'];
         foreach ($commands as $command) {
             $this->friendlyLine(sprintf('Now executing %s', $command));
             $this->call($command);

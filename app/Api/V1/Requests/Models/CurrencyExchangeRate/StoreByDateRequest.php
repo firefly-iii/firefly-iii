@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreByDateRequest extends FormRequest
@@ -42,15 +42,12 @@ class StoreByDateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return [
-            'from'  => $this->get('from'),
-            'rates' => $this->get('rates', []),
-        ];
+        return ['from'  => $this->get('from'), 'rates' => $this->get('rates', [])];
     }
 
     public function getFromCurrency(): TransactionCurrency
     {
-        return Amount::getTransactionCurrencyByCode((string)$this->get('from'));
+        return Amount::getTransactionCurrencyByCode((string) $this->get('from'));
     }
 
     /**
@@ -60,40 +57,34 @@ class StoreByDateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            'from'    => 'required|exists:transaction_currencies,code',
-            'rates'   => 'required|array',
-            'rates.*' => 'required|numeric|min:0.0000000001',
-        ];
+        return ['from'    => 'required|exists:transaction_currencies,code', 'rates'   => 'required|array', 'rates.*' => 'required|numeric|min:0.0000000001'];
     }
 
     public function withValidator(Validator $validator): void
     {
         $from = $this->getFromCurrency();
 
-        $validator->after(
-            static function (Validator $validator) use ($from): void {
-                $data  = $validator->getData();
-                $rates = $data['rates'] ?? [];
-                if (0 === count($rates)) {
-                    $validator->errors()->add('rates', 'No rates given.');
+        $validator->after(static function (Validator $validator) use ($from): void {
+            $data  = $validator->getData();
+            $rates = $data['rates'] ?? [];
+            if (0 === count($rates)) {
+                $validator->errors()->add('rates', 'No rates given.');
 
-                    return;
+                return;
+            }
+            foreach ($rates as $key => $entry) {
+                if ($key === $from->code) {
+                    $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.convert_to_itself', ['code' => $key]));
+
+                    continue;
                 }
-                foreach ($rates as $key => $entry) {
-                    if ($key === $from->code) {
-                        $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.convert_to_itself', ['code' => $key]));
 
-                        continue;
-                    }
-
-                    try {
-                        Amount::getTransactionCurrencyByCode((string)$key);
-                    } catch (FireflyException) {
-                        $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
-                    }
+                try {
+                    Amount::getTransactionCurrencyByCode((string) $key);
+                } catch (FireflyException) {
+                    $validator->errors()->add(sprintf('rates.%s', $key), trans('validation.invalid_currency_code', ['code' => $key]));
                 }
             }
-        );
+        });
     }
 }

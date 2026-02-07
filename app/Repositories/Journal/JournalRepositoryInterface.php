@@ -69,6 +69,8 @@ interface JournalRepositoryInterface
      */
     public function firstNull(): ?TransactionJournal;
 
+    public function getAllUncompletedJournals(): Collection;
+
     /**
      * Returns the destination account of the journal.
      *
@@ -96,6 +98,10 @@ interface JournalRepositoryInterface
      * @throws FireflyException
      */
     public function getSourceAccount(TransactionJournal $journal): Account;
+
+    public function getUncompletedJournals(): Collection;
+
+    public function markAsCompleted(Collection $set): void;
 
     /**
      * TODO Maybe to account repository? Do this wen reconcile is API only.

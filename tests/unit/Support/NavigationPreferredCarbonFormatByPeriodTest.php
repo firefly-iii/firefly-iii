@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use FireflyIII\Support\Navigation;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -41,13 +41,6 @@ use Tests\integration\TestCase;
 final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
 {
     private Navigation $navigation;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
 
     #[DataProvider('providePeriods')]
     public function testGivenAPeriodWhenCallPreferredCarbonFormatByPeriodThenReturnsExpectedFormat(string $period, string $expected): void
@@ -69,5 +62,12 @@ final class NavigationPreferredCarbonFormatByPeriodTest extends TestCase
         yield 'half-yearly' => ['6M', '\QQ,Y'];
 
         yield 'yearly' => ['1Y', 'Y'];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

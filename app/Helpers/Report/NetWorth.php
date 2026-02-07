@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Log;
  */
 class NetWorth implements NetWorthInterface
 {
-    private AccountRepositoryInterface  $accountRepository;
+    private AccountRepositoryInterface $accountRepository;
 
     /**
      * This method collects the user's net worth in ALL the user's currencies
@@ -90,7 +90,9 @@ class NetWorth implements NetWorthInterface
             //            Log::debug(sprintf('Balance is %s, primary balance is %s', $balance, $primaryBalance));
             // always subtract virtual balance again.
             $balance                            = '' !== (string) $account->virtual_balance ? bcsub($balance, (string) $account->virtual_balance) : $balance;
-            $primaryBalance                     = '' !== (string) $account->native_virtual_balance ? bcsub($primaryBalance, (string) $account->native_virtual_balance) : $primaryBalance;
+            $primaryBalance                     = '' !== (string) $account->native_virtual_balance
+                ? bcsub($primaryBalance, (string) $account->native_virtual_balance)
+                : $primaryBalance;
             $amountToUse                        = $usePrimary ? $primaryBalance : $balance;
             //            Log::debug(sprintf('Will use %s %s', $currencyCode, $amountToUse));
 
@@ -122,6 +124,5 @@ class NetWorth implements NetWorthInterface
     {
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountRepository->setUserGroup($userGroup);
-
     }
 }

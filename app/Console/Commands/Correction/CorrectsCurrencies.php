@@ -32,11 +32,11 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\UserGroup;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Console\Command\Command as CommandAlias;
-use FireflyIII\Support\Facades\Amount;
 
 class CorrectsCurrencies extends Command
 {
@@ -72,16 +72,16 @@ class CorrectsCurrencies extends Command
         // get all meta entries
         $meta            = AccountMeta::leftJoin('accounts', 'accounts.id', '=', 'account_meta.account_id')
             ->where('accounts.user_group_id', $userGroup->id)
-            ->where('account_meta.name', 'currency_id')->groupBy('data')->get(['data'])
+            ->where('account_meta.name', 'currency_id')
+            ->groupBy('data')
+            ->get(['data'])
         ;
         foreach ($meta as $entry) {
             $found[] = (int) $entry->data;
         }
 
         // get all from journals:
-        $journals        = TransactionJournal::where('user_group_id', $userGroup->id)
-            ->groupBy('transaction_currency_id')->get(['transaction_currency_id'])
-        ;
+        $journals        = TransactionJournal::where('user_group_id', $userGroup->id)->groupBy('transaction_currency_id')->get(['transaction_currency_id']);
         foreach ($journals as $entry) {
             $found[] = (int) $entry->transaction_currency_id;
         }
@@ -98,10 +98,9 @@ class CorrectsCurrencies extends Command
         }
 
         // get all from budget limits
-        $limits          = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
-            ->groupBy('transaction_currency_id')
-            ->get(['budget_limits.transaction_currency_id'])
-        ;
+        $limits          = BudgetLimit::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')->groupBy('transaction_currency_id')->get([
+            'budget_limits.transaction_currency_id',
+        ]);
         foreach ($limits as $entry) {
             $found[] = $entry->transaction_currency_id;
         }
@@ -113,12 +112,7 @@ class CorrectsCurrencies extends Command
         }
 
         $found           = array_values(array_unique($found));
-        $found           = array_values(
-            array_filter(
-                $found,
-                static fn (int $currencyId): bool => 0 !== $currencyId
-            )
-        );
+        $found           = array_values(array_filter($found, static fn (int $currencyId): bool => 0 !== $currencyId));
 
         $valid           = new Collection();
 

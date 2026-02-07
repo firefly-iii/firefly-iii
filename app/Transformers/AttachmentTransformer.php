@@ -63,12 +63,7 @@ class AttachmentTransformer extends AbstractTransformer
             'notes'           => $this->repository->getNoteText($attachment),
             'mime'            => $attachment->mime,
             'size'            => (int) $attachment->size,
-            'links'           => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/attachment/'.$attachment->id,
-                ],
-            ],
+            'links'           => [['rel' => 'self', 'uri' => '/attachment/'.$attachment->id]],
         ];
     }
 }

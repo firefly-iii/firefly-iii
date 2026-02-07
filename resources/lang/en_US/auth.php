@@ -20,11 +20,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
-
 declare(strict_types=1);
 
-return [
-    'failed'   => 'These credentials do not match our records.',
-    'throttle' => 'Too many login attempts. Please try again in :seconds seconds.',
-];
+return ['failed'   => 'These credentials do not match our records.', 'throttle' => 'Too many login attempts. Please try again in :seconds seconds.'];

@@ -52,43 +52,41 @@ class ChangesForV4710 extends Migration
     {
         if (!Schema::hasTable('transaction_groups')) {
             try {
-                Schema::create(
-                    'transaction_groups',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->timestamps();
-                        $table->softDeletes();
-                        $table->integer('user_id', false, true);
-                        $table->string('title', 1024)->nullable();
+                Schema::create('transaction_groups', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->timestamps();
+                    $table->softDeletes();
+                    $table->integer('user_id', false, true);
+                    $table->string('title', 1024)->nullable();
 
-                        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-                    }
-                );
+                    $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "transaction_groups": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
 
         if (!Schema::hasTable('group_journals')) {
             try {
-                Schema::create(
-                    'group_journals',
-                    static function (Blueprint $table): void {
-                        $table->increments('id');
-                        $table->integer('transaction_group_id', false, true);
-                        $table->integer('transaction_journal_id', false, true);
+                Schema::create('group_journals', static function (Blueprint $table): void {
+                    $table->increments('id');
+                    $table->integer('transaction_group_id', false, true);
+                    $table->integer('transaction_journal_id', false, true);
 
-                        $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
-                        $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
+                    $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
+                    $table->foreign('transaction_journal_id')->references('id')->on('transaction_journals')->onDelete('cascade');
 
-                        // unique combi:
-                        $table->unique(['transaction_group_id', 'transaction_journal_id'], 'unique_in_group');
-                    }
-                );
+                    // unique combi:
+                    $table->unique(['transaction_group_id', 'transaction_journal_id'], 'unique_in_group');
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not create table "group_journals": %s', $e->getMessage()));
-                app('log')->error('If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.');
+                app('log')->error(
+                    'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.'
+                );
             }
         }
     }

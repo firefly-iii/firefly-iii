@@ -33,6 +33,11 @@ use FireflyIII\Support\Facades\Steam;
  */
 class AccountMetaFactory
 {
+    public function create(array $data): ?AccountMeta
+    {
+        return AccountMeta::create($data);
+    }
+
     /**
      * Create update or delete meta data.
      */
@@ -48,9 +53,8 @@ class AccountMetaFactory
             }
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
-                return $this->create(['account_id' => $account->id, 'name' => $field, 'data' => $value]);
+                return $this->create(['account_id' => $account->id, 'name'       => $field, 'data'       => $value]);
             }
-
 
             // if $data has field and $entry is not null, update $entry:
             $entry->data = $value;
@@ -63,10 +67,5 @@ class AccountMetaFactory
         }
 
         return $entry;
-    }
-
-    public function create(array $data): ?AccountMeta
-    {
-        return AccountMeta::create($data);
     }
 }

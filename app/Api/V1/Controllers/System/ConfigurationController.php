@@ -51,13 +51,11 @@ class ConfigurationController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                $this->repository = app(UserRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->repository = app(UserRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -79,52 +77,13 @@ class ConfigurationController extends Controller
         $staticData = $this->getStaticConfiguration();
         $return     = [];
         foreach ($dynamicData as $key => $value) {
-            $return[] = [
-                'title'    => sprintf('configuration.%s', $key),
-                'value'    => $value,
-                'editable' => true,
-            ];
+            $return[] = ['title'    => sprintf('configuration.%s', $key), 'value'    => $value, 'editable' => true];
         }
         foreach ($staticData as $key => $value) {
-            $return[] = [
-                'title'    => $key,
-                'value'    => $value,
-                'editable' => false,
-            ];
+            $return[] = ['title'    => $key, 'value'    => $value, 'editable' => false];
         }
 
         return response()->api($return);
-    }
-
-    /**
-     * Get all config values.
-     *
-     * @throws FireflyException
-     */
-    private function getDynamicConfiguration(): array
-    {
-        $isDemoSite  = FireflyConfig::get('is_demo_site');
-        $updateCheck = FireflyConfig::get('permission_update_check');
-        $lastCheck   = FireflyConfig::get('last_update_check');
-        $singleUser  = FireflyConfig::get('single_user_mode');
-
-        return [
-            'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
-            'single_user_mode'        => $singleUser?->data,
-        ];
-    }
-
-    private function getStaticConfiguration(): array
-    {
-        $list   = EitherConfigKey::$static;
-        $return = [];
-        foreach ($list as $key) {
-            $return[$key] = config($key);
-        }
-
-        return $return;
     }
 
     /**
@@ -136,30 +95,18 @@ class ConfigurationController extends Controller
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
         if (str_starts_with($configKey, 'configuration.')) {
-            $data = [
-                'title'    => $configKey,
-                'value'    => $dynamic[$shortKey],
-                'editable' => true,
-            ];
+            $data = ['title'    => $configKey, 'value'    => $dynamic[$shortKey], 'editable' => true];
 
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
         if (str_starts_with($configKey, 'webhook.')) {
-            $data = [
-                'title'    => $configKey,
-                'value'    => $this->getWebhookConfiguration($configKey),
-                'editable' => false,
-            ];
+            $data = ['title'    => $configKey, 'value'    => $this->getWebhookConfiguration($configKey), 'editable' => false];
 
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
 
         // fallback
-        $data     = [
-            'title'    => $configKey,
-            'value'    => config($shortKey),
-            'editable' => false,
-        ];
+        $data     = ['title'    => $configKey, 'value'    => config($shortKey), 'editable' => false];
 
         return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
@@ -187,13 +134,40 @@ class ConfigurationController extends Controller
 
         // get updated config:
         $newConfig = $this->getDynamicConfiguration();
-        $data      = [
-            'title'    => $name,
-            'value'    => $newConfig[$shortName],
-            'editable' => true,
-        ];
+        $data      = ['title'    => $name, 'value'    => $newConfig[$shortName], 'editable' => true];
 
         return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
+    }
+
+    /**
+     * Get all config values.
+     *
+     * @throws FireflyException
+     */
+    private function getDynamicConfiguration(): array
+    {
+        $isDemoSite  = FireflyConfig::get('is_demo_site');
+        $updateCheck = FireflyConfig::get('permission_update_check');
+        $lastCheck   = FireflyConfig::get('last_update_check');
+        $singleUser  = FireflyConfig::get('single_user_mode');
+
+        return [
+            'is_demo_site'            => $isDemoSite?->data,
+            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
+            'single_user_mode'        => $singleUser?->data,
+        ];
+    }
+
+    private function getStaticConfiguration(): array
+    {
+        $list   = EitherConfigKey::$static;
+        $return = [];
+        foreach ($list as $key) {
+            $return[$key] = config($key);
+        }
+
+        return $return;
     }
 
     private function getWebhookConfiguration(string $configKey): array

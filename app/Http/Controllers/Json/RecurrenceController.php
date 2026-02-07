@@ -24,16 +24,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class RecurrenceController
@@ -50,13 +50,11 @@ class RecurrenceController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            function ($request, $next) {
-                $this->recurring = app(RecurringRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            $this->recurring = app(RecurringRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -183,21 +181,21 @@ class RecurrenceController extends Controller
             $yearly     = sprintf('yearly,%s', $date->format('Y-m-d'));
             $yearlyDate = $date->isoFormat((string) trans('config.month_and_day_no_year_js', [], $locale));
             $result     = [
-                'daily'  => ['label' => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
+                'daily'  => ['label'    => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => [
-                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
+                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday'    => $dayOfWeek]),
                     'selected' => str_starts_with($preSelected, 'weekly'),
                 ],
                 $monthly => [
-                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
+                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth'    => $date->day]),
                     'selected' => str_starts_with($preSelected, 'monthly'),
                 ],
                 $ndom    => [
-                    'label'    => (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
+                    'label'    => (string) trans('firefly.recurring_ndom', ['weekday'    => $dayOfWeek, 'dayOfMonth' => $date->weekOfMonth]),
                     'selected' => str_starts_with($preSelected, 'ndom'),
                 ],
                 $yearly  => [
-                    'label'    => (string) trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
+                    'label'    => (string) trans('firefly.recurring_yearly', ['date'    => $yearlyDate]),
                     'selected' => str_starts_with($preSelected, 'yearly'),
                 ],
             ];

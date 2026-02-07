@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Bill;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsValidPositiveAmount;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 use TypeError;
@@ -95,33 +95,31 @@ class StoreRequest extends FormRequest
      */
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            static function (Validator $validator): void {
-                $data   = $validator->getData();
-                $min    = $data['amount_min'] ?? '0';
-                $max    = $data['amount_max'] ?? '0';
+        $validator->after(static function (Validator $validator): void {
+            $data   = $validator->getData();
+            $min    = $data['amount_min'] ?? '0';
+            $max    = $data['amount_max'] ?? '0';
 
-                if (is_array($min) || is_array($max)) {
-                    $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
-                    $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
-                    $min = '0';
-                    $max = '0';
-                }
-                $result = false;
-
-                try {
-                    $result = bccomp($min, $max);
-                } catch (ValueError $e) {
-                    Log::error($e->getMessage());
-                    $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
-                    $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
-                }
-
-                if (1 === $result) {
-                    $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
-                }
+            if (is_array($min) || is_array($max)) {
+                $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
+                $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
+                $min = '0';
+                $max = '0';
             }
-        );
+            $result = false;
+
+            try {
+                $result = bccomp($min, $max);
+            } catch (ValueError $e) {
+                Log::error($e->getMessage());
+                $validator->errors()->add('amount_min', (string) trans('validation.generic_invalid'));
+                $validator->errors()->add('amount_max', (string) trans('validation.generic_invalid'));
+            }
+
+            if (1 === $result) {
+                $validator->errors()->add('amount_min', (string) trans('validation.amount_min_over_max'));
+            }
+        });
         $failed = false;
 
         try {

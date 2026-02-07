@@ -98,6 +98,77 @@ abstract class Controller extends BaseController
         });
     }
 
+    /**
+     * Method to help build URL's.
+     */
+    final protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+
+                continue;
+            }
+            $params[$key] = $value;
+        }
+
+        return $return.http_build_query($params);
+    }
+
+    final protected function getManager(): Manager
+    {
+        // create some objects:
+        $manager = new Manager();
+        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        return $manager;
+    }
+
+    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
+    {
+        $manager  = new Manager();
+        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
+
+        // TODO add stuff to path?
+
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $objects  = $paginator->getCollection();
+
+        // the transformer, at this point, needs to collect information that ALL items in the collection
+        // require, like meta-data and stuff like that, and save it for later.
+        // $objects  = $transformer->collectMetaData($objects);
+        $paginator->setCollection($objects);
+
+        $resource = new FractalCollection($objects, $transformer, $key);
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return $manager->createData($resource)->toArray();
+    }
+
+    /**
+     * Returns a JSON API object and returns it.
+     *
+     * @param array<int, mixed>|Model $object
+     */
+    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
+    {
+        // create some objects:
+        $manager  = new Manager();
+        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($object, $transformer, $key);
+
+        return $manager->createData($resource)->toArray();
+    }
+
     #[Deprecated(message: <<<'TXT'
         use Request classes
          Method to grab all parameters from the URL
@@ -169,76 +240,5 @@ abstract class Controller extends BaseController
         return $bag;
 
         // return $this->getSortParameters($bag);
-    }
-
-    /**
-     * Method to help build URL's.
-     */
-    final protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-
-                continue;
-            }
-            $params[$key] = $value;
-        }
-
-        return $return.http_build_query($params);
-    }
-
-    final protected function getManager(): Manager
-    {
-        // create some objects:
-        $manager = new Manager();
-        $baseUrl = request()->getSchemeAndHttpHost().'/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        return $manager;
-    }
-
-    final protected function jsonApiList(string $key, LengthAwarePaginator $paginator, AbstractTransformer $transformer): array
-    {
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1/', request()->getSchemeAndHttpHost());
-
-        // TODO add stuff to path?
-
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $objects  = $paginator->getCollection();
-
-        // the transformer, at this point, needs to collect information that ALL items in the collection
-        // require, like meta-data and stuff like that, and save it for later.
-        // $objects  = $transformer->collectMetaData($objects);
-        $paginator->setCollection($objects);
-
-        $resource = new FractalCollection($objects, $transformer, $key);
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return $manager->createData($resource)->toArray();
-    }
-
-    /**
-     * Returns a JSON API object and returns it.
-     *
-     * @param array<int, mixed>|Model $object
-     */
-    final protected function jsonApiObject(string $key, array|Model $object, AbstractTransformer $transformer): array
-    {
-        // create some objects:
-        $manager  = new Manager();
-        $baseUrl  = sprintf('%s/api/v1', request()->getSchemeAndHttpHost());
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $resource = new Item($object, $transformer, $key);
-
-        return $manager->createData($resource)->toArray();
     }
 }

@@ -58,6 +58,11 @@ trait UserGroupTrait
         return $this->user;
     }
 
+    public function getUserGroup(): ?UserGroup
+    {
+        return $this->userGroup;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -77,11 +82,6 @@ trait UserGroupTrait
         throw new FireflyException(sprintf('Object is %s, not User.', $class));
     }
 
-    public function getUserGroup(): ?UserGroup
-    {
-        return $this->userGroup;
-    }
-
     /**
      * TODO This method does not check if the user has access to this particular user group.
      */
@@ -98,10 +98,7 @@ trait UserGroupTrait
      */
     public function setUserGroupById(int $userGroupId): void
     {
-        $memberships = GroupMembership::where('user_id', $this->user->id)
-            ->where('user_group_id', $userGroupId)
-            ->count()
-        ;
+        $memberships = GroupMembership::where('user_id', $this->user->id)->where('user_group_id', $userGroupId)->count();
         if (0 === $memberships) {
             throw new FireflyException(sprintf('User #%d has no access to administration #%d', $this->user->id, $userGroupId));
         }

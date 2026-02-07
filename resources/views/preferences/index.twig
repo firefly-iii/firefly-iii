@@ -24,6 +24,18 @@
                                         aria-expanded="false">{{ 'preferences_notifications'|_ }}</a></li>
                     </ul>
                     <div class="tab-content">
+                        {% if errors.any %}
+                        <div class="alert alert-danger" role="alert">
+                            <ul>
+                                {% for bag in errors.getBags %}
+                                    {% for error in bag.all %}
+                                    <li>{{  error }}</li>
+                                {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
                         <div class="tab-pane active" id="general">
                             {# general settings here #}
                             <div class="row">
@@ -374,7 +386,7 @@
                                         {{ ExpandedForm.text('ntfy_topic', ntfyTopic, {}) }}
                                         {{ ExpandedForm.checkbox('ntfy_auth','1', ntfyAuth, {}) }}
                                         {{ ExpandedForm.text('ntfy_user', ntfyUser, {}) }}
-                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {}) }}
+                                        {{ ExpandedForm.passwordWithValue('ntfy_pass', ntfyPass, {autocomplete: 'off'}) }}
                                         <p>
                                         {{ 'pref_notifications_settings_help'|_ }}
                                         </p>

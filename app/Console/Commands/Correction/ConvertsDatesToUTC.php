@@ -62,14 +62,6 @@ class ConvertsDatesToUTC extends Command
         return Command::SUCCESS;
     }
 
-    private function ConvertModeltoUTC(string $model, array $fields): void
-    {
-        /** @var string $field */
-        foreach ($fields as $field) {
-            $this->convertFieldtoUTC($model, $field);
-        }
-    }
-
     private function convertFieldtoUTC(string $model, string $field): void
     {
         $this->info(sprintf('Converting %s.%s to UTC', $model, $field));
@@ -90,14 +82,20 @@ class ConvertsDatesToUTC extends Command
             return;
         }
         $this->friendlyInfo(sprintf('Converting field "%s" of model "%s" to UTC.', $field, $shortModel));
-        $items->each(
-            static function ($item) use ($field, $timezoneField): void {
-                $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
-                $date->setTimezone('UTC');
-                $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
-                $item->{$timezoneField} = 'UTC';                        // @phpstan-ignore-line
-                $item->save();
-            }
-        );
+        $items->each(static function ($item) use ($field, $timezoneField): void {
+            $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField}); // @phpstan-ignore-line
+            $date->setTimezone('UTC');
+            $item->{$field}         = $date->format('Y-m-d H:i:s'); // @phpstan-ignore-line
+            $item->{$timezoneField} = 'UTC'; // @phpstan-ignore-line
+            $item->save();
+        });
+    }
+
+    private function ConvertModeltoUTC(string $model, array $fields): void
+    {
+        /** @var string $field */
+        foreach ($fields as $field) {
+            $this->convertFieldtoUTC($model, $field);
+        }
     }
 }

@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * BalanceControllerTest.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -26,8 +25,8 @@ declare(strict_types=1);
 namespace Tests\integration\Api\Chart;
 
 use FireflyIII\User;
-use Override;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Override;
 use Tests\integration\TestCase;
 
 /**
@@ -38,7 +37,23 @@ use Tests\integration\TestCase;
 final class BalanceControllerTest extends TestCase
 {
     use RefreshDatabase;
+
     private ?User $user = null;
+
+    public function testGetOverviewChart(): void
+    {
+        $this->actingAs($this->user);
+        $params   = ['start' => '2024-01-01', 'end'   => '2024-01-31'];
+        $response = $this->getJson(route('api.v1.chart.balance.balance').'?'.http_build_query($params));
+        $response->assertStatus(200);
+    }
+
+    public function testGetOverviewChartFails(): void
+    {
+        $this->actingAs($this->user);
+        $response = $this->getJson(route('api.v1.chart.balance.balance'));
+        $response->assertStatus(422);
+    }
 
     #[Override]
     protected function setUp(): void
@@ -49,25 +64,5 @@ final class BalanceControllerTest extends TestCase
             $this->user = $this->createAuthenticatedUser();
         }
         $this->actingAs($this->user);
-    }
-
-    public function testGetOverviewChartFails(): void
-    {
-        $this->actingAs($this->user);
-        $response = $this->getJson(route('api.v1.chart.balance.balance'));
-        $response->assertStatus(422);
-
-    }
-
-    public function testGetOverviewChart(): void
-    {
-        $this->actingAs($this->user);
-        $params   = [
-            'start' => '2024-01-01',
-            'end'   => '2024-01-31',
-        ];
-        $response = $this->getJson(route('api.v1.chart.balance.balance').'?'.http_build_query($params));
-        $response->assertStatus(200);
-
     }
 }

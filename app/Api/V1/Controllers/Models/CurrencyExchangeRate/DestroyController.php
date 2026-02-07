@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers\Models\CurrencyExchangeRate;
 
-use Illuminate\Http\Request;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate\DestroyRequest;
@@ -35,38 +34,31 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\ExchangeRate\ExchangeRateRepositoryInterface;
 use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class DestroyController extends Controller
 {
     use ValidatesUserGroupTrait;
 
     public const string RESOURCE_KEY = 'exchange-rates';
+
     protected array $acceptedRoles   = [UserRoleEnum::OWNER];
     private ExchangeRateRepositoryInterface $repository;
 
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function (Request $request, $next) {
-                $this->repository = app(ExchangeRateRepositoryInterface::class);
-                $this->repository->setUserGroup($this->validateUserGroup($request));
+        $this->middleware(function (Request $request, $next) {
+            $this->repository = app(ExchangeRateRepositoryInterface::class);
+            $this->repository->setUserGroup($this->validateUserGroup($request));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function destroy(DestroyRequest $request, TransactionCurrency $from, TransactionCurrency $to): JsonResponse
     {
         $this->repository->deleteRates($from, $to);
-
-        return response()->json([], 204);
-    }
-
-    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
-    {
-        $this->repository->deleteRate($exchangeRate);
 
         return response()->json([], 204);
     }
@@ -80,6 +72,13 @@ class DestroyController extends Controller
         if (!$exchangeRate instanceof CurrencyExchangeRate) {
             throw new FireflyException('Bla');
         }
+
+        return response()->json([], 204);
+    }
+
+    public function destroySingleById(CurrencyExchangeRate $exchangeRate): JsonResponse
+    {
+        $this->repository->deleteRate($exchangeRate);
 
         return response()->json([], 204);
     }

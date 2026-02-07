@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * SearchQueryRequest.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -30,21 +31,17 @@ class SearchQueryRequest extends ApiRequest
 {
     public function rules(): array
     {
-        return [
-            'query' => sprintf('min:0|max:500|%s', $this->required),
-        ];
+        return ['query' => sprintf('min:0|max:500|%s', $this->required)];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $query = $this->convertString('query');
-                $this->attributes->set('query', $query);
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $query = $this->convertString('query');
+            $this->attributes->set('query', $query);
+        });
     }
 }

@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\PiggyBank;
 
-use FireflyIII\Support\Facades\Preferences;
 use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use FireflyIII\Support\Facades\Amount;
 
 /**
  * Class AmountController
@@ -51,16 +51,14 @@ class AmountController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.piggyBanks'));
-                app('view')->share('mainTitleIcon', 'fa-bullseye');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.piggyBanks'));
+            app('view')->share('mainTitleIcon', 'fa-bullseye');
 
-                $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
+            $this->piggyRepos = app(PiggyBankRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -86,7 +84,7 @@ class AmountController extends Controller
                 $leftOnAccount,
                 $totalSaved,
                 $leftToSave,
-                $maxAmount,
+                $maxAmount
             ));
 
             $accounts[]    = [
@@ -100,7 +98,7 @@ class AmountController extends Controller
         }
         $total      = (float) $total; // intentional float.
 
-        return view('piggy-banks.add', ['piggyBank' => $piggyBank, 'accounts' => $accounts, 'total' => $total]);
+        return view('piggy-banks.add', ['piggyBank' => $piggyBank, 'accounts'  => $accounts, 'total'     => $total]);
     }
 
     /**
@@ -129,7 +127,7 @@ class AmountController extends Controller
             $total         = bcadd($total, $leftOnAccount);
         }
 
-        return view('piggy-banks.add-mobile', ['piggyBank' => $piggyBank, 'total' => $total, 'accounts' => $accounts]);
+        return view('piggy-banks.add-mobile', ['piggyBank' => $piggyBank, 'total'     => $total, 'accounts'  => $accounts]);
     }
 
     /**
@@ -168,7 +166,13 @@ class AmountController extends Controller
             $piggyBank->refresh();
         }
         if (0 !== bccomp($total, '0')) {
-            session()->flash('success', (string) trans('firefly.added_amount_to_piggy', ['amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]));
+            session()->flash(
+                'success',
+                (string) trans('firefly.added_amount_to_piggy', [
+                    'amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false),
+                    'name'   => $piggyBank->name,
+                ])
+            );
             Preferences::mark();
 
             return redirect(route('piggy-banks.index'));
@@ -176,10 +180,10 @@ class AmountController extends Controller
         Log::error(sprintf('Cannot add %s because canAddAmount returned false.', $total));
         session()->flash(
             'error',
-            (string) trans(
-                'firefly.cannot_add_amount_piggy',
-                ['amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
-            )
+            (string) trans('firefly.cannot_add_amount_piggy', [
+                'amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false),
+                'name'   => e($piggyBank->name),
+            ])
         );
 
         return redirect(route('piggy-banks.index'));
@@ -213,10 +217,10 @@ class AmountController extends Controller
         if (0 !== bccomp($total, '0')) {
             session()->flash(
                 'success',
-                (string) trans(
-                    'firefly.removed_amount_from_piggy',
-                    ['amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => $piggyBank->name]
-                )
+                (string) trans('firefly.removed_amount_from_piggy', [
+                    'amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false),
+                    'name'   => $piggyBank->name,
+                ])
             );
             Preferences::mark();
 
@@ -225,10 +229,10 @@ class AmountController extends Controller
 
         session()->flash(
             'error',
-            (string) trans(
-                'firefly.cannot_remove_from_piggy',
-                ['amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false), 'name' => e($piggyBank->name)]
-            )
+            (string) trans('firefly.cannot_remove_from_piggy', [
+                'amount' => Amount::formatAnything($piggyBank->transactionCurrency, $total, false),
+                'name'   => e($piggyBank->name),
+            ])
         );
 
         return redirect(route('piggy-banks.index'));
@@ -243,13 +247,10 @@ class AmountController extends Controller
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
-            $accounts[] = [
-                'account'      => $account,
-                'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account),
-            ];
+            $accounts[] = ['account'      => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
         }
 
-        return view('piggy-banks.remove', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
+        return view('piggy-banks.remove', ['piggyBank' => $piggyBank, 'accounts'  => $accounts]);
     }
 
     /**
@@ -261,12 +262,9 @@ class AmountController extends Controller
     {
         $accounts = [];
         foreach ($piggyBank->accounts as $account) {
-            $accounts[] = [
-                'account'      => $account,
-                'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account),
-            ];
+            $accounts[] = ['account'      => $account, 'saved_so_far' => $this->piggyRepos->getCurrentAmount($piggyBank, $account)];
         }
 
-        return view('piggy-banks.remove-mobile', ['piggyBank' => $piggyBank, 'accounts' => $accounts]);
+        return view('piggy-banks.remove-mobile', ['piggyBank' => $piggyBank, 'accounts'  => $accounts]);
     }
 }

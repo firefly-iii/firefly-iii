@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
 use Illuminate\Support\Facades\Log;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -43,13 +43,6 @@ use Tests\integration\TestCase;
 final class NavigationStartOfPeriodTest extends TestCase
 {
     private Navigation $navigation;
-
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
 
     #[DataProvider('provideDates')]
     public function testGivenADateAndFrequencyWhenCalculateTheDateThenReturnsTheExpectedDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
@@ -110,14 +103,14 @@ final class NavigationStartOfPeriodTest extends TestCase
     }
 
     #[DataProvider('provideUnknownFrequencies')]
-    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(string $frequency, Carbon $from, Carbon $expected): void
-    {
+    public function testGivenADateAndUnknownFrequencyWhenCalculateTheDateThenReturnsTheSameDateSuccessful(
+        string $frequency,
+        Carbon $from,
+        Carbon $expected
+    ): void {
         Log::spy();
 
-        Log::shouldReceive('error')
-            ->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))
-            ->andReturnNull()
-        ;
+        Log::shouldReceive('error')->with(sprintf('Cannot do startOfPeriod for $repeat_freq "%s"', $frequency))->andReturnNull();
 
         $period = $this->navigation->startOfPeriod($from, $frequency);
         $this->assertSame($expected->toDateString(), $period->toDateString());
@@ -130,5 +123,12 @@ final class NavigationStartOfPeriodTest extends TestCase
         yield 'unknown' => ['unknown', Carbon::now(), Carbon::now()->startOfDay()];
 
         yield 'empty' => ['', Carbon::now(), Carbon::now()->startOfDay()];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

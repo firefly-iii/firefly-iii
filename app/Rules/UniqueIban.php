@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use Illuminate\Support\Facades\Log;
 use Closure;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Account;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class UniqueIban
@@ -41,8 +41,10 @@ class UniqueIban implements ValidationRule
     /**
      * Create a new rule instance.
      */
-    public function __construct(private readonly ?Account $account, ?string $expectedType)
-    {
+    public function __construct(
+        private readonly ?Account $account,
+        ?string $expectedType
+    ) {
         if (null === $expectedType) {
             return;
         }
@@ -68,13 +70,6 @@ class UniqueIban implements ValidationRule
     public function message(): string
     {
         return (string) trans('validation.unique_iban_for_user');
-    }
-
-    public function validate(string $attribute, mixed $value, Closure $fail): void
-    {
-        if (!$this->passes($attribute, $value)) {
-            $fail((string) trans('validation.unique_iban_for_user'));
-        }
     }
 
     /**
@@ -106,21 +101,47 @@ class UniqueIban implements ValidationRule
             $count = $this->countHits($type, $value);
             Log::debug(sprintf('Count for "%s" and IBAN "%s" is %d', $type, $value, $count));
             if ($count > $max) {
-                Log::debug(
-                    sprintf(
-                        'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
-                        $value,
-                        $count,
-                        $type,
-                        implode(', ', $this->expectedTypes)
-                    )
-                );
+                Log::debug(sprintf(
+                    'IBAN "%s" is in use with %d account(s) of type "%s", which is too much for expected types "%s"',
+                    $value,
+                    $count,
+                    $type,
+                    implode(', ', $this->expectedTypes)
+                ));
 
                 return false;
             }
         }
 
         return true;
+    }
+
+    public function validate(string $attribute, mixed $value, Closure $fail): void
+    {
+        if (!$this->passes($attribute, $value)) {
+            $fail((string) trans('validation.unique_iban_for_user'));
+        }
+    }
+
+    private function countHits(string $type, string $iban): int
+    {
+        $typesArray = [$type];
+        if ('liabilities' === $type) {
+            $typesArray = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+        }
+        $query      = auth()
+            ->user()
+            ->accounts()
+            ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+            ->where('accounts.iban', $iban)
+            ->whereIn('account_types.type', $typesArray)
+        ;
+
+        if ($this->account instanceof Account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+
+        return $query->count();
     }
 
     private function getMaxOccurrences(): array
@@ -144,26 +165,5 @@ class UniqueIban implements ValidationRule
         }
 
         return $maxCounts;
-    }
-
-    private function countHits(string $type, string $iban): int
-    {
-        $typesArray = [$type];
-        if ('liabilities' === $type) {
-            $typesArray = [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
-        }
-        $query
-                    = auth()->user()
-                        ->accounts()
-                        ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                        ->where('accounts.iban', $iban)
-                        ->whereIn('account_types.type', $typesArray)
-        ;
-
-        if ($this->account instanceof Account) {
-            $query->where('accounts.id', '!=', $this->account->id);
-        }
-
-        return $query->count();
     }
 }

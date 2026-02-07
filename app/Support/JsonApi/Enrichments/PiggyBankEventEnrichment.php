@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * PiggyBankEventEnrichment.php
  * Copyright (c) 2025 james@firefly-iii.org
@@ -38,14 +37,27 @@ use Illuminate\Support\Facades\Log;
 
 class PiggyBankEventEnrichment implements EnrichmentInterface
 {
-    private array      $accountCurrencies = [];      // @phpstan-ignore-line
-    private array      $accountIds        = [];      // @phpstan-ignore-line
+    private array $accountCurrencies = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    private array $accountIds        = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private Collection $collection;
-    private array      $currencies        = [];
-    private array      $groupIds          = [];
-    private array      $ids               = [];
-    private array      $journalIds        = [];
-    private array      $piggyBankIds      = [];
+    private array $currencies        = [];
+    private array $groupIds          = [];
+    private array $ids               = [];
+    private array $journalIds        = [];
+    private array $piggyBankIds      = [];
+
     // private bool       $convertToPrimary  = false;
     // private TransactionCurrency $primaryCurrency;
 
@@ -83,9 +95,9 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     private function appendCollectedData(): void
     {
         $this->collection = $this->collection->map(function (PiggyBankEvent $item): PiggyBankEvent {
-            $id         = (int)$item->id;
-            $piggyId    = (int)$item->piggy_bank_id;
-            $journalId  = (int)$item->transaction_journal_id;
+            $id         = (int) $item->id;
+            $piggyId    = (int) $item->piggy_bank_id;
+            $journalId  = (int) $item->transaction_journal_id;
             $currency   = null;
             if (array_key_exists($piggyId, $this->accountIds)) {
                 $accountId = $this->accountIds[$piggyId];
@@ -94,23 +106,22 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
                 }
             }
             $meta       = [
-                'transaction_group_id' => array_key_exists($journalId, $this->groupIds) ? (string)$this->groupIds[$journalId] : null,
+                'transaction_group_id' => array_key_exists($journalId, $this->groupIds) ? (string) $this->groupIds[$journalId] : null,
                 'currency'             => $currency,
             ];
             $item->meta = $meta;
 
             return $item;
         });
-
     }
 
     private function collectIds(): void
     {
         /** @var PiggyBankEvent $event */
         foreach ($this->collection as $event) {
-            $this->ids[]                         = (int)$event->id;
-            $this->journalIds[(int)$event->id]   = (int)$event->transaction_journal_id;
-            $this->piggyBankIds[(int)$event->id] = (int)$event->piggy_bank_id;
+            $this->ids[]                          = (int) $event->id;
+            $this->journalIds[(int) $event->id]   = (int) $event->transaction_journal_id;
+            $this->piggyBankIds[(int) $event->id] = (int) $event->piggy_bank_id;
         }
         $this->ids = array_unique($this->ids);
         // collect groups with journal info.
@@ -118,15 +129,15 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
 
         /** @var TransactionJournal $item */
         foreach ($set as $item) {
-            $this->groupIds[(int)$item->id] = (int)$item->transaction_group_id;
+            $this->groupIds[(int) $item->id] = (int) $item->transaction_group_id;
         }
 
         // collect account info.
         $set       = DB::table('account_piggy_bank')->whereIn('piggy_bank_id', $this->piggyBankIds)->get(['piggy_bank_id', 'account_id']);
         foreach ($set as $item) {
-            $id = (int)$item->piggy_bank_id;
+            $id = (int) $item->piggy_bank_id;
             if (!array_key_exists($id, $this->accountIds)) {
-                $this->accountIds[$id] = (int)$item->account_id;
+                $this->accountIds[$id] = (int) $item->account_id;
             }
         }
 
@@ -135,8 +146,8 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
 
         /** @var AccountMeta $item */
         foreach ($set as $item) {
-            $accountId                           = (int)$item->account_id;
-            $currencyId                          = (int)$item->data;
+            $accountId                           = (int) $item->account_id;
+            $currencyId                          = (int) $item->data;
             if (!array_key_exists($currencyId, $this->currencies)) {
                 $this->currencies[$currencyId] = Amount::getTransactionCurrencyById($currencyId);
             }

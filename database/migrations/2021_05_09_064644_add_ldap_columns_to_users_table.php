@@ -36,12 +36,9 @@ class AddLdapColumnsToUsersTable extends Migration
     {
         if (Schema::hasColumn('users', 'domain')) {
             try {
-                Schema::table(
-                    'users',
-                    static function (Blueprint $table): void {
-                        $table->dropColumn(['domain']);
-                    }
-                );
+                Schema::table('users', static function (Blueprint $table): void {
+                    $table->dropColumn(['domain']);
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
@@ -58,12 +55,9 @@ class AddLdapColumnsToUsersTable extends Migration
     {
         if (!Schema::hasColumn('users', 'domain')) {
             try {
-                Schema::table(
-                    'users',
-                    static function (Blueprint $table): void {
-                        $table->string('domain')->nullable();
-                    }
-                );
+                Schema::table('users', static function (Blueprint $table): void {
+                    $table->string('domain')->nullable();
+                });
             } catch (QueryException $e) {
                 app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
                 app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');

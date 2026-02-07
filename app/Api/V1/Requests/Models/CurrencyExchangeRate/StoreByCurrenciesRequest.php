@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\CurrencyExchangeRate;
 
-use Illuminate\Contracts\Validation\Validator;
 use Carbon\Carbon;
 use Carbon\Exceptions\InvalidFormatException;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreByCurrenciesRequest extends FormRequest
@@ -46,31 +46,27 @@ class StoreByCurrenciesRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
-            '*' => 'required|numeric|min:0.0000000001',
-        ];
+        return ['*' => 'required|numeric|min:0.0000000001'];
     }
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            static function (Validator $validator): void {
-                $data = $validator->getData();
-                foreach ($data as $date => $rate) {
-                    try {
-                        Carbon::createFromFormat('Y-m-d', $date);
-                    } catch (InvalidFormatException) {
-                        $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
+        $validator->after(static function (Validator $validator): void {
+            $data = $validator->getData();
+            foreach ($data as $date => $rate) {
+                try {
+                    Carbon::createFromFormat('Y-m-d', $date);
+                } catch (InvalidFormatException) {
+                    $validator->errors()->add('date', trans('validation.date', ['attribute' => 'date']));
 
-                        return;
-                    }
-                    if (!is_numeric($rate)) {
-                        $validator->errors()->add('rate', trans('validation.number', ['attribute' => 'rate']));
+                    return;
+                }
+                if (!is_numeric($rate)) {
+                    $validator->errors()->add('rate', trans('validation.number', ['attribute' => 'rate']));
 
-                        return;
-                    }
+                    return;
                 }
             }
-        );
+        });
     }
 }

@@ -104,6 +104,48 @@ class BudgetController extends Controller
         return response()->json($this->clean($data));
     }
 
+    private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
+    {
+        $amount    = '0';
+        $limit     = null;
+        $converter = new ExchangeRateConverter();
+
+        /** @var BudgetLimit $current */
+        foreach ($limits as $current) {
+            if ($this->convertToPrimary) {
+                if ($current->transaction_currency_id === $this->primaryCurrency->id) {
+                    // simply add it.
+                    $amount = bcadd($amount, (string) $current->amount);
+                    Log::debug(sprintf('Set amount in limit to %s', $amount));
+                }
+                if ($current->transaction_currency_id !== $this->primaryCurrency->id) {
+                    // convert and then add it.
+                    $converted = $converter->convert($current->transactionCurrency, $this->primaryCurrency, $current->start_date, $current->amount);
+                    $amount    = bcadd($amount, $converted);
+                    Log::debug(sprintf(
+                        'Budgeted in limit #%d: %s %s, converted to %s %s',
+                        $current->id,
+                        $current->transactionCurrency->code,
+                        $current->amount,
+                        $this->primaryCurrency->code,
+                        $converted
+                    ));
+                    Log::debug(sprintf('Set amount in limit to %s', $amount));
+                }
+            }
+            if ($current->transaction_currency_id === $currencyId) {
+                $limit = $current;
+            }
+        }
+        if (null !== $limit && $this->convertToPrimary) {
+            // convert and add all amounts.
+            $limit->amount = Steam::positive($amount);
+            Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
+        }
+
+        return $limit;
+    }
+
     /**
      * @throws FireflyException
      */
@@ -249,47 +291,5 @@ class BudgetController extends Controller
         }
 
         return $return;
-    }
-
-    private function filterLimit(int $currencyId, Collection $limits): ?BudgetLimit
-    {
-        $amount    = '0';
-        $limit     = null;
-        $converter = new ExchangeRateConverter();
-
-        /** @var BudgetLimit $current */
-        foreach ($limits as $current) {
-            if ($this->convertToPrimary) {
-                if ($current->transaction_currency_id === $this->primaryCurrency->id) {
-                    // simply add it.
-                    $amount = bcadd($amount, (string) $current->amount);
-                    Log::debug(sprintf('Set amount in limit to %s', $amount));
-                }
-                if ($current->transaction_currency_id !== $this->primaryCurrency->id) {
-                    // convert and then add it.
-                    $converted = $converter->convert($current->transactionCurrency, $this->primaryCurrency, $current->start_date, $current->amount);
-                    $amount    = bcadd($amount, $converted);
-                    Log::debug(sprintf(
-                        'Budgeted in limit #%d: %s %s, converted to %s %s',
-                        $current->id,
-                        $current->transactionCurrency->code,
-                        $current->amount,
-                        $this->primaryCurrency->code,
-                        $converted
-                    ));
-                    Log::debug(sprintf('Set amount in limit to %s', $amount));
-                }
-            }
-            if ($current->transaction_currency_id === $currencyId) {
-                $limit = $current;
-            }
-        }
-        if (null !== $limit && $this->convertToPrimary) {
-            // convert and add all amounts.
-            $limit->amount = Steam::positive($amount);
-            Log::debug(sprintf('Final amount in limit with converted amount %s', $limit->amount));
-        }
-
-        return $limit;
     }
 }

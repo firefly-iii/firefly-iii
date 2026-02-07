@@ -42,19 +42,6 @@ final class CurrencyControllerTest extends TestCase
      */
     use RefreshDatabase;
 
-    private function createTestCurrencies(int $count, bool $enabled): void
-    {
-        for ($i = 1; $i <= $count; ++$i) {
-            $currency = TransactionCurrency::create([
-                'name'           => 'Currency '.$i,
-                'code'           => 'CUR'.$i,
-                'symbol'         => 'C'.$i,
-                'decimal_places' => $i,
-                'enabled'        => $enabled,
-            ]);
-        }
-    }
-
     public function testGivenAnUnauthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturns401HttpCode(): void
     {
         // test API
@@ -62,6 +49,22 @@ final class CurrencyControllerTest extends TestCase
         $response->assertStatus(401);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertContent('{"message":"Unauthenticated.","exception":"AuthenticationException"}');
+    }
+
+    public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointDoesNotReturnDisabledCurrencies(): void
+    {
+        // act as a user
+        $user     = $this->createAuthenticatedUser();
+        $this->actingAs($user);
+
+        // create test data
+        $this->createTestCurrencies(10, false);
+
+        // test API
+        $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/json');
+        $response->assertJsonCount(1); // always connects to EUR.
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointThenReturns200HttpCode(): void
@@ -91,33 +94,22 @@ final class CurrencyControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
         $response->assertJsonFragment(['code' => 'CUR1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(10);
     }
 
-    public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointDoesNotReturnDisabledCurrencies(): void
+    public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
     {
-        // act as a user
         $user     = $this->createAuthenticatedUser();
         $this->actingAs($user);
 
-        // create test data
-        $this->createTestCurrencies(10, false);
-
-        // test API
-        $response = $this->get(route('api.v1.autocomplete.currencies'), ['Accept' => 'application/json']);
+        $this->createTestCurrencies(20, true);
+        $response = $this->get(route('api.v1.autocomplete.currencies', ['query' => 'Currency 1', 'limit' => 20]), ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
-        $response->assertJsonCount(1); // always connects to EUR.
+        // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
+        $response->assertJsonCount(11);
     }
 
     public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesWithLimit(): void
@@ -134,33 +126,21 @@ final class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertJsonFragment(['name' => 'Currency 1']);
-        $response->assertJsonStructure([
-            '*' => [
-                'id',
-                'name',
-                'code',
-                'symbol',
-                'decimal_places',
-            ],
-        ]);
+        $response->assertJsonStructure(['*' => ['id', 'name', 'code', 'symbol', 'decimal_places']]);
 
         $response->assertJsonCount(1);
-
     }
 
-    public function testGivenAuthenticatedRequestWhenCallingTheCurrenciesEndpointWithQueryThenReturnsCurrenciesThatMatchQuery(): void
+    private function createTestCurrencies(int $count, bool $enabled): void
     {
-        $user     = $this->createAuthenticatedUser();
-        $this->actingAs($user);
-
-        $this->createTestCurrencies(20, true);
-        $response = $this->get(route('api.v1.autocomplete.currencies', [
-            'query' => 'Currency 1',
-            'limit' => 20,
-        ]), ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/json');
-        // Currency 1, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 (11)
-        $response->assertJsonCount(11);
+        for ($i = 1; $i <= $count; ++$i) {
+            $currency = TransactionCurrency::create([
+                'name'           => 'Currency '.$i,
+                'code'           => 'CUR'.$i,
+                'symbol'         => 'C'.$i,
+                'decimal_places' => $i,
+                'enabled'        => $enabled,
+            ]);
+        }
     }
 }

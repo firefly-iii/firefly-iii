@@ -24,10 +24,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Trait TransactionTypeTrait

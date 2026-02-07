@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests\Models\Recurrence;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
@@ -35,6 +34,7 @@ use FireflyIII\Support\Request\GetRecurrenceData;
 use FireflyIII\Validation\CurrencyValidation;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Log;
 
@@ -68,15 +68,80 @@ class UpdateRequest extends FormRequest
         ];
         $reps                   = $this->getRepetitionData();
         $transactions           = $this->getTransactionData();
-        $return                 = [
-            'recurrence' => $this->getAllData($fields),
-        ];
+        $return                 = ['recurrence'       => $this->getAllData($fields)];
         if (null !== $reps) {
             $return['repetitions'] = $reps;
         }
         $return['transactions'] = $transactions;
 
         return $return;
+    }
+
+    /**
+     * The rules that the incoming request must be matched against.
+     */
+    public function rules(): array
+    {
+        /** @var Recurrence $recurrence */
+        $recurrence = $this->route()->parameter('recurrence');
+
+        return [
+            'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
+            'description'                          => 'min:1|max:32768',
+            'first_date'                           => 'date|after:1970-01-02|before:2038-01-17',
+            'apply_rules'                          => [new IsBoolean()],
+            'active'                               => [new IsBoolean()],
+            'repeat_until'                         => 'nullable|date',
+            'nr_of_repetitions'                    => 'nullable|numeric|min:1|max:31',
+
+            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
+            'repetitions.*.moment'                 => 'min:0|max:10|numeric',
+            'repetitions.*.skip'                   => 'nullable|numeric|min:0|max:31',
+            'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
+
+            'transactions.*.description'           => ['min:1', 'max:255'],
+            'transactions.*.amount'                => [new IsValidPositiveAmount()],
+            'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
+            'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
+            'transactions.*.currency_code'         => 'nullable|min:3|max:51|exists:transaction_currencies,code',
+            'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
+            'transactions.*.foreign_currency_code' => 'nullable|min:3|max:51|exists:transaction_currencies,code',
+            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.source_name'           => 'min:1|max:255|nullable',
+            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser()],
+            'transactions.*.destination_name'      => 'min:1|max:255|nullable',
+
+            // new and updated fields:
+            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
+            'transactions.*.budget_name'           => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser()],
+            'transactions.*.category_name'         => 'min:1|max:255|nullable',
+            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
+            'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
+            'transactions.*.tags'                  => 'nullable|min:1|max:255',
+        ];
+    }
+
+    /**
+     * Configure the validator instance.
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(function (Validator $validator): void {
+            // $this->validateOneRecurrenceTransaction($validator);
+            // $this->validateOneRepetitionUpdate($validator);
+
+            /** @var Recurrence $recurrence */
+            $recurrence = $this->route()->parameter('recurrence');
+            $this->validateTransactionId($recurrence, $validator);
+            $this->validateRecurrenceRepetition($validator);
+            $this->validateRepetitionMoment($validator);
+            $this->validateForeignCurrencyInformation($validator);
+            $this->valUpdateAccountInfo($validator);
+        });
+        if ($validator->fails()) {
+            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
+        }
     }
 
     /**
@@ -141,74 +206,5 @@ class UpdateRequest extends FormRequest
         }
 
         return $return;
-    }
-
-    /**
-     * The rules that the incoming request must be matched against.
-     */
-    public function rules(): array
-    {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->route()->parameter('recurrence');
-
-        return [
-            'title'                                => sprintf('min:1|max:255|uniqueObjectForUser:recurrences,title,%d', $recurrence->id),
-            'description'                          => 'min:1|max:32768',
-            'first_date'                           => 'date|after:1970-01-02|before:2038-01-17',
-            'apply_rules'                          => [new IsBoolean()],
-            'active'                               => [new IsBoolean()],
-            'repeat_until'                         => 'nullable|date',
-            'nr_of_repetitions'                    => 'nullable|numeric|min:1|max:31',
-
-            'repetitions.*.type'                   => 'in:daily,weekly,ndom,monthly,yearly',
-            'repetitions.*.moment'                 => 'min:0|max:10|numeric',
-            'repetitions.*.skip'                   => 'nullable|numeric|min:0|max:31',
-            'repetitions.*.weekend'                => 'nullable|numeric|min:1|max:4',
-
-            'transactions.*.description'           => ['min:1', 'max:255'],
-            'transactions.*.amount'                => [new IsValidPositiveAmount()],
-            'transactions.*.foreign_amount'        => ['nullable', new IsValidPositiveAmount()],
-            'transactions.*.currency_id'           => 'nullable|numeric|exists:transaction_currencies,id',
-            'transactions.*.currency_code'         => 'nullable|min:3|max:51|exists:transaction_currencies,code',
-            'transactions.*.foreign_currency_id'   => 'nullable|numeric|exists:transaction_currencies,id',
-            'transactions.*.foreign_currency_code' => 'nullable|min:3|max:51|exists:transaction_currencies,code',
-            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.source_name'           => 'min:1|max:255|nullable',
-            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser()],
-            'transactions.*.destination_name'      => 'min:1|max:255|nullable',
-
-            // new and updated fields:
-            'transactions.*.budget_id'             => ['nullable', 'mustExist:budgets,id', new BelongsUser()],
-            'transactions.*.budget_name'           => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.category_id'           => ['nullable', 'mustExist:categories,id', new BelongsUser()],
-            'transactions.*.category_name'         => 'min:1|max:255|nullable',
-            'transactions.*.piggy_bank_id'         => ['nullable', 'numeric', 'mustExist:piggy_banks,id', new BelongsUser()],
-            'transactions.*.piggy_bank_name'       => ['min:1', 'max:255', 'nullable', new BelongsUser()],
-            'transactions.*.tags'                  => 'nullable|min:1|max:255',
-        ];
-    }
-
-    /**
-     * Configure the validator instance.
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator): void {
-                // $this->validateOneRecurrenceTransaction($validator);
-                // $this->validateOneRepetitionUpdate($validator);
-
-                /** @var Recurrence $recurrence */
-                $recurrence = $this->route()->parameter('recurrence');
-                $this->validateTransactionId($recurrence, $validator);
-                $this->validateRecurrenceRepetition($validator);
-                $this->validateRepetitionMoment($validator);
-                $this->validateForeignCurrencyInformation($validator);
-                $this->valUpdateAccountInfo($validator);
-            }
-        );
-        if ($validator->fails()) {
-            Log::channel('audit')->error(sprintf('Validation errors in %s', self::class), $validator->errors()->toArray());
-        }
     }
 }

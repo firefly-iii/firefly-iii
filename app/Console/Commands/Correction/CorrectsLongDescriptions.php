@@ -35,6 +35,7 @@ class CorrectsLongDescriptions extends Command
     use ShowsFriendlyMessages;
 
     private const int MAX_LENGTH = 1000;
+
     protected $description       = 'Fixes long descriptions in journals and groups.';
     protected $signature         = 'correction:long-descriptions';
 

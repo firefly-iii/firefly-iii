@@ -25,15 +25,16 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Upgrade;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Models\AccountBalanceCalculator;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 class RepairsAccountBalances extends Command
 {
     use ShowsFriendlyMessages;
 
     public const string CONFIG_NAME = '610_correct_balances';
+
     protected $description          = 'Recalculate all account balance amounts';
     protected $signature            = 'upgrade:610-account-balances {--F|force : Force the execution of this command.}';
 
@@ -57,6 +58,11 @@ class RepairsAccountBalances extends Command
         return 0;
     }
 
+    private function correctBalanceAmounts(): void
+    {
+        AccountBalanceCalculator::recalculateAll(false);
+    }
+
     private function isExecuted(): bool
     {
         $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
@@ -67,10 +73,5 @@ class RepairsAccountBalances extends Command
     private function markAsExecuted(): void
     {
         FireflyConfig::set(self::CONFIG_NAME, true);
-    }
-
-    private function correctBalanceAmounts(): void
-    {
-        AccountBalanceCalculator::recalculateAll(false);
     }
 }

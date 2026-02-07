@@ -24,18 +24,18 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Bill;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BillUpdateRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
+use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use FireflyIII\Support\Facades\Steam;
 
 /**
  * Class EditController
@@ -43,7 +43,7 @@ use FireflyIII\Support\Facades\Steam;
 class EditController extends Controller
 {
     private AttachmentHelperInterface $attachments;
-    private BillRepositoryInterface   $repository;
+    private BillRepositoryInterface $repository;
 
     /**
      * BillController constructor.
@@ -52,16 +52,14 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.bills'));
-                app('view')->share('mainTitleIcon', 'fa-calendar-o');
-                $this->attachments = app(AttachmentHelperInterface::class);
-                $this->repository  = app(BillRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.bills'));
+            app('view')->share('mainTitleIcon', 'fa-calendar-o');
+            $this->attachments = app(AttachmentHelperInterface::class);
+            $this->repository  = app(BillRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -104,7 +102,7 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', ['subTitle' => $subTitle, 'periods' => $periods, 'rules' => $rules, 'bill' => $bill, 'preFilled' => $preFilled]);
+        return view('bills.edit', ['subTitle'  => $subTitle, 'periods'   => $periods, 'rules'     => $rules, 'bill'      => $bill, 'preFilled' => $preFilled]);
     }
 
     /**

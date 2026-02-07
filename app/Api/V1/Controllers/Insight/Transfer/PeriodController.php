@@ -74,7 +74,6 @@ class PeriodController extends Controller
             ];
             $response[$currencyId]['difference']       = bcadd($response[$currencyId]['difference'], Steam::positive($journal[$field]));
             $response[$currencyId]['difference_float'] = (float) $response[$currencyId]['difference'];
-
         }
 
         return response()->json(array_values($response));

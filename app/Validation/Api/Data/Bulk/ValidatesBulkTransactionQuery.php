@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation\Api\Data\Bulk;
 
-use Illuminate\Contracts\Validation\Validator;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Illuminate\Contracts\Validation\Validator;
 
 use function Safe\json_decode;
 
@@ -41,7 +41,8 @@ trait ValidatesBulkTransactionQuery
         if (
             array_key_exists('where', $json)
             && array_key_exists('update', $json)
-            && array_key_exists('account_id', $json['where']) && array_key_exists('account_id', $json['update'])
+            && array_key_exists('account_id', $json['where'])
+            && array_key_exists('account_id', $json['update'])
         ) {
             // find both accounts, must be same type.
             // already validated: belongs to this user.
@@ -68,11 +69,7 @@ trait ValidatesBulkTransactionQuery
             // some account types (like expenses) do not have currency, so they have to be omitted
             $sourceCurrency = $repository->getAccountCurrency($source);
             $destCurrency   = $repository->getAccountCurrency($dest);
-            if (
-                null !== $sourceCurrency
-                && null !== $destCurrency
-                && $sourceCurrency->id !== $destCurrency->id
-            ) {
+            if (null !== $sourceCurrency && null !== $destCurrency && $sourceCurrency->id !== $destCurrency->id) {
                 $validator->errors()->add('query', (string) trans('validation.invalid_query_currency'));
             }
         }

@@ -75,6 +75,17 @@ class Preferences
         return true;
     }
 
+    public function deleteForUser(User $user, string $name): bool
+    {
+        $fullName = sprintf('preference%s%s', auth()->user()->id, $name);
+        if (Cache::has($fullName)) {
+            Cache::forget($fullName);
+        }
+        Preference::where('user_id', $user->id)->where('name', $name)->delete();
+
+        return true;
+    }
+
     /**
      * Find by name, has no user ID in it, because the method is called from an unauthenticated route any way.
      */
@@ -177,7 +188,6 @@ class Preferences
             return $result;
         }
 
-
         return $result;
     }
 
@@ -247,7 +257,7 @@ class Preferences
         if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
-        $setting      = hash('sha256', (string)$lastActivity);
+        $setting      = hash('sha256', (string) $lastActivity);
         $instance->setPreference('last_activity', $setting);
 
         return $setting;
@@ -294,7 +304,7 @@ class Preferences
     {
         $fullName         = sprintf('preference%s%s', $user->id, $name);
         $userGroupId      = $this->getUserGroupId($user, $name);
-        $userGroupId      = 0 === (int)$userGroupId ? null : (int)$userGroupId;
+        $userGroupId      = 0 === (int) $userGroupId ? null : (int) $userGroupId;
 
         Cache::forget($fullName);
 
@@ -316,10 +326,9 @@ class Preferences
         }
         if (null === $preference) {
             $preference                = new Preference();
-            $preference->user_id       = (int)$user->id;
+            $preference->user_id       = (int) $user->id;
             $preference->user_group_id = $userGroupId;
             $preference->name          = $name;
-
         }
         $preference->data = $value;
         $preference->save();
@@ -333,7 +342,7 @@ class Preferences
         $groupId = null;
         $items   = config('firefly.admin_specific_prefs') ?? [];
         if (in_array($preferenceName, $items, true)) {
-            return (int)$user->user_group_id;
+            return (int) $user->user_group_id;
         }
 
         return $groupId;

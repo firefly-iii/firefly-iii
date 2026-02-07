@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Traits\RefreshNotesTrait;
@@ -40,7 +40,9 @@ class SetDescription implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private RuleAction $action) {}
+    public function __construct(
+        private RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -59,21 +61,16 @@ class SetDescription implements ActionInterface
             $after = '(no description)';
         }
 
-        DB::table('transaction_journals')
-            ->where('id', '=', $journal['transaction_journal_id'])
-            ->update(['description' => $after])
-        ;
+        DB::table('transaction_journals')->where('id', '=', $journal['transaction_journal_id'])->update(['description' => $after]);
 
-        Log::debug(
-            sprintf(
-                'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
-                $journal['transaction_journal_id'],
-                $journal['description'],
-                $after
-            )
-        );
+        Log::debug(sprintf(
+            'RuleAction SetDescription changed the description of journal #%d from "%s" to "%s".',
+            $journal['transaction_journal_id'],
+            $journal['description'],
+            $after
+        ));
         $object->refresh();
-        event(new TriggeredAuditLog($this->action->rule, $object, 'update_description', $before, $after));
+        event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'update_description', $before, $after));
 
         return true;
     }

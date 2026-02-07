@@ -69,13 +69,30 @@ class RuleTransformer extends AbstractTransformer
             'trigger'          => $this->getRuleTrigger($rule),
             'triggers'         => $this->triggers($rule),
             'actions'          => $this->actions($rule),
-            'links'            => [
-                [
-                    'rel' => 'self',
-                    'uri' => '/rules/'.$rule->id,
-                ],
-            ],
+            'links'            => [['rel' => 'self', 'uri' => '/rules/'.$rule->id]],
         ];
+    }
+
+    private function actions(Rule $rule): array
+    {
+        $result  = [];
+        $actions = $this->ruleRepository->getRuleActions($rule);
+
+        /** @var RuleAction $ruleAction */
+        foreach ($actions as $ruleAction) {
+            $result[] = [
+                'id'              => (string) $ruleAction->id,
+                'created_at'      => $ruleAction->created_at->toAtomString(),
+                'updated_at'      => $ruleAction->updated_at->toAtomString(),
+                'type'            => $ruleAction->action_type,
+                'value'           => $ruleAction->action_value,
+                'order'           => $ruleAction->order,
+                'active'          => $ruleAction->active,
+                'stop_processing' => $ruleAction->stop_processing,
+            ];
+        }
+
+        return $result;
     }
 
     /**
@@ -133,28 +150,6 @@ class RuleTransformer extends AbstractTransformer
                 'order'           => $ruleTrigger->order,
                 'active'          => $ruleTrigger->active,
                 'stop_processing' => $ruleTrigger->stop_processing,
-            ];
-        }
-
-        return $result;
-    }
-
-    private function actions(Rule $rule): array
-    {
-        $result  = [];
-        $actions = $this->ruleRepository->getRuleActions($rule);
-
-        /** @var RuleAction $ruleAction */
-        foreach ($actions as $ruleAction) {
-            $result[] = [
-                'id'              => (string) $ruleAction->id,
-                'created_at'      => $ruleAction->created_at->toAtomString(),
-                'updated_at'      => $ruleAction->updated_at->toAtomString(),
-                'type'            => $ruleAction->action_type,
-                'value'           => $ruleAction->action_value,
-                'order'           => $ruleAction->order,
-                'active'          => $ruleAction->active,
-                'stop_processing' => $ruleAction->stop_processing,
             ];
         }
 

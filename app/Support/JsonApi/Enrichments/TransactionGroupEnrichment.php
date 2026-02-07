@@ -45,15 +45,27 @@ use Override;
 
 class TransactionGroupEnrichment implements EnrichmentInterface
 {
-    private array                        $attachmentCount = [];
-    private Collection                   $collection;
-    private readonly array               $dateFields;
-    private array                        $journalIds      = [];
-    private array                        $locations       = [];
-    private array                        $metaData        = [];
-    private array                        $notes           = [];
+    private array $attachmentCount = [];
+    private Collection $collection;
+    private readonly array $dateFields;
+    private array $journalIds      = [];
+    private array $locations       = [];
+    private array $metaData        = [];
+    private array $notes           = [];
     private readonly TransactionCurrency $primaryCurrency;
-    private array                        $tags            = []; // @phpstan-ignore-line
+    private array $tags            = []; // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
 
     public function __construct()
     {
@@ -107,9 +119,16 @@ class TransactionGroupEnrichment implements EnrichmentInterface
         $attachmentCount  = $this->attachmentCount;
         $primaryCurrency  = $this->primaryCurrency;
 
-        $this->collection = $this->collection->map(function (array $item) use ($primaryCurrency, $notes, $tags, $metaData, $locations, $attachmentCount): array {
+        $this->collection = $this->collection->map(function (array $item) use (
+            $primaryCurrency,
+            $notes,
+            $tags,
+            $metaData,
+            $locations,
+            $attachmentCount
+        ): array {
             foreach ($item['transactions'] as $index => $transaction) {
-                $journalId                                        = (int)$transaction['transaction_journal_id'];
+                $journalId                                        = (int) $transaction['transaction_journal_id'];
 
                 // attach notes if they exist:
                 $item['transactions'][$index]['notes']            = $notes[$journalId] ?? null;
@@ -121,15 +140,11 @@ class TransactionGroupEnrichment implements EnrichmentInterface
                 $item['transactions'][$index]['attachment_count'] = array_key_exists($journalId, $attachmentCount) ? $attachmentCount[$journalId] : 0;
 
                 // default location data
-                $item['transactions'][$index]['location']         = [
-                    'latitude'   => null,
-                    'longitude'  => null,
-                    'zoom_level' => null,
-                ];
+                $item['transactions'][$index]['location']         = ['latitude'   => null, 'longitude'  => null, 'zoom_level' => null];
 
                 // primary currency
                 $item['transactions'][$index]['primary_currency'] = [
-                    'id'             => (string)$primaryCurrency->id,
+                    'id'             => (string) $primaryCurrency->id,
                     'code'           => $primaryCurrency->code,
                     'name'           => $primaryCurrency->name,
                     'symbol'         => $primaryCurrency->symbol,
@@ -173,7 +188,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
             ->toArray()
         ;
         foreach ($attachments as $row) {
-            $this->attachmentCount[(int)$row['attachable_id']] = (int)$row['nr_of_attachments'];
+            $this->attachmentCount[(int) $row['attachable_id']] = (int) $row['nr_of_attachments'];
         }
     }
 
@@ -190,26 +205,29 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     private function collectLocations(): void
     {
-        $locations = Location::query()->whereIn('locatable_id', $this->journalIds)
-            ->where('locatable_type', TransactionJournal::class)->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])->toArray()
+        $locations = Location::query()
+            ->whereIn('locatable_id', $this->journalIds)
+            ->where('locatable_type', TransactionJournal::class)
+            ->get(['locations.locatable_id', 'locations.latitude', 'locations.longitude', 'locations.zoom_level'])
+            ->toArray()
         ;
         foreach ($locations as $location) {
-            $this->locations[(int)$location['locatable_id']]
-                = [
-                    'latitude'   => (float)$location['latitude'],
-                    'longitude'  => (float)$location['longitude'],
-                    'zoom_level' => (int)$location['zoom_level'],
-                ];
+            $this->locations[(int) $location['locatable_id']] = [
+                'latitude'   => (float) $location['latitude'],
+                'longitude'  => (float) $location['longitude'],
+                'zoom_level' => (int) $location['zoom_level'],
+            ];
         }
-        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
+
+        //        Log::debug(sprintf('Enrich with %d locations(s)', count($this->locations)));
     }
 
     private function collectMetaData(): void
     {
         $set = TransactionJournalMeta::whereIn('transaction_journal_id', $this->journalIds)->get(['transaction_journal_id', 'name', 'data'])->toArray();
         foreach ($set as $entry) {
-            $name                                                         = $entry['name'];
-            $data                                                         = (string)$entry['data'];
+            $name                                                          = $entry['name'];
+            $data                                                          = (string) $entry['data'];
             if ('' === $data) {
                 continue;
             }
@@ -220,28 +238,33 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
                 continue;
             }
-            $this->metaData[(int)$entry['transaction_journal_id']][$name] = $data;
+            $this->metaData[(int) $entry['transaction_journal_id']][$name] = $data;
         }
     }
 
     private function collectNotes(): void
     {
-        $notes = Note::query()->whereIn('noteable_id', $this->journalIds)
+        $notes = Note::query()
+            ->whereIn('noteable_id', $this->journalIds)
             ->whereNotNull('notes.text')
             ->where('notes.text', '!=', '')
-            ->where('noteable_type', TransactionJournal::class)->get(['notes.noteable_id', 'notes.text'])->toArray()
+            ->where('noteable_type', TransactionJournal::class)
+            ->get(['notes.noteable_id', 'notes.text'])
+            ->toArray()
         ;
         foreach ($notes as $note) {
-            $this->notes[(int)$note['noteable_id']] = (string)$note['text'];
+            $this->notes[(int) $note['noteable_id']] = (string) $note['text'];
         }
-        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
+
+        //        Log::debug(sprintf('Enrich with %d note(s)', count($this->notes)));
     }
 
     private function collectTags(): void
     {
         $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
             ->whereIn('tag_transaction_journal.transaction_journal_id', $this->journalIds)
-            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])->toArray()
+            ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag'])
+            ->toArray()
         ;
         foreach ($set as $item) {
             $journalId                = $item['transaction_journal_id'];

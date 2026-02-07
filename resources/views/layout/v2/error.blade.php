@@ -15,7 +15,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="color-scheme" content="light dark">
 
-    <script type="text/javascript" nonce="{{ $JS_NONCE }}">
+    <script type="text/javascript" nonce="{{ $JS_NONCE ?? 'none' }}">
         /*!
  * Color mode toggler for Bootstrap's docs (https://getbootstrap.com/)
  * Copyright 2011-2023 The Bootstrap Authors

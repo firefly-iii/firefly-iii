@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Services\Internal\Update\GroupCloneService;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -38,7 +38,6 @@ use Illuminate\Http\Request;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Safe\Exceptions\UrlException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 use function Safe\parse_url;
 
@@ -56,15 +55,13 @@ class CreateController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-exchange');
-                $this->repository = app(TransactionGroupRepositoryInterface::class);
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('mainTitleIcon', 'fa-exchange');
+            $this->repository = app(TransactionGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     public function cloneGroup(Request $request): JsonResponse
@@ -76,9 +73,6 @@ class CreateController extends Controller
                 /** @var GroupCloneService $service */
                 $service  = app(GroupCloneService::class);
                 $newGroup = $service->cloneGroup($group);
-
-                // event!
-                event(new StoredTransactionGroup($newGroup, true, true));
 
                 Preferences::mark();
 
@@ -141,7 +135,8 @@ class CreateController extends Controller
         ];
         $optionalFields['external_url'] ??= false;
         $optionalFields['location']     ??= false;
-        $optionalFields['location'] = $optionalFields['location'] && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
+        $optionalFields['location'] = $optionalFields['location']
+        && true === FireflyConfig::get('enable_external_map', config('firefly.enable_external_map'))->data;
 
         // map info:
         $longitude                  = config('firefly.default_location.longitude');
@@ -150,6 +145,22 @@ class CreateController extends Controller
 
         session()->put('preFilled', $preFilled);
 
-        return view('transactions.create', ['subTitleIcon' => $subTitleIcon, 'cash' => $cash, 'longitude' => $longitude, 'latitude' => $latitude, 'zoomLevel' => $zoomLevel, 'objectType' => $objectType, 'optionalDateFields' => $optionalDateFields, 'subTitle' => $subTitle, 'previousUrl' => $previousUrl, 'optionalFields' => $optionalFields, 'preFilled' => $preFilled, 'allowedOpposingTypes' => $allowedOpposingTypes, 'accountToTypes' => $accountToTypes, 'sourceId' => $sourceId, 'destinationId' => $destinationId]);
+        return view('transactions.create', [
+            'subTitleIcon'         => $subTitleIcon,
+            'cash'                 => $cash,
+            'longitude'            => $longitude,
+            'latitude'             => $latitude,
+            'zoomLevel'            => $zoomLevel,
+            'objectType'           => $objectType,
+            'optionalDateFields'   => $optionalDateFields,
+            'subTitle'             => $subTitle,
+            'previousUrl'          => $previousUrl,
+            'optionalFields'       => $optionalFields,
+            'preFilled'            => $preFilled,
+            'allowedOpposingTypes' => $allowedOpposingTypes,
+            'accountToTypes'       => $accountToTypes,
+            'sourceId'             => $sourceId,
+            'destinationId'        => $destinationId,
+        ]);
     }
 }

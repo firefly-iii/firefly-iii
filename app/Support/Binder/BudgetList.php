@@ -23,10 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use Illuminate\Support\Facades\Log;
 use FireflyIII\Models\Budget;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -41,11 +41,7 @@ class BudgetList implements BinderInterface
     {
         if (auth()->check()) {
             if ('allBudgets' === $value) {
-                return auth()->user()->budgets()->where('active', true)
-                    ->orderBy('order', 'ASC')
-                    ->orderBy('name', 'ASC')
-                    ->get()
-                ;
+                return auth()->user()->budgets()->where('active', true)->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
             }
 
             $list       = array_unique(array_map(\intval(...), explode(',', $value)));
@@ -57,11 +53,7 @@ class BudgetList implements BinderInterface
             }
 
             /** @var Collection $collection */
-            $collection = auth()->user()->budgets()
-                ->where('active', true)
-                ->whereIn('id', $list)
-                ->get()
-            ;
+            $collection = auth()->user()->budgets()->where('active', true)->whereIn('id', $list)->get();
 
             // add empty budget if applicable.
             if (in_array(0, $list, true)) {

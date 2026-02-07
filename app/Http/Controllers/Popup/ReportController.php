@@ -55,7 +55,7 @@ class ReportController extends Controller
             'expense-entry'       => $this->expenseEntry($attributes),
             'income-entry'        => $this->incomeEntry($attributes),
             'category-entry'      => $this->categoryEntry($attributes),
-            'budget-entry'        => $this->budgetEntry($attributes),
+            'budget-entry'        => $this->budgetEntry($attributes)
         };
 
         return response()->json(['html' => $html]);

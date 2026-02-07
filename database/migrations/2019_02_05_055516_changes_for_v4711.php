@@ -55,24 +55,18 @@ class ChangesForV4711 extends Migration
          * nice.
          */
         try {
-            Schema::table(
-                'transaction_journals',
-                static function (Blueprint $table): void {
-                    $table->dateTime('date')->change();
-                }
-            );
+            Schema::table('transaction_journals', static function (Blueprint $table): void {
+                $table->dateTime('date')->change();
+            });
         } catch (QueryException $e) {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
 
         try {
-            Schema::table(
-                'preferences',
-                static function (Blueprint $table): void {
-                    $table->text('data')->nullable()->change();
-                }
-            );
+            Schema::table('preferences', static function (Blueprint $table): void {
+                $table->text('data')->nullable()->change();
+            });
         } catch (QueryException $e) {
             app('log')->error(sprintf('Could not execute query: %s', $e->getMessage()));
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');

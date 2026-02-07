@@ -163,7 +163,7 @@ class GracefulNotFoundHandler extends ExceptionHandler
         if ($param instanceof Account) {
             $accountId = $param->id;
         }
-        if (!($param instanceof Account) && !is_object($param)) {
+        if (!$param instanceof Account && !is_object($param)) {
             $accountId = (int) $param;
         }
 
@@ -179,46 +179,6 @@ class GracefulNotFoundHandler extends ExceptionHandler
         $request->session()->reflash();
 
         return redirect(route('accounts.index', [$shortType]));
-    }
-
-    /**
-     * @return Response
-     *
-     * @throws Throwable
-     */
-    private function handleGroup(Request $request, Throwable $exception)
-    {
-        Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
-
-        /** @var User $user */
-        $user    = auth()->user();
-        $route   = $request->route();
-        $param   = $route->parameter('transactionGroup');
-        $groupId = is_object($param) ? 0 : (int) $param;
-
-        /** @var null|TransactionGroup $group */
-        $group   = $user->transactionGroups()->withTrashed()->find($groupId);
-        if (null === $group) {
-            Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
-
-            return parent::render($request, $exception);
-        }
-
-        /** @var null|TransactionJournal $journal */
-        $journal = $group->transactionJournals()->withTrashed()->first();
-        if (null === $journal) {
-            Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
-
-            return parent::render($request, $exception);
-        }
-        $type    = $journal->transactionType->type;
-        $request->session()->reflash();
-
-        if (TransactionTypeEnum::RECONCILIATION->value === $type) {
-            return redirect(route('accounts.index', ['asset']));
-        }
-
-        return redirect(route('transactions.index', [strtolower((string) $type)]));
     }
 
     /**
@@ -264,5 +224,45 @@ class GracefulNotFoundHandler extends ExceptionHandler
         Log::error(sprintf('Could not redirect attachment %d, its linked to a %s.', $attachmentId, $attachment->attachable_type));
 
         return parent::render($request, $exception);
+    }
+
+    /**
+     * @return Response
+     *
+     * @throws Throwable
+     */
+    private function handleGroup(Request $request, Throwable $exception)
+    {
+        Log::debug('404 page is probably a deleted group. Redirect to overview of group types.');
+
+        /** @var User $user */
+        $user    = auth()->user();
+        $route   = $request->route();
+        $param   = $route->parameter('transactionGroup');
+        $groupId = is_object($param) ? 0 : (int) $param;
+
+        /** @var null|TransactionGroup $group */
+        $group   = $user->transactionGroups()->withTrashed()->find($groupId);
+        if (null === $group) {
+            Log::error(sprintf('Could not find group %d, so give big fat error.', $groupId));
+
+            return parent::render($request, $exception);
+        }
+
+        /** @var null|TransactionJournal $journal */
+        $journal = $group->transactionJournals()->withTrashed()->first();
+        if (null === $journal) {
+            Log::error(sprintf('Could not find journal for group %d, so give big fat error.', $groupId));
+
+            return parent::render($request, $exception);
+        }
+        $type    = $journal->transactionType->type;
+        $request->session()->reflash();
+
+        if (TransactionTypeEnum::RECONCILIATION->value === $type) {
+            return redirect(route('accounts.index', ['asset']));
+        }
+
+        return redirect(route('transactions.index', [strtolower((string) $type)]));
     }
 }

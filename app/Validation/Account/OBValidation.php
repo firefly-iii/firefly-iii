@@ -34,6 +34,8 @@ use Illuminate\Support\Facades\Log;
  */
 trait OBValidation
 {
+    abstract protected function canCreateTypes(array $accountTypes): bool;
+
     protected function validateOBDestination(array $array): bool
     {
         $result      = null;
@@ -61,7 +63,7 @@ trait OBValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.', $validTypes);
-                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.ob_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
@@ -74,8 +76,6 @@ trait OBValidation
 
         return $result;
     }
-
-    abstract protected function canCreateTypes(array $accountTypes): bool;
 
     /**
      * Source of an opening balance can either be an asset account

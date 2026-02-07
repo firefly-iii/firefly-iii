@@ -37,11 +37,11 @@ class CorrectsRecurringTransactions extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected $description                      = 'Fixes recurring transactions with the wrong transaction type.';
-    protected $signature                        = 'correction:recurring-transactions';
-    private int                          $count = 0;
+    protected $description = 'Fixes recurring transactions with the wrong transaction type.';
+    protected $signature   = 'correction:recurring-transactions';
+    private int $count     = 0;
     private RecurringRepositoryInterface $recurringRepos;
-    private UserRepositoryInterface      $userRepos;
+    private UserRepositoryInterface $userRepos;
 
     /**
      * Execute the console command.
@@ -54,17 +54,6 @@ class CorrectsRecurringTransactions extends Command
         return 0;
     }
 
-    /**
-     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
-     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
-     * be called from the handle method instead of using the constructor to initialize the command.
-     */
-    private function stupidLaravel(): void
-    {
-        $this->recurringRepos = app(RecurringRepositoryInterface::class);
-        $this->userRepos      = app(UserRepositoryInterface::class);
-    }
-
     private function correctTransactions(): void
     {
         $users = $this->userRepos->all();
@@ -72,17 +61,6 @@ class CorrectsRecurringTransactions extends Command
         /** @var User $user */
         foreach ($users as $user) {
             $this->processUser($user);
-        }
-    }
-
-    private function processUser(User $user): void
-    {
-        $this->recurringRepos->setUser($user);
-        $recurrences = $this->recurringRepos->get();
-
-        /** @var Recurrence $recurrence */
-        foreach ($recurrences as $recurrence) {
-            $this->processRecurrence($recurrence);
         }
     }
 
@@ -101,9 +79,12 @@ class CorrectsRecurringTransactions extends Command
         $type        = $recurrence->transactionType;
         $link        = config(sprintf('firefly.account_to_transaction.%s.%s', $source->accountType->type, $destination->accountType->type));
         if (null !== $link && strtolower((string) $type->type) !== strtolower($link)) {
-            $this->friendlyWarning(
-                sprintf('Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.', $recurrence->id, $link, $type->type)
-            );
+            $this->friendlyWarning(sprintf(
+                'Recurring transaction #%d should be a "%s" but is a "%s" and will be corrected.',
+                $recurrence->id,
+                $link,
+                $type->type
+            ));
             $transactionType = TransactionType::whereType($link)->first();
             if (null !== $transactionType) {
                 $recurrence->transaction_type_id = $transactionType->id;
@@ -111,5 +92,27 @@ class CorrectsRecurringTransactions extends Command
                 ++$this->count;
             }
         }
+    }
+
+    private function processUser(User $user): void
+    {
+        $this->recurringRepos->setUser($user);
+        $recurrences = $this->recurringRepos->get();
+
+        /** @var Recurrence $recurrence */
+        foreach ($recurrences as $recurrence) {
+            $this->processRecurrence($recurrence);
+        }
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     */
+    private function stupidLaravel(): void
+    {
+        $this->recurringRepos = app(RecurringRepositoryInterface::class);
+        $this->userRepos      = app(UserRepositoryInterface::class);
     }
 }

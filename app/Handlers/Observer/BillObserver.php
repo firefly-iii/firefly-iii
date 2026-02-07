@@ -23,12 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Observer;
 
-use FireflyIII\Models\Attachment;
+use FireflyIII\Handlers\ExchangeRate\ConversionParameters;
+use FireflyIII\Handlers\ExchangeRate\ConvertsAmountToPrimaryAmount;
 use FireflyIII\Models\Bill;
-use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Support\Facades\Amount;
-use FireflyIII\Support\Http\Api\ExchangeRateConverter;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillObserver
@@ -37,45 +34,28 @@ class BillObserver
 {
     public function created(Bill $bill): void
     {
-        //        Log::debug('Observe "created" of a bill.');
         $this->updatePrimaryCurrencyAmount($bill);
-    }
-
-    private function updatePrimaryCurrencyAmount(Bill $bill): void
-    {
-        if (!Amount::convertToPrimary($bill->user)) {
-            return;
-        }
-        $userCurrency            = Amount::getPrimaryCurrencyByUserGroup($bill->user->userGroup);
-        $bill->native_amount_min = null;
-        $bill->native_amount_max = null;
-        if ($bill->transactionCurrency->id !== $userCurrency->id) {
-            $converter               = new ExchangeRateConverter();
-            $converter->setUserGroup($bill->user->userGroup);
-            $converter->setIgnoreSettings(true);
-            $bill->native_amount_min = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_min);
-            $bill->native_amount_max = $converter->convert($bill->transactionCurrency, $userCurrency, today(), $bill->amount_max);
-        }
-        $bill->saveQuietly();
-        Log::debug('Bill primary currency amounts are updated.');
-    }
-
-    public function deleting(Bill $bill): void
-    {
-        $repository = app(AttachmentRepositoryInterface::class);
-        $repository->setUser($bill->user);
-
-        //        Log::debug('Observe "deleting" of a bill.');
-        /** @var Attachment $attachment */
-        foreach ($bill->attachments()->get() as $attachment) {
-            $repository->destroy($attachment);
-        }
-        $bill->notes()->delete();
     }
 
     public function updated(Bill $bill): void
     {
         //        Log::debug('Observe "updated" of a bill.');
         $this->updatePrimaryCurrencyAmount($bill);
+    }
+
+    private function updatePrimaryCurrencyAmount(Bill $bill): void
+    {
+        $params                     = new ConversionParameters();
+        $params->user               = $bill->user;
+        $params->model              = $bill;
+        $params->originalCurrency   = $bill->transactionCurrency;
+        $params->amountField        = 'amount_min';
+        $params->primaryAmountField = 'native_amount_min';
+        ConvertsAmountToPrimaryAmount::convert($params);
+
+        // and again!
+        $params->amountField        = 'amount_max';
+        $params->primaryAmountField = 'native_amount_max';
+        ConvertsAmountToPrimaryAmount::convert($params);
     }
 }

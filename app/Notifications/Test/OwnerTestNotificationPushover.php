@@ -45,8 +45,7 @@ class OwnerTestNotificationPushover extends Notification
      */
     public function toArray(OwnerNotifiable $notifiable): array
     {
-        return [
-        ];
+        return [];
     }
 
     /**
@@ -56,9 +55,9 @@ class OwnerTestNotificationPushover extends Notification
     {
         Log::debug('Now in toPushover()');
 
-        return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))
-            ->title((string) trans('email.admin_test_subject'))
-        ;
+        return PushoverMessage::create((string) trans('email.admin_test_message', ['channel' => 'Pushover']))->title((string) trans(
+            'email.admin_test_subject'
+        ));
     }
 
     /**

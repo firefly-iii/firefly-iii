@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Chart\Category;
 
-use FireflyIII\Support\Facades\Navigation;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
-use Illuminate\Support\Collection;
+use FireflyIII\Support\Facades\Navigation;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Collection;
 
 /**
  * Class WholePeriodChartGenerator
@@ -50,7 +50,13 @@ class WholePeriodChartGenerator
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
 
-        $types             = [AccountTypeEnum::DEFAULT->value, AccountTypeEnum::ASSET->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value];
+        $types             = [
+            AccountTypeEnum::DEFAULT->value,
+            AccountTypeEnum::ASSET->value,
+            AccountTypeEnum::LOAN->value,
+            AccountTypeEnum::DEBT->value,
+            AccountTypeEnum::MORTGAGE->value,
+        ];
         $accounts          = $accountRepository->getAccountsByType($types);
         $step              = $this->calculateStep($start, $end);
         $chartData         = [];
@@ -75,14 +81,14 @@ class WholePeriodChartGenerator
             $code                                      = $currency['currency_code'];
             $name                                      = $currency['currency_name'];
             $chartData[sprintf('spent-in-%s', $code)]  = [
-                'label'           => (string)trans('firefly.box_spent_in_currency', ['currency' => $name]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency'           => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ];
 
             $chartData[sprintf('earned-in-%s', $code)] = [
-                'label'           => (string)trans('firefly.box_earned_in_currency', ['currency' => $name]),
+                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency'           => $name]),
                 'entries'         => [],
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green

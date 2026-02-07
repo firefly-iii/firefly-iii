@@ -25,9 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Transaction;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Events\UpdatedAccount;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -51,20 +48,18 @@ class DestroyController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $admin */
-                $admin                 = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $admin */
+            $admin                 = auth()->user();
 
-                $this->repository      = app(JournalRepositoryInterface::class);
-                $this->repository->setUser($admin);
+            $this->repository      = app(JournalRepositoryInterface::class);
+            $this->repository->setUser($admin);
 
-                $this->groupRepository = app(TransactionGroupRepository::class);
-                $this->groupRepository->setUser($admin);
+            $this->groupRepository = app(TransactionGroupRepository::class);
+            $this->groupRepository->setUser($admin);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -76,30 +71,8 @@ class DestroyController extends Controller
     public function destroy(TransactionGroup $transactionGroup): JsonResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        // grab asset account(s) from group:
-        $accounts = [];
-
-        /** @var TransactionJournal $journal */
-        foreach ($transactionGroup->transactionJournals as $journal) {
-            /** @var Transaction $transaction */
-            foreach ($journal->transactions as $transaction) {
-                $type = $transaction->account->accountType->type;
-                // if is valid liability, trigger event!
-                if (in_array($type, config('firefly.valid_liabilities'), true)) {
-                    $accounts[] = $transaction->account;
-                }
-            }
-        }
-
         $this->groupRepository->destroy($transactionGroup);
-
         Preferences::mark();
-
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            Log::debug(sprintf('Now going to trigger updated account event for account #%d', $account->id));
-            event(new UpdatedAccount($account));
-        }
 
         return response()->json([], 204);
     }

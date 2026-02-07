@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\CategoryObserver;
+use FireflyIII\Handlers\Observer\DeletedCategoryObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\Support\Models\ReturnsIntegerUserIdTrait;
 use FireflyIII\User;
@@ -36,7 +36,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([CategoryObserver::class])]
+#[ObservedBy([DeletedCategoryObserver::class])]
 class Category extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -52,10 +52,13 @@ class Category extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
+        if ($value instanceof self) {
+            $value = (int) $value->id;
+        }
         if (auth()->check()) {
-            $categoryId = (int)$value;
+            $categoryId = (int) $value;
 
             /** @var User $user */
             $user       = auth()->user();
@@ -68,11 +71,6 @@ class Category extends Model
         }
 
         throw new NotFoundHttpException();
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 
     public function attachments(): MorphMany
@@ -88,6 +86,11 @@ class Category extends Model
         return $this->morphMany(Note::class, 'noteable');
     }
 
+    public function primaryPeriodStatistics(): MorphMany
+    {
+        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
+    }
+
     public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
@@ -96,6 +99,11 @@ class Category extends Model
     public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 
     protected function casts(): array
@@ -108,10 +116,5 @@ class Category extends Model
             'user_id'       => 'integer',
             'user_group_id' => 'integer',
         ];
-    }
-
-    public function primaryPeriodStatistics(): MorphMany
-    {
-        return $this->morphMany(PeriodStatistic::class, 'primary_statable');
     }
 }

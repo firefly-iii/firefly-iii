@@ -41,6 +41,7 @@ abstract class TestCase extends BaseTestCase
     use RefreshDatabase;
 
     protected const MAX_ITERATIONS = 2;
+
     protected $seed                = true;
 
     public function dateRangeProvider(): array
@@ -56,30 +57,19 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    protected function getAuthenticatedUser(): User
-    {
-        return User::where('email', 'james@firefly')->first();
-    }
-
     protected function createAuthenticatedUser(): User
     {
         $group = UserGroup::create(['title' => 'test@email.com']);
         $role  = UserRole::where('title', 'owner')->first();
-        $user  = User::create([
-            'email'         => 'test@email.com',
-            'password'      => 'password',
-            'user_group_id' => $group->id,
-        ]);
+        $user  = User::create(['email'         => 'test@email.com', 'password'      => 'password', 'user_group_id' => $group->id]);
 
-        GroupMembership::create(
-            [
-                'user_id'       => $user->id,
-                'user_group_id' => $group->id,
-                'user_role_id'  => $role->id,
-            ]
-        );
-
+        GroupMembership::create(['user_id'       => $user->id, 'user_group_id' => $group->id, 'user_role_id'  => $role->id]);
 
         return $user;
+    }
+
+    protected function getAuthenticatedUser(): User
+    {
+        return User::where('email', 'james@firefly')->first();
     }
 }

@@ -33,6 +33,12 @@ use Illuminate\Support\Collection;
  */
 class ALERepository implements ALERepositoryInterface
 {
+    public function getForId(string $model, int $modelId): Collection
+    {
+        // all Models have an ID.
+        return AuditLogEntry::where('auditable_id', $modelId)->where('auditable_type', $model)->get();
+    }
+
     public function getForObject(Model $model): Collection
     {
         // all Models have an ID.
@@ -51,11 +57,5 @@ class ALERepository implements ALERepositoryInterface
         $auditLogEntry->save();
 
         return $auditLogEntry;
-    }
-
-    public function getForId(string $model, int $modelId): Collection
-    {
-        // all Models have an ID.
-        return AuditLogEntry::where('auditable_id', $modelId)->where('auditable_type', $model)->get();
     }
 }

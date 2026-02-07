@@ -37,7 +37,7 @@ use function Safe\json_decode;
 class IsValidBulkClause implements ValidationRule
 {
     private string $error;
-    private array  $rules;
+    private array $rules;
 
     public function __construct(string $type)
     {
@@ -92,9 +92,7 @@ class IsValidBulkClause implements ValidationRule
                     return false;
                 }
                 // validate!
-                $validator = Validator::make(['value' => $arrayValue], [
-                    'value' => $this->rules[$clause][$arrayKey],
-                ]);
+                $validator = Validator::make(['value' => $arrayValue], ['value' => $this->rules[$clause][$arrayKey]]);
                 if ($validator->fails()) {
                     $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value'))); // @phpstan-ignore-line
 

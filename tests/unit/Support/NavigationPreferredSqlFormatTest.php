@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 namespace Tests\unit\Support;
 
-use Override;
 use Carbon\Carbon;
 use FireflyIII\Support\Navigation;
+use Override;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\integration\TestCase;
 
@@ -43,16 +43,12 @@ final class NavigationPreferredSqlFormatTest extends TestCase
 {
     private Navigation $navigation;
 
-    #[Override]
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->navigation = new Navigation();
-    }
-
     #[DataProvider('provideDates')]
-    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(Carbon $start, Carbon $end, string $expected): void
-    {
+    public function testGivenStartAndEndDatesWhenCallPreferredSqlFormatThenReturnsTheExpectedFormatSuccessful(
+        Carbon $start,
+        Carbon $end,
+        string $expected
+    ): void {
         $formatPeriod = $this->navigation->preferredSqlFormat($start, $end);
         $this->assertSame($expected, $formatPeriod);
     }
@@ -82,5 +78,12 @@ final class NavigationPreferredSqlFormatTest extends TestCase
         yield '1 year' => [Carbon::now(), Carbon::now()->addYear(), '%Y-%m'];
 
         yield '2 years' => [Carbon::now(), Carbon::now()->addYears(2), '%Y'];
+    }
+
+    #[Override]
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->navigation = new Navigation();
     }
 }

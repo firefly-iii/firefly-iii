@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\RuleGroup;
 
-use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleGroupFormRequest;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -50,16 +50,14 @@ class EditController extends Controller
     {
         parent::__construct();
 
-        $this->middleware(
-            function ($request, $next) {
-                app('view')->share('title', (string) trans('firefly.rules'));
-                app('view')->share('mainTitleIcon', 'fa-random');
+        $this->middleware(function ($request, $next) {
+            app('view')->share('title', (string) trans('firefly.rules'));
+            app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->repository = app(RuleGroupRepositoryInterface::class);
+            $this->repository = app(RuleGroupRepositoryInterface::class);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -72,9 +70,7 @@ class EditController extends Controller
         $subTitle    = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
-        $preFilled   = [
-            'active' => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active,
-        ];
+        $preFilled   = ['active'   => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active];
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUrl('rule-groups.edit.url');
@@ -82,7 +78,7 @@ class EditController extends Controller
         session()->forget('rule-groups.edit.fromUpdate');
         session()->flash('preFilled', $preFilled);
 
-        return view('rules.rule-group.edit', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
+        return view('rules.rule-group.edit', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
     }
 
     /**

@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use FireflyIII\Handlers\Observer\WebhookMessageObserver;
+use FireflyIII\Handlers\Observer\DeletedWebhookMessageObserver;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -34,7 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-#[ObservedBy([WebhookMessageObserver::class])]
+#[ObservedBy([DeletedWebhookMessageObserver::class])]
 class WebhookMessage extends Model
 {
     use ReturnsIntegerIdTrait;
@@ -44,10 +44,13 @@ class WebhookMessage extends Model
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if (auth()->check()) {
-            $messageId = (int)$value;
+            if ($value instanceof self) {
+                $value = (int) $value->id;
+            }
+            $messageId = (int) $value;
 
             /** @var User $user */
             $user      = auth()->user();
@@ -74,13 +77,7 @@ class WebhookMessage extends Model
 
     protected function casts(): array
     {
-        return [
-            'sent'    => 'boolean',
-            'errored' => 'boolean',
-            'uuid'    => 'string',
-            'message' => 'json',
-            'logs'    => 'json',
-        ];
+        return ['sent'    => 'boolean', 'errored' => 'boolean', 'uuid'    => 'string', 'message' => 'json', 'logs'    => 'json'];
     }
 
     /**
@@ -88,15 +85,11 @@ class WebhookMessage extends Model
      */
     protected function sent(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): bool => (bool)$value,
-        );
+        return Attribute::make(get: static fn ($value): bool => (bool) $value);
     }
 
     protected function webhookId(): Attribute
     {
-        return Attribute::make(
-            get: static fn ($value): int => (int)$value,
-        );
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

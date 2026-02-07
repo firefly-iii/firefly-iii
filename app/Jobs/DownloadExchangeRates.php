@@ -54,10 +54,10 @@ class DownloadExchangeRates implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    private array                       $active = [];
-    private Carbon                      $date;
+    private array $active = [];
+    private Carbon $date;
     private CurrencyRepositoryInterface $repository;
-    private Collection                  $users;
+    private Collection $users;
 
     /**
      * Create a new job instance.
@@ -91,6 +91,13 @@ class DownloadExchangeRates implements ShouldQueue
         foreach ($currencies as $currency) {
             $this->downloadRates($currency);
         }
+    }
+
+    public function setDate(Carbon $date): void
+    {
+        $newDate    = clone $date;
+        $newDate->startOfDay();
+        $this->date = $newDate;
     }
 
     /**
@@ -129,20 +136,6 @@ class DownloadExchangeRates implements ShouldQueue
             return;
         }
         $this->saveRates($currency, $date, $json['rates']);
-    }
-
-    private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
-    {
-        foreach ($rates as $code => $rate) {
-            $to = $this->getCurrency($code);
-            if (!$to instanceof TransactionCurrency) {
-                Log::debug(sprintf('Currency %s is not in use, do not save rate.', $code));
-
-                continue;
-            }
-            Log::debug(sprintf('Currency %s is in use.', $code));
-            $this->saveRate($currency, $to, $date, $rate);
-        }
     }
 
     private function getCurrency(string $code): ?TransactionCurrency
@@ -185,10 +178,17 @@ class DownloadExchangeRates implements ShouldQueue
         }
     }
 
-    public function setDate(Carbon $date): void
+    private function saveRates(TransactionCurrency $currency, Carbon $date, array $rates): void
     {
-        $newDate    = clone $date;
-        $newDate->startOfDay();
-        $this->date = $newDate;
+        foreach ($rates as $code => $rate) {
+            $to = $this->getCurrency($code);
+            if (!$to instanceof TransactionCurrency) {
+                Log::debug(sprintf('Currency %s is not in use, do not save rate.', $code));
+
+                continue;
+            }
+            Log::debug(sprintf('Currency %s is in use.', $code));
+            $this->saveRate($currency, $to, $date, $rate);
+        }
     }
 }

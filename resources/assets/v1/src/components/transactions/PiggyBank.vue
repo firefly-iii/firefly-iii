@@ -79,7 +79,7 @@ export default {
           if (res.data.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
             // add to temp list
             let currentPiggy = res.data[key];
-            if (currentPiggy.objectGroup) {
+            if (null !== currentPiggy.object_group_id) {
               let groupOrder = currentPiggy.object_group_order;
               if (!tempList[groupOrder]) {
                 tempList[groupOrder] = {

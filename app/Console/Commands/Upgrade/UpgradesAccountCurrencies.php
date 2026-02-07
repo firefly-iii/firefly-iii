@@ -33,10 +33,10 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Facades\Amount;
+use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use FireflyIII\Support\Facades\FireflyConfig;
-use FireflyIII\Support\Facades\Amount;
 
 class UpgradesAccountCurrencies extends Command
 {
@@ -47,8 +47,8 @@ class UpgradesAccountCurrencies extends Command
     protected $description          = 'Give all accounts proper currency info.';
     protected $signature            = 'upgrade:480-account-currencies {--F|force : Force the execution of this command.}';
     private AccountRepositoryInterface $accountRepos;
-    private int                        $count;
-    private UserRepositoryInterface    $userRepos;
+    private int $count;
+    private UserRepositoryInterface $userRepos;
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's
@@ -73,6 +73,18 @@ class UpgradesAccountCurrencies extends Command
         return 0;
     }
 
+    private function isExecuted(): bool
+    {
+        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+
+        return (bool) $configVar?->data;
+    }
+
+    private function markAsExecuted(): void
+    {
+        FireflyConfig::set(self::CONFIG_NAME, true);
+    }
+
     /**
      * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
      * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
@@ -85,11 +97,43 @@ class UpgradesAccountCurrencies extends Command
         $this->count        = 0;
     }
 
-    private function isExecuted(): bool
+    private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
-        $configVar = FireflyConfig::get(self::CONFIG_NAME, false);
+        $this->accountRepos->setUser($account->user);
+        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
+        $openingBalance  = $this->accountRepos->getOpeningBalance($account);
+        $obCurrency      = (int) $openingBalance?->transaction_currency_id;
 
-        return (bool) $configVar?->data;
+        // both 0? set to default currency:
+        if (0 === $accountCurrency && 0 === $obCurrency) {
+            AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
+            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $currency->id]);
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
+            ++$this->count;
+
+            return;
+        }
+
+        // account is set to 0, opening balance is not?
+        if (0 === $accountCurrency && $obCurrency > 0) {
+            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $obCurrency]);
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
+            ++$this->count;
+
+            return;
+        }
+        // do not match and opening balance id is not null.
+        if ($accountCurrency !== $obCurrency && $openingBalance instanceof TransactionJournal) {
+            // update opening balance:
+            $openingBalance->transaction_currency_id = $accountCurrency;
+            $openingBalance->save();
+            $openingBalance->transactions->each(static function (Transaction $transaction) use ($accountCurrency): void {
+                $transaction->transaction_currency_id = $accountCurrency;
+                $transaction->save();
+            });
+            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
+            ++$this->count;
+        }
     }
 
     private function updateAccountCurrencies(): void
@@ -112,51 +156,5 @@ class UpgradesAccountCurrencies extends Command
         foreach ($accounts as $account) {
             $this->updateAccount($account, $primaryCurrency);
         }
-    }
-
-    private function updateAccount(Account $account, TransactionCurrency $currency): void
-    {
-        $this->accountRepos->setUser($account->user);
-        $accountCurrency = (int) $this->accountRepos->getMetaValue($account, 'currency_id');
-        $openingBalance  = $this->accountRepos->getOpeningBalance($account);
-        $obCurrency      = (int) $openingBalance?->transaction_currency_id;
-
-        // both 0? set to default currency:
-        if (0 === $accountCurrency && 0 === $obCurrency) {
-            AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
-            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
-            ++$this->count;
-
-            return;
-        }
-
-        // account is set to 0, opening balance is not?
-        if (0 === $accountCurrency && $obCurrency > 0) {
-            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
-            ++$this->count;
-
-            return;
-        }
-        // do not match and opening balance id is not null.
-        if ($accountCurrency !== $obCurrency && $openingBalance instanceof TransactionJournal) {
-            // update opening balance:
-            $openingBalance->transaction_currency_id = $accountCurrency;
-            $openingBalance->save();
-            $openingBalance->transactions->each(
-                static function (Transaction $transaction) use ($accountCurrency): void {
-                    $transaction->transaction_currency_id = $accountCurrency;
-                    $transaction->save();
-                }
-            );
-            $this->friendlyInfo(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
-            ++$this->count;
-        }
-    }
-
-    private function markAsExecuted(): void
-    {
-        FireflyConfig::set(self::CONFIG_NAME, true);
     }
 }

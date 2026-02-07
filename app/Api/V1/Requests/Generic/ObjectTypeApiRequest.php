@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+
 /*
  * AccountTypeApiRequest.php
  * Copyright (c) 2025 https://github.com/ctrl-f5
@@ -63,9 +64,7 @@ class ObjectTypeApiRequest extends ApiRequest
         if (Transaction::class === $this->objectType) {
             $rule = new IsValidTransactionTypeList();
         }
-        $rules = [
-            'types' => [$rule],
-        ];
+        $rules = ['types' => [$rule]];
         if ('' !== $this->required) {
             $rules['types'][] = $this->required;
         }
@@ -75,34 +74,36 @@ class ObjectTypeApiRequest extends ApiRequest
 
     public function withValidator(Validator $validator): void
     {
-        $validator->after(
-            function (Validator $validator): void {
-                if ($validator->failed()) {
-                    return;
-                }
-                $type = $this->convertString('types', 'all');
-                $this->attributes->set('type', $type);
-
-                switch ($this->objectType) {
-                    default:
-                        $this->attributes->set('types', []);
-
-                        // no break
-                    case Account::class:
-                        $types = $this->mapAccountTypes($type);
-
-                        // remove system account types because autocomplete doesn't need them.
-                        $types = array_values(array_diff($types, [AccountTypeEnum::INITIAL_BALANCE->value, AccountTypeEnum::RECONCILIATION->value, AccountTypeEnum::LIABILITY_CREDIT->value]));
-                        $this->attributes->set('types', $types);
-
-                        break;
-
-                    case Transaction::class:
-                        $this->attributes->set('types', $this->mapTransactionTypes($type));
-
-                        break;
-                }
+        $validator->after(function (Validator $validator): void {
+            if ($validator->failed()) {
+                return;
             }
-        );
+            $type = $this->convertString('types', 'all');
+            $this->attributes->set('type', $type);
+
+            switch ($this->objectType) {
+                default:
+                    $this->attributes->set('types', []);
+
+                    // no break
+                case Account::class:
+                    $types = $this->mapAccountTypes($type);
+
+                    // remove system account types because autocomplete doesn't need them.
+                    $types = array_values(array_diff($types, [
+                        AccountTypeEnum::INITIAL_BALANCE->value,
+                        AccountTypeEnum::RECONCILIATION->value,
+                        AccountTypeEnum::LIABILITY_CREDIT->value,
+                    ]));
+                    $this->attributes->set('types', $types);
+
+                    break;
+
+                case Transaction::class:
+                    $this->attributes->set('types', $this->mapTransactionTypes($type));
+
+                    break;
+            }
+        });
     }
 }

@@ -26,12 +26,12 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
+use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FireflyIII\Support\Facades\FireflyConfig;
 
 /**
  * Class DeleteController
@@ -46,16 +46,14 @@ class DeleteController extends Controller
         parent::__construct();
 
         // translations:
-        $this->middleware(
-            static function ($request, $next) {
-                app('view')->share('mainTitleIcon', 'fa-bolt');
-                app('view')->share('subTitleIcon', 'fa-trash');
-                app('view')->share('title', (string) trans('firefly.webhooks'));
-                app('view')->share('subTitle', (string) trans('firefly.delete_webhook'));
+        $this->middleware(static function ($request, $next) {
+            app('view')->share('mainTitleIcon', 'fa-bolt');
+            app('view')->share('subTitleIcon', 'fa-trash');
+            app('view')->share('title', (string) trans('firefly.webhooks'));
+            app('view')->share('subTitle', (string) trans('firefly.delete_webhook'));
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -74,6 +72,6 @@ class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
-        return view('webhooks.delete', ['webhook' => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.delete', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
     }
 }

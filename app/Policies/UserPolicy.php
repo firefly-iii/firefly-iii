@@ -34,12 +34,14 @@ class UserPolicy
     public function view(User $user, User $user1): bool
     {
         return true;
+
         //        return auth()->check() && $user->id === $account->user_id;
     }
 
     public function viewAccounts(User $user): bool
     {
         return true;
+
         //        return auth()->check();
     }
 
@@ -51,6 +53,7 @@ class UserPolicy
     public function viewAny(): bool
     {
         return true;
+
         //        return auth()->check();
     }
 }

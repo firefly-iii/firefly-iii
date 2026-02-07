@@ -23,13 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use Illuminate\Support\Facades\Log;
-use FireflyIII\Events\TriggeredAuditLog;
+use FireflyIII\Events\Model\TransactionGroup\TransactionGroupRequestsAuditLogEntry;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class DeleteTransaction.
@@ -39,7 +39,9 @@ class DeleteTransaction implements ActionInterface
     /**
      * TriggerInterface constructor.
      */
-    public function __construct(private readonly RuleAction $action) {}
+    public function __construct(
+        private readonly RuleAction $action
+    ) {}
 
     public function actOnArray(array $journal): bool
     {
@@ -47,26 +49,26 @@ class DeleteTransaction implements ActionInterface
 
         // destroy entire group.
         if (1 === $count) {
-            Log::debug(
-                sprintf(
-                    'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
-                    $journal['transaction_journal_id'],
-                    $journal['description']
-                )
-            );
+            Log::debug(sprintf(
+                'RuleAction DeleteTransaction DELETED the entire transaction group of journal #%d ("%s").',
+                $journal['transaction_journal_id'],
+                $journal['description']
+            ));
 
             /** @var TransactionGroup $group */
             $group   = TransactionGroup::find($journal['transaction_group_id']);
             $service = app(TransactionGroupDestroyService::class);
             $service->destroy($group);
 
-            event(new TriggeredAuditLog($this->action->rule, $group, 'delete_group', null, null));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $group, 'delete_group', null, null));
 
             return true;
         }
-        Log::debug(
-            sprintf('RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").', $journal['transaction_journal_id'], $journal['description'])
-        );
+        Log::debug(sprintf(
+            'RuleAction DeleteTransaction DELETED transaction journal #%d ("%s").',
+            $journal['transaction_journal_id'],
+            $journal['description']
+        ));
 
         // trigger delete factory:
         /** @var null|TransactionJournal $object */
@@ -75,7 +77,7 @@ class DeleteTransaction implements ActionInterface
             /** @var JournalDestroyService $service */
             $service = app(JournalDestroyService::class);
             $service->destroy($object);
-            event(new TriggeredAuditLog($this->action->rule, $object, 'delete_journal', null, null));
+            event(new TransactionGroupRequestsAuditLogEntry($this->action->rule, $object, 'delete_journal', null, null));
         }
 
         return true;

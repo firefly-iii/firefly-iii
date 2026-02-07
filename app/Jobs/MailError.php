@@ -51,8 +51,12 @@ class MailError extends Job implements ShouldQueue
     /**
      * MailError constructor.
      */
-    public function __construct(protected array $userData, protected string $destination, protected string $ipAddress, protected array $exception)
-    {
+    public function __construct(
+        protected array $userData,
+        protected string $destination,
+        protected string $ipAddress,
+        protected array $exception
+    ) {
         $debug = $this->exception;
         unset($debug['stackTrace'], $debug['headers']);
 
@@ -80,15 +84,11 @@ class MailError extends Job implements ShouldQueue
 
         if ($this->attempts() < 3 && '' !== $email) {
             try {
-                Mail::send(
-                    ['emails.error-html', 'emails.error-text'],
-                    $args,
-                    static function (Message $message) use ($email): void {
-                        if ('mail@example.com' !== $email) {
-                            $message->to($email, $email)->subject((string) trans('email.error_subject'));
-                        }
+                Mail::send(['emails.error-html', 'emails.error-text'], $args, static function (Message $message) use ($email): void {
+                    if ('mail@example.com' !== $email) {
+                        $message->to($email, $email)->subject((string) trans('email.error_subject'));
                     }
-                );
+                });
             } catch (Exception|TransportException $e) {
                 $message = $e->getMessage();
                 if (str_contains($message, 'Bcc')) {
@@ -152,18 +152,16 @@ class MailError extends Job implements ShouldQueue
             Log::debug(sprintf('Now checking limit "%s"', $type), $info);
             if (!array_key_exists($type, $limits)) {
                 Log::debug(sprintf('Limit "%s" reset to zero, did not exist yet.', $type));
-                $limits[$type] = [
-                    'time' => Carbon::now()->getTimestamp(),
-                    'sent' => 0,
-                ];
+                $limits[$type] = ['time' => Carbon::now()->getTimestamp(), 'sent' => 0];
             }
 
-            if (Carbon::now()->getTimestamp() - $limits[$type]['time'] > $info['reset']) {
-                Log::debug(sprintf('Time past for this limit is %d seconds, exceeding %d seconds. Reset to zero.', Carbon::now()->getTimestamp() - $limits[$type]['time'], $info['reset']));
-                $limits[$type] = [
-                    'time' => Carbon::now()->getTimestamp(),
-                    'sent' => 0,
-                ];
+            if ((Carbon::now()->getTimestamp() - $limits[$type]['time']) > $info['reset']) {
+                Log::debug(sprintf(
+                    'Time past for this limit is %d seconds, exceeding %d seconds. Reset to zero.',
+                    Carbon::now()->getTimestamp() - $limits[$type]['time'],
+                    $info['reset']
+                ));
+                $limits[$type] = ['time' => Carbon::now()->getTimestamp(), 'sent' => 0];
             }
 
             if ($limits[$type]['sent'] > $info['limit']) {

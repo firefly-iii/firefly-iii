@@ -54,17 +54,15 @@ class ListController extends Controller
     public function __construct()
     {
         parent::__construct();
-        $this->middleware(
-            function ($request, $next) {
-                /** @var User $user */
-                $user             = auth()->user();
+        $this->middleware(function ($request, $next) {
+            /** @var User $user */
+            $user             = auth()->user();
 
-                $this->repository = app(TagRepositoryInterface::class);
-                $this->repository->setUser($user);
+            $this->repository = app(TagRepositoryInterface::class);
+            $this->repository->setUser($user);
 
-                return $next($request);
-            }
-        );
+            return $next($request);
+        });
     }
 
     /**
@@ -142,7 +140,6 @@ class ListController extends Controller
         $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
         $transactions = $enrichment->enrich($paginator->getCollection());
-
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer  = app(TransactionGroupTransformer::class);
