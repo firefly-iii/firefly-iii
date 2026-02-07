@@ -54,7 +54,7 @@ class QueryParser implements QueryParserInterface
         $prohibited             = false;
         $chrArray               = preg_split('//u', $this->query, -1, PREG_SPLIT_NO_EMPTY);
         $count                  = count($chrArray);
-        $prevChar = null;
+        $prevChar               = null;
         while ($this->position < $count) {
             $char     = $chrArray[$this->position];
             $nextChar = $chrArray[$this->position + 1] ?? '';

@@ -35,9 +35,7 @@ class ExtendCurrencyInfo extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down(): void
-    {
-    }
+    public function down(): void {}
 
     /**
      * Run the migrations.
