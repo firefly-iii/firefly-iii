@@ -95,6 +95,10 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function deleteStatisticsForPrefix(string $prefix, Collection $dates): void
     {
+        if(null === $this->userGroup) {
+            Log::warning(('No user group, so cannot continue.'));
+            return;
+        }
         $count = $this->userGroup
             ->periodStatistics()
             ->where(function (Builder $q) use ($dates): void {

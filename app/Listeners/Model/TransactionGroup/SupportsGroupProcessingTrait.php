@@ -29,12 +29,17 @@ trait SupportsGroupProcessingTrait
     protected function processRules(Collection $set, string $type): void
     {
         Log::debug(sprintf('Will now processRules("%s") for %d journal(s)', $type, $set->count()));
-        $array               = $set->pluck('id')->toArray();
+
+        if (0 === $set->count()) {
+            return;
+        }
+
+        $array = $set->pluck('id')->toArray();
 
         /** @var TransactionJournal $first */
-        $first               = $set->first();
-        $journalIds          = implode(',', $array);
-        $user                = $first->user;
+        $first      = $set->first();
+        $journalIds = implode(',', $array);
+        $user       = $first->user;
         Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
@@ -44,12 +49,12 @@ trait SupportsGroupProcessingTrait
         // add the groups to the rule engine.
         // it should run the rules in the group and cancel the group if necessary.
         Log::debug(sprintf('Fire processRules with ALL %s rule groups.', $type));
-        $groups              = $ruleGroupRepository->getRuleGroupsWithRules($type);
+        $groups = $ruleGroupRepository->getRuleGroupsWithRules($type);
 
         // create and fire rule engine.
-        $newRuleEngine       = app(RuleEngineInterface::class);
+        $newRuleEngine = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
+        $newRuleEngine->addOperator(['type' => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
         $newRuleEngine->fire();
         Log::debug(sprintf('Done with processRules("%s") for %d journal(s)', $type, $set->count()));
@@ -63,10 +68,16 @@ trait SupportsGroupProcessingTrait
 
             return;
         }
-        // find the earliest date in the set, based on date and _internal_previous_date
-        $earliest         = $objects->transactionJournals->pluck('date')->sort()->first();
-        $fromInternalDate = $this->getFromInternalDate($objects->transactionJournals->pluck('id')->toArray());
-        $earliest         = $fromInternalDate->lt($earliest) ? $fromInternalDate : $earliest;
+        if (0 === $objects->accounts->count()) {
+            return;
+        }
+        $earliest = today()->subDays(2);
+        if ($objects->transactionJournals->count() > 0) {
+            // find the earliest date in the set, based on date and _internal_previous_date
+            $earliest         = $objects->transactionJournals->pluck('date')->sort()->first();
+            $fromInternalDate = $this->getFromInternalDate($objects->transactionJournals->pluck('id')->toArray());
+            $earliest         = $fromInternalDate->lt($earliest) ? $fromInternalDate : $earliest;
+        }
         Log::debug(sprintf('Found earliest date: %s', $earliest->toW3cString()));
 
         Log::debug('Found accounts to process', $objects->accounts->pluck('id')->toArray());
@@ -78,6 +89,7 @@ trait SupportsGroupProcessingTrait
     {
         if (!auth()->check()) {
             Log::debug('Will NOT remove period statistics for all objects, because no user detected.');
+            return;
         }
         Log::debug('Will now remove period statistics for all objects.');
 
@@ -122,9 +134,13 @@ trait SupportsGroupProcessingTrait
     {
         Log::debug(sprintf('Will now create webhook messages for %d group(s)', $groups->count()));
 
+        if (0 === $groups->count()) {
+            return;
+        }
+
         /** @var TransactionGroup $first */
-        $first  = $groups->first();
-        $user   = $first->user;
+        $first = $groups->first();
+        $user  = $first->user;
 
         /** @var MessageGeneratorInterface $engine */
         $engine = app(MessageGeneratorInterface::class);
