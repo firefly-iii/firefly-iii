@@ -98,6 +98,7 @@ trait ChecksLogin
 
                 return null;
             }
+
             // Log::debug('Request class has valid user_group_id.');
         }
 

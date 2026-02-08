@@ -146,7 +146,7 @@ class TransactionSummarizer
             // $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], \FireflyIII\Support\Facades\Steam::{$method}($amount));
             // Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
-//        Log::debug('End of sumExpenses.', $array);
+        //        Log::debug('End of sumExpenses.', $array);
 
         return $array;
     }
