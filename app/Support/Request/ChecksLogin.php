@@ -46,7 +46,7 @@ trait ChecksLogin
             return false;
         }
         if (!property_exists($this, 'acceptedRoles')) { // @phpstan-ignore-line
-            Log::debug(sprintf('Request class %s has no acceptedRoles array', get_class($this)));
+            Log::debug(sprintf('Request class %s has no acceptedRoles array', static::class));
 
             return true; // check for false already took place.
         }
