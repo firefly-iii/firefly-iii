@@ -167,7 +167,7 @@ class CreateAutoBudgetLimits implements ShouldQueue
 
         /** @var BudgetLimitRepositoryInterface $repository */
         $repository  = app(BudgetLimitRepositoryInterface::class);
-        $repository->setUserGroup($autoBudget->budget->user->userGroup);
+        $repository->setUser($autoBudget->budget->user);
 
         $budgetLimit = $repository->store([
             'currency_id' => $autoBudget->transaction_currency_id,
