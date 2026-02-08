@@ -57,19 +57,27 @@ return new class() extends Migration {
                 'transaction_group_id',
                 'transaction_type_id',
                 'transaction_currency_id',
-                'bill_id'
+                'bill_id',
             ],
-            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id']
+            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
         ];
 
         foreach ($set as $table => $fields) {
             foreach ($fields as $field) {
                 try {
-                    Schema::table($table, static function (Blueprint $blueprint) use ($field): void {
-                        $blueprint->index($field);
+                    Schema::table($table, static function (Blueprint $blueprint) use ($table, $field): void {
+                        if (!Schema::hasIndex($table, $field)) {
+                            $blueprint->index($field);
+                        }
                     });
                 } catch (QueryException $e) {
-                    app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $e->getMessage()));
+                    $message = $e->getMessage();
+
+                    // ignore duplicate key name as error.
+                    if(str_contains($message,' Duplicate key name')) {
+                        continue;
+                    }
+                    app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $message));
                     app('log')->error(self::EXPL);
                 }
             }
