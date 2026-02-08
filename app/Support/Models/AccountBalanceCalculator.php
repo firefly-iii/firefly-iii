@@ -78,7 +78,7 @@ class AccountBalanceCalculator
         ]);
 
         if (null === $first) {
-            Log::debug(sprintf('Found no transactions for currency #%d and account #%d, return 0.', $currencyId, $accountId));
+            // Log::debug(sprintf('Found no transactions for currency #%d and account #%d, return 0.', $currencyId, $accountId));
 
             return '0';
         }

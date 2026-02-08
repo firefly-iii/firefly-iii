@@ -60,7 +60,7 @@ class SearchRuleEngine implements RuleEngineInterface
 
     public function addOperator(array $operator): void
     {
-        Log::debug('Add extra operator: ', $operator);
+        // Log::debug('Add extra operator: ', $operator);
         $this->operators[] = $operator;
     }
 
