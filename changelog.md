@@ -6,9 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## v6.4.18
 
 ### Fixed
-- #11671
-- #11667
-- #11668
+- [Discussion 11671](https://github.com/orgs/firefly-iii/discussions/11671) (Subscriptions Next Expected Match) started by @idgaron
+- [Issue 11667](https://github.com/firefly-iii/firefly-iii/issues/11667) (Account names and numbers are not corrected in rules when the account is updated) reported by @Kage1
+- [Issue 11668](https://github.com/firefly-iii/firefly-iii/issues/11668) (Auto-budget cron crashes on develop: Call to a member function budgets() on null (BudgetLimitRepository.php:311)) reported by @sykmer
 
 ## v6.4.17 - 2026-02-06
 
