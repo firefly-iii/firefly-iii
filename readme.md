@@ -149,13 +149,13 @@ OK, that was a joke. But for real, when you feel Firefly III made your life bett
 
 ### Sponsorships
 
-Firefly III is sponsored by LamdaTest. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
+Firefly III is sponsored by TestMu AI. Their support allows me to test Firefly III more easily and introduce even fewer bugs with every release.
 
-<p style="font-size:21px; color:black;">Browser testing via
-<a href="https://www.lambdatest.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
-<img src="https://www.lambdatest.com/blue-logo.png" style="vertical-align: middle;" width="250" height="45" />
+Browser testing via:
+
+<a href="https://www.testmuai.com/?utm_source=fireflyiii&utm_medium=sponsor" target="_blank">
+<img src=".github/assets/img/testmu.png" alt="Testmu" style="vertical-align: middle;" width="250" />
 </a>
-</p>
 
 <!-- END OF SPONSOR TEXT -->
 
