@@ -40,7 +40,7 @@ trait SupportsGroupProcessingTrait
         $first               = $set->first();
         $journalIds          = implode(',', $array);
         $user                = $first->user;
-        Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
+        // Log::debug(sprintf('Add local operator for journal(s): %s', $journalIds));
 
         // collect rules:
         $ruleGroupRepository = app(RuleGroupRepositoryInterface::class);

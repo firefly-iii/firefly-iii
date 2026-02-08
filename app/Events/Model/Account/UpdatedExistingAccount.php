@@ -36,6 +36,7 @@ class UpdatedExistingAccount extends Event
      * Create a new event instance.
      */
     public function __construct(
-        public Account $account
+        public Account $account,
+        public array $oldData
     ) {}
 }

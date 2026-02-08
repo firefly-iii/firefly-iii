@@ -74,8 +74,8 @@ class IndexController extends Controller
         $this->cleanupObjectGroups();
         $this->repository->correctOrder();
         $this->repository->correctTransfers();
-        $start       = session('start');
-        $end         = session('end');
+        $start       = session('start')->clone();
+        $end         = session('end')->clone();
         $viewRange   = Preferences::get('viewRange', '1M')->data;
 
         // give the end some extra space when the user has last7, last30 or last90.

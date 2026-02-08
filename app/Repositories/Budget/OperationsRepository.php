@@ -85,7 +85,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ?Collection $budgets = null,
         ?TransactionCurrency $currency = null
     ): array {
-        Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
+        // Log::debug(sprintf('Start of %s(%s, %s, array, array, "%s").', __METHOD__, $start->toW3cString(), $end->toW3cString(), $currency?->code));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.
@@ -275,7 +275,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         TransactionCurrency $transactionCurrency,
         bool $convertToPrimary = false
     ): array {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
+        //        Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
@@ -290,7 +290,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
     public function sumCollectedExpensesByBudget(array $expenses, Budget $budget, bool $convertToPrimary = false): array
     {
-        Log::debug(sprintf('Start of %s.', __METHOD__));
+        // Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
@@ -311,7 +311,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         ?TransactionCurrency $currency = null,
         bool $convertToPrimary = false
     ): array {
-        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToPrimary, true)));
+        //        Log::debug(sprintf('Start of %s(date, date, array, array, "%s", %s).', __METHOD__, $currency?->code, var_export($convertToPrimary, true)));
         // this collector excludes all transfers TO liabilities (which are also withdrawals)
         // because those expenses only become expenses once they move from the liability to the friend.
         // 2024-12-24 disable the exclusion for now.

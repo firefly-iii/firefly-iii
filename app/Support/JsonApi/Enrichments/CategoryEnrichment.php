@@ -63,7 +63,7 @@ class CategoryEnrichment implements EnrichmentInterface
 
     public function enrichSingle(array|Model $model): array|Model
     {
-        Log::debug(__METHOD__);
+        // Log::debug(__METHOD__);
         $collection = new Collection()->push($model);
         $collection = $this->enrich($collection);
 

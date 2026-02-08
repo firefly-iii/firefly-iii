@@ -67,6 +67,12 @@ class TransactionGroupEnrichment implements EnrichmentInterface
 
     // @phpstan-ignore-line
 
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
     public function __construct()
     {
         $this->dateFields      = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
@@ -76,7 +82,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     #[Override]
     public function enrich(Collection $collection): Collection
     {
-        Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));
+        // Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));
         // prep local fields
         $this->collection = $collection;
         $this->collectJournalIds();

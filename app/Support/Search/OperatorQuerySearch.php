@@ -122,11 +122,11 @@ class OperatorQuerySearch implements SearchInterface
             if (str_starts_with($original, '-')) {
                 $return = sprintf('-%s', $config['alias_for']);
             }
-            Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
+            // Log::debug(sprintf('"%s" is an alias for "%s", so return that instead.', $original, $return));
 
             return $return;
         }
-        Log::debug(sprintf('"%s" is not an alias.', $operator));
+        // Log::debug(sprintf('"%s" is not an alias.', $operator));
 
         return $original;
     }
@@ -174,7 +174,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     public function parseQuery(string $query): void
     {
-        Log::debug(sprintf('Now in parseQuery("%s")', $query));
+        // Log::debug(sprintf('Now in parseQuery("%s")', $query));
 
         /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);

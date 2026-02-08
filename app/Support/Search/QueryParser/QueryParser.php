@@ -39,7 +39,7 @@ class QueryParser implements QueryParserInterface
 
     public function parse(string $query): NodeGroup
     {
-        Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
+        // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
         $this->query    = $query;
         $this->position = 0;
 
@@ -78,7 +78,7 @@ class QueryParser implements QueryParserInterface
                 }
                 // char is "
                 ++$this->position;
-                Log::debug(sprintf('Constructed token: %s', $tokenUnderConstruction));
+                // Log::debug(sprintf('Constructed token: %s', $tokenUnderConstruction));
 
                 return new NodeResult($this->createNode($tokenUnderConstruction, $fieldName, $prohibited), false);
             }
@@ -200,11 +200,11 @@ class QueryParser implements QueryParserInterface
                 $token = rtrim($token, '"');
             }
             $token = str_replace('\"', '"', $token);
-            Log::debug(sprintf('Create FieldNode %s:%s (%s)', $fieldName, $token, var_export($prohibited, true)));
+            // Log::debug(sprintf('Create FieldNode %s:%s (%s)', $fieldName, $token, var_export($prohibited, true)));
 
             return new FieldNode(trim($fieldName), trim($token), $prohibited);
         }
-        Log::debug(sprintf('Create StringNode "%s" (%s)', $token, var_export($prohibited, true)));
+        // F Now in handleSearchNodeLog::debug(sprintf('Create StringNode "%s" (%s)', $token, var_export($prohibited, true)));
 
         return new StringNode(trim($token), $prohibited);
     }
