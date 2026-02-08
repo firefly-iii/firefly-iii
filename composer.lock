@@ -11908,16 +11908,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "12.5.9",
+            "version": "12.5.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "83d4c158526c879b4c5cf7149d27958b6d912373"
+                "reference": "1686e30f6b32d35592f878a7f56fd0421d7d56c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/83d4c158526c879b4c5cf7149d27958b6d912373",
-                "reference": "83d4c158526c879b4c5cf7149d27958b6d912373",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/1686e30f6b32d35592f878a7f56fd0421d7d56c5",
+                "reference": "1686e30f6b32d35592f878a7f56fd0421d7d56c5",
                 "shasum": ""
             },
             "require": {
@@ -11931,7 +11931,7 @@
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=8.3",
-                "phpunit/php-code-coverage": "^12.5.2",
+                "phpunit/php-code-coverage": "^12.5.3",
                 "phpunit/php-file-iterator": "^6.0.1",
                 "phpunit/php-invoker": "^6.0.0",
                 "phpunit/php-text-template": "^5.0.0",
@@ -11986,7 +11986,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.9"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/12.5.10"
             },
             "funding": [
                 {
@@ -12010,7 +12010,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-02-05T08:01:09+00:00"
+            "time": "2026-02-08T07:06:48+00:00"
         },
         {
             "name": "rector/rector",
