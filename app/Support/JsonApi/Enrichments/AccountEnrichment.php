@@ -92,7 +92,7 @@ class AccountEnrichment implements EnrichmentInterface
      */
     public function enrich(Collection $collection): Collection
     {
-        Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
+        // Log::debug(sprintf('Now doing account enrichment for %d account(s)', $collection->count()));
 
         // prep local fields
         $this->collection = $collection;

@@ -39,7 +39,7 @@ class QueryParser implements QueryParserInterface
 
     public function parse(string $query): NodeGroup
     {
-        Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
+        // Log::debug(sprintf('Parsing query in QueryParser: "%s"', $query));
         $this->query    = $query;
         $this->position = 0;
 
@@ -78,7 +78,7 @@ class QueryParser implements QueryParserInterface
                 }
                 // char is "
                 ++$this->position;
-                Log::debug(sprintf('Constructed token: %s', $tokenUnderConstruction));
+                // Log::debug(sprintf('Constructed token: %s', $tokenUnderConstruction));
 
                 return new NodeResult($this->createNode($tokenUnderConstruction, $fieldName, $prohibited), false);
             }

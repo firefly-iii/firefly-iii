@@ -76,7 +76,7 @@ class TransactionGroupEnrichment implements EnrichmentInterface
     #[Override]
     public function enrich(Collection $collection): Collection
     {
-        Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));
+        // Log::debug(sprintf('Now doing account enrichment for %d transaction group(s)', $collection->count()));
         // prep local fields
         $this->collection = $collection;
         $this->collectJournalIds();

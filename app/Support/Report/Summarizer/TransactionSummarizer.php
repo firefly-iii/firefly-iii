@@ -45,7 +45,7 @@ class TransactionSummarizer
 
     public function groupByCurrencyId(array $journals, string $method = 'negative', bool $includeForeign = true): array
     {
-        Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s", %s)', count($journals), $method, var_export($includeForeign, true)));
+        // Log::debug(sprintf('Now in groupByCurrencyId([%d journals], "%s", %s)', count($journals), $method, var_export($includeForeign, true)));
         $array = [];
         foreach ($journals as $journal) {
             $field                        = 'amount';
@@ -146,7 +146,7 @@ class TransactionSummarizer
             // $array[$currencyId]['sum'] = bcadd($array[$currencyId]['sum'], \FireflyIII\Support\Facades\Steam::{$method}($amount));
             // Log::debug(sprintf('Journal #%d adds amount %s %s', $journal['transaction_journal_id'], $currencyCode, $amount));
         }
-        Log::debug('End of sumExpenses.', $array);
+//        Log::debug('End of sumExpenses.', $array);
 
         return $array;
     }
@@ -234,7 +234,7 @@ class TransactionSummarizer
 
     public function setConvertToPrimary(bool $convertToPrimary): void
     {
-        Log::debug(sprintf('Overrule convertToPrimary to become %s', var_export($convertToPrimary, true)));
+        // Log::debug(sprintf('Overrule convertToPrimary to become %s', var_export($convertToPrimary, true)));
         $this->convertToPrimary = $convertToPrimary;
     }
 

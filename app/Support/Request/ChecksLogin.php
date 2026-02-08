@@ -39,7 +39,7 @@ trait ChecksLogin
      */
     public function authorize(): bool
     {
-        Log::debug(sprintf('Now in %s', __METHOD__));
+        // Log::debug(sprintf('Now in %s', __METHOD__));
         // Only allow logged-in users
         $check     = auth()->check();
         if (!$check) {
@@ -81,15 +81,15 @@ trait ChecksLogin
     {
         /** @var User $user */
         $user      = auth()->user();
-        Log::debug('Now in getUserGroup()');
+        // Log::debug('Now in getUserGroup()');
 
         /** @var null|UserGroup $userGroup */
         $userGroup = $this->route()?->parameter('userGroup');
         if (null === $userGroup) {
-            Log::debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
+            // Log::debug('Request class has no userGroup parameter, but perhaps there is a parameter.');
             $userGroupId = (int) $this->get('user_group_id');
             if (0 === $userGroupId) {
-                Log::debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
+                // Log::debug(sprintf('Request class has no user_group_id parameter, grab default from user (group #%d).', $user->user_group_id));
                 $userGroupId = (int) $user->user_group_id;
             }
             $userGroup   = UserGroup::find($userGroupId);
@@ -98,7 +98,7 @@ trait ChecksLogin
 
                 return null;
             }
-            Log::debug('Request class has valid user_group_id.');
+            // Log::debug('Request class has valid user_group_id.');
         }
 
         return $userGroup;

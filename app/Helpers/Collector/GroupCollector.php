@@ -433,7 +433,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function getGroups(): Collection
     {
-        Log::debug('Now in getGroups()');
+        // Log::debug('Now in getGroups()');
         if ($this->expandGroupSearch) {
             // get group ID's for the query:
             $groupIds = $this->getCollectedGroupIds();
@@ -556,7 +556,7 @@ class GroupCollector implements GroupCollectorInterface
         if (0 !== count($journalIds)) {
             // make all integers.
             $integerIDs = array_map(intval(...), $journalIds);
-            Log::debug(sprintf('GroupCollector: setJournalIds: %s', implode(', ', $integerIDs)));
+            // Log::debug(sprintf('GroupCollector: setJournalIds: %s', implode(', ', $integerIDs)));
 
             $this->query->whereIn('transaction_journals.id', $integerIDs);
         }
