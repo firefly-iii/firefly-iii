@@ -40,48 +40,13 @@ use Illuminate\Support\Facades\Log;
 
 class UpdatesAccountInformation implements ShouldQueue
 {
-    public function handle(CreatedNewAccount | UpdatedExistingAccount $event): void
+    public function handle(CreatedNewAccount|UpdatedExistingAccount $event): void
     {
         $this->recalculateCredit($event->account);
         $this->updateVirtualBalance($event->account);
         if ($event instanceof UpdatedExistingAccount) {
             $this->renameRules($event->account, $event->oldData);
         }
-
-    }
-
-    private function correctRuleTriggers(Account $account, array $oldData, Rule $rule): void
-    {
-        $nameFields   = ['source_account_is', 'source_account_contains', 'source_account_ends', 'source_account_starts', 'destination_account_is', 'destination_account_contains', 'destination_account_ends', 'destination_account_starts', 'account_is', 'account_contains', 'account_ends', 'account_starts',];
-        $numberFields = ['source_account_nr_is', 'source_account_nr_contains', 'source_account_nr_ends', 'source_account_nr_starts', 'destination_account_nr_is', 'destination_account_nr_contains', 'destination_account_nr_starts', 'account_nr_is', 'account_nr_contains', 'account_nr_ends', 'account_nr_starts',];
-
-        Log::debug(sprintf('Check if rule #%d triggers reference account #%d "%s"', $rule->id, $account->id, $account->name));
-        $fixed = 0;
-        /** @var RuleTrigger $trigger */
-        foreach ($rule->ruleTriggers as $trigger) {
-            // fix name:
-            if ($oldData['name'] === $trigger->trigger_value && in_array($trigger->trigger_type, $nameFields, true)) {
-                Log::debug(sprintf('Rule trigger #%d "%s" has old account name, replace with new.', $trigger->id, $trigger->trigger_type));
-                $trigger->trigger_value = $account->name;
-                $trigger->save();
-                $fixed++;
-            }
-            // fix IBAN:
-            if ($oldData['iban'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
-                Log::debug(sprintf('Rule trigger #%d "%s" has old account IBAN, replace with new.', $trigger->id, $trigger->trigger_type));
-                $trigger->trigger_value = $account->iban;
-                $trigger->save();
-                $fixed++;
-            }
-            // fix account number: // account_number
-            if ($oldData['account_number'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
-                Log::debug(sprintf('Rule trigger #%d "%s" has old account account_number, replace with new.', $trigger->id, $trigger->trigger_type));
-                $trigger->trigger_value = $account->iban;
-                $trigger->save();
-                $fixed++;
-            }
-        }
-        Log::debug(sprintf('Corrected %d trigger(s) for rule #%d', $fixed, $rule->id));
     }
 
     private function correctRuleActions(Account $account, array $oldData, Rule $rule): void
@@ -89,19 +54,79 @@ class UpdatesAccountInformation implements ShouldQueue
         $fields = ['set_source_account', 'set_destination_account'];
 
         Log::debug(sprintf('Check if rule #%d actions reference account #%d "%s"', $rule->id, $account->id, $account->name));
-        $fixed = 0;
+        $fixed  = 0;
+
         /** @var RuleAction $action */
         foreach ($rule->ruleActions as $action) {
-
             // fix name:
             if ($oldData['name'] === $action->action_value && in_array($action->action_type, $fields, true)) {
                 Log::debug(sprintf('Rule action #%d "%s" has old account name, replace with new.', $action->id, $action->action_type));
                 $action->action_value = $account->name;
                 $action->save();
-                $fixed++;
+                ++$fixed;
             }
         }
         Log::debug(sprintf('Corrected %d action(s) for rule #%d', $fixed, $rule->id));
+    }
+
+    private function correctRuleTriggers(Account $account, array $oldData, Rule $rule): void
+    {
+        $nameFields   = [
+            'source_account_is',
+            'source_account_contains',
+            'source_account_ends',
+            'source_account_starts',
+            'destination_account_is',
+            'destination_account_contains',
+            'destination_account_ends',
+            'destination_account_starts',
+            'account_is',
+            'account_contains',
+            'account_ends',
+            'account_starts',
+        ];
+        $numberFields = [
+            'source_account_nr_is',
+            'source_account_nr_contains',
+            'source_account_nr_ends',
+            'source_account_nr_starts',
+            'destination_account_nr_is',
+            'destination_account_nr_contains',
+            'destination_account_nr_starts',
+            'account_nr_is',
+            'account_nr_contains',
+            'account_nr_ends',
+            'account_nr_starts',
+        ];
+
+        Log::debug(sprintf('Check if rule #%d triggers reference account #%d "%s"', $rule->id, $account->id, $account->name));
+        $fixed        = 0;
+
+        /** @var RuleTrigger $trigger */
+        foreach ($rule->ruleTriggers as $trigger) {
+            // fix name:
+            if ($oldData['name'] === $trigger->trigger_value && in_array($trigger->trigger_type, $nameFields, true)) {
+                Log::debug(sprintf('Rule trigger #%d "%s" has old account name, replace with new.', $trigger->id, $trigger->trigger_type));
+                $trigger->trigger_value = $account->name;
+                $trigger->save();
+                ++$fixed;
+            }
+            // fix IBAN:
+            if ($oldData['iban'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
+                Log::debug(sprintf('Rule trigger #%d "%s" has old account IBAN, replace with new.', $trigger->id, $trigger->trigger_type));
+                $trigger->trigger_value = $account->iban;
+                $trigger->save();
+                ++$fixed;
+            }
+            // fix account number: // account_number
+            if ($oldData['account_number'] === $trigger->trigger_value && in_array($trigger->trigger_type, $numberFields, true)) {
+                Log::debug(sprintf('Rule trigger #%d "%s" has old account account_number, replace with new.', $trigger->id, $trigger->trigger_type));
+                $trigger->trigger_value = $account->iban;
+                $trigger->save();
+                ++$fixed;
+            }
+        }
+        Log::debug(sprintf('Corrected %d trigger(s) for rule #%d', $fixed, $rule->id));
     }
 
     private function recalculateCredit(Account $account): void
@@ -119,7 +144,7 @@ class UpdatesAccountInformation implements ShouldQueue
         Log::debug('Updated account, will now correct rules.');
         $repository = app(RuleRepositoryInterface::class);
         $repository->setUser($account->user);
-        $rules = $repository->getAll();
+        $rules      = $repository->getAll();
 
         /** @var Rule $rule */
         foreach ($rules as $rule) {

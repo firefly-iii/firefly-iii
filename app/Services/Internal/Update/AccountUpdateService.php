@@ -78,11 +78,11 @@ class AccountUpdateService
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $this->accountRepository->setUser($account->user);
-        $this->user = $account->user;
-        $oldData = $account->toArray();
+        $this->user                = $account->user;
+        $oldData                   = $account->toArray();
         $oldData['account_number'] = $this->accountRepository->getMetaValue($account, 'account_number');
-        $account    = $this->updateAccount($account, $data);
-        $account    = $this->updateAccountOrder($account, $data);
+        $account                   = $this->updateAccount($account, $data);
+        $account                   = $this->updateAccountOrder($account, $data);
 
         // find currency, or use default currency instead.
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
