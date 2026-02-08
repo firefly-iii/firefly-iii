@@ -82,7 +82,7 @@ class IndexController extends Controller
         if ('last7' === $viewRange || 'last30' === $viewRange) {
             $end->addDays(30);
         }
-        if ('last90') {
+        if ('last90' === $viewRange) {
             $end->addDays(90);
         }
 
