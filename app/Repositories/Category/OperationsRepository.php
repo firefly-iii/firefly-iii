@@ -372,7 +372,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
     public function sumCollectedTransactionsByCategory(array $expenses, Category $category, string $method, bool $convertToPrimary = false): array
     {
-//        Log::debug(sprintf('Start of %s.', __METHOD__));
+        //        Log::debug(sprintf('Start of %s.', __METHOD__));
         $summarizer = new TransactionSummarizer($this->user);
         $summarizer->setConvertToPrimary($convertToPrimary);
 
