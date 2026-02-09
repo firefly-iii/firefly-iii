@@ -57,9 +57,9 @@ return new class() extends Migration {
                 'transaction_group_id',
                 'transaction_type_id',
                 'transaction_currency_id',
-                'bill_id',
+                'bill_id'
             ],
-            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id'],
+            'transactions'                 => ['account_id', 'transaction_journal_id', 'transaction_currency_id', 'foreign_currency_id']
         ];
 
         foreach ($set as $table => $fields) {
@@ -74,7 +74,7 @@ return new class() extends Migration {
                     $message = $e->getMessage();
 
                     // ignore duplicate key name as error.
-                    if(str_contains($message,' Duplicate key name')) {
+                    if (str_contains($message, ' Duplicate key name')) {
                         continue;
                     }
                     app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $message));
