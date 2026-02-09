@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "72404106289a876b0046dceacbaccf24",
+    "content-hash": "c4e7dd2df7bae96ea6e4df82530411b9",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3486,29 +3486,29 @@
         },
         {
             "name": "mailersend/laravel-driver",
-            "version": "v2.12.0",
+            "version": "v3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-laravel-driver.git",
-                "reference": "15e1ec41e29e65d3ca226929c65804190aaa93eb"
+                "reference": "cbda1bdcbd35e54f27a329df3c011389636eb783"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/15e1ec41e29e65d3ca226929c65804190aaa93eb",
-                "reference": "15e1ec41e29e65d3ca226929c65804190aaa93eb",
+                "url": "https://api.github.com/repos/mailersend/mailersend-laravel-driver/zipball/cbda1bdcbd35e54f27a329df3c011389636eb783",
+                "reference": "cbda1bdcbd35e54f27a329df3c011389636eb783",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
-                "illuminate/support": "^9.0 || ^10.0  || ^11.0 || ^12.0",
-                "mailersend/mailersend": "^0.35.0",
+                "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+                "mailersend/mailersend": "^0.36.0",
                 "nyholm/psr7": "^1.5",
-                "php": ">=8.0",
+                "php": ">=8.2",
                 "php-http/guzzle7-adapter": "^1.0",
                 "symfony/mailer": "^6.0 || ^7.0"
             },
             "require-dev": {
-                "orchestra/testbench": "^7.0 || ^9.0 || ^10.0",
+                "orchestra/testbench": "^9.0 || ^10.0",
                 "phpunit/phpunit": "^9.0 || ^10.5 || ^12.0"
             },
             "type": "library",
@@ -3549,28 +3549,28 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-laravel-driver/issues",
-                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v2.12.0"
+                "source": "https://github.com/mailersend/mailersend-laravel-driver/tree/v3.0.0"
             },
-            "time": "2025-10-28T14:59:16+00:00"
+            "time": "2026-02-05T12:32:37+00:00"
         },
         {
             "name": "mailersend/mailersend",
-            "version": "v0.35.0",
+            "version": "v0.36.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mailersend/mailersend-php.git",
-                "reference": "f1696cf9e727e9503fbc5882d2a111bd966ad276"
+                "reference": "0a28852bba61f31c3668a2af6426dc0b2c866432"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/f1696cf9e727e9503fbc5882d2a111bd966ad276",
-                "reference": "f1696cf9e727e9503fbc5882d2a111bd966ad276",
+                "url": "https://api.github.com/repos/mailersend/mailersend-php/zipball/0a28852bba61f31c3668a2af6426dc0b2c866432",
+                "reference": "0a28852bba61f31c3668a2af6426dc0b2c866432",
                 "shasum": ""
             },
             "require": {
                 "beberlei/assert": "^3.2",
                 "ext-json": "*",
-                "php": "^7.4 || ^8.0 <8.5",
+                "php": "^7.4 || ^8.0 <8.6",
                 "php-http/client-common": "^2.2",
                 "php-http/discovery": "^1.9",
                 "php-http/httplug": "^2.1",
@@ -3615,9 +3615,9 @@
             ],
             "support": {
                 "issues": "https://github.com/mailersend/mailersend-php/issues",
-                "source": "https://github.com/mailersend/mailersend-php/tree/v0.35.0"
+                "source": "https://github.com/mailersend/mailersend-php/tree/v0.36.0"
             },
-            "time": "2025-10-28T13:11:43+00:00"
+            "time": "2026-02-02T09:26:45+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -13215,5 +13215,5 @@
     "platform-overrides": {
         "php": "8.4"
     },
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
