@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * RollbackSingleMigration.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -34,7 +37,7 @@ class RollbacksSingleMigration extends Command
      *
      * @var string
      */
-    protected $signature = 'correction:rollback-single-migration {--force}';
+    protected $signature   = 'correction:rollback-single-migration {--force}';
 
     /**
      * The console command description.
@@ -50,8 +53,9 @@ class RollbacksSingleMigration extends Command
     {
         $entry = DB::table('migrations')->orderBy('id', 'DESC')->first();
 
-        if(null === $entry) {
+        if (null === $entry) {
             $this->friendlyError('There are no more database migrations to rollback.');
+
             return Command::FAILURE;
         }
 
@@ -64,14 +68,14 @@ class RollbacksSingleMigration extends Command
         $this->friendlyLine('');
         $this->friendlyLine('If this doesn\'t work, run the command a few times to remove more rows and try "php artisan migrate" again.');
         $this->friendlyLine('');
-        $res = true;
+        $res   = true;
         if (!$this->option('force')) {
             $this->friendlyWarning('Use this command at your own risk.');
             $res = $this->confirm('Are you sure you want to continue?');
         }
 
         if ($res) {
-            DB::table('migrations')->where('id', (int)$entry->id)->delete();
+            DB::table('migrations')->where('id', (int) $entry->id)->delete();
             $this->friendlyInfo(sprintf('Database migration #%d ("%s") is deleted.', $entry->id, $entry->migration));
             $this->friendlyLine('');
             $this->friendlyLine('Try running "php artisan migrate" now.');
@@ -80,6 +84,7 @@ class RollbacksSingleMigration extends Command
         if (!$res) {
             $this->friendlyError('User cancelled, will not delete anything.');
         }
+
         return Command::SUCCESS;
     }
 }
