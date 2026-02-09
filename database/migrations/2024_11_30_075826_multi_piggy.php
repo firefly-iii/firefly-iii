@@ -103,7 +103,7 @@ return new class() extends Migration {
                 // 2. make column nullable.
                 $table->unsignedInteger('account_id')->nullable()->change();
             });
-        } catch(QueryException $e) {
+        } catch (QueryException $e) {
             app('log')->error($e->getMessage());
         }
         Schema::table('piggy_banks', static function (Blueprint $table): void {

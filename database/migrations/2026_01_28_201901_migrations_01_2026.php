@@ -28,7 +28,7 @@ return new class extends Migration {
             $message = $e->getMessage();
 
             // ignore duplicate key name as error.
-            if(str_contains($message,' Duplicate key name')) {
+            if (str_contains($message, ' Duplicate key name')) {
                 return;
             }
             Log::error(sprintf('Error when creating index: %s', $e->getMessage()));
@@ -41,7 +41,7 @@ return new class extends Migration {
             $message = $e->getMessage();
 
             // ignore duplicate key name as error.
-            if(str_contains($message,' Duplicate key name')) {
+            if (str_contains($message, ' Duplicate key name')) {
                 return;
             }
             Log::error(sprintf('Error when creating index: %s', $e->getMessage()));
@@ -54,7 +54,7 @@ return new class extends Migration {
             $message = $e->getMessage();
 
             // ignore duplicate key name as error.
-            if(str_contains($message,' Duplicate key name')) {
+            if (str_contains($message, ' Duplicate key name')) {
                 return;
             }
             Log::error(sprintf('Error when creating index: %s', $e->getMessage()));
