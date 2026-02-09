@@ -551,7 +551,7 @@ class JournalUpdateService
         event(
             new TransactionGroupRequestsAuditLogEntry(
                 $group->user,
-                $group,
+                $this->transactionJournal,
                 'update_amount',
                 [
                     'currency_symbol' => $recordCurrency->symbol,
@@ -767,7 +767,7 @@ class JournalUpdateService
             event(
                 new TransactionGroupRequestsAuditLogEntry(
                     $group->user,
-                    $group,
+                    $this->transactionJournal,
                     'update_foreign_amount',
                     [
                         'currency_symbol' => $recordCurrency->symbol,
