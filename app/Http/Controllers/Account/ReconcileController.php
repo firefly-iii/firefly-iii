@@ -137,7 +137,7 @@ class ReconcileController extends Controller
         );
 
         $subTitleIcon    = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $subTitle        = (string) trans('firefly.reconcile_account', ['account'     => $account->name]);
+        $subTitle        = (string) trans('firefly.reconcile_account', ['account' => $account->name]);
 
         // various links
         $transactionsUrl = route('accounts.reconcile.transactions', [$account->id, '%start%', '%end%']);

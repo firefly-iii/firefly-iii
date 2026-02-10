@@ -135,7 +135,7 @@ class UserController extends Controller
         }
         session()->forget('users.edit.fromUpdate');
 
-        $subTitle       = (string) trans('firefly.edit_user', ['email'     => $user->email]);
+        $subTitle       = (string) trans('firefly.edit_user', ['email' => $user->email]);
         $subTitleIcon   = 'fa-user-o';
         $currentUser    = auth()->user();
         $isAdmin        = $this->repository->hasRole($user, 'owner');
@@ -216,7 +216,7 @@ class UserController extends Controller
     {
         $title         = (string) trans('firefly.system_settings');
         $mainTitleIcon = 'fa-hand-spock-o';
-        $subTitle      = (string) trans('firefly.single_user_administration', ['email'      => $user->email]);
+        $subTitle      = (string) trans('firefly.single_user_administration', ['email' => $user->email]);
         $subTitleIcon  = 'fa-user';
         $information   = $this->repository->getUserData($user);
 

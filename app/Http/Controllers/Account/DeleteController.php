@@ -72,7 +72,7 @@ class DeleteController extends Controller
         }
 
         $typeName    = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name'    => $account->name]);
+        $subTitle    = (string) trans(sprintf('firefly.delete_%s_account', $typeName), ['name' => $account->name]);
         $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
         $objectType  = $typeName;
         unset($accountList[$account->id]);

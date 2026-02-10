@@ -219,7 +219,7 @@ class ShowController extends Controller
         $page         = (int) $request->get('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $currency     = $this->repository->getAccountCurrency($account) ?? $this->primaryCurrency;
-        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name'     => $account->name]);
+        $subTitle     = (string) trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods      = new Collection();
 
         $end->endOfDay();

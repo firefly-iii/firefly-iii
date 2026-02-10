@@ -61,7 +61,7 @@ class InstallController extends Controller
         'migrate'                            => ['--seed'  => true, '--force' => true],
         'generate-keys'                      => [], // an exception :(
         'firefly-iii:upgrade-database'       => [],
-        'firefly-iii:set-latest-version'     => ['--james-is-cool'     => true],
+        'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
         'firefly-iii:verify-security-alerts' => [],
     ];
 

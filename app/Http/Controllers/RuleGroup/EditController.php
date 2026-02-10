@@ -70,7 +70,7 @@ class EditController extends Controller
         $subTitle    = (string) trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
-        $preFilled   = ['active'   => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active];
+        $preFilled   = ['active' => $hasOldInput ? (bool) $request->old('active') : $ruleGroup->active];
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rule-groups.edit.fromUpdate')) {
             $this->rememberPreviousUrl('rule-groups.edit.url');

@@ -167,7 +167,7 @@ class BasicController extends Controller
                 ],
             ];
             $newIncomes  = [
-                $primary->id  => [
+                $primary->id => [
                     'currency_id'             => $primary->id,
                     'currency_code'           => $primary->code,
                     'currency_symbol'         => $primary->symbol,
@@ -176,7 +176,7 @@ class BasicController extends Controller
                 ],
             ];
             $sums        = [
-                $primary->id        => [
+                $primary->id => [
                     'currency_id'             => $primary->id,
                     'currency_code'           => $primary->code,
                     'currency_symbol'         => $primary->symbol,
@@ -244,7 +244,7 @@ class BasicController extends Controller
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_balance_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $sums[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -258,7 +258,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_spent_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $expenses[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -270,7 +270,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_earned_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => $incomes[$currencyId]['sum'] ?? '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -286,7 +286,7 @@ class BasicController extends Controller
             // create objects for big array.
             $return[] = [
                 'key'                     => sprintf('balance-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_balance_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_balance_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -298,7 +298,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('spent-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_spent_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_spent_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -310,7 +310,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('earned-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_earned_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_earned_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -345,7 +345,7 @@ class BasicController extends Controller
             $currencies[$currencyId] ??= $this->currencyRepos->find($currencyId);
             $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $currencies[$currencyId]->code),
-                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency'                   => $currencies[$currencyId]->symbol]),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $currencies[$currencyId]->symbol]),
                 'no_available_budgets'    => false,
                 'monetary_value'          => $availableBudget,
                 'currency_id'             => (string) $currencies[$currencyId]->id,
@@ -386,7 +386,7 @@ class BasicController extends Controller
 
             $return[$currencyId] = [
                 'key'                     => sprintf('left-to-spend-in-%s', $row['currency_code']),
-                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency'                   => $row['currency_symbol']]),
+                'title'                   => trans('firefly.box_left_to_spend_in_currency', ['currency' => $row['currency_symbol']]),
                 'no_available_budgets'    => false,
                 'monetary_value'          => $leftToSpend,
                 'currency_id'             => (string) $row['currency_id'],
@@ -493,7 +493,7 @@ class BasicController extends Controller
             // return stuff
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $data['currency_code']),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency'                   => $data['currency_symbol']]),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $data['currency_symbol']]),
                 'monetary_value'          => $amount,
                 'currency_id'             => (string) $data['currency_id'],
                 'currency_code'           => $data['currency_code'],
@@ -507,7 +507,7 @@ class BasicController extends Controller
         if (0 === count($return)) {
             $return[] = [
                 'key'                     => sprintf('net-worth-in-%s', $this->primaryCurrency->code),
-                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency'                   => $this->primaryCurrency->symbol]),
+                'title'                   => trans('firefly.box_net_worth_in_currency', ['currency' => $this->primaryCurrency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $this->primaryCurrency->id,
                 'currency_code'           => $this->primaryCurrency->code,
@@ -533,7 +533,7 @@ class BasicController extends Controller
          */
         $paidAmount   = $this->billRepository->sumPaidInRange($start, $end);
         $unpaidAmount = $this->billRepository->sumUnpaidInRange($start, $end);
-        $currencies   = [$this->primaryCurrency->id   => $this->primaryCurrency];
+        $currencies   = [$this->primaryCurrency->id => $this->primaryCurrency];
 
         if ($this->convertToPrimary) {
             $converter       = new ExchangeRateConverter();
@@ -598,7 +598,7 @@ class BasicController extends Controller
             $amount   = bcmul((string) $info['sum'], '-1');
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $info['code']),
-                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency'                   => $info['symbol']]),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
                 'currency_id'             => (string) $info['id'],
                 'currency_code'           => $info['code'],
@@ -617,7 +617,7 @@ class BasicController extends Controller
             $amount   = bcmul((string) $info['sum'], '-1');
             $return[] = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $info['code']),
-                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency'                   => $info['symbol']]),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $info['symbol']]),
                 'monetary_value'          => $amount,
                 'currency_id'             => (string) $info['id'],
                 'currency_code'           => $info['code'],
@@ -636,7 +636,7 @@ class BasicController extends Controller
 
             $return[] = [
                 'key'                     => sprintf('bills-paid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_bill_paid_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,
@@ -648,7 +648,7 @@ class BasicController extends Controller
             ];
             $return[] = [
                 'key'                     => sprintf('bills-unpaid-in-%s', $currency->code),
-                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency'                   => $currency->symbol]),
+                'title'                   => trans('firefly.box_bill_unpaid_in_currency', ['currency' => $currency->symbol]),
                 'monetary_value'          => '0',
                 'currency_id'             => (string) $currency->id,
                 'currency_code'           => $currency->code,

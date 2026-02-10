@@ -80,7 +80,7 @@ class CreateController extends Controller
     public function create(Request $request, ?RuleGroup $ruleGroup = null): Factory|\Illuminate\Contracts\View\View
     {
         $this->createDefaultRuleGroup();
-        $preFilled    = ['strict'   => true];
+        $preFilled    = ['strict' => true];
         $oldTriggers  = [];
         $oldActions   = [];
 
@@ -159,7 +159,7 @@ class CreateController extends Controller
         $this->createDefaultRuleGroup();
         $preFilled    = [
             'strict'      => true,
-            'title'       => (string) trans('firefly.new_rule_for_bill_title', ['name'       => $bill->name]),
+            'title'       => (string) trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]),
             'description' => (string) trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]),
         ];
 
@@ -221,7 +221,7 @@ class CreateController extends Controller
         // collect pre-filled information:
         $preFilled    = [
             'strict'      => true,
-            'title'       => (string) trans('firefly.new_rule_for_journal_title', ['description'       => $journal->description]),
+            'title'       => (string) trans('firefly.new_rule_for_journal_title', ['description' => $journal->description]),
             'description' => (string) trans('firefly.new_rule_for_journal_description', ['description' => $journal->description]),
         ];
 
