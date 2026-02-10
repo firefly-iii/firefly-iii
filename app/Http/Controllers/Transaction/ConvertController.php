@@ -103,7 +103,7 @@ class ConvertController extends Controller
 
         $groupTitle           = $group->title ?? $first->description;
         $groupArray           = $transformer->transformObject($group);
-        $subTitle             = (string) trans('firefly.convert_to_'.$destinationType->type, ['description'     => $groupTitle]);
+        $subTitle             = (string) trans('firefly.convert_to_'.$destinationType->type, ['description' => $groupTitle]);
         $subTitleIcon         = 'fa-exchange';
 
         // get a list of asset accounts and liabilities and stuff, in various combinations:

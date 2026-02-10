@@ -178,7 +178,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$primaryCurrency->id    => $primaryCurrency];
+        $currencies      = [$primaryCurrency->id => $primaryCurrency];
         $report          = ['accounts' => [], 'sums'     => []];
 
         /** @var array $journal */
@@ -232,7 +232,7 @@ class AccountTasker implements AccountTaskerInterface, UserGroupInterface
 
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos   = app(CurrencyRepositoryInterface::class);
-        $currencies      = [$primaryCurrency->id    => $primaryCurrency];
+        $currencies      = [$primaryCurrency->id => $primaryCurrency];
         $report          = ['accounts' => [], 'sums'     => []];
 
         /** @var array $journal */

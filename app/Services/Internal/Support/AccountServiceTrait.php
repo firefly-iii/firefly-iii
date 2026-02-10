@@ -62,8 +62,8 @@ trait AccountServiceTrait
         if (null === $iban) {
             return null;
         }
-        $data      = ['iban'      => $iban];
-        $rules     = ['iban'     => 'required|iban'];
+        $data      = ['iban' => $iban];
+        $rules     = ['iban' => 'required|iban'];
         $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             Log::info(sprintf('Detected invalid IBAN ("%s"). Return NULL instead.', $iban));
@@ -228,7 +228,7 @@ trait AccountServiceTrait
             $sourceId   = $account->id;
             $sourceName = null;
             $destId     = null;
-            $destName   = trans('firefly.liability_credit_description', ['account'   => $account->name], $language);
+            $destName   = trans('firefly.liability_credit_description', ['account' => $account->name], $language);
         }
 
         // amount must be positive for the transaction to work.
@@ -257,7 +257,7 @@ trait AccountServiceTrait
                 'order'            => 0,
                 'amount'           => $amount,
                 'foreign_amount'   => null,
-                'description'      => trans('firefly.liability_credit_description', ['account'      => $account->name]),
+                'description'      => trans('firefly.liability_credit_description', ['account' => $account->name]),
                 'budget_id'        => null,
                 'budget_name'      => null,
                 'category_id'      => null,
@@ -352,7 +352,7 @@ trait AccountServiceTrait
                 'order'            => 0,
                 'amount'           => $amount,
                 'foreign_amount'   => null,
-                'description'      => trans('firefly.initial_balance_description', ['account'      => $account->name]),
+                'description'      => trans('firefly.initial_balance_description', ['account' => $account->name]),
                 'budget_id'        => null,
                 'budget_name'      => null,
                 'category_id'      => null,
@@ -444,7 +444,7 @@ trait AccountServiceTrait
                 'order'            => 0,
                 'amount'           => $amount,
                 'foreign_amount'   => null,
-                'description'      => trans('firefly.initial_balance_description', ['account'      => $account->name]),
+                'description'      => trans('firefly.initial_balance_description', ['account' => $account->name]),
                 'budget_id'        => null,
                 'budget_name'      => null,
                 'category_id'      => null,

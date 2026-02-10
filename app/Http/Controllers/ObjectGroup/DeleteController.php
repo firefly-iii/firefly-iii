@@ -61,7 +61,7 @@ class DeleteController extends Controller
      */
     public function delete(ObjectGroup $objectGroup): Factory|View
     {
-        $subTitle   = (string) trans('firefly.delete_object_group', ['title'   => $objectGroup->title]);
+        $subTitle   = (string) trans('firefly.delete_object_group', ['title' => $objectGroup->title]);
         $piggyBanks = $objectGroup->piggyBanks()->count();
 
         // put previous url in session

@@ -204,7 +204,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
         $currencySymbol        = $primaryCurrency->symbol;
         $currencyDecimalPlaces = $primaryCurrency->decimal_places;
         $converter             = new ExchangeRateConverter();
-        $currencies            = [$currencyId            => $primaryCurrency];
+        $currencies            = [$currencyId => $primaryCurrency];
 
         foreach ($journals as $journal) {
             $amount                                                                       = Steam::negative($journal['amount']);

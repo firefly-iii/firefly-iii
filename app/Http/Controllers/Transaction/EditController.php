@@ -91,7 +91,7 @@ class EditController extends Controller
         $title                      = $transactionGroup->transactionJournals()->count() > 1
             ? $transactionGroup->title
             : $transactionGroup->transactionJournals()->first()->description;
-        $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description'             => $title]);
+        $subTitle                   = (string) trans('firefly.edit_transaction_title', ['description' => $title]);
         $subTitleIcon               = 'fa-plus';
         $cash                       = $repository->getCashAccount();
         $previousUrl                = $this->rememberPreviousUrl('transactions.edit.url');

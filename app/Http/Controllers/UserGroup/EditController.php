@@ -39,7 +39,7 @@ class EditController extends Controller
     public function edit(UserGroup $userGroup)
     {
         $title         = (string) trans('firefly.administrations_page_title');
-        $subTitle      = (string) trans('firefly.administrations_page_edit_sub_title', ['title'      => $userGroup->title]);
+        $subTitle      = (string) trans('firefly.administrations_page_edit_sub_title', ['title' => $userGroup->title]);
         $mainTitleIcon = 'fa-book';
         Log::debug(sprintf('Now at %s', __METHOD__));
 

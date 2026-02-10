@@ -131,7 +131,7 @@ class AttachmentController extends Controller
     public function edit(Request $request, Attachment $attachment): Factory|\Illuminate\Contracts\View\View
     {
         $subTitleIcon = 'fa-pencil';
-        $subTitle     = (string) trans('firefly.edit_attachment', ['name'     => $attachment->filename]);
+        $subTitle     = (string) trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('attachments.edit.fromUpdate')) {

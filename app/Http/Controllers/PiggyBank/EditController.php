@@ -70,7 +70,7 @@ class EditController extends Controller
      */
     public function edit(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string) trans('firefly.update_piggy_title', ['name'     => $piggyBank->name]);
+        $subTitle     = (string) trans('firefly.update_piggy_title', ['name' => $piggyBank->name]);
         $subTitleIcon = 'fa-pencil';
         $note         = $piggyBank->notes()->first();
         // Flash some data to fill the form.

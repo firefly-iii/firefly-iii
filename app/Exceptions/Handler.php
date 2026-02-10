@@ -157,7 +157,7 @@ class Handler extends ExceptionHandler
 
             return response()->json([
                 'message' => sprintf('Validation exception: %s', $e->getMessage()),
-                'errors'  => ['field'  => 'Field is invalid'],
+                'errors'  => ['field' => 'Field is invalid'],
             ], $errorCode);
         }
 
