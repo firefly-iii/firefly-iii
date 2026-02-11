@@ -102,7 +102,7 @@ class RuleRepository implements RuleRepositoryInterface, UserGroupInterface
     {
         return $this->user
             ->rules()
-            ->with(['ruleGroup'])
+            ->with(['ruleGroup', 'ruleTriggers', 'ruleActions'])
             ->get()
         ;
     }
