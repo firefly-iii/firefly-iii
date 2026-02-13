@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdatedExistingBill.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -32,6 +35,8 @@ class UpdatedExistingBill extends Event
     /**
      * Create a new event instance.
      */
-    public function __construct(public Bill $bill, public array $oldData) {}
+    public function __construct(
+        public Bill $bill,
+        public array $oldData
+    ) {}
 }
-

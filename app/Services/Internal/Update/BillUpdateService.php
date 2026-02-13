@@ -30,7 +30,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\Support\Facades\Amount;
@@ -51,7 +50,7 @@ class BillUpdateService
     public function update(Bill $bill, array $data): Bill
     {
         $this->user = $bill->user;
-        $oldData  = $bill->toArray();
+        $oldData    = $bill->toArray();
 
         if (array_key_exists('currency_id', $data) || array_key_exists('currency_code', $data)) {
             $factory                       = app(TransactionCurrencyFactory::class);
