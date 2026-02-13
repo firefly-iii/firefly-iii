@@ -184,11 +184,14 @@
                                 {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             {% endif %}
                             {% if transaction.source_account_id != account.id %}
-                            {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
+                                {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_decimal_places, false) }}
                             {% endif %}
 
                             {# foreign amount of transfer #}
-                            {% if null != transaction.foreign_amount %}
+                            {% if null != transaction.foreign_amount and transaction.source_account_id == account.id %}
+                                ({{ formatAmountBySymbol(transaction.foreign_amount, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
+                            {% endif %}
+                            {% if null != transaction.foreign_amount and transaction.source_account_id != account.id %}
                                 ({{ formatAmountBySymbol(transaction.foreign_amount*-1, transaction.foreign_currency_symbol, transaction.foreign_currency_decimal_places, false) }})
                             {% endif %}
 
