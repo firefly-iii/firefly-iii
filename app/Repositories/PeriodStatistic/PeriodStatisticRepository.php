@@ -51,6 +51,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     {
         Log::debug(sprintf('Collect all statistics where type starts with "%s"', $prefix));
         Log::debug(sprintf('Between %s and %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+
         return $this->userGroup
             ->periodStatistics()
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
