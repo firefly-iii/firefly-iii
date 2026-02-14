@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.19
+
+### Added
+- The ability to undo the recording of a database migration, which may help with database issues. [See the docs](https://docs.firefly-iii.org/references/faq/firefly-iii/using/#i-get-errors-about-missing-tables-how-do-i-fix-this)
+- Added dbug logs to file permission checks
+
+### Fixed
+- View range issue for subscription overview
+- Amount log entries were recorded for the transaction group, not the journal
+- Subscriptions were not being renamed in rules when their names were changed
+- #11688
+- #11694
+- #11684
+- #11700
+- #11702
+
 ## v6.4.18
 
 ### Fixed
