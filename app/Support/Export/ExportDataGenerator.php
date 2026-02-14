@@ -122,6 +122,12 @@ class ExportDataGenerator
 
     // @phpstan-ignore-line
 
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
+    // @phpstan-ignore-line
+
     public function __construct()
     {
         $this->accounts = new Collection();

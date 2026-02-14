@@ -115,6 +115,7 @@ class ConfigurationController extends Controller
         FireflyConfig::set('enable_external_map', $data['enable_external_map']);
         FireflyConfig::set('enable_external_rates', $data['enable_external_rates']);
         FireflyConfig::set('allow_webhooks', $data['allow_webhooks']);
+        FireflyConfig::set('enable_batch_processing', $data['enable_batch_processing']);
 
         FireflyConfig::set('valid_url_protocols', $data['valid_url_protocols']);
         FireflyConfig::set('is_demo_site', $data['is_demo_site']);

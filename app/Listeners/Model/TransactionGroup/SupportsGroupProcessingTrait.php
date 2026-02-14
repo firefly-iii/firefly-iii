@@ -104,7 +104,9 @@ trait SupportsGroupProcessingTrait
         $repository->deleteStatisticsForType(Category::class, $objects->categories, $dates);
         $repository->deleteStatisticsForType(Tag::class, $objects->tags, $dates);
 
-        // remove if no stuff present:
+        // remove generic statistics:
+        $repository->deleteStatisticsForPrefix('all_', $dates);
+
         // remove for no tag, no cat, etc.
         if (0 === $objects->budgets->count()) {
             Log::debug('No budgets, delete "no_category" stats.');
