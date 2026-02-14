@@ -169,7 +169,7 @@ class MassController extends Controller
             throw new FireflyException(sprintf('Could not generate CSV: %s', $e->getMessage()), 0, $e);
         }
 
-        $name    = sprintf('%s_selected_transactions.csv', Carbon::now()->format('Y_m_d'));
+        $name    = sprintf('selected_transactions_%s.csv', Carbon::now()->format('YmdHis'));
         $quoted  = sprintf('"%s"', addcslashes($name, '"\\'));
 
         /** @var LaravelResponse $response */
