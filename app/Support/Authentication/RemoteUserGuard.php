@@ -59,8 +59,9 @@ class RemoteUserGuard implements Guard
     {
         $this->tried   = true;
         Log::debug(sprintf('Now at %s', __METHOD__));
-        if(App::runningInConsole()) {
+        if (App::runningInConsole()) {
             Log::debug('Running in console, will not authenticate.');
+
             return;
         }
         if ($this->user instanceof User) {
@@ -155,8 +156,9 @@ class RemoteUserGuard implements Guard
 
     public function user(): ?User
     {
-        if(App::runningInConsole()) {
+        if (App::runningInConsole()) {
             Log::debug('Running in console, will not authenticate.');
+
             return null;
         }
         if (false === $this->tried) {
