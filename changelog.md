@@ -13,11 +13,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - View range issue for subscription overview
 - Amount log entries were recorded for the transaction group, not the journal
 - Subscriptions were not being renamed in rules when their names were changed
-- #11688
-- #11694
-- #11684
-- #11700
-- #11702
+- [Issue 11688](https://github.com/firefly-iii/firefly-iii/issues/11688) (Token endpoints returning 401 unauthorized) reported by @molnarti
+- [Issue 11694](https://github.com/firefly-iii/firefly-iii/issues/11694) (Foreign currency amount is always positive in transfers) reported by @SledgehammerPL
+- [Issue 11684](https://github.com/firefly-iii/firefly-iii/issues/11684) (Transaction summary duplicated after more than 10 rows) reported by @jkmf
+- [Issue 11700](https://github.com/firefly-iii/firefly-iii/issues/11700) (Duplicate entry for key 'tag_transaction_journal_tag_id_transaction_journal_id_unique') reported by @beatbesmer
+- [Issue 11702](https://github.com/firefly-iii/firefly-iii/issues/11702) (Can't enable displaying primary currency when using Postgres) reported by @absdjfh
 
 ## v6.4.18
 
