@@ -34,9 +34,6 @@
         "transfers",
         "management"
     ],
-    "platform": {
-        "php": "8.4"
-    },
     "license": "AGPL-3.0-or-later",
     "homepage": "https://github.com/firefly-iii/firefly-iii",
     "type": "project",
@@ -68,7 +65,7 @@
         }
     ],
     "require": {
-        "php": ">=8.5",
+        "php": ">=8.4",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
@@ -198,6 +195,9 @@
             "composer/package-versions-deprecated": true,
             "phpstan/extension-installer": true,
             "php-http/discovery": true
+        },
+        "platform": {
+            "php": "8.4"
         }
     }
 }
