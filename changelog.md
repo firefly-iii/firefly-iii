@@ -18,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 11684](https://github.com/firefly-iii/firefly-iii/issues/11684) (Transaction summary duplicated after more than 10 rows) reported by @jkmf
 - [Issue 11700](https://github.com/firefly-iii/firefly-iii/issues/11700) (Duplicate entry for key 'tag_transaction_journal_tag_id_transaction_journal_id_unique') reported by @beatbesmer
 - [Issue 11702](https://github.com/firefly-iii/firefly-iii/issues/11702) (Can't enable displaying primary currency when using Postgres) reported by @absdjfh
-- #11710
+- [Issue 11710](https://github.com/firefly-iii/firefly-iii/issues/11710) (Firefly throws error on startup and when trying to use importer) reported by @avee87
 
 ## v6.4.20
 
