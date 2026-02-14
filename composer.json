@@ -68,7 +68,7 @@
         }
     ],
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.5",
         "ext-bcmath": "*",
         "ext-curl": "*",
         "ext-fileinfo": "*",
@@ -198,9 +198,6 @@
             "composer/package-versions-deprecated": true,
             "phpstan/extension-installer": true,
             "php-http/discovery": true
-        },
-        "platform": {
-            "php": "8.4"
         }
     }
 }
