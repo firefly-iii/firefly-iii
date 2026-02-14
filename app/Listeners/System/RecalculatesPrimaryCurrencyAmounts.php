@@ -76,7 +76,7 @@ class RecalculatesPrimaryCurrencyAmounts
     private function resetBudget(Budget $budget): void
     {
         foreach ($budget->autoBudgets as $autoBudget) {
-            if ('' === (string) $autoBudget->native_amount) {
+            if ('' === (string)$autoBudget->native_amount) {
                 continue;
             }
             Log::debug(sprintf('Resetting native_amount for budget #%d and auto budget #%d.', $budget->id, $autoBudget->id));
@@ -84,7 +84,7 @@ class RecalculatesPrimaryCurrencyAmounts
             $autoBudget->saveQuietly();
         }
         foreach ($budget->budgetlimits as $limit) {
-            if ('' !== (string) $limit->native_amount) {
+            if ('' !== (string)$limit->native_amount) {
                 Log::debug(sprintf('Resetting native_amount for budget #%d and budget limit #%d.', $budget->id, $limit->id));
                 $limit->native_amount = null;
                 $limit->saveQuietly();
@@ -96,7 +96,7 @@ class RecalculatesPrimaryCurrencyAmounts
     {
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUserGroup($userGroup);
-        $set        = $repository->getBudgets();
+        $set = $repository->getBudgets();
 
         Log::debug(sprintf('Reset primary currency of %d budget(s).', $set->count()));
 
@@ -108,20 +108,20 @@ class RecalculatesPrimaryCurrencyAmounts
 
     private function resetPiggyBank(PiggyBank $piggyBank): void
     {
-        if ('' !== (string) $piggyBank->native_target_amount) {
+        if ('' !== (string)$piggyBank->native_target_amount) {
             Log::debug(sprintf('Resetting native_target_amount for piggy bank #%d.', $piggyBank->id));
             $piggyBank->native_target_amount = null;
             $piggyBank->saveQuietly();
         }
         foreach ($piggyBank->accounts as $account) {
-            if ('' !== (string) $account->pivot->native_current_amount) {
+            if ('' !== (string)$account->pivot->native_current_amount) {
                 Log::debug(sprintf('Resetting native_current_amount for piggy bank #%d and account #%d.', $piggyBank->id, $account->id));
                 $account->pivot->native_current_amount = null;
                 $account->pivot->save();
             }
         }
         foreach ($piggyBank->piggyBankEvents as $event) {
-            if ('' !== (string) $event->native_amount) {
+            if ('' !== (string)$event->native_amount) {
                 Log::debug(sprintf('Resetting native_amount for piggy bank #%d and event #%d.', $piggyBank->id, $event->id));
                 $event->native_amount = null;
                 $event->saveQuietly();
@@ -146,18 +146,18 @@ class RecalculatesPrimaryCurrencyAmounts
     {
         // custom query because of the potential size of this update.
         $success = DB::table('transactions')
-            ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->where('transaction_journals.user_group_id', $userGroup->id)
-            ->where(static function (Builder $q): void {
-                $q
-                    ->whereNotNull('native_amount')
-                    ->orWhereNotNull('native_foreign_amount')
-                    ->orWhere('native_amount', '!=', '')
-                    ->orWhere('native_foreign_amount', '!=', '')
-                ;
-            })
-            ->update(['native_amount'         => null, 'native_foreign_amount' => null])
-        ;
+                     ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                     ->where('transaction_journals.user_group_id', $userGroup->id)
+                     ->where(static function (Builder $q): void {
+                         $q
+                             ->whereNotNull('native_amount')
+                             ->orWhereNotNull('native_foreign_amount');
+                         if (config('database.default') !== 'pgsql') {
+                             $q->orWhere('native_amount', '!=', '')
+                               ->orWhere('native_foreign_amount', '!=', '');
+                         }
+                     })
+                     ->update(['native_amount' => null, 'native_foreign_amount' => null]);
         Log::debug(sprintf('Reset %d transactions.', $success));
     }
 }
