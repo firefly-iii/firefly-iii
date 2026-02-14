@@ -50,6 +50,7 @@ class Calculator
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private static array $intervals               = [];
 
     public function isAvailablePeriodicity(Periodicity $periodicity): bool
