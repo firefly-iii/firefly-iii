@@ -96,7 +96,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         foreach ($set as $bill) {
             if ($bill->order !== $current) {
                 $bill->order = $current;
-                $bill->save();
+                $bill->saveQuietly();
             }
             ++$current;
         }
@@ -613,7 +613,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
     public function setOrder(Bill $bill, int $order): void
     {
         $bill->order = $order;
-        $bill->save();
+        $bill->saveQuietly();
     }
 
     /**

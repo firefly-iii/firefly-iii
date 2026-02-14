@@ -23,6 +23,7 @@
 declare(strict_types=1);
 
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Schema;
@@ -97,10 +98,14 @@ return new class() extends Migration {
         } catch (RuntimeException $e) {
             Log::error('Could not drop foreign key "piggy_banks_account_id_foreign". Probably not an issue.');
         }
-        Schema::table('piggy_banks', static function (Blueprint $table): void {
-            // 2. make column nullable.
-            $table->unsignedInteger('account_id')->nullable()->change();
-        });
+        try {
+            Schema::table('piggy_banks', static function (Blueprint $table): void {
+                // 2. make column nullable.
+                $table->unsignedInteger('account_id')->nullable()->change();
+            });
+        } catch (QueryException $e) {
+            app('log')->error($e->getMessage());
+        }
         Schema::table('piggy_banks', static function (Blueprint $table): void {
             // 3. add currency
             if (!Schema::hasColumn('piggy_banks', 'transaction_currency_id')) {

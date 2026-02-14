@@ -157,7 +157,7 @@ trait GetConfigurationData
 
         // previous year:
         $yearBegin      = today(config('app.timezone'))->subYear()->startOfYear();
-        $index          = (string) trans('firefly.previous_year', ['year'          => $yearBegin->year]);
+        $index          = (string) trans('firefly.previous_year', ['year' => $yearBegin->year]);
         $ranges[$index] = [$yearBegin, $yearBegin->clone()->endOfYear()];
 
         // everything

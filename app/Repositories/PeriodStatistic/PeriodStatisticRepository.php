@@ -49,6 +49,9 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection
     {
+        Log::debug(sprintf('Collect all statistics where type starts with "%s"', $prefix));
+        Log::debug(sprintf('Between %s and %s', $start->format('Y-m-d H:i:s'), $end->format('Y-m-d H:i:s')));
+
         return $this->userGroup
             ->periodStatistics()
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
@@ -156,6 +159,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         int $count,
         string $amount
     ): PeriodStatistic {
+        Log::debug(sprintf('Store as type "%s"', sprintf('%s_%s', $prefix, $type)));
         $stat                          = new PeriodStatistic();
         $stat->transaction_currency_id = $currencyId;
         $stat->user_group_id           = $this->getUserGroup()->id;

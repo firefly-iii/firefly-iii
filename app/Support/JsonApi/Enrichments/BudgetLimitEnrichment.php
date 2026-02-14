@@ -50,6 +50,13 @@ class BudgetLimitEnrichment implements EnrichmentInterface
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $currencies  = [];
     private array $currencyIds = [];
     private Carbon $end;

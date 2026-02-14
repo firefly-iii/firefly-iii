@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Rules\UniqueIban;
 use FireflyIII\Support\NullArrayObject;
+use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Log;
 use Safe\Exceptions\JsonException;
 
@@ -227,7 +228,12 @@ trait JournalServiceTrait
         $set = array_unique($set);
         Log::debug('End of loop.');
         Log::debug(sprintf('Total nr. of tags: %d', count($tags)), $tags);
-        $journal->tags()->sync($set);
+
+        try {
+            $journal->tags()->sync($set);
+        } catch (UniqueConstraintViolationException $e) {
+            Log::error(sprintf('Firefly III could not sync tags: %s', $e->getMessage()));
+        }
     }
 
     /**

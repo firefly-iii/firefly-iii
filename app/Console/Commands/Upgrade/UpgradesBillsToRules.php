@@ -110,7 +110,7 @@ class UpgradesBillsToRules extends Command
             'active'          => true,
             'strict'          => false,
             'stop_processing' => false, // field is no longer used.
-            'title'           => (string) trans('firefly.rule_for_bill_title', ['name'       => $bill->name], $languageString),
+            'title'           => (string) trans('firefly.rule_for_bill_title', ['name' => $bill->name], $languageString),
             'description'     => (string) trans('firefly.rule_for_bill_description', ['name' => $bill->name], $languageString),
             'trigger'         => 'store-journal',
             'triggers'        => [['type'  => 'description_contains', 'value' => $match]],

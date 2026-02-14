@@ -86,7 +86,7 @@ class EditController extends Controller
         }
 
         $objectType           = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name'        => $account->name]);
+        $subTitle             = (string) trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
         $subTitleIcon         = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
         $roles                = $this->getRoles();
         $liabilityTypes       = $this->getLiabilityTypes();

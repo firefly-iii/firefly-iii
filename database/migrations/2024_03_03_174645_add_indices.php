@@ -65,11 +65,19 @@ return new class() extends Migration {
         foreach ($set as $table => $fields) {
             foreach ($fields as $field) {
                 try {
-                    Schema::table($table, static function (Blueprint $blueprint) use ($field): void {
-                        $blueprint->index($field);
+                    Schema::table($table, static function (Blueprint $blueprint) use ($table, $field): void {
+                        if (!Schema::hasIndex($table, $field)) {
+                            $blueprint->index($field);
+                        }
                     });
                 } catch (QueryException $e) {
-                    app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $e->getMessage()));
+                    $message = $e->getMessage();
+
+                    // ignore duplicate key name as error.
+                    if (str_contains($message, ' Duplicate key name')) {
+                        continue;
+                    }
+                    app('log')->error(sprintf(self::QUERY_ERROR, $table, $field, $message));
                     app('log')->error(self::EXPL);
                 }
             }

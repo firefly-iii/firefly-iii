@@ -94,7 +94,7 @@ class LinkController extends Controller
         }
 
         Log::channel('audit')->info(sprintf('User wants to delete link type #%d', $linkType->id));
-        $subTitle   = (string) trans('firefly.delete_link_type', ['name'   => $linkType->name]);
+        $subTitle   = (string) trans('firefly.delete_link_type', ['name' => $linkType->name]);
         $otherTypes = $this->repository->get();
         $count      = $this->repository->countJournals($linkType);
         $moveTo     = [];
@@ -141,7 +141,7 @@ class LinkController extends Controller
 
             return redirect(route('settings.links.index'));
         }
-        $subTitle     = (string) trans('firefly.edit_link_type', ['name'     => $linkType->name]);
+        $subTitle     = (string) trans('firefly.edit_link_type', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
 
         Log::channel('audit')->info(sprintf('User wants to edit link type #%d', $linkType->id));
@@ -181,7 +181,7 @@ class LinkController extends Controller
      */
     public function show(LinkType $linkType): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string) trans('firefly.overview_for_link', ['name'     => $linkType->name]);
+        $subTitle     = (string) trans('firefly.overview_for_link', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
         $links        = $this->repository->getJournalLinks($linkType);
 

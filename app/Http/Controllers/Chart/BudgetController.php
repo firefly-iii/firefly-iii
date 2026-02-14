@@ -505,14 +505,14 @@ class BudgetController extends Controller
         $preferredRange = Navigation::preferredRangeFormat($start, $end);
         $chartData      = [
             [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency'           => $currency->name]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'entries'         => [],
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,
             ],
             [
-                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency'           => $currency->name]),
+                'label'           => (string) trans('firefly.box_budgeted_in_currency', ['currency' => $currency->name]),
                 'type'            => 'bar',
                 'currency_symbol' => $currency->symbol,
                 'currency_code'   => $currency->code,

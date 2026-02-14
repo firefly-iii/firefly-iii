@@ -40,6 +40,7 @@ class RemoteUserGuard implements Guard
 {
     protected Application $application;
     protected ?User $user = null;
+    private $tried        = false;
 
     /**
      * Create a new authentication guard.
@@ -49,13 +50,14 @@ class RemoteUserGuard implements Guard
         Application $app
     ) {
         $app->get('request');
-        // Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $request?->getMethod(), $request?->getRequestUri()));
+        Log::debug(sprintf('Created RemoteUserGuard for %s "%s"', $app->get('request')?->getMethod(), $app->get('request')?->getRequestUri()));
         $this->application = $app;
     }
 
     public function authenticate(): void
     {
-        // Log::debug(sprintf('Now at %s', __METHOD__));
+        $this->tried   = true;
+        Log::debug(sprintf('Now at %s', __METHOD__));
         if ($this->user instanceof User) {
             Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
@@ -69,6 +71,9 @@ class RemoteUserGuard implements Guard
             Log::debug('Use apache_request_headers to find user ID.');
             $userID = request()->server($header) ?? apache_request_headers()[$header] ?? null;
         }
+
+        // test value for development
+        // $userID = 'james@firefly';
 
         if (null === $userID || '' === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
@@ -145,8 +150,13 @@ class RemoteUserGuard implements Guard
 
     public function user(): ?User
     {
+        if (false === $this->tried) {
+            Log::debug('Have not tried authentication, do it now.');
+            $this->authenticate();
+        }
         // Log::debug(sprintf('Now at %s', __METHOD__));
         $user = $this->user;
+
         if (!$user instanceof User) {
             Log::debug('User is NULL');
 

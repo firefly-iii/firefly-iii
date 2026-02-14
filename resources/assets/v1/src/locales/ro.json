@@ -29,7 +29,7 @@
         "transaction_journal_information": "Informa\u021bii despre tranzac\u021bii",
         "submission_options": "Op\u0163iuni de depunere",
         "apply_rules_checkbox": "Aplic\u0103 regulile",
-        "fire_webhooks_checkbox": "Webhook-uri de incendiu",
+        "fire_webhooks_checkbox": "Declan\u0219eaz\u0103 webhook-uri",
         "no_budget_pointer": "Se pare c\u0103 nu ai \u00eenc\u0103 bugete. Creeaz\u0103-le pe pagina <a href=\"budgets\">bugete<\/a>. Bugetele te ajut\u0103 s\u0103 \u021bii eviden\u021ba cheltuielilor.",
         "no_bill_pointer": "Se pare c\u0103 nu ai \u00eenc\u0103 abonamente. Creeaz\u0103-le pe pagina <a href=\"subscriptions\">abonamente<\/a>. Abonamentele te ajut\u0103 s\u0103 \u021bii eviden\u021ba cheltuielilor.",
         "source_account": "Contul surs\u0103",

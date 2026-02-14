@@ -183,11 +183,11 @@ class RecurrenceController extends Controller
             $result     = [
                 'daily'  => ['label'    => (string) trans('firefly.recurring_daily'), 'selected' => str_starts_with($preSelected, 'daily')],
                 $weekly  => [
-                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday'    => $dayOfWeek]),
+                    'label'    => (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek]),
                     'selected' => str_starts_with($preSelected, 'weekly'),
                 ],
                 $monthly => [
-                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth'    => $date->day]),
+                    'label'    => (string) trans('firefly.recurring_monthly', ['dayOfMonth' => $date->day]),
                     'selected' => str_starts_with($preSelected, 'monthly'),
                 ],
                 $ndom    => [
@@ -195,7 +195,7 @@ class RecurrenceController extends Controller
                     'selected' => str_starts_with($preSelected, 'ndom'),
                 ],
                 $yearly  => [
-                    'label'    => (string) trans('firefly.recurring_yearly', ['date'    => $yearlyDate]),
+                    'label'    => (string) trans('firefly.recurring_yearly', ['date' => $yearlyDate]),
                     'selected' => str_starts_with($preSelected, 'yearly'),
                 ],
             ];

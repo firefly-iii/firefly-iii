@@ -149,12 +149,10 @@ class RecalculatesPrimaryCurrencyAmounts
             ->join('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
             ->where('transaction_journals.user_group_id', $userGroup->id)
             ->where(static function (Builder $q): void {
-                $q
-                    ->whereNotNull('native_amount')
-                    ->orWhereNotNull('native_foreign_amount')
-                    ->orWhere('native_amount', '!=', '')
-                    ->orWhere('native_foreign_amount', '!=', '')
-                ;
+                $q->whereNotNull('native_amount')->orWhereNotNull('native_foreign_amount');
+                if ('pgsql' !== config('database.default')) {
+                    $q->orWhere('native_amount', '!=', '')->orWhere('native_foreign_amount', '!=', '');
+                }
             })
             ->update(['native_amount'         => null, 'native_foreign_amount' => null])
         ;

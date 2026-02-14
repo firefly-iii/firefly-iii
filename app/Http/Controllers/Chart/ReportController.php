@@ -212,7 +212,7 @@ class ReportController extends Controller
         foreach ($data as $currency) {
             Log::debug(sprintf('Now processing currency "%s"', $currency['currency_name']));
             $income       = [
-                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency'           => $currency['currency_name']]),
+                'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
                 'currency_id'     => $currency['currency_id'],
@@ -221,7 +221,7 @@ class ReportController extends Controller
                 'entries'         => [],
             ];
             $expense      = [
-                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency'           => $currency['currency_name']]),
+                'label'           => (string) trans('firefly.box_spent_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'currency_id'     => $currency['currency_id'],

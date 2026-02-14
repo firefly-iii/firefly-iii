@@ -134,7 +134,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle     = (string) trans('firefly.edit_tag', ['tag'     => $tag->tag]);
+        $subTitle     = (string) trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
         $location     = $this->repository->getLocation($tag);
@@ -289,7 +289,7 @@ class TagController extends Controller
         $page         = (int) $request->get('page');
         $pageSize     = (int) Preferences::get('listPageSize', 50)->data;
         $periods      = [];
-        $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag'     => $tag->tag]);
+        $subTitle     = (string) trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? today(config('app.timezone'));
         $end          = $this->repository->lastUseDate($tag) ?? today(config('app.timezone'));
         $attachments  = $this->repository->getAttachments($tag);

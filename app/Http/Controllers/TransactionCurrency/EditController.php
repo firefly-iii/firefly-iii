@@ -78,7 +78,7 @@ class EditController extends Controller
         }
 
         $subTitleIcon     = 'fa-pencil';
-        $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name'         => $currency->name]);
+        $subTitle         = (string) trans('breadcrumbs.edit_currency', ['name' => $currency->name]);
         $currency->symbol = htmlentities($currency->symbol);
 
         // is currently enabled (for this user?)
@@ -91,7 +91,7 @@ class EditController extends Controller
 
         // code to handle active-checkboxes
         $hasOldInput      = null !== $request->old('_token');
-        $preFilled        = ['enabled'   => $hasOldInput ? (bool) $request->old('enabled') : $enabled];
+        $preFilled        = ['enabled' => $hasOldInput ? (bool) $request->old('enabled') : $enabled];
 
         $request->session()->flash('preFilled', $preFilled);
         Log::channel('audit')->info('Edit currency.', $currency->toArray());

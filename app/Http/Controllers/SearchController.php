@@ -87,7 +87,7 @@ class SearchController extends Controller
         $excludedWords    = $searcher->getExcludedWords();
         $operators        = $searcher->getOperators();
         $invalidOperators = $searcher->getInvalidOperators();
-        $subTitle         = (string) trans('breadcrumbs.search_result', ['query'         => $fullQuery]);
+        $subTitle         = (string) trans('breadcrumbs.search_result', ['query' => $fullQuery]);
 
         return view('search.index', [
             'words'            => $words,

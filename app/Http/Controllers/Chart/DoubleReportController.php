@@ -162,11 +162,7 @@ class DoubleReportController extends Controller
             $name     = $this->getCounterpartName($accounts, $account->id, $account->name, $account->iban);
 
             $chartData[$spentKey] ??= [
-                'label'           => sprintf(
-                    '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_double', ['account'           => $name]),
-                    $currency['currency_name']
-                ),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.spent_in_specific_double', ['account' => $name]), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],
@@ -188,11 +184,7 @@ class DoubleReportController extends Controller
             $name      = $this->getCounterpartName($accounts, $account->id, $account->name, $account->iban);
 
             $chartData[$earnedKey] ??= [
-                'label'           => sprintf(
-                    '%s (%s)',
-                    (string) trans('firefly.earned_in_specific_double', ['account'           => $name]),
-                    $currency['currency_name']
-                ),
+                'label'           => sprintf('%s (%s)', (string) trans('firefly.earned_in_specific_double', ['account' => $name]), $currency['currency_name']),
                 'type'            => 'bar',
                 'currency_symbol' => $currency['currency_symbol'],
                 'currency_code'   => $currency['currency_code'],

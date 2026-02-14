@@ -77,7 +77,7 @@ class DeleteController extends Controller
             throw new NotFoundHttpException();
         }
         $objectType = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle   = (string) trans('firefly.delete_'.$objectType, ['description'   => $group->title ?? $journal->description]);
+        $subTitle   = (string) trans('firefly.delete_'.$objectType, ['description' => $group->title ?? $journal->description]);
         $previous   = Steam::getSafePreviousUrl();
         // put previous url in session
         Log::debug('Will try to remember previous URL');

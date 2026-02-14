@@ -216,7 +216,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.spent_in_specific_category', ['category'           => $category->name]),
+                    (string) trans('firefly.spent_in_specific_category', ['category' => $category->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',
@@ -243,7 +243,7 @@ class CategoryReportController extends Controller
             $chartData[$spentKey] ??= [
                 'label'           => sprintf(
                     '%s (%s)',
-                    (string) trans('firefly.earned_in_specific_category', ['category'           => $category->name]),
+                    (string) trans('firefly.earned_in_specific_category', ['category' => $category->name]),
                     $currency['currency_name']
                 ),
                 'type'            => 'bar',
