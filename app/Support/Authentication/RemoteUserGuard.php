@@ -31,6 +31,7 @@ use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
 use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -58,6 +59,10 @@ class RemoteUserGuard implements Guard
     {
         $this->tried   = true;
         Log::debug(sprintf('Now at %s', __METHOD__));
+        if(App::runningInConsole()) {
+            Log::debug('Running in console, will not authenticate.');
+            return;
+        }
         if ($this->user instanceof User) {
             Log::debug(sprintf('%s is found: #%d, "%s".', $this->user::class, $this->user->id, $this->user->email));
 
@@ -150,6 +155,10 @@ class RemoteUserGuard implements Guard
 
     public function user(): ?User
     {
+        if(App::runningInConsole()) {
+            Log::debug('Running in console, will not authenticate.');
+            return null;
+        }
         if (false === $this->tried) {
             Log::debug('Have not tried authentication, do it now.');
             $this->authenticate();

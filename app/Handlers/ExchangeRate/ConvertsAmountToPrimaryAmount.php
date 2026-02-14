@@ -36,13 +36,13 @@ class ConvertsAmountToPrimaryAmount
         $primaryAmountField                   = $params->primaryAmountField;
 
         if (!Amount::convertToPrimary($params->user)) {
-            Log::debug(sprintf(
-                'User does not want to do conversion, no need to convert "%s" and store it in field "%s" for %s #%d.',
-                $params->amountField,
-                $params->primaryAmountField,
-                get_class($params->model),
-                $params->model->id
-            ));
+//            Log::debug(sprintf(
+//                'User does not want to do conversion, no need to convert "%s" and store it in field "%s" for %s #%d.',
+//                $params->amountField,
+//                $params->primaryAmountField,
+//                get_class($params->model),
+//                $params->model->id
+//            ));
             $params->model->{$primaryAmountField} = null;
             $params->model->saveQuietly();
 
