@@ -105,7 +105,7 @@ class IndexController extends Controller
         $endPeriod     = clone $end;
         $endPeriod->endOfDay();
         // limit to 6 years for the time being.
-        $max = 6;
+        $max           = 6;
         if (now()->diffInYears($startPeriod, true) > $max) {
             $startPeriod = now()->subYears($max);
         }
