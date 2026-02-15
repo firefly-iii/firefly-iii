@@ -66,8 +66,8 @@ class PiggyBankEventTransformer extends AbstractTransformer
 
         return [
             'id'                              => (string) $event->id,
-            'created_at'                      => $event->created_at?->toAtomString(),
-            'updated_at'                      => $event->updated_at?->toAtomString(),
+            'created_at'                      => $event->created_at->toAtomString(),
+            'updated_at'                      => $event->updated_at->toAtomString(),
             'amount'                          => $amount,
             'pc_amount'                       => $primaryAmount,
 
