@@ -9,7 +9,7 @@ This release and several previous ones fix authentication problems mainly. Clean
 
 As far as I know it all works as it should, but feel free to open new issues when necessary. My apologies for the mess.
 
-## Fixed
+### Fixed
 
 - Removed Laravel Sanctum as it was unused.
 - Migrated away from Laravel 10's kernel and bootstrap structure.
