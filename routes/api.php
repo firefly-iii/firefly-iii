@@ -21,6 +21,9 @@
  */
 
 declare(strict_types=1);
+
+use FireflyIII\Http\Middleware\AcceptHeaders;
+use FireflyIII\Http\Middleware\Binder;
 use Illuminate\Support\Facades\Route;
 
 use function Safe\define;
@@ -37,6 +40,19 @@ use function Safe\define;
 if (!defined('DATEFORMAT')) {
     define('DATEFORMAT', '(19|20)[0-9]{2}-?[0-9]{2}-?[0-9]{2}');
 }
+
+// API route for cron
+Route::group(
+    [
+        'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
+        'prefix'     => 'v1',
+        'as'         => 'api.v1.cron.',
+        'middleware' => [Binder::class, AcceptHeaders::class],
+    ],
+    static function (): void {
+        Route::get('cron/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index'])->withoutMiddleware(['api']);
+    }
+);
 
 // Autocomplete controllers
 Route::group(

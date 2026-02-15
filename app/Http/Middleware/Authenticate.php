@@ -82,22 +82,23 @@ class Authenticate
     protected function authenticate($request, array $guards)
     {
         if (0 === count($guards)) {
-            // go for default guard:
-            // @noinspection PhpUndefinedMethodInspection
-            if ($this->auth->check()) {
-                // do an extra check on user object.
-                /** @noinspection PhpUndefinedMethodInspection */
-
-                /** @var User $user */
-                $user = $this->auth->authenticate();
+            Log::debug('in Authenticate::authenticate() with zero guards.');
+            // There are no guards defined, go for the default guard:
+            if (auth()->check()) {
+                Log::debug('User is authenticated.');
+                $user = auth()->user();
                 $this->validateBlockedUser($user, $guards);
+                return;
             }
-
             // @noinspection PhpUndefinedMethodInspection
-            return $this->auth->authenticate();
+            $this->auth->authenticate();
+            if (!$this->auth->check()) {
+                throw new AuthenticationException('The user is not logged in but must be.', $guards);
+            }
         }
-
+        die('five');
         foreach ($guards as $guard) {
+            die('six');
             if ('api' !== $guard) {
                 $this->auth->guard($guard)->authenticate();
             }
@@ -110,7 +111,7 @@ class Authenticate
                 return $this->auth->shouldUse($guard); // @phpstan-ignore-line
             }
         }
-
+        die('seven');
         // this is a massive hack, but if the handler has the oauth exception
         // at this point we can report its error instead of a generic one.
         $message = 'Unauthenticated.';
@@ -130,10 +131,10 @@ class Authenticate
             Log::warning('User is null, throw exception?');
         }
         // \Illuminate\Support\Facades\Log::debug(get_class($user));
-        if ($user instanceof User && 1 === (int) $user->blocked) {
-            $message = (string) trans('firefly.block_account_logout');
+        if ($user instanceof User && 1 === (int)$user->blocked) {
+            $message = (string)trans('firefly.block_account_logout');
             if ('email_changed' === $user->blocked_code) {
-                $message = (string) trans('firefly.email_changed_logout');
+                $message = (string)trans('firefly.email_changed_logout');
             }
             Log::warning('User is blocked, cannot use authentication method.');
             app('session')->flash('logoutMessage', $message);
@@ -143,5 +144,6 @@ class Authenticate
             // @phpstan-ignore-line (thinks function is undefined)
             throw new AuthenticationException('Blocked account.', $guards);
         }
+        Log::debug(sprintf('User #%d is not blocked.', $user->id));
     }
 }
