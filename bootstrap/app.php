@@ -130,7 +130,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       $middleware->group('api',
                                          [
                                              AcceptHeaders::class,
-                                             EnsureFrontendRequestsAreStateful::class,
+                                             // EnsureFrontendRequestsAreStateful::class,
                                              'auth:api',
                                              Binder::class,
                           ]
