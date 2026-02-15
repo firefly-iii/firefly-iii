@@ -84,7 +84,7 @@ Route::group(
     ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function (): void {
         // Route::get('offline', static fn () => view('errors.offline'));
-        Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
+        // Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
     }
 );
 
