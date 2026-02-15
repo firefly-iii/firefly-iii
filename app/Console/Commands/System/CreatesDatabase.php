@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\System;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
+use FireflyIII\Console\Commands\Tools\VerifiesDatabaseConnectionTrait;
 use Illuminate\Console\Command;
 use PDO;
 use PDOException;
@@ -32,23 +33,30 @@ use PDOException;
 class CreatesDatabase extends Command
 {
     use ShowsFriendlyMessages;
+    use VerifiesDatabaseConnectionTrait;
 
     protected $description = 'Tries to create the database if it doesn\'t exist yet.';
 
-    protected $signature   = 'firefly-iii:create-database';
+    protected $signature = 'firefly-iii:create-database';
 
     public function handle(): int
     {
-        if ('mysql' !== env('DB_CONNECTION')) { // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig */
-            $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', env('DB_CONNECTION')));
+        $connected = $this->verifyDatabaseConnection();
+        if (!$connected) {
+            $this->friendlyError('Failed to connect to the database. Is it up?');
+
+            return Command::FAILURE;
+        }
+        if ('mysql' !== config('database.default')) { // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig */
+            $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', config('database.default')));
 
             return 0;
         }
         // try to set up a raw connection:
-        $exists  = false;
-        $dsn     = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST'), env('DB_PORT'));
+        $exists = false;
+        $dsn    = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', env('DB_HOST'), env('DB_PORT'));
 
-        if ('' !== (string) env('DB_SOCKET')) {
+        if ('' !== (string)env('DB_SOCKET')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', env('DB_SOCKET'));
         }
         $this->friendlyLine(sprintf('DSN is %s', $dsn));
@@ -61,7 +69,7 @@ class CreatesDatabase extends Command
 
         // when it fails, display error
         try {
-            $pdo = new PDO($dsn, (string) env('DB_USERNAME'), (string) env('DB_PASSWORD'), $options);
+            $pdo = new PDO($dsn, (string)env('DB_USERNAME'), (string)env('DB_PASSWORD'), $options);
         } catch (PDOException $e) {
             $this->friendlyError(sprintf('Error when connecting to DB: %s', $e->getMessage()));
 
@@ -71,7 +79,7 @@ class CreatesDatabase extends Command
         // only continue when no error.
         // with PDO, try to list DB's (
         /** @var array $stmt */
-        $stmt    = $pdo->query('SHOW DATABASES;');
+        $stmt = $pdo->query('SHOW DATABASES;');
         // slightly more complex but less error-prone.
         foreach ($stmt as $row) {
             $name = $row['Database'] ?? false;
