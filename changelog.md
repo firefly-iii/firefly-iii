@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.22
+
+This release and several previous ones fix authentication problems mainly. Cleaning up the libraries that make up Firefly III's excellent security (with me standing on the shoulders of giants) means that many edge cases that worked in the past no longer worked. Notable issues are listed below. 
+
+As far as I know it all works as it should, but feel free to open new issues when necessary. My apologies for the mess.
+
+## Fixed
+
+- Removed Laravel Sanctum as it was unused.
+- Migrated away from Laravel 10's kernel and bootstrap structure.
+- Fixed remote user guard for console and unauthenticated routes (like `/up` and `health`)
+- #11710
+- #11712
+- #11720
+
 ## v6.4.21
 
 ### Added

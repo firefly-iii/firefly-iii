@@ -56,8 +56,8 @@ class CorrectsGroupAccounts extends Command
             }
         }
         $flags                    = new TransactionGroupEventFlags();
-        $flags->applyRules        = true;
-        $flags->fireWebhooks      = true;
+        $flags->applyRules        = false;
+        $flags->fireWebhooks      = false;
         $flags->recalculateCredit = true;
         $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
