@@ -26,7 +26,6 @@ namespace FireflyIII\Console\Commands\Tools;
 
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
 
 class VerifiesDatabaseConnection extends Command
 {
@@ -38,7 +37,7 @@ class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:verify-database-connection';
+    protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**
      * The console command description.

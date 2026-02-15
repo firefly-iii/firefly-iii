@@ -63,7 +63,7 @@ class UpdateRequest extends FormRequest
     {
         /** @var TransactionCurrency $currency */
         $currency = $this->route()->parameter('currency_code');
-        if(is_string($currency)) {
+        if (is_string($currency)) {
             $currency = TransactionCurrency::whereCode($currency)->first();
         }
 
