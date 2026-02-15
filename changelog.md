@@ -14,9 +14,9 @@ As far as I know it all works as it should, but feel free to open new issues whe
 - Removed Laravel Sanctum as it was unused.
 - Migrated away from Laravel 10's kernel and bootstrap structure.
 - Fixed remote user guard for console and unauthenticated routes (like `/up` and `health`)
-- #11710
-- #11712
-- #11720
+- [Issue 11710](https://github.com/firefly-iii/firefly-iii/issues/11710) (Firefly throws error on startup and when trying to use importer) reported by @avee87
+- [Issue 11712](https://github.com/firefly-iii/firefly-iii/issues/11712) (`RemoteUserGuard` regression in v6.4.19 blocks `/health` endpoint and internal Artisan commands) reported by @Dual-0
+- [Issue 11720](https://github.com/firefly-iii/firefly-iii/issues/11720) (`RemoteUserGuard` regression from v6.4.19 (including v6.4.21) blocks `/health` endpoint) reported by @rjhenry
 
 ## v6.4.21
 
