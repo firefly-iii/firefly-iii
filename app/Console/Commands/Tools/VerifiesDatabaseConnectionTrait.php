@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * VerifiesDatabaseConnectionTrait.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -28,19 +31,15 @@ use Illuminate\Support\Facades\Log;
 
 trait VerifiesDatabaseConnectionTrait
 {
-
     protected function verifyDatabaseConnection(): bool
     {
-        $loops   = 30;
-        $loop    = 0;
-        $queries = [
-            'pgsql'  => 'SELECT * FROM pg_catalog.pg_tables;',
-            'sqlite' => 'SELECT name FROM sqlite_schema;',
-            'mysql'  => 'SHOW TABLES;',
-        ];
-        $default = config('database.default');
+        $loops     = 30;
+        $loop      = 0;
+        $queries   = ['pgsql'  => 'SELECT * FROM pg_catalog.pg_tables;', 'sqlite' => 'SELECT name FROM sqlite_schema;', 'mysql'  => 'SHOW TABLES;'];
+        $default   = config('database.default');
         if (!array_key_exists($default, $queries)) {
             $this->friendlyWarning(sprintf('Cannot validate database connection for "%s"', $default));
+
             return true;
         }
         $query     = $queries[$default];
@@ -61,7 +60,7 @@ trait VerifiesDatabaseConnectionTrait
             }
             ++$loop;
         }
+
         return $connected;
     }
-
 }
