@@ -38,8 +38,8 @@ class CurrencyTransformer extends AbstractTransformer
     {
         return [
             'id'             => $currency->id,
-            'created_at'     => $currency->created_at->toAtomString(),
-            'updated_at'     => $currency->updated_at->toAtomString(),
+            'created_at'     => $currency->created_at?->toAtomString(),
+            'updated_at'     => $currency->updated_at?->toAtomString(),
             'native'         => $currency->userGroupNative,
             'default'        => $currency->userGroupNative,
             'primary'        => $currency->userGroupNative,
