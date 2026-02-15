@@ -86,61 +86,6 @@ return [
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
-    'providers'       => [
-        // Laravel Framework Service Providers...
-        AuthServiceProvider::class,
-        BroadcastServiceProvider::class,
-        BusServiceProvider::class,
-        CacheServiceProvider::class,
-        ConsoleSupportServiceProvider::class,
-        CookieServiceProvider::class,
-        DatabaseServiceProvider::class,
-        EncryptionServiceProvider::class,
-        FilesystemServiceProvider::class,
-        FoundationServiceProvider::class,
-        HashServiceProvider::class,
-        MailServiceProvider::class,
-        NotificationServiceProvider::class,
-        PaginationServiceProvider::class,
-        PipelineServiceProvider::class,
-        QueueServiceProvider::class,
-        RedisServiceProvider::class,
-        PasswordResetServiceProvider::class,
-        SessionServiceProvider::class,
-        TranslationServiceProvider::class,
-        ValidationServiceProvider::class,
-        ViewServiceProvider::class,
-
-        // Package Service Providers...
-
-        // Application Service Providers...
-        AppServiceProvider::class,
-        FireflyIII\Providers\AuthServiceProvider::class,
-        // FireflyIII\Providers\BroadcastServiceProvider::class,
-        // EventServiceProvider::class,
-        RouteServiceProvider::class,
-
-        // own stuff:
-        PragmaRX\Google2FALaravel\ServiceProvider::class,
-        ServiceProvider::class,
-
-        // More service providers.
-        AccountServiceProvider::class,
-        AttachmentServiceProvider::class,
-        BillServiceProvider::class,
-        BudgetServiceProvider::class,
-        CategoryServiceProvider::class,
-        CurrencyServiceProvider::class,
-        FireflyServiceProvider::class,
-        JournalServiceProvider::class,
-        PiggyBankServiceProvider::class,
-        RuleServiceProvider::class,
-        RuleGroupServiceProvider::class,
-        SearchServiceProvider::class,
-        TagServiceProvider::class,
-        AdminServiceProvider::class,
-        RecurringServiceProvider::class,
-    ],
     'aliases'         => [
         'Auth'          => Auth::class,
         'Route'         => Route::class,
