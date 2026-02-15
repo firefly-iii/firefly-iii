@@ -190,6 +190,10 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request): Factory|Redirector|RedirectResponse|View
     {
+        if('remote_user_guard' === config('auth.defaults.guard')) {
+            $message = sprintf('Firefly III is configured to use the "remote user guard", but was unable to link you to a user. Are you sure the "%s" header is in place?', config('auth.guard_header'));
+            return view('errors.error', ['message' => $message]);
+        }
         Log::channel('audit')->info('Show login form (1.1).');
 
         $count             = DB::table('users')->count();

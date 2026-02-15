@@ -73,24 +73,24 @@ Route::group(
     }
 );
 
-Route::group(
-    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'],
-    static function (): void {
-        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
-    }
-);
+//Route::group(
+//    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'],
+//    static function (): void {
+//        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+//    }
+//);
 
 Route::group(
-    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System'],
+    ['middleware' => ['binders-only'], 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function (): void {
         // Route::get('offline', static fn () => view('errors.offline'));
-        // Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck']);
+         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck'])->withoutMiddleware(['web']);
     }
 );
 
 // These routes only work when the user is NOT logged in.
 Route::group(
-    ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'],
+    ['middleware' => ['user-not-logged-in'], 'namespace' => 'FireflyIII\Http\Controllers'],
     static function (): void {
         // Authentication Routes...
         Route::get('login', ['uses' => 'Auth\LoginController@showLoginForm', 'as' => 'login']);
@@ -128,7 +128,7 @@ Route::group(
 
 // For the two factor routes, the user must be logged in, but NOT 2FA. Account confirmation does not matter here.
 Route::group(
-    ['middleware' => 'user-logged-in-no-2fa', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
+    ['middleware' => 'user-simple-auth', 'prefix' => 'two-factor', 'as' => 'two-factor.', 'namespace' => 'FireflyIII\Http\Controllers\Auth'],
     static function (): void {
         Route::post('submit', ['uses' => 'TwoFactorController@submitMFA', 'as' => 'submit']);
         Route::get('lost', ['uses' => 'TwoFactorController@lostTwoFactor', 'as' => 'lost']); // can be removed when v2 is live.

@@ -26,14 +26,3 @@ use Illuminate\Support\Facades\Route;
 // Cron job API routes:
 use FireflyIII\Http\Middleware\AcceptHeaders;
 
-Route::group(
-    [
-        'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
-        'prefix'     => '',
-        'as'         => 'api.v1.cron.',
-        'middleware' => [AcceptHeaders::class],
-    ],
-    static function (): void {
-        Route::get('{cliToken}', ['uses' => 'CronController@cron', 'as' => 'index']);
-    }
-);
