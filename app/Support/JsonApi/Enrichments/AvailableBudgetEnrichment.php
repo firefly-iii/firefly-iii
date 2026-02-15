@@ -67,7 +67,9 @@ class AvailableBudgetEnrichment implements EnrichmentInterface
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private readonly bool $convertToPrimary; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
