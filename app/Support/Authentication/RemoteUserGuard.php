@@ -84,7 +84,7 @@ class RemoteUserGuard implements Guard
         if (null === $userID || '' === $userID) {
             Log::error(sprintf('No user in header "%s".', $header));
 
-            //throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
+            // throw new FireflyException('The guard header was unexpectedly empty. See the logs.');
             return;
         }
 

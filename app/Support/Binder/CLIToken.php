@@ -55,6 +55,7 @@ class CLIToken implements BinderInterface
             }
         }
         Log::error(sprintf('Recognized no users by access token "%s"', $value));
+
         throw new NotFoundHttpException();
     }
 }

@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * VerifiesDatabaseConnection.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -26,6 +29,7 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Exception;
 
 class VerifiesDatabaseConnection extends Command
 {
@@ -36,7 +40,7 @@ class VerifiesDatabaseConnection extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:verify-database-connection';
+    protected $signature   = 'firefly-iii:verify-database-connection';
 
     /**
      * The console command description.
@@ -50,16 +54,13 @@ class VerifiesDatabaseConnection extends Command
      */
     public function handle(): int
     {
-        $loops   = 30;
-        $loop    = 0;
-        $queries = [
-            'pgsql'  => 'SELECT * FROM pg_catalog.pg_tables;',
-            'sqlite' => 'SELECT name FROM sqlite_schema;',
-            'mysql'  => 'SHOW TABLES;',
-        ];
-        $default = config('database.default');
+        $loops     = 30;
+        $loop      = 0;
+        $queries   = ['pgsql'  => 'SELECT * FROM pg_catalog.pg_tables;', 'sqlite' => 'SELECT name FROM sqlite_schema;', 'mysql'  => 'SHOW TABLES;'];
+        $default   = config('database.default');
         if (!array_key_exists($default, $queries)) {
             $this->friendlyWarning(sprintf('Cannot validate database connection for "%s"', $default));
+
             return Command::SUCCESS;
         }
         $query     = $queries[$default];
@@ -73,21 +74,22 @@ class VerifiesDatabaseConnection extends Command
                 Log::error(sprintf('Loop #%d: connection failed: %s', $loop, $e->getMessage()));
                 $this->friendlyWarning(sprintf('Database connection attempt #%d failed. Sleep for 10 seconds...', $loop + 1));
                 sleep(10);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 Log::error(sprintf('Loop #%d: not connected yet because of a %s: %s', $loop, get_class($e), $e->getMessage()));
                 $this->friendlyWarning(sprintf('Database connection attempt #%d failed. Sleep for 10 seconds...', $loop + 1));
                 sleep(10);
             }
-            $loop++;
+            ++$loop;
         }
         if ($connected) {
             Log::debug(sprintf('Connected to database after %d attempt(s).', $loop));
             $this->friendlyPositive('Connected to the database.');
+
             return Command::SUCCESS;
         }
         Log::error('Failed to connect to database.');
         $this->friendlyError('Failed to connect to the database. Is it up?');
+
         return Command::FAILURE;
     }
-
 }

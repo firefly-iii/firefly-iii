@@ -73,18 +73,18 @@ Route::group(
     }
 );
 
-//Route::group(
+// Route::group(
 //    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'],
 //    static function (): void {
 //        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
 //    }
-//);
+// );
 
 Route::group(
     ['middleware' => ['binders-only'], 'namespace' => 'FireflyIII\Http\Controllers\System'],
     static function (): void {
         // Route::get('offline', static fn () => view('errors.offline'));
-         Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck'])->withoutMiddleware(['web']);
+        Route::get('health', ['uses' => 'HealthcheckController@check', 'as' => 'healthcheck'])->withoutMiddleware(['web']);
     }
 );
 
