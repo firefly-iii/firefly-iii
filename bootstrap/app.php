@@ -32,7 +32,7 @@ use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
-use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\StartFireflyIIISession;
 use FireflyIII\Http\Middleware\TrustProxies;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -96,18 +96,19 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       health  : '/health',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
+
                       // overrule the standard middleware
                       $middleware->use(
                           [
-                              InvokeDeferredCallbacks::class,
-                              HandleCors::class,
-                              PreventRequestsDuringMaintenance::class,
-                              ValidatePostSize::class,
-                              TrimStrings::class,
-                              ConvertEmptyStringsToNull::class,
-                              SecureHeaders::class,
-                              TrustProxies::class,
-                          ]
+                                           InvokeDeferredCallbacks::class,
+                                           \Illuminate\Http\Middleware\TrustProxies::class, // use the DEFAULT middleware for this.
+                                           HandleCors::class,
+                                           PreventRequestsDuringMaintenance::class,
+                                           ValidatePostSize::class,
+                                           TrimStrings::class,
+                                           ConvertEmptyStringsToNull::class,
+                                           SecureHeaders::class, // is a Firefly III specific middleware class.
+                                       ]
                       );
 
                       // overrule the web group
@@ -115,7 +116,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                          [
                                              EncryptCookies::class,
                                              AddQueuedCookiesToResponse::class,
-                                             StartFireflySession::class,
+                                             StartFireflyIIISession::class,
                                              ShareErrorsFromSession::class,
                                              VerifyCsrfToken::class,
                                              SubstituteBindings::class,
@@ -136,7 +137,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                           Installer::class,
                           EncryptCookies::class,
                           AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
+                          StartFireflyIIISession::class,
                           ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
                           Binder::class,
@@ -148,7 +149,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                           Installer::class,
                           EncryptCookies::class,
                           AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
+                          StartFireflyIIISession::class,
                           ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
                           Binder::class,
@@ -159,7 +160,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       $middleware->appendToGroup('user-simple-auth', [
                           EncryptCookies::class,
                           AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
+                          StartFireflyIIISession::class,
                           ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
                           Binder::class,
@@ -170,7 +171,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       $middleware->appendToGroup('user-full-auth', [
                           EncryptCookies::class,
                           AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
+                          StartFireflyIIISession::class,
                           ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
                           Authenticate::class,
@@ -185,7 +186,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       $middleware->appendToGroup('admin', [
                           EncryptCookies::class,
                           AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
+                          StartFireflyIIISession::class,
                           ShareErrorsFromSession::class,
                           VerifyCsrfToken::class,
                           Authenticate::class,
@@ -224,16 +225,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
 | incoming requests to this application from both the web and CLI.
 |
 */
-
-$app->singleton(
-    Kernel::class,
-    FireflyIII\Http\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    FireflyIII\Console\Kernel::class
-);
 
 $app->singleton(
     ExceptionHandler::class,
