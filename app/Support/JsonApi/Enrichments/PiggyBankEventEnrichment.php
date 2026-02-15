@@ -63,7 +63,9 @@ class PiggyBankEventEnrichment implements EnrichmentInterface
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
+    // @phpstan-ignore-line
     private array $accountIds        = []; // @phpstan-ignore-line
+    // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
     // @phpstan-ignore-line
