@@ -32,11 +32,9 @@ use FireflyIII\Http\Middleware\IsAdmin;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\SecureHeaders;
-use FireflyIII\Http\Middleware\StartFireflySession;
-use FireflyIII\Http\Middleware\TrustProxies;
+use FireflyIII\Http\Middleware\StartFireflyIIISession;
 use FireflyIII\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Contracts\Http\Kernel;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -47,7 +45,6 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance;
 use Illuminate\Foundation\Http\Middleware\TrimStrings;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Http\Middleware\ValidatePostSize;
-use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -92,115 +89,99 @@ if (!function_exists('stringIsEqual')) {
 $app = Application::configure(basePath: dirname(__DIR__))
                   ->withRouting(
                       web     : __DIR__ . '/../routes/web.php',
+                      api     : __DIR__ . '/../routes/api.php',
                       commands: __DIR__ . '/../routes/console.php',
                       health  : '/up',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
+
                       // overrule the standard middleware
                       $middleware->use(
                           [
                               InvokeDeferredCallbacks::class,
+                              \Illuminate\Http\Middleware\TrustProxies::class, // use the DEFAULT middleware for this.
                               HandleCors::class,
                               PreventRequestsDuringMaintenance::class,
                               ValidatePostSize::class,
                               TrimStrings::class,
                               ConvertEmptyStringsToNull::class,
-                              SecureHeaders::class,
-                              TrustProxies::class,
+                              SecureHeaders::class, // is a Firefly III specific middleware class.
                           ]
                       );
 
-                      // overrule the web group
+                      // append and extend the default "web" middleware
+                      // to include our own custom "StartFireflyIIISession" class.
+                      // this class in turns contains a better "previous URL" feature.
+                      // See https://laravel.com/docs/12.x/middleware for the default list.
                       $middleware->group('web',
                                          [
                                              EncryptCookies::class,
                                              AddQueuedCookiesToResponse::class,
-                                             StartFireflySession::class,
+                                             StartFireflyIIISession::class, // this is different.
                                              ShareErrorsFromSession::class,
                                              VerifyCsrfToken::class,
-                                             SubstituteBindings::class,
+                                             Binder::class, // this is also different.
                                              CreateFreshApiToken::class,
                                          ]
                       );
-                      // new group?
-                      $middleware->appendToGroup('binders-only',
-                                                 [
-                                                     Installer::class,
-                                                     EncryptCookies::class,
-                                                     AddQueuedCookiesToResponse::class,
-                                                     Binder::class,
-                                                 ]);
 
-                      //
-                      $middleware->appendToGroup('user-not-logged-in', [
-                          Installer::class,
-                          EncryptCookies::class,
-                          AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
-                          Binder::class,
-                          RedirectIfAuthenticated::class,
-                      ]);
+                      // the default API group only contains "substitute bindings" middleware
+                      // so here we replace the entire API group and add more sensible stuff.
+                      $middleware->group('api',
+                                         [
+                                             AcceptHeaders::class,
+                                             // EnsureFrontendRequestsAreStateful::class,
+                                             'auth:api',
+                                             Binder::class,
+                          ]
+                      );
+                      $middleware->appendToGroup('api_basic', [AcceptHeaders::class, Binder::class]);
 
-                      // more
-                      $middleware->appendToGroup('user-logged-in-no-2fa', [
-                          Installer::class,
-                          EncryptCookies::class,
-                          AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
-                          Binder::class,
-                          Authenticate::class,
-                      ]);
 
-                      // simple auth
+                      // "simple auth" means the user must be logged in and present,
+                      // but does not have to be 2FA authenticated. This is so all users
+                      // can always log out, for example.
                       $middleware->appendToGroup('user-simple-auth', [
-                          EncryptCookies::class,
-                          AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
-                          Binder::class,
                           Authenticate::class,
                       ]);
 
-                      // user full auth
+                      // This middleware is added for all routes where the user MUST have full authentication.
+                      // this includes 2FA etc.
+                      // incidentally, this group also includes the range middleware and the message thing.
                       $middleware->appendToGroup('user-full-auth', [
-                          EncryptCookies::class,
-                          AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
                           Authenticate::class,
                           MFAMiddleware::class,
                           Range::class,
-                          Binder::class,
                           InterestingMessage::class,
-                          CreateFreshApiToken::class,
                       ]);
-
-                      // admin
+                      // This middleware is added to ensure that the user is not only logged in and
+                      // authenticated (with MFA and everything), but also admin.
                       $middleware->appendToGroup('admin', [
-                          EncryptCookies::class,
-                          AddQueuedCookiesToResponse::class,
-                          StartFireflySession::class,
-                          ShareErrorsFromSession::class,
-                          VerifyCsrfToken::class,
                           Authenticate::class,
-                          // AuthenticateTwoFactor::class,
+                          MFAMiddleware::class,
                           IsAdmin::class,
                           Range::class,
-                          Binder::class,
-                          CreateFreshApiToken::class,
+                          InterestingMessage::class,
                       ]);
 
-                      // api
-                      $middleware->appendToGroup('api', [AcceptHeaders::class, EnsureFrontendRequestsAreStateful::class, 'auth:api,sanctum', Binder::class]);
-                      // api basic,
-                      $middleware->appendToGroup('api_basic', [AcceptHeaders::class, Binder::class]);
+                      // if the user is not logged in, this group applies.
+                      // on top of everything else of course.
+                      $middleware->appendToGroup('user-not-logged-in', [
+                          Installer::class,
+                          RedirectIfAuthenticated::class,
+                      ]);
 
+                      // the "binders only" group does not need or ask for authentication
+                      // it just makes sure strings from routes are bound to objects if possible.
+                      $middleware->group('binders-only',
+                                         [
+                                             Installer::class,
+                                             EncryptCookies::class,
+                                             AddQueuedCookiesToResponse::class,
+                                             Binder::class,
+                                         ]);
+
+                      // $middleware->priority([StartFireflyIIISession::class, ShareErrorsFromSession::class, Authenticate::class, Binder::class, Authorize::class]);
                   })
                   ->withEvents(discover: [
                                              __DIR__ . '/../app/Listeners',
@@ -224,16 +205,6 @@ $app = Application::configure(basePath: dirname(__DIR__))
 | incoming requests to this application from both the web and CLI.
 |
 */
-
-$app->singleton(
-    Kernel::class,
-    FireflyIII\Http\Kernel::class
-);
-
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    FireflyIII\Console\Kernel::class
-);
 
 $app->singleton(
     ExceptionHandler::class,

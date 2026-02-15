@@ -34,10 +34,6 @@ use Laravel\Passport\Passport;
  */
 class AuthServiceProvider extends ServiceProvider
 {
-    protected $policies = [
-        // 'FireflyIII\Model' => 'FireflyIII\Policies\ModelPolicy',
-    ];
-
     /**
      * Register any authentication / authorization services.
      *

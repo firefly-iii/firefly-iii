@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Http\Middleware\StartFireflySession;
+use FireflyIII\Http\Middleware\StartFireflyIIISession;
 use Illuminate\Session\SessionServiceProvider as BaseSessionServiceProvider;
 use Override;
 
@@ -42,6 +42,6 @@ class SessionServiceProvider extends BaseSessionServiceProvider
 
         $this->registerSessionDriver();
 
-        $this->app->singleton(StartFireflySession::class);
+        $this->app->singleton(StartFireflyIIISession::class);
     }
 }
