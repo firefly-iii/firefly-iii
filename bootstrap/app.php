@@ -93,7 +93,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                   ->withRouting(
                       web     : __DIR__ . '/../routes/web.php',
                       commands: __DIR__ . '/../routes/console.php',
-                      health  : '/up',
+                      health  : '/health',
                   )
                   ->withMiddleware(function (Middleware $middleware): void {
                       // overrule the standard middleware
@@ -123,7 +123,7 @@ $app = Application::configure(basePath: dirname(__DIR__))
                                          ]
                       );
                       // new group?
-                      $middleware->appendToGroup('binders-only',
+                      $middleware->group('binders-only',
                                                  [
                                                      Installer::class,
                                                      EncryptCookies::class,
