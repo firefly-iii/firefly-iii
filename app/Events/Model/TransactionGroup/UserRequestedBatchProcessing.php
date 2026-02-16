@@ -25,11 +25,11 @@ declare(strict_types=1);
 namespace FireflyIII\Events\Model\TransactionGroup;
 
 use FireflyIII\Events\Event;
-use Illuminate\Support\Facades\Log;
 
 class UserRequestedBatchProcessing extends Event
 {
     public TransactionGroupEventObjects $objects;
+
     public function __construct(
         public TransactionGroupEventFlags $flags
     ) {
