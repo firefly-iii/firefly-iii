@@ -732,7 +732,6 @@ Route::group(
 // Users API routes:
 Route::group(
     [
-        'middleware' => ['auth:api,sanctum', 'bindings'],
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
         'prefix'     => 'v1/users',
         'as'         => 'api.v1.users.',
@@ -749,7 +748,6 @@ Route::group(
 // Batch API routes:
 Route::group(
     [
-        'middleware' => ['auth:api,sanctum', 'bindings'],
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
         'prefix'     => 'v1/batch',
         'as'         => 'api.v1.batch.',
