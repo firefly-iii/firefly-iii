@@ -348,6 +348,12 @@
                                                            :href="'./accounts/show/' + account.id"><em
                                                                 class="fa-solid fa-eye"></em> {{ __('firefly.show') }}
                                                         </a></li>
+                                                    <template x-if="'ccAsset' === account.role">
+                                                        <li><a class="dropdown-item"
+                                                               :href="'./accounts/statement/' + account.id"><em
+                                                                    class="fa-solid fa-file-invoice-dollar"></em> {{ __('firefly.credit_card_statement') }}
+                                                            </a></li>
+                                                    </template>
                                                     <li><a class="dropdown-item"
                                                            :href="'./accounts/reconcile/' + account.id"><em
                                                                 class="fa-solid fa-calculator"></em> {{ __('firefly.reconcile_selected')  }}

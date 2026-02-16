@@ -61,6 +61,7 @@ export default defineConfig(({command, mode, isSsrBuild, isPreview}) => {
 
                     // accounts
                     'src/pages/accounts/index.js',
+                    'src/pages/accounts/statement.js',
 
                     // administrations
                     'src/pages/administrations/index.js',

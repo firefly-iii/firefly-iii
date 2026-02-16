@@ -132,6 +132,14 @@ Breadcrumbs::for(
 );
 
 Breadcrumbs::for(
+    'accounts.statement',
+    static function (Generator $breadcrumbs, Account $account): void {
+        $breadcrumbs->parent('accounts.show', $account);
+        $breadcrumbs->push(trans('firefly.credit_card_statement', ['name' => $account->name]), route('accounts.statement', [$account->id]));
+    }
+);
+
+Breadcrumbs::for(
     'accounts.reconcile',
     static function (Generator $breadcrumbs, Account $account): void {
         $breadcrumbs->parent('accounts.show', $account);
