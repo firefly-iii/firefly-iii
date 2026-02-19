@@ -64,7 +64,7 @@ return [
         'web'               => [
             'driver'   => 'session',
             'provider' => 'users',
-            'remember' => 364*24*60, // 364 days.
+            'remember' => 364 * 24 * 60, // 364 days.
         ],
         'remote_user_guard' => [
             'driver'   => 'remote_user_guard',
