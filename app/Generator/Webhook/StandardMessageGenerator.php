@@ -227,6 +227,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::TRANSACTIONS->name:
                 $model->refresh();
+
                 /** @var TransactionGroup $model */
                 $transformer             = new TransactionGroupTransformer();
 
@@ -247,6 +248,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
 
             case WebhookResponse::ACCOUNTS->name:
                 $model->refresh();
+
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
