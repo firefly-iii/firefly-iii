@@ -192,6 +192,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
             case WebhookResponse::BUDGET->name:
                 $basicMessage['content'] = [];
                 if ($model instanceof Budget) {
+                    $model->refresh();
                     $enrichment              = new BudgetEnrichment();
                     $enrichment->setUser($model->user);
 
@@ -201,6 +202,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                     $basicMessage['content'] = $transformer->transform($model);
                 }
                 if ($model instanceof BudgetLimit) {
+                    $model->refresh();
                     $user                    = $model->budget->user;
                     $enrichment              = new BudgetLimitEnrichment();
                     $enrichment->setUser($user);
@@ -224,6 +226,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 break;
 
             case WebhookResponse::TRANSACTIONS->name:
+                $model->refresh();
                 /** @var TransactionGroup $model */
                 $transformer             = new TransactionGroupTransformer();
 
@@ -243,6 +246,7 @@ class StandardMessageGenerator implements MessageGeneratorInterface
                 break;
 
             case WebhookResponse::ACCOUNTS->name:
+                $model->refresh();
                 /** @var TransactionGroup $model */
                 $accounts                = $this->collectAccounts($model);
                 $enrichment              = new AccountEnrichment();
