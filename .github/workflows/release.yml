@@ -10,7 +10,7 @@ on:
       phpversion:
         description: 'PHP version'
         required: true
-        default: '8.4'
+        default: '8.5'
   schedule:
     - cron: '0 3 * * MON'
 
@@ -42,7 +42,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ github.event.inputs.phpversion || '8.4' }}
+          php-version: ${{ github.event.inputs.phpversion || '8.5' }}
           extensions: mbstring, intl, zip, bcmath
       - name: Switch and pull
         run: |
