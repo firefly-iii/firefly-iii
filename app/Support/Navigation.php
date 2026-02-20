@@ -448,7 +448,7 @@ class Navigation
         $locale        = Steam::getLocale();
         // define period to increment
         $increment     = 'addDay';
-        $format        = $this->preferredCarbonFormat($start, $end);
+        $format        = $this->preferredCarbonLocalizedFormat($start, $end);
         $displayFormat = (string) trans('config.month_and_day_js', [], $locale);
         $diff          = $start->diffInMonths($end, true);
         // increment by month (for year)

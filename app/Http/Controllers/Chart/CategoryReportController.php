@@ -45,11 +45,9 @@ class CategoryReportController extends Controller
     use AugumentData;
     use TransactionCalculation;
 
-    /** @var GeneratorInterface Chart generation methods. */
-    private $generator;
+    private GeneratorInterface $generator;
 
-    /** @var OperationsRepositoryInterface */
-    private $opsRepository;
+    private OperationsRepositoryInterface $opsRepository;
 
     /**
      * CategoryReportController constructor.
