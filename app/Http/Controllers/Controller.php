@@ -80,13 +80,13 @@ abstract class Controller extends BaseController
         View::share('FF_VERSION', config('firefly.version'));
         View::share('FF_BUILD_TIME', config('firefly.build_time'));
 
-        // this breaks when running < php 8.5 and is totally intentional.
-        //        $input            = ' James is cool';
-        //        $output           = $input
-        //            |> trim(...)
-        //            |> (fn (string $string) => str_replace(' ', '-', $string))
-        //            |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
-        //            |> strtolower(...);
+        // this breaks when running < PHP 8.5 and is totally intentional.
+                $input            = ' James is cool';
+                $output           = $input
+                    |> trim(...)
+                    |> (fn (string $string) => str_replace(' ', '-', $string))
+                    |> (fn (string $string) => str_replace(['.', '/', '…'], '', $string))
+                    |> strtolower(...);
 
         // is webhooks enabled?
         View::share(
