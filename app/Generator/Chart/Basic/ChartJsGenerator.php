@@ -101,11 +101,11 @@ class ChartJsGenerator implements GeneratorInterface
             return [];
         }
         Log::debug('Now in multiSet()');
-        if(0 !== count($labels)) {
+        if (0 !== count($labels)) {
             Log::debug('Labels are given: ', $labels);
         }
-        if(0 === count($labels)) {
-            $labels    = is_array($first['entries']) ? array_keys($first['entries']) : [];
+        if (0 === count($labels)) {
+            $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
             Log::debug('Labels are generated: ', $labels);
         }
 
