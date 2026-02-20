@@ -6,7 +6,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ## v6.5.0 - 2026-02-20
 
 > [!IMPORTANT]  
-> This release is the same as 6.4.23, but only works on PHP 8.5 and higher. To continue using the latest version of Firefly III, you must upgrade to (at least) PHP 8.5.0, or switch to the Docker containers.
+> This release is the same as 6.4.23, but only works on PHP 8.5 and higher. To continue using the latest version of Firefly III, you must upgrade to (at least) PHP 8.5.0, or switch to the Docker containers. Read more about Firefly III's release and support schedule in [`releases.md`](releases.md).
 
 ### Added
 - Support for PHP8.5
