@@ -52,6 +52,7 @@ class NotificationSender
 
                 return;
             }
+            Log::error('Could not send notification :(.');
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }

@@ -246,7 +246,7 @@ class UpdatePiggyBank implements ActionInterface
             Log::warning(sprintf('Cannot remove %s from piggy bank.', $amount));
             $currency = $accountRepository->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
             event(new RuleActionFailedOnArray($this->action, $array, trans('rules.cannot_remove_from_piggy', [
-                'amount' => Amount::formatAnything($amount, $currency, false),
+                'amount' => Amount::formatAnything($currency, $amount, false),
                 'name'   => $piggyBank->name,
             ])));
 

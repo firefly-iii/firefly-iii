@@ -127,6 +127,7 @@
         "rector/rector": "^2.0",
         "thecodingmachine/phpstan-safe-rule": "^1.4"
     },
+
     "suggest": {},
     "autoload": {
         "psr-4": {
@@ -197,6 +198,11 @@
         },
         "platform": {
             "php": "8.4"
+        },
+        "audit": {
+            "ignore": {
+                "PKSA-y2cr-5h3j-g3ys": "Keys are not generated."
+            }
         }
     }
 }

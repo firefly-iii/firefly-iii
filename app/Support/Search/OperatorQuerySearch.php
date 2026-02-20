@@ -2217,7 +2217,7 @@ class OperatorQuerySearch implements SearchInterface
                     // changed from includeTags to includeAnyTags for #8632
                     $ids                          = array_values($tags->pluck('id')->toArray());
                     $index                        = count($this->includeAnyTags);
-                    $this->includeAnyTags[$index] = array_unique(array_merge($this->includeAnyTags[$index], $ids));
+                    $this->includeAnyTags[$index] = array_unique(array_merge($this->includeAnyTags[$index] ?? [], $ids));
                 }
 
                 break;
@@ -2252,7 +2252,7 @@ class OperatorQuerySearch implements SearchInterface
                 if ($tags->count() > 0) {
                     $ids                          = array_values($tags->pluck('id')->toArray());
                     $index                        = count($this->includeAnyTags);
-                    $this->includeAnyTags[$index] = array_unique(array_merge($this->includeAnyTags[$index], $ids));
+                    $this->includeAnyTags[$index] = array_unique(array_merge($this->includeAnyTags[$index] ?? [], $ids));
                 }
 
                 break;

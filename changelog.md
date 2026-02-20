@@ -3,13 +3,28 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## v6.4.23
+
+> [!WARNING]
+> If no pressing issues get reported, this release will be followed by **v6.5.0**. It will be exactly the same but require PHP 8.5.
+
+### Fixed
+- [Issue 11734](https://github.com/firefly-iii/firefly-iii/issues/11734) (Cache is not cleared for "no category" overview monthly blocks) reported by @JC5
+- [Issue 11735](https://github.com/firefly-iii/firefly-iii/issues/11735) (health endpoint no longer performant) reported by @grgar
+- [Discussion 11736](https://github.com/orgs/firefly-iii/discussions/11736) (Deposit from a Liability & the default financial report) started by @dratze98
+- [Issue 11738](https://github.com/firefly-iii/firefly-iii/issues/11738) (API endpoint `api/v1/batch/finish` does not work) reported by @JC5
+- [Issue 11744](https://github.com/firefly-iii/firefly-iii/issues/11744) (Webhook and rule execution for imported transactions) reported by @mleck28
+- [Issue 11752](https://github.com/firefly-iii/firefly-iii/issues/11752) (ErrorException in OperatorQuerySearch.php when using tag_starts or tag_ends operators via API) reported by @travelr
+- [Issue 11757](https://github.com/firefly-iii/firefly-iii/issues/11757) ("Remember Me" cookie expires after 1 minute) reported by @michaeljandrews
+- Invitee mail message would error out, reported over mail. Thanks!
+
 ## v6.4.22
 
 This release and several previous ones fix authentication problems mainly. Cleaning up the libraries that make up Firefly III's excellent security (with me standing on the shoulders of giants) means that many edge cases that worked in the past no longer worked. Notable issues are listed below. 
 
 As far as I know it all works as it should, but feel free to open new issues when necessary. My apologies for the mess.
 
-## Fixed
+### Fixed
 
 - Removed Laravel Sanctum as it was unused.
 - Migrated away from Laravel 10's kernel and bootstrap structure.

@@ -107,20 +107,10 @@ trait SupportsGroupProcessingTrait
         // remove generic statistics:
         $repository->deleteStatisticsForPrefix('all_', $dates);
 
-        // remove for no tag, no cat, etc.
-        if (0 === $objects->budgets->count()) {
-            Log::debug('No budgets, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_budget', $dates);
-        }
-        if (0 === $objects->categories->count()) {
-            Log::debug('No categories, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_category', $dates);
-        }
-        if (0 === $objects->tags->count()) {
-            Log::debug('No tags, delete "no_category" stats.');
-            $repository->deleteStatisticsForPrefix('no_tag', $dates);
-        }
-        Log::debug('Done with remove period statistics for all objects.');
+        // ALWAYS remove for no tag, no cat, etc.
+        $repository->deleteStatisticsForPrefix('no_budget', $dates);
+        $repository->deleteStatisticsForPrefix('no_category', $dates);
+        $repository->deleteStatisticsForPrefix('no_tag', $dates);
     }
 
     private function collectDatesFromJournals(Collection $journals): Collection

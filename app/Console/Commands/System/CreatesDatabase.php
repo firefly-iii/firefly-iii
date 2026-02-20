@@ -47,7 +47,7 @@ class CreatesDatabase extends Command
 
             return Command::FAILURE;
         }
-        if ('mysql' !== config('database.default')) { // @phpstan-ignore larastan.noEnvCallsOutsideOfConfig */
+        if ('mysql' !== config('database.default')) {
             $this->friendlyInfo(sprintf('CreateDB does not apply to "%s", skipped.', config('database.default')));
 
             return 0;

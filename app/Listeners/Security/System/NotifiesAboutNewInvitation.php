@@ -62,7 +62,7 @@ class NotifiesAboutNewInvitation implements ShouldQueue
         $url   = route('invite', [$invitee->invite_code]);
 
         try {
-            Mail::to($email)->send(new InvitationMail($invitee, $admin, $url));
+            Mail::to($email)->send(new InvitationMail($email, $admin, $url));
         } catch (Exception $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

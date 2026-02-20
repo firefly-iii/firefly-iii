@@ -52,6 +52,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->withoutCategory();
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
+            $collector->excludeDestinationAccounts($accounts); // to exclude withdrawals to liabilities.
         }
         $journals  = $collector->getExtractedJournals();
         $array     = [];
@@ -97,6 +98,7 @@ class NoCategoryRepository implements NoCategoryRepositoryInterface, UserGroupIn
         $collector->setUser($this->user)->setRange($start, $end)->setTypes([TransactionTypeEnum::DEPOSIT->value])->withoutCategory();
         if ($accounts instanceof Collection && $accounts->count() > 0) {
             $collector->setAccounts($accounts);
+            $collector->excludeSourceAccounts($accounts); // to prevent income from liabilities.
         }
         $journals  = $collector->getExtractedJournals();
         $array     = [];
