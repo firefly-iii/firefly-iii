@@ -54,17 +54,17 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
 
         /** @var AvailableBudget $availableBudget */
         foreach ($availableBudgets as $availableBudget) {
-            $start = $availableBudget->start_date->format('Y-m-d');
-            $end   = $availableBudget->end_date->format('Y-m-d');
-            $key   = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
+            $start        = $availableBudget->start_date->format('Y-m-d');
+            $end          = $availableBudget->end_date->format('Y-m-d');
+            $key          = sprintf('%s-%s-%s', $availableBudget->transaction_currency_id, $start, $end);
             if (array_key_exists($key, $exists)) {
                 Log::debug(sprintf(
-                               'Found duplicate AB: %s %s, %s-%s. Has been deleted',
-                               $availableBudget->transaction_currency_id,
-                               $availableBudget->amount,
-                               $start,
-                               $end
-                           ));
+                    'Found duplicate AB: %s %s, %s-%s. Has been deleted',
+                    $availableBudget->transaction_currency_id,
+                    $availableBudget->amount,
+                    $start,
+                    $end
+                ));
                 $availableBudget->delete();
             }
             $exists[$key] = true;
@@ -96,7 +96,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))
-            ->first();
+            ->first()
+        ;
     }
 
     public function findById(int $id): ?AvailableBudget
@@ -104,12 +105,28 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         return $this->user->availableBudgets->find($id);
     }
 
+    #[Override]
+    public function findInRange(TransactionCurrency $currency, Carbon $start, Carbon $end): Collection
+    {
+        /** @var null|AvailableBudget */
+        return $this->user
+            ->availableBudgets()
+            ->where('transaction_currency_id', $currency->id)
+            // start date OR end date must be the same or equal to start or END respectively.
+            ->where(function ($q1) use ($start, $end): void {
+                $q1->whereBetween('start_date', [$start, $end]);
+                $q1->orWhereBetween('end_date', [$start, $end]);
+            })
+            ->get(['available_budgets.*'])
+        ;
+    }
+
     /**
      * Return a list of all available budgets (in all currencies) (for the selected period).
      */
     public function get(?Carbon $start = null, ?Carbon $end = null): Collection
     {
-        $query = $this->user->availableBudgets()->with(['transactionCurrency']);
+        $query  = $this->user->availableBudgets()->with(['transactionCurrency']);
         if ($start instanceof Carbon && $end instanceof Carbon) {
             $query->where(static function (Builder $q1) use ($start, $end): void {
                 $q1->where('start_date', '=', $start->format('Y-m-d'));
@@ -125,7 +142,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
     #[Deprecated]
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string
     {
-        $amount = '0';
+        $amount          = '0';
 
         /** @var null|AvailableBudget $availableBudget */
         $availableBudget = $this->user
@@ -133,7 +150,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))
-            ->first();
+            ->first()
+        ;
         if (null !== $availableBudget) {
             return $availableBudget->amount;
         }
@@ -149,7 +167,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         return $this->user
             ->availableBudgets()
             ->where('transaction_currency_id', $currency->id)
-            ->get();
+            ->get()
+        ;
     }
 
     /**
@@ -178,7 +197,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->availableBudgets()
             ->where('start_date', '=', $start->format('Y-m-d'))
             ->where('end_date', '=', $end->format('Y-m-d'))
-            ->get();
+            ->get()
+        ;
     }
 
     public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
@@ -189,7 +209,8 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->availableBudgets()
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))
-            ->get();
+            ->get()
+        ;
 
         Log::debug(sprintf('Found %d available budgets (already converted)', $availableBudgets->count()));
 
@@ -204,7 +225,7 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
                 : $availableBudget->transaction_currency_id;
             $field               = $convertToPrimary && $availableBudget->transaction_currency_id !== $primary->id ? 'native_amount' : 'amount';
             $return[$currencyId] ??= '0';
-            $amount              = '' === (string)$availableBudget->{$field} ? '0' : (string)$availableBudget->{$field};
+            $amount              = '' === (string) $availableBudget->{$field} ? '0' : (string) $availableBudget->{$field};
             $return[$currencyId] = bcadd($return[$currencyId], $amount);
             Log::debug(sprintf('Add #%d %s (%s) for a total of %s', $currencyId, $amount, $field, $return[$currencyId]));
         }
@@ -220,25 +241,26 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))
-            ->first();
+            ->first()
+        ;
     }
 
     #[Override]
     public function recalculateAmount(AvailableBudget $availableBudget): void
     {
         Log::debug(sprintf('Now in recalculateAmount(#%d)', $availableBudget->id));
-        $newAmount = '0';
-        $period    = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
+        $newAmount    = '0';
+        $period       = Period::make($availableBudget->start_date, $availableBudget->end_date, Precision::DAY());
         Log::debug(sprintf(
-                       'Now recalculating available budget #%d, (%s to %s)',
-                       $availableBudget->id,
-                       $availableBudget->start_date->format('Y-m-d'),
-                       $availableBudget->end_date->format('Y-m-d')
-                   ));
+            'Now recalculating available budget #%d, (%s to %s)',
+            $availableBudget->id,
+            $availableBudget->start_date->format('Y-m-d'),
+            $availableBudget->end_date->format('Y-m-d')
+        ));
         // have to recalculate everything just in case.
         $blRepository = app(BudgetLimitRepositoryInterface::class);
         $blRepository->setUser($this->user);
-        $set = $blRepository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
+        $set          = $blRepository->getAllBudgetLimitsByCurrency($availableBudget->transactionCurrency, $availableBudget->start_date, $availableBudget->end_date);
         Log::debug(sprintf('Found %d interesting budget limit(s).', $set->count()));
 
         /** @var BudgetLimit $budgetLimit */
@@ -259,14 +281,15 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget
     {
         /** @var null|AvailableBudget $availableBudget */
-        $availableBudget = $this->user
+        $availableBudget         = $this->user
             ->availableBudgets()
             ->where('transaction_currency_id', $currency->id)
             ->where('start_date', $start->format('Y-m-d'))
             ->where('end_date', $end->format('Y-m-d'))
-            ->first();
+            ->first()
+        ;
         if (null === $availableBudget) {
-            $availableBudget = new AvailableBudget();
+            $availableBudget                = new AvailableBudget();
             $availableBudget->user()->associate($this->user);
             $availableBudget->transactionCurrency()->associate($currency);
             $availableBudget->start_date    = $start->startOfDay();
@@ -286,21 +309,21 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         if ($start instanceof Carbon) {
             $start = $data['start']->startOfDay();
         }
-        $end = $data['end'];
+        $end   = $data['end'];
         if ($end instanceof Carbon) {
             $end = $data['end']->endOfDay();
         }
 
         return AvailableBudget::create([
-                                           'user_id'                 => $this->user->id,
-                                           'user_group_id'           => $this->user->user_group_id,
-                                           'transaction_currency_id' => $data['currency_id'],
-                                           'amount'                  => $data['amount'],
-                                           'start_date'              => $start,
-                                           'start_date_tz'           => $start->format('e'),
-                                           'end_date'                => $end,
-                                           'end_date_tz'             => $end->format('e'),
-                                       ]);
+            'user_id'                 => $this->user->id,
+            'user_group_id'           => $this->user->user_group_id,
+            'transaction_currency_id' => $data['currency_id'],
+            'amount'                  => $data['amount'],
+            'start_date'              => $start,
+            'start_date_tz'           => $start->format('e'),
+            'end_date'                => $end,
+            'end_date_tz'             => $end->format('e'),
+        ]);
     }
 
     public function update(AvailableBudget $availableBudget, array $data): AvailableBudget
@@ -352,24 +375,24 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
         $blRepository->setUser($this->user);
 
         Log::debug(sprintf(
-                       'Found interesting budget limit #%d (%s to %s)',
-                       $budgetLimit->id,
-                       $budgetLimit->start_date->format('Y-m-d'),
-                       $budgetLimit->end_date->format('Y-m-d')
-                   ));
+            'Found interesting budget limit #%d (%s to %s)',
+            $budgetLimit->id,
+            $budgetLimit->start_date->format('Y-m-d'),
+            $budgetLimit->end_date->format('Y-m-d')
+        ));
         // overlap in days:
-        $limitPeriod = Period::make($budgetLimit->start_date, $budgetLimit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        $limitPeriod  = Period::make($budgetLimit->start_date, $budgetLimit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
         // if both equal each other, amount from this BL must be added to the AB
         if ($limitPeriod->equals($availableBudgetPeriod)) {
             Log::debug('This budget limit is equal to the available budget period.');
 
-            return (string)$budgetLimit->amount;
+            return (string) $budgetLimit->amount;
         }
         // if budget limit period is inside AB period, it can be added in full.
         if (!$limitPeriod->equals($availableBudgetPeriod) && $availableBudgetPeriod->contains($limitPeriod)) {
             Log::debug('This budget limit is smaller than the available budget period.');
 
-            return (string)$budgetLimit->amount;
+            return (string) $budgetLimit->amount;
         }
 
         if (
@@ -382,26 +405,10 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             if ($overlap instanceof Period) {
                 $length = $overlap->length();
 
-                return bcmul($blRepository->getDailyAmount($budgetLimit), (string)$length);
+                return bcmul($blRepository->getDailyAmount($budgetLimit), (string) $length);
             }
         }
 
         return '0';
-    }
-
-    #[\Override]
-    public function findInRange(TransactionCurrency $currency, Carbon $start, Carbon $end): Collection
-    {
-        /** @var null|AvailableBudget */
-        return $this->user
-            ->availableBudgets()
-            ->where('transaction_currency_id', $currency->id)
-
-            // start date OR end date must be the same or equal to start or END respectively.
-            ->where(function ($q1) use ($start, $end) {
-                $q1->whereBetween('start_date', [$start, $end]);
-                $q1->orWhereBetween('end_date', [$start, $end]);
-            })
-            ->get(['available_budgets.*']);
     }
 }
