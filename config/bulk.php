@@ -25,11 +25,11 @@ declare(strict_types=1);
 use FireflyIII\Enums\ClauseType;
 
 return [
-    ClauseType::TRANSACTION => [
-        ClauseType::WHERE  => [
+    ClauseType::TRANSACTION->value => [
+        ClauseType::WHERE->value  => [
             'account_id' => 'required|numeric|belongsToUser:accounts,id',
         ],
-        ClauseType::UPDATE => [
+        ClauseType::UPDATE->value => [
             'account_id' => 'required|numeric|belongsToUser:accounts,id',
         ],
     ],

@@ -27,9 +27,9 @@ namespace FireflyIII\Enums;
 /**
  * Class ClauseType
  */
-class ClauseType
+enum ClauseType: string
 {
-    public const string TRANSACTION = 'transaction';
-    public const string UPDATE      = 'update';
-    public const string WHERE       = 'where';
+    case TRANSACTION = 'transaction';
+    case UPDATE      = 'update';
+    case WHERE       = 'where';
 }

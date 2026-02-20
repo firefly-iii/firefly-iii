@@ -53,7 +53,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 #[ObservedBy([DeletedTransactionJournalObserver::class])]
 class TransactionJournal extends Model
 {
-    use HasFactory;
     use ReturnsIntegerIdTrait;
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;

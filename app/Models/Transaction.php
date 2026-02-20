@@ -39,7 +39,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[ObservedBy([TransactionObserver::class])]
 class Transaction extends Model
 {
-    use HasFactory;
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
