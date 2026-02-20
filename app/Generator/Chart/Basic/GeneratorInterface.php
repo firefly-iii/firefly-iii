@@ -58,7 +58,7 @@ interface GeneratorInterface
      *
      *  // it's five.
      */
-    public function multiSet(array $data): array;
+    public function multiSet(array $data, array $labels = []): array;
 
     /**
      * Expects data as:.

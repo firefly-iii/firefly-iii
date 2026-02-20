@@ -281,6 +281,6 @@ class CategoryController extends Controller
             }
         }
 
-        return $this->generator->multiSet($chartData);
+        return $this->generator->multiSet($chartData, array_values($periods));
     }
 }

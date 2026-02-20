@@ -25,6 +25,7 @@ namespace FireflyIII\Generator\Chart\Basic;
 
 use FireflyIII\Support\ChartColour;
 use FireflyIII\Support\Facades\Steam;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Class ChartJsGenerator.
@@ -92,14 +93,21 @@ class ChartJsGenerator implements GeneratorInterface
      *
      *  // it's five.
      */
-    public function multiSet(array $data): array
+    public function multiSet(array $data, array $labels = []): array
     {
         reset($data);
         $first     = current($data);
         if (!is_array($first)) {
             return [];
         }
-        $labels    = is_array($first['entries']) ? array_keys($first['entries']) : [];
+        Log::debug('Now in multiSet()');
+        if(0 !== count($labels)) {
+            Log::debug('Labels are given: ', $labels);
+        }
+        if(0 === count($labels)) {
+            $labels    = is_array($first['entries']) ? array_keys($first['entries']) : [];
+            Log::debug('Labels are generated: ', $labels);
+        }
 
         $chartData = [
             'count'    => count($data),
