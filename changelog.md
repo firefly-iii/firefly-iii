@@ -9,13 +9,13 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 > If no pressing issues get reported, this release will be followed by **v6.5.0**. It will be exactly the same but require PHP 8.5.
 
 ### Fixed
-- #11734
-- #11735
-- #11736
-- #11738
-- #11744
-- #11752
-- #11757
+- [Issue 11734](https://github.com/firefly-iii/firefly-iii/issues/11734) (Cache is not cleared for "no category" overview monthly blocks) reported by @JC5
+- [Issue 11735](https://github.com/firefly-iii/firefly-iii/issues/11735) (health endpoint no longer performant) reported by @grgar
+- [Discussion 11736](https://github.com/orgs/firefly-iii/discussions/11736) (Deposit from a Liability & the default financial report) started by @dratze98
+- [Issue 11738](https://github.com/firefly-iii/firefly-iii/issues/11738) (API endpoint `api/v1/batch/finish` does not work) reported by @JC5
+- [Issue 11744](https://github.com/firefly-iii/firefly-iii/issues/11744) (Webhook and rule execution for imported transactions) reported by @mleck28
+- [Issue 11752](https://github.com/firefly-iii/firefly-iii/issues/11752) (ErrorException in OperatorQuerySearch.php when using tag_starts or tag_ends operators via API) reported by @travelr
+- [Issue 11757](https://github.com/firefly-iii/firefly-iii/issues/11757) ("Remember Me" cookie expires after 1 minute) reported by @michaeljandrews
 - Invitee mail message would error out, reported over mail. Thanks!
 
 ## v6.4.22
