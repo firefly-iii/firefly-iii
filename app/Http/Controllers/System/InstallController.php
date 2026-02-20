@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Laravel\Passport\Passport;
 use phpseclib3\Crypt\RSA;
-
 use function Safe\file_put_contents;
 
 /**
@@ -53,17 +52,19 @@ class InstallController extends Controller
     public const string FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     public const string OTHER_ERROR     = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
 
-    private string $lastError           = '';
+    private string $lastError = '';
     // empty on purpose.
-    private array $upgradeCommands      = [
-        // there are 5 initial commands
-        // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
-        'migrate'                            => ['--seed'  => true, '--force' => true],
-        'generate-keys'                      => [], // an exception :(
-        'firefly-iii:upgrade-database'       => [],
-        'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
-        'firefly-iii:verify-security-alerts' => [],
-    ];
+    private array $upgradeCommands
+        = [
+            // there are 5 initial commands
+            // Check 4 places: InstallController, Docker image, UpgradeDatabase, composer.json
+            'firefly-iii:create-database'        => [],
+            'migrate'                            => ['--seed' => true, '--force' => true],
+            'generate-keys'                      => [], // an exception :(
+            'firefly-iii:upgrade-database'       => [],
+            'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
+            'firefly-iii:verify-security-alerts' => [],
+        ];
 
     /**
      * InstallController constructor.
@@ -78,13 +79,13 @@ class InstallController extends Controller
      *
      * @return Factory|View
      */
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory | \Illuminate\Contracts\View\View
     {
         app('view')->share('FF_VERSION', config('firefly.version'));
 
         // index will set FF3 version.
-        FireflyConfig::set('ff3_version', (string) config('firefly.version'));
-        FireflyConfig::set('ff3_build_time', (int) config('firefly.build_time'));
+        FireflyConfig::set('ff3_version', (string)config('firefly.version'));
+        FireflyConfig::set('ff3_build_time', (int)config('firefly.build_time'));
 
         return view('install.index');
     }
@@ -94,7 +95,7 @@ class InstallController extends Controller
      */
     public function keys(): void
     {
-        $key                      = RSA::createKey(4096);
+        $key = RSA::createKey(4096);
 
         [$publicKey, $privateKey] = [Passport::keyPath('oauth-public.key'), Passport::keyPath('oauth-private.key')];
 
@@ -102,20 +103,20 @@ class InstallController extends Controller
             return;
         }
 
-        file_put_contents($publicKey, (string) $key->getPublicKey());
+        file_put_contents($publicKey, (string)$key->getPublicKey());
         file_put_contents($privateKey, $key->toString('PKCS1'));
     }
 
     public function runCommand(Request $request): JsonResponse
     {
-        $requestIndex = (int) $request->get('index');
-        $response     = ['hasNextCommand' => false, 'done'           => true, 'previous'       => null, 'error'          => false, 'errorMessage'   => null];
+        $requestIndex = (int)$request->get('index');
+        $response     = ['hasNextCommand' => false, 'done' => true, 'previous' => null, 'error' => false, 'errorMessage' => null];
 
         Log::debug(sprintf('Will now run commands. Request index is %d', $requestIndex));
-        $indexes      = array_keys($this->upgradeCommands);
+        $indexes = array_keys($this->upgradeCommands);
         if (array_key_exists($requestIndex, $indexes)) {
-            $command                    = $indexes[$requestIndex];
-            $parameters                 = $this->upgradeCommands[$command];
+            $command    = $indexes[$requestIndex];
+            $parameters = $this->upgradeCommands[$command];
             Log::debug(sprintf('Will now execute command "%s" with parameters', $command), $parameters);
 
             try {
