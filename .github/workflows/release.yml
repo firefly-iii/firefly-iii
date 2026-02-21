@@ -177,7 +177,7 @@ jobs:
           rm -rf vendor composer.lock
           composer update --no-scripts --no-plugins -q
           mago format || true
-          mago analyze --reporting-format=github || true
+          # mago analyze --reporting-format=github || true
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
       - name: Calculate variables
