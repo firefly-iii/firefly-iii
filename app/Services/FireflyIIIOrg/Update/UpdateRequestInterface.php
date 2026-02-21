@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\FireflyIIIOrg\Update;
 
+use Carbon\Carbon;
+
 /**
  * Interface UpdateRequestInterface
  */
 interface UpdateRequestInterface
 {
-    public function getUpdateInformation(string $channel): array;
+    public function getUpdateInformation(string $currentVersion, Carbon $currentBuild, string $channel): UpdateResponse;
 }

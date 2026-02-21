@@ -331,6 +331,7 @@ return [
     'update_newer_version_alert'                          => 'You are running :your_version, which is newer than the latest release, :new_version.',
     'update_check_error'                                  => 'An error occurred while checking for updates: :error',
     'unknown_error'                                       => 'Unknown error. Sorry about that.',
+    'no_new_release_available'                            => 'There is no newer release available. You are up to date.',
     'disabled_but_check'                                  => 'You disabled update checking. So don\'t forget to check for updates yourself every now and then. Thank you!',
     'admin_update_channel_title'                          => 'Update channel',
     'admin_update_channel_explain'                        => 'Firefly III has three update "channels" which determine how ahead of the curve you are in terms of features, enhancements and bugs. Use the "beta" channel if you\'re adventurous and the "alpha" when you like to live life dangerously.',

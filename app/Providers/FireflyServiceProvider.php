@@ -53,6 +53,7 @@ use FireflyIII\Repositories\UserGroup\UserGroupRepository;
 use FireflyIII\Repositories\UserGroup\UserGroupRepositoryInterface;
 use FireflyIII\Repositories\Webhook\WebhookRepository;
 use FireflyIII\Repositories\Webhook\WebhookRepositoryInterface;
+use FireflyIII\Services\FireflyIIIOrg\Update\GitHubUpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequest;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
 use FireflyIII\Services\Password\PwndVerifierV2;
@@ -191,7 +192,8 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
-        $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+        //$this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+        $this->app->bind(UpdateRequestInterface::class, GitHubUpdateRequest::class);
 
         // webhooks:
         $this->app->bind(MessageGeneratorInterface::class, StandardMessageGenerator::class);
