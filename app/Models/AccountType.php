@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
-use Deprecated;
 use FireflyIII\Support\Models\ReturnsIntegerIdTrait;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -32,9 +31,9 @@ class AccountType extends Model
 {
     use ReturnsIntegerIdTrait;
 
-    protected $casts                     = ['created_at' => 'datetime', 'updated_at' => 'datetime'];
+    protected $casts    = ['created_at' => 'datetime', 'updated_at' => 'datetime'];
 
-    protected $fillable                  = ['type'];
+    protected $fillable = ['type'];
 
     public function accounts(): HasMany
     {

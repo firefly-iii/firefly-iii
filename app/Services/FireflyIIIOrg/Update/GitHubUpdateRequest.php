@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * GitHubUpdateRequest.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -25,6 +28,7 @@ use Carbon\Carbon;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 class GitHubUpdateRequest implements UpdateRequestInterface
 {
@@ -33,7 +37,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private string $channel        = 'stable';
     private bool   $localDebug     = false;
 
-    #[\Override]
+    #[Override]
     public function getUpdateInformation(string $currentVersion, Carbon $currentBuild, string $channel): UpdateResponse
     {
         $this->currentVersion = $currentVersion;
@@ -41,18 +45,19 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         $this->currentBuild   = $currentBuild;
         Log::debug(sprintf('Now in getUpdateInformation(%s, %s)', $currentVersion, $channel));
 
-        $response = new UpdateResponse();
-        $releases = $this->getReleases();
-        $filtered = $this->filterReleases($releases);
+        $response             = new UpdateResponse();
+        $releases             = $this->getReleases();
+        $filtered             = $this->filterReleases($releases);
 
         Log::debug(sprintf('Left with %d release(s) to compare', count($filtered)));
 
         if (0 === count($filtered)) {
             $response->setNewVersionAvailable(false);
+
             return $response;
         }
 
-        $newest = $this->getNewest($filtered);
+        $newest               = $this->getNewest($filtered);
 
         Log::debug(sprintf('Newest release is "%s" released on %s', $newest['version'], $newest['published_at']->format('Y-m-d H:i')));
 
@@ -64,26 +69,31 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         if (str_contains($currentVersion, 'develop')) {
             Log::debug(sprintf('Compare with current version "%s", built on %s', $currentVersion, $currentBuild->format('Y-m-d H:i')));
             if ($currentBuild->lt($newest['published_at'])) {
-                Log::debug(sprintf('Current build %s is older than newest build %s, so a new release is available.', $currentBuild->format('Y-m-d H:i'), $newest['published_at']->format('Y-m-d H:i')));
+                Log::debug(sprintf('Current build %s is older than newest build %s, so a new release is available.', $currentBuild->format('Y-m-d H:i:s e'), $newest['published_at']->format('Y-m-d H:i:s e')));
                 $response->setNewVersionAvailable(true);
+
                 return $response;
             }
             if ($currentBuild->gt($newest['published_at'])) {
                 Log::debug(sprintf('Current build %s is newer than newest build %s, so NO new release is available.', $currentBuild->format('Y-m-d H:i'), $newest['published_at']->format('Y-m-d H:i')));
                 $response->setNewVersionAvailable(false);
+
                 return $response;
             }
+
             return $response;
         }
 
         // if not, compare version.
-        $res = version_compare($newest['version'], $currentVersion);
+        $res                  = version_compare($newest['version'], $currentVersion);
         if ($res < 1) {
             $response->setNewVersionAvailable(false);
+
             return $response;
         }
         if (1 === $res) {
             $response->setNewVersionAvailable(true);
+
             return $response;
         }
 
@@ -93,41 +103,47 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private function filterReleases(array $releases): array
     {
         $return = [];
+
         /** @var array $release */
         foreach ($releases as $release) {
             if ($release['published_at']->lte($this->currentBuild)) {
                 Log::debug(sprintf('Skip older version "%s"', $release['version']));
+
                 continue;
             }
             // if channel is stable, and version is "alpha", continue.
             // if channel is stable, and version is "beta", continue.
             // if channel is beta, and version is "alpha", continue.
-            if (($this->channel === 'stable' || $this->channel === 'beta') && str_contains($release['version'], 'alpha')) {
+            if (('stable' === $this->channel || 'beta' === $this->channel) && str_contains($release['version'], 'alpha')) {
                 Log::debug(sprintf('Skip version "%s"', $release['version']));
+
                 continue;
             }
-            if ($this->channel === 'stable' && str_contains($release['version'], 'beta')) {
+            if ('stable' === $this->channel && str_contains($release['version'], 'beta')) {
                 Log::debug(sprintf('Skip version "%s"', $release['version']));
+
                 continue;
             }
             $return[] = $release;
         }
+
         return $return;
     }
 
     private function getNewest(array $releases): array
     {
-        $latest = [
-            'version'      => '1.0.0',
-            'published_at' => now()->startOfYear(),
-        ];
+        $latest = ['version'      => '1.0.0', 'published_at' => now(config('app.timezone'))->startOfYear()];
         foreach ($releases as $release) {
             Log::debug(sprintf('Comparing current version "%s" with latest version "%s"', $release['version'], $latest['version']));
             if (str_contains($release['version'], 'develop') || str_contains($latest['version'], 'develop')) {
                 Log::debug('Compare based on build time.');
                 // compare build times.
                 if ($latest['published_at']->lt($release['published_at'])) {
-                    Log::debug(sprintf('Current date "%s" is newer than latest date "%s"', $release['published_at']->format('Y-m-d H:i'), $latest['published_at']->format('Y-m-d H:i')));
+                    Log::debug(sprintf(
+                        'Current date "%s" is newer than latest date "%s"',
+                        $release['published_at']->format('Y-m-d H:i'),
+                        $latest['published_at']->format('Y-m-d H:i')
+                    ));
                     $latest = $release;
                 }
             }
@@ -141,56 +157,53 @@ class GitHubUpdateRequest implements UpdateRequestInterface
                 }
             }
         }
-        Log::debug(sprintf('Latest version seems to be "%s", released at %s', $latest['version'], $latest['published_at']->format('Y-m-d H:i')));
+        Log::debug(sprintf('Latest version seems to be "%s", released at %s', $latest['version'], $latest['published_at']->format('Y-m-d H:i e')));
+
         return $latest;
     }
 
     private function getReleases(): array
     {
         $client = new Client();
-        $opts   = [
-            'headers' => [
-                'User-Agent' => 'FireflyIII/' . config('firefly.version'),
-            ],
-        ];
+        $opts   = ['headers'   => ['User-Agent' => 'FireflyIII/'.config('firefly.version')]];
         $return = [];
         $body   = '';
         if ($this->localDebug && file_exists('json.json')) {
             $body = file_get_contents('json.json');
         }
         if (!$this->localDebug) {
-
             try {
                 $res = $client->get('https://api.github.com/repos/firefly-iii/firefly-iii/releases', $opts);
             } catch (ClientException $e) {
                 Log::error($e->getMessage());
+
                 return [];
             }
             Log::debug('Successfully contacted GitHub');
-            $body = (string)$res->getBody();
+            $body = (string) $res->getBody();
         }
 
         if (!json_validate($body)) {
             Log::debug('GitHub returned invalid JSON');
+
             return [];
         }
-        $json = json_decode($body, true);
+        $json   = json_decode($body, true);
+
         /** @var array $release */
         foreach ($json as $release) {
             $version   = $release['tag_name'];
             $version   = 'v' === $version[0] ? substr($version, 1) : $version;
-            $published = Carbon::parse($release['published_at']);
+            $published = Carbon::parse($release['published_at'], config('app.timezone'));
 
             // always skip "develop" releases, unless user is also running develop.
             if (str_contains($version, 'develop') && !str_contains($this->currentVersion, 'develop')) {
                 Log::debug(sprintf('Skip version "%s"', $release['tag_name']));
+
                 continue;
             }
 
-            $return[] = [
-                'version'      => $version,
-                'published_at' => $published,
-            ];
+            $return[]  = ['version'      => $version, 'published_at' => $published];
         }
 
         return $return;

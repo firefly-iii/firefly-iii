@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /*
  * UpdateResponse.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -30,25 +33,9 @@ class UpdateResponse
     private string $newVersion          = '1.0.0';
     private Carbon $publishedAt;
 
-    public function getPublishedAt(): Carbon
+    public function getError(): string
     {
-        return $this->publishedAt;
-    }
-
-    public function setPublishedAt(Carbon $publishedAt): void
-    {
-        $this->publishedAt = $publishedAt;
-    }
-
-
-    public function isNewVersionAvailable(): bool
-    {
-        return $this->newVersionAvailable;
-    }
-
-    public function setNewVersionAvailable(bool $newVersionAvailable): void
-    {
-        $this->newVersionAvailable = $newVersionAvailable;
+        return $this->error;
     }
 
     public function getNewVersion(): string
@@ -56,14 +43,14 @@ class UpdateResponse
         return $this->newVersion;
     }
 
-    public function setNewVersion(string $newVersion): void
+    public function getPublishedAt(): Carbon
     {
-        $this->newVersion = $newVersion;
+        return $this->publishedAt;
     }
 
-    public function getError(): string
+    public function isNewVersionAvailable(): bool
     {
-        return $this->error;
+        return $this->newVersionAvailable;
     }
 
     public function setError(string $error): void
@@ -71,5 +58,18 @@ class UpdateResponse
         $this->error = $error;
     }
 
+    public function setNewVersion(string $newVersion): void
+    {
+        $this->newVersion = $newVersion;
+    }
 
+    public function setNewVersionAvailable(bool $newVersionAvailable): void
+    {
+        $this->newVersionAvailable = $newVersionAvailable;
+    }
+
+    public function setPublishedAt(Carbon $publishedAt): void
+    {
+        $this->publishedAt = $publishedAt;
+    }
 }

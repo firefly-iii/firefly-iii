@@ -192,7 +192,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(PopupReportInterface::class, PopupReport::class);
         $this->app->bind(ReportHelperInterface::class, ReportHelper::class);
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
-        //$this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
+        // $this->app->bind(UpdateRequestInterface::class, UpdateRequest::class);
         $this->app->bind(UpdateRequestInterface::class, GitHubUpdateRequest::class);
 
         // webhooks:
