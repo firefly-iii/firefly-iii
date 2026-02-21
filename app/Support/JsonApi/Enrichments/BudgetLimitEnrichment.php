@@ -40,49 +40,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetLimitEnrichment implements EnrichmentInterface
 {
     private Collection $collection;
-    private readonly bool $convertToPrimary; // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
-    // @phpstan-ignore-line
+    private readonly bool $convertToPrimary;
     private array $currencies  = [];
     private array $currencyIds = [];
     private Carbon $end;
