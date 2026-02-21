@@ -71,6 +71,7 @@ class StoreRequest extends FormRequest
             'opening_balance_date'    => $this->getCarbonDate('opening_balance_date'),
             'cc_type'                 => $this->convertString('credit_card_type'),
             'cc_monthly_payment_date' => $this->convertString('monthly_payment_date'),
+            'cc_closing_day'          => $this->convertString('closing_day'),
             'notes'                   => $this->stringWithNewlines('notes'),
             'interest'                => $this->convertString('interest'),
             'interest_period'         => $this->convertString('interest_period'),

@@ -86,7 +86,7 @@ class AccountTransformer extends AbstractTransformer
         }
 
         // get some listed information from the account meta-data:
-        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
+        [$creditCardType, $monthlyPaymentDate, $closingDay] = $this->getCCInfo($account, $accountRole, $accountType);
         $openingBalanceDate                    = $this->getOpeningBalance($account, $accountType);
         [$interest, $interestPeriod]           = $this->getInterest($account, $accountType);
 
@@ -140,6 +140,7 @@ class AccountTransformer extends AbstractTransformer
             'notes'                           => $account->meta['notes'] ?? null,
             'monthly_payment_date'            => $monthlyPaymentDate,
             'credit_card_type'                => $creditCardType,
+            'closing_day'                     => $closingDay,
             'account_number'                  => $account->meta['account_number'],
             'iban'                            => '' === $account->iban ? null : $account->iban,
             'bic'                             => $account->meta['BIC'] ?? null,
@@ -171,9 +172,11 @@ class AccountTransformer extends AbstractTransformer
     {
         $monthlyPaymentDate = null;
         $creditCardType     = null;
+        $closingDay         = null;
         if ('ccAsset' === $accountRole && 'asset' === $accountType) {
             $creditCardType     = $account->meta['cc_type'] ?? null;
             $monthlyPaymentDate = $account->meta['cc_monthly_payment_date'] ?? null;
+            $closingDay         = isset($account->meta['cc_closing_day']) ? (int) $account->meta['cc_closing_day'] : null;
         }
         if (null !== $monthlyPaymentDate) {
             // try classic date:
@@ -189,7 +192,7 @@ class AccountTransformer extends AbstractTransformer
             }
         }
 
-        return [$creditCardType, $monthlyPaymentDate];
+        return [$creditCardType, $monthlyPaymentDate, $closingDay];
     }
 
     private function getInterest(Account $account, string $accountType): array

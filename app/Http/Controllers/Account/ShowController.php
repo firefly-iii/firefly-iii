@@ -83,6 +83,36 @@ class ShowController extends Controller
      * @throws FireflyException
      * @throws NotFoundExceptionInterface
      */
+    public function statement(
+        Request $request,
+        Account $account,
+        ?Carbon $date = null
+    ): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse {
+        if (0 === $account->id) {
+            throw new NotFoundHttpException();
+        }
+
+        $accountRole = $this->repository->getMetaValue($account, 'account_role');
+        if ('ccAsset' !== $accountRole) {
+            return redirect(route('accounts.show', [$account->id]));
+        }
+
+        $closingDay = (int) $this->repository->getMetaValue($account, 'cc_closing_day');
+        if (0 === $closingDay) {
+            return redirect(route('accounts.show', [$account->id]));
+        }
+
+        $date ??= today(config('app.timezone'));
+
+        return view('accounts.statement', [
+            'account'    => $account,
+            'accountId'  => $account->id,
+            'closingDay' => $closingDay,
+            'date'       => $date->format('Y-m-d'),
+            'subTitle'   => (string) trans('firefly.credit_card_statement', ['name' => $account->name]),
+        ]);
+    }
+
     public function show(
         Request $request,
         Account $account,
