@@ -68,7 +68,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         // if current version is "develop", compare date.
         if (str_contains($currentVersion, 'develop')) {
             Log::debug(sprintf('Compare with current version "%s", built on %s', $currentVersion, $currentBuild->format('Y-m-d H:i')));
-            if ($currentBuild->lt($newest['published_at'])) {
+            if ($currentBuild->lt($newest['published_at']) && $currentBuild->diffInMinutes($newest['published_at']) > 10) {
                 Log::debug(sprintf('Current build %s is older than newest build %s, so a new release is available.', $currentBuild->format('Y-m-d H:i:s e'), $newest['published_at']->format('Y-m-d H:i:s e')));
                 $response->setNewVersionAvailable(true);
 
