@@ -24,7 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Update;
 
+use Carbon\Carbon;
 use FireflyIII\Services\FireflyIIIOrg\Update\UpdateRequestInterface;
+use FireflyIII\Services\FireflyIIIOrg\Update\UpdateResponse;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Support\Facades\Log;
 
@@ -38,15 +40,17 @@ trait UpdateTrait
      * 'message' => 'A new version is available.
      * 'level' => 'info' / 'success' / 'error'
      */
-    public function getLatestRelease(): array
+    public function getLatestRelease(): UpdateResponse
     {
         Log::debug('Now in getLatestRelease()');
 
         /** @var UpdateRequestInterface $checker */
         $checker       = app(UpdateRequestInterface::class);
         $channelConfig = FireflyConfig::get('update_channel', 'stable');
-        $channel       = (string) $channelConfig->data;
+        $channel       = (string)$channelConfig->data;
+        $build         = Carbon::createFromTimestamp(config('firefly.build_time'), config('app.timezone'));
+        $version       = config('firefly.version');
 
-        return $checker->getUpdateInformation($channel);
+        return $checker->getUpdateInformation($version, $build, $channel);
     }
 }

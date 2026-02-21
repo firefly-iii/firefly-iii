@@ -31,7 +31,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private string $currentVersion = '1.0.0';
     private Carbon $currentBuild;
     private string $channel        = 'stable';
-    private bool   $localDebug     = true;
+    private bool   $localDebug     = false;
 
     #[\Override]
     public function getUpdateInformation(string $currentVersion, Carbon $currentBuild, string $channel): UpdateResponse
