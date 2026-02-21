@@ -143,7 +143,6 @@ class AvailableBudgetCalculator
         $availableBudget  = $this->abRepository->find($this->currency, $start, $end);
         $availableBudgets = $this->abRepository->findInRange($this->currency, $start, $end);
 
-        Log::debug(sprintf('Found #%d', $availableBudget->id));
         foreach ($availableBudgets as $item) {
             Log::debug(sprintf(
                 'findInRange found available budget #%d (%s - %s), will update it.',
