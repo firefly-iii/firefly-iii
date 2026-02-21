@@ -48,7 +48,7 @@ class UpdateController extends Controller
     {
         parent::__construct();
         $this->middleware(static function ($request, $next) {
-            app('view')->share('title', (string)trans('firefly.system_settings'));
+            app('view')->share('title', (string) trans('firefly.system_settings'));
             app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 
             return $next($request);
@@ -61,24 +61,24 @@ class UpdateController extends Controller
      *
      * @return Factory|View
      */
-    public function index(): Factory | \Illuminate\Contracts\View\View
+    public function index(): Factory|\Illuminate\Contracts\View\View
     {
-        $subTitle        = (string)trans('firefly.update_check_title');
+        $subTitle        = (string) trans('firefly.update_check_title');
         $subTitleIcon    = 'fa-star';
         $permission      = FireflyConfig::get('permission_update_check', -1);
         $channel         = FireflyConfig::get('update_channel', 'stable');
         $selected        = $permission->data;
         $channelSelected = $channel->data;
         $options         = [
-            -1 => (string)trans('firefly.updates_ask_me_later'),
-            0  => (string)trans('firefly.updates_do_not_check'),
-            1  => (string)trans('firefly.updates_enable_check'),
+            -1 => (string) trans('firefly.updates_ask_me_later'),
+            0  => (string) trans('firefly.updates_do_not_check'),
+            1  => (string) trans('firefly.updates_enable_check'),
         ];
 
-        $channelOptions = [
-            'stable' => (string)trans('firefly.update_channel_stable'),
-            'beta'   => (string)trans('firefly.update_channel_beta'),
-            'alpha'  => (string)trans('firefly.update_channel_alpha'),
+        $channelOptions  = [
+            'stable' => (string) trans('firefly.update_channel_stable'),
+            'beta'   => (string) trans('firefly.update_channel_beta'),
+            'alpha'  => (string) trans('firefly.update_channel_alpha'),
         ];
 
         return view('settings.update.index', [
@@ -94,16 +94,16 @@ class UpdateController extends Controller
     /**
      * Post new settings.
      */
-    public function post(Request $request): Redirector | RedirectResponse
+    public function post(Request $request): Redirector|RedirectResponse
     {
-        $checkForUpdates = (int)$request->get('check_for_updates');
+        $checkForUpdates = (int) $request->get('check_for_updates');
         $channel         = $request->get('update_channel');
         $channel         = in_array($channel, ['stable', 'beta', 'alpha'], true) ? $channel : 'stable';
 
         FireflyConfig::set('permission_update_check', $checkForUpdates);
         FireflyConfig::set('last_update_check', Carbon::now()->getTimestamp());
         FireflyConfig::set('update_channel', $channel);
-        session()->flash('success', (string)trans('firefly.configuration_updated'));
+        session()->flash('success', (string) trans('firefly.configuration_updated'));
 
         return redirect(route('settings.update-check'));
     }
@@ -123,10 +123,14 @@ class UpdateController extends Controller
         if ($release->isNewVersionAvailable()) {
             // if running develop, slightly different message.
             if (str_contains(config('firefly.version'), 'develop')) {
-                $message = trans('firefly.update_current_dev_older', ['version' => config('firefly.version'), 'new_version' => $release->getNewVersion()]);
+                $message = trans('firefly.update_current_dev_older', ['version'     => config('firefly.version'), 'new_version' => $release->getNewVersion()]);
             }
             if (!str_contains(config('firefly.version'), 'develop')) {
-                $message = trans('firefly.update_new_version_alert', ['your_version' => config('firefly.version'), 'new_version' => $release->getNewVersion(), 'date' => $release->getPublishedAt()->format('Y-m-d H:i:s')]);
+                $message = trans('firefly.update_new_version_alert', [
+                    'your_version' => config('firefly.version'),
+                    'new_version'  => $release->getNewVersion(),
+                    'date'         => $release->getPublishedAt()->format('Y-m-d H:i:s'),
+                ]);
             }
         }
 

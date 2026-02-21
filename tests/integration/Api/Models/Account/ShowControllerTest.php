@@ -100,7 +100,6 @@ final class ShowControllerTest extends TestCase
         Account::factory()
             ->for($this->user)
             ->withType(AccountTypeEnum::ASSET)
-            ->create()
-        ;
+            ->create();
     }
 }
