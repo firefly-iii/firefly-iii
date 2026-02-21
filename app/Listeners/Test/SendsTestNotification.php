@@ -81,7 +81,7 @@ class SendsTestNotification
                 return;
         }
         Log::debug(sprintf('Will send %s as a notification.', $class));
-        NotificationSender::send($event->$type, new $class());
+        NotificationSender::send($event->{$type}, new $class());
         Log::debug(sprintf('If you see no errors above this line, test notification was sent over channel "%s"', $event->channel));
     }
 }
