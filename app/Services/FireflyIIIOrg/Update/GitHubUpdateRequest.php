@@ -120,8 +120,8 @@ class GitHubUpdateRequest implements UpdateRequestInterface
 
                 continue;
             }
-            // new version must be at least a week old.
-            if ($release['published_at']->gt($weekAgo)) {
+            // new version must be at least a week old, unless it is a develop release.
+            if ($release['published_at']->gt($weekAgo) && !str_contains($release['version'], 'develop')) {
                 Log::debug(sprintf('Skip too new version "%s"', $release['version']));
 
                 continue;
