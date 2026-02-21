@@ -111,12 +111,17 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private function filterReleases(array $releases): array
     {
         $return = [];
-
+        $weekAgo = now()->subWeek();
         /** @var array $release */
         foreach ($releases as $release) {
             if ($release['published_at']->lte($this->currentBuild)) {
                 Log::debug(sprintf('Skip older version "%s"', $release['version']));
 
+                continue;
+            }
+            // new version must be at least a week old.
+            if ($release['published_at']->gt($weekAgo)) {
+                Log::debug(sprintf('Skip too new version "%s"', $release['version']));
                 continue;
             }
             // if channel is stable, and version is "alpha", continue.
