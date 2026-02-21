@@ -43,10 +43,14 @@ use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Response as LaravelResponse;
 use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View as IlluminateView;
 use InvalidArgumentException;
+use League\Csv\CannotInsertRecord;
+use League\Csv\Exception as CsvException;
+use League\Csv\Writer;
 
 /**
  * Class MassController.
@@ -82,6 +86,106 @@ class MassController extends Controller
         $this->rememberPreviousUrl('transactions.mass-delete.url');
 
         return view('transactions.mass.delete', ['journals' => $journals, 'subTitle' => $subTitle]);
+    }
+
+    /**
+     * Download selected transactions as CSV.
+     *
+     * @throws FireflyException
+     */
+    public function download(array $journals): LaravelResponse
+    {
+        $header  = [
+            'transaction_group_id',
+            'transaction_journal_id',
+            'type',
+            'description',
+            'date',
+            'amount',
+            'currency_code',
+            'foreign_amount',
+            'foreign_currency_code',
+            'source_account_id',
+            'source_account_name',
+            'destination_account_id',
+            'destination_account_name',
+            'category_id',
+            'category_name',
+            'budget_id',
+            'budget_name',
+            'tags',
+            'notes',
+        ];
+
+        $records = [];
+        foreach ($journals as $journal) {
+            $amount = $journal['amount'];
+            if (TransactionTypeEnum::WITHDRAWAL->value !== $journal['transaction_type_type']) {
+                $amount = Steam::positive($journal['amount']);
+            }
+
+            $tags      = '';
+            if (is_array($journal['tags']) && 0 !== count($journal['tags'])) {
+                $tagNames = array_map(static fn (array $tag): string => $tag['name'], $journal['tags']);
+                $tags     = implode(',', $tagNames);
+            }
+
+            $records[] = [
+                $journal['transaction_group_id'],
+                $journal['transaction_journal_id'],
+                $journal['transaction_type_type'],
+                $journal['description'],
+                $journal['date']->format('Y-m-d'),
+                $amount,
+                $journal['currency_code'],
+                $journal['foreign_amount'],
+                $journal['foreign_currency_code'] ?? '',
+                $journal['source_account_id'],
+                $journal['source_account_name'],
+                $journal['destination_account_id'],
+                $journal['destination_account_name'],
+                $journal['category_id'] ?? '',
+                $journal['category_name'] ?? '',
+                $journal['budget_id'] ?? '',
+                $journal['budget_name'] ?? '',
+                $tags,
+                $journal['notes'] ?? '',
+            ];
+        }
+
+        $csv = Writer::createFromString();
+
+        try {
+            $csv->insertOne($header);
+        } catch (CannotInsertRecord $e) {
+            throw new FireflyException(sprintf('Could not create CSV: %s', $e->getMessage()), 0, $e);
+        }
+
+        $csv->insertAll($records);
+
+        try {
+            $content = $csv->toString();
+        } catch (CsvException $e) {
+            throw new FireflyException(sprintf('Could not generate CSV: %s', $e->getMessage()), 0, $e);
+        }
+
+        $name    = sprintf('selected_transactions_%s.csv', Carbon::now()->format('YmdHis'));
+        $quoted  = sprintf('"%s"', addcslashes($name, '"\\'));
+
+        /** @var LaravelResponse $response */
+        $response = response($content);
+        $response
+            ->header('Content-Description', 'File Transfer')
+            ->header('Content-Type', 'text/csv')
+            ->header('Content-Disposition', 'attachment; filename=' . $quoted)
+            ->header('Connection', 'Keep-Alive')
+            ->header('Expires', '0')
+            ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
+            ->header('Pragma', 'public')
+            ->header('Content-Length', (string) strlen($content))
+        ;
+
+        return $response;
     }
 
     /**

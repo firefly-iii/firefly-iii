@@ -50,7 +50,7 @@ class JournalList implements BinderInterface
                 TransactionTypeEnum::TRANSFER->value,
                 TransactionTypeEnum::RECONCILIATION->value,
             ]);
-            $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation();
+            $collector->withCategoryInformation()->withBudgetInformation()->withTagInformation()->withAccountInformation()->withNotes();
             $collector->setJournalIds($list);
             $result    = $collector->getExtractedJournals();
             if (0 === count($result)) {
