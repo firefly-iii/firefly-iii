@@ -147,6 +147,7 @@ class ReportController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($accounts);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
             return response()->json($cache->get());
         }
@@ -177,17 +178,36 @@ class ReportController extends Controller
         foreach ($journals as $journal) {
             $period                           = $journal['date']->format($format);
             $currencyId                       = (int) $journal['currency_id'];
+            $currencySymbol                   = (string) $journal['currency_symbol'];
+            $currencyCode                     = (string) $journal['currency_code'];
+            $currencyName                     = (string) $journal['currency_name'];
+            $currencyDecimalPlaces            = (int) $journal['currency_decimal_places'];
+            $amount                           = (string) $journal['amount'];
+
+            if (
+                $this->convertToPrimary
+                && null !== $this->primaryCurrency
+                && $journal['currency_id'] !== $this->primaryCurrency->id
+            ) {
+                $currencyId            = $this->primaryCurrency->id;
+                $currencySymbol        = $this->primaryCurrency->symbol;
+                $currencyCode          = $this->primaryCurrency->code;
+                $currencyName          = $this->primaryCurrency->name;
+                $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
+                $amount                = $journal['foreign_currency_id'] === $this->primaryCurrency->id ? $journal['foreign_amount'] : $journal['pc_amount'];
+            }
+
             $data[$currencyId]          ??= [
                 'currency_id'             => $currencyId,
-                'currency_symbol'         => $journal['currency_symbol'],
-                'currency_code'           => $journal['currency_code'],
-                'currency_name'           => $journal['currency_name'],
-                'currency_decimal_places' => (int) $journal['currency_decimal_places'],
+                'currency_symbol'         => $currencySymbol,
+                'currency_code'           => $currencyCode,
+                'currency_name'           => $currencyName,
+                'currency_decimal_places' => $currencyDecimalPlaces,
             ];
             $data[$currencyId][$period] ??= ['period' => $period, 'spent'  => '0', 'earned' => '0'];
             // in our outgoing?
             $key                              = 'spent';
-            $amount                           = Steam::positive($journal['amount']);
+            $amount                           = Steam::positive($amount);
 
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.

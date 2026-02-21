@@ -115,9 +115,11 @@ class CategoryController extends Controller
             return response()->json($cache->get());
         }
 
-        $frontpageGenerator = new FrontpageChartGenerator($start, $end);
-        $chartData          = $frontpageGenerator->generate();
-        $data               = $this->generator->multiSet($chartData);
+        $frontpageGenerator                   = new FrontpageChartGenerator($start, $end);
+        $frontpageGenerator->convertToPrimary = $this->convertToPrimary;
+
+        $chartData                            = $frontpageGenerator->generate();
+        $data                                 = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
