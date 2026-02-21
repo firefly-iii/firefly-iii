@@ -103,10 +103,10 @@ class CategoryController extends Controller
      */
     public function frontPage(): JsonResponse
     {
-        $start              = session('start', today(config('app.timezone'))->startOfMonth());
-        $end                = session('end', today(config('app.timezone'))->endOfMonth());
+        $start                                = session('start', today(config('app.timezone'))->startOfMonth());
+        $end                                  = session('end', today(config('app.timezone'))->endOfMonth());
         // chart properties for cache:
-        $cache              = new CacheProperties();
+        $cache                                = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($this->convertToPrimary);

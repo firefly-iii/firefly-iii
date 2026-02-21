@@ -184,11 +184,7 @@ class ReportController extends Controller
             $currencyDecimalPlaces            = (int) $journal['currency_decimal_places'];
             $amount                           = (string) $journal['amount'];
 
-            if (
-                $this->convertToPrimary
-                && null !== $this->primaryCurrency
-                && $journal['currency_id'] !== $this->primaryCurrency->id
-            ) {
+            if ($this->convertToPrimary && null !== $this->primaryCurrency && $journal['currency_id'] !== $this->primaryCurrency->id) {
                 $currencyId            = $this->primaryCurrency->id;
                 $currencySymbol        = $this->primaryCurrency->symbol;
                 $currencyCode          = $this->primaryCurrency->code;
