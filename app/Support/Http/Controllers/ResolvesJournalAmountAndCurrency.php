@@ -31,8 +31,10 @@ trait ResolvesJournalAmountAndCurrency
     /**
      * Normalize journal currency metadata and positive amount, honoring primary currency conversion.
      */
-    protected function resolveJournalAmountAndCurrency(array $journal, array $currency): array
+    protected function resolveJournalAmountAndCurrency(array $journal, ?array $currency = null): array
     {
+        $currency ??= $journal;
+
         $currencyId            = (int) ($journal['currency_id'] ?? $currency['currency_id']);
         $currencyName          = (string) ($journal['currency_name'] ?? $currency['currency_name']);
         $currencySymbol        = (string) ($journal['currency_symbol'] ?? $currency['currency_symbol']);
