@@ -46,6 +46,9 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Spatie\Period\Boundaries;
+use Spatie\Period\Period;
+use Spatie\Period\Precision;
 
 /**
  * Class BudgetLimitController
@@ -196,13 +199,7 @@ class BudgetLimitController extends Controller
         if ($request->expectsJson()) {
             $array                           = $limit->toArray();
             // add some extra metadata:
-            $spentArr                        = $this->opsRepository->sumExpenses(
-                $limit->start_date,
-                $limit->end_date,
-                null,
-                new Collection()->push($budget),
-                $currency
-            );
+            $spentArr                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
             $array['spent']                  = $spentArr[$currency->id]['sum'] ?? '0';
             $array['left_formatted']         = Amount::formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
             $array['amount_formatted']       = Amount::formatAnything($limit->transactionCurrency, $limit['amount']);
@@ -268,10 +265,16 @@ class BudgetLimitController extends Controller
             $budgetLimit->transactionCurrency
         );
         $daysLeft                        = $this->activeDaysLeft($limit->start_date, $limit->end_date);
+
+        $limitPeriod                     = Period::make($limit->start_date, $limit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+        $inPast                          = $limitPeriod->startsBefore(now()) && $limitPeriod->endsBefore(now());
+
+        // create aray.
         $array['spent']                  = $spentArr[$budgetLimit->transactionCurrency->id]['sum'] ?? '0';
         $array['left_formatted']         = Amount::formatAnything($limit->transactionCurrency, bcadd($array['spent'], (string) $array['amount']));
         $array['amount_formatted']       = Amount::formatAnything($limit->transactionCurrency, $limit['amount']);
         $array['days_left']              = (string) $daysLeft;
+        $array['in_past']                = $inPast;
         $array['left_per_day']           = 0 === $daysLeft
             ? bcadd((string) $array['spent'], (string) $array['amount'])
             : bcdiv(bcadd((string) $array['spent'], (string) $array['amount']), $array['days_left']);
