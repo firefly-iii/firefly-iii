@@ -25,7 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Generic\PaginationDateRangeRequest;
+use FireflyIII\Api\V1\Requests\Models\Transaction\ListRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
@@ -126,17 +126,23 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      */
-    public function transactions(PaginationDateRangeRequest $request, Account $account): JsonResponse
+    public function transactions(ListRequest $request, Account $account): JsonResponse
     {
-        ['limit' => $limit, 'page'  => $page, 'start' => $start, 'end'   => $end, 'types' => $types] = $request->attributes->all();
-        $manager                                                                                     = $this->getManager();
+        [
+            'limit' => $limit,
+            'page'  => $page,
+            'start' => $start,
+            'end'   => $end,
+            'types' => $types,
+        ]             = $request->attributes->all();
+        $manager      = $this->getManager();
 
         /** @var User $admin */
-        $admin                                                                                       = auth()->user();
+        $admin        = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector                                                                                   = app(GroupCollectorInterface::class);
+        $collector    = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setAccounts(new Collection()->push($account))->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types);
         if (null !== $start) {
             $collector->setStart($start);
@@ -145,18 +151,18 @@ class ListController extends Controller
             $collector->setEnd($end);
         }
 
-        $paginator                                                                                   = $collector->getPaginatedGroups();
+        $paginator    = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]).$this->buildParams());
 
         // enrich
-        $enrichment                                                                                  = new TransactionGroupEnrichment();
+        $enrichment   = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $transactions                                                                                = $enrichment->enrich($paginator->getCollection());
+        $transactions = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer                                                                                 = app(TransactionGroupTransformer::class);
+        $transformer  = app(TransactionGroupTransformer::class);
 
-        $resource                                                                                    = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

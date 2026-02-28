@@ -68,12 +68,13 @@ class General extends AbstractExtension
             $this->getRootSearchOperator(),
             $this->carbonize(),
             $this->fireflyIIIConfig(),
+            $this->bccomp(),
         ];
     }
 
     /**
      * Will return "active" when a part of the route matches the argument.
-     * ie. "accounts" will match "accounts.index".
+     * i.e. "accounts" will match "accounts.index".
      */
     protected function activeRoutePartial(): TwigFunction
     {
@@ -89,6 +90,10 @@ class General extends AbstractExtension
         });
     }
 
+    /**
+     * Will return "active" when a part of the route matches the argument.
+     * ie. "accounts" will match "accounts.index".
+     */
     /**
      * This function will return "active" when the current route matches the first argument (even partly)
      * but, the variable $objectType has been set and matches the second argument.
@@ -186,6 +191,13 @@ class General extends AbstractExtension
             return implode(', ', $strings);
 
             // return \FireflyIII\Support\Facades\Steam::balance($account, $date);
+        });
+    }
+
+    protected function bccomp(): TwigFunction
+    {
+        return new TwigFunction('bccomp', static function (string $left, string $right): int {
+            return bccomp($left, $right, 12);
         });
     }
 
