@@ -156,8 +156,13 @@ $app = Application::configure(basePath: dirname(__DIR__))
                       ]);
                       // This middleware is added to ensure that the user is not only logged in and
                       // authenticated (with MFA and everything), but also admin.
+                      $middleware->appendToGroup('api-admin', [
+                          IsAdmin::class,
+                      ]);
                       $middleware->appendToGroup('admin', [
                           IsAdmin::class,
+                          Range::class,
+                          InterestingMessage::class
                       ]);
 
                       // if the user is not logged in, this group applies.
