@@ -1,13 +1,22 @@
 {# The amount left can only be shown for actual budget limits. #}
 {% for budgetLimit in budget.budgeted %}
     <span class="left_span" data-currency="{{ budgetLimit.currency_id }}" data-limit="{{ budgetLimit.id }}" data-value="{{ budgetLimit.left }}" class="amount_left">
+        {# the amount left #}
         {{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
-        {% if not budgetLimit.in_past %}
-        {% if 0 == budgetLimit.active_days_left %}
-            ({{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
-        {% else %}
-            ({{ formatAmountBySymbol(budgetLimit.left / budgetLimit.active_days_left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+
+        {# if the budget limit is in the past, this is not interesting. #}
+        {# if there is nothing left, this is not interesting. #}
+        {% if not budgetLimit.in_past and -1 == bccomp('0',budgetLimit.left) %}
+            {% if 0 == budgetLimit.active_days_left %}
+                ({{ formatAmountBySymbol(budgetLimit.left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+            {% else %}
+                ({{ formatAmountBySymbol(budgetLimit.left / budgetLimit.active_days_left, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+            {% endif %}
         {% endif %}
+
+        {# if there is nothing left, just format 0.00 #}
+        {% if not budgetLimit.in_past and -1 != bccomp('0',budgetLimit.left) %}
+            ({{ formatAmountBySymbol('0', budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
         {% endif %}
 </span><br />
 {% endfor %}
