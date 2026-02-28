@@ -98,8 +98,10 @@ trait GetConfigurationData
         $title          = sprintf('%s - %s', $start->isoFormat($this->monthAndDayFormat), $end->isoFormat($this->monthAndDayFormat));
         $isCustom       = true === session('is_custom_range', false);
         $today          = today(config('app.timezone'));
-        $ranges         = [// first range is the current range:
-            $title   => [$start, $end]];
+        $ranges         = [
+            // first range is the current range:
+            $title => [$start, $end],
+        ];
         Log::debug(sprintf('dateRange: the date range in the session is"%s" - "%s"', $start->format('Y-m-d'), $end->format('Y-m-d')));
 
         // when current range is a custom range, add the current period as the next range.

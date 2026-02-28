@@ -283,7 +283,10 @@ final class IndexController extends Controller
 
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
-                    $array['spent'][$currency->id]['spent_outside']           = bcmul(bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']), '-1');
+                    $array['spent'][$currency->id]['spent_outside']           = bcmul(
+                        bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']),
+                        '-1'
+                    );
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;
