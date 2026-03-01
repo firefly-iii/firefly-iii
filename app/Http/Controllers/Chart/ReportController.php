@@ -151,7 +151,7 @@ class ReportController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
-            return response()->json($cache->get());
+            // return response()->json($cache->get());
         }
 
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
@@ -219,7 +219,7 @@ class ReportController extends Controller
 
         /** @var array $currency */
         foreach ($data as $currency) {
-            Log::debug(sprintf('Now processing currency "%s"', $currency['currency_name']));
+            Log::debug(sprintf('Now processing currency %s', $currency['currency_code']));
             $income       = [
                 'label'           => (string) trans('firefly.box_earned_in_currency', ['currency' => $currency['currency_name']]),
                 'type'            => 'bar',
@@ -247,7 +247,11 @@ class ReportController extends Controller
             if ('1Y' === $preferredRange) {
                 $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
             }
-            Log::debug('Start of sub-loop');
+            // 2026-03-01 similar fix for monthly ranges.
+            if ('1M' === $preferredRange) {
+                $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
+            }
+            Log::debug(sprintf('Start of sub-loop, current end is %s', $currentEnd->toW3cString()));
             while ($currentStart <= $currentEnd) {
                 Log::debug(sprintf('Current start: %s', $currentStart->toW3cString()));
                 $key          = $currentStart->format($format);

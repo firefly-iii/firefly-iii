@@ -453,7 +453,7 @@ class Navigation
         $diff          = $start->diffInMonths($end, true);
         // increment by month (for year)
         if ($diff >= 1.0001 && $diff < 12.001) {
-            $increment     = 'addMonth';
+            $increment     = 'addMonthsNoOverflow';
             $displayFormat = (string) trans('config.month_js');
         }
 
@@ -464,12 +464,15 @@ class Navigation
         }
         $begin         = clone $start;
         $entries       = [];
+        Log::debug(sprintf('listOfPeriods start of loop (end: %s).', $end->format('Y-m-d H:i:s')));
         while ($begin < $end) {
+            Log::debug(sprintf('Begin is now %s.', $begin->format('Y-m-d H:i:s')));
             $formatted           = $begin->format($format);
             $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
             $begin->{$increment}(); // @phpstan-ignore-line
         }
+        Log::debug('listOfPeriods end of loop.');
 
         return $entries;
     }
