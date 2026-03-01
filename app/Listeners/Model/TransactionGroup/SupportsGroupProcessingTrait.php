@@ -55,7 +55,7 @@ trait SupportsGroupProcessingTrait
         $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
         $newRuleEngine->setRuleGroups($groups);
-        foreach($array as $journalId) {
+        foreach ($array as $journalId) {
             $newRuleEngine->removeOperator('journal_id');
             $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalId]);
             $newRuleEngine->fire();

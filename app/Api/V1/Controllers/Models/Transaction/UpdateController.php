@@ -92,7 +92,7 @@ class UpdateController extends Controller
         $flags->applyRules        = $applyRules;
         $flags->fireWebhooks      = $fireWebhooks;
         $flags->recalculateCredit = $runRecalculations;
-        $flags->batchSubmission = $data['batch_submission'] ?? false;
+        $flags->batchSubmission   = $data['batch_submission'] ?? false;
         event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
 

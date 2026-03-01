@@ -30,7 +30,9 @@ class UserRequestedBatchProcessing extends Event
 {
     public TransactionGroupEventObjects $objects;
 
-    public function __construct(public TransactionGroupEventFlags $flags) {
+    public function __construct(
+        public TransactionGroupEventFlags $flags
+    ) {
         $this->objects = new TransactionGroupEventObjects();
     }
 }

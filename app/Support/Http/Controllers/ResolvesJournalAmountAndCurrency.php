@@ -42,11 +42,7 @@ trait ResolvesJournalAmountAndCurrency
         $currencyDecimalPlaces = (int) ($journal['currency_decimal_places'] ?? $currency['currency_decimal_places'] ?? 2);
         $amount                = (string) $journal['amount'];
 
-        if (
-            $this->convertToPrimary
-            && null !== $this->primaryCurrency
-            && $currencyId !== $this->primaryCurrency->id
-        ) {
+        if ($this->convertToPrimary && null !== $this->primaryCurrency && $currencyId !== $this->primaryCurrency->id) {
             $currencyId            = $this->primaryCurrency->id;
             $currencyName          = $this->primaryCurrency->name;
             $currencySymbol        = $this->primaryCurrency->symbol;
@@ -54,8 +50,7 @@ trait ResolvesJournalAmountAndCurrency
             $currencyDecimalPlaces = $this->primaryCurrency->decimal_places;
             $amount                = (int) ($journal['foreign_currency_id'] ?? 0) === $this->primaryCurrency->id
                 ? (string) ($journal['foreign_amount'] ?? '0')
-                : (string) ($journal['pc_amount'] ?? '0')
-            ;
+                : (string) ($journal['pc_amount'] ?? '0');
         }
 
         return [

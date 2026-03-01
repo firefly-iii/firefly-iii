@@ -102,8 +102,8 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $journalData = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $title       = sprintf('%s (%s)', $category['name'], $journalData['currency_name']);
+                    $journalData              = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $title                    = sprintf('%s (%s)', $category['name'], $journalData['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $journalData['currency_symbol'],
@@ -129,8 +129,8 @@ class CategoryReportController extends Controller
             /** @var array $category */
             foreach ($currency['categories'] as $category) {
                 foreach ($category['transaction_journals'] as $journal) {
-                    $journalData = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $title       = sprintf('%s (%s)', $category['name'], $journalData['currency_name']);
+                    $journalData              = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $title                    = sprintf('%s (%s)', $category['name'], $journalData['currency_name']);
                     $result[$title] ??= [
                         'amount'          => '0',
                         'currency_symbol' => $journalData['currency_symbol'],
@@ -213,9 +213,9 @@ class CategoryReportController extends Controller
             // add things to chart Data for each currency:
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $journalData = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $spentKey    = sprintf('%d-spent', $journalData['currency_id']);
-                    $chartData[$spentKey] ??= [
+                    $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $spentKey                              = sprintf('%d-spent', $journalData['currency_id']);
+                    $chartData[$spentKey]                  ??= [
                         'label'           => sprintf(
                             '%s (%s)',
                             (string) trans('firefly.spent_in_specific_category', ['category' => $category->name]),
@@ -227,7 +227,7 @@ class CategoryReportController extends Controller
                         'currency_id'     => $journalData['currency_id'],
                         'entries'         => $this->makeEntries($start, $end),
                     ];
-                    $key                    = $journal['date']->isoFormat($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $journalData['amount']);
                 }
@@ -239,9 +239,9 @@ class CategoryReportController extends Controller
             // add things to chart Data for each currency:
             foreach ($currency['categories'] as $currentCategory) {
                 foreach ($currentCategory['transaction_journals'] as $journal) {
-                    $journalData = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $spentKey    = sprintf('%d-earned', $journalData['currency_id']);
-                    $chartData[$spentKey] ??= [
+                    $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $spentKey                              = sprintf('%d-earned', $journalData['currency_id']);
+                    $chartData[$spentKey]                  ??= [
                         'label'           => sprintf(
                             '%s (%s)',
                             (string) trans('firefly.earned_in_specific_category', ['category' => $category->name]),
@@ -253,7 +253,7 @@ class CategoryReportController extends Controller
                         'currency_id'     => $journalData['currency_id'],
                         'entries'         => $this->makeEntries($start, $end),
                     ];
-                    $key                    = $journal['date']->isoFormat($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $journalData['amount']);
                 }
@@ -340,5 +340,4 @@ class CategoryReportController extends Controller
 
         return $return;
     }
-
 }
