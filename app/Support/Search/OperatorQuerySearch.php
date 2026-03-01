@@ -178,7 +178,7 @@ class OperatorQuerySearch implements SearchInterface
 
         /** @var QueryParserInterface $parser */
         $parser = app(QueryParserInterface::class);
-        Log::debug(sprintf('Using %s as implementation for QueryParserInterface', $parser::class));
+        // Log::debug(sprintf('Using %s as implementation for QueryParserInterface', $parser::class));
 
         try {
             $parsedQuery = $parser->parse($query);
@@ -189,7 +189,7 @@ class OperatorQuerySearch implements SearchInterface
             throw new FireflyException(sprintf('Invalid search value "%s". See the logs.', e($query)), 0, $e);
         }
 
-        Log::debug(sprintf('Found %d node(s) at top-level', count($parsedQuery->getNodes())));
+        // Log::debug(sprintf('Found %d node(s) at top-level', count($parsedQuery->getNodes())));
         $this->handleSearchNode($parsedQuery, $parsedQuery->isProhibited(false));
 
         // add missing information
@@ -329,7 +329,7 @@ class OperatorQuerySearch implements SearchInterface
      */
     private function handleSearchNode(Node $node, bool $flipProhibitedFlag): void
     {
-        Log::debug(sprintf('Now in handleSearchNode(%s)', $node::class));
+        // Log::debug(sprintf('Now in handleSearchNode(%s)', $node::class));
 
         switch (true) {
             case $node instanceof StringNode:

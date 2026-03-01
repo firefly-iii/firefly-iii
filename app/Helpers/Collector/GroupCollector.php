@@ -603,7 +603,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
-            Log::debug('No words in array');
+            // Log::debug('No words in array');
 
             return $this;
         }

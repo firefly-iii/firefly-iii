@@ -54,9 +54,13 @@ trait SupportsGroupProcessingTrait
         // create and fire rule engine.
         $newRuleEngine       = app(RuleEngineInterface::class);
         $newRuleEngine->setUser($user);
-        $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalIds]);
         $newRuleEngine->setRuleGroups($groups);
-        $newRuleEngine->fire();
+        foreach($array as $journalId) {
+            $newRuleEngine->removeOperator('journal_id');
+            $newRuleEngine->addOperator(['type'  => 'journal_id', 'value' => $journalId]);
+            $newRuleEngine->fire();
+        }
+
         Log::debug(sprintf('Done with processRules("%s") for %d journal(s)', $type, $set->count()));
     }
 

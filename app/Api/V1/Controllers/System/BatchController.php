@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BatchController extends Controller
 {
@@ -52,19 +53,22 @@ class BatchController extends Controller
 
     public function finishBatch(Request $request): JsonResponse
     {
-        $journals          = $this->repository->getUncompletedJournals();
+        Log::debug('Now in finishBatch.');
+        $journals = $this->repository->getUncompletedJournals();
         if (0 === count($journals)) {
+            Log::debug('Counted zero journals, return.');
             return response()->json([], 204);
         }
-
+        Log::debug(sprintf('Counted %d journals.', count($journals)));
         /** @var TransactionJournal $first */
-        $first             = $journals->first();
-        $group             = $first?->transactionGroup;
+        $first = $journals->first();
+        $group = $first?->transactionGroup;
         if (null === $group) {
+            Log::debug('First group is NULL.');
             return response()->json([], 204);
         }
         $flags             = new TransactionGroupEventFlags();
-        $flags->applyRules = 'true' === $request->get('apply_rules');
+        $flags->applyRules = 'true' === $request->input('apply_rules');
         event(new UserRequestedBatchProcessing($flags));
         // event(new CreatedSingleTransactionGroup($group, $flags));
 

@@ -37,6 +37,9 @@ interface RuleEngineInterface
      */
     public function addOperator(array $operator): void;
 
+    public function removeOperator(string $type): void;
+
+
     /**
      * Find all transactions only, dont apply anything.
      */
