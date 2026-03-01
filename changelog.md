@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.5.1 - 2026-02-28
+
+> [!IMPORTANT]  
+> This releases also fixes a security issue, relevant only if you have multiple users using your Firefly III instance. Upgrading is recommended. 
+
+### Added
+
+- [PR 11808](https://github.com/firefly-iii/firefly-iii/pull/11808) (Add Thai baht to Currency Seeder) reported by @CinnamonPyro
+
+### Fixed
+
+- [Issue 11817](https://github.com/firefly-iii/firefly-iii/issues/11817) (500 Error if internet is inaccessible while checking for updates) reported by @NoiTheCat
+- [Issue 11814](https://github.com/firefly-iii/firefly-iii/issues/11814) (Budget : error with CRON after switch user range view) reported by @fabienfitoussi
+- [Issue 11750](https://github.com/firefly-iii/firefly-iii/issues/11750) (500 error when creating first user with USD balance (works after refresh)) reported by @pinalgirkar
+
+### Security
+
+- Security issue where any authenticated user with API access also has read access to the `/api/v1/users` endpoint. Authenticated users would be able to see other user's email addresses, blocked status and roles, even when not admin. No actual financial data was exposed, just the user's info itself.
+
+### API
+
+- Added extra checks to the `/api/v1/users` endpoints.
+
+
 ## v6.5.0 - 2026-02-20
 
 > [!IMPORTANT]  

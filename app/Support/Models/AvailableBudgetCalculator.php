@@ -150,7 +150,7 @@ class AvailableBudgetCalculator
                 $item->start_date->format('Y-m-d'),
                 $item->end_date->format('Y-m-d')
             ));
-            $this->abRepository->recalculateAmount($availableBudget);
+            $this->abRepository->recalculateAmount($item);
         }
         if (!$this->create) {
             Log::debug('Can stop here. have not been asked to create an available budget.');

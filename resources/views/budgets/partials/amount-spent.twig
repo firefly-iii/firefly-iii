@@ -1,0 +1,42 @@
+{# this is spent in budget limits: #}
+{% for budgetLimit in budget.budgeted %}
+    {{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}
+    {% if 0 == budgetLimit.active_days_passed %}
+        ({{ formatAmountBySymbol(budgetLimit.spent, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+    {% else %}
+        ({{ formatAmountBySymbol(budgetLimit.spent / budgetLimit.active_days_passed, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }})
+    {% endif %}
+<br />
+{% endfor %}
+
+{# this is spent NOT in budget limits: #}
+{% for spent in budget.spent %}
+    {% if 0 != bccomp('0', spent.spent_outside)  %}
+        {{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }}
+        {% if 0 == activeDaysPassed %}
+            ({{ formatAmountBySymbol(spent.spent_outside, spent.currency_symbol, spent.currency_decimal_places) }})
+        {% else %}
+            ({{ formatAmountBySymbol(spent.spent_outside / activeDaysPassed, spent.currency_symbol, spent.currency_decimal_places) }})
+            {% endif %}
+        <br />
+    {% endif %}
+{% endfor %}
+
+{#
+
+
+{% for spentInfo in budget.spent %}
+    {{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }}
+    {% if 0 == activeDaysPassed %}
+        ({{ formatAmountBySymbol(spentInfo.spent, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+    {% else %}
+        ({{ formatAmountBySymbol(spentInfo.spent / activeDaysPassed, spentInfo.currency_symbol, spentInfo.currency_decimal_places) }})
+    {% endif %}
+    <br/>
+{% endfor %}
+{% for budgetLimit in budget.budgeted %}
+    {% if null == budget.spent[budgetLimit.currency_id] %}
+        {{ formatAmountBySymbol(0, budgetLimit.currency_symbol, budgetLimit.currency_decimal_places) }}<br/>
+    {% endif %}
+{% endfor %}
+#}
