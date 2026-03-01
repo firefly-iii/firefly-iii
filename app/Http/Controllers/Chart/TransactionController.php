@@ -30,6 +30,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\ResolvesJournalAmountAndCurrency;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -37,6 +38,8 @@ use Illuminate\Http\JsonResponse;
  */
 class TransactionController extends Controller
 {
+    use ResolvesJournalAmountAndCurrency;
+
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -57,6 +60,7 @@ class TransactionController extends Controller
         $cache     = new CacheProperties();
         $cache->addProperty($start);
         $cache->addProperty($end);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.transactions.budgets');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -74,14 +78,15 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
+            $resolved               = $this->resolveJournalAmountAndCurrency($journal);
             $budget                 = $journal['budget_name'] ?? (string) trans('firefly.no_budget');
-            $title                  = sprintf('%s (%s)', $budget, $journal['currency_symbol']);
+            $title                  = sprintf('%s (%s)', $budget, $resolved['currency_symbol']);
             $data[$title] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
+                'currency_symbol' => $resolved['currency_symbol'],
+                'currency_code'   => $resolved['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], $resolved['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -98,6 +103,7 @@ class TransactionController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.transactions.categories');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -124,14 +130,15 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
+            $resolved               = $this->resolveJournalAmountAndCurrency($journal);
             $category               = $journal['category_name'] ?? (string) trans('firefly.no_category');
-            $title                  = sprintf('%s (%s)', $category, $journal['currency_symbol']);
+            $title                  = sprintf('%s (%s)', $category, $resolved['currency_symbol']);
             $data[$title] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
+                'currency_symbol' => $resolved['currency_symbol'],
+                'currency_code'   => $resolved['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], $resolved['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -148,6 +155,7 @@ class TransactionController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.transactions.destinations');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -174,14 +182,15 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
+            $resolved               = $this->resolveJournalAmountAndCurrency($journal);
             $name                   = $journal['destination_account_name'];
-            $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
+            $title                  = sprintf('%s (%s)', $name, $resolved['currency_symbol']);
             $data[$title] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
+                'currency_symbol' => $resolved['currency_symbol'],
+                'currency_code'   => $resolved['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], $resolved['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
@@ -198,6 +207,7 @@ class TransactionController extends Controller
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty($objectType);
+        $cache->addProperty($this->convertToPrimary);
         $cache->addProperty('chart.transactions.sources');
         if ($cache->has()) {
             return response()->json($cache->get());
@@ -224,14 +234,15 @@ class TransactionController extends Controller
         // group by category.
         /** @var array $journal */
         foreach ($result as $journal) {
+            $resolved               = $this->resolveJournalAmountAndCurrency($journal);
             $name                   = $journal['source_account_name'];
-            $title                  = sprintf('%s (%s)', $name, $journal['currency_symbol']);
+            $title                  = sprintf('%s (%s)', $name, $resolved['currency_symbol']);
             $data[$title] ??= [
                 'amount'          => '0',
-                'currency_symbol' => $journal['currency_symbol'],
-                'currency_code'   => $journal['currency_code'],
+                'currency_symbol' => $resolved['currency_symbol'],
+                'currency_code'   => $resolved['currency_code'],
             ];
-            $data[$title]['amount'] = bcadd($data[$title]['amount'], (string) $journal['amount']);
+            $data[$title]['amount'] = bcadd($data[$title]['amount'], $resolved['amount']);
         }
         $chart     = $this->generator->multiCurrencyPieChart($data);
         $cache->store($chart);
