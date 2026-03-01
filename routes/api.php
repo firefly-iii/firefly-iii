@@ -724,7 +724,6 @@ Route::group(
         'namespace'  => 'FireflyIII\Api\V1\Controllers\System',
         'prefix'     => 'v1/configuration',
         'as'         => 'api.v1.configuration.',
-        'middleware' => ['api-admin'],
     ],
     static function (): void {
         Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
