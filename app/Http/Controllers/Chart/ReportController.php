@@ -151,9 +151,8 @@ class ReportController extends Controller
         $cache->addProperty($end);
         $cache->addProperty($this->convertToPrimary);
         if ($cache->has()) {
-            // return response()->json($cache->get());
+//             return response()->json($cache->get());
         }
-
         Log::debug('Going to do operations for accounts ', $accounts->pluck('id')->toArray());
         Log::debug(sprintf('Period: %s to %s', $start->toW3cString(), $end->toW3cString()));
         $format         = Navigation::preferredCarbonFormat($start, $end);
@@ -249,7 +248,7 @@ class ReportController extends Controller
             }
             // 2026-03-01 similar fix for monthly ranges.
             if ('1M' === $preferredRange) {
-                $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
+                // $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
             }
             Log::debug(sprintf('Start of sub-loop, current end is %s', $currentEnd->toW3cString()));
             while ($currentStart <= $currentEnd) {
