@@ -37,9 +37,6 @@ interface RuleEngineInterface
      */
     public function addOperator(array $operator): void;
 
-    public function removeOperator(string $type): void;
-
-
     /**
      * Find all transactions only, dont apply anything.
      */
@@ -54,6 +51,8 @@ interface RuleEngineInterface
      * Return the number of changed transactions from the previous "fire" action.
      */
     public function getResults(): int;
+
+    public function removeOperator(string $type): void;
 
     public function setRefreshTriggers(bool $refreshTriggers): void;
 

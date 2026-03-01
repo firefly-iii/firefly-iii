@@ -215,17 +215,21 @@ class TagReportController extends Controller
             // add things to chart Data for each currency:
             foreach ($currency['tags'] as $currentTag) {
                 foreach ($currentTag['transaction_journals'] as $journal) {
-                    $journalData            = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $spentKey               = sprintf('%d-spent', $journalData['currency_id']);
-                    $chartData[$spentKey] ??= [
-                        'label'           => sprintf('%s (%s)', (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]), $journalData['currency_name']),
+                    $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $spentKey                              = sprintf('%d-spent', $journalData['currency_id']);
+                    $chartData[$spentKey]                  ??= [
+                        'label'           => sprintf(
+                            '%s (%s)',
+                            (string) trans('firefly.spent_in_specific_tag', ['tag' => $tag->tag]),
+                            $journalData['currency_name']
+                        ),
                         'type'            => 'bar',
                         'currency_symbol' => $journalData['currency_symbol'],
                         'currency_code'   => $journalData['currency_code'],
                         'currency_id'     => $journalData['currency_id'],
                         'entries'         => $this->makeEntries($start, $end),
                     ];
-                    $key                    = $journal['date']->isoFormat($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $journalData['amount']);
                 }
@@ -237,17 +241,21 @@ class TagReportController extends Controller
             // add things to chart Data for each currency:
             foreach ($currency['tags'] as $currentTag) {
                 foreach ($currentTag['transaction_journals'] as $journal) {
-                    $journalData            = $this->resolveJournalAmountAndCurrency($journal, $currency);
-                    $spentKey               = sprintf('%d-earned', $journalData['currency_id']);
-                    $chartData[$spentKey] ??= [
-                        'label'           => sprintf('%s (%s)', (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]), $journalData['currency_name']),
+                    $journalData                           = $this->resolveJournalAmountAndCurrency($journal, $currency);
+                    $spentKey                              = sprintf('%d-earned', $journalData['currency_id']);
+                    $chartData[$spentKey]                  ??= [
+                        'label'           => sprintf(
+                            '%s (%s)',
+                            (string) trans('firefly.earned_in_specific_tag', ['tag' => $tag->tag]),
+                            $journalData['currency_name']
+                        ),
                         'type'            => 'bar',
                         'currency_symbol' => $journalData['currency_symbol'],
                         'currency_code'   => $journalData['currency_code'],
                         'currency_id'     => $journalData['currency_id'],
                         'entries'         => $this->makeEntries($start, $end),
                     ];
-                    $key                    = $journal['date']->isoFormat($format);
+                    $key                                   = $journal['date']->isoFormat($format);
                     $chartData[$spentKey]['entries'][$key] ??= '0';
                     $chartData[$spentKey]['entries'][$key] = bcadd($chartData[$spentKey]['entries'][$key], $journalData['amount']);
                 }
@@ -386,5 +394,4 @@ class TagReportController extends Controller
 
         return $return;
     }
-
 }

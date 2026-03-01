@@ -128,16 +128,16 @@ class ListController extends Controller
      */
     public function transactions(ListRequest $request, Account $account): JsonResponse
     {
-        ['limit' => $limit, 'page'  => $page, 'start' => $start, 'end'   => $end, 'type' => $type] = $request->attributes->all();
-        $types                                                                                     = $this->mapTransactionTypes($type ?? 'default');
-        $manager                                                                                   = $this->getManager();
+        ['limit' => $limit, 'page'  => $page, 'start' => $start, 'end'   => $end, 'type'  => $type] = $request->attributes->all();
+        $types                                                                                      = $this->mapTransactionTypes($type ?? 'default');
+        $manager                                                                                    = $this->getManager();
 
         /** @var User $admin */
-        $admin                                                                                     = auth()->user();
+        $admin                                                                                      = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector                                                                                 = app(GroupCollectorInterface::class);
+        $collector                                                                                  = app(GroupCollectorInterface::class);
         $collector->setUser($admin)->setAccounts(new Collection()->push($account))->withAPIInformation()->setLimit($limit)->setPage($page)->setTypes($types);
         if (null !== $start) {
             $collector->setStart($start);
@@ -146,18 +146,18 @@ class ListController extends Controller
             $collector->setEnd($end);
         }
 
-        $paginator                                                                                 = $collector->getPaginatedGroups();
+        $paginator                                                                                  = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]).$this->buildParams());
 
         // enrich
-        $enrichment                                                                                = new TransactionGroupEnrichment();
+        $enrichment                                                                                 = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $transactions                                                                              = $enrichment->enrich($paginator->getCollection());
+        $transactions                                                                               = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer                                                                               = app(TransactionGroupTransformer::class);
+        $transformer                                                                                = app(TransactionGroupTransformer::class);
 
-        $resource                                                                                  = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource                                                                                   = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

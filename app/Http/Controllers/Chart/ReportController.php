@@ -178,14 +178,14 @@ class ReportController extends Controller
         // loop. group by currency and by period.
         /** @var array $journal */
         foreach ($journals as $journal) {
-            $period      = $journal['date']->format($format);
-            $journalData = $this->resolveJournalAmountAndCurrency($journal, $journal);
-            $currencyId            = $journalData['currency_id'];
-            $currencySymbol        = $journalData['currency_symbol'];
-            $currencyCode          = $journalData['currency_code'];
-            $currencyName          = $journalData['currency_name'];
-            $currencyDecimalPlaces = $journalData['currency_decimal_places'];
-            $amount                = $journalData['amount'];
+            $period                           = $journal['date']->format($format);
+            $journalData                      = $this->resolveJournalAmountAndCurrency($journal, $journal);
+            $currencyId                       = $journalData['currency_id'];
+            $currencySymbol                   = $journalData['currency_symbol'];
+            $currencyCode                     = $journalData['currency_code'];
+            $currencyName                     = $journalData['currency_name'];
+            $currencyDecimalPlaces            = $journalData['currency_decimal_places'];
+            $amount                           = $journalData['amount'];
 
             $data[$currencyId]          ??= [
                 'currency_id'             => $currencyId,
@@ -196,7 +196,7 @@ class ReportController extends Controller
             ];
             $data[$currencyId][$period] ??= ['period' => $period, 'spent'  => '0', 'earned' => '0'];
             // in our outgoing?
-            $key = 'spent';
+            $key                              = 'spent';
 
             // deposit = incoming
             // transfer or reconcile or opening balance, and these accounts are the destination.
