@@ -779,8 +779,9 @@ class GroupCollector implements GroupCollectorInterface
         $newArray = $newJournal->toArray();
         if (array_key_exists('attachment_id', $newArray)) {
             $attachmentId                                  = (int) $newJournal['attachment_id'];
-
-            $existingJournal['attachments'][$attachmentId] = ['id' => $attachmentId];
+            if(0 !== $attachmentId) {
+                $existingJournal['attachments'][$attachmentId] = ['id' => $attachmentId];
+            }
         }
 
         return $existingJournal;

@@ -451,4 +451,10 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
 
         return $tag;
     }
+
+    #[\Override]
+    public function getJournalIds(Tag $tag): array
+    {
+        return $tag->transactionJournals->pluck('id')->toArray();
+    }
 }
