@@ -246,10 +246,6 @@ class ReportController extends Controller
             if ('1Y' === $preferredRange) {
                 $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
             }
-            // 2026-03-01 similar fix for monthly ranges.
-            if ('1M' === $preferredRange) {
-                // $currentEnd = Navigation::endOfPeriod($currentEnd, $preferredRange);
-            }
             Log::debug(sprintf('Start of sub-loop, current end is %s', $currentEnd->toW3cString()));
             while ($currentStart <= $currentEnd) {
                 Log::debug(sprintf('Current start: %s', $currentStart->toW3cString()));
