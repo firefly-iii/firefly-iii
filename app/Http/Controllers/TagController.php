@@ -248,7 +248,7 @@ class TagController extends Controller
 
         // collect transaction journal IDs in repository,
         // this makes the collector faster and more accurate.
-        $journalIds = $this->repository->getJournalIds($tag);
+        $journalIds   = $this->repository->getJournalIds($tag);
 
         $collector
             ->setRange($start, $end)
@@ -303,7 +303,7 @@ class TagController extends Controller
 
         // collect transaction journal IDs in repository,
         // this makes the collector faster and more accurate.
-        $journalIds = $this->repository->getJournalIds($tag);
+        $journalIds   = $this->repository->getJournalIds($tag);
 
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
