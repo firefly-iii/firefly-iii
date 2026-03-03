@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Account;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\Generic\PaginationDateRangeRequest;
 use FireflyIII\Api\V1\Requests\Models\Transaction\ListRequest;
 use FireflyIII\Api\V1\Requests\PaginationRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -126,7 +127,7 @@ class ListController extends Controller
     /**
      * Show all transaction groups related to the account.
      */
-    public function transactions(ListRequest $request, Account $account): JsonResponse
+    public function transactions(PaginationDateRangeRequest $request, Account $account): JsonResponse
     {
         ['limit' => $limit, 'page'  => $page, 'start' => $start, 'end'   => $end, 'type'  => $type] = $request->attributes->all();
         $types                                                                                      = $this->mapTransactionTypes($type ?? 'default');
