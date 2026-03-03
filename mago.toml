@@ -45,7 +45,6 @@ no-assign-in-condition = { enabled = false }
 tagged-fixme = { enabled = false }
 no-empty-catch-clause = { enabled = false }
 excessive-parameter-list = { enabled = false }
-no-sprintf-concat = { enabled = false }
 no-redundant-math={ enabled = false }
 prefer-first-class-callable={ enabled = false }
 no-redundant-method-override={ enabled = false }

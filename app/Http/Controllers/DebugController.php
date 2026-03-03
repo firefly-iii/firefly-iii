@@ -252,7 +252,8 @@ final class DebugController extends Controller
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
         foreach ($return as $name => $path) {
-            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
+            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name);
+            echo PHP_EOL;
             ++$count;
             if (0 === ($count % 10)) {
                 echo '<hr>';

@@ -62,7 +62,7 @@ class OutputsInstructions extends Command
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->line('| '.sprintf('%-77s', $string).'|');
+            $this->line(sprintf('| %-77s|', $string));
         }
     }
 
@@ -73,7 +73,7 @@ class OutputsInstructions extends Command
     {
         $parts = explode("\n", wordwrap($text));
         foreach ($parts as $string) {
-            $this->info('| '.sprintf('%-77s', $string).'|');
+            $this->info(sprintf('| %-77s|', $string));
         }
     }
 
