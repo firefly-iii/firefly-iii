@@ -25,10 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\PeriodStatistic;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;
@@ -57,8 +54,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
             ->where('start', '>=', $start)
             ->where('end', '<=', $end)
-            ->get()
-        ;
+            ->get();
     }
 
     #[Override]
@@ -113,8 +109,7 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
                 }
             })
             ->where('type', 'LIKE', sprintf('%s%%', $prefix))
-            ->delete()
-        ;
+            ->delete();
         Log::debug(sprintf('Deleted %d entries for prefix "%s"', $count, $prefix));
     }
 
@@ -126,16 +121,15 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
             return;
         }
         $count = PeriodStatistic::where('primary_statable_type', $class)
-            ->whereIn('primary_statable_id', $objects->pluck('id')->toArray())
-            ->where(function (Builder $q) use ($dates): void {
-                foreach ($dates as $date) {
-                    $q->where(function (Builder $q1) use ($date): void {
-                        $q1->where('start', '<=', $date)->where('end', '>=', $date);
-                    });
-                }
-            })
-            ->delete()
-        ;
+                                ->whereIn('primary_statable_id', $objects->pluck('id')->toArray())
+                                ->where(function (Builder $q) use ($dates): void {
+                                    foreach ($dates as $date) {
+                                        $q->where(function (Builder $q1) use ($date): void {
+                                            $q1->where('start', '<=', $date)->where('end', '>=', $date);
+                                        });
+                                    }
+                                })
+                                ->delete();
         Log::debug(sprintf('Delete %d statistics for %dx %s', $count, $objects->count(), $class));
     }
 
@@ -152,13 +146,14 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
     #[Override]
     public function savePrefixedStatistic(
         string $prefix,
-        int $currencyId,
+        int    $currencyId,
         Carbon $start,
         Carbon $end,
         string $type,
-        int $count,
+        int    $count,
         string $amount
-    ): PeriodStatistic {
+    ): PeriodStatistic
+    {
         Log::debug(sprintf('Store as type "%s"', sprintf('%s_%s', $prefix, $type)));
         $stat                          = new PeriodStatistic();
         $stat->transaction_currency_id = $currencyId;
@@ -173,22 +168,22 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $stat->transaction_currency_id,
-            $stat->type,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, type "%s", %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $stat->transaction_currency_id,
+                       $stat->type,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
     }
 
     public function saveStatistic(Model $model, int $currencyId, Carbon $start, Carbon $end, string $type, int $count, string $amount): PeriodStatistic
     {
-        $stat                          = new PeriodStatistic();
+        $stat = new PeriodStatistic();
         $stat->primaryStatable()->associate($model);
         $stat->transaction_currency_id = $currencyId;
         $stat->user_group_id           = $this->getUserGroup()->id;
@@ -202,16 +197,16 @@ class PeriodStatisticRepository implements PeriodStatisticRepositoryInterface, U
         $stat->save();
 
         Log::debug(sprintf(
-            'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
-            $stat->id,
-            $model::class,
-            $model->id,
-            $stat->transaction_currency_id,
-            $stat->start->toW3cString(),
-            $stat->end->toW3cString(),
-            $count,
-            $amount
-        ));
+                       'Saved #%d [currency #%d, Model %s #%d, %s to %s, %d, %s] as new statistic.',
+                       $stat->id,
+                       $model::class,
+                       $model->id,
+                       $stat->transaction_currency_id,
+                       $stat->start->toW3cString(),
+                       $stat->end->toW3cString(),
+                       $count,
+                       $amount
+                   ));
 
         return $stat;
     }

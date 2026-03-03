@@ -46,12 +46,9 @@ tagged-fixme = { enabled = false }
 no-empty-catch-clause = { enabled = false }
 excessive-parameter-list = { enabled = false }
 no-sprintf-concat = { enabled = false }
-no-redundant-use ={ enabled = false }
 no-redundant-math={ enabled = false }
 prefer-first-class-callable={ enabled = false }
 no-redundant-method-override={ enabled = false }
-no-empty-comment={ enabled = false }
-no-insecure-comparison={ enabled = false }
 prefer-arrow-function = { enabled = false }
 
 

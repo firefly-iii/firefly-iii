@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
-use Illuminate\Support\Facades\Log;
+
 use SensitiveParameter;
 
 /**

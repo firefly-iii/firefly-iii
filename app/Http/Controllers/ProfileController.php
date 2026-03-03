@@ -142,7 +142,7 @@ final class ProfileController extends Controller
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
-            if ($preference->data === $token) {
+            if (hash_equals($preference->data, $token)) {
                 $user = $preference->user;
             }
         }
@@ -404,7 +404,7 @@ final class ProfileController extends Controller
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
-            if ($preference->data === $token) {
+            if (hash_equals($preference->data, $token)) {
                 $user = $preference->user;
             }
         }
