@@ -77,10 +77,18 @@ class ConfigurationController extends Controller
         $staticData = $this->getStaticConfiguration();
         $return     = [];
         foreach ($dynamicData as $key => $value) {
-            $return[] = ['title'    => sprintf('configuration.%s', $key), 'value'    => $value, 'editable' => true];
+            $return[] = [
+                'title'    => sprintf('configuration.%s', $key),
+                'value'    => $value,
+                'editable' => true,
+            ];
         }
         foreach ($staticData as $key => $value) {
-            $return[] = ['title'    => $key, 'value'    => $value, 'editable' => false];
+            $return[] = [
+                'title'    => $key,
+                'value'    => $value,
+                'editable' => false,
+            ];
         }
 
         return response()->api($return);
@@ -95,18 +103,30 @@ class ConfigurationController extends Controller
         $dynamic  = $this->getDynamicConfiguration();
         $shortKey = str_replace('configuration.', '', $configKey);
         if (str_starts_with($configKey, 'configuration.')) {
-            $data = ['title'    => $configKey, 'value'    => $dynamic[$shortKey], 'editable' => true];
+            $data = [
+                'title'    => $configKey,
+                'value'    => $dynamic[$shortKey],
+                'editable' => true,
+            ];
 
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
         if (str_starts_with($configKey, 'webhook.')) {
-            $data = ['title'    => $configKey, 'value'    => $this->getWebhookConfiguration($configKey), 'editable' => false];
+            $data = [
+                'title'    => $configKey,
+                'value'    => $this->getWebhookConfiguration($configKey),
+                'editable' => false,
+            ];
 
             return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
         }
 
         // fallback
-        $data     = ['title'    => $configKey, 'value'    => config($shortKey), 'editable' => false];
+        $data = [
+            'title'    => $configKey,
+            'value'    => config($shortKey),
+            'editable' => false,
+        ];
 
         return response()->api(['data' => $data])->header('Content-Type', self::JSON_CONTENT_TYPE);
     }
@@ -122,7 +142,7 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
-        $rules     = ['value' => 'required'];
+        $rules = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
             Validator::make([], $rules, $messages)->validate();
@@ -134,7 +154,11 @@ class ConfigurationController extends Controller
 
         // get updated config:
         $newConfig = $this->getDynamicConfiguration();
-        $data      = ['title'    => $name, 'value'    => $newConfig[$shortName], 'editable' => true];
+        $data      = [
+            'title'    => $name,
+            'value'    => $newConfig[$shortName],
+            'editable' => true,
+        ];
 
         return response()->api(['data' => $data])->header('Content-Type', self::CONTENT_TYPE);
     }
@@ -146,16 +170,30 @@ class ConfigurationController extends Controller
      */
     private function getDynamicConfiguration(): array
     {
-        $isDemoSite  = FireflyConfig::get('is_demo_site');
-        $updateCheck = FireflyConfig::get('permission_update_check');
-        $lastCheck   = FireflyConfig::get('last_update_check');
-        $singleUser  = FireflyConfig::get('single_user_mode');
+        $isDemoSite            = FireflyConfig::get('is_demo_site', false);
+        $updateCheck           = FireflyConfig::get('permission_update_check', -1);
+        $singleUser            = FireflyConfig::get('single_user_mode', true);
+        $lastCheck             = FireflyConfig::get('last_update_check', 1);
+        $enableExchangeRates   = FireflyConfig::get('enable_exchange_rates', config('cer.enabled'));
+        $useRunningBalance     = FireflyConfig::get('use_running_balance', true);
+        $enableExternalMap     = FireflyConfig::get('enable_external_map', false);
+        $enableExternalRates   = FireflyConfig::get('enable_external_rates', false);
+        $allowWebhooks         = FireflyConfig::get('allow_webhooks', false);
+        $enableBatchProcessing = FireflyConfig::get('enable_batch_processing', false);
+        $validUrlProtocols     = FireflyConfig::get('valid_url_protocols', 'http,https');
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
-            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
+            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
             'single_user_mode'        => $singleUser?->data,
+            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
+            'enable_exchange_rates'   => $enableExchangeRates?->data,
+            'use_running_balance'     => $useRunningBalance?->data,
+            'enable_external_map'     => $enableExternalMap?->data,
+            'enable_external_rates'   => $enableExternalRates?->data,
+            'allow_webhooks'          => $allowWebhooks?->data,
+            'enable_batch_processing' => $enableBatchProcessing?->data,
+            'valid_url_protocols'     => $validUrlProtocols?->data ?? 'http,https',
         ];
     }
 

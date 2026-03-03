@@ -727,8 +727,8 @@ Route::group(
     ],
     static function (): void {
         Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
-        Route::get('{eitherConfigKey}', ['uses' => 'ConfigurationController@show', 'as' => 'show']);
         Route::put('{dynamicConfigKey}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
+        Route::get('{eitherConfigKey}', ['uses' => 'ConfigurationController@show', 'as' => 'show']);
     }
 );
 // Users API routes:
