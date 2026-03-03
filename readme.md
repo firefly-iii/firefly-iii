@@ -27,6 +27,14 @@
     <a href="https://github.com/firefly-iii/firefly-iii/discussions">Ask questions</a>
   </p>
 
+---
+
+<p>
+<img align="left" src=".github/assets/img/europe.png" alt="Flag of Europe" height="50"> Billionairs and facsists are breaking democracies and international alliances. their profits are more important than our safety. (Digital) sovereignty is more important than ever. <strong>Firefly III</strong> is free open source software and lives in the European Union.
+</p>
+
+---
+
 <!-- MarkdownTOC autolink="true" -->
 
 - [About Firefly III](#about-firefly-iii)
