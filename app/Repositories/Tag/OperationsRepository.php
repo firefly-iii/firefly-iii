@@ -95,15 +95,23 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
 
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => Steam::negative($journal['amount']),
+                    'currency_id'              => (int) $journal['currency_id'],
+                    'currency_name'            => (string) $journal['currency_name'],
+                    'currency_symbol'          => (string) $journal['currency_symbol'],
+                    'currency_code'            => (string) $journal['currency_code'],
+                    'currency_decimal_places'  => (int) $journal['currency_decimal_places'],
+                    'foreign_currency_id'      => (int) ($journal['foreign_currency_id'] ?? 0),
+                    'foreign_amount'           => isset($journal['foreign_amount']) ? Steam::negative((string) $journal['foreign_amount']) : null,
+                    'pc_amount'                => isset($journal['pc_amount']) ? Steam::negative((string) $journal['pc_amount']) : null,
                     'date'                     => $journal['date'],
-                    'source_account_id'        => $journal['source_account_id'],
+                    'source_account_id'        => (string) $journal['source_account_id'],
                     'budget_name'              => $journal['budget_name'],
                     'category_name'            => $journal['category_name'],
                     'source_account_name'      => $journal['source_account_name'],
-                    'destination_account_id'   => $journal['destination_account_id'],
+                    'destination_account_id'   => (string) $journal['destination_account_id'],
                     'destination_account_name' => $journal['destination_account_name'],
                     'description'              => $journal['description'],
-                    'transaction_group_id'     => $journal['transaction_group_id'],
+                    'transaction_group_id'     => (string) $journal['transaction_group_id'],
                 ];
             }
         }
@@ -172,14 +180,22 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
                 $journalId                                                              = (int) $journal['transaction_journal_id'];
                 $array[$currencyId]['tags'][$tagId]['transaction_journals'][$journalId] = [
                     'amount'                   => Steam::positive($journal['amount']),
+                    'currency_id'              => (int) $journal['currency_id'],
+                    'currency_name'            => (string) $journal['currency_name'],
+                    'currency_symbol'          => (string) $journal['currency_symbol'],
+                    'currency_code'            => (string) $journal['currency_code'],
+                    'currency_decimal_places'  => (int) $journal['currency_decimal_places'],
+                    'foreign_currency_id'      => (int) ($journal['foreign_currency_id'] ?? 0),
+                    'foreign_amount'           => isset($journal['foreign_amount']) ? Steam::positive((string) $journal['foreign_amount']) : null,
+                    'pc_amount'                => isset($journal['pc_amount']) ? Steam::positive((string) $journal['pc_amount']) : null,
                     'date'                     => $journal['date'],
-                    'source_account_id'        => $journal['source_account_id'],
+                    'source_account_id'        => (string) $journal['source_account_id'],
                     'budget_name'              => $journal['budget_name'],
                     'source_account_name'      => $journal['source_account_name'],
-                    'destination_account_id'   => $journal['destination_account_id'],
+                    'destination_account_id'   => (string) $journal['destination_account_id'],
                     'destination_account_name' => $journal['destination_account_name'],
                     'description'              => $journal['description'],
-                    'transaction_group_id'     => $journal['transaction_group_id'],
+                    'transaction_group_id'     => (string) $journal['transaction_group_id'],
                 ];
             }
         }
