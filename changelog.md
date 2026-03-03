@@ -7,24 +7,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- #11825
-- #11833
-- #11835
-- #11836
-- #11837
+- [PR 11825](https://github.com/firefly-iii/firefly-iii/pull/11825) (Fix account transaction type filtering) reported by @mgrove36
+- [PR 11833](https://github.com/firefly-iii/firefly-iii/pull/11833) (Convert to primary currency for category charts) reported by @dakennguyen
+- [PR 11835](https://github.com/firefly-iii/firefly-iii/pull/11835) (Convert to primary currency for tag charts) reported by @dakennguyen
+- [PR 11836](https://github.com/firefly-iii/firefly-iii/pull/11836) (Convert to primary currency for reportPeriodChart) reported by @dakennguyen
+- [PR 11837](https://github.com/firefly-iii/firefly-iii/pull/11837) (Convert to primary currency for transaction charts) reported by @dakennguyen
 
 ### Fixed
 
-- #11812
-- #11814
-- #11829
-- #11847
+- [Issue 11812](https://github.com/firefly-iii/firefly-iii/issues/11812) (Using batch mode, some imported transactions aren't checked by rules) reported by @JC5
+- [Issue 11814](https://github.com/firefly-iii/firefly-iii/issues/11814) (Budget : error with CRON after switch user range view) reported by @fabienfitoussi
+- [Issue 11829](https://github.com/firefly-iii/firefly-iii/issues/11829) (User overview in settings shows 500) reported by @JC5
+- [Issue 11847](https://github.com/firefly-iii/firefly-iii/issues/11847) (Wrong attachment indicator when listing records by tags) reported by @jgmm81
 - Better check on renamed accounts, thanks @Kage1
 
 ### API
 
-- #11822
-- #11842
+- [Issue 11822](https://github.com/firefly-iii/firefly-iii/issues/11822) (API - account transaction type filtering) reported by @mgrove36
+- [Issue 11842](https://github.com/firefly-iii/firefly-iii/issues/11842) (API: `/api/v1/configuration` always returns unauthenticated for v6.5.1) reported by @dreautall
 
 ## 6.5.1 - 2026-02-28
 
