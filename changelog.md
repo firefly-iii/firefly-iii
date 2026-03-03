@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.5.2 - 2026-03-04
+
+### Changed
+
+- #11825
+- #11833
+- #11835
+- #11836
+- #11837
+
+### Fixed
+
+- #11812
+- #11814
+- #11829
+- #11847
+- Better check on renamed accounts, thanks @Kage1
+
+### API
+
+- #11822
+- #11842
+
 ## 6.5.1 - 2026-02-28
 
 > [!IMPORTANT]  
