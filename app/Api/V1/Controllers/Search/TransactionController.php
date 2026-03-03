@@ -40,7 +40,7 @@ use League\Fractal\Resource\Collection;
 /**
  * Class TransactionController
  */
-class TransactionController extends Controller
+final class TransactionController extends Controller
 {
     private JournalRepositoryInterface $repository;
 

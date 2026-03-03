@@ -36,7 +36,7 @@ use Illuminate\Support\Collection;
 /**
  * Class CategoryController
  */
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     private NoCategoryRepositoryInterface $noRepository;
     private OperationsRepositoryInterface $opsRepository;

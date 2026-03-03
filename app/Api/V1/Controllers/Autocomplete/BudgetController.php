@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class BudgetController
  */
-class BudgetController extends Controller
+final class BudgetController extends Controller
 {
     private BudgetRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_BUDGETS];

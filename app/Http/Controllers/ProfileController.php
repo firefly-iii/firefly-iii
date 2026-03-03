@@ -59,7 +59,7 @@ use SensitiveParameter;
  *
  * @method Guard guard()
  */
-class ProfileController extends Controller
+final class ProfileController extends Controller
 {
     use CreateStuff;
 

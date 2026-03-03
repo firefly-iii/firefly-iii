@@ -33,7 +33,7 @@ use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 
-class UpdateController extends Controller
+final class UpdateController extends Controller
 {
     public const string RESOURCE_KEY = 'user_groups';
 

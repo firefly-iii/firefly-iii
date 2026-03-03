@@ -36,7 +36,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class EditController
  */
-class EditController extends Controller
+final class EditController extends Controller
 {
     /**
      * DeleteController constructor.

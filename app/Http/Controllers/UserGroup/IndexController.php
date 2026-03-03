@@ -30,7 +30,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     /**
      * Show all administrations.

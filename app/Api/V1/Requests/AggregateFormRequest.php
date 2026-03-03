@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Override;
 use RuntimeException;
 
@@ -45,8 +44,9 @@ abstract class AggregateFormRequest extends ApiRequest
         array $cookies = [],
         array $files = [],
         array $server = [],
-        $content = null
-    ): void {
+              $content = null
+    ): void
+    {
         parent::initialize($query, $request, $attributes, $cookies, $files, $server, $content);
 
         // instantiate all subrequests and share current requests' bags with them
@@ -54,14 +54,15 @@ abstract class AggregateFormRequest extends ApiRequest
 
         /** @var array|string $config */
         foreach ($this->getRequests() as $config) {
-            $requestClass         = is_array($config) ? array_shift($config) : $config;
+            $requestClass = is_array($config) ? array_shift($config) : $config;
 
             if (!is_a($requestClass, Request::class, true)) {
                 throw new RuntimeException('getRequests() must return class-strings of subclasses of Request');
             }
             // Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
-            $instance             = $this->requests[] = new $requestClass();
+            $instance             = new $requestClass();
+            $this->requests[]     = $instance;
             $instance->request    = $this->request;
             $instance->query      = $this->query;
             $instance->attributes = $this->attributes;
@@ -83,7 +84,7 @@ abstract class AggregateFormRequest extends ApiRequest
         // check all subrequests for rules and combine them
         return array_reduce(
             $this->requests,
-            static fn (array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
+            static fn(array $rules, FormRequest $request): array => $rules + (method_exists($request, 'rules') ? $request->rules() : []),
             []
         );
     }

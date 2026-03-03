@@ -39,7 +39,7 @@ use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class EditController extends Controller
+final class EditController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
     protected UserRepositoryInterface $userRepository;

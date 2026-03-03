@@ -45,7 +45,7 @@ use Throwable;
 /**
  * Class EditController
  */
-class EditController extends Controller
+final class EditController extends Controller
 {
     use RenderPartialViews;
     use RuleManagement;

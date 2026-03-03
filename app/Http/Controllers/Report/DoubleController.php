@@ -39,7 +39,7 @@ use Throwable;
 /**
  * Class DoubleController
  */
-class DoubleController extends Controller
+final class DoubleController extends Controller
 {
     use AugumentData;
 

@@ -39,7 +39,7 @@ use Illuminate\Support\Collection;
 /**
  * Class TransactionController
  */
-class TransactionController extends Controller
+final class TransactionController extends Controller
 {
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];
     private TransactionGroupRepositoryInterface $groupRepository;

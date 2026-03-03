@@ -283,9 +283,10 @@ class GroupCollector implements GroupCollectorInterface
         }
         echo $query;
 
-        echo '<pre>';
-        print_r($this->query->getBindings());
-        echo '</pre>';
+        die(PHP_EOL. 'To see the query, uncomment the next lines first.');
+//        echo '<pre>';
+//        print_r($this->query->getBindings());
+//        echo '</pre>';
     }
 
     public function dumpQueryInLogs(): void

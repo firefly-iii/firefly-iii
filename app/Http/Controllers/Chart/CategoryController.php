@@ -46,7 +46,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class CategoryController.
  */
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     use AugumentData;
     use ChartGeneration;

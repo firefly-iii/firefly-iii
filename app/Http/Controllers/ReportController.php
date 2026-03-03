@@ -47,7 +47,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class ReportController.
  */
-class ReportController extends Controller
+final class ReportController extends Controller
 {
     use RenderPartialViews;
 

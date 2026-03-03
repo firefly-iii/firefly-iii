@@ -36,7 +36,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class TransactionController
  */
-class TransactionController extends Controller
+final class TransactionController extends Controller
 {
     use ResolvesJournalAmountAndCurrency;
 

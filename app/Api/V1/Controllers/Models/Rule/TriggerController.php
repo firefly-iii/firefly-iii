@@ -42,7 +42,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 /**
  * Class TriggerController
  */
-class TriggerController extends Controller
+final class TriggerController extends Controller
 {
     private RuleRepositoryInterface $ruleRepository;
 

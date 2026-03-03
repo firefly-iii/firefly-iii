@@ -35,7 +35,7 @@ use Throwable;
 /**
  * Class AccountController.
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     /**
      * Show partial overview for account balances.

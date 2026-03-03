@@ -36,7 +36,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 /**
  * Class ShowController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     use ValidatesUserGroupTrait;
 

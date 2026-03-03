@@ -42,7 +42,7 @@ use Illuminate\Http\Request;
  * Because this is a security nightmare waiting to happen validation
  * is pretty strict.
  */
-class TransactionController extends Controller
+final class TransactionController extends Controller
 {
     private AccountRepositoryInterface $repository;
 

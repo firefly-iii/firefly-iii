@@ -36,7 +36,7 @@ use FireflyIII\Support\Http\Api\ValidatesUserGroupTrait;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class DestroyController extends Controller
+final class DestroyController extends Controller
 {
     use ValidatesUserGroupTrait;
 

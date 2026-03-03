@@ -45,7 +45,7 @@ use function Safe\parse_url;
 /**
  * Class EditController
  */
-class EditController extends Controller
+final class EditController extends Controller
 {
     private JournalRepositoryInterface $repository;
 

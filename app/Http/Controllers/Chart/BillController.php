@@ -36,7 +36,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class BillController.
  */
-class BillController extends Controller
+final class BillController extends Controller
 {
     protected GeneratorInterface $generator;
 

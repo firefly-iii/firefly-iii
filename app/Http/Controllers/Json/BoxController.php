@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BoxController.
  */
-class BoxController extends Controller
+final class BoxController extends Controller
 {
     use DateCalculation;
 

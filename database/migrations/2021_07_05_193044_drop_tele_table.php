@@ -28,7 +28,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class DropTeleTable
  */
-class DropTeleTable extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -48,3 +48,4 @@ class DropTeleTable extends Migration
         Schema::dropIfExists('telemetry');
     }
 }
+    ;

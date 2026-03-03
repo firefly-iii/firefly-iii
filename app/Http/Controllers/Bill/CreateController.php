@@ -39,7 +39,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CreateController
  */
-class CreateController extends Controller
+final class CreateController extends Controller
 {
     private AttachmentHelperInterface $attachments;
     private BillRepositoryInterface $repository;

@@ -44,7 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class NoCategoryController
  */
-class NoCategoryController extends Controller
+final class NoCategoryController extends Controller
 {
     use PeriodOverview;
 

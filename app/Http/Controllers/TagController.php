@@ -44,7 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class TagController.
  */
-class TagController extends Controller
+final class TagController extends Controller
 {
     use PeriodOverview;
 

@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class ObjectGroupController
  */
-class ObjectGroupController extends Controller
+final class ObjectGroupController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

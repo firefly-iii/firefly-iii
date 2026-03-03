@@ -32,7 +32,7 @@ use Illuminate\Foundation\Auth\ConfirmsPasswords;
 /**
  * Class ConfirmPasswordController
  */
-class ConfirmPasswordController extends Controller
+final class ConfirmPasswordController extends Controller
 {
     /*
      |--------------------------------------------------------------------------

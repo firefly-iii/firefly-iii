@@ -30,7 +30,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class ExtendCurrencyInfo
  */
-class ExtendCurrencyInfo extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -55,3 +55,4 @@ class ExtendCurrencyInfo extends Migration
         }
     }
 }
+    ;

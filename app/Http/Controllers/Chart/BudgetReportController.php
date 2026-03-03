@@ -41,7 +41,7 @@ use Illuminate\Support\Collection;
  *
  * Class BudgetReportController
  */
-class BudgetReportController extends Controller
+final class BudgetReportController extends Controller
 {
     use AugumentData;
     use TransactionCalculation;

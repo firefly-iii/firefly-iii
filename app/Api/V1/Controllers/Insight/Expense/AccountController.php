@@ -37,7 +37,7 @@ use Illuminate\Http\JsonResponse;
  * Shows expense information grouped or limited by date.
  * I.e. all expenses grouped by account + currency.
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use ApiSupport;
 

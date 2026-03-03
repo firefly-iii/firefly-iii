@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class BillController
  */
-class BillController extends Controller
+final class BillController extends Controller
 {
     private BillRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_SUBSCRIPTIONS];

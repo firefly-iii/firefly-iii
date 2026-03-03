@@ -41,7 +41,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 /**
  * Class AccountController
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use AccountFilter;
 

@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TriggerController
  */
-class TriggerController extends Controller
+final class TriggerController extends Controller
 {
     private RecurringRepositoryInterface $repository;
 

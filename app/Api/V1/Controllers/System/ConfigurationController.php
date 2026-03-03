@@ -41,7 +41,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * Class ConfigurationController
  */
-class ConfigurationController extends Controller
+final class ConfigurationController extends Controller
 {
     private UserRepositoryInterface $repository;
 
@@ -193,7 +193,7 @@ class ConfigurationController extends Controller
             'enable_external_rates'   => $enableExternalRates?->data,
             'allow_webhooks'          => $allowWebhooks?->data,
             'enable_batch_processing' => $enableBatchProcessing?->data,
-            'valid_url_protocols'     => $validUrlProtocols?->data ?? 'http,https',
+            'valid_url_protocols'     => $validUrlProtocols->data ?? 'http,https',
         ];
     }
 

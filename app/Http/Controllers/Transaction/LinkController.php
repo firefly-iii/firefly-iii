@@ -41,7 +41,7 @@ use Illuminate\View\View;
 /**
  * Class LinkController.
  */
-class LinkController extends Controller
+final class LinkController extends Controller
 {
     private JournalRepositoryInterface $journalRepository;
     private LinkTypeRepositoryInterface $repository;

@@ -38,7 +38,7 @@ use Throwable;
 /**
  * Class BalanceController.
  */
-class BalanceController extends Controller
+final class BalanceController extends Controller
 {
     /** @var BudgetRepositoryInterface */
     private $repository;

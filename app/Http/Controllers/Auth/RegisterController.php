@@ -50,7 +50,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * validation and creation. By default this controller uses a trait to
  * provide this functionality without requiring any additional code.
  */
-class RegisterController extends Controller
+final class RegisterController extends Controller
 {
     use CreateStuff;
     use RegistersUsers;

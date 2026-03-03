@@ -273,8 +273,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && $notes === $value;
+                    if('' !== $notes && $notes === $value) {
+                        return true;
+                    }
                 }
             }
 
@@ -297,8 +298,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && $notes !== $value;
+                    if('' !== $notes && $notes !== $value) {
+                        return true;
+                    }
                 }
             }
 
@@ -321,8 +323,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && str_contains(strtolower($notes), strtolower($value));
+                    if( '' !== $notes && str_contains(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 
@@ -345,8 +348,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && !str_contains(strtolower($notes), strtolower($value));
+                    if('' !== $notes && !str_contains(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 
@@ -370,7 +374,9 @@ trait AttachmentCollection
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
 
-                    return '' !== $notes && !str_ends_with(strtolower($notes), strtolower($value));
+                    if('' !== $notes && !str_ends_with(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 
@@ -393,8 +399,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && !str_starts_with(strtolower($notes), strtolower($value));
+                    if('' !== $notes && !str_starts_with(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 
@@ -417,8 +424,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && str_ends_with(strtolower($notes), strtolower($value));
+                    if('' !== $notes && str_ends_with(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 
@@ -441,8 +449,9 @@ trait AttachmentCollection
                     /** @var null|Attachment $object */
                     $object = auth()->user()->attachments()->find($attachment['id']);
                     $notes  = (string) $object?->notes()->first()?->text;
-
-                    return '' !== $notes && str_starts_with(strtolower($notes), strtolower($value));
+                    if('' !== $notes && str_starts_with(strtolower($notes), strtolower($value))) {
+                        return true;
+                    }
                 }
             }
 

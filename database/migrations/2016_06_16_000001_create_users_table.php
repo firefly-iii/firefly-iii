@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class CreateUsersTable extends Migration
+return new class extends Migration
 {
     private const TABLE_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
     private const TABLE_ERROR          = 'Could not create table "%s": %s';
@@ -70,3 +70,4 @@ class CreateUsersTable extends Migration
         }
     }
 }
+;

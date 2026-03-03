@@ -36,7 +36,7 @@ use Throwable;
 /**
  * Class SearchController.
  */
-class SearchController extends Controller
+final class SearchController extends Controller
 {
     /**
      * SearchController constructor.

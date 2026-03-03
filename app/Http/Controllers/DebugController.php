@@ -62,7 +62,7 @@ use const PHP_SAPI;
 /**
  * Class DebugController
  */
-class DebugController extends Controller
+final class DebugController extends Controller
 {
     use GetConfigurationData;
 
@@ -195,9 +195,7 @@ class DebugController extends Controller
                 }
                 // no name route:
                 if (null === $route->getName()) {
-                    var_dump($route);
-
-                    exit;
+                    die('Route name is NULL, cannot deal with this.');
                 }
 
                 echo substr($route->uri(), 3);
@@ -236,9 +234,7 @@ class DebugController extends Controller
             }
             // no name route:
             if (null === $route->getName()) {
-                var_dump($route);
-
-                exit;
+                die('Route name is NULL, cannot deal with this.');
             }
             if (!str_contains($route->uri(), '{')) {
                 $return[$route->getName()] = route($route->getName());

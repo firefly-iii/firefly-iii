@@ -36,7 +36,7 @@ use Throwable;
 /**
  * Class BillController
  */
-class BillController extends Controller
+final class BillController extends Controller
 {
     /**
      * @return mixed|string

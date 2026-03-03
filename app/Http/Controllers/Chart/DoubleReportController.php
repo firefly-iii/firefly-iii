@@ -38,7 +38,7 @@ use Illuminate\Support\Collection;
 /**
  * Class DoubleReportController
  */
-class DoubleReportController extends Controller
+final class DoubleReportController extends Controller
 {
     /** @var GeneratorInterface Chart generation methods. */
     private $generator;

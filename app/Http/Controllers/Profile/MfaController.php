@@ -58,7 +58,7 @@ use Psr\Container\NotFoundExceptionInterface;
  * Page 3 (GET): Confirm 2FA status and show recovery codes.
  *        Same page as page 1, but when secret is present.
  */
-class MfaController extends Controller
+final class MfaController extends Controller
 {
     protected bool $internalAuth;
 

@@ -38,7 +38,7 @@ use Illuminate\View\View;
 /**
  * Class AttachmentController.
  */
-class AttachmentController extends Controller
+final class AttachmentController extends Controller
 {
     private AttachmentRepositoryInterface $repository;
 

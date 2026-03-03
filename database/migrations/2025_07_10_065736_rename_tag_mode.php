@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 /*
  * 2025_07_10_065736_rename_tag_mode.php
  * Copyright (c) 2025 james@firefly-iii.org

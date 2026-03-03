@@ -34,7 +34,7 @@ use Throwable;
 /**
  * Class RuleController
  */
-class RuleController extends Controller
+final class RuleController extends Controller
 {
     /**
      * Render HTML form for rule action.

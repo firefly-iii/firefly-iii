@@ -58,7 +58,7 @@ use Illuminate\View\View;
  *
  * TODO when converting a split transfer, all sources and destinations must be the same.
  */
-class ConvertController extends Controller
+final class ConvertController extends Controller
 {
     use ModelInformation;
 

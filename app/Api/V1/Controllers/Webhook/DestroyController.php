@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class DestroyController
  */
-class DestroyController extends Controller
+final class DestroyController extends Controller
 {
     private WebhookRepositoryInterface $repository;
 

@@ -33,7 +33,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class DestroyController
  */
-class DestroyController extends Controller
+final class DestroyController extends Controller
 {
     private BillRepositoryInterface $repository;
 

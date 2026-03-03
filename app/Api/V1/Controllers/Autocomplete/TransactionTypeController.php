@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class TransactionTypeController
  */
-class TransactionTypeController extends Controller
+final class TransactionTypeController extends Controller
 {
     private TransactionTypeRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

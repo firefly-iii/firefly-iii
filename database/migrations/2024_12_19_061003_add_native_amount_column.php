@@ -1,5 +1,4 @@
 <?php
-
 /*
  * 2024_12_19_061003_add_native_amount_column.php
  * Copyright (c) 2025 james@firefly-iii.org.
@@ -26,7 +25,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class() extends Migration {
+return new class extends Migration {
     private array $tables = [
         // !!! this array is also in PreferencesEventHandler + RecalculateNativeAmountsCommand
         'accounts' => ['native_virtual_balance'], // works.

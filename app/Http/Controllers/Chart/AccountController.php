@@ -52,7 +52,7 @@ use function Safe\json_encode;
 /**
  * Class AccountController.
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use AugumentData;
     use ChartGeneration;

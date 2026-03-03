@@ -41,7 +41,7 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class StoreController extends Controller
+final class StoreController extends Controller
 {
     use ValidatesUserGroupTrait;
 

@@ -45,7 +45,7 @@ use Throwable;
 /**
  * Class SelectController.
  */
-class SelectController extends Controller
+final class SelectController extends Controller
 {
     use RuleManagement;
 

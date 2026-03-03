@@ -43,7 +43,7 @@ use Throwable;
 /**
  * Class CategoryController.
  */
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     use BasicDataSupport;
 

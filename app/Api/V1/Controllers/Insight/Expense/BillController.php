@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BillController
  */
-class BillController extends Controller
+final class BillController extends Controller
 {
     private BillRepositoryInterface $repository;
 

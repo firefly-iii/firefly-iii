@@ -48,7 +48,7 @@ use Illuminate\View\View;
 /**
  * Class ReconcileController.
  */
-class ReconcileController extends Controller
+final class ReconcileController extends Controller
 {
     private AccountRepositoryInterface $accountRepos;
     private JournalRepositoryInterface $repository;

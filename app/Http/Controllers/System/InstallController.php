@@ -45,7 +45,7 @@ use function Safe\file_put_contents;
 /**
  * Class InstallController
  */
-class InstallController extends Controller
+final class InstallController extends Controller
 {
     use GetConfigurationData;
 

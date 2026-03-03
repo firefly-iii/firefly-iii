@@ -28,7 +28,7 @@ use Illuminate\Database\Migrations\Migration;
  *
  * @codeCoverageIgnore
  */
-class ChangesFor3101 extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -42,3 +42,4 @@ class ChangesFor3101 extends Migration
      */
     public function up(): void {}
 }
+    ;

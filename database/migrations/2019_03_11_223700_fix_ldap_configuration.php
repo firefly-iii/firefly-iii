@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class FixLdapConfiguration extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -74,3 +74,4 @@ class FixLdapConfiguration extends Migration
         }
     }
 }
+    ;

@@ -31,7 +31,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class ChangesForV450 extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -106,3 +106,4 @@ class ChangesForV450 extends Migration
         }
     }
 }
+    ;

@@ -39,7 +39,7 @@ use Illuminate\View\View;
 /**
  * Class LinkController.
  */
-class LinkController extends Controller
+final class LinkController extends Controller
 {
     private LinkTypeRepositoryInterface $repository;
 

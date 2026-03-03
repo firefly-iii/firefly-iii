@@ -38,7 +38,7 @@ use Illuminate\Routing\Redirector;
 /**
  * Class EditController
  */
-class EditController extends Controller
+final class EditController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
 

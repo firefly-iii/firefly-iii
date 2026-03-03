@@ -50,7 +50,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BasicController
  */
-class BasicController extends Controller
+final class BasicController extends Controller
 {
     private AvailableBudgetRepositoryInterface $abRepository;
     private AccountRepositoryInterface $accountRepository;

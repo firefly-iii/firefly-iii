@@ -31,7 +31,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Log;
 
-class EditController extends Controller
+final class EditController extends Controller
 {
     /**
      * @return Application|Factory|\Illuminate\Contracts\Foundation\Application|View

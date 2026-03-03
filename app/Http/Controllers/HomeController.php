@@ -43,7 +43,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class HomeController.
  */
-class HomeController extends Controller
+final class HomeController extends Controller
 {
     /**
      * HomeController constructor.

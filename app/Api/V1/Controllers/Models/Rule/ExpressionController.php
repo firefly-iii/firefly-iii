@@ -31,7 +31,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class ExpressionController
  */
-class ExpressionController extends Controller
+final class ExpressionController extends Controller
 {
     /**
      * This endpoint is documented at:

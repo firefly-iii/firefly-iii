@@ -37,7 +37,7 @@ use Illuminate\View\View;
 /**
  * Class DeleteController
  */
-class DeleteController extends Controller
+final class DeleteController extends Controller
 {
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;

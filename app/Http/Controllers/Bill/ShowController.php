@@ -52,7 +52,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+final class ShowController extends Controller
 {
     private BillRepositoryInterface $repository;
 

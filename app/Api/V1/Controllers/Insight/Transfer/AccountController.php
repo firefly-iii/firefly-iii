@@ -33,7 +33,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class AccountController
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use ApiSupport;
 

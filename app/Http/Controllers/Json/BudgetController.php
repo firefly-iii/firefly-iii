@@ -38,7 +38,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class BudgetController
  */
-class BudgetController extends Controller
+final class BudgetController extends Controller
 {
     use DateCalculation;
 

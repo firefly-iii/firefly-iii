@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class CreateOauthPersonalAccessClientsTable extends Migration
+return new class extends Migration
 {
     /**
      * Reverse the migrations.
@@ -65,3 +65,4 @@ class CreateOauthPersonalAccessClientsTable extends Migration
         }
     }
 }
+    ;

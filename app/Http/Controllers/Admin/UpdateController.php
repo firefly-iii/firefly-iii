@@ -37,7 +37,7 @@ use Illuminate\View\View;
 /**
  * Class HomeController.
  */
-class UpdateController extends Controller
+final class UpdateController extends Controller
 {
     use UpdateTrait;
 

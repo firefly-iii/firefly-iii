@@ -37,7 +37,7 @@ use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     protected CurrencyRepositoryInterface $repository;
     protected UserRepositoryInterface $userRepository;

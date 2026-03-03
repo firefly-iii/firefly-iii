@@ -40,7 +40,7 @@ use Illuminate\Support\Collection;
  *
  * Class CategoryReportController
  */
-class CategoryReportController extends Controller
+final class CategoryReportController extends Controller
 {
     use AugumentData;
     use ResolvesJournalAmountAndCurrency;

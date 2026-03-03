@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class TagController
  */
-class TagController extends Controller
+final class TagController extends Controller
 {
     private TagRepositoryInterface $repository;
 
