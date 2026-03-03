@@ -122,7 +122,7 @@ class ConfigurationController extends Controller
         }
 
         // fallback
-        $data = [
+        $data     = [
             'title'    => $configKey,
             'value'    => config($shortKey),
             'editable' => false,
@@ -142,7 +142,7 @@ class ConfigurationController extends Controller
      */
     public function update(UpdateRequest $request, string $name): JsonResponse
     {
-        $rules = ['value' => 'required'];
+        $rules     = ['value' => 'required'];
         if (!$this->repository->hasRole(auth()->user(), 'owner')) {
             $messages = ['value' => '200005: You need the "owner" role to do this.'];
             Validator::make([], $rules, $messages)->validate();
@@ -184,9 +184,9 @@ class ConfigurationController extends Controller
 
         return [
             'is_demo_site'            => $isDemoSite?->data,
-            'permission_update_check' => null === $updateCheck ? null : (int)$updateCheck->data,
+            'permission_update_check' => null === $updateCheck ? null : (int) $updateCheck->data,
             'single_user_mode'        => $singleUser?->data,
-            'last_update_check'       => null === $lastCheck ? null : (int)$lastCheck->data,
+            'last_update_check'       => null === $lastCheck ? null : (int) $lastCheck->data,
             'enable_exchange_rates'   => $enableExchangeRates?->data,
             'use_running_balance'     => $useRunningBalance?->data,
             'enable_external_map'     => $enableExternalMap?->data,
