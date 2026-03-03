@@ -53,11 +53,6 @@ final class AccountController extends Controller
         AccountSearch::SEARCH_NUMBER,
     ];
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     /**
      * This endpoint is documented at:
      * https://api-docs.firefly-iii.org/?urls.primaryName=2.0.0%20(v1)#/search/searchAccounts

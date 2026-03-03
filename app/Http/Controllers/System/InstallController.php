@@ -67,14 +67,6 @@ final class InstallController extends Controller
     ];
 
     /**
-     * InstallController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Show index.
      *
      * @return Factory|View
