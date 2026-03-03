@@ -47,6 +47,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
+use Spatie\Period\Boundaries;
+use Spatie\Period\Period;
+use Spatie\Period\Precision;
 
 /**
  * Class IndexController
@@ -117,6 +120,10 @@ final class IndexController extends Controller
         $prevLoop         = $this->getPreviousPeriods($start, $range);
         $nextLoop         = $this->getNextPeriods($start, $range);
 
+        // number of days for consistent budgeting.
+        $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
+        $activeDaysLeft   = $this->activeDaysLeft($start, $end); // see method description.
+
         // get all available budgets:
         $availableBudgets = $this->getAllAvailableBudgets($start, $end);
         // get all active budgets:
@@ -133,9 +140,6 @@ final class IndexController extends Controller
             $spent    = $spentArr[$this->primaryCurrency->id]['sum'] ?? '0';
             unset($spentArr);
         }
-        // number of days for consistent budgeting.
-        $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
-        $activeDaysLeft   = $this->activeDaysLeft($start, $end); // see method description.
 
         // get all inactive budgets, and simply list them:
         $inactive         = $this->repository->getInactiveBudgets();
@@ -221,44 +225,68 @@ final class IndexController extends Controller
 
         // complement budget with budget limits in range, and expenses in currency X in range.
         /** @var Budget $current */
-        foreach ($collection as $current) {
-            Log::debug(sprintf('Working on budget #%d ("%s")', $current->id, $current->name));
-            $array                = $current->toArray();
+        foreach ($collection as $budget) {
+            Log::debug(sprintf('Working on budget #%d ("%s")', $budget->id, $budget->name));
+            $array                = $budget->toArray();
             $array['spent']       = [];
-            $array['spent_total'] = [];
             $array['budgeted']    = [];
-            $array['attachments'] = $this->repository->getAttachments($current);
-            $array['auto_budget'] = $this->repository->getAutoBudget($current);
-            $budgetLimits         = $this->blRepository->getBudgetLimits($current, $start, $end);
+            $array['attachments'] = $this->repository->getAttachments($budget);
+            $array['auto_budget'] = $this->repository->getAutoBudget($budget);
+            $budgetLimits         = $this->blRepository->getBudgetLimits($budget, $start, $end);
+            $spentInLimits        = [];
 
             /** @var BudgetLimit $limit */
             foreach ($budgetLimits as $limit) {
                 Log::debug(sprintf('Working on budget limit #%d', $limit->id));
-                $currency            = $limit->transactionCurrency ?? $primaryCurrency;
-                $amount              = Steam::bcround($limit->amount, $currency->decimal_places);
-                $array['budgeted'][] = [
+                // number of days for consistent budgeting.
+                $activeDaysPassed             = $this->activeDaysPassed($limit->start_date, $limit->end_date); // see method description.
+                $activeDaysLeft               = $this->activeDaysLeft($limit->start_date, $limit->end_date); // see method description.
+                $limitPeriod                  = Period::make($limit->start_date, $limit->end_date, precision: Precision::DAY(), boundaries: Boundaries::EXCLUDE_NONE());
+                $inPast                       = $limitPeriod->startsBefore(now()) && $limitPeriod->endsBefore(now());
+                $currency                     = $limit->transactionCurrency ?? $primaryCurrency;
+                $amount                       = Steam::bcround($limit->amount, $currency->decimal_places);
+                $spent                        = $this->opsRepository->sumExpenses($limit->start_date, $limit->end_date, null, new Collection()->push($budget), $currency);
+                $spentAmount                  = $spent[$currency->id]['sum'] ?? '0';
+                $array['budgeted'][]          = [
                     'id'                      => $limit->id,
                     'amount'                  => $amount,
                     'notes'                   => $this->blRepository->getNoteText($limit),
                     'start_date'              => $limit->start_date->isoFormat($this->monthAndDayFormat),
                     'end_date'                => $limit->end_date->isoFormat($this->monthAndDayFormat),
                     'in_range'                => $limit->start_date->isSameDay($start) && $limit->end_date->isSameDay($end),
+                    'in_past'                 => $inPast,
                     'total_days'              => $limit->start_date->diffInDays($limit->end_date) + 1,
                     'currency_id'             => $currency->id,
                     'currency_symbol'         => $currency->symbol,
                     'currency_name'           => $currency->name,
                     'currency_decimal_places' => $currency->decimal_places,
+                    'spent'                   => $spentAmount,
+                    'left'                    => bcadd($amount, $spentAmount),
+                    'active_days_passed'      => $activeDaysPassed,
+                    'active_days_left'        => $activeDaysLeft,
                 ];
+                $spentInLimits[$currency->id] = array_key_exists($currency->id, $spentInLimits)
+                    ? bcadd($spentInLimits[$currency->id], $spentAmount)
+                    : $spentAmount;
                 Log::debug(sprintf('The amount budgeted for budget limit #%d is %s %s', $limit->id, $currency->code, $amount));
+                Log::debug(sprintf('spentInLimits[%s] is now %s', $currency->code, $spentInLimits[$currency->id]));
             }
-
             // #10463
+            Log::debug('Looping currencies');
 
             /** @var TransactionCurrency $currency */
             foreach ($currencies as $currency) {
-                $spentArr = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($current), $currency);
+                $spentInLimits[$currency->id] = array_key_exists($currency->id, $spentInLimits) ? $spentInLimits[$currency->id] : '0';
+                $spentArr                     = $this->opsRepository->sumExpenses($start, $end, null, new Collection()->push($budget), $currency);
+
+                Log::debug(sprintf('Working on currency %s, spentInLimits is %s', $currency->code, $spentInLimits[$currency->id]));
+
                 if (array_key_exists($currency->id, $spentArr) && array_key_exists('sum', $spentArr[$currency->id])) {
                     $array['spent'][$currency->id]['spent']                   = $spentArr[$currency->id]['sum'];
+                    $array['spent'][$currency->id]['spent_outside']           = bcmul(
+                        bcsub($spentInLimits[$currency->id], $spentArr[$currency->id]['sum']),
+                        '-1'
+                    );
                     $array['spent'][$currency->id]['currency_id']             = $currency->id;
                     $array['spent'][$currency->id]['currency_symbol']         = $currency->symbol;
                     $array['spent'][$currency->id]['currency_decimal_places'] = $currency->decimal_places;

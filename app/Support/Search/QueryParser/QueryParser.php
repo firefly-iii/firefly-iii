@@ -145,7 +145,7 @@ class QueryParser implements QueryParserInterface
                         $skipNext = true;
                     }
                     if ('' !== $tokenUnderConstruction && !$skipNext) { // @phpstan-ignore-line
-                        Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
+                        // Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
                         $fieldName              = $tokenUnderConstruction;
                         $tokenUnderConstruction = '';

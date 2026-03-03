@@ -38,6 +38,7 @@ use FireflyIII\TransactionRules\Factory\ActionFactory;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Override;
 
 /**
  * Class SearchRuleEngine
@@ -45,6 +46,7 @@ use Illuminate\Support\Facades\Log;
 class SearchRuleEngine implements RuleEngineInterface
 {
     private readonly Collection $groups;
+
     private array $operators       = [];
     // always collect the triggers from the database, unless indicated otherwise.
     private bool  $refreshTriggers = true;
@@ -131,6 +133,21 @@ class SearchRuleEngine implements RuleEngineInterface
     public function getResults(): int
     {
         return count($this->resultCount);
+    }
+
+    #[Override]
+    public function removeOperator(string $type): void
+    {
+        $new             = [];
+        foreach ($this->operators as $operator) {
+            if ($type === $operator['type']) {
+                Log::debug(sprintf('Removing operator "%s"', $type));
+
+                continue;
+            }
+            $new[] = $operator;
+        }
+        $this->operators = $new;
     }
 
     public function setRefreshTriggers(bool $refreshTriggers): void
@@ -331,6 +348,7 @@ class SearchRuleEngine implements RuleEngineInterface
         $searchEngine->setLimit(31337);
         $searchEngine->setDate($date);
         Log::debug('Search array', $searchArray);
+
         foreach ($searchArray as $type => $searches) {
             foreach ($searches as $value) {
                 $query = sprintf('%s:%s', $type, $value);
@@ -356,15 +374,7 @@ class SearchRuleEngine implements RuleEngineInterface
         }
         if (!$group->relationLoaded('rules')) {
             Log::debug('Group rules have NOT been pre-loaded, load them NOW.');
-            $rules = $group
-                ->rules()
-                ->orderBy('rules.order', 'ASC')
-                //                         ->leftJoin('rule_triggers', 'rules.id', '=', 'rule_triggers.rule_id')
-                //                         ->where('rule_triggers.trigger_type', 'user_action')
-                //                         ->where('rule_triggers.trigger_value', 'store-journal')
-                ->where('rules.active', true)
-                ->get(['rules.*'])
-            ;
+            $rules = $group->rules()->orderBy('rules.order', 'ASC')->where('rules.active', true)->get(['rules.*']);
         }
         Log::debug(sprintf('Going to fire group #%d with %d rule(s)', $group->id, $rules->count()));
 
@@ -455,6 +465,10 @@ class SearchRuleEngine implements RuleEngineInterface
         $dateTrigger    = false;
         foreach ($array as $triggerName => $values) {
             if ('journal_id' === $triggerName && is_array($values) && 1 === count($values)) {
+                Log::debug('Found a journal_id trigger with 1 journal, true.');
+                $journalTrigger = true;
+            }
+            if ('journal_id' === $triggerName && is_string($values) && !str_contains($values, ',')) {
                 Log::debug('Found a journal_id trigger with 1 journal, true.');
                 $journalTrigger = true;
             }

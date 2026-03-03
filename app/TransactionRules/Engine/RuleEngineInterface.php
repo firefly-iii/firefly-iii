@@ -52,6 +52,8 @@ interface RuleEngineInterface
      */
     public function getResults(): int;
 
+    public function removeOperator(string $type): void;
+
     public function setRefreshTriggers(bool $refreshTriggers): void;
 
     /**

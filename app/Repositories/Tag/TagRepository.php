@@ -135,6 +135,12 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         });
     }
 
+    #[Override]
+    public function getJournalIds(Tag $tag): array
+    {
+        return $tag->transactionJournals->pluck('id')->toArray();
+    }
+
     public function getLocation(Tag $tag): ?Location
     {
         /** @var null|Location */

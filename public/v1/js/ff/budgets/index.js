@@ -100,7 +100,7 @@ function updateBudgetedAmount(e) {
             input.data('limit', data.id);
             // update amount left.
             $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted);
-            if (data.left_per_day > 0) {
+            if (data.left_per_day > 0 && !data.in_past) {
                 $('.left_span[data-limit="0"][data-id="' + budgetId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
             }
             // update budgeted amount
@@ -117,7 +117,7 @@ function updateBudgetedAmount(e) {
             input.prop('disabled', false);
             input.data('limit', data.id);
             $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted);
-            if (data.left_per_day > 0) {
+            if (data.left_per_day > 0 && !data.in_past) {
                 $('.left_span[data-limit="' + budgetLimitId + '"]').html(data.left_formatted + '(' + data.left_per_day_formatted + ')');
             }
             updateTotalBudgetedAmount(data.transaction_currency_id);

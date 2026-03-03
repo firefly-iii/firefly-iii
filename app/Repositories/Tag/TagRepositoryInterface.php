@@ -71,6 +71,8 @@ interface TagRepositoryInterface
 
     public function getAttachments(Tag $tag): Collection;
 
+    public function getJournalIds(Tag $tag): array;
+
     /**
      * Return location, or NULL.
      */

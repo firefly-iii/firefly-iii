@@ -51,7 +51,7 @@ class UpdatesAccountInformation implements ShouldQueue
 
     private function correctRuleActions(Account $account, array $oldData, Rule $rule): void
     {
-        $fields = ['set_source_account', 'set_destination_account'];
+        $fields = ['set_source_account', 'set_destination_account', 'convert_withdrawal', 'convert_deposit', 'convert_transfer'];
 
         Log::debug(sprintf('Check if rule #%d actions reference account #%d "%s"', $rule->id, $account->id, $account->name));
         $fixed  = 0;

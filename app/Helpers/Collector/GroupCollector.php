@@ -603,7 +603,7 @@ class GroupCollector implements GroupCollectorInterface
     public function setSearchWords(array $array): GroupCollectorInterface
     {
         if (0 === count($array)) {
-            Log::debug('No words in array');
+            // Log::debug('No words in array');
 
             return $this;
         }
@@ -778,9 +778,10 @@ class GroupCollector implements GroupCollectorInterface
     {
         $newArray = $newJournal->toArray();
         if (array_key_exists('attachment_id', $newArray)) {
-            $attachmentId                                  = (int) $newJournal['attachment_id'];
-
-            $existingJournal['attachments'][$attachmentId] = ['id' => $attachmentId];
+            $attachmentId = (int) $newJournal['attachment_id'];
+            if (0 !== $attachmentId) {
+                $existingJournal['attachments'][$attachmentId] = ['id' => $attachmentId];
+            }
         }
 
         return $existingJournal;

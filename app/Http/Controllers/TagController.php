@@ -246,12 +246,17 @@ class TagController extends Controller
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
 
+        // collect transaction journal IDs in repository,
+        // this makes the collector faster and more accurate.
+        $journalIds   = $this->repository->getJournalIds($tag);
+
         $collector
             ->setRange($start, $end)
             ->setLimit($pageSize)
             ->setPage($page)
+            ->setJournalIds($journalIds)
             ->withAccountInformation()
-            ->setTag($tag)
+            // ->setTag($tag)
             ->withBudgetInformation()
             ->withCategoryInformation()
             ->withAttachmentInformation()
@@ -296,6 +301,10 @@ class TagController extends Controller
         $path         = route('tags.show', [$tag->id, 'all']);
         $location     = $this->repository->getLocation($tag);
 
+        // collect transaction journal IDs in repository,
+        // this makes the collector faster and more accurate.
+        $journalIds   = $this->repository->getJournalIds($tag);
+
         /** @var GroupCollectorInterface $collector */
         $collector    = app(GroupCollectorInterface::class);
         $collector
@@ -303,7 +312,7 @@ class TagController extends Controller
             ->setLimit($pageSize)
             ->setPage($page)
             ->withAccountInformation()
-            ->setTag($tag)
+            ->setJournalIds($journalIds)
             ->withBudgetInformation()
             ->withCategoryInformation()
             ->withAttachmentInformation()
