@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Config;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -37,7 +36,7 @@ class Rule extends AbstractExtension
     {
         return new TwigFunction('allRuleActions', static function (): array {
             // array of valid values for actions
-            $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
+            $ruleActions     = array_keys(config('firefly.rule-actions'));
             $possibleActions = [];
             foreach ($ruleActions as $key) {
                 $possibleActions[$key] = (string) trans('firefly.rule_action_'.$key.'_choice');

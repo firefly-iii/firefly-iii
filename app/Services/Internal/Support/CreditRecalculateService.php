@@ -120,26 +120,6 @@ class CreditRecalculateService
         }
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
-    {
-        /** @var null|Transaction $transaction */
-        $transaction  = $journal->transactions()->where('amount', $direction, '0')->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
-        }
-
-        /** @var null|Account $foundAccount */
-        $foundAccount = $transaction->account;
-        if (null === $foundAccount) {
-            throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));
-        }
-
-        return $foundAccount;
-    }
-
     private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
     {
         $usedAmount = $transaction->amount;

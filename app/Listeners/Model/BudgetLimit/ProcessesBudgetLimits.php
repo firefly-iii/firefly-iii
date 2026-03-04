@@ -35,6 +35,7 @@ use FireflyIII\Support\Models\AvailableBudgetCalculator;
 use FireflyIII\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class ProcessesBudgetLimits implements ShouldQueue
 {

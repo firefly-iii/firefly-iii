@@ -398,7 +398,7 @@ class General extends AbstractExtension
         });
     }
 
-    private function fireflyIIIConfig()
+    private function fireflyIIIConfig(): TwigFunction
     {
         return new TwigFunction('fireflyiiiconfig', static fn (string $string, mixed $default): mixed => FireflyConfig::get($string, $default)->data);
     }

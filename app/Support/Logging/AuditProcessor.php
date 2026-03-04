@@ -36,7 +36,7 @@ class AuditProcessor
         if (auth()->check()) {
             $message = sprintf(
                 'AUDIT: %s (%s (%s) -> %s:%s)',
-                $record['message'], // @phpstan-ignore-line
+                $record['message'],
                 app('request')->ip(),
                 auth()->user()->email,
                 request()->method(),
@@ -48,7 +48,7 @@ class AuditProcessor
 
         $message = sprintf(
             'AUDIT: %s (%s -> %s:%s)',
-            $record['message'], // @phpstan-ignore-line
+            $record['message'],
             app('request')->ip(),
             request()->method(),
             request()->url()

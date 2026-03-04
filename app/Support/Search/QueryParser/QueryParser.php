@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Search\QueryParser;
 
 
 use SensitiveParameter;
+use function Safe\preg_split;
 
 /**
  * Single-pass parser that processes query strings into structured nodes.
@@ -144,7 +145,7 @@ class QueryParser implements QueryParserInterface
                         $tokenUnderConstruction .= $char;
                         $skipNext = true;
                     }
-                    if ('' !== $tokenUnderConstruction && !$skipNext) { // @phpstan-ignore-line
+                    if ('' !== $tokenUnderConstruction && !$skipNext) {
                         // Log::debug(sprintf('Turns out that "%s" is a field name. Reset the token.', $tokenUnderConstruction));
                         // If we meet a colon with a left-hand side string, we know we're in a field and are about to set up the value
                         $fieldName              = $tokenUnderConstruction;
