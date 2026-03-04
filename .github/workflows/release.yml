@@ -174,22 +174,24 @@ jobs:
         uses: nhedger/setup-mago@v1
       - name: Run CI
         run: |
+          cp .env.example .env
           # install all packages etc.
           rm -rf vendor composer.lock
-          composer update --no-scripts --no-plugins -q
+          composer update --no-scripts -q
 
           # format code.
           echo "Will now run Mago Format"
-          mago format || true
+          mago format
           sudo chown -R runner:docker resources/lang
           echo "Will now run PHPCS"
-          .ci/phpcs.sh || true
+          .ci/phpcs.sh
 
           # lint and check
           echo "Will now run Mago Lint"
-          mago lint || true
+          mago lint
           echo "Will now run PHPstan"
-          .ci/phpstan.sh || true
+          .ci/phpstan.sh
+          rm .env
       - name: Calculate variables
         run: |
 
