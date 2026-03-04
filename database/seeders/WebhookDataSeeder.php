@@ -31,6 +31,7 @@ use FireflyIII\Models\WebhookDelivery as WebhookDeliveryModel;
 use FireflyIII\Models\WebhookResponse as WebhookResponseModel;
 use FireflyIII\Models\WebhookTrigger as WebhookTriggerModel;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class WebhookDataSeeder extends Seeder
 {
@@ -44,7 +45,7 @@ class WebhookDataSeeder extends Seeder
                 try {
                     WebhookTriggerModel::create(['key'   => $trigger->value, 'title' => $trigger->name]);
                 } catch (\PDOException $e) {
-                    // @ignoreException
+                    Log::debug(sprintf('Webhook trigger with name "%s" already exists and that is OK.', $trigger->name));
                 }
             }
         }
@@ -53,7 +54,7 @@ class WebhookDataSeeder extends Seeder
                 try {
                     WebhookResponseModel::create(['key'   => $response->value, 'title' => $response->name]);
                 } catch (\PDOException $e) {
-                    // @ignoreException
+                    Log::debug(sprintf('Webhook response with name "%s" already exists and that is OK.', $response->name));
                 }
             }
         }
@@ -62,7 +63,7 @@ class WebhookDataSeeder extends Seeder
                 try {
                     WebhookDeliveryModel::create(['key'   => $delivery->value, 'title' => $delivery->name]);
                 } catch (\PDOException $e) {
-                    // @ignoreException
+                    Log::debug(sprintf('Webhook delivery type with name "%s" already exists and that is OK.', $delivery->name));
                 }
             }
         }

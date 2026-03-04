@@ -25,6 +25,7 @@ namespace Database\Seeders;
 
 use FireflyIII\Models\LinkType;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use PDOException;
 
 /**
@@ -44,8 +45,8 @@ class LinkTypeSeeder extends Seeder
             if (null === LinkType::where('name', $type['name'])->first()) {
                 try {
                     LinkType::create($type);
-                } catch (PDOException $e) {
-                    // @ignoreException
+                } catch (PDOException) {
+                    Log::debug(sprintf('Link type with name "%s" already exists and that is OK.', $type['name']));
                 }
             }
         }

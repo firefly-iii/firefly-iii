@@ -351,7 +351,7 @@ trait ConvertsDataTypes
         try {
             $carbon = new Carbon($string, config('app.timezone'));
         } catch (InvalidFormatException) {
-            // @ignoreException
+            Log::debug(sprintf('"%s" is not a valid date, but that is OK.', $string));
         }
         if (!$carbon instanceof Carbon) {
             Log::debug(sprintf('Invalid date: %s', $string));

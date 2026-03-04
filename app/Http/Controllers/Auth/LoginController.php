@@ -274,8 +274,8 @@ final class LoginController extends Controller
     {
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
-
-        if ($response = $this->authenticated($request, $this->guard()->user())) {
+        $response = $this->authenticated($request, $this->guard()->user());
+        if ($response) {
             return $response;
         }
         $path = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
