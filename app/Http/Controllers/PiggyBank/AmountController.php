@@ -143,7 +143,7 @@ final class AmountController extends Controller
         /** @var Account $account */
         foreach ($piggyBank->accounts as $account) {
             $amount        = (string) ($amounts[$account->id] ?? '0');
-            if ('' === $amount || 0 === bccomp($amount, '0')) {
+            if ('' === $amount || !is_numeric($amount) || 0 === bccomp($amount, '0')) {
                 continue;
             }
             if (-1 === bccomp($amount, '0')) {
