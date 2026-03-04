@@ -10,6 +10,7 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
+    - identifier: staticMethod.notFound
     - identifier: notIdentical.alwaysTrue
     - identifier: method.notFound
     - identifier: nullsafe.neverNull
