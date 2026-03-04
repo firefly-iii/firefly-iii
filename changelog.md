@@ -12,11 +12,11 @@ This release fixes some sloppy coding on my part, but good news everyone! A new 
 - Note about the EU origins of Firefly III.
 
 ### Changed
-- #11862
+- [PR 11862](https://github.com/firefly-iii/firefly-iii/pull/11862) (Return currency info for tag journals) reported by @dakennguyen
 - Expand code linting and checks.
 
 ### Fixed
-- #11866
+- [Issue 11866](https://github.com/firefly-iii/firefly-iii/issues/11866) (ReflectionException on Transaction\ListRequest) reported by @brot
 
 ## 6.5.2 - 2026-03-04
 
