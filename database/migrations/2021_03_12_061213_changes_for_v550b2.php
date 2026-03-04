@@ -30,8 +30,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class ChangesForV550b2
  */
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -76,5 +75,4 @@ return new class extends Migration
             }
         }
     }
-}
-    ;
+};

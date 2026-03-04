@@ -30,6 +30,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use Override;
+
 use function Safe\file_get_contents;
 use function Safe\json_decode;
 

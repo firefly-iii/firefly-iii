@@ -46,13 +46,7 @@ class AuditProcessor
             return new LogRecord($record->datetime, $record->channel, $record->level, $message, $record->context, $record->extra, $record->formatted);
         }
 
-        $message = sprintf(
-            'AUDIT: %s (%s -> %s:%s)',
-            $record['message'],
-            app('request')->ip(),
-            request()->method(),
-            request()->url()
-        );
+        $message = sprintf('AUDIT: %s (%s -> %s:%s)', $record['message'], app('request')->ip(), request()->method(), request()->url());
 
         return new LogRecord($record->datetime, $record->channel, $record->level, $message, $record->context, $record->extra, $record->formatted);
     }

@@ -40,7 +40,7 @@ class NotifiesUserAboutNewIpAddress implements ShouldQueue
             return; // do not email demo user.
         }
 
-        /** @var array|null $list */
+        /** @var null|array $list */
         $list = Preferences::getForUser($user, 'login_ip_history', [])->data;
         if (!is_array($list)) {
             $list = [];

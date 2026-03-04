@@ -195,7 +195,7 @@ final class DebugController extends Controller
                 }
                 // no name route:
                 if (null === $route->getName()) {
-                    die('Route name is NULL, cannot deal with this.');
+                    exit('Route name is NULL, cannot deal with this.');
                 }
 
                 echo substr($route->uri(), 3);
@@ -234,7 +234,7 @@ final class DebugController extends Controller
             }
             // no name route:
             if (null === $route->getName()) {
-                die('Route name is NULL, cannot deal with this.');
+                exit('Route name is NULL, cannot deal with this.');
             }
             if (!str_contains($route->uri(), '{')) {
                 $return[$route->getName()] = route($route->getName());

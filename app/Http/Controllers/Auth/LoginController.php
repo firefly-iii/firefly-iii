@@ -278,7 +278,7 @@ final class LoginController extends Controller
         if ($response) {
             return $response;
         }
-        $path = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
+        $path     = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
         Log::debug(sprintf('SafeURL is %s', $path));
 
         return $request->wantsJson() ? new JsonResponse([], 204) : redirect()->to($path);
