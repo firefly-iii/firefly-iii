@@ -180,16 +180,16 @@ jobs:
 
           # format code.
           echo "Will now run Mago Format"
-          mago format || true
+          mago format
           sudo chown -R runner:docker resources/lang
           echo "Will now run PHPCS"
-          .ci/phpcs.sh || true
+          .ci/phpcs.sh
 
           # lint and check
           echo "Will now run Mago Lint"
-          mago lint || true
+          mago lint
           echo "Will now run PHPstan"
-          .ci/phpstan.sh || true
+          .ci/phpstan.sh
       - name: Calculate variables
         run: |
 
