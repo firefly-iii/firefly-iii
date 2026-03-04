@@ -176,7 +176,7 @@ jobs:
         run: |
           # install all packages etc.
           rm -rf vendor composer.lock
-          composer update --no-scripts --no-plugins -q
+          composer update --no-scripts -q
 
           # format code.
           echo "Will now run Mago Format"
