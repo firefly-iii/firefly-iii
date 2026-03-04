@@ -33,7 +33,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+final class ShowController extends Controller
 {
     public const string RESOURCE_KEY = 'user_groups';
 

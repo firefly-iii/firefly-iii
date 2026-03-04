@@ -32,8 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class CreateOauthRefreshTokensTable extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -65,4 +64,4 @@ class CreateOauthRefreshTokensTable extends Migration
             }
         }
     }
-}
+};

@@ -36,7 +36,7 @@ use Illuminate\View\View;
 /**
  * Class CreateController
  */
-class CreateController extends Controller
+final class CreateController extends Controller
 {
     /** @var RuleGroupRepositoryInterface */
     private $repository;

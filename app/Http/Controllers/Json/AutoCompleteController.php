@@ -28,4 +28,4 @@ use FireflyIII\Http\Controllers\Controller;
 /**
  * Class AutoCompleteController.
  */
-class AutoCompleteController extends Controller {}
+final class AutoCompleteController extends Controller {}

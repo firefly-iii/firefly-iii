@@ -31,8 +31,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class FixNullables extends Migration
-{
+return new class extends Migration {
     private const COLUMN_ALREADY_EXISTS = 'If this table exists already (see the error message), this is not a problem. Other errors? Please open a discussion on GitHub.';
     private const TABLE_UPDATE_ERROR    = 'Could not update table "%s": %s';
 
@@ -70,4 +69,4 @@ class FixNullables extends Migration
             }
         }
     }
-}
+};

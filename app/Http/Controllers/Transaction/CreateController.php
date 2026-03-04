@@ -44,7 +44,7 @@ use function Safe\parse_url;
 /**
  * Class CreateController
  */
-class CreateController extends Controller
+final class CreateController extends Controller
 {
     private TransactionGroupRepositoryInterface $repository;
 

@@ -34,7 +34,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-class NotificationController extends Controller
+final class NotificationController extends Controller
 {
     public function index(): View
     {

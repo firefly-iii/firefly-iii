@@ -35,7 +35,7 @@ use League\Fractal\Resource\Item;
 /**
  * Class StoreController
  */
-class StoreController extends Controller
+final class StoreController extends Controller
 {
     private RuleRepositoryInterface $ruleRepository;
 

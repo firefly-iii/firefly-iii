@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class RecurrenceController
  */
-class RecurrenceController extends Controller
+final class RecurrenceController extends Controller
 {
     private RecurringRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_RECURRING];

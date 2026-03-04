@@ -38,7 +38,7 @@ use Illuminate\Http\JsonResponse;
 /**
  * Class PiggyBankController.
  */
-class PiggyBankController extends Controller
+final class PiggyBankController extends Controller
 {
     use DateCalculation;
 

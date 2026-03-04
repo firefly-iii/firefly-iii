@@ -42,7 +42,7 @@ use Throwable;
 /**
  * Class BudgetController.
  */
-class BudgetController extends Controller
+final class BudgetController extends Controller
 {
     use BasicDataSupport;
 

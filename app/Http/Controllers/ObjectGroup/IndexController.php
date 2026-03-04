@@ -36,7 +36,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IndexController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     private ObjectGroupRepositoryInterface $repository;
 

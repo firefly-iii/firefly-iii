@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CronController
  */
-class CronController extends Controller
+final class CronController extends Controller
 {
     use CronRunner;
 

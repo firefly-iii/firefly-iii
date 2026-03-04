@@ -37,7 +37,7 @@ use Illuminate\Http\Request;
 /**
  * Class CurrencyController
  */
-class CurrencyController extends Controller
+final class CurrencyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

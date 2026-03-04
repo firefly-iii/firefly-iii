@@ -41,7 +41,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class IndexController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     use PeriodOverview;
 

@@ -40,7 +40,7 @@ use League\Fractal\Resource\Item;
 /**
  * Class PreferencesController
  */
-class PreferencesController extends Controller
+final class PreferencesController extends Controller
 {
     public const string DATE_FORMAT  = 'Y-m-d';
     public const string RESOURCE_KEY = 'preferences';

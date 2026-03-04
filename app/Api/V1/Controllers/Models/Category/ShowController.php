@@ -39,7 +39,7 @@ use League\Fractal\Resource\Item;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+final class ShowController extends Controller
 {
     private CategoryRepositoryInterface $repository;
 

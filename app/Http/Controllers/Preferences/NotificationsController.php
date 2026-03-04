@@ -26,4 +26,4 @@ namespace FireflyIII\Http\Controllers\Preferences;
 
 use FireflyIII\Http\Controllers\Controller;
 
-class NotificationsController extends Controller {}
+final class NotificationsController extends Controller {}

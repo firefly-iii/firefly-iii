@@ -357,7 +357,7 @@ class Steam
             $primary = Amount::getPrimaryCurrencyByUserGroup($account->user->userGroup);
         }
         // account balance thing.
-        $currencyPresent   = isset($account->meta) && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];
+        $currencyPresent   = property_exists($account, 'meta') && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];
         if ($currencyPresent) {
             $accountCurrency = $account->meta['currency'];
         }
@@ -846,7 +846,7 @@ class Steam
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId       = $account->id;
-            $currencyPresent = isset($account->meta) && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];
+            $currencyPresent = property_exists($account, 'meta') && array_key_exists('currency', $account->meta) && null !== $account->meta['currency'];
             if ($currencyPresent) {
                 $currencyId                    = $account->meta['currency']->id;
                 $currencies[$currencyId] ??= $account->meta['currency'];

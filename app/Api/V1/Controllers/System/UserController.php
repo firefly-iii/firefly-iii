@@ -41,7 +41,7 @@ use League\Fractal\Resource\Item;
 /**
  * Class UserController.
  */
-class UserController extends Controller
+final class UserController extends Controller
 {
     private UserRepositoryInterface $repository;
 
@@ -82,8 +82,6 @@ class UserController extends Controller
 
         throw new FireflyException('200025: No access to function.');
     }
-
-    public function finishBatch(): JsonResponse {}
 
     /**
      * This endpoint is documented at:

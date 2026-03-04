@@ -39,7 +39,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class IndexController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;

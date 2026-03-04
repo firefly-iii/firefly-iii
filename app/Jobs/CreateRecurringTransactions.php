@@ -215,7 +215,7 @@ class CreateRecurringTransactions implements ShouldQueue
             $single   = [
                 'type'                  => null === $transaction?->transactionType?->type
                     ? strtolower((string) $recurrence->transactionType->type)
-                    : strtolower($transaction->transactionType->type), // @phpstan-ignore-line
+                    : strtolower($transaction->transactionType->type),
                 'date'                  => $date,
                 'user'                  => $recurrence->user,
                 'user_group'            => $recurrence->user->userGroup,

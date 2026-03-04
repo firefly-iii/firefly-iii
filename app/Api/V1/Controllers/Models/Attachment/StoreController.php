@@ -42,7 +42,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class StoreController
  */
-class StoreController extends Controller
+final class StoreController extends Controller
 {
     private AttachmentRepositoryInterface $repository;
 

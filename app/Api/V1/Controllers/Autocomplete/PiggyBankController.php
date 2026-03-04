@@ -38,7 +38,7 @@ use Illuminate\Http\Request;
 /**
  * Class PiggyBankController
  */
-class PiggyBankController extends Controller
+final class PiggyBankController extends Controller
 {
     private AccountRepositoryInterface $accountRepository;
     private PiggyBankRepositoryInterface $piggyRepository;

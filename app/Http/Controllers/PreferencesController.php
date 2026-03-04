@@ -52,7 +52,7 @@ use function Safe\json_decode;
 /**
  * Class PreferencesController.
  */
-class PreferencesController extends Controller
+final class PreferencesController extends Controller
 {
     /**
      * PreferencesController constructor.

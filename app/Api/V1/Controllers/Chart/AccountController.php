@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class AccountController
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use ApiSupport;
     use CleansChartData;

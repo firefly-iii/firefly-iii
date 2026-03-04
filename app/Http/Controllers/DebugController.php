@@ -62,7 +62,7 @@ use const PHP_SAPI;
 /**
  * Class DebugController
  */
-class DebugController extends Controller
+final class DebugController extends Controller
 {
     use GetConfigurationData;
 
@@ -195,9 +195,7 @@ class DebugController extends Controller
                 }
                 // no name route:
                 if (null === $route->getName()) {
-                    var_dump($route);
-
-                    exit;
+                    exit('Route name is NULL, cannot deal with this.');
                 }
 
                 echo substr($route->uri(), 3);
@@ -236,9 +234,7 @@ class DebugController extends Controller
             }
             // no name route:
             if (null === $route->getName()) {
-                var_dump($route);
-
-                exit;
+                exit('Route name is NULL, cannot deal with this.');
             }
             if (!str_contains($route->uri(), '{')) {
                 $return[$route->getName()] = route($route->getName());
@@ -256,7 +252,8 @@ class DebugController extends Controller
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
         foreach ($return as $name => $path) {
-            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name).PHP_EOL;
+            echo sprintf('<a href="%1$s">%2$s</a><br>', $path, $name);
+            echo PHP_EOL;
             ++$count;
             if (0 === ($count % 10)) {
                 echo '<hr>';
@@ -302,7 +299,7 @@ class DebugController extends Controller
         if ($lastTime > 0) {
             $carbon         = Carbon::createFromTimestamp($lastTime);
             $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans(); // @phpstan-ignore-line
+            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
         }
 
         return [

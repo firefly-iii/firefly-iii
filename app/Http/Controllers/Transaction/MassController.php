@@ -51,7 +51,7 @@ use InvalidArgumentException;
 /**
  * Class MassController.
  */
-class MassController extends Controller
+final class MassController extends Controller
 {
     private JournalRepositoryInterface $repository;
 
@@ -180,8 +180,8 @@ class MassController extends Controller
             try {
                 $this->updateJournal($integer, $request);
                 ++$count;
-            } catch (FireflyException) {
-                // @ignoreException
+            } catch (FireflyException $e) {
+                Log::debug(sprintf('Could not update journal #%d: %s', $integer, $e->getMessage()));
             }
         }
 

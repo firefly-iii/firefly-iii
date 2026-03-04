@@ -25,10 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PeriodStatistic;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\PeriodStatistic;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Database\Eloquent\Builder;

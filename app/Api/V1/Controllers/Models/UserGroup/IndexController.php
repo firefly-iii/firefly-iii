@@ -31,7 +31,7 @@ use FireflyIII\Transformers\UserGroupTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     public const string RESOURCE_KEY = 'user_groups';
 

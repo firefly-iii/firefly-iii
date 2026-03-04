@@ -70,6 +70,7 @@ class NotifiesAboutOverdueSubscriptions implements ShouldQueue
 
             return;
         }
+        unset($item);
         foreach ($toBeWarned as $item) {
             /** @var Bill $bill */
             $bill = $item['bill'];

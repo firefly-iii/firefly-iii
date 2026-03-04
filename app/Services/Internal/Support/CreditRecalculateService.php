@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -120,44 +119,6 @@ class CreditRecalculateService
         }
     }
 
-    /**
-     * @throws FireflyException
-     */
-    private function findByJournal(TransactionJournal $journal): void
-    {
-        $source      = $this->getSourceAccount($journal);
-        $destination = $this->getDestinationAccount($journal);
-
-        // destination or source must be liability.
-        $valid       = config('firefly.valid_liabilities');
-        if (in_array($destination->accountType->type, $valid, true)) {
-            $this->work[] = $destination;
-        }
-        if (in_array($source->accountType->type, $valid, true)) {
-            $this->work[] = $source;
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
-    {
-        /** @var null|Transaction $transaction */
-        $transaction  = $journal->transactions()->where('amount', $direction, '0')->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Cannot find "%s"-transaction of journal #%d', $direction, $journal->id));
-        }
-
-        /** @var null|Account $foundAccount */
-        $foundAccount = $transaction->account;
-        if (null === $foundAccount) {
-            throw new FireflyException(sprintf('Cannot find "%s"-account of transaction #%d of journal #%d', $direction, $transaction->id, $journal->id));
-        }
-
-        return $foundAccount;
-    }
-
     private function getAmountToUse(Transaction $transaction, TransactionCurrency $accountCurrency, ?TransactionCurrency $foreignCurrency): string
     {
         $usedAmount = $transaction->amount;
@@ -169,22 +130,6 @@ class CreditRecalculateService
         }
 
         return $usedAmount;
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '>');
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '<');
     }
 
     /**

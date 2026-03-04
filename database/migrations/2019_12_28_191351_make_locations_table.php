@@ -32,8 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class MakeLocationsTable extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -71,4 +70,4 @@ class MakeLocationsTable extends Migration
             }
         }
     }
-}
+};

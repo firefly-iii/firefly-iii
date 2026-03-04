@@ -37,7 +37,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class DestroyController
  */
-class DestroyController extends Controller
+final class DestroyController extends Controller
 {
     private TransactionGroupRepository $groupRepository;
     private JournalRepositoryInterface $repository;

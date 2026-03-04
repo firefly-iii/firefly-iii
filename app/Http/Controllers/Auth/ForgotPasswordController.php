@@ -43,7 +43,7 @@ use function Safe\parse_url;
 /**
  * Class ForgotPasswordController
  */
-class ForgotPasswordController extends Controller
+final class ForgotPasswordController extends Controller
 {
     use SendsPasswordResetEmails;
 

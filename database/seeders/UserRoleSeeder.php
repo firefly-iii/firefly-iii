@@ -27,6 +27,7 @@ namespace Database\Seeders;
 use FireflyIII\Enums\UserRoleEnum;
 use FireflyIII\Models\UserRole;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 use PDOException;
 
 /**
@@ -44,8 +45,8 @@ class UserRoleSeeder extends Seeder
             if (null === UserRole::where('title', $role->value)->first()) {
                 try {
                     UserRole::create(['title' => $role->value]);
-                } catch (PDOException $e) {
-                    // @ignoreException
+                } catch (PDOException) {
+                    Log::debug(sprintf('User role with title "%s" already exists and that is OK', $role->value));
                 }
             }
         }

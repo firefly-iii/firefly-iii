@@ -40,7 +40,7 @@ use Illuminate\View\View;
 /**
  * Class AmountController
  */
-class AmountController extends Controller
+final class AmountController extends Controller
 {
     private PiggyBankRepositoryInterface $piggyRepos;
 

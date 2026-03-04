@@ -40,7 +40,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 /**
  * Class ListController
  */
-class ListController extends Controller
+final class ListController extends Controller
 {
     use TransactionFilter;
 

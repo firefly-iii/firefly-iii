@@ -41,7 +41,7 @@ use Illuminate\View\View;
 /**
  * Class ExecutionController
  */
-class ExecutionController extends Controller
+final class ExecutionController extends Controller
 {
     private readonly AccountRepositoryInterface $repository;
     private readonly RuleGroupRepositoryInterface $ruleGroupRepository;

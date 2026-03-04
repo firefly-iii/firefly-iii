@@ -45,7 +45,7 @@ use Illuminate\View\View;
 /**
  * Class BulkController
  */
-class BulkController extends Controller
+final class BulkController extends Controller
 {
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;

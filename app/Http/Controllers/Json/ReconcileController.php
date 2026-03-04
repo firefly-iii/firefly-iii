@@ -42,7 +42,7 @@ use Throwable;
 /**
  * Class ReconcileController
  */
-class ReconcileController extends Controller
+final class ReconcileController extends Controller
 {
     private AccountRepositoryInterface $accountRepos;
 

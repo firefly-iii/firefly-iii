@@ -44,7 +44,7 @@ use Illuminate\Http\Request;
 /**
  * Class PurgeController
  */
-class PurgeController extends Controller
+final class PurgeController extends Controller
 {
     protected array $acceptedRoles = [UserRoleEnum::FULL];
 

@@ -44,7 +44,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class ReportController.
  */
-class ReportController extends Controller
+final class ReportController extends Controller
 {
     use BasicDataSupport;
     use ChartGeneration;

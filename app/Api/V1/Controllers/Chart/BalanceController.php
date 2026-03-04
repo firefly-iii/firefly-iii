@@ -40,7 +40,7 @@ use Illuminate\Http\Request;
 /**
  * Class BalanceController
  */
-class BalanceController extends Controller
+final class BalanceController extends Controller
 {
     use CleansChartData;
     use CollectsAccountsFromFilter;

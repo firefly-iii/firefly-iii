@@ -38,7 +38,7 @@ use Illuminate\Validation\ValidationException;
 /**
  * Class DestroyController
  */
-class DestroyController extends Controller
+final class DestroyController extends Controller
 {
     private CurrencyRepositoryInterface $repository;
     private UserRepositoryInterface $userRepository;

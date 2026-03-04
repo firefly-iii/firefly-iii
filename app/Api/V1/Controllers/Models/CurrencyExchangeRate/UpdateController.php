@@ -37,7 +37,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class UpdateController extends Controller
+final class UpdateController extends Controller
 {
     use ValidatesUserGroupTrait;
 

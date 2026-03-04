@@ -48,7 +48,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * Class StoreController
  */
-class StoreController extends Controller
+final class StoreController extends Controller
 {
     use TransactionFilter;
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * 2025_08_19_180459_create_webhook_details_tables.php
  * Copyright (c) 2025 james@firefly-iii.org

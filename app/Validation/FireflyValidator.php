@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use Config;
 use ErrorException;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Exceptions\FireflyException;
@@ -890,7 +889,7 @@ class FireflyValidator extends Validator
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
         /** @var null|array $search */
-        $search         = Config::get('firefly.accountTypeByIdentifier.'.$type);
+        $search         = config('firefly.accountTypeByIdentifier.'.$type);
 
         if (null === $search) {
             return false;

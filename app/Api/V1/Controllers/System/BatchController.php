@@ -33,7 +33,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
-class BatchController extends Controller
+final class BatchController extends Controller
 {
     private JournalRepositoryInterface $repository;
 

@@ -46,7 +46,7 @@ use SensitiveParameter;
  * and uses a simple trait to include this behavior. You're free to
  * explore this trait and override any methods you wish to tweak.
  */
-class ResetPasswordController extends Controller
+final class ResetPasswordController extends Controller
 {
     use ResetsPasswords;
 

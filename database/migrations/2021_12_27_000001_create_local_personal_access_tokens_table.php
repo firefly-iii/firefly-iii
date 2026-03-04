@@ -30,8 +30,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class CreateLocalPersonalAccessTokensTable
  */
-class CreateLocalPersonalAccessTokensTable extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -66,4 +65,4 @@ class CreateLocalPersonalAccessTokensTable extends Migration
             }
         }
     }
-}
+};

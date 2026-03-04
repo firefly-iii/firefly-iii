@@ -32,8 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-class ChangesForV4711 extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -72,4 +71,4 @@ class ChangesForV4711 extends Migration
             app('log')->error('If the column or index already exists (see error), this is not an problem. Otherwise, please open a GitHub discussion.');
         }
     }
-}
+};

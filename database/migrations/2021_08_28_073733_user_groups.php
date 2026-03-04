@@ -30,8 +30,7 @@ use Illuminate\Support\Facades\Schema;
 /**
  * Class UserGroups
  */
-class UserGroups extends Migration
-{
+return new class extends Migration {
     private array $tables = [
         'accounts',
         'attachments',
@@ -198,4 +197,4 @@ class UserGroups extends Migration
             }
         }
     }
-}
+};

@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class RuleController
  */
-class RuleController extends Controller
+final class RuleController extends Controller
 {
     private RuleRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_RULES];

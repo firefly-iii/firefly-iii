@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class IntroController.
  */
-class IntroController extends Controller
+final class IntroController extends Controller
 {
     use GetConfigurationData;
 

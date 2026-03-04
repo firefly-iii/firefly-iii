@@ -35,7 +35,7 @@ use League\Fractal\Resource\Item;
  *
  * Class AboutController.
  */
-class AboutController extends Controller
+final class AboutController extends Controller
 {
     /**
      * This endpoint is documented at:

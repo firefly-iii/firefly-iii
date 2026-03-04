@@ -28,8 +28,7 @@ use Illuminate\Database\Migrations\Migration;
  *
  * @codeCoverageIgnore
  */
-class ChangesFor3101 extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -41,4 +40,4 @@ class ChangesFor3101 extends Migration
      * @SuppressWarnings("PHPMD.ShortMethodName")
      */
     public function up(): void {}
-}
+};

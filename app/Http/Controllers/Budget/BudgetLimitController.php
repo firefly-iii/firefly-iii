@@ -53,7 +53,7 @@ use Spatie\Period\Precision;
 /**
  * Class BudgetLimitController
  */
-class BudgetLimitController extends Controller
+final class BudgetLimitController extends Controller
 {
     use DateCalculation;
 

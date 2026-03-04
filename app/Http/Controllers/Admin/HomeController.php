@@ -35,7 +35,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class HomeController.
  */
-class HomeController extends Controller
+final class HomeController extends Controller
 {
     /**
      * ConfigurationController constructor.

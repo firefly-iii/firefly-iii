@@ -45,7 +45,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class BudgetController
  */
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     use CleansChartData;
     use ValidatesUserGroupTrait;

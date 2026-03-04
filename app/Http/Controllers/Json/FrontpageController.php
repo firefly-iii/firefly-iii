@@ -34,7 +34,7 @@ use Throwable;
 /**
  * Class FrontpageController.
  */
-class FrontpageController extends Controller
+final class FrontpageController extends Controller
 {
     /**
      * Piggy bank pie chart.

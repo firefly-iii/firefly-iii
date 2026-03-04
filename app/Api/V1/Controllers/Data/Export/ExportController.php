@@ -38,7 +38,7 @@ use function Safe\date;
 /**
  * Class ExportController
  */
-class ExportController extends Controller
+final class ExportController extends Controller
 {
     private ExportDataGenerator $exporter;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

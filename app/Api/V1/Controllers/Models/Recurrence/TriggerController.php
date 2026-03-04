@@ -41,7 +41,7 @@ use Illuminate\Support\Facades\Log;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 
-class TriggerController extends Controller
+final class TriggerController extends Controller
 {
     private RecurringRepositoryInterface $repository;
 

@@ -35,7 +35,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class PeriodController
  */
-class PeriodController extends Controller
+final class PeriodController extends Controller
 {
     public function total(GenericRequest $request): JsonResponse
     {

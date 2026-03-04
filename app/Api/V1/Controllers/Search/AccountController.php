@@ -41,7 +41,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 /**
  * Class AccountController
  */
-class AccountController extends Controller
+final class AccountController extends Controller
 {
     use AccountFilter;
 
@@ -52,11 +52,6 @@ class AccountController extends Controller
         AccountSearch::SEARCH_IBAN,
         AccountSearch::SEARCH_NUMBER,
     ];
-
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * This endpoint is documented at:

@@ -37,7 +37,7 @@ use Illuminate\Support\Collection;
 /**
  * Class TagReportController
  */
-class TagReportController extends Controller
+final class TagReportController extends Controller
 {
     use AugumentData;
     use ResolvesJournalAmountAndCurrency;

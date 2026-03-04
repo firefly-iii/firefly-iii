@@ -1,6 +1,6 @@
 # Welcome to Mago!
 # For full documentation, see https://mago.carthage.software/tools/overview
-php-version = "8.4.0"
+php-version = "8.5.0"
 
 [source]
 workspace = "."
@@ -26,8 +26,28 @@ excludes = ["app/Providers/AppServiceProvider.php"]  # Additionally excluded fro
 [linter.rules]
 ambiguous-function-call = { enabled = false }
 literal-named-argument = { enabled = false }
-halstead = { effort-threshold = 7000 }
+halstead = { effort-threshold = 7000, enabled = false }
 prefer-early-continue = { enabled = false }
+cyclomatic-complexity = { enabled = false }
+middleware-in-routes = { enabled = false }
+too-many-methods = { enabled = false }
+kan-defect = { enabled = false }
+no-request-all = { enabled = false }
+tagged-todo = { enabled = false }
+too-many-properties = { enabled = false }
+prefer-view-array = { enabled = false }
+assertion-style = { enabled = false }
+no-boolean-flag-parameter = { enabled = false }
+prefer-static-closure = { enabled = false }
+no-literal-password = { enabled = false }
+too-many-enum-cases = { enabled = false }
+tagged-fixme = { enabled = false }
+excessive-parameter-list = { enabled = false }
+no-redundant-math={ enabled = false }
+prefer-first-class-callable={ enabled = false }
+prefer-arrow-function = { enabled = false }
+
+
 
 [analyzer]
 find-unused-definitions = true

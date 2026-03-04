@@ -44,7 +44,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class TwoFactorController.
  */
-class TwoFactorController extends Controller
+final class TwoFactorController extends Controller
 {
     /**
      * What to do if 2FA lost?

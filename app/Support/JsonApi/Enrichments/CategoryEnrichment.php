@@ -32,7 +32,6 @@ use FireflyIII\Repositories\Category\OperationsRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 class CategoryEnrichment implements EnrichmentInterface
 {

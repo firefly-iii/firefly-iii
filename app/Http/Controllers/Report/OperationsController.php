@@ -35,7 +35,7 @@ use Throwable;
 /**
  * Class OperationsController.
  */
-class OperationsController extends Controller
+final class OperationsController extends Controller
 {
     /** @var AccountTaskerInterface Some specific account things. */
     private $tasker;

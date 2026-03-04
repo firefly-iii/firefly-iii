@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class TagController
  */
-class TagController extends Controller
+final class TagController extends Controller
 {
     private TagRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

@@ -45,7 +45,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class IndexController
  */
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     use OrganisesObjectGroups;
 

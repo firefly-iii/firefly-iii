@@ -31,6 +31,9 @@ use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use Override;
 
+use function Safe\file_get_contents;
+use function Safe\json_decode;
+
 class GitHubUpdateRequest implements UpdateRequestInterface
 {
     private string $currentVersion = '1.0.0';
@@ -106,7 +109,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
             return $response;
         }
 
-        return $response;
+        // return $response;
     }
 
     private function filterReleases(array $releases): array

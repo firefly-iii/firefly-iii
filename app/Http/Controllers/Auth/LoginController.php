@@ -59,7 +59,7 @@ use Symfony\Component\HttpFoundation\Response as ResponseAlias;
  * redirecting them to your home screen. The controller uses a trait
  * to conveniently provide its functionality to your applications.
  */
-class LoginController extends Controller
+final class LoginController extends Controller
 {
     use AuthenticatesUsers;
     use ThrottlesLogins;
@@ -274,11 +274,11 @@ class LoginController extends Controller
     {
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
-
-        if ($response = $this->authenticated($request, $this->guard()->user())) {
+        $response = $this->authenticated($request, $this->guard()->user());
+        if ($response) {
             return $response;
         }
-        $path = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
+        $path     = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));
         Log::debug(sprintf('SafeURL is %s', $path));
 
         return $request->wantsJson() ? new JsonResponse([], 204) : redirect()->to($path);

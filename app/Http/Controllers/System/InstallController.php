@@ -45,7 +45,7 @@ use function Safe\file_put_contents;
 /**
  * Class InstallController
  */
-class InstallController extends Controller
+final class InstallController extends Controller
 {
     use GetConfigurationData;
 
@@ -65,14 +65,6 @@ class InstallController extends Controller
         'firefly-iii:set-latest-version'     => ['--james-is-cool' => true],
         'firefly-iii:verify-security-alerts' => [],
     ];
-
-    /**
-     * InstallController constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
 
     /**
      * Show index.

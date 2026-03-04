@@ -47,7 +47,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class UserController.
  */
-class UserController extends Controller
+final class UserController extends Controller
 {
     protected bool $externalIdentity;
     private UserRepositoryInterface $repository;

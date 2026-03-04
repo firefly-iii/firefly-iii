@@ -35,7 +35,7 @@ use Illuminate\Http\Request;
 /**
  * Class CategoryController
  */
-class CategoryController extends Controller
+final class CategoryController extends Controller
 {
     private CategoryRepositoryInterface $repository;
     protected array $acceptedRoles = [UserRoleEnum::READ_ONLY];

@@ -36,7 +36,7 @@ use Illuminate\View\View;
 /**
  * Class ConfigurationController.
  */
-class ConfigurationController extends Controller
+final class ConfigurationController extends Controller
 {
     /**
      * ConfigurationController constructor.

@@ -49,7 +49,7 @@ use Illuminate\View\View;
 /**
  * Class EditController
  */
-class EditController extends Controller
+final class EditController extends Controller
 {
     private AttachmentHelperInterface $attachments;
     private BillRepositoryInterface $billRepository;

@@ -38,7 +38,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class RecurrenceController
  */
-class RecurrenceController extends Controller
+final class RecurrenceController extends Controller
 {
     private RecurringRepositoryInterface $recurring;
 

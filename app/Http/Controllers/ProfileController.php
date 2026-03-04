@@ -59,7 +59,7 @@ use SensitiveParameter;
  *
  * @method Guard guard()
  */
-class ProfileController extends Controller
+final class ProfileController extends Controller
 {
     use CreateStuff;
 
@@ -142,7 +142,7 @@ class ProfileController extends Controller
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
-            if ($preference->data === $token) {
+            if (hash_equals($preference->data, $token)) {
                 $user = $preference->user;
             }
         }
@@ -404,7 +404,7 @@ class ProfileController extends Controller
 
         /** @var Preference $preference */
         foreach ($set as $preference) {
-            if ($preference->data === $token) {
+            if (hash_equals($preference->data, $token)) {
                 $user = $preference->user;
             }
         }

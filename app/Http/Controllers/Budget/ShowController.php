@@ -46,7 +46,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class ShowController
  */
-class ShowController extends Controller
+final class ShowController extends Controller
 {
     use AugumentData;
     use PeriodOverview;

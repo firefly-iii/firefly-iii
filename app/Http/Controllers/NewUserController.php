@@ -38,7 +38,7 @@ use Illuminate\View\View;
 /**
  * Class NewUserController.
  */
-class NewUserController extends Controller
+final class NewUserController extends Controller
 {
     use CreateStuff;
 

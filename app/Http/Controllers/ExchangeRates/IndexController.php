@@ -30,7 +30,7 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\View\View;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class IndexController extends Controller
+final class IndexController extends Controller
 {
     /**
      * AttachmentController constructor.

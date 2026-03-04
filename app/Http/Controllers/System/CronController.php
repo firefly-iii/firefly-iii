@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * Class CronController
  */
-class CronController
+final class CronController
 {
     /**
      * @return Application|Response|ResponseFactory

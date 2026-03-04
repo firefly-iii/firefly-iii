@@ -42,7 +42,7 @@ use Psr\Container\NotFoundExceptionInterface;
 /**
  * Class JavascriptController.
  */
-class JavascriptController extends Controller
+final class JavascriptController extends Controller
 {
     use GetConfigurationData;
 

@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
 /**
  * Class ReportController.
  */
-class ReportController extends Controller
+final class ReportController extends Controller
 {
     use RenderPartialViews;
 

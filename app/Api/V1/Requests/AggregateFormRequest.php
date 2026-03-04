@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Requests;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Override;
 use RuntimeException;
 
@@ -61,7 +60,8 @@ abstract class AggregateFormRequest extends ApiRequest
             }
             // Log::debug(sprintf('Initializing subrequest %s', $requestClass));
 
-            $instance             = $this->requests[] = new $requestClass();
+            $instance             = new $requestClass();
+            $this->requests[]     = $instance;
             $instance->request    = $this->request;
             $instance->query      = $this->query;
             $instance->attributes = $this->attributes;
