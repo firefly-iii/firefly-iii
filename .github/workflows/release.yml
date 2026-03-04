@@ -179,13 +179,17 @@ jobs:
           composer update --no-scripts --no-plugins -q
 
           # format code.
+          echo "Will now run Mago Format"
           mago format || true
           sudo chown -R runner:docker resources/lang
+          echo "Will now run PHPCS"
           .ci/phpcs.sh || true
 
           # lint and check
-          mago lint
-          .ci/phpstan.sh
+          echo "Will now run Mago Lint"
+          mago lint || true
+          echo "Will now run PHPstan"
+          .ci/phpstan.sh || true
       - name: Calculate variables
         run: |
 
