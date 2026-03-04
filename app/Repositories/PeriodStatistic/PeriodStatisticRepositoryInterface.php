@@ -35,7 +35,7 @@ interface PeriodStatisticRepositoryInterface
 
     public function allInRangeForPrefix(string $prefix, Carbon $start, Carbon $end): Collection;
 
-    public function deleteStatisticsForCollection(Collection $set);
+    public function deleteStatisticsForCollection(Collection $set): void;
 
     public function deleteStatisticsForModel(Model $model, Carbon $date): void;
 

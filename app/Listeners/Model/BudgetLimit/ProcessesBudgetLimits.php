@@ -40,6 +40,7 @@ class ProcessesBudgetLimits implements ShouldQueue
 {
     public function handle(CreatedBudgetLimit|DestroyedBudgetLimit|UpdatedBudgetLimit $event): void
     {
+        Log::debug(sprintf('Now in handle for event %s', get_class($event)));
         if ($event instanceof DestroyedBudgetLimit && null !== $event->user) {
             // need to recalculate all available budgets for this user.
             $calculator = new AvailableBudgetCalculator();

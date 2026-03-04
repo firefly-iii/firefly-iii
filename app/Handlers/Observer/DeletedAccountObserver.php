@@ -57,8 +57,7 @@ class DeletedAccountObserver
         $groupIds   = TransactionJournal::whereIn('id', $journalIds)
             ->get(['transaction_journals.transaction_group_id'])
             ->pluck('transaction_group_id')
-            ->toArray() // @phpstan-ignore-line
-        ;
+            ->toArray();
 
         if (count($journalIds) > 0) {
             Transaction::whereIn('transaction_journal_id', $journalIds)->delete();

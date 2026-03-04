@@ -299,7 +299,7 @@ final class DebugController extends Controller
         if ($lastTime > 0) {
             $carbon         = Carbon::createFromTimestamp($lastTime);
             $lastCronjob    = $carbon->format('Y-m-d H:i:s');
-            $lastCronjobAgo = $carbon->locale('en')->diffForHumans(); // @phpstan-ignore-line
+            $lastCronjobAgo = $carbon->locale('en')->diffForHumans();
         }
 
         return [

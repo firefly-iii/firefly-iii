@@ -31,7 +31,7 @@ use FireflyIII\Enums\TransactionTypeEnum;
  */
 trait TransactionFilter
 {
-    protected $transactionTypes = [
+    protected array $transactionTypes = [
         'all'                                       => [
             TransactionTypeEnum::WITHDRAWAL->value,
             TransactionTypeEnum::DEPOSIT->value,

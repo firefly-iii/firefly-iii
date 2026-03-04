@@ -114,11 +114,11 @@ class RepairsPostgresSequences extends Command
                 continue;
             }
 
-            if ($nextId->nextval < $highestId->max) { // @phpstan-ignore-line
+            if ($nextId->nextval < $highestId->max) {
                 DB::select(sprintf('SELECT setval(\'%s_id_seq\', %d)', $tableToCheck, $highestId->max));
                 $highestId = DB::table($tableToCheck)->select(DB::raw('MAX(id)'))->first();
                 $nextId    = DB::table($tableToCheck)->select(DB::raw(sprintf('nextval(\'%s_id_seq\')', $tableToCheck)))->first();
-                if ($nextId->nextval > $highestId->max) { // @phpstan-ignore-line
+                if ($nextId->nextval > $highestId->max) {
                     $this->friendlyInfo(sprintf('Table "%s" autoincrement corrected.', $tableToCheck));
                 }
                 if ($nextId->nextval <= $highestId->max) {

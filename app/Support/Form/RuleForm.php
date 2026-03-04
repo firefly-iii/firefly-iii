@@ -52,7 +52,7 @@ class RuleForm
         return $this->select($name, $array, $value, $options);
     }
 
-    public function ruleGroupListWithEmpty(string $name, $value = null, ?array $options = null): string
+    public function ruleGroupListWithEmpty(string $name, mixed $value = null, ?array $options = null): string
     {
         $options ??= [];
         $options['class'] = 'form-control';

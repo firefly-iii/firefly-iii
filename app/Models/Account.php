@@ -81,10 +81,6 @@ class Account extends Model
         throw new NotFoundHttpException();
     }
 
-    public function accountBalances(): HasMany
-    {
-        return $this->hasMany(AccountBalance::class);
-    }
 
     public function accountMeta(): HasMany
     {

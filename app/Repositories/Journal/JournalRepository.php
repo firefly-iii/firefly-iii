@@ -40,6 +40,7 @@ use FireflyIII\Support\Repositories\UserGroup\UserGroupInterface;
 use FireflyIII\Support\Repositories\UserGroup\UserGroupTrait;
 use Illuminate\Support\Collection;
 use Override;
+use function Safe\json_encode;
 
 /**
  * Class JournalRepository.

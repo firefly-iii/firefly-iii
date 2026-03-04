@@ -123,24 +123,6 @@ class CreditRecalculateService
     /**
      * @throws FireflyException
      */
-    private function findByJournal(TransactionJournal $journal): void
-    {
-        $source      = $this->getSourceAccount($journal);
-        $destination = $this->getDestinationAccount($journal);
-
-        // destination or source must be liability.
-        $valid       = config('firefly.valid_liabilities');
-        if (in_array($destination->accountType->type, $valid, true)) {
-            $this->work[] = $destination;
-        }
-        if (in_array($source->accountType->type, $valid, true)) {
-            $this->work[] = $source;
-        }
-    }
-
-    /**
-     * @throws FireflyException
-     */
     private function getAccountByDirection(TransactionJournal $journal, string $direction): Account
     {
         /** @var null|Transaction $transaction */
@@ -170,23 +152,6 @@ class CreditRecalculateService
 
         return $usedAmount;
     }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '>');
-    }
-
-    /**
-     * @throws FireflyException
-     */
-    private function getSourceAccount(TransactionJournal $journal): Account
-    {
-        return $this->getAccountByDirection($journal, '<');
-    }
-
     /**
      * case 4
      * it's a deposit into this liability (from revenue account).

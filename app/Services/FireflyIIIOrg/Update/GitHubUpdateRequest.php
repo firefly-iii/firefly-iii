@@ -30,6 +30,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use Override;
+use function Safe\file_get_contents;
+use function Safe\json_decode;
 
 class GitHubUpdateRequest implements UpdateRequestInterface
 {
@@ -106,7 +108,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
             return $response;
         }
 
-        return $response;
+        // return $response;
     }
 
     private function filterReleases(array $releases): array

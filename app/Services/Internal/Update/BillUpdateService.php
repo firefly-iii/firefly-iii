@@ -120,11 +120,6 @@ class BillUpdateService
         return $bill;
     }
 
-    private function getRuleTrigger(Rule $rule, string $key): ?RuleTrigger
-    {
-        /** @var null|RuleTrigger */
-        return $rule->ruleTriggers()->where('trigger_type', $key)->first();
-    }
 
     /**
      * @SuppressWarnings("PHPMD.NPathComplexity")
@@ -193,31 +188,6 @@ class BillUpdateService
             ;
             $bill->order = $newOrder;
             $bill->save();
-        }
-    }
-
-    private function updateRules(Collection $rules, string $key, string $oldValue, string $newValue): void
-    {
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
-            $trigger = $this->getRuleTrigger($rule, $key);
-            if ($trigger instanceof RuleTrigger && $trigger->trigger_value === $oldValue) {
-                Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
-                $trigger->trigger_value = $newValue;
-                $trigger->save();
-
-                continue;
-            }
-            if (
-                $trigger instanceof RuleTrigger
-                && $trigger->trigger_value !== $oldValue
-                && in_array($key, ['amount_more', 'amount_less'], true)
-                && 0 === bccomp($trigger->trigger_value, $oldValue)
-            ) {
-                Log::debug(sprintf('Updated rule trigger #%d from value "%s" to value "%s"', $trigger->id, $oldValue, $newValue));
-                $trigger->trigger_value = $newValue;
-                $trigger->save();
-            }
         }
     }
 }

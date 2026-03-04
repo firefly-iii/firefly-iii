@@ -86,7 +86,7 @@ class HandlesNewUserRegistration implements ShouldQueue
         $group               = null;
 
         // create a new group.
-        while ($groupExists) { // @phpstan-ignore-line
+        while ($groupExists) {
             $groupExists = UserGroup::where('title', $groupTitle)->count() > 0;
             if (false === $groupExists) {
                 $group = UserGroup::create(['title' => $groupTitle]);
