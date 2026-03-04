@@ -24,8 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Search\QueryParser;
 
-
 use SensitiveParameter;
+
 use function Safe\preg_split;
 
 /**

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 2024_12_19_061003_add_native_amount_column.php
  * Copyright (c) 2025 james@firefly-iii.org.

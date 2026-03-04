@@ -81,7 +81,6 @@ class Account extends Model
         throw new NotFoundHttpException();
     }
 
-
     public function accountMeta(): HasMany
     {
         return $this->hasMany(AccountMeta::class);

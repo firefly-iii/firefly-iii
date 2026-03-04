@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 use FireflyIII\Enums\TransactionTypeEnum;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
@@ -132,6 +131,7 @@ class CreditRecalculateService
 
         return $usedAmount;
     }
+
     /**
      * case 4
      * it's a deposit into this liability (from revenue account).

@@ -28,14 +28,10 @@ use FireflyIII\Events\Model\Bill\UpdatedExistingBill;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ObjectGroup;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\ObjectGroup\CreatesObjectGroups;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\Support\Facades\Amount;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Class BillUpdateService
@@ -119,7 +115,6 @@ class BillUpdateService
 
         return $bill;
     }
-
 
     /**
      * @SuppressWarnings("PHPMD.NPathComplexity")

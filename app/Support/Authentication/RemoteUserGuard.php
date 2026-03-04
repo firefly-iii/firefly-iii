@@ -41,7 +41,7 @@ class RemoteUserGuard implements Guard
 {
     protected Application $application;
     protected ?User $user = null;
-    private bool $tried        = false;
+    private bool $tried   = false;
 
     /**
      * Create a new authentication guard.

@@ -32,8 +32,7 @@ use Illuminate\Support\Facades\Schema;
  *
  * @codeCoverageIgnore
  */
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Reverse the migrations.
      */
@@ -84,5 +83,4 @@ return new class extends Migration
             }
         }
     }
-}
-    ;
+};
