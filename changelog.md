@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.5.3 - 2026-03-05
+
+This release fixes some sloppy coding on my part, but good news everyone! A new linter is in place that should prevent that from happening. Turns out I had disabled it in the past :(.
+
+### Added
+
+- Note about the EU origins of Firefly III.
+
+### Changed
+- #11862
+- Expand code linting and checks.
+
+### Fixed
+- #11866
+
 ## 6.5.2 - 2026-03-04
 
 ### Changed
