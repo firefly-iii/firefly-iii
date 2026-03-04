@@ -5,6 +5,7 @@ parameters:
     - ../routes
     - ../config
     - ../bootstrap/app.php
+    - ../bootstrap/providers.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   reportUnmatchedIgnoredErrors: true
