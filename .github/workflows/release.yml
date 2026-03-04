@@ -174,12 +174,18 @@ jobs:
         uses: nhedger/setup-mago@v1
       - name: Run CI
         run: |
+          # install all packages etc.
           rm -rf vendor composer.lock
           composer update --no-scripts --no-plugins -q
+
+          # format code.
           mago format || true
-          # mago analyze --reporting-format=github || true
           sudo chown -R runner:docker resources/lang
           .ci/phpcs.sh || true
+
+          # lint and check
+          mago lint
+          .ci/phpstan.sh
       - name: Calculate variables
         run: |
 
