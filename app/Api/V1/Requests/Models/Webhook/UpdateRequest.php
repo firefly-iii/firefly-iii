@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Requests\Models\Webhook;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\Webhook\IsValidWebhookUrl;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Request\ChecksLogin;
 use FireflyIII\Support\Request\ConvertsDataTypes;
@@ -87,7 +88,7 @@ class UpdateRequest extends FormRequest
             'delivery'     => 'prohibited',
             'deliveries'   => 'required|array|min:1|max:1',
             'deliveries.*' => sprintf('required|in:%s', $deliveries),
-            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id)],
+            'url'          => [sprintf('url:%s', $validProtocols), sprintf('uniqueExistingWebhook:%d', $webhook->id), new IsValidWebhookUrl()],
         ];
     }
 }
