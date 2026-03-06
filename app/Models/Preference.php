@@ -30,6 +30,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property mixed $data
+ */
 class Preference extends Model
 {
     use ReturnsIntegerIdTrait;

@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Enums\TransactionTypeEnum;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -65,11 +66,11 @@ class JournalList implements BinderInterface
 
     protected static function parseList(string $value): array
     {
-        $list = array_unique(array_map(\intval(...), explode(',', $value)));
-        if (0 === count($list)) {
+        if('' === $value) {
+            Log::warning('Category list count is zero, return 404.');
+
             throw new NotFoundHttpException();
         }
-
-        return $list;
+        return array_unique(array_map(\intval(...), explode(',', $value)));
     }
 }

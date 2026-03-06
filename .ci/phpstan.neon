@@ -34,13 +34,9 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
-    - identifier: method.notFound
-    - identifier: identical.alwaysFalse
     - identifier: function.impossibleType
     - identifier: booleanNot.exprNotBoolean
     - identifier: ternary.condNotBoolean
-    - identifier: booleanNot.alwaysFalse
-    - identifier: booleanAnd.alwaysFalse
     - identifier: greater.alwaysTrue
     - identifier: function.alreadyNarrowedType
     - identifier: booleanNot.alwaysTrue
@@ -52,13 +48,11 @@ parameters:
     - identifier: identical.alwaysTrue
     - identifier: assign.propertyReadOnly
     - identifier: varTag.nativeType
-    - identifier: booleanAnd.leftAlwaysFalse
     - identifier: property.onlyWritten
     - identifier: parameter.phpDocType
     - identifier: property.dynamicName
     - identifier: property.unusedType
     - identifier: staticMethod.deprecated
-    - identifier: greater.invalid
     # ignore everything but things that BREAK
     - identifier: property.deprecated
     - identifier: method.deprecated
@@ -71,6 +65,7 @@ parameters:
     - identifier: return.unusedType
     - identifier: return.phpDocType
     # all errors below I will (probably) never fix.
+    - identifier: method.notFound # way too many false positives
     - identifier: catch.neverThrown # plenty of errors that are thrown undocumented
     - identifier: staticMethod.dynamicName # dont care
     - identifier: arguments.count # one false positive

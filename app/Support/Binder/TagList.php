@@ -44,14 +44,14 @@ class TagList implements BinderInterface
             if ('allTags' === $value) {
                 return auth()->user()->tags()->orderBy('tag', 'ASC')->get();
             }
-            $list       = array_unique(array_map(\strtolower(...), explode(',', $value)));
-            Log::debug('List of tags is', $list);
-
-            if (0 === count($list)) {
-                Log::error('Tag list is empty.');
+            if('' === $value) {
+                Log::warning('Category list count is zero, return 404.');
 
                 throw new NotFoundHttpException();
             }
+
+            $list       = array_unique(array_map(\strtolower(...), explode(',', $value)));
+            Log::debug('List of tags is', $list);
 
             /** @var TagRepositoryInterface $repository */
             $repository = app(TagRepositoryInterface::class);
