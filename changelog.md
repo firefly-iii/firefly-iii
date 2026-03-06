@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Fixed
 
-- #11873
+- [Issue 11873](https://github.com/firefly-iii/firefly-iii/issues/11873) (Piggy bank +/- sometimes sends 0.00 and fails with “Cannot add 0 because canAddAmount returned false”) reported by @ralle06
 - Transaction count would search for the wrong meta field.
 
 ### Security

@@ -48,7 +48,8 @@ class AvailableBudgetCalculator
     private AvailableBudgetRepositoryInterface $abRepository;
     private BudgetLimitRepositoryInterface $blRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         Log::debug('Created new AvailableBudgetCalculator');
     }
 

@@ -402,7 +402,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         }
         Log::debug(sprintf('Updated budget limit with ID #%d', $budgetLimit->id));
         $generateMessages                     = $data['fire_webhooks'] ?? true;
-        event(  new UpdatedBudgetLimit($budgetLimit, $generateMessages));
+        event(new UpdatedBudgetLimit($budgetLimit, $generateMessages));
         event(new WebhookMessagesRequestSending());
 
         return $budgetLimit;
