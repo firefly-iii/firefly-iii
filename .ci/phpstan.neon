@@ -14,10 +14,6 @@ parameters:
       enabled: false
     noNullableReturnTypeDeclaration:
       enabled: false
-    privateInFinalClass:
-      enabled: false
-    noIsset:
-      enabled: false
     finalInAbstractClass:
       enabled: false
     noConstructorParameterWithDefaultValue:

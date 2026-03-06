@@ -487,7 +487,7 @@ class OperatorQuerySearch implements SearchInterface
 
         // search direction: for destination accounts
         if (SearchDirection::DESTINATION === $searchDirection) { // destination
-            // destination can be
+            // the destination account can be
             $searchTypes     = [
                 AccountTypeEnum::ASSET->value,
                 AccountTypeEnum::MORTGAGE->value,
@@ -530,7 +530,7 @@ class OperatorQuerySearch implements SearchInterface
         }
 
         // get accounts:
-        $accounts        = $this->accountRepository->searchAccount($value, $searchTypes, 1337);
+        $accounts        = $this->accountRepository->searchAccountIncludingInactive($value, $searchTypes, 1337);
         if (0 === $accounts->count() && false === $prohibited) {
             Log::warning('Found zero accounts, search for non existing account, NO results will be returned.');
             $this->collector->findNothing();
