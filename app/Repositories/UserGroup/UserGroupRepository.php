@@ -253,10 +253,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             // group has multiple members. How many are owner, except the user we're editing now?
             $ownerCount = $userGroup->groupMemberships()->where('user_role_id', $owner->id)->where('user_id', '!=', $user->id)->count();
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
-            if (
-                0 === $ownerCount
-                && (0 === count($data['roles']) || !in_array(UserRoleEnum::OWNER->value, $data['roles'], true))
-            ) {
+            if (0 === $ownerCount && (0 === count($data['roles']) || !in_array(UserRoleEnum::OWNER->value, $data['roles'], true))) {
                 Log::debug('User needs to keep owner role in this group, refuse to act');
 
                 throw new FireflyException('The last owner in this user group must keep the "owner" role.');
