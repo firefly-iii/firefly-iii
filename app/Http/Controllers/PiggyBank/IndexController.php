@@ -112,7 +112,7 @@ final class IndexController extends Controller
 
     private function collectAccounts(Collection $collection): array
     {
-        $now = Carbon::now();
+        $now                = Carbon::now();
 
         /** @var AccountTransformer $accountTransformer */
         $accountTransformer = app(AccountTransformer::class);

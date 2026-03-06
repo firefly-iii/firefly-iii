@@ -66,13 +66,13 @@ class StandardWebhookSender implements WebhookSenderInterface
         $this->message->save();
 
         // validate the webhook URL.
-        $data = [
-            'url' => $this->message->webhook->url
+        $data                = [
+            'url' => $this->message->webhook->url,
         ];
-        $rules = [
-            'url' => [new IsValidWebhookUrl()]
+        $rules               = [
+            'url' => [new IsValidWebhookUrl()],
         ];
-        $res=Validator::make($data, $rules)->validate();
+        $res                 = Validator::make($data, $rules)->validate();
         Log::debug('Result of res', $res);
 
         try {
@@ -124,7 +124,6 @@ class StandardWebhookSender implements WebhookSenderInterface
             ],
         ];
         $client              = new Client();
-
 
         try {
             $res = $client->request('POST', $this->message->webhook->url, $options);
