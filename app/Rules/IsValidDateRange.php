@@ -54,7 +54,7 @@ class IsValidDateRange implements ValidationRule
         try {
             $left  = Carbon::parse($value);
             $right = Carbon::parse($otherValue);
-        } catch (InvalidDateException $e) { // @phpstan-ignore-line
+        } catch (InvalidDateException $e) {
             Log::error(sprintf('"%s" or "%s" is not a valid date or time: %s', $value, $otherValue, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();

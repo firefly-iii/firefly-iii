@@ -262,7 +262,7 @@ class FireflyValidator extends Validator
 
         try {
             $checksum = bcmod($iban, '97');
-        } catch (ValueError $e) { // @phpstan-ignore-line
+        } catch (ValueError $e) {
             $message = sprintf('Could not validate IBAN check value "%s" (IBAN "%s")', $iban, $value);
             Log::error($message);
             Log::error($e->getTraceAsString());

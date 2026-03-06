@@ -675,7 +675,7 @@ class JournalUpdateService
                 )
             );
 
-            $this->transactionJournal->{$fieldName} = $value; // @phpstan-ignore-line
+            $this->transactionJournal->{$fieldName} = $value;
             Log::debug(sprintf('Updated %s', $fieldName));
         }
     }
@@ -822,7 +822,7 @@ class JournalUpdateService
             if ($this->hasFields([$field])) {
                 try {
                     $value = '' === (string) $this->data[$field] ? null : new Carbon($this->data[$field]);
-                } catch (InvalidDateException|InvalidFormatException $e) { // @phpstan-ignore-line
+                } catch (InvalidDateException|InvalidFormatException $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
                     return;

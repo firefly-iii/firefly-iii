@@ -29,6 +29,7 @@ use FireflyIII\Events\Event;
 use FireflyIII\Models\Budget;
 use FireflyIII\User;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class DestroyedBudgetLimit extends Event
 {
@@ -40,5 +41,7 @@ class DestroyedBudgetLimit extends Event
         public Carbon $start,
         public Carbon $end,
         public bool $createWebhookMessages
-    ) {}
+    ) {
+        Log::debug(sprintf('DestroyedBudgetLimit(#%d) Event', $budget->id));
+    }
 }

@@ -187,7 +187,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
             ->bills()
             ->where('active', true)
             ->orderBy('bills.name', 'ASC')
-            ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount')]) // @phpstan-ignore-line
+            ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount')])
         ;
     }
 
@@ -199,7 +199,7 @@ class BillRepository implements BillRepositoryInterface, UserGroupInterface
         $set  = $bill->attachments()->get();
         $disk = Storage::disk('upload');
 
-        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment {
             $notes                   = $attachment->notes()->first();
             $attachment->file_exists = $disk->exists($attachment->fileName());
             $attachment->notes_text  = null !== $notes ? $notes->text : '';

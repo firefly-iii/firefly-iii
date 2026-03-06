@@ -126,6 +126,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         $user  = $budgetLimit->budget->user;
         $start = $budgetLimit->start_date->clone();
         $end   = $budgetLimit->end_date->clone();
+        Log::debug(sprintf('Send event for DestroyedBudgetLimit (limit #%d, budget #%d)', $budgetLimit->id, $budgetLimit->budget_id));
         event(new DestroyedBudgetLimit($user, $budgetLimit->budget, $start, $end, true));
         $budgetLimit->delete();
         event(new WebhookMessagesRequestSending());
@@ -399,6 +400,7 @@ class BudgetLimitRepository implements BudgetLimitRepositoryInterface, UserGroup
         if (array_key_exists('notes', $data)) {
             $this->setNoteText($budgetLimit, (string) $data['notes']);
         }
+        Log::debug(sprintf('Updated budget limit with ID #%d', $budgetLimit->id));
         $generateMessages                     = $data['fire_webhooks'] ?? true;
         event(new UpdatedBudgetLimit($budgetLimit, $generateMessages));
         event(new WebhookMessagesRequestSending());

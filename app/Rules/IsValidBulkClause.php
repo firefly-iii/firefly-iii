@@ -94,7 +94,7 @@ class IsValidBulkClause implements ValidationRule
                 // validate!
                 $validator = Validator::make(['value' => $arrayValue], ['value' => $this->rules[$clause][$arrayKey]]);
                 if ($validator->fails()) {
-                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value'))); // @phpstan-ignore-line
+                    $this->error = sprintf('%s: %s: %s', $clause, $arrayKey, implode(', ', $validator->errors()->get('value')));
 
                     return false;
                 }

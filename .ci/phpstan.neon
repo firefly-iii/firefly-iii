@@ -1,15 +1,54 @@
 parameters:
+  ergebnis:
+    noExtends:
+      enabled: false
+    final:
+      enabled: false
+    noParameterWithNullDefaultValue:
+      enabled: false
+    noParameterWithNullableTypeDeclaration:
+      enabled: false
+    noCompact:
+      enabled: false
+    noSwitch:
+      enabled: false
+    noNullableReturnTypeDeclaration:
+      enabled: false
+    privateInFinalClass:
+      enabled: false
+    noIsset:
+      enabled: false
+    finalInAbstractClass:
+      enabled: false
+    noConstructorParameterWithDefaultValue:
+      enabled: false
+    noNamedArgument:
+      enabled: false
+    noParameterWithContainerTypeDeclaration:
+      enabled: false
   paths:
     - ../app
     - ../database
     - ../routes
     - ../config
     - ../bootstrap/app.php
+    - ../bootstrap/providers.php
   universalObjectCratesClasses:
     - Illuminate\Database\Eloquent\Model
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
+    - identifier: staticMethod.dynamicCall
+    - identifier: argument.templateType
+    - identifier: method.childReturnType
+    - identifier: instanceof.alwaysFalse
+    - identifier: deadCode.unreachable
+    - identifier: method.dynamicName
+    - identifier: larastan.noEnvCallsOutsideOfConfig
+    - identifier: property.notFound
+    - identifier: arguments.count
+    - identifier: staticMethod.dynamicName
+    - identifier: catch.neverThrown
     - identifier: notIdentical.alwaysTrue
     - identifier: method.notFound
     - identifier: nullsafe.neverNull
@@ -64,7 +103,7 @@ parameters:
         path: ../app/Console/Commands/System/CreatesDatabase.php
     - identifier: missingType.iterableValue # not interesting enough to fix.
     - identifier: varTag.type # needs a custom extension for every repository, not gonna happen.
-    - '#Dynamic call to static method Illuminate#'
+    # - '#Dynamic call to static method Illuminate#'
     # - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::before#' # is custom scope
     # - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::after#' # is custom scope
     # - '#Call to an undefined method Illuminate\\Database\\Eloquent\\Relations\\HasMany::withTrashed#' # is to allow soft delete

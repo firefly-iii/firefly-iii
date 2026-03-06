@@ -322,12 +322,7 @@ class CorrectsUnevenAmount extends Command
         foreach ($journals as $entry) {
             $sum = (string) $entry->the_sum;
             $sum = Steam::floatalize($sum);
-            if (
-                !is_numeric($sum)
-                || '' === $sum // @phpstan-ignore-line
-                || str_contains($sum, 'e')
-                || str_contains($sum, ',')
-            ) {
+            if (!is_numeric($sum) || '' === $sum || str_contains($sum, 'e') || str_contains($sum, ',')) {
                 $message = sprintf('Journal #%d has an invalid sum ("%s"). No sure what to do.', $entry->transaction_journal_id, $entry->the_sum);
                 $this->friendlyWarning($message);
                 Log::warning($message);

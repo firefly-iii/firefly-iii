@@ -314,7 +314,7 @@ class GroupCollector implements GroupCollectorInterface
 
     public function excludeForeignCurrency(TransactionCurrency $currency): GroupCollectorInterface
     {
-        $this->query->where(static function (EloquentBuilder $q2) use ($currency): void { // @phpstan-ignore-line
+        $this->query->where(static function (EloquentBuilder $q2) use ($currency): void {
             $q2->where('source.foreign_currency_id', '!=', $currency->id);
             $q2->orWhereNull('source.foreign_currency_id');
         });
@@ -698,7 +698,7 @@ class GroupCollector implements GroupCollectorInterface
          */
         foreach ($this->sorting as $field => $direction) {
             $func       = 'ASC' === $direction ? 'sortBy' : 'sortByDesc';
-            $collection = $collection->{$func}(static function (array $product, int $key) use ($field) { // @phpstan-ignore-line
+            $collection = $collection->{$func}(static function (array $product, int $key) use ($field) {
                 // depends on $field:
                 if ('description' === $field) {
                     if (1 === count($product['transactions'])) {

@@ -41,7 +41,7 @@ class UserRoleSeeder extends Seeder
     public function run(): void
     {
         /** @var UserRoleEnum $role */
-        foreach (UserRoleEnum::cases() as $role) { // @phpstan-ignore-line
+        foreach (UserRoleEnum::cases() as $role) {
             if (null === UserRole::where('title', $role->value)->first()) {
                 try {
                     UserRole::create(['title' => $role->value]);

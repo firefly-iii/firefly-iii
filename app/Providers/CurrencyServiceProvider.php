@@ -52,7 +52,7 @@ class CurrencyServiceProvider extends ServiceProvider
             /** @var CurrencyRepository $repository */
             $repository = app(GroupCurrencyRepository::class);
             // phpstan does not get the reference to auth
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -62,7 +62,7 @@ class CurrencyServiceProvider extends ServiceProvider
             /** @var GroupCurrencyRepository $repository */
             $repository = app(GroupCurrencyRepository::class);
             // phpstan does not get the reference to auth
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -73,7 +73,7 @@ class CurrencyServiceProvider extends ServiceProvider
             /** @var ExchangeRateRepository $repository */
             $repository = app(ExchangeRateRepository::class);
             // phpstan does not get the reference to auth
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUserGroup(auth()->user()->userGroup);
             }
 

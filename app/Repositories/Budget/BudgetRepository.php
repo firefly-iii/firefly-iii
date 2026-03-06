@@ -345,7 +345,7 @@ class BudgetRepository implements BudgetRepositoryInterface, UserGroupInterface
 
         $disk = Storage::disk('upload');
 
-        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment {
             $notes                   = $attachment->notes()->first();
             $attachment->file_exists = $disk->exists($attachment->fileName());
             $attachment->notes_text  = null !== $notes ? $notes->text : '';

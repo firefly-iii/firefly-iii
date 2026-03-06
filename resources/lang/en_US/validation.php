@@ -139,6 +139,8 @@ return [
     'in'                              => 'The selected :attribute is invalid.',
     'integer'                         => 'The :attribute must be an integer.',
     'ip'                              => 'The :attribute must be a valid IP address.',
+    'no_reserved_ip'                  => 'The URL must point to a valid IP address.',
+    'bad_url_prefix'                  => 'This URL is invalid.',
     'json'                            => 'The :attribute must be a valid JSON string.',
     'max.numeric'                     => 'The :attribute may not be greater than :max.',
     'max.file'                        => 'The :attribute may not be greater than :max kilobytes.',

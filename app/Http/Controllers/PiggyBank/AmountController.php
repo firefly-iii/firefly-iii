@@ -69,7 +69,7 @@ final class AmountController extends Controller
     public function add(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $date */
-        $date       = session('end', today(config('app.timezone')));
+        $date       = now(config('app.timezone'));
         $accounts   = [];
         $total      = '0';
         $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
@@ -109,7 +109,7 @@ final class AmountController extends Controller
     public function addMobile(PiggyBank $piggyBank): Factory|\Illuminate\Contracts\View\View
     {
         /** @var Carbon $date */
-        $date       = session('end', today(config('app.timezone')));
+        $date       = now(config('app.timezone'));
         $accounts   = [];
         $total      = '0';
         $totalSaved = $this->piggyRepos->getCurrentAmount($piggyBank);
@@ -143,7 +143,7 @@ final class AmountController extends Controller
         /** @var Account $account */
         foreach ($piggyBank->accounts as $account) {
             $amount        = (string) ($amounts[$account->id] ?? '0');
-            if ('' === $amount || 0 === bccomp($amount, '0')) {
+            if ('' === $amount || !is_numeric($amount) || 0 === bccomp($amount, '0')) {
                 continue;
             }
             if (-1 === bccomp($amount, '0')) {

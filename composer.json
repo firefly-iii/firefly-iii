@@ -125,7 +125,8 @@
         "phpstan/phpstan-strict-rules": "^2",
         "phpunit/phpunit": "^12",
         "rector/rector": "^2.3",
-        "thecodingmachine/phpstan-safe-rule": "^1.4"
+        "thecodingmachine/phpstan-safe-rule": "^1.4",
+        "ergebnis/phpstan-rules": "^2"
     },
 
     "suggest": {},

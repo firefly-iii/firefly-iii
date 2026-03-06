@@ -59,7 +59,7 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): BudgetRepositoryInterface {
             /** @var BudgetRepositoryInterface $repository */
             $repository = app(BudgetRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -70,7 +70,7 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): AvailableBudgetRepositoryInterface {
             /** @var AvailableBudgetRepositoryInterface $repository */
             $repository = app(AvailableBudgetRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -81,7 +81,7 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): BudgetLimitRepositoryInterface {
             /** @var BudgetLimitRepositoryInterface $repository */
             $repository = app(BudgetLimitRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -92,7 +92,7 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): NoBudgetRepositoryInterface {
             /** @var NoBudgetRepositoryInterface $repository */
             $repository = app(NoBudgetRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -103,7 +103,7 @@ class BudgetServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): OperationsRepositoryInterface {
             /** @var OperationsRepositoryInterface $repository */
             $repository = app(OperationsRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 

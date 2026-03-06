@@ -134,7 +134,7 @@ class RecurrenceFormRequest extends FormRequest
          * @var int   $index
          * @var array $transaction
          */
-        foreach ($return['transactions'] as $index => $transaction) { // @phpstan-ignore-line
+        foreach ($return['transactions'] as $index => $transaction) {
             $categoryName = $transaction['category_name'] ?? null;
             if (null !== $categoryName) {
                 $category = $factory->findOrCreate(null, $categoryName);

@@ -63,7 +63,7 @@ class AccountServiceProvider extends ServiceProvider
             $repository = app(AccountRepository::class);
 
             // phpstan thinks auth does not exist.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -75,7 +75,7 @@ class AccountServiceProvider extends ServiceProvider
             $repository = app(OperationsRepository::class);
 
             // phpstan thinks auth does not exist.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -93,7 +93,7 @@ class AccountServiceProvider extends ServiceProvider
             $tasker = app(AccountTasker::class);
 
             // phpstan thinks auth does not exist.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $tasker->setUser(auth()->user());
             }
 
