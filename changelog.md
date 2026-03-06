@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## 6.5.4 - 2026-03-06
+## v6.5.4 - 2026-03-06
 
 ### Added
 
@@ -19,11 +19,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Published security advisory https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-5q8v-j673-m5v4 found and reported by @lighthousekeeper1212
 - It's possible to submit webhook URLs that point to internal IP addresses. This will still be the case in the future, though some reserved ranges are now blocked. Let me know if this impacts you.
 
-### API
-
-- Initial release.
-
-## 6.5.3 - 2026-03-05
+## v6.5.3 - 2026-03-05
 
 This release fixes some sloppy coding on my part, but good news everyone! A new linter is in place that should prevent that from happening. Turns out I had disabled it in the past :(.
 
@@ -38,7 +34,7 @@ This release fixes some sloppy coding on my part, but good news everyone! A new 
 ### Fixed
 - [Issue 11866](https://github.com/firefly-iii/firefly-iii/issues/11866) (ReflectionException on Transaction\ListRequest) reported by @brot
 
-## 6.5.2 - 2026-03-04
+## v6.5.2 - 2026-03-04
 
 ### Changed
 
@@ -61,7 +57,7 @@ This release fixes some sloppy coding on my part, but good news everyone! A new 
 - [Issue 11822](https://github.com/firefly-iii/firefly-iii/issues/11822) (API - account transaction type filtering) reported by @mgrove36
 - [Issue 11842](https://github.com/firefly-iii/firefly-iii/issues/11842) (API: `/api/v1/configuration` always returns unauthenticated for v6.5.1) reported by @dreautall
 
-## 6.5.1 - 2026-02-28
+## v6.5.1 - 2026-02-28
 
 > [!IMPORTANT]  
 > This releases also fixes a security issue, relevant only if you have multiple users using your Firefly III instance. Upgrading is recommended. 
