@@ -298,7 +298,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             ->withPivot(['group_default'])
             ->get()
         ;
-        $all->map(static function (TransactionCurrency $current): TransactionCurrency { // @phpstan-ignore-line
+        $all->map(static function (TransactionCurrency $current): TransactionCurrency {
             $current->userGroupEnabled = true;
             $current->userGroupNative  = 1 === (int) $current->pivot->group_default;
 

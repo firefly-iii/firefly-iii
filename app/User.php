@@ -319,7 +319,7 @@ class User extends Authenticatable
     {
         $method = 'routeNotificationFor'.Str::studly($driver);
         if (method_exists($this, $method)) {
-            return $this->{$method}($notification); // @phpstan-ignore-line
+            return $this->{$method}($notification);
         }
         $email  = $this->email;
         // see if user has alternative email address:

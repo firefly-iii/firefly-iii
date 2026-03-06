@@ -48,7 +48,7 @@ class PiggyBankServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): PiggyBankRepositoryInterface {
             /** @var PiggyBankRepository $repository */
             $repository = app(PiggyBankRepository::class);
-            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
                 $repository->setUser(auth()->user());
             }
 

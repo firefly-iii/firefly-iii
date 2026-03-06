@@ -475,7 +475,7 @@ class Steam
             ->groupBy('transactions.transaction_currency_id')
             ->orderBy('transaction_journals.date', 'ASC')
             ->whereNull('transaction_journals.deleted_at')
-            ->get(['transaction_journals.date', 'transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) AS sum_of_day')]) // @phpstan-ignore-line
+            ->get(['transaction_journals.date', 'transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) AS sum_of_day')])
         ;
 
         $currentBalance       = $startBalance;
@@ -619,7 +619,7 @@ class Steam
             ->transactions()
             ->whereIn('transactions.account_id', $accounts)
             ->groupBy(['transactions.account_id', 'transaction_journals.user_id'])
-            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')]) // @phpstan-ignore-line
+            ->get(['transactions.account_id', DB::raw('MAX(transaction_journals.date) AS max_date')])
         ;
 
         /** @var Transaction $entry */

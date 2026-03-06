@@ -57,7 +57,7 @@ class AdminServiceProvider extends ServiceProvider
             /** @var LinkTypeRepository $repository */
             $repository = app(LinkTypeRepository::class);
             // reference to auth is not understood by phpstan.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 

@@ -353,7 +353,7 @@ class ParseDateString
             }
             $func      = $functions[$direction][$period];
             Log::debug(sprintf('Will now do %s(%d) on %s', $func, $number, $today->format('Y-m-d')));
-            $today->{$func}($number); // @phpstan-ignore-line
+            $today->{$func}($number);
             Log::debug(sprintf('Resulting date is %s', $today->format('Y-m-d')));
         }
 

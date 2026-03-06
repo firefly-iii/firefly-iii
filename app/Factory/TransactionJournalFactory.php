@@ -574,14 +574,14 @@ class TransactionJournalFactory
             return [$sourceAccount, $account];
         }
 
-        if (!$sourceAccount instanceof Account) { // @phpstan-ignore-line
+        if (!$sourceAccount instanceof Account) {
             Log::debug('Source account is NULL, destination account is not.');
             $account = $this->accountRepository->getReconciliation($destinationAccount);
             Log::debug(sprintf('Will return account #%d ("%s") of type "%s"', $account->id, $account->name, $account->accountType->type));
 
             return [$account, $destinationAccount];
         }
-        Log::debug('Unused fallback'); // @phpstan-ignore-line
+        Log::debug('Unused fallback');
 
         return [$sourceAccount, $destinationAccount];
     }

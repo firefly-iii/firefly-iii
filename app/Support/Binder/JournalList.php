@@ -66,7 +66,7 @@ class JournalList implements BinderInterface
     protected static function parseList(string $value): array
     {
         $list = array_unique(array_map(\intval(...), explode(',', $value)));
-        if (0 === count($list)) { // @phpstan-ignore-line
+        if (0 === count($list)) {
             throw new NotFoundHttpException();
         }
 

@@ -156,7 +156,7 @@ class Navigation
         }
         $func      = $map[$period];
         // first do the diff
-        $floatDiff = $beginning->{$func}($end, true); // @phpstan-ignore-line
+        $floatDiff = $beginning->{$func}($end, true);
 
         // then correct for quarterly or half-year
         if ('quarterly' === $period) {
@@ -345,7 +345,7 @@ class Navigation
         $function    = $functionMap[$repeatFreq];
 
         if (array_key_exists($repeatFreq, $modifierMap)) {
-            $currentEnd->{$function}($modifierMap[$repeatFreq])->milli(0); // @phpstan-ignore-line
+            $currentEnd->{$function}($modifierMap[$repeatFreq])->milli(0);
             if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
@@ -363,7 +363,7 @@ class Navigation
 
             return $currentEnd;
         }
-        $currentEnd->{$function}(); // @phpstan-ignore-line
+        $currentEnd->{$function}();
         $currentEnd->endOfDay()->milli(0);
         if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
@@ -406,7 +406,7 @@ class Navigation
 
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $currentEnd->{$function}(); // @phpstan-ignore-line
+            $currentEnd->{$function}();
         }
 
         if ($maxDate instanceof Carbon && $currentEnd > $maxDate) {
@@ -470,7 +470,7 @@ class Navigation
             $formatted           = $begin->format($format);
             $displayed           = $begin->isoFormat($displayFormat);
             $entries[$formatted] = $displayed;
-            $begin->{$increment}(); // @phpstan-ignore-line
+            $begin->{$increment}();
         }
         Log::debug('listOfPeriods end of loop.');
 
@@ -677,13 +677,13 @@ class Navigation
             //            Log::debug(sprintf('Function is ->%s()', $function));
             if (array_key_exists($function, $parameterMap)) {
                 //                Log::debug(sprintf('Parameter map, function becomes ->%s(%s)', $function, implode(', ', $parameterMap[$function])));
-                $date->{$function}($parameterMap[$function][0]); // @phpstan-ignore-line
+                $date->{$function}($parameterMap[$function][0]);
                 //                Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
                 return $date;
             }
 
-            $date->{$function}(); // @phpstan-ignore-line
+            $date->{$function}();
             //            Log::debug(sprintf('Result is "%s"', $date->toIso8601String()));
 
             return $date;
@@ -747,7 +747,7 @@ class Navigation
         $modifierMap = ['quarter'   => 3, '3M'        => 3, 'quarterly' => 3, 'half-year' => 6, '6M'        => 6];
         if (array_key_exists($repeatFreq, $functionMap)) {
             $function = $functionMap[$repeatFreq];
-            $date->{$function}($subtract); // @phpstan-ignore-line
+            $date->{$function}($subtract);
 
             return $date;
         }
@@ -826,7 +826,7 @@ class Navigation
 
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $end->{$function}(); // @phpstan-ignore-line
+            $end->{$function}();
 
             Log::debug(sprintf('updateEndDate returns "%s"', $end->format('Y-m-d')));
 
@@ -877,7 +877,7 @@ class Navigation
         ];
         if (array_key_exists($range, $functionMap)) {
             $function = $functionMap[$range];
-            $start->{$function}(); // @phpstan-ignore-line
+            $start->{$function}();
             Log::debug(sprintf('updateStartDate returns "%s"', $start->format('Y-m-d')));
 
             return $start;

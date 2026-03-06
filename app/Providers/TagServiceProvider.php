@@ -51,7 +51,7 @@ class TagServiceProvider extends ServiceProvider
             /** @var TagRepository $repository */
             $repository = app(TagRepository::class);
 
-            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
                 $repository->setUser(auth()->user());
             }
 
@@ -62,7 +62,7 @@ class TagServiceProvider extends ServiceProvider
             /** @var OperationsRepository $repository */
             $repository = app(OperationsRepository::class);
 
-            if ($app->auth->check()) { // @phpstan-ignore-line (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
                 $repository->setUser(auth()->user());
             }
 

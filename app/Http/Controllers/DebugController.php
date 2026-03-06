@@ -149,7 +149,7 @@ final class DebugController extends Controller
         // get latest log file:
         $logger     = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
-        $handlers   = $logger->getHandlers(); // @phpstan-ignore-line
+        $handlers   = $logger->getHandlers();
         $logContent = '';
         foreach ($handlers as $handler) {
             if ($handler instanceof RotatingFileHandler) {
@@ -323,7 +323,7 @@ final class DebugController extends Controller
     private function getBuildInfo(): array
     {
         $return = [
-            'is_docker'       => env('IS_DOCKER', false), // @phpstan-ignore-line
+            'is_docker'       => env('IS_DOCKER', false),
             'build'           => '(unknown)',
             'build_date'      => '(unknown)',
             'base_build'      => '(unknown)',
@@ -348,11 +348,11 @@ final class DebugController extends Controller
             Log::debug('Could not check build date, but thats ok.');
             Log::warning($e->getMessage());
         }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) { // @phpstan-ignore-line
-            $return['base_build'] = env('BASE_IMAGE_BUILD'); // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
+            $return['base_build'] = env('BASE_IMAGE_BUILD');
         }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) { // @phpstan-ignore-line
-            $return['base_build_date'] = env('BASE_IMAGE_DATE'); // @phpstan-ignore-line
+        if ('' !== (string) env('BASE_IMAGE_DATE')) {
+            $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
 
         return $return;

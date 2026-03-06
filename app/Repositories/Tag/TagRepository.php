@@ -126,7 +126,7 @@ class TagRepository implements TagRepositoryInterface, UserGroupInterface
         $set  = $tag->attachments()->get();
         $disk = Storage::disk('upload');
 
-        return $set->each(static function (Attachment $attachment) use ($disk): void { // @phpstan-ignore-line
+        return $set->each(static function (Attachment $attachment) use ($disk): void {
             /** @var null|Note $note */
             $note                    = $attachment->notes()->first();
             // only used in v1 view of tags

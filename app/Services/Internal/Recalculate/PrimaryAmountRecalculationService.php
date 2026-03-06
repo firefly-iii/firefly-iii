@@ -198,7 +198,7 @@ class PrimaryAmountRecalculationService
     private function recalculatePiggyBankEvents(PiggyBank $piggyBank): void
     {
         $set = $piggyBank->piggyBankEvents()->get();
-        $set->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
+        $set->each(static function (PiggyBankEvent $event): void {
             $event->touch();
         });
         Log::debug(sprintf('Recalculated %d piggy bank events.', $set->count()));

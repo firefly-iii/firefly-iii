@@ -49,7 +49,7 @@ class AttachmentServiceProvider extends ServiceProvider
             /** @var AttachmentRepositoryInterface $repository */
             $repository = app(AttachmentRepository::class);
             // reference to auth is not understood by phpstan.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 

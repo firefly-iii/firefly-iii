@@ -51,7 +51,7 @@ class IsDateOrTime implements ValidationRule
             // probably a date format.
             try {
                 Carbon::createFromFormat('Y-m-d', $value);
-            } catch (InvalidDateException $e) { // @phpstan-ignore-line
+            } catch (InvalidDateException $e) {
                 Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 $fail('validation.date_or_time')->translate();
@@ -71,7 +71,7 @@ class IsDateOrTime implements ValidationRule
         // is an atom string, I hope?
         try {
             Carbon::parse($value);
-        } catch (InvalidDateException $e) { // @phpstan-ignore-line
+        } catch (InvalidDateException $e) {
             Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             $fail('validation.date_or_time')->translate();

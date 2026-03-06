@@ -552,7 +552,7 @@ class OperatorQuerySearch implements SearchInterface
             return;
         }
         Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
-        $this->collector->{$collectorMethod}($filtered); // @phpstan-ignore-line
+        $this->collector->{$collectorMethod}($filtered);
     }
 
     /**
@@ -661,7 +661,7 @@ class OperatorQuerySearch implements SearchInterface
             return;
         }
         Log::debug(sprintf('Left with %d, set as %s().', $filtered->count(), $collectorMethod));
-        $this->collector->{$collectorMethod}($filtered); // @phpstan-ignore-line
+        $this->collector->{$collectorMethod}($filtered);
     }
 
     /**

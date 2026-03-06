@@ -101,7 +101,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             'webhooks',
         ];
         foreach ($objects as $object) {
-            foreach ($userGroup->{$object}()->get() as $item) { // @phpstan-ignore-line
+            foreach ($userGroup->{$object}()->get() as $item) {
                 $item->delete();
             }
         }
@@ -257,7 +257,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
                 0 === $ownerCount
                 && (
                     0 === count($data['roles'])
-                    || count($data['roles']) > 0 // @phpstan-ignore-line
+                    || count($data['roles']) > 0
                     && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true)
                 )
             ) {

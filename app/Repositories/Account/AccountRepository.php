@@ -271,7 +271,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     {
         $query = $this->user
             ->accounts()
-            ->with([ // @phpstan-ignore-line
+            ->with([
                 'accountmeta' => static function (HasMany $query): void {
                     $query->where('name', 'account_role');
                 },
@@ -296,7 +296,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
         /** @var Storage $disk */
         $disk = Storage::disk('upload');
 
-        return $set->each(static function (Attachment $attachment) use ($disk): Attachment { // @phpstan-ignore-line
+        return $set->each(static function (Attachment $attachment) use ($disk): Attachment {
             $notes                   = $attachment->notes()->first();
             $attachment->file_exists = $disk->exists($attachment->fileName());
             $attachment->notes_text  = null !== $notes ? $notes->text : '';
@@ -335,7 +335,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
     {
         $query = $this->user
             ->accounts()
-            ->with(['accountmeta' => static function (HasMany $query): void { // @phpstan-ignore-line
+            ->with(['accountmeta' => static function (HasMany $query): void {
                 $query->where('name', 'account_role');
             }])
         ;

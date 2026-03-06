@@ -82,7 +82,7 @@ class BelongsUser implements ValidationRule
         }
         $count   = 0;
         foreach ($objects as $object) {
-            $objectValue = trim((string) $object->{$field}); // @phpstan-ignore-line
+            $objectValue = trim((string) $object->{$field});
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));
             if ($objectValue === $value) {
                 ++$count;

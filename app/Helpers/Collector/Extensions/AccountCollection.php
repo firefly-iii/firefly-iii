@@ -178,7 +178,7 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void {
                 $query->whereIn('source.account_id', $accountIds);
                 $query->orWhereIn('destination.account_id', $accountIds);
             });
@@ -196,7 +196,7 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void {
                 $query->whereIn('source.account_id', $accountIds);
                 $query->whereIn('destination.account_id', $accountIds);
             });
@@ -228,7 +228,7 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $query) use ($accountIds): void {
                 $query->whereNotIn('source.account_id', $accountIds);
                 $query->whereNotIn('destination.account_id', $accountIds);
             });
@@ -261,7 +261,7 @@ trait AccountCollection
     {
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
-            $this->query->where(static function (EloquentBuilder $q1) use ($accountIds): void { // @phpstan-ignore-line
+            $this->query->where(static function (EloquentBuilder $q1) use ($accountIds): void {
                 // sourceAccount is in the set, and destination is NOT.
 
                 $q1->where(static function (EloquentBuilder $q2) use ($accountIds): void {

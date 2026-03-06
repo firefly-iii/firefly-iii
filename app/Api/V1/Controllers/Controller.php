@@ -224,7 +224,7 @@ abstract class Controller extends BaseController
             }
             if (
                 null === $value
-                && 'limit' === $integer // @phpstan-ignore-line
+                && 'limit' === $integer
                 && auth()->check()
             ) {
                 // set default for user:

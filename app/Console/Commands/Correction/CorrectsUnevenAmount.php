@@ -324,7 +324,7 @@ class CorrectsUnevenAmount extends Command
             $sum = Steam::floatalize($sum);
             if (
                 !is_numeric($sum)
-                || '' === $sum // @phpstan-ignore-line
+                || '' === $sum
                 || str_contains($sum, 'e')
                 || str_contains($sum, ',')
             ) {

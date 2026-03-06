@@ -86,7 +86,7 @@ class JournalAPIRepository implements JournalAPIRepositoryInterface, UserGroupIn
     public function getPiggyBankEvents(TransactionJournal $journal): Collection
     {
         $events = $journal->piggyBankEvents()->get();
-        $events->each(static function (PiggyBankEvent $event): void { // @phpstan-ignore-line
+        $events->each(static function (PiggyBankEvent $event): void {
             $event->piggyBank = PiggyBank::withTrashed()->find($event->piggy_bank_id);
         });
 

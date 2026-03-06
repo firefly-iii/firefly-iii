@@ -205,7 +205,7 @@ trait ConvertsDataTypes
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        if (method_exists($this, 'validateUserGroup')) { // @phpstan-ignore-line
+        if (method_exists($this, 'validateUserGroup')) {
             $userGroup = $this->validateUserGroup($this);
             $repository->setUserGroup($userGroup);
         }
@@ -290,11 +290,11 @@ trait ConvertsDataTypes
             // probably a date format.
             try {
                 $carbon = Carbon::createFromFormat('Y-m-d', $value, config('app.timezone'));
-            } catch (InvalidDateException $e) { // @phpstan-ignore-line
+            } catch (InvalidDateException $e) {
                 Log::error(sprintf('[1] "%s" is not a valid date: %s', $value, $e->getMessage()));
 
                 return null;
-            } catch (InvalidFormatException $e) { // @phpstan-ignore-line
+            } catch (InvalidFormatException $e) {
                 Log::error(sprintf('[2] "%s" is of an invalid format: %s', $value, $e->getMessage()));
 
                 return null;
@@ -312,7 +312,7 @@ trait ConvertsDataTypes
         try {
             $carbon = Carbon::parse($value);
             $carbon->setTimezone(config('app.timezone'));
-        } catch (InvalidDateException $e) { // @phpstan-ignore-line
+        } catch (InvalidDateException $e) {
             Log::error(sprintf('[3] "%s" is not a valid date or time: %s', $value, $e->getMessage()));
 
             return null;
@@ -385,7 +385,7 @@ trait ConvertsDataTypes
         foreach ($fields as $field => $info) {
             if (true === $this->has($info[0])) {
                 $method         = $info[1];
-                $return[$field] = $this->{$method}($info[0]); // @phpstan-ignore-line
+                $return[$field] = $this->{$method}($info[0]);
             }
         }
 

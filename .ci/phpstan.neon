@@ -1,4 +1,29 @@
 parameters:
+  ergebnis:
+    noExtends:
+      enabled: false
+    final:
+      enabled: false
+    noParameterWithNullDefaultValue:
+      enabled: false
+    noParameterWithNullableTypeDeclaration:
+      enabled: false
+    noCompact:
+      enabled: false
+    noSwitch:
+      enabled: false
+    noNullableReturnTypeDeclaration:
+      enabled: false
+    privateInFinalClass:
+      enabled: false
+    noIsset:
+      enabled: false
+    finalInAbstractClass:
+      enabled: false
+    noConstructorParameterWithDefaultValue:
+      enabled: false
+    noNamedArgument:
+      enabled: false
   paths:
     - ../app
     - ../database

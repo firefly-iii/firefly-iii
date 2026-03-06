@@ -394,7 +394,7 @@ class OperationsRepository implements OperationsRepositoryInterface, UserGroupIn
             ];
 
             $array[$currencyId]['transaction_journals'][$journalId] = [
-                'amount'                   => Steam::{$direction}((string) $journal['amount']), // @phpstan-ignore-line
+                'amount'                   => Steam::{$direction}((string) $journal['amount']),
                 'date'                     => $journal['date'],
                 'transaction_journal_id'   => $journalId,
                 'budget_name'              => $journal['budget_name'],

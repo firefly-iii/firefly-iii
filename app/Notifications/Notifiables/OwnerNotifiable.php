@@ -46,7 +46,7 @@ class OwnerNotifiable
         if (method_exists($this, $method)) {
             Log::debug(sprintf('Redirect for settings to "%s".', $method));
 
-            return $this->{$method}($notification); // @phpstan-ignore-line
+            return $this->{$method}($notification);
         }
         Log::debug(sprintf('No method "%s" found, return generic settings.', $method));
 

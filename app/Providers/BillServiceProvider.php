@@ -50,7 +50,7 @@ class BillServiceProvider extends ServiceProvider
             $repository = app(BillRepository::class);
 
             // reference to auth is not understood by phpstan.
-            if ($app->auth->check()) { // @phpstan-ignore-line
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 

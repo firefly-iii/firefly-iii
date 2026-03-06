@@ -86,7 +86,7 @@ final class PreferencesController extends Controller
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::MORTGAGE->value,
         ]);
-        $isDocker                       = env('IS_DOCKER', false); // @phpstan-ignore-line
+        $isDocker                       = env('IS_DOCKER', false);
         $groupedAccounts                = [];
 
         /** @var Account $account */

@@ -102,7 +102,7 @@ abstract class Controller extends BaseController
         if ('true' === request()->get('force_default_layout') && 'v2' === config('view.layout')) {
             // config('view.layout','v1');
             Config::set('view.layout', 'v1');
-            View::getFinder()->setPaths([realpath(base_path('resources/views'))]); // @phpstan-ignore-line
+            View::getFinder()->setPaths([realpath(base_path('resources/views'))]);
         }
 
         View::share('authGuard', $authGuard);
