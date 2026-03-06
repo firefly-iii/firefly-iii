@@ -48,6 +48,10 @@ class AvailableBudgetCalculator
     private AvailableBudgetRepositoryInterface $abRepository;
     private BudgetLimitRepositoryInterface $blRepository;
 
+    public function __construct() {
+        Log::debug('Created new AvailableBudgetCalculator');
+    }
+
     public function recalculateByRange(): void
     {
         Log::debug(sprintf('Now in recalculateByRange(%s, %s)', $this->start->format('Y-m-d'), $this->start->format('Y-m-d')));

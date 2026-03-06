@@ -27,6 +27,7 @@ namespace FireflyIII\Events\Model\BudgetLimit;
 use FireflyIII\Events\Event;
 use FireflyIII\Models\BudgetLimit;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class UpdatedBudgetLimit extends Event
 {
@@ -35,5 +36,7 @@ class UpdatedBudgetLimit extends Event
     public function __construct(
         public BudgetLimit $budgetLimit,
         public bool $createWebhookMessages
-    ) {}
+    ) {
+        Log::debug(sprintf('UpdatedBudgetLimit(#%d) Event', $budgetLimit->id));
+    }
 }
