@@ -112,19 +112,6 @@ final class BasicController extends Controller
         return response()->json($return);
     }
 
-    /**
-     * Check if date is outside session range.
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool
-    { // Validate a preference
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            return true;
-        }
-
-        // start and end in the past? use $end
-        return $start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date);
-    }
-
     private function getBalanceInformation(Carbon $start, Carbon $end): array
     {
         Log::debug('getBalanceInformation');

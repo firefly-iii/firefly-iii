@@ -176,7 +176,7 @@ final class RegisterController extends Controller
     /**
      * @throws FireflyException
      */
-    protected function allowedToRegister(): bool
+    private function allowedToRegister(): bool
     {
         // is allowed to register?
         $allowRegistration = true;
