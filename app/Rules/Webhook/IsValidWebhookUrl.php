@@ -7,6 +7,7 @@ use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\IpUtils;
+use function Safe\parse_url;
 
 class IsValidWebhookUrl implements ValidationRule
 {
