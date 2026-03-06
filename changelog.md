@@ -7,7 +7,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added
 
-- Add some debug info to find 
+- Add some debug info to find problems with available budget calculations.
 
 ### Fixed
 
@@ -17,7 +17,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Security
 
 - Published security advisory https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-5q8v-j673-m5v4 found and reported by @lighthousekeeper1212
-- It's possible to submit webhook URLs that point to internal IP addresses. This will still be the case in the future, though some reserved ranges are no blocked. Let me know if this impacts you.
+- It's possible to submit webhook URLs that point to internal IP addresses. This will still be the case in the future, though some reserved ranges are now blocked. Let me know if this impacts you.
 
 ### API
 
