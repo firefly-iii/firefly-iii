@@ -123,7 +123,6 @@ final class LoginController extends Controller
             // send a custom login event because laravel will also fire a login event if a "remember me"-cookie
             // restores the event.
             event(new UserSuccessfullyLoggedIn($this->guard()->user()));
-
             return $this->sendLoginResponse($request);
         }
         Log::warning('Login attempt failed.');
@@ -275,7 +274,7 @@ final class LoginController extends Controller
         $request->session()->regenerate();
         $this->clearLoginAttempts($request);
         $response = $this->authenticated($request, $this->guard()->user());
-        if ($response) {
+        if (null !== $response) {
             return $response;
         }
         $path     = Steam::getSafeUrl(session()->pull('url.intended', route('index')), route('index'));

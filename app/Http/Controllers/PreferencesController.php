@@ -86,7 +86,7 @@ final class PreferencesController extends Controller
             AccountTypeEnum::DEBT->value,
             AccountTypeEnum::MORTGAGE->value,
         ]);
-        $isDocker                       = env('IS_DOCKER', false);
+        $isDocker                       = config('firefly.is_docker');
         $groupedAccounts                = [];
 
         /** @var Account $account */

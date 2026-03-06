@@ -62,7 +62,7 @@ final class BatchController extends Controller
         }
         Log::debug(sprintf('Counted %d journals.', count($journals)));
 
-        /** @var TransactionJournal $first */
+        /** @var TransactionJournal|null $first */
         $first             = $journals->first();
         $group             = $first?->transactionGroup;
         if (null === $group) {

@@ -36,7 +36,7 @@ return [
     |
     */
 
-    'default' => envNonEmpty('CACHE_DRIVER', 'file'),
+    'default' => envDefaultWhenEmpty(env('CACHE_DRIVER'), 'file'),
 
     /*
     |--------------------------------------------------------------------------

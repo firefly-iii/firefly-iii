@@ -58,10 +58,9 @@ class SendsWebhookMessages implements ShouldQueue
                 $message->save();
                 Log::debug(sprintf('Send message #%d', $message->id));
                 SendWebhookMessage::dispatch($message)->afterResponse();
+                continue;
             }
-            if (false !== $message->sent) {
-                Log::debug(sprintf('Skip message #%d', $message->id));
-            }
+            Log::debug(sprintf('Skip message #%d', $message->id));
         }
 
         // clean up sent messages table:

@@ -45,7 +45,7 @@ final class DestroyController extends Controller
         parent::__construct();
         $this->middleware(function ($request, $next) {
             $this->repository = app(BillRepositoryInterface::class);
-            $this->repository->setUser(auth()->user());
+            $this->repository->setUser(auth(    )->user());
 
             return $next($request);
         });

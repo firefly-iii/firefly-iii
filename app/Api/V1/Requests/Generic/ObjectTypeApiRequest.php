@@ -75,7 +75,7 @@ class ObjectTypeApiRequest extends ApiRequest
     public function withValidator(Validator $validator): void
     {
         $validator->after(function (Validator $validator): void {
-            if ($validator->failed()) {
+            if (count($validator->failed()) > 0) {
                 return;
             }
             $type = $this->convertString('types', 'all');

@@ -34,8 +34,8 @@ $validChannels      = ['single', 'papertrail', 'stdout', 'daily', 'syslog', 'err
 $validAuditChannels = ['audit_papertrail', 'audit_stdout', 'audit_stdout', 'audit_daily', 'audit_syslog', 'audit_errorlog'];
 
 // which settings did the user set, if any?
-$defaultLogChannel  = (string) envNonEmpty('LOG_CHANNEL', 'stack');
-$auditLogChannel    = (string) envNonEmpty('AUDIT_LOG_CHANNEL', '');
+$defaultLogChannel  = (string) envDefaultWhenEmpty(env('LOG_CHANNEL'), 'stack');
+$auditLogChannel    = (string) env('AUDIT_LOG_CHANNEL');
 
 if ('stack' === $defaultLogChannel) {
     $defaultChannels = ['daily', 'stdout'];
@@ -60,8 +60,8 @@ return [
     |
     */
 
-    'default'  => envNonEmpty('LOG_CHANNEL', 'stack'),
-    'level'    => envNonEmpty('APP_LOG_LEVEL', 'info'),
+    'default'  => envDefaultWhenEmpty(env('LOG_CHANNEL'), 'stack'),
+    'level'    => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
     /*
     |--------------------------------------------------------------------------
     | Log Channels
@@ -93,11 +93,11 @@ return [
         'single'           => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
         ],
         'papertrail'       => [
             'driver'       => 'monolog',
-            'level'        => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'        => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
             'handler'      => SyslogUdpHandler::class,
             'handler_with' => [
                 'host' => env('PAPERTRAIL_HOST'),
@@ -107,21 +107,21 @@ return [
         'stdout'           => [
             'driver' => 'single',
             'path'   => 'php://stdout',
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
         ],
         'daily'            => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-'.PHP_SAPI.'.log'),
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
             'days'   => 7,
         ],
         'syslog'           => [
             'driver' => 'syslog',
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
         ],
         'errorlog'         => [
             'driver' => 'errorlog',
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('APP_LOG_LEVEL'), 'info'),
         ],
 
         /*
@@ -130,7 +130,7 @@ return [
          */
         'audit_papertrail' => [
             'driver'       => 'monolog',
-            'level'        => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
+            'level'        => envDefaultWhenEmpty(env('AUDIT_LOG_LEVEL'), 'info'),
             'handler'      => SyslogUdpHandler::class,
             'tap'          => [AuditLogger::class],
             'handler_with' => [
@@ -142,24 +142,24 @@ return [
             'driver' => 'single',
             'path'   => 'php://stdout',
             'tap'    => [AuditLogger::class],
-            'level'  => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('AUDIT_LOG_LEVEL'), 'info'),
         ],
         'audit_daily'      => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-audit.log'),
             'tap'    => [AuditLogger::class],
-            'level'  => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('AUDIT_LOG_LEVEL'), 'info'),
             'days'   => 90,
         ],
         'audit_syslog'     => [
             'driver' => 'syslog',
             'tap'    => [AuditLogger::class],
-            'level'  => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('AUDIT_LOG_LEVEL'), 'info'),
         ],
         'audit_errorlog'   => [
             'driver' => 'errorlog',
             'tap'    => [AuditLogger::class],
-            'level'  => envNonEmpty('AUDIT_LOG_LEVEL', 'info'),
+            'level'  => envDefaultWhenEmpty(env('AUDIT_LOG_LEVEL'), 'info'),
         ],
     ],
 ];

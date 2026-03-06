@@ -201,25 +201,25 @@ class Navigation
             Log::debug('endOfPeriod() requests "YTD" + future, set it to "3M" instead.');
             $repeatFreq = '3M';
         }
-
+        $new = Carbon::now();
         $functionMap = [
             '1D'        => 'endOfDay',
             'daily'     => 'endOfDay',
-            '1W'        => 'addWeek',
-            'week'      => 'addWeek',
-            'weekly'    => 'addWeek',
-            '1M'        => 'addMonth',
-            'month'     => 'addMonth',
-            'monthly'   => 'addMonth',
-            '3M'        => 'addQuarter',
-            'quarter'   => 'addQuarter',
-            'quarterly' => 'addQuarter',
+            '1W'        => 'addWeeks',
+            'week'      => 'addWeeks',
+            'weekly'    => 'addWeeks',
+            '1M'        => 'addMonths',
+            'month'     => 'addMonths',
+            'monthly'   => 'addMonths',
+            '3M'        => 'addQuarters',
+            'quarter'   => 'addQuarters',
+            'quarterly' => 'addQuarters',
             '6M'        => 'addMonths',
             'half-year' => 'addMonths',
             'half_year' => 'addMonths',
-            'year'      => 'addYear',
-            'yearly'    => 'addYear',
-            '1Y'        => 'addYear',
+            'year'      => 'addYears',
+            'yearly'    => 'addYears',
+            '1Y'        => 'addYears',
         ];
         $modifierMap = ['half-year' => 6, 'half_year' => 6, '6M'        => 6];
         $subDay      = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'half_year', '1Y', 'year', 'yearly'];

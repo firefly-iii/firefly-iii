@@ -34,7 +34,7 @@ return [
     |
     */
 
-    'guard'                  => envNonEmpty('AUTHENTICATION_GUARD', 'web'),
+    'guard'                  => envDefaultWhenEmpty(env('AUTHENTICATION_GUARD'), 'web'),
 
     /*
     |--------------------------------------------------------------------------

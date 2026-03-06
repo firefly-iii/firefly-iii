@@ -36,12 +36,12 @@ use Illuminate\Support\Facades\URL;
 use Spatie\Html\Facades\Html;
 
 return [
-    'name'            => envNonEmpty('APP_NAME', 'Firefly III'),
-    'env'             => envNonEmpty('APP_ENV', 'production'),
+    'name'            => envDefaultWhenEmpty(env('APP_NAME'), 'Firefly III'),
+    'env'             => envDefaultWhenEmpty(env('APP_ENV'), 'production'),
     'debug'           => env('APP_DEBUG', false),
-    'url'             => envNonEmpty('APP_URL', 'http://localhost'),
-    'timezone'        => envNonEmpty('TZ', 'UTC'),
-    'locale'          => envNonEmpty('DEFAULT_LANGUAGE', 'en_US'),
+    'url'             => envDefaultWhenEmpty(env('APP_URL'), 'http://localhost'),
+    'timezone'        => envDefaultWhenEmpty(env('TZ'), 'UTC'),
+    'locale'          => envDefaultWhenEmpty(env('DEFAULT_LANGUAGE'), 'en_US'),
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',

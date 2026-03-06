@@ -67,7 +67,7 @@ class SecureHeaders
         ];
 
         // overrule in development mode
-        if (true === env('IS_LOCAL_DEV')) {
+        if (true === config('firefly.is_local_dev')) {
             $csp = [
                 "default-src 'none'",
                 "object-src 'none'",

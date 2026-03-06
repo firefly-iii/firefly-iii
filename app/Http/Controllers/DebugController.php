@@ -52,10 +52,8 @@ use Illuminate\View\View;
 use Monolog\Handler\RotatingFileHandler;
 use Safe\Exceptions\FilesystemException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-
 use function Safe\file_get_contents;
 use function Safe\ini_get;
-
 use const PHP_INT_SIZE;
 use const PHP_SAPI;
 
@@ -104,7 +102,7 @@ final class DebugController extends Controller
      *
      * @throws FireflyException
      */
-    public function flush(Request $request): Redirector|RedirectResponse
+    public function flush(Request $request): Redirector | RedirectResponse
     {
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
@@ -140,14 +138,14 @@ final class DebugController extends Controller
      *
      * @throws FilesystemException
      */
-    public function index(): Factory|\Illuminate\Contracts\View\View
+    public function index(): Factory | \Illuminate\Contracts\View\View
     {
-        $table      = $this->generateTable();
-        $table      = str_replace(["\n", "\t", '  '], '', $table);
-        $now        = now(config('app.timezone'))->format('Y-m-d H:i:s');
+        $table = $this->generateTable();
+        $table = str_replace(["\n", "\t", '  '], '', $table);
+        $now   = now(config('app.timezone'))->format('Y-m-d H:i:s');
 
         // get latest log file:
-        $logger     = Log::driver();
+        $logger = Log::driver();
         // PHPstan doesn't recognize the method because of its polymorphic nature.
         $handlers   = $logger->getHandlers();
         $logContent = '';
@@ -161,10 +159,10 @@ final class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
+            $logContent = 'Truncated from this point <----|' . substr($logContent, -16384);
         }
 
-        return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
+        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
     }
 
     public function routes(Request $request): never
@@ -241,13 +239,13 @@ final class DebugController extends Controller
 
                 continue;
             }
-            $params                    = [];
+            $params = [];
             foreach ($route->parameterNames() as $name) {
                 $params[] = $this->getParameter($name);
             }
             $return[$route->getName()] = route($route->getName(), $params);
         }
-        $count  = 0;
+        $count = 0;
         echo '<hr>';
         echo '<h1>Routes</h1>';
         echo sprintf('<h2>%s</h2>', $count);
@@ -267,7 +265,7 @@ final class DebugController extends Controller
     /**
      * Flash all types of messages.
      */
-    public function testFlash(Request $request): Redirector|RedirectResponse
+    public function testFlash(Request $request): Redirector | RedirectResponse
     {
         $request->session()->flash('success', 'This is a success message.');
         $request->session()->flash('info', 'This is an info message.');
@@ -285,15 +283,15 @@ final class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
+        return (string)view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
     }
 
     private function getAppInfo(): array
     {
-        $userGuard      = config('auth.defaults.guard');
+        $userGuard = config('auth.defaults.guard');
 
         $config         = FireflyConfig::get('last_rt_job', 0);
-        $lastTime       = (int) $config->data;
+        $lastTime       = (int)$config->data;
         $lastCronjob    = 'never';
         $lastCronjobAgo = 'never';
         if ($lastTime > 0) {
@@ -304,9 +302,9 @@ final class DebugController extends Controller
 
         return [
             'debug'              => var_export(config('app.debug'), true),
-            'audit_log_channel'  => envNonEmpty('AUDIT_LOG_CHANNEL', '(empty)'),
-            'default_language'   => (string) config('firefly.default_language'),
-            'default_locale'     => (string) config('firefly.default_locale'),
+            'audit_log_channel'  => join(', ', config('logging.channels.audit.channels')),
+            'default_language'   => (string)config('firefly.default_language'),
+            'default_locale'     => (string)config('firefly.default_locale'),
             'remote_header'      => 'remote_user_guard' === $userGuard ? config('auth.guard_header') : 'N/A',
             'remote_mail_header' => 'remote_user_guard' === $userGuard ? config('auth.guard_email') : 'N/A',
             'stateful_domains'   => implode(', ', config('sanctum.stateful')),
@@ -315,19 +313,19 @@ final class DebugController extends Controller
             // any of the cron jobs will do, they always run at the same time.
             // but this job is the oldest, so the biggest chance it ran once
 
-            'last_cronjob'       => $lastCronjob,
-            'last_cronjob_ago'   => $lastCronjobAgo,
+            'last_cronjob'     => $lastCronjob,
+            'last_cronjob_ago' => $lastCronjobAgo,
         ];
     }
 
     private function getBuildInfo(): array
     {
         $return = [
-            'is_docker'       => env('IS_DOCKER', false),
+            'is_docker'       => config('firefly.is_docker'),
             'build'           => '(unknown)',
             'build_date'      => '(unknown)',
-            'base_build'      => '(unknown)',
-            'base_build_date' => '(unknown)',
+            'base_build'      => config('firefly.base_image_build'),
+            'base_build_date' => config('firefly.base_image_date'),
         ];
 
         try {
@@ -347,12 +345,6 @@ final class DebugController extends Controller
         } catch (Exception $e) {
             Log::debug('Could not check build date, but thats ok.');
             Log::warning($e->getMessage());
-        }
-        if ('' !== (string) env('BASE_IMAGE_BUILD')) {
-            $return['base_build'] = env('BASE_IMAGE_BUILD');
-        }
-        if ('' !== (string) env('BASE_IMAGE_DATE')) {
-            $return['base_build_date'] = env('BASE_IMAGE_DATE');
         }
 
         return $return;
@@ -471,7 +463,7 @@ final class DebugController extends Controller
             'bits'            => PHP_INT_SIZE * 8,
             'bcscale'         => bcscale(),
             'display_errors'  => ini_get('display_errors'),
-            'error_reporting' => $this->errorReporting((int) ini_get('error_reporting')),
+            'error_reporting' => $this->errorReporting((int)ini_get('error_reporting')),
             'upload_size'     => min($maxFileSize, $maxPostSize),
             'all_drivers'     => $drivers,
             'current_driver'  => $currentDriver,
@@ -480,10 +472,10 @@ final class DebugController extends Controller
 
     private function getUserFlags(): string
     {
-        $flags      = [];
+        $flags = [];
 
         /** @var User $user */
-        $user       = auth()->user();
+        $user = auth()->user();
 
         // has liabilities
         if ($user->accounts()->accountTypeIn([AccountTypeEnum::DEBT->value, AccountTypeEnum::LOAN->value, AccountTypeEnum::MORTGAGE->value])->count() > 0) {
@@ -499,7 +491,7 @@ final class DebugController extends Controller
         }
 
         // has stored reconciliations
-        $type       = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
+        $type = TransactionType::whereType(TransactionTypeEnum::RECONCILIATION->value)->first();
         if ($user->transactionJournals()->where('transaction_type_id', $type->id)->count() > 0) {
             $flags[] = '<span title="Has reconciled">:ledger:</span>';
         }
@@ -531,22 +523,22 @@ final class DebugController extends Controller
 
     private function getUserInfo(): array
     {
-        $userFlags      = $this->getUserFlags();
+        $userFlags = $this->getUserFlags();
 
         // user info
-        $userAgent      = request()->header('user-agent');
+        $userAgent = request()->header('user-agent');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, '0');
         $localeAttempts = [];
         $parts          = Steam::getLocaleArray(Steam::getLocale());
         foreach ($parts as $code) {
-            $code                  = trim($code);
+            $code = trim($code);
             Log::debug(sprintf('Trying to set %s', $code));
             $result                = setlocale(LC_ALL, $code);
             $localeAttempts[$code] = $result === $code;
         }
-        setlocale(LC_ALL, (string) $original);
+        setlocale(LC_ALL, (string)$original);
 
         return [
             'user_id'            => auth()->user()->id,

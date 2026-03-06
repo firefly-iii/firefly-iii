@@ -47,7 +47,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method        EloquentBuilder|static after()
  * @method static EloquentBuilder|static query()
  *
- * @property TransactionGroup $transactionGroup
+ * @property TransactionGroup|null $transactionGroup
+ * @property Carbon $date
  */
 #[ObservedBy([DeletedTransactionJournalObserver::class])]
 class TransactionJournal extends Model
