@@ -132,7 +132,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): ObjectGroupRepositoryInterface {
             /** @var ObjectGroupRepository $repository */
             $repository = app(ObjectGroupRepository::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -142,7 +142,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): PeriodStatisticRepositoryInterface {
             /** @var PeriodStatisticRepository $repository */
             $repository = app(PeriodStatisticRepository::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -152,7 +152,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): WebhookRepositoryInterface {
             /** @var WebhookRepository $repository */
             $repository = app(WebhookRepository::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 
@@ -170,7 +170,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): RuleEngineInterface {
             /** @var SearchRuleEngine $engine */
             $engine = app(SearchRuleEngine::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $engine->setUser(auth()->user());
             }
 
@@ -180,7 +180,7 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): UserGroupRepositoryInterface {
             /** @var UserGroupRepository $repository */
             $repository = app(UserGroupRepository::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $repository->setUser(auth()->user());
             }
 

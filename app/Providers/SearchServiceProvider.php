@@ -52,7 +52,7 @@ class SearchServiceProvider extends ServiceProvider
         $this->app->bind(static function (Application $app): SearchInterface {
             /** @var OperatorQuerySearch $search */
             $search = app(OperatorQuerySearch::class);
-            if ($app->auth->check()) {  (phpstan does not understand the reference to auth)
+            if ($app->auth->check()) {
                 $search->setUser(auth()->user());
             }
 
