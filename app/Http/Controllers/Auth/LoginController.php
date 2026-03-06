@@ -123,6 +123,7 @@ final class LoginController extends Controller
             // send a custom login event because laravel will also fire a login event if a "remember me"-cookie
             // restores the event.
             event(new UserSuccessfullyLoggedIn($this->guard()->user()));
+
             return $this->sendLoginResponse($request);
         }
         Log::warning('Login attempt failed.');

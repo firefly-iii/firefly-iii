@@ -24,12 +24,12 @@ declare(strict_types=1);
 
 use function Safe\parse_url;
 
-$databaseUrl = getenv('DATABASE_URL');
-$host        = '';
-$username    = '';
-$password    = '';
-$database    = '';
-$port        = '';
+$databaseUrl       = getenv('DATABASE_URL');
+$host              = '';
+$username          = '';
+$password          = '';
+$database          = '';
+$port              = '';
 
 if (false !== $databaseUrl) {
     $options  = parse_url($databaseUrl);
@@ -48,8 +48,8 @@ $mysql_ssl_key     = env('MYSQL_SSL_KEY');
 $mysql_ssl_ciphers = env('MYSQL_SSL_CIPHER');
 $mysql_ssl_verify  = env('MYSQL_SSL_VERIFY_SERVER_CERT');
 
-$mySqlSSLOptions = [];
-$useSSL          = envDefaultWhenEmpty(env('MYSQL_USE_SSL'), false);
+$mySqlSSLOptions   = [];
+$useSSL            = envDefaultWhenEmpty(env('MYSQL_USE_SSL'), false);
 if (false !== $useSSL && null !== $useSSL && '' !== $useSSL) {
     if (null !== $mysql_ssl_ca_dir) {
         $mySqlSSLOptions[PDO::MYSQL_ATTR_SSL_CAPATH] = $mysql_ssl_ca_dir;

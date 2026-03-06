@@ -43,7 +43,7 @@ class CategoryList implements BinderInterface
             if ('allCategories' === $value) {
                 return auth()->user()->categories()->orderBy('name', 'ASC')->get();
             }
-            if('' === $value) {
+            if ('' === $value) {
                 Log::warning('Category list count is zero, return 404.');
 
                 throw new NotFoundHttpException();

@@ -66,11 +66,12 @@ class JournalList implements BinderInterface
 
     protected static function parseList(string $value): array
     {
-        if('' === $value) {
+        if ('' === $value) {
             Log::warning('Category list count is zero, return 404.');
 
             throw new NotFoundHttpException();
         }
+
         return array_unique(array_map(\intval(...), explode(',', $value)));
     }
 }

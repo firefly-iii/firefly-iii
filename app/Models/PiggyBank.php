@@ -38,8 +38,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property Carbon|null $target_date
- * @property Carbon|null $start_date
+ * @property null|Carbon $target_date
+ * @property null|Carbon $start_date
  */
 #[ObservedBy([PiggyBankObserver::class])]
 class PiggyBank extends Model
@@ -47,37 +47,37 @@ class PiggyBank extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-        = [
-            'name',
-            'order',
-            'target_amount',
-            'start_date',
-            'start_date_tz',
-            'target_date',
-            'target_date_tz',
-            'active',
-            'transaction_currency_id',
-            'native_target_amount',
-        ];
+    protected $fillable = [
+        'name',
+        'order',
+        'target_amount',
+        'start_date',
+        'start_date_tz',
+        'target_date',
+        'target_date_tz',
+        'active',
+        'transaction_currency_id',
+        'native_target_amount',
+    ];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self | string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if ($value instanceof self) {
-            $value = (int)$value->id;
+            $value = (int) $value->id;
         }
         if (auth()->check()) {
-            $piggyBankId = (int)$value;
+            $piggyBankId = (int) $value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                               ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
-                               ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
-                               ->where('accounts.user_id', auth()->user()->id)
-                               ->first(['piggy_banks.*']);
+                ->leftJoin('account_piggy_bank', 'account_piggy_bank.piggy_bank_id', '=', 'piggy_banks.id')
+                ->leftJoin('accounts', 'accounts.id', '=', 'account_piggy_bank.account_id')
+                ->where('accounts.user_id', auth()->user()->id)
+                ->first(['piggy_banks.*'])
+            ;
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -132,7 +132,7 @@ class PiggyBank extends Model
      */
     public function setTargetAmountAttribute($value): void
     {
-        $this->attributes['target_amount'] = (string)$value;
+        $this->attributes['target_amount'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -142,7 +142,7 @@ class PiggyBank extends Model
 
     protected function accountId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function casts(): array
@@ -163,7 +163,7 @@ class PiggyBank extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -171,6 +171,6 @@ class PiggyBank extends Model
      */
     protected function targetAmount(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string)$value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 }

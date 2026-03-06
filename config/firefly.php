@@ -78,16 +78,16 @@ return [
         'running_balance_column' => (bool)envDefaultWhenEmpty(env('USE_RUNNING_BALANCE'), true), // this is only the default value, is not used.
         // see cer.php for exchange rates feature flag.
     ],
-    'version'                              => '6.5.4',
-    'build_time'                           => 1772787852,
+    'version'                              => 'develop/2026-03-06',
+    'build_time'                           => 1772807311,
     'api_version'                          => '2.1.0', // field is no longer used.
     'db_version'                           => 28, // field is no longer used.
 
     // Docker build info, if present:
-    'is_docker' => env('IS_DOCKER', false),
-    'base_image_build' => envDefaultWhenEmpty(env('BASE_IMAGE_BUILD'),'(unknown)'),
-    'base_image_date' => envDefaultWhenEmpty(env('BASE_IMAGE_DATE'),'(unknown)'),
-    'is_local_dev' => env('IS_LOCAL_DEV', false),
+    'is_docker'                            => env('IS_DOCKER', false),
+    'base_image_build'                     => envDefaultWhenEmpty(env('BASE_IMAGE_BUILD'), '(unknown)'),
+    'base_image_date'                      => envDefaultWhenEmpty(env('BASE_IMAGE_DATE'), '(unknown)'),
+    'is_local_dev'                         => env('IS_LOCAL_DEV', false),
 
     // generic settings
     'maxUploadSize'                        => 1073741824, // 1 GB

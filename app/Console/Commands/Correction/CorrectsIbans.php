@@ -35,9 +35,9 @@ class CorrectsIbans extends Command
 {
     use ShowsFriendlyMessages;
 
-    protected   $description = 'Removes spaces from IBANs';
-    protected   $signature   = 'correction:ibans';
-    private int $count       = 0;
+    protected $description = 'Removes spaces from IBANs';
+    protected $signature   = 'correction:ibans';
+    private int $count     = 0;
 
     /**
      * Execute the console command.
@@ -57,13 +57,13 @@ class CorrectsIbans extends Command
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $userId       = $account->user_id;
+            $userId                = $account->user_id;
             $set[$userId] ??= [];
-            $iban         = (string)$account->iban;
+            $iban                  = (string) $account->iban;
             if ('' === $iban) {
                 continue;
             }
-            $type = $account->accountType->type;
+            $type                  = $account->accountType->type;
             if (in_array($type, [AccountTypeEnum::LOAN->value, AccountTypeEnum::DEBT->value, AccountTypeEnum::MORTGAGE->value], true)) {
                 $type = 'liabilities';
             }
@@ -79,7 +79,13 @@ class CorrectsIbans extends Command
                 }
             }
             if ($showWarningAndCorrect) {
-                $this->friendlyWarning(sprintf('IBAN "%s" is used more than once and will be removed from %s #%d ("%s")', $iban, $account->accountType->type, $account->id, $account->name));
+                $this->friendlyWarning(sprintf(
+                    'IBAN "%s" is used more than once and will be removed from %s #%d ("%s")',
+                    $iban,
+                    $account->accountType->type,
+                    $account->id,
+                    $account->name
+                ));
                 $account->iban = null;
                 $account->save();
                 ++$this->count;
@@ -95,8 +101,8 @@ class CorrectsIbans extends Command
     {
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $iban    = (string)$account->iban;
-            $newIban = Steam::filterSpaces($iban);
+            $iban          = (string) $account->iban;
+            $newIban       = Steam::filterSpaces($iban);
             if ('' !== $iban && $iban !== $newIban) {
                 $account->iban = $newIban;
                 $account->save();
@@ -106,7 +112,7 @@ class CorrectsIbans extends Command
             // same for account number:
             $accountNumber = $account->accountMeta->where('name', 'account_number')->first();
             if (null !== $accountNumber) {
-                $number    = (string)$accountNumber->value;
+                $number    = (string) $accountNumber->value;
                 $newNumber = Steam::filterSpaces($number);
                 if ('' !== $number && $number !== $newNumber) {
                     $accountNumber->value = $newNumber;

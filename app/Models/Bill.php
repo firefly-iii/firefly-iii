@@ -41,8 +41,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @property Carbon      $date
- * @property Carbon|null $end_date
- * @property Carbon|null $extension_date
+ * @property null|Carbon $end_date
+ * @property null|Carbon $extension_date
  */
 #[ObservedBy([BillObserver::class])]
 class Bill extends Model
@@ -51,49 +51,48 @@ class Bill extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-        = [
-            'name',
-            'match',
-            'amount_min',
-            'user_id',
-            'user_group_id',
-            'amount_max',
-            'date',
-            'date_tz',
-            'repeat_freq',
-            'skip',
-            'automatch',
-            'active',
-            'transaction_currency_id',
-            'end_date',
-            'extension_date',
-            'end_date_tz',
-            'extension_date_tz',
-            'native_amount_min',
-            'native_amount_max',
-        ];
+    protected $fillable = [
+        'name',
+        'match',
+        'amount_min',
+        'user_id',
+        'user_group_id',
+        'amount_max',
+        'date',
+        'date_tz',
+        'repeat_freq',
+        'skip',
+        'automatch',
+        'active',
+        'transaction_currency_id',
+        'end_date',
+        'extension_date',
+        'end_date_tz',
+        'extension_date_tz',
+        'native_amount_min',
+        'native_amount_max',
+    ];
 
-    protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
+    protected $hidden   = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self | string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if ($value instanceof self) {
-            $value = (int)$value->id;
+            $value = (int) $value->id;
         }
         if (auth()->check()) {
-            $billId = (int)$value;
+            $billId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user   = auth()->user();
 
             /** @var null|Bill $bill */
-            $bill = $user->bills()->find($billId);
+            $bill   = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
             }
@@ -128,7 +127,7 @@ class Bill extends Model
      */
     public function setAmountMaxAttribute($value): void
     {
-        $this->attributes['amount_max'] = (string)$value;
+        $this->attributes['amount_max'] = (string) $value;
     }
 
     /**
@@ -136,7 +135,7 @@ class Bill extends Model
      */
     public function setAmountMinAttribute($value): void
     {
-        $this->attributes['amount_min'] = (string)$value;
+        $this->attributes['amount_min'] = (string) $value;
     }
 
     public function transactionCurrency(): BelongsTo
@@ -159,7 +158,7 @@ class Bill extends Model
      */
     protected function amountMax(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string)$value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     /**
@@ -167,7 +166,7 @@ class Bill extends Model
      */
     protected function amountMin(): Attribute
     {
-        return Attribute::make(get: static fn($value): string => (string)$value);
+        return Attribute::make(get: static fn ($value): string => (string) $value);
     }
 
     protected function casts(): array
@@ -193,7 +192,7 @@ class Bill extends Model
 
     protected function order(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     /**
@@ -201,11 +200,11 @@ class Bill extends Model
      */
     protected function skip(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

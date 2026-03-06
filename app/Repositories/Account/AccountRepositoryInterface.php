@@ -155,6 +155,7 @@ interface AccountRepositoryInterface
     public function resetAccountOrder(): void;
 
     public function searchAccount(string $query, array $types, int $limit): Collection;
+
     public function searchAccountIncludingInactive(string $query, array $types, int $limit): Collection;
 
     public function searchAccountNr(string $query, array $types, int $limit): Collection;

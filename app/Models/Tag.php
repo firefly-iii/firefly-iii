@@ -38,7 +38,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property Carbon|null $date
+ * @property null|Carbon $date
  */
 #[ObservedBy([DeletedTagObserver::class])]
 class Tag extends Model
