@@ -70,7 +70,7 @@ if (!function_exists('envNonEmpty')) {
      */
     function envNonEmpty(string $key, string | int | bool | null $default = null)
     {
-        $result = env($key, $default); // @phpstan-ignore-line
+        $result = env($key, $default);
         if ('' === $result) {
             return $default;
         }
