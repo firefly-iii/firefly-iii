@@ -153,6 +153,7 @@ class RemoteUserGuard implements Guard
             return $this;
         }
         Log::error(sprintf('Did not set user at %s', __METHOD__));
+
         return $this;
     }
 

@@ -201,7 +201,7 @@ class Navigation
             Log::debug('endOfPeriod() requests "YTD" + future, set it to "3M" instead.');
             $repeatFreq = '3M';
         }
-        $new = Carbon::now();
+        $new         = Carbon::now();
         $functionMap = [
             '1D'        => 'endOfDay',
             'daily'     => 'endOfDay',

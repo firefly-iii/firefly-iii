@@ -40,7 +40,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property Carbon|null $first_date
+ * @property null|Carbon $first_date
  * @property null|Carbon $latest_date
  * @property null|Carbon $repeat_until
  */
@@ -51,44 +51,43 @@ class Recurrence extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable
-        = [
-            'user_id',
-            'user_group_id',
-            'transaction_type_id',
-            'title',
-            'description',
-            'first_date',
-            'first_date_tz',
-            'repeat_until',
-            'repeat_until_tz',
-            'latest_date',
-            'latest_date_tz',
-            'repetitions',
-            'apply_rules',
-            'active',
-        ];
+    protected $fillable = [
+        'user_id',
+        'user_group_id',
+        'transaction_type_id',
+        'title',
+        'description',
+        'first_date',
+        'first_date_tz',
+        'repeat_until',
+        'repeat_until_tz',
+        'latest_date',
+        'latest_date_tz',
+        'repetitions',
+        'apply_rules',
+        'active',
+    ];
 
-    protected $table = 'recurrences';
+    protected $table    = 'recurrences';
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self | string $value): self
+    public static function routeBinder(self|string $value): self
     {
         if ($value instanceof self) {
-            $value = (int)$value->id;
+            $value = (int) $value->id;
         }
         if (auth()->check()) {
-            $recurrenceId = (int)$value;
+            $recurrenceId = (int) $value;
 
             /** @var User $user */
-            $user = auth()->user();
+            $user         = auth()->user();
 
             /** @var null|Recurrence $recurrence */
-            $recurrence = $user->recurrences()->find($recurrenceId);
+            $recurrence   = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }
@@ -162,6 +161,6 @@ class Recurrence extends Model
 
     protected function transactionTypeId(): Attribute
     {
-        return Attribute::make(get: static fn($value): int => (int)$value);
+        return Attribute::make(get: static fn ($value): int => (int) $value);
     }
 }

@@ -43,7 +43,7 @@ class BudgetList implements BinderInterface
             if ('allBudgets' === $value) {
                 return auth()->user()->budgets()->where('active', true)->orderBy('order', 'ASC')->orderBy('name', 'ASC')->get();
             }
-            if('' === $value) {
+            if ('' === $value) {
                 Log::warning('Budget list count is zero, return 404.');
 
                 throw new NotFoundHttpException();

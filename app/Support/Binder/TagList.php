@@ -44,7 +44,7 @@ class TagList implements BinderInterface
             if ('allTags' === $value) {
                 return auth()->user()->tags()->orderBy('tag', 'ASC')->get();
             }
-            if('' === $value) {
+            if ('' === $value) {
                 Log::warning('Category list count is zero, return 404.');
 
                 throw new NotFoundHttpException();
