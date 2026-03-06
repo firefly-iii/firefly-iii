@@ -389,17 +389,13 @@ class AvailableBudgetRepository implements AvailableBudgetRepositoryInterface, U
             return (string) $budgetLimit->amount;
         }
         // if budget limit period is inside AB period, it can be added in full.
-        if (!$limitPeriod->equals($availableBudgetPeriod) && $availableBudgetPeriod->contains($limitPeriod)) {
+        if ($availableBudgetPeriod->contains($limitPeriod)) {
             Log::debug('This budget limit is smaller than the available budget period.');
 
             return (string) $budgetLimit->amount;
         }
 
-        if (
-            !$limitPeriod->equals($availableBudgetPeriod)
-            && !$availableBudgetPeriod->contains($limitPeriod)
-            && $availableBudgetPeriod->overlapsWith($limitPeriod)
-        ) {
+        if ($availableBudgetPeriod->overlapsWith($limitPeriod)) {
             Log::debug('This budget limit is something else entirely!');
             $overlap = $availableBudgetPeriod->overlap($limitPeriod);
             if ($overlap instanceof Period) {

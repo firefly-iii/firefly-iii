@@ -45,8 +45,8 @@ trait ChecksLogin
         if (!$check) {
             return false;
         }
-        if (!property_exists($this, 'acceptedRoles')) {
-            Log::debug(sprintf('Request class %s has no acceptedRoles array', static::class));
+        if (0 === count($this->acceptedRoles)) {
+            Log::debug(sprintf('Request class %s has 0 entries in acceptedRoles array', static::class));
 
             return true; // check for false already took place.
         }

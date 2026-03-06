@@ -205,10 +205,9 @@ trait ConvertsDataTypes
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
-        if (method_exists($this, 'validateUserGroup')) {
-            $userGroup = $this->validateUserGroup($this);
-            $repository->setUserGroup($userGroup);
-        }
+        // blindly assume this method exists.
+        $userGroup = $this->validateUserGroup($this);
+        $repository->setUserGroup($userGroup);
 
         // set administration ID
         // group ID

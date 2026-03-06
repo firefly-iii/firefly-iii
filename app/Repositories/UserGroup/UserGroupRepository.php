@@ -255,7 +255,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             // if there are no other owners and the current users does not get or keep the owner role, refuse.
             if (
                 0 === $ownerCount
-                && (0 === count($data['roles']) || count($data['roles']) > 0 && !in_array(UserRoleEnum::OWNER->value, $data['roles'], true))
+                && (0 === count($data['roles']) || !in_array(UserRoleEnum::OWNER->value, $data['roles'], true))
             ) {
                 Log::debug('User needs to keep owner role in this group, refuse to act');
 

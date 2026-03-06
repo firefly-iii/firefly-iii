@@ -62,6 +62,7 @@ abstract class Controller extends BaseController
     use DispatchesJobs;
     use ValidatesRequests;
     use ValidatesUserGroupTrait;
+    protected array $acceptedRoles = [];
 
     protected const string CONTENT_TYPE      = 'application/vnd.api+json';
     protected const string JSON_CONTENT_TYPE = 'application/json';

@@ -34,10 +34,6 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
-    - identifier: greater.alwaysTrue
-    - identifier: function.alreadyNarrowedType
-    - identifier: booleanNot.alwaysTrue
-    - identifier: property.phpDocType
     - identifier: nullCoalesce.offset
     - identifier: nullCoalesce.variable
     - identifier: larastan.noUnnecessaryCollectionCall

@@ -127,7 +127,7 @@ class RemovesDatabaseDecryption extends Command
         }
 
         // A separate routine for preferences table:
-        if ('preferences' === $table && is_string($value)) {
+        if ('preferences' === $table) {
             $this->decryptPreferencesRow($id, $value);
 
             return;
