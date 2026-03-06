@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 6.5.4 - 2026-03-06
+
+### Added
+
+- Add some debug info to find 
+
+### Fixed
+
+- #11873
+- Transaction count would search for the wrong meta field.
+
+### Security
+
+- Published security advisory https://github.com/firefly-iii/firefly-iii/security/advisories/GHSA-5q8v-j673-m5v4 found and reported by @lighthousekeeper1212
+- It's possible to submit webhook URLs that point to internal IP addresses. This will still be the case in the future, though some reserved ranges are no blocked. Let me know if this impacts you.
+
+### API
+
+- Initial release.
+
 ## 6.5.3 - 2026-03-05
 
 This release fixes some sloppy coding on my part, but good news everyone! A new linter is in place that should prevent that from happening. Turns out I had disabled it in the past :(.
