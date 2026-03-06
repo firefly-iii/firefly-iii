@@ -41,7 +41,7 @@ class PaginationRequest extends ApiRequest
 
         $this->sortClass = $config['sort_class'] ?? null;
 
-        if (!$this->sortClass) {
+        if (null === $this->sortClass) {
             throw new RuntimeException('PaginationRequest requires a sort_class config');
         }
     }
@@ -72,7 +72,7 @@ class PaginationRequest extends ApiRequest
             $page   = $this->convertInteger('page');
             $page   = min(max(1, $page), 2 ** 16);
             $offset = ($page - 1) * $limit;
-            $sort   = $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
+            $sort   = null !== $this->sortClass ? $this->convertSortParameters('sort', $this->sortClass) : $this->get('sort');
             $this->attributes->set('limit', $limit);
             $this->attributes->set('sort', $sort);
             $this->attributes->set('page', $page);

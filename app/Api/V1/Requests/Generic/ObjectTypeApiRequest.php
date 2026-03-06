@@ -50,7 +50,7 @@ class ObjectTypeApiRequest extends ApiRequest
 
         $this->objectType = $config['object_type'] ?? null;
 
-        if (!$this->objectType) {
+        if (null === $this->objectType) {
             throw new RuntimeException('ObjectTypeApiRequest requires a object_type config');
         }
     }

@@ -337,7 +337,7 @@ class TransactionJournalFactory
                                                   'date_tz'                 => $carbon->format('e'),
                                                   'order'                   => $order,
                                                   'tag_count'               => 0,
-                                                  'completed'               => !$row['batch_submission'],
+                                                  'completed'               => is_bool($row['batch_submission']) && !$row['batch_submission'],
                                               ]);
         Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
