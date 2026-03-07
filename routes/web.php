@@ -193,6 +193,11 @@ Route::group(
         Route::get('delete/{account}', ['uses' => 'Account\DeleteController@delete', 'as' => 'delete']);
         Route::post('destroy/{account}', ['uses' => 'Account\DeleteController@destroy', 'as' => 'destroy']);
 
+        // statement
+        Route::get('statement/{account}/{date?}', ['uses' => 'Account\ShowController@statement', 'as' => 'statement'])
+            ->where(['date' => DATEFORMAT])
+        ;
+
         // show
         Route::get('show/{account}/all', ['uses' => 'Account\ShowController@showAll', 'as' => 'show.all']);
         Route::get('show/{account?}/{start_date?}/{end_date?}', ['uses' => 'Account\ShowController@show', 'as' => 'show'])

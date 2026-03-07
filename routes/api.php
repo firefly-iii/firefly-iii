@@ -320,6 +320,7 @@ Route::group(
         Route::get('{account}/piggy-banks', ['uses' => 'ListController@piggyBanks', 'as' => 'piggy-banks']);
         Route::get('{account}/transactions', ['uses' => 'ListController@transactions', 'as' => 'transactions']);
         Route::get('{account}/attachments', ['uses' => 'ListController@attachments', 'as' => 'attachments']);
+        Route::get('{account}/statements', ['uses' => 'StatementController@show', 'as' => 'statements']);
     }
 );
 

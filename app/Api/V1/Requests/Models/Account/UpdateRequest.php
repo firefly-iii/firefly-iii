@@ -63,6 +63,7 @@ class UpdateRequest extends FormRequest
             'opening_balance_date'    => ['opening_balance_date', 'convertDateTime'],
             'cc_type'                 => ['credit_card_type', 'convertString'],
             'cc_monthly_payment_date' => ['monthly_payment_date', 'convertDateTime'],
+            'cc_closing_day'          => ['closing_day', 'convertString'],
             'notes'                   => ['notes', 'stringWithNewlines'],
             'interest'                => ['interest', 'convertString'],
             'interest_period'         => ['interest_period', 'convertString'],
