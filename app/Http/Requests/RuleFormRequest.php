@@ -40,6 +40,7 @@ class RuleFormRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
+
     protected array $acceptedRoles = [];
 
     public static function replaceAmountTrigger(array $array): array

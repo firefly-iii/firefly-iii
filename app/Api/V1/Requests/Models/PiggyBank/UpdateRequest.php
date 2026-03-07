@@ -39,6 +39,7 @@ class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     /**

@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Log;
 class BudgetIncomeRequest extends FormRequest
 {
     use ChecksLogin;
+
     protected array $acceptedRoles = [];
 
     /**

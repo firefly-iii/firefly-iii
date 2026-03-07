@@ -53,6 +53,7 @@ class StoreRequest extends FormRequest
     use CurrencyValidation;
     use GroupValidation;
     use TransactionValidation;
+
     protected array $acceptedRoles = [];
 
     /**

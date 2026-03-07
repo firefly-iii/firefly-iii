@@ -41,6 +41,7 @@ class StoreRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
+
     protected array $acceptedRoles = [];
 
     /**

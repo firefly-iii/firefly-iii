@@ -36,9 +36,10 @@ class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
-    private array $booleans = [
+    private array $booleans        = [
         'configuration.is_demo_site',
         'configuration.single_user_mode',
         'configuration.enable_exchange_rates',
@@ -47,7 +48,7 @@ class UpdateRequest extends FormRequest
         'configuration.enable_external_rates',
         'configuration.allow_webhooks',
     ];
-    private array $integers = ['configuration.permission_update_check', 'configuration.last_update_check'];
+    private array $integers        = ['configuration.permission_update_check', 'configuration.last_update_check'];
 
     /**
      * Get all data from the request.

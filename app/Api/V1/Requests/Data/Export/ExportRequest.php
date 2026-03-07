@@ -38,6 +38,7 @@ class ExportRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     public function getAll(): array
