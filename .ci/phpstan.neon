@@ -34,10 +34,6 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
-    - identifier: larastan.noUnnecessaryCollectionCall
-    - identifier: varTag.differentVariable
-    - identifier: identical.alwaysTrue
-    - identifier: assign.propertyReadOnly
     - identifier: varTag.nativeType
     - identifier: property.onlyWritten
     - identifier: parameter.phpDocType

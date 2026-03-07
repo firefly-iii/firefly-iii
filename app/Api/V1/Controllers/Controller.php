@@ -224,7 +224,8 @@ abstract class Controller extends BaseController
                 $value = min(max(1, $value), 2 ** 16);
                 $bag->set($integer, $value);
             }
-            if (null === $value && 'limit' === $integer && auth()->check()) {
+            // && 'limit' === $integer
+            if (null === $value && auth()->check()) {
                 // set default for user:
                 /** @var User $user */
                 $user     = auth()->user();

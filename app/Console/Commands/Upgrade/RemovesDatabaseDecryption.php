@@ -64,10 +64,6 @@ class RemovesDatabaseDecryption extends Command
             'journal_links'        => ['comment'],
         ];
 
-        /**
-         * @var string $table
-         * @var array  $fields
-         */
         foreach ($tables as $table => $fields) {
             $this->decryptTable($table, $fields);
         }

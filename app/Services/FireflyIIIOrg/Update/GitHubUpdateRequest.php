@@ -30,7 +30,6 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Log;
 use Override;
-
 use function Safe\file_get_contents;
 use function Safe\json_decode;
 
@@ -49,9 +48,9 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         $this->currentBuild   = $currentBuild;
         Log::debug(sprintf('Now in getUpdateInformation(%s, %s)', $currentVersion, $channel));
 
-        $response             = new UpdateResponse();
-        $releases             = $this->getReleases();
-        $filtered             = $this->filterReleases($releases);
+        $response = new UpdateResponse();
+        $releases = $this->getReleases();
+        $filtered = $this->filterReleases($releases);
 
         Log::debug(sprintf('Left with %d release(s) to compare', count($filtered)));
 
@@ -61,7 +60,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
             return $response;
         }
 
-        $newest               = $this->getNewest($filtered);
+        $newest = $this->getNewest($filtered);
 
         Log::debug(sprintf('Newest release is "%s" released on %s', $newest['version'], $newest['published_at']->format('Y-m-d H:i')));
 
@@ -74,20 +73,20 @@ class GitHubUpdateRequest implements UpdateRequestInterface
             Log::debug(sprintf('Compare with current version "%s", built on %s', $currentVersion, $currentBuild->format('Y-m-d H:i')));
             if ($currentBuild->lt($newest['published_at']) && $currentBuild->diffInMinutes($newest['published_at']) > 10) {
                 Log::debug(sprintf(
-                    'Current build %s is older than newest build %s, so a new release is available.',
-                    $currentBuild->format('Y-m-d H:i:s e'),
-                    $newest['published_at']->format('Y-m-d H:i:s e')
-                ));
+                               'Current build %s is older than newest build %s, so a new release is available.',
+                               $currentBuild->format('Y-m-d H:i:s e'),
+                               $newest['published_at']->format('Y-m-d H:i:s e')
+                           ));
                 $response->setNewVersionAvailable(true);
 
                 return $response;
             }
             if ($currentBuild->gt($newest['published_at'])) {
                 Log::debug(sprintf(
-                    'Current build %s is newer than newest build %s, so NO new release is available.',
-                    $currentBuild->format('Y-m-d H:i'),
-                    $newest['published_at']->format('Y-m-d H:i')
-                ));
+                               'Current build %s is newer than newest build %s, so NO new release is available.',
+                               $currentBuild->format('Y-m-d H:i'),
+                               $newest['published_at']->format('Y-m-d H:i')
+                           ));
                 $response->setNewVersionAvailable(false);
 
                 return $response;
@@ -97,19 +96,15 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         }
 
         // if not, compare version.
-        $res                  = version_compare($newest['version'], $currentVersion);
+        $res = version_compare($newest['version'], $currentVersion);
         if ($res < 1) {
             $response->setNewVersionAvailable(false);
 
             return $response;
         }
-        if (1 === $res) {
-            $response->setNewVersionAvailable(true);
+        $response->setNewVersionAvailable(true);
 
-            return $response;
-        }
-
-        // return $response;
+        return $response;
     }
 
     private function filterReleases(array $releases): array
@@ -151,7 +146,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
 
     private function getNewest(array $releases): array
     {
-        $latest = ['version'      => '1.0.0', 'published_at' => now(config('app.timezone'))->startOfYear()];
+        $latest = ['version' => '1.0.0', 'published_at' => now(config('app.timezone'))->startOfYear()];
         foreach ($releases as $release) {
             Log::debug(sprintf('Comparing current version "%s" with latest version "%s"', $release['version'], $latest['version']));
             if (str_contains($release['version'], 'develop') || str_contains($latest['version'], 'develop')) {
@@ -159,10 +154,10 @@ class GitHubUpdateRequest implements UpdateRequestInterface
                 // compare build times.
                 if ($latest['published_at']->lt($release['published_at'])) {
                     Log::debug(sprintf(
-                        'Current date "%s" is newer than latest date "%s"',
-                        $release['published_at']->format('Y-m-d H:i'),
-                        $latest['published_at']->format('Y-m-d H:i')
-                    ));
+                                   'Current date "%s" is newer than latest date "%s"',
+                                   $release['published_at']->format('Y-m-d H:i'),
+                                   $latest['published_at']->format('Y-m-d H:i')
+                               ));
                     $latest = $release;
                 }
             }
@@ -184,7 +179,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
     private function getReleases(): array
     {
         $client = new Client();
-        $opts   = ['timeout' => 5.0, 'headers' => ['User-Agent' => 'FireflyIII/'.config('firefly.version')]];
+        $opts   = ['timeout' => 5.0, 'headers' => ['User-Agent' => 'FireflyIII/' . config('firefly.version')]];
         $return = [];
         $body   = '';
         if ($this->localDebug && file_exists('json.json')) {
@@ -193,13 +188,13 @@ class GitHubUpdateRequest implements UpdateRequestInterface
         if (!$this->localDebug) {
             try {
                 $res = $client->get('https://api.github.com/repos/firefly-iii/firefly-iii/releases', $opts);
-            } catch (ClientException|Exception $e) {
+            } catch (ClientException | Exception $e) {
                 Log::error($e->getMessage());
 
                 return [];
             }
             Log::debug('Successfully contacted GitHub');
-            $body = (string) $res->getBody();
+            $body = (string)$res->getBody();
         }
 
         if (!json_validate($body)) {
@@ -207,7 +202,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
 
             return [];
         }
-        $json   = json_decode($body, true);
+        $json = json_decode($body, true);
 
         /** @var array $release */
         foreach ($json as $release) {
@@ -222,7 +217,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
                 continue;
             }
 
-            $return[]  = ['version'      => $version, 'published_at' => $published];
+            $return[] = ['version' => $version, 'published_at' => $published];
         }
 
         return $return;

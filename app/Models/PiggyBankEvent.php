@@ -34,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property Carbon $date
+ * @property PiggyBank $piggyBank
  */
 #[ObservedBy([PiggyBankEventObserver::class])]
 class PiggyBankEvent extends Model
