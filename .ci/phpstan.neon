@@ -34,8 +34,6 @@ parameters:
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
     # these are actually interesting but not right now:
-    - identifier: nullCoalesce.offset
-    - identifier: nullCoalesce.variable
     - identifier: larastan.noUnnecessaryCollectionCall
     - identifier: varTag.differentVariable
     - identifier: identical.alwaysTrue
