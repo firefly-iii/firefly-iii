@@ -44,6 +44,7 @@ class GenericRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     private Collection $accounts;

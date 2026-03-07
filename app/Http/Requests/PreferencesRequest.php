@@ -31,6 +31,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class PreferencesRequest extends FormRequest
 {
     use ChecksLogin;
+
     protected array $acceptedRoles = [];
 
     /**

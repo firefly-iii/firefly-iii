@@ -49,6 +49,7 @@ class UpdateRequest extends FormRequest
     use GetRecurrenceData;
     use RecurrenceValidation;
     use TransactionValidation;
+
     protected array $acceptedRoles = [];
 
     /**

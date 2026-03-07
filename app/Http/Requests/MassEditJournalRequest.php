@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 class MassEditJournalRequest extends FormRequest
 {
     use ChecksLogin;
+
     protected array $acceptedRoles = [];
 
     /**

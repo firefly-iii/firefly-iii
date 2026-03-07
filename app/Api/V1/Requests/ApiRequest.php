@@ -34,7 +34,7 @@ class ApiRequest extends FormRequest
 
     protected array $acceptedRoles = [];
 
-    protected string $required = '';
+    protected string $required     = '';
 
     public function handleConfig(array $config): void
     {

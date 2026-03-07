@@ -36,6 +36,7 @@ class BulkEditJournalRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     /**

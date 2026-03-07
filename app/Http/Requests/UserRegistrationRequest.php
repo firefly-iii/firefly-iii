@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 class UserRegistrationRequest extends FormRequest
 {
     use ChecksLogin;
+
     protected array $acceptedRoles = [];
 
     /**

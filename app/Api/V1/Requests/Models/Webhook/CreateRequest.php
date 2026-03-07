@@ -42,6 +42,7 @@ class CreateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesWebhooks;
+
     protected array $acceptedRoles = [];
 
     public function getData(): array

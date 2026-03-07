@@ -45,6 +45,7 @@ class RecurrenceFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     /**

@@ -36,6 +36,7 @@ class TriggerRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+
     protected array $acceptedRoles = [];
 
     public function getTriggerParameters(): array
