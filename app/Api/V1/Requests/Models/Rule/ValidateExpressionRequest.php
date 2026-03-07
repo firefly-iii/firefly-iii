@@ -34,6 +34,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class ValidateExpressionRequest extends FormRequest
 {
     use ChecksLogin;
+    protected array $acceptedRoles = [];
 
     public function rules(): array
     {

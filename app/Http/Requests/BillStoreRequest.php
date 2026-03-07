@@ -37,6 +37,7 @@ class BillStoreRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     /**
      * Returns the data required by the controller.

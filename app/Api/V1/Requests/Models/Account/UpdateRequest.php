@@ -45,6 +45,7 @@ class UpdateRequest extends FormRequest
     use AppendsLocationData;
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     public function getUpdateData(): array
     {

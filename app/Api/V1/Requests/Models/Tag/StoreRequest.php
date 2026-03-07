@@ -38,6 +38,7 @@ class StoreRequest extends FormRequest
     use AppendsLocationData;
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     /**
      * Get all data from the request.

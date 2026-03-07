@@ -37,6 +37,7 @@ class CategoryFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     /**
      * Get information for the controller.

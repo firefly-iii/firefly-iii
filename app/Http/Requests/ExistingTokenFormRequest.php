@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 class ExistingTokenFormRequest extends FormRequest
 {
     use ChecksLogin;
+    protected array $acceptedRoles = [];
 
     /**
      * Rules for this request.

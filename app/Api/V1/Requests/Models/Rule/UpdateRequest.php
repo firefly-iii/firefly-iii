@@ -42,6 +42,7 @@ class UpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use GetRuleConfiguration;
+    protected array $acceptedRoles = [];
 
     /**
      * Get all data from the request.

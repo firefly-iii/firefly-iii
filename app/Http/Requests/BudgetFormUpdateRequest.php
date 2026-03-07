@@ -40,6 +40,7 @@ class BudgetFormUpdateRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesAutoBudgetRequest;
+    protected array $acceptedRoles = [];
 
     /**
      * Returns the data required by the controller.

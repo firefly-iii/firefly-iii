@@ -44,6 +44,7 @@ class TransactionRequest extends FormRequest
     use ChecksLogin;
     use ConvertsDataTypes;
     use ValidatesBulkTransactionQuery;
+    protected array $acceptedRoles = [];
 
     public function getAll(): array
     {

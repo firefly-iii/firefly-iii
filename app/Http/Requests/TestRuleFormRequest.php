@@ -36,6 +36,7 @@ class TestRuleFormRequest extends FormRequest
 {
     use ChecksLogin;
     use GetRuleConfiguration;
+    protected array $acceptedRoles = [];
 
     /**
      * Rules for this request.

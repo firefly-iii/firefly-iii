@@ -34,6 +34,7 @@ use Illuminate\Support\Facades\Log;
 class ConfigurationRequest extends FormRequest
 {
     use ChecksLogin;
+    protected array $acceptedRoles = [];
 
     /**
      * Returns the data required by the controller.

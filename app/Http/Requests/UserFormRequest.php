@@ -36,6 +36,7 @@ class UserFormRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     /**
      * Get data for controller.

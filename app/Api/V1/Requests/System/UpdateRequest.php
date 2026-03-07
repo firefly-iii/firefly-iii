@@ -36,6 +36,7 @@ class UpdateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     private array $booleans = [
         'configuration.is_demo_site',

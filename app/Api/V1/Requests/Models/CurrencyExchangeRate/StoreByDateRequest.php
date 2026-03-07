@@ -36,6 +36,7 @@ class StoreByDateRequest extends FormRequest
 {
     use ChecksLogin;
     use ConvertsDataTypes;
+    protected array $acceptedRoles = [];
 
     /**
      * @return array<string, mixed>

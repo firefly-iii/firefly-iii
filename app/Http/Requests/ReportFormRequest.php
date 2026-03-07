@@ -45,6 +45,7 @@ use function Safe\preg_match;
 class ReportFormRequest extends FormRequest
 {
     use ChecksLogin;
+    protected array $acceptedRoles = [];
 
     /**
      * Validate list of accounts.
