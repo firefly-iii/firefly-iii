@@ -48,7 +48,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 final class UpdateController extends Controller
 {
     private TransactionGroupRepositoryInterface $groupRepository;
-    protected array $acceptedRoles           = [];
+    protected array $acceptedRoles = [];
 
     /**
      * TransactionController constructor.
