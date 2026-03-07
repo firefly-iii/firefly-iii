@@ -1319,6 +1319,7 @@ Route::group(
     static function (): void {
         Route::get('edit/{journalList?}', ['uses' => 'MassController@edit', 'as' => 'edit']);
         Route::get('delete/{journalList?}', ['uses' => 'MassController@delete', 'as' => 'delete']);
+        Route::get('download/{journalList?}', ['uses' => 'MassController@download', 'as' => 'download']);
         Route::post('update', ['uses' => 'MassController@update', 'as' => 'update']);
         Route::post('destroy', ['uses' => 'MassController@destroy', 'as' => 'destroy']);
     }
