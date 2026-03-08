@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use Carbon\Carbon;
 use FireflyIII\Enums\AccountTypeEnum;
 use FireflyIII\Enums\TransactionTypeEnum;
+use FireflyIII\Events\Model\TransactionGroup\DestroyedSingleTransactionGroup;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventFlags;
 use FireflyIII\Events\Model\TransactionGroup\TransactionGroupEventObjects;
 use FireflyIII\Events\Model\TransactionGroup\UpdatedSingleTransactionGroup;
@@ -63,7 +64,7 @@ final class MassController extends Controller
         parent::__construct();
 
         $this->middleware(function ($request, $next) {
-            app('view')->share('title', (string) trans('firefly.transactions'));
+            app('view')->share('title', (string)trans('firefly.transactions'));
             app('view')->share('mainTitleIcon', 'fa-exchange');
             $this->repository = app(JournalRepositoryInterface::class);
 
@@ -76,7 +77,7 @@ final class MassController extends Controller
      */
     public function delete(array $journals): IlluminateView
     {
-        $subTitle = (string) trans('firefly.mass_delete_journals');
+        $subTitle = (string)trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUrl('transactions.mass-delete.url');
@@ -89,11 +90,15 @@ final class MassController extends Controller
      *
      * @return Application|Redirector|RedirectResponse
      */
-    public function destroy(MassDeleteJournalRequest $request): Redirector|RedirectResponse
+    public function destroy(MassDeleteJournalRequest $request): Redirector | RedirectResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
-        $ids   = $request->get('confirm_mass_delete');
+        $ids   = $request->input('confirm_mass_delete');
         $count = 0;
+
+        $objects = new TransactionGroupEventObjects();
+
+
         if (is_array($ids)) {
             Log::debug('Array of IDs', $ids);
 
@@ -102,9 +107,11 @@ final class MassController extends Controller
                 Log::debug(sprintf('Searching for ID #%d', $journalId));
 
                 /** @var null|TransactionJournal $journal */
-                $journal = $this->repository->find((int) $journalId);
-                if (null !== $journal && (int) $journalId === $journal->id) {
+                $journal = $this->repository->find((int)$journalId);
+                if (null !== $journal && (int)$journalId === $journal->id) {
+                    $objects->appendFromTransactionGroup($journal->transactionGroup);
                     $this->repository->destroyJournal($journal);
+
                     ++$count;
                     Log::debug(sprintf('Deleted transaction journal #%d', $journalId));
 
@@ -116,6 +123,11 @@ final class MassController extends Controller
         Preferences::mark();
         session()->flash('success', trans_choice('firefly.mass_deleted_transactions_success', $count));
 
+        // trigger just after destruction
+        $flags = new TransactionGroupEventFlags();
+        event(new DestroyedSingleTransactionGroup($flags, $objects));
+        event(new WebhookMessagesRequestSending());
+
         // redirect to previous URL:
         return redirect($this->getPreviousUrl('transactions.mass-delete.url'));
     }
@@ -125,22 +137,22 @@ final class MassController extends Controller
      */
     public function edit(array $journals): IlluminateView
     {
-        $subTitle            = (string) trans('firefly.mass_edit_journals');
+        $subTitle = (string)trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository   = app(AccountRepositoryInterface::class);
+        $accountRepository = app(AccountRepositoryInterface::class);
 
         // valid withdrawal sources:
-        $array               = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
-        $withdrawalSources   = $accountRepository->getAccountsByType($array);
+        $array             = array_keys(config(sprintf('firefly.source_dests.%s', TransactionTypeEnum::WITHDRAWAL->value)));
+        $withdrawalSources = $accountRepository->getAccountsByType($array);
 
         // valid deposit destinations:
         $array               = config(sprintf('firefly.source_dests.%s.%s', TransactionTypeEnum::DEPOSIT->value, AccountTypeEnum::REVENUE->value));
         $depositDestinations = $accountRepository->getAccountsByType($array);
 
         /** @var BudgetRepositoryInterface $budgetRepository */
-        $budgetRepository    = app(BudgetRepositoryInterface::class);
-        $budgets             = $budgetRepository->getBudgets();
+        $budgetRepository = app(BudgetRepositoryInterface::class);
+        $budgets          = $budgetRepository->getBudgets();
 
         // reverse amounts
         foreach ($journals as $index => $journal) {
@@ -164,18 +176,18 @@ final class MassController extends Controller
      *
      * @throws FireflyException
      */
-    public function update(MassEditJournalRequest $request): Redirector|RedirectResponse
+    public function update(MassEditJournalRequest $request): Redirector | RedirectResponse
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {
             // TODO this is a weird error, should be caught.
             throw new FireflyException('This is not an array.');
         }
-        $count      = 0;
+        $count = 0;
 
         /** @var string $journalId */
         foreach ($journalIds as $journalId) {
-            $integer = (int) $journalId;
+            $integer = (int)$journalId;
 
             try {
                 $this->updateJournal($integer, $request);
@@ -224,7 +236,7 @@ final class MassController extends Controller
             return null;
         }
 
-        return (int) $value[$journalId];
+        return (int)$value[$journalId];
     }
 
     private function getStringFromRequest(MassEditJournalRequest $request, int $journalId, string $string): ?string
@@ -237,7 +249,7 @@ final class MassController extends Controller
             return null;
         }
 
-        return (string) $value[$journalId];
+        return (string)$value[$journalId];
     }
 
     /**
@@ -253,7 +265,7 @@ final class MassController extends Controller
         // for each field, call the update service.
         $service->setTransactionJournal($journal);
 
-        $data    = [
+        $data = [
             'date'             => $this->getDateFromRequest($request, $journal->id, 'date'),
             'description'      => $this->getStringFromRequest($request, $journal->id, 'description'),
             'source_id'        => $this->getIntFromRequest($request, $journal->id, 'source_id'),
