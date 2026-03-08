@@ -59,12 +59,12 @@ class CorrectsGroupAccounts extends Command
         $flags->applyRules        = false;
         $flags->fireWebhooks      = false;
         $flags->recalculateCredit = true;
-        $objects                  = new TransactionGroupEventObjects();
         foreach ($groups as $groupId) {
-            $group = TransactionGroup::find($groupId);
-            $objects->appendFromTransactionGroup($group);
+            $group  = TransactionGroup::find($groupId);
+            $object = new TransactionGroupEventObjects();
+            $object->appendFromTransactionGroup($group);
+            event(new UpdatedSingleTransactionGroup($flags, $object));
         }
-        event(new UpdatedSingleTransactionGroup($flags, $objects));
         event(new WebhookMessagesRequestSending());
 
         return 0;
