@@ -106,17 +106,20 @@ class UpgradesVariousCurrencyInformation extends Command
                 break;
 
             case TransactionTypeEnum::WITHDRAWAL->value:
+                /** @var null|Transaction $lead */
                 $lead = $journal->transactions()->where('amount', '<', 0)->first();
 
                 break;
 
             case TransactionTypeEnum::DEPOSIT->value:
+                /** @var null|Transaction $lead */
                 $lead = $journal->transactions()->where('amount', '>', 0)->first();
 
                 break;
 
             case TransactionTypeEnum::OPENING_BALANCE->value:
                 // whichever isn't an initial balance account:
+                /** @var null|Transaction $lead */
                 $lead = $journal
                     ->transactions()
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')
@@ -129,6 +132,7 @@ class UpgradesVariousCurrencyInformation extends Command
 
             case TransactionTypeEnum::RECONCILIATION->value:
                 // whichever isn't the reconciliation account:
+                /** @var null|Transaction $lead */
                 $lead = $journal
                     ->transactions()
                     ->leftJoin('accounts', 'transactions.account_id', '=', 'accounts.id')

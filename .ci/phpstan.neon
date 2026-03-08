@@ -37,10 +37,7 @@ parameters:
     - identifier: property.deprecated
     - identifier: method.deprecated
     - identifier: cast.useless
-    - identifier: parameter.deprecatedClass
-    - identifier: method.deprecatedClass
     - identifier: argument.type
-    - identifier: return.type
     - identifier: assign.propertyType
     - identifier: return.unusedType
     # all errors below I will (probably) never fix.

@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\Generic\SingleDateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\CreateRecurringTransactions;
@@ -59,12 +60,12 @@ final class TriggerController extends Controller
         });
     }
 
-    public function trigger(SingleDateRequest $request, Recurrence $recurrence): JsonResponse
+    public function trigger(DateRequest $request, Recurrence $recurrence): JsonResponse
     {
         // find recurrence occurrence for this date and trigger it.
         // grab the date from the last time the recurrence fired:
         $backupDate   = $recurrence->latest_date;
-        $date         = $request->getDate();
+        $date         = $request->attributes->get('date');
 
         // fire the recurring cron job on the given date, then post-date the created transaction.
         Log::info(sprintf('Trigger: will now fire recurring cron job task for date "%s".', $date->format('Y-m-d H:i:s')));

@@ -129,6 +129,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
      */
     public function firstNull(): ?TransactionJournal
     {
+        /** @var TransactionJournal|null */
         return $this->user
             ->transactionJournals()
             ->orderBy('date', 'ASC')
@@ -149,8 +150,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
         if (null === $transaction) {
             throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no destination transaction.', $journal->id));
         }
-
-        return $transaction->account;
+        /** @var Account|null $res */
+        $res = $transaction->account;
+        if(null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+        return $res;
     }
 
     /**
@@ -175,6 +180,7 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
 
     public function getLast(): ?TransactionJournal
     {
+        /** @var TransactionJournal|null */
         return $this->user
             ->transactionJournals()
             ->orderBy('date', 'DESC')
@@ -221,7 +227,12 @@ class JournalRepository implements JournalRepositoryInterface, UserGroupInterfac
             throw new FireflyException(sprintf('Your administration is broken. Transaction journal #%d has no source transaction.', $journal->id));
         }
 
-        return $transaction->account;
+        /** @var Account|null $res */
+        $res = $transaction->account;
+        if(null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+        return $res;
     }
 
     #[Override]

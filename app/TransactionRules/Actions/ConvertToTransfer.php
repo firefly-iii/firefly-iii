@@ -299,13 +299,18 @@ class ConvertToTransfer implements ActionInterface
      */
     private function getDestinationAccount(TransactionJournal $journal): Account
     {
-        /** @var null|Transaction $destAccount */
-        $destAccount = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $destAccount) {
+        /** @var null|Transaction $destTransaction */
+        $destTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $destTransaction) {
             throw new FireflyException(sprintf('Cannot find destination transaction for journal #%d', $journal->id));
         }
 
-        return $destAccount->account;
+        /** @var Account|null $res */
+        $res = $destTransaction->account;
+        if(null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+        return $res;
     }
 
     private function getDestinationType(int $journalId): string
@@ -332,7 +337,12 @@ class ConvertToTransfer implements ActionInterface
             throw new FireflyException(sprintf('Cannot find source transaction for journal #%d', $journal->id));
         }
 
-        return $sourceTransaction->account;
+        /** @var Account|null $res */
+        $res = $sourceTransaction->account;
+        if(null === $res) {
+            throw new FireflyException('Account is unexpectedly NULL.');
+        }
+        return $res;
     }
 
     private function getSourceType(int $journalId): string
