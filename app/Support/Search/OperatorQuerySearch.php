@@ -71,7 +71,7 @@ class OperatorQuerySearch implements SearchInterface
     private array $excludeTags      = [];
     private array $includeAnyTags   = [];
     // added to fix #8632
-    private array $includeTags      = [];
+    // private array $includeTags      = [];
     // added to fix #11473
     private array $includeAllTags   = [];
     private array $invalidOperators = [];

@@ -59,6 +59,7 @@ use FireflyIII\Support\Request\ConvertsDataTypes;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use League\Csv\AbstractCsv;
 use League\Csv\CannotInsertRecord;
 use League\Csv\Exception;
 use League\Csv\Writer;
@@ -88,7 +89,7 @@ class ExportDataGenerator
     private bool $exportTransactions    = false;
     private Carbon $start;
     private User $user;
-    private UserGroup $userGroup;
+    //private UserGroup $userGroup;
 
     public function __construct()
     {
@@ -222,7 +223,7 @@ class ExportDataGenerator
 
     public function setUserGroup(UserGroup $userGroup): void
     {
-        $this->userGroup = $userGroup;
+        // $this->userGroup = $userGroup;
     }
 
     /**
@@ -283,7 +284,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv         = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -352,7 +353,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv        = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -411,7 +412,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv         = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -456,7 +457,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv        = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -536,7 +537,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv          = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -703,7 +704,7 @@ class ExportDataGenerator
             }
         }
         // load the CSV document from a string
-        $csv            = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -850,7 +851,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv       = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -906,7 +907,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv      = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {
@@ -1102,7 +1103,7 @@ class ExportDataGenerator
         }
 
         // load the CSV document from a string
-        $csv        = Writer::createFromString();
+        $csv = AbstractCsv::fromString();
 
         // insert the header
         try {

@@ -342,7 +342,6 @@ final class ProfileController extends Controller
     }
 
     /**
-     * @return Application|Redirector|RedirectResponse
      *
      * @throws AuthenticationException
      */

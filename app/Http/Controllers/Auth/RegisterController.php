@@ -75,14 +75,6 @@ final class RegisterController extends Controller
         }
     }
 
-    /**
-     * Handle a registration request for the application.
-     *
-     * @return Application|Redirector|RedirectResponse
-     *
-     * @throws FireflyException
-     * @throws ValidationException
-     */
     public function register(Request $request): Redirector|RedirectResponse
     {
         $allowRegistration = $this->allowedToRegister();

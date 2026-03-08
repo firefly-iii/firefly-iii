@@ -56,11 +56,6 @@ final class DeleteController extends Controller
         });
     }
 
-    /**
-     * Delete account screen.
-     *
-     * @return Application|Factory|View
-     */
     public function index(Webhook $webhook): Factory|View
     {
         if (false === FireflyConfig::get('allow_webhooks', config('firefly.allow_webhooks'))->data) {

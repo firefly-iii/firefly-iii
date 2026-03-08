@@ -633,6 +633,9 @@ class JournalUpdateService
      */
     private function updateField(string $fieldName): void
     {
+        if(null === $this->transactionJournal) {
+            return;
+        }
         if (array_key_exists($fieldName, $this->data) && '' !== (string) $this->data[$fieldName]) {
             $value                                  = $this->data[$fieldName];
 
@@ -665,15 +668,7 @@ class JournalUpdateService
                 }
                 $factory->updateOrCreate($set);
             }
-            event(
-                new TransactionGroupRequestsAuditLogEntry(
-                    $this->transactionJournal->user,
-                    $this->transactionJournal,
-                    sprintf('update_%s', $fieldName),
-                    $this->transactionJournal->{$fieldName},
-                    $value
-                )
-            );
+            event(new TransactionGroupRequestsAuditLogEntry($this->transactionJournal->user, $this->transactionJournal, sprintf('update_%s', $fieldName), $this->transactionJournal->{$fieldName}, $value));
 
             $this->transactionJournal->{$fieldName} = $value;
             Log::debug(sprintf('Updated %s', $fieldName));

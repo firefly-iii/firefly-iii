@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Console\Commands\ShowsFriendlyMessages;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
@@ -82,7 +83,7 @@ class ConvertsDatesToUTC extends Command
             return;
         }
         $this->friendlyInfo(sprintf('Converting field "%s" of model "%s" to UTC.', $field, $shortModel));
-        $items->each(static function ($item) use ($field, $timezoneField): void {
+        $items->each(static function (Model $item) use ($field, $timezoneField): void {
             $date                   = Carbon::parse($item->{$field}, $item->{$timezoneField});
             $date->setTimezone('UTC');
             $item->{$field}         = $date->format('Y-m-d H:i:s');

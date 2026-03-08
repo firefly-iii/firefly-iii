@@ -499,13 +499,7 @@ class FireflyValidator extends Validator
         return true;
     }
 
-    /**
-     * @param mixed $attribute
-     * @param mixed $value
-     *
-     * @SuppressWarnings("PHPMD.UnusedFormalParameter")
-     */
-    public function validateSecurePassword($attribute, ?string $value): bool
+    public function validateSecurePassword(mixed $attribute, ?string $value): bool
     {
         $value  = (string) $value;
         $verify = false;

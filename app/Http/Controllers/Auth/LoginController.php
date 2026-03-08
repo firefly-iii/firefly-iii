@@ -181,12 +181,6 @@ final class LoginController extends Controller
 
     /**
      * Show the application's login form.
-     *
-     * @return Application|Factory|Redirector|RedirectResponse|View
-     *
-     * @throws FireflyException
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function showLoginForm(Request $request): Factory|Redirector|RedirectResponse|View
     {

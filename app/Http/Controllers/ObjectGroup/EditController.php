@@ -78,7 +78,6 @@ final class EditController extends Controller
     /**
      * Update a piggy bank.
      *
-     * @return Application|Redirector|RedirectResponse
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup): Redirector|RedirectResponse
     {

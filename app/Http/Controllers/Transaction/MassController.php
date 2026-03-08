@@ -85,11 +85,6 @@ final class MassController extends Controller
         return view('transactions.mass.delete', ['journals' => $journals, 'subTitle' => $subTitle]);
     }
 
-    /**
-     * Do the mass delete.
-     *
-     * @return Application|Redirector|RedirectResponse
-     */
     public function destroy(MassDeleteJournalRequest $request): Redirector | RedirectResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));

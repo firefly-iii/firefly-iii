@@ -171,6 +171,9 @@ abstract class Controller extends BaseController
         return $manager->createData($resource)->toArray();
     }
 
+    /**
+     * @deprecated
+     */
     #[Deprecated(message: <<<'TXT'
         use Request classes
          Method to grab all parameters from the URL

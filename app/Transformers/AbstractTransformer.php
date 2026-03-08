@@ -35,12 +35,19 @@ abstract class AbstractTransformer extends TransformerAbstract
 {
     protected ParameterBag $parameters;
 
+    /**
+     * @deprecated
+     */
     #[Deprecated]
     final public function getParameters(): ParameterBag
     {
         return $this->parameters;
     }
 
+
+    /**
+     * @deprecated
+     */
     #[Deprecated]
     final public function setParameters(ParameterBag $parameters): void
     {

@@ -33,6 +33,7 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\ValidationRule;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -81,6 +82,7 @@ class BelongsUser implements ValidationRule
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();
         }
         $count   = 0;
+        /** @var Model $object */
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field});
             Log::debug(sprintf('Comparing object "%s" with value "%s"', $objectValue, $value));

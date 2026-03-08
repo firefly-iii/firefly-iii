@@ -47,8 +47,7 @@ use Illuminate\View\View;
  */
 final class BulkController extends Controller
 {
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $repository;
+    private JournalRepositoryInterface $repository;
 
     /**
      * BulkController constructor.
@@ -91,8 +90,6 @@ final class BulkController extends Controller
 
     /**
      * Update all journals.
-     *
-     * @return Application|Redirector|RedirectResponse
      */
     public function update(BulkEditJournalRequest $request): Redirector|RedirectResponse
     {

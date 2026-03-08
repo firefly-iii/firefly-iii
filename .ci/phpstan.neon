@@ -33,13 +33,6 @@ parameters:
     - Illuminate\Database\Eloquent\Model
   reportUnmatchedIgnoredErrors: true
   ignoreErrors:
-    # these are actually interesting but not right now:
-    - identifier: varTag.nativeType
-    - identifier: property.onlyWritten
-    - identifier: parameter.phpDocType
-    - identifier: property.dynamicName
-    - identifier: property.unusedType
-    - identifier: staticMethod.deprecated
     # ignore everything but things that BREAK
     - identifier: property.deprecated
     - identifier: method.deprecated
@@ -50,8 +43,9 @@ parameters:
     - identifier: return.type
     - identifier: assign.propertyType
     - identifier: return.unusedType
-    - identifier: return.phpDocType
     # all errors below I will (probably) never fix.
+    - identifier: property.unusedType # one false positive
+    - identifier: varTag.nativeType # dont even know what im supposed to fix.
     - identifier: method.notFound # way too many false positives
     - identifier: catch.neverThrown # plenty of errors that are thrown undocumented
     - identifier: staticMethod.dynamicName # dont care

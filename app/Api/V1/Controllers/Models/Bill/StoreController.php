@@ -83,7 +83,6 @@ final class StoreController extends Controller
 
         /** @var BillTransformer $transformer */
         $transformer = app(BillTransformer::class);
-        $transformer->setParameters($this->parameters);
 
         $resource    = new Item($bill, $transformer, 'bills');
 

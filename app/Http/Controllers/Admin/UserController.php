@@ -70,9 +70,6 @@ final class UserController extends Controller
         $this->externalIdentity = 'web' !== config('firefly.authentication_guard');
     }
 
-    /**
-     * @return Application|Factory|Redirector|RedirectResponse|View
-     */
     public function delete(User $user): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
         if ($this->externalIdentity) {
