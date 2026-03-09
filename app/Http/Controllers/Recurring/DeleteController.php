@@ -78,7 +78,7 @@ final class DeleteController extends Controller
     /**
      * Destroy the recurring transaction.
      */
-    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence): Redirector|RedirectResponse
+    public function destroy(RecurringRepositoryInterface $repository, Request $request, Recurrence $recurrence): RedirectResponse
     {
         $repository->destroy($recurrence);
         $request->session()->flash('success', (string) trans('firefly.recurrence_deleted', ['title' => $recurrence->title]));

@@ -73,6 +73,9 @@ use NotificationChannels\Pushover\PushoverReceiver;
 use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property UserGroup|null $userGroup
+ */
 class User extends Authenticatable
 {
     use HasApiTokens;

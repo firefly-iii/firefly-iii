@@ -107,7 +107,7 @@ final class ProfileController extends Controller
     /**
      * Change your password.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function changePassword(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -129,7 +129,7 @@ final class ProfileController extends Controller
      *
      * @throws FireflyException
      */
-    public function confirmEmailChange(UserRepositoryInterface $repository, #[SensitiveParameter] string $token): Redirector|RedirectResponse
+    public function confirmEmailChange(UserRepositoryInterface $repository, #[SensitiveParameter] string $token): RedirectResponse
     {
         if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));
@@ -284,7 +284,7 @@ final class ProfileController extends Controller
     /**
      * Submit change password form.
      */
-    public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository): Redirector|RedirectResponse
+    public function postChangePassword(ProfileFormRequest $request, UserRepositoryInterface $repository): RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -316,7 +316,7 @@ final class ProfileController extends Controller
     /**
      * Submit delete account.
      */
-    public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request): Redirector|RedirectResponse
+    public function postDeleteAccount(UserRepositoryInterface $repository, DeleteAccountFormRequest $request): RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -345,7 +345,7 @@ final class ProfileController extends Controller
      *
      * @throws AuthenticationException
      */
-    public function postLogoutOtherSessions(Request $request): Redirector|RedirectResponse
+    public function postLogoutOtherSessions(Request $request): RedirectResponse
     {
         if (!$this->internalAuth) {
             session()->flash('info', (string) trans('firefly.external_auth_disabled'));
@@ -369,7 +369,7 @@ final class ProfileController extends Controller
      *
      * @throws Exception
      */
-    public function regenerate(Request $request): Redirector|RedirectResponse
+    public function regenerate(Request $request): RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -391,7 +391,7 @@ final class ProfileController extends Controller
      *
      * @throws FireflyException
      */
-    public function undoEmailChange(UserRepositoryInterface $repository, #[SensitiveParameter] string $token, string $hash): Redirector|RedirectResponse
+    public function undoEmailChange(UserRepositoryInterface $repository, #[SensitiveParameter] string $token, string $hash): RedirectResponse
     {
         if (!$this->internalAuth) {
             throw new FireflyException(trans('firefly.external_user_mgt_disabled'));

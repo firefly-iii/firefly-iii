@@ -66,7 +66,7 @@ final class CreateController extends Controller
     /**
      * Create a currency.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function create(Request $request): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -95,7 +95,7 @@ final class CreateController extends Controller
     /**
      * Store new currency.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(CurrencyFormRequest $request)
     {

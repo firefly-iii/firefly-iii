@@ -77,7 +77,7 @@ final class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
      * @throws FireflyException
@@ -197,7 +197,7 @@ final class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface

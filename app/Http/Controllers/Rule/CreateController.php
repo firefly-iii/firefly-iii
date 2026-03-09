@@ -268,7 +268,7 @@ final class CreateController extends Controller
     /**
      * Store the new rule.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(RuleFormRequest $request)
     {

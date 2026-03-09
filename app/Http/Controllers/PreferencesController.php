@@ -227,7 +227,7 @@ final class PreferencesController extends Controller
      * @SuppressWarnings("PHPMD.ExcessiveMethodLength")
      * @SuppressWarnings("PHPMD.NPathComplexity")
      */
-    public function postIndex(PreferencesRequest $request): Redirector|RedirectResponse
+    public function postIndex(PreferencesRequest $request): RedirectResponse
     {
         Log::debug('postIndex for preferences.');
         // front page accounts

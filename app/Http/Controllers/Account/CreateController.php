@@ -126,15 +126,7 @@ final class CreateController extends Controller
         ]);
     }
 
-    /**
-     * Store the new account.
-     *
-     * @return Redirector|RedirectResponse
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
-     */
-    public function store(AccountFormRequest $request)
+    public function store(AccountFormRequest $request): RedirectResponse
     {
         $data      = $request->getAccountData();
         $account   = $this->repository->store($data);

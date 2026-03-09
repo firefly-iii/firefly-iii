@@ -85,7 +85,7 @@ final class MassController extends Controller
         return view('transactions.mass.delete', ['journals' => $journals, 'subTitle' => $subTitle]);
     }
 
-    public function destroy(MassDeleteJournalRequest $request): Redirector | RedirectResponse
+    public function destroy(MassDeleteJournalRequest $request): RedirectResponse
     {
         Log::debug(sprintf('Now in %s', __METHOD__));
         $ids   = $request->input('confirm_mass_delete');
@@ -171,7 +171,7 @@ final class MassController extends Controller
      *
      * @throws FireflyException
      */
-    public function update(MassEditJournalRequest $request): Redirector | RedirectResponse
+    public function update(MassEditJournalRequest $request): RedirectResponse
     {
         $journalIds = $request->get('journals');
         if (!is_array($journalIds)) {

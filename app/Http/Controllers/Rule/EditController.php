@@ -154,7 +154,7 @@ final class EditController extends Controller
     /**
      * Update the rule.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(RuleFormRequest $request, Rule $rule)
     {

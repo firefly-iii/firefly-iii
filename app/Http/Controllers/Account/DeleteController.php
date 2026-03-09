@@ -63,7 +63,7 @@ final class DeleteController extends Controller
     /**
      * Delete account screen.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function delete(Account $account): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -86,7 +86,7 @@ final class DeleteController extends Controller
     /**
      * Delete the account.
      */
-    public function destroy(Request $request, Account $account): Redirector|RedirectResponse
+    public function destroy(Request $request, Account $account): RedirectResponse
     {
         if (!$this->isEditableAccount($account)) {
             return $this->redirectAccountToAccount($account);

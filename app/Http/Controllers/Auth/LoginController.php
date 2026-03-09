@@ -153,7 +153,7 @@ final class LoginController extends Controller
     /**
      * Log the user out of the application.
      */
-    public function logout(Request $request): Redirector|RedirectResponse|Response
+    public function logout(Request $request): RedirectResponse|Response
     {
         $authGuard  = config('firefly.authentication_guard');
         $logoutUrl  = config('firefly.custom_logout_url');

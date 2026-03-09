@@ -99,7 +99,7 @@ final class MfaController extends Controller
         return view('profile.mfa.backup-codes-intro');
     }
 
-    public function backupCodesPost(ExistingTokenFormRequest $request): Redirector|RedirectResponse|View
+    public function backupCodesPost(ExistingTokenFormRequest $request): RedirectResponse|View
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -150,7 +150,7 @@ final class MfaController extends Controller
     /**
      * Delete 2FA routine.
      */
-    public function disableMFAPost(ExistingTokenFormRequest $request): Redirector|RedirectResponse
+    public function disableMFAPost(ExistingTokenFormRequest $request): RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -186,7 +186,7 @@ final class MfaController extends Controller
     /**
      * Enable 2FA screen.
      */
-    public function enableMFA(Request $request): Redirector|RedirectResponse|View
+    public function enableMFA(Request $request): RedirectResponse|View
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -221,7 +221,7 @@ final class MfaController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function enableMFAPost(TokenFormRequest $request): Redirector|RedirectResponse
+    public function enableMFAPost(TokenFormRequest $request): RedirectResponse
     {
         if (!$this->internalAuth) {
             $request->session()->flash('error', trans('firefly.external_user_mgt_disabled'));

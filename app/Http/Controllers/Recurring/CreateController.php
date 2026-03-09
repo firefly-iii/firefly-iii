@@ -222,7 +222,7 @@ final class CreateController extends Controller
     /**
      * Store a recurring transaction.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      *
      * @throws FireflyException
      */

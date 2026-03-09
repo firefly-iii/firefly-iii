@@ -103,7 +103,7 @@ final class BudgetLimitController extends Controller
         return view('budgets.budget-limits.create', ['start'      => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
     }
 
-    public function delete(BudgetLimit $budgetLimit): Redirector|RedirectResponse
+    public function delete(BudgetLimit $budgetLimit): RedirectResponse
     {
         $this->blRepository->destroyBudgetLimit($budgetLimit);
         session()->flash('success', trans('firefly.deleted_bl'));

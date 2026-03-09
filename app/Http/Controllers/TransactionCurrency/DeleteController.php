@@ -65,7 +65,7 @@ final class DeleteController extends Controller
     /**
      * Deletes a currency.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws FireflyException
      */
@@ -102,7 +102,7 @@ final class DeleteController extends Controller
      *
      * @throws FireflyException
      */
-    public function destroy(Request $request, TransactionCurrency $currency): Redirector|RedirectResponse
+    public function destroy(Request $request, TransactionCurrency $currency): RedirectResponse
     {
         /** @var User $user */
         $user = auth()->user();

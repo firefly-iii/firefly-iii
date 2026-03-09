@@ -113,7 +113,7 @@ final class EditController extends Controller
     /**
      * Update the rule group.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(RuleGroupFormRequest $request, RuleGroup $ruleGroup)
     {

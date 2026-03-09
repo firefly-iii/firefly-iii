@@ -81,7 +81,7 @@ final class CreateController extends Controller
     /**
      * Store new category.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      *
      * @throws FireflyException
      */

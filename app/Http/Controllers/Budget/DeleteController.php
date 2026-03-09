@@ -76,7 +76,7 @@ final class DeleteController extends Controller
     /**
      * Destroys a budget.
      */
-    public function destroy(Request $request, Budget $budget): Redirector|RedirectResponse
+    public function destroy(Request $request, Budget $budget): RedirectResponse
     {
         $name = $budget->name;
         $this->repository->destroy($budget);

@@ -84,7 +84,7 @@ final class ConvertController extends Controller
     /**
      * Show overview of a to be converted transaction.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      *
      * @throws Exception
      */
@@ -141,7 +141,7 @@ final class ConvertController extends Controller
     /**
      * Do the conversion.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionGroup $group)
     {

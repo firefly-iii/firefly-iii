@@ -77,7 +77,7 @@ final class AttachmentController extends Controller
     /**
      * Destroy attachment.
      */
-    public function destroy(Request $request, Attachment $attachment): Redirector|RedirectResponse
+    public function destroy(Request $request, Attachment $attachment): RedirectResponse
     {
         $name = $attachment->filename;
 

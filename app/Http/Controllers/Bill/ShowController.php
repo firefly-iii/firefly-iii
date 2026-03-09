@@ -77,7 +77,7 @@ final class ShowController extends Controller
     /**
      * Rescan bills for transactions.
      */
-    public function rescan(Request $request, Bill $bill): Redirector|RedirectResponse
+    public function rescan(Request $request, Bill $bill): RedirectResponse
     {
         $total      = 0;
         if (false === $bill->active) {

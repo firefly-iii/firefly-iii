@@ -63,7 +63,7 @@ final class TwoFactorController extends Controller
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    public function submitMFA(Request $request): Redirector|RedirectResponse
+    public function submitMFA(Request $request): RedirectResponse
     {
         /** @var array $mfaHistory */
         $mfaHistory    = Preferences::get('mfa_history', [])->data;

@@ -91,7 +91,7 @@ final class BulkController extends Controller
     /**
      * Update all journals.
      */
-    public function update(BulkEditJournalRequest $request): Redirector|RedirectResponse
+    public function update(BulkEditJournalRequest $request): RedirectResponse
     {
         $journalIds     = $request->get('journals');
         $journalIds     = is_array($journalIds) ? $journalIds : [];

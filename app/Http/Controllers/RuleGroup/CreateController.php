@@ -80,7 +80,7 @@ final class CreateController extends Controller
     /**
      * Store the rule group.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(RuleGroupFormRequest $request)
     {

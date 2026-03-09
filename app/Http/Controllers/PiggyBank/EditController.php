@@ -120,7 +120,7 @@ final class EditController extends Controller
     /**
      * Update a piggy bank.
      */
-    public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank): Redirector|RedirectResponse
+    public function update(PiggyBankUpdateRequest $request, PiggyBank $piggyBank): RedirectResponse
     {
         $data      = $request->getPiggyBankData();
         $piggyBank = $this->piggyRepos->update($piggyBank, $data);

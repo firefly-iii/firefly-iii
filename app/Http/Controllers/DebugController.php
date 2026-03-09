@@ -104,7 +104,7 @@ final class DebugController extends Controller
      *
      * @throws FireflyException
      */
-    public function flush(Request $request): Redirector|RedirectResponse
+    public function flush(Request $request): RedirectResponse
     {
         Preferences::mark();
         $request->session()->forget(['start', 'end', '_previous', 'viewRange', 'range', 'is_custom_range', 'temp-mfa-secret', 'temp-mfa-codes']);
@@ -267,7 +267,7 @@ final class DebugController extends Controller
     /**
      * Flash all types of messages.
      */
-    public function testFlash(Request $request): Redirector|RedirectResponse
+    public function testFlash(Request $request): RedirectResponse
     {
         $request->session()->flash('success', 'This is a success message.');
         $request->session()->flash('info', 'This is an info message.');

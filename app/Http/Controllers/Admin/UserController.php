@@ -102,7 +102,7 @@ final class UserController extends Controller
     /**
      * Destroy a user.
      */
-    public function destroy(User $user): Redirector|RedirectResponse
+    public function destroy(User $user): RedirectResponse
     {
         if ($this->externalIdentity) {
             request()->session()->flash('error', trans('firefly.external_user_mgt_disabled'));
@@ -230,7 +230,7 @@ final class UserController extends Controller
     /**
      * Update single user.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(UserFormRequest $request, User $user)
     {

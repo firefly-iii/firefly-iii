@@ -176,7 +176,7 @@ final class EditController extends Controller
     /**
      * Update the recurring transaction.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      *
      * @throws FireflyException
      */

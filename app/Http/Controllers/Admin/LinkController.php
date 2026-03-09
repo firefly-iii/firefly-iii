@@ -83,7 +83,7 @@ final class LinkController extends Controller
     /**
      * Delete a link form.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function delete(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -116,7 +116,7 @@ final class LinkController extends Controller
     /**
      * Actually destroy the link.
      */
-    public function destroy(Request $request, LinkType $linkType): Redirector|RedirectResponse
+    public function destroy(Request $request, LinkType $linkType): RedirectResponse
     {
         Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
@@ -132,7 +132,7 @@ final class LinkController extends Controller
     /**
      * Edit a link form.
      *
-     * @return Factory|Redirector|RedirectResponse|View
+     * @return Factory|RedirectResponse|View
      */
     public function edit(Request $request, LinkType $linkType): Factory|\Illuminate\Contracts\View\View|Redirector|RedirectResponse
     {
@@ -198,7 +198,7 @@ final class LinkController extends Controller
     /**
      * Store the new link.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function store(LinkTypeFormRequest $request)
     {
@@ -227,7 +227,7 @@ final class LinkController extends Controller
     /**
      * Update an existing link.
      *
-     * @return $this|Redirector|RedirectResponse
+     * @return RedirectResponse
      */
     public function update(LinkTypeFormRequest $request, LinkType $linkType)
     {

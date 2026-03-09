@@ -79,7 +79,7 @@ final class EditController extends Controller
      * Update a piggy bank.
      *
      */
-    public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup): Redirector|RedirectResponse
+    public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup): RedirectResponse
     {
         $data      = $request->getObjectGroupData();
         $piggyBank = $this->repository->update($objectGroup, $data);

@@ -39,7 +39,6 @@ parameters:
     - identifier: cast.useless
     - identifier: argument.type
     - identifier: assign.propertyType
-    - identifier: return.unusedType
     # all errors below I will (probably) never fix.
     - identifier: property.unusedType # one false positive
     - identifier: varTag.nativeType # dont even know what im supposed to fix.

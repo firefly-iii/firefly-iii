@@ -85,7 +85,7 @@ final class EditController extends Controller
     /**
      * Update category.
      */
-    public function update(CategoryFormRequest $request, Category $category): Redirector|RedirectResponse
+    public function update(CategoryFormRequest $request, Category $category): RedirectResponse
     {
         $data     = $request->getCategoryData();
         $this->repository->update($category, $data);

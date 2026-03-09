@@ -77,7 +77,7 @@ final class DeleteController extends Controller
     /**
      * Actually destroy the rule group.
      */
-    public function destroy(Request $request, RuleGroup $ruleGroup): Redirector|RedirectResponse
+    public function destroy(Request $request, RuleGroup $ruleGroup): RedirectResponse
     {
         $title  = $ruleGroup->title;
 

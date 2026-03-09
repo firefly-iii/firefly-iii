@@ -94,7 +94,7 @@ final class UpdateController extends Controller
     /**
      * Post new settings.
      */
-    public function post(Request $request): Redirector|RedirectResponse
+    public function post(Request $request): RedirectResponse
     {
         $checkForUpdates = (int) $request->get('check_for_updates');
         $channel         = $request->get('update_channel');

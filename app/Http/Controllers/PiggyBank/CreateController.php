@@ -90,7 +90,7 @@ final class CreateController extends Controller
     /**
      * Store a new piggy bank.
      *
-     * @return Redirector|RedirectResponse
+     * @return RedirectResponse
      *
      * @throws FireflyException
      */

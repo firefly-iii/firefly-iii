@@ -81,7 +81,7 @@ final class LinkController extends Controller
     /**
      * Actually destroy it.
      */
-    public function destroy(TransactionJournalLink $link): Redirector|RedirectResponse
+    public function destroy(TransactionJournalLink $link): RedirectResponse
     {
         $this->repository->destroyLink($link);
 
@@ -104,7 +104,7 @@ final class LinkController extends Controller
     /**
      * Store a new link.
      */
-    public function store(JournalLinkRequest $request, TransactionJournal $journal): Redirector|RedirectResponse
+    public function store(JournalLinkRequest $request, TransactionJournal $journal): RedirectResponse
     {
         $linkInfo      = $request->getLinkInfo();
 
@@ -139,7 +139,7 @@ final class LinkController extends Controller
     /**
      * Switch link from A <> B to B <> A.
      */
-    public function switchLink(Request $request): Redirector|RedirectResponse
+    public function switchLink(Request $request): RedirectResponse
     {
         $linkId = (int) $request->get('id');
         $this->repository->switchLinkById($linkId);

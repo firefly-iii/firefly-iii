@@ -75,7 +75,7 @@ final class RegisterController extends Controller
         }
     }
 
-    public function register(Request $request): Redirector|RedirectResponse
+    public function register(Request $request): RedirectResponse
     {
         $allowRegistration = $this->allowedToRegister();
         $inviteCode        = (string) $request->get('invite_code');
