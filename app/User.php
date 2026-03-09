@@ -75,6 +75,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @property UserGroup|null $userGroup
+ * @property bool $blocked
  */
 class User extends Authenticatable
 {

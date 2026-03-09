@@ -32,7 +32,7 @@ use RuntimeException;
 abstract class AggregateFormRequest extends ApiRequest
 {
     /**
-     * @var ApiRequest[]
+     * @var Request[]
      */
     protected array $requests      = [];
 

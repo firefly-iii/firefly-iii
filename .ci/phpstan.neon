@@ -38,7 +38,6 @@ parameters:
     - identifier: method.deprecated
     - identifier: cast.useless
     - identifier: argument.type
-    - identifier: assign.propertyType
     # all errors below I will (probably) never fix.
     - identifier: property.unusedType # one false positive
     - identifier: varTag.nativeType # dont even know what im supposed to fix.
@@ -54,9 +53,6 @@ parameters:
     # - '#expects view-string, string given#'
     # - "#Parameter \\#[1-2] \\$num[1-2] of function bc[a-z]+ expects numeric-string, [a-z\\-|&]+ given#"
     - identifier: missingType.generics # not interesting enough to fix.
-    -
-        identifier: larastan.noEnvCallsOutsideOfConfig
-        path: ../app/Console/Commands/System/CreatesDatabase.php
     - identifier: missingType.iterableValue # not interesting enough to fix.
     - identifier: varTag.type # needs a custom extension for every repository, not gonna happen.
     # - '#Dynamic call to static method Illuminate#'

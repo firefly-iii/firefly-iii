@@ -34,6 +34,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property array|string $message
+ */
 #[ObservedBy([DeletedWebhookMessageObserver::class])]
 class WebhookMessage extends Model
 {

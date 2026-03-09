@@ -43,6 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property null|Carbon $first_date
  * @property null|Carbon $latest_date
  * @property null|Carbon $repeat_until
+ * @property User $user
  */
 #[ObservedBy([DeletedRecurrenceObserver::class])]
 class Recurrence extends Model

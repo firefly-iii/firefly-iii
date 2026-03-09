@@ -35,6 +35,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
+/**
+ * @property User                $user
+ * @property TransactionCurrency $transactionCurrency
+ */
 #[ObservedBy([AvailableBudgetObserver::class])]
 class AvailableBudget extends Model
 {
@@ -42,36 +46,37 @@ class AvailableBudget extends Model
     use ReturnsIntegerUserIdTrait;
     use SoftDeletes;
 
-    protected $fillable = [
-        'user_id',
-        'user_group_id',
-        'transaction_currency_id',
-        'amount',
-        'start_date',
-        'end_date',
-        'start_date_tz',
-        'end_date_tz',
-        'native_amount',
-    ];
+    protected $fillable
+        = [
+            'user_id',
+            'user_group_id',
+            'transaction_currency_id',
+            'amount',
+            'start_date',
+            'end_date',
+            'start_date_tz',
+            'end_date_tz',
+            'native_amount',
+        ];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
      *
      * @throws NotFoundHttpException
      */
-    public static function routeBinder(self|string $value): self
+    public static function routeBinder(self | string $value): self
     {
         if ($value instanceof self) {
-            $value = (int) $value->id;
+            $value = (int)$value->id;
         }
         if (auth()->check()) {
-            $availableBudgetId = (int) $value;
+            $availableBudgetId = (int)$value;
 
             /** @var User $user */
-            $user              = auth()->user();
+            $user = auth()->user();
 
             /** @var null|AvailableBudget $availableBudget */
-            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
@@ -92,7 +97,7 @@ class AvailableBudget extends Model
 
     protected function amount(): Attribute
     {
-        return Attribute::make(get: static fn ($value): string => (string) $value);
+        return Attribute::make(get: static fn($value): string => (string)$value);
     }
 
     protected function casts(): array
@@ -114,21 +119,21 @@ class AvailableBudget extends Model
     protected function endDate(): Attribute
     {
         return Attribute::make(
-            get: static fn (string $value): Carbon => Carbon::parse($value),
-            set: static fn (Carbon $value): string => $value->format('Y-m-d')
+            get: static fn(string $value): Carbon => Carbon::parse($value),
+            set: static fn(Carbon $value): string => $value->format('Y-m-d')
         );
     }
 
     protected function startDate(): Attribute
     {
         return Attribute::make(
-            get: static fn (string $value): Carbon => Carbon::parse($value),
-            set: static fn (Carbon $value): string => $value->format('Y-m-d')
+            get: static fn(string $value): Carbon => Carbon::parse($value),
+            set: static fn(Carbon $value): string => $value->format('Y-m-d')
         );
     }
 
     protected function transactionCurrencyId(): Attribute
     {
-        return Attribute::make(get: static fn ($value): int => (int) $value);
+        return Attribute::make(get: static fn($value): int => (int)$value);
     }
 }

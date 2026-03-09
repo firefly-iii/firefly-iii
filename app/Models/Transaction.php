@@ -35,6 +35,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * @property Account|null $account
+ * @property TransactionCurrency $transactionCurrency
+ * @property TransactionCurrency|null $foreignCurrency
+ * @property string|null $balance_before
+ * @property string|null $balance_after
+ */
 #[ObservedBy([TransactionObserver::class])]
 class Transaction extends Model
 {

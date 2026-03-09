@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 /**
  * @property Carbon $start
  * @property Carbon $end
+ * @property string $amount
  */
 class PeriodStatistic extends Model
 {
