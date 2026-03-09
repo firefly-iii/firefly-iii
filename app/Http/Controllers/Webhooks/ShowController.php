@@ -27,7 +27,6 @@ namespace FireflyIII\Http\Controllers\Webhooks;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Webhook;
 use FireflyIII\Support\Facades\FireflyConfig;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\Log;

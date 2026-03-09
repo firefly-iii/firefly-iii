@@ -296,13 +296,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface, UserGroupInterf
             ->currencies()
             ->orderBy('code', 'ASC')
             ->withPivot(['group_default'])
-            ->get();
+            ->get()
+        ;
         $all->map(static function (TransactionCurrency $current): TransactionCurrency {
             $current->userGroupEnabled = true;
             $current->userGroupNative  = 1 === (int) $current->pivot->group_default;
 
             return $current;
         });
+
         /** @var Collection */
         return $all;
     }

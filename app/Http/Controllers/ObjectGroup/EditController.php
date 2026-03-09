@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\ObjectGroupFormRequest;
 use FireflyIII\Models\ObjectGroup;
 use FireflyIII\Repositories\ObjectGroup\ObjectGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -77,7 +76,6 @@ final class EditController extends Controller
 
     /**
      * Update a piggy bank.
-     *
      */
     public function update(ObjectGroupFormRequest $request, ObjectGroup $objectGroup): RedirectResponse
     {

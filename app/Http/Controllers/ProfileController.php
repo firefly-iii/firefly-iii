@@ -38,7 +38,6 @@ use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Guard;
-use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -342,7 +341,6 @@ final class ProfileController extends Controller
     }
 
     /**
-     *
      * @throws AuthenticationException
      */
     public function postLogoutOtherSessions(Request $request): RedirectResponse

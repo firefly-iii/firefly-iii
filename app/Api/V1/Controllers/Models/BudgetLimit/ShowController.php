@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers\Models\BudgetLimit;
 
 use FireflyIII\Api\V1\Controllers\Controller;
-use FireflyIII\Api\V1\Requests\Data\SameDateRequest;
 use FireflyIII\Api\V1\Requests\DateRangeRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Budget;
@@ -124,9 +123,7 @@ final class ShowController extends Controller
         $manager      = $this->getManager();
         $manager->parseIncludes('budget');
         $pageSize     = $this->parameters->get('limit');
-        $collection   = $this->blRepository->getAllBudgetLimits(
-            $request->attributes->get('start'),
-            $request->attributes->get('end'));
+        $collection   = $this->blRepository->getAllBudgetLimits($request->attributes->get('start'), $request->attributes->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
