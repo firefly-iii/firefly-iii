@@ -82,6 +82,7 @@ class BelongsUser implements ValidationRule
             $objects = $class::where('user_id', '=', auth()->user()->id)->get();
         }
         $count   = 0;
+
         /** @var Model $object */
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field});

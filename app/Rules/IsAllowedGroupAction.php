@@ -71,6 +71,7 @@ class IsAllowedGroupAction implements ValidationRule
     private function validateUserGroup(): void
     {
         Log::debug('This method is not yet in use', $this->acceptedRoles);
+
         try {
             throw new FireflyException('Here we are');
         } catch (FireflyException $e) {

@@ -231,9 +231,10 @@ class CorrectsAccountTypes extends Command
     {
         /** @var null|Transaction $res */
         $res = $journal->transactions->firstWhere('amount', '>', 0);
-        if(null === $res) {
+        if (null === $res) {
             throw new FireflyException('Could not find transaction.');
         }
+
         return $res;
     }
 
@@ -241,9 +242,10 @@ class CorrectsAccountTypes extends Command
     {
         /** @var null|Transaction $res */
         $res = $journal->transactions->firstWhere('amount', '<', 0);
-        if(null === $res) {
+        if (null === $res) {
             throw new FireflyException('Could not find transaction.');
         }
+
         return $res;
     }
 
