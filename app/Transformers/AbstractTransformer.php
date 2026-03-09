@@ -44,7 +44,6 @@ abstract class AbstractTransformer extends TransformerAbstract
         return $this->parameters;
     }
 
-
     /**
      * @deprecated
      */

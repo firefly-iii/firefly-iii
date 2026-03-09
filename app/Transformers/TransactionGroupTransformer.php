@@ -182,7 +182,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        /** @var Transaction|null $result */
+        /** @var null|Transaction $result */
         $result = $journal->transactions->first(static fn (Transaction $transaction): bool => (float) $transaction->amount > 0);
         if (null === $result) {
             throw new FireflyException(sprintf('Journal #%d unexpectedly has no destination transaction.', $journal->id));
@@ -225,7 +225,7 @@ class TransactionGroupTransformer extends AbstractTransformer
      */
     private function getSourceTransaction(TransactionJournal $journal): Transaction
     {
-        /** @var Transaction|null $result */
+        /** @var null|Transaction $result */
         $result = $journal->transactions->first(static fn (Transaction $transaction): bool => (float) $transaction->amount < 0);
         if (null === $result) {
             throw new FireflyException(sprintf('Journal #%d unexpectedly has no source transaction.', $journal->id));

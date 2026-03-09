@@ -95,6 +95,7 @@ class BelongsUserGroup implements ValidationRule
             $objects = $class::where('user_group_id', '=', $this->userGroup->id)->get();
         }
         $count   = 0;
+
         /** @var Model $object */
         foreach ($objects as $object) {
             $objectValue = trim((string) $object->{$field});

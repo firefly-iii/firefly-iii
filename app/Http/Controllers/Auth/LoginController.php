@@ -27,7 +27,6 @@ use Carbon\Carbon;
 use FireflyIII\Events\Security\System\UnknownUserTriedLogin;
 use FireflyIII\Events\Security\User\UserFailedLoginAttempt;
 use FireflyIII\Events\Security\User\UserSuccessfullyLoggedIn;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Providers\RouteServiceProvider;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -48,8 +47,6 @@ use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 
 /**

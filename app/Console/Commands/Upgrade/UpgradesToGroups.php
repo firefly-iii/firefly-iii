@@ -93,7 +93,8 @@ class UpgradesToGroups extends Command
 
             return $amount && $identifier;
         });
-        /** @var Transaction|null */
+
+        /** @var null|Transaction */
         return $set->first();
     }
 

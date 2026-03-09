@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers\Models\Recurrence;
 
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Api\V1\Requests\Generic\SingleDateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Recurrence;
