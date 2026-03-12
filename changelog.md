@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## x.x.x - 20xx-xx-xx
+
+<!-- summary: If you can read this I forgot to update the summary! -->
+
+### Added
+
+- Initial release.
+
+### Changed
+
+- Initial release.
+
+### Deprecated
+
+- Initial release.
+
+### Removed
+
+- Initial release.
+
+### Fixed
+
+- Initial release.
+
+### Security
+
+- Enum thing in rule engine, reported by basically all users with preview access to the new Claude code security scanner
+
+### API
+
+- Initial release.
+
 ## v6.5.4 - 2026-03-06
 
 ### Added
