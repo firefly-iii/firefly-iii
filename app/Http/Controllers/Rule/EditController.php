@@ -37,7 +37,6 @@ use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Throwable;
@@ -94,13 +93,13 @@ final class EditController extends Controller
             if (count($words) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $words)]));
                 foreach ($words as $word) {
-                    $operators[] = ['type'  => 'description_contains', 'value' => $word];
+                    $operators[] = ['type' => 'description_contains', 'value' => $word];
                 }
             }
             if (count($excludedWords) > 0) {
                 session()->flash('warning', trans('firefly.rule_from_search_words', ['string' => implode('', $excludedWords)]));
                 foreach ($excludedWords as $excludedWord) {
-                    $operators[] = ['type'  => '-description_contains', 'value' => $excludedWord];
+                    $operators[] = ['type' => '-description_contains', 'value' => $excludedWord];
                 }
             }
             $oldTriggers   = $this->parseFromOperators($operators);
@@ -130,7 +129,7 @@ final class EditController extends Controller
 
         // get rule trigger for update / store-journal:
         $primaryTrigger = $this->ruleRepos->getPrimaryTrigger($rule);
-        $subTitle       = (string) trans('firefly.edit_rule', ['nr'    => $rule->order, 'title' => $rule->title]);
+        $subTitle       = (string) trans('firefly.edit_rule', ['nr' => $rule->order, 'title' => $rule->title]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('rules.edit.fromUpdate')) {

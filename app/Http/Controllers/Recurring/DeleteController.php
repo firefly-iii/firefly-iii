@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -72,7 +71,7 @@ final class DeleteController extends Controller
 
         $journalsCreated = $this->repository->getTransactions($recurrence)->count();
 
-        return view('recurring.delete', ['recurrence'      => $recurrence, 'subTitle'        => $subTitle, 'journalsCreated' => $journalsCreated]);
+        return view('recurring.delete', ['recurrence' => $recurrence, 'subTitle' => $subTitle, 'journalsCreated' => $journalsCreated]);
     }
 
     /**

@@ -564,10 +564,10 @@ trait PeriodOverview
             $groupedSpent       = $this->groupByCurrency($spent);
             $groupedEarned      = $this->groupByCurrency($earned);
             $groupedTransferred = $this->groupByCurrency($transferred);
-            $entry              = ['title'              => $title, 'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [
+            $entry              = ['title' => $title, 'route' => route(sprintf('%s.no-%s', Str::plural($model), $model), [
                 $start->format('Y-m-d'),
                 $end->format('Y-m-d'),
-            ]), 'total_transactions' => count($spent), 'spent'              => $groupedSpent, 'earned'             => $groupedEarned, 'transferred'        => $groupedTransferred];
+            ]), 'total_transactions' => count($spent), 'spent' => $groupedSpent, 'earned' => $groupedEarned, 'transferred' => $groupedTransferred];
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'spent', $groupedSpent);
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'earned', $groupedEarned);
             $this->saveGroupedForPrefix(sprintf('no_%s', $model), $start, $end, 'transferred', $groupedTransferred);
@@ -576,10 +576,10 @@ trait PeriodOverview
         }
         Log::debug(sprintf('Found %d statistics in period %s - %s.', count($statistics), $start->format('Y-m-d'), $end->format('Y-m-d')));
 
-        $entry      = ['title'              => $title, 'route'              => route(sprintf('%s.no-%s', Str::plural($model), $model), [
+        $entry      = ['title' => $title, 'route' => route(sprintf('%s.no-%s', Str::plural($model), $model), [
             $start->format('Y-m-d'),
             $end->format('Y-m-d'),
-        ]), 'total_transactions' => 0, 'spent'              => [], 'earned'             => [], 'transferred'        => []];
+        ]), 'total_transactions' => 0, 'spent' => [], 'earned' => [], 'transferred' => []];
         $grouped    = [];
 
         /** @var PeriodStatistic $statistic */

@@ -211,7 +211,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
                 $this->accountIds[$id] = (int) $item->account_id;
             }
             if (!array_key_exists($accountId, $this->amounts[$id])) {
-                $this->amounts[$id][$accountId] = ['current_amount'    => '0', 'pc_current_amount' => '0'];
+                $this->amounts[$id][$accountId] = ['current_amount' => '0', 'pc_current_amount' => '0'];
             }
             $this->amounts[$id][$accountId]['current_amount'] = bcadd(
                 (string) $this->amounts[$id][$accountId]['current_amount'],
@@ -245,7 +245,7 @@ class PiggyBankEnrichment implements EnrichmentInterface
         /** @var Account $item */
         foreach ($set as $item) {
             $id                  = (int) $item->id;
-            $this->accounts[$id] = ['id'   => $id, 'name' => $item->name];
+            $this->accounts[$id] = ['id' => $id, 'name' => $item->name];
         }
     }
 

@@ -58,7 +58,7 @@ class UserFailedLoginAttempt extends Notification
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
-        $link = route('index');
+        $link      = route('index');
 
         return new MailMessage()
             ->markdown('emails.security.failed-login', [
@@ -92,7 +92,7 @@ class UserFailedLoginAttempt extends Notification
     {
         $ip = Request::ip();
 
-        return PushoverMessage::create((string) trans('email.failed_login_message', ['ip'    => $ip, 'email' => $this->user->email]))->title((string) trans(
+        return PushoverMessage::create((string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]))->title((string) trans(
             'email.failed_login_subject'
         ));
     }
@@ -103,7 +103,7 @@ class UserFailedLoginAttempt extends Notification
     public function toSlack(User $notifiable): SlackMessage
     {
         $ip      = Request::ip();
-        $message = (string) trans('email.failed_login_message', ['ip'    => $ip, 'email' => $this->user->email]);
+        $message = (string) trans('email.failed_login_message', ['ip' => $ip, 'email' => $this->user->email]);
 
         return new SlackMessage()->content($message);
     }

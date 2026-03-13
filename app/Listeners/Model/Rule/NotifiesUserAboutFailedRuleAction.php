@@ -52,7 +52,7 @@ class NotifiesUserAboutFailedRuleAction implements ShouldQueue
         $groupId     = is_array($journal) ? $journal['transaction_group_id'] : $journal->transaction_group_id;
         $groupTitle  = is_array($journal) ? $journal['description'] ?? '' : $journal->description ?? '';
 
-        $mainMessage = trans('rules.main_message', ['rule'   => $rule->title, 'action' => $ruleAction->action_type, 'group'  => $groupId, 'error'  => $error]);
+        $mainMessage = trans('rules.main_message', ['rule' => $rule->title, 'action' => $ruleAction->action_type, 'group' => $groupId, 'error' => $error]);
         $groupLink   = route('transactions.show', [$groupId]);
         $ruleTitle   = $rule->title;
         $ruleLink    = route('rules.edit', [$rule->id]);

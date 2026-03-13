@@ -54,7 +54,7 @@ class AutocompleteRequest extends FormRequest
 
         $date  = $this->getCarbonDate('date') ?? today(config('app.timezone'));
 
-        return ['types' => $array, 'query' => $this->convertString('query'), 'date'  => $date->endOfDay()];
+        return ['types' => $array, 'query' => $this->convertString('query'), 'date' => $date->endOfDay()];
     }
 
     public function rules(): array

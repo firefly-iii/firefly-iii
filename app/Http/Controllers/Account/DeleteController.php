@@ -80,7 +80,7 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('accounts.delete.url');
 
-        return view('accounts.delete', ['account'     => $account, 'subTitle'    => $subTitle, 'accountList' => $accountList, 'objectType'  => $objectType]);
+        return view('accounts.delete', ['account' => $account, 'subTitle' => $subTitle, 'accountList' => $accountList, 'objectType' => $objectType]);
     }
 
     /**

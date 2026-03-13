@@ -82,7 +82,7 @@ final class BudgetController extends Controller
         $generator->accountPerBudget();
         $report    = $generator->getReport();
 
-        return view('reports.budget.partials.account-per-budget', ['report'  => $report, 'budgets' => $budgets]);
+        return view('reports.budget.partials.account-per-budget', ['report' => $report, 'budgets' => $budgets]);
     }
 
     /**
@@ -97,7 +97,7 @@ final class BudgetController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
+            $report[$accountId] ??= ['name' => $account->name, 'id' => $account->id, 'iban' => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -129,7 +129,7 @@ final class BudgetController extends Controller
             }
         }
 
-        return view('reports.budget.partials.accounts', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.budget.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -195,7 +195,7 @@ final class BudgetController extends Controller
         /** @var Budget $budget */
         foreach ($budgets as $budget) {
             $budgetId = $budget->id;
-            $report[$budgetId] ??= ['name'       => $budget->name, 'id'         => $budget->id, 'currencies' => []];
+            $report[$budgetId] ??= ['name' => $budget->name, 'id' => $budget->id, 'currencies' => []];
         }
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
@@ -243,7 +243,7 @@ final class BudgetController extends Controller
             }
         }
 
-        return view('reports.budget.partials.budgets', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.budget.partials.budgets', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -330,7 +330,7 @@ final class BudgetController extends Controller
         }
 
         try {
-            $result = view('reports.partials.budget-period', ['report'  => $report, 'periods' => $periods])->render();
+            $result = view('reports.partials.budget-period', ['report' => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

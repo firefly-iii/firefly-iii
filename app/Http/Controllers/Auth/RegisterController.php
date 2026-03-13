@@ -36,7 +36,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 use Psr\Container\ContainerExceptionInterface;
@@ -135,7 +134,7 @@ final class RegisterController extends Controller
 
         $email             = $request->old('email');
 
-        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle, 'inviteCode' => $inviteCode]);
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle, 'inviteCode' => $inviteCode]);
     }
 
     /**
@@ -161,7 +160,7 @@ final class RegisterController extends Controller
 
         $email             = $request?->old('email');
 
-        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email'      => $email, 'pageTitle'  => $pageTitle]);
+        return view('auth.register', ['isDemoSite' => $isDemoSite, 'email' => $email, 'pageTitle' => $pageTitle]);
     }
 
     /**

@@ -130,7 +130,7 @@ final class BoxController extends Controller
             $expenses[$this->primaryCurrency->id] = Amount::formatAnything($this->primaryCurrency, '0', false);
         }
 
-        $response  = ['incomes'   => $incomes, 'expenses'  => $expenses, 'sums'      => $sums, 'size'      => count($sums), 'preferred' => $currency->id];
+        $response  = ['incomes' => $incomes, 'expenses' => $expenses, 'sums' => $sums, 'size' => count($sums), 'preferred' => $currency->id];
         $cache->store($response);
 
         return response()->json($response);

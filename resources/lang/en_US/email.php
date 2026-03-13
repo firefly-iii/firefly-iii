@@ -33,8 +33,8 @@ return [
     'admin_test_subject'                         => 'A test message from your Firefly III installation',
     'admin_test_body'                            => 'This is a test message from your Firefly III instance. It was sent to :email.',
     'admin_test_message'                         => 'This is a test message from your Firefly III instance over channel ":channel".',
-    'admin_test_link' => 'The following link should point to your Firefly III installation. It should be correctly adorned with "http" or "https". If not, please set your `APP_URL` environment variable: [:link](:link)',
-    'firefly_iii_url' => 'Firefly III',
+    'admin_test_link'                            => 'The following link should point to your Firefly III installation. It should be correctly adorned with "http" or "https". If not, please set your `APP_URL` environment variable: [:link](:link)',
+    'firefly_iii_url'                            => 'Firefly III',
 
     // invite
     'invitation_created_subject'                 => 'An invitation has been created',

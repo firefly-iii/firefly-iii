@@ -102,7 +102,7 @@ final class EditController extends Controller
         }
         $request->session()->forget('currencies.edit.fromUpdate');
 
-        return view('currencies.edit', ['currency'     => $currency, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('currencies.edit', ['currency' => $currency, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**

@@ -41,7 +41,7 @@ class AutoBudget extends Model
     use ReturnsIntegerIdTrait;
     use SoftDeletes;
 
-    protected $casts    = ['amount'        => 'string', 'native_amount' => 'string'];
+    protected $casts    = ['amount' => 'string', 'native_amount' => 'string'];
     protected $fillable = ['budget_id', 'amount', 'period', 'native_amount'];
 
     public function budget(): BelongsTo

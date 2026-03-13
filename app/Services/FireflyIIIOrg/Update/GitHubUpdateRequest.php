@@ -147,7 +147,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
 
     private function getNewest(array $releases): array
     {
-        $latest = ['version'      => '1.0.0', 'published_at' => now(config('app.timezone'))->startOfYear()];
+        $latest = ['version' => '1.0.0', 'published_at' => now(config('app.timezone'))->startOfYear()];
         foreach ($releases as $release) {
             Log::debug(sprintf('Comparing current version "%s" with latest version "%s"', $release['version'], $latest['version']));
             if (str_contains($release['version'], 'develop') || str_contains($latest['version'], 'develop')) {
@@ -218,7 +218,7 @@ class GitHubUpdateRequest implements UpdateRequestInterface
                 continue;
             }
 
-            $return[]  = ['version'      => $version, 'published_at' => $published];
+            $return[]  = ['version' => $version, 'published_at' => $published];
         }
 
         return $return;

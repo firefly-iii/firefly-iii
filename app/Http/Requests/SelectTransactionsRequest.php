@@ -42,7 +42,7 @@ class SelectTransactionsRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['accounts'   => 'required', 'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts'];
+        return ['accounts' => 'required', 'accounts.*' => 'required|exists:accounts,id|belongsToUser:accounts'];
     }
 
     public function withValidator(Validator $validator): void

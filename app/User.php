@@ -74,8 +74,8 @@ use SensitiveParameter;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property UserGroup|null $userGroup
- * @property bool $blocked
+ * @property null|UserGroup $userGroup
+ * @property bool           $blocked
  */
 class User extends Authenticatable
 {
@@ -480,7 +480,7 @@ class User extends Authenticatable
 
     protected function casts(): array
     {
-        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked'    => 'boolean'];
+        return ['created_at' => 'datetime', 'updated_at' => 'datetime', 'blocked' => 'boolean'];
     }
 
     /**

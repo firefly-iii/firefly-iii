@@ -178,7 +178,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted transfer to deposit.');
 
@@ -235,7 +235,7 @@ class ConvertToDeposit implements ActionInterface
         // change transaction type of journal:
         $newType         = TransactionType::whereType(TransactionTypeEnum::DEPOSIT->value)->first();
 
-        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id'             => null]);
+        DB::table('transaction_journals')->where('id', '=', $journal->id)->update(['transaction_type_id' => $newType->id, 'bill_id' => null]);
 
         Log::debug('Converted withdrawal to deposit.');
 

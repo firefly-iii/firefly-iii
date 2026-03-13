@@ -69,7 +69,7 @@ class StoreRequest extends FormRequest
         ];
         $recurrence = $this->getAllData($fields);
 
-        return ['recurrence'   => $recurrence, 'transactions' => $this->getTransactionData(), 'repetitions'  => $this->getRepetitionData()];
+        return ['recurrence' => $recurrence, 'transactions' => $this->getTransactionData(), 'repetitions' => $this->getRepetitionData()];
     }
 
     /**

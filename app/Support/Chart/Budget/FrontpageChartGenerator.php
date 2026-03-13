@@ -69,9 +69,9 @@ class FrontpageChartGenerator
         Log::debug('Now in generate for budget chart.');
         $budgets = $this->budgetRepository->getActiveBudgets();
         $data    = [
-            ['label'   => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type'    => 'bar'],
-            ['label'   => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type'    => 'bar'],
-            ['label'   => (string) trans('firefly.overspent'), 'entries' => [], 'type'    => 'bar'],
+            ['label' => (string) trans('firefly.spent_in_budget'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.left_to_spend'), 'entries' => [], 'type' => 'bar'],
+            ['label' => (string) trans('firefly.overspent'), 'entries' => [], 'type' => 'bar'],
         ];
 
         // loop al budgets:

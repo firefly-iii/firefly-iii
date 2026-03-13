@@ -43,7 +43,7 @@ class WebhookDataSeeder extends Seeder
         foreach (WebhookTrigger::cases() as $trigger) {
             if (null === WebhookTriggerModel::where('key', $trigger->value)->where('title', $trigger->name)->first()) {
                 try {
-                    WebhookTriggerModel::create(['key'   => $trigger->value, 'title' => $trigger->name]);
+                    WebhookTriggerModel::create(['key' => $trigger->value, 'title' => $trigger->name]);
                 } catch (\PDOException $e) {
                     Log::debug(sprintf('Webhook trigger with name "%s" already exists and that is OK.', $trigger->name));
                 }
@@ -52,7 +52,7 @@ class WebhookDataSeeder extends Seeder
         foreach (WebhookResponse::cases() as $response) {
             if (null === WebhookResponseModel::where('key', $response->value)->where('title', $response->name)->first()) {
                 try {
-                    WebhookResponseModel::create(['key'   => $response->value, 'title' => $response->name]);
+                    WebhookResponseModel::create(['key' => $response->value, 'title' => $response->name]);
                 } catch (\PDOException $e) {
                     Log::debug(sprintf('Webhook response with name "%s" already exists and that is OK.', $response->name));
                 }
@@ -61,7 +61,7 @@ class WebhookDataSeeder extends Seeder
         foreach (WebhookDelivery::cases() as $delivery) {
             if (null === WebhookDeliveryModel::where('key', $delivery->value)->where('title', $delivery->name)->first()) {
                 try {
-                    WebhookDeliveryModel::create(['key'   => $delivery->value, 'title' => $delivery->name]);
+                    WebhookDeliveryModel::create(['key' => $delivery->value, 'title' => $delivery->name]);
                 } catch (\PDOException $e) {
                     Log::debug(sprintf('Webhook delivery type with name "%s" already exists and that is OK.', $delivery->name));
                 }

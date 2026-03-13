@@ -86,7 +86,7 @@ class WarnAboutBills implements ShouldQueue
                 Log::debug(sprintf('Now checking bill #%d ("%s")', $bill->id, $bill->name));
                 $dates = $this->getDates($bill);
                 if ($this->needsOverdueAlert($dates)) {
-                    $overdue[] = ['bill'  => $bill, 'dates' => $dates];
+                    $overdue[] = ['bill' => $bill, 'dates' => $dates];
                 }
                 if ($this->hasDateFields($bill)) {
                     if ($this->needsWarning($bill, 'end_date')) {
@@ -128,7 +128,7 @@ class WarnAboutBills implements ShouldQueue
         /** @var Bill $single */
         $single     = $enrichment->enrichSingle($bill);
 
-        return ['pay_dates'  => $single->meta['pay_dates'] ?? [], 'paid_dates' => $single->meta['paid_dates'] ?? []];
+        return ['pay_dates' => $single->meta['pay_dates'] ?? [], 'paid_dates' => $single->meta['paid_dates'] ?? []];
     }
 
     private function getDiff(Bill $bill, string $field): int

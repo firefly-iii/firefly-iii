@@ -87,7 +87,7 @@ final class IndexController extends Controller
     {
         $route = route('search.index');
         $query = $this->ruleRepos->getSearchQuery($rule);
-        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule'   => $rule->id]));
+        $route = sprintf('%s?%s', $route, http_build_query(['search' => $query, 'rule' => $rule->id]));
 
         return redirect($route);
     }

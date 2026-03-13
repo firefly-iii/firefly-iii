@@ -40,10 +40,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property Carbon      $date
- * @property null|Carbon $end_date
- * @property null|Carbon $extension_date
- * @property User $user
+ * @property Carbon              $date
+ * @property null|Carbon         $end_date
+ * @property null|Carbon         $extension_date
+ * @property User                $user
  * @property TransactionCurrency $transactionCurrency
  */
 #[ObservedBy([BillObserver::class])]

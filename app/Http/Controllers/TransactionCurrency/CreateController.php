@@ -89,7 +89,7 @@ final class CreateController extends Controller
 
         Log::channel('audit')->info('Create new currency.');
 
-        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
+        return view('currencies.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
     }
 
     /**

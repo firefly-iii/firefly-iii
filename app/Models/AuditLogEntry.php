@@ -52,7 +52,7 @@ class AuditLogEntry extends Model
 
     protected function casts(): array
     {
-        return ['before'     => 'array', 'after'      => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
+        return ['before' => 'array', 'after' => 'array', 'created_at' => 'datetime', 'updated_at' => 'datetime', 'deleted_at' => 'datetime'];
     }
 
     protected function changerId(): Attribute

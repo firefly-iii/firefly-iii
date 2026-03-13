@@ -54,7 +54,7 @@ class CreatesDatabase extends Command
         }
         // try to set up a raw connection:
         $exists    = false;
-        $dsn       = sprintf('mysql:host=%s;port=%d;charset=utf8mb4',config('database.connections.mysql.host'), config('database.connections.mysql.port'));
+        $dsn       = sprintf('mysql:host=%s;port=%d;charset=utf8mb4', config('database.connections.mysql.host'), config('database.connections.mysql.port'));
 
         if ('' !== (string) config('database.connections.mysql.unix_socket')) {
             $dsn = sprintf('mysql:unix_socket=%s;charset=utf8mb4', config('database.connections.mysql.unix_socket'));

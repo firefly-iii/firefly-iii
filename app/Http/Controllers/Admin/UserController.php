@@ -79,7 +79,7 @@ final class UserController extends Controller
 
         $subTitle = (string) trans('firefly.delete_user', ['email' => $user->email]);
 
-        return view('settings.users.delete', ['user'     => $user, 'subTitle' => $subTitle]);
+        return view('settings.users.delete', ['user' => $user, 'subTitle' => $subTitle]);
     }
 
     public function deleteInvite(InvitedUser $invitedUser): JsonResponse

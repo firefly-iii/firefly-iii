@@ -77,7 +77,7 @@ final class LinkController extends Controller
             $this->rememberPreviousUrl('link-types.create.url');
         }
 
-        return view('settings.link.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('settings.link.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -110,7 +110,7 @@ final class LinkController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('link-types.delete.url');
 
-        return view('settings.link.delete', ['linkType' => $linkType, 'subTitle' => $subTitle, 'moveTo'   => $moveTo, 'count'    => $count]);
+        return view('settings.link.delete', ['linkType' => $linkType, 'subTitle' => $subTitle, 'moveTo' => $moveTo, 'count' => $count]);
     }
 
     /**
@@ -152,7 +152,7 @@ final class LinkController extends Controller
         }
         $request->session()->forget('link-types.edit.fromUpdate');
 
-        return view('settings.link.edit', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType'     => $linkType]);
+        return view('settings.link.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkType' => $linkType]);
     }
 
     /**
@@ -171,7 +171,7 @@ final class LinkController extends Controller
             $linkType->journalCount = $this->repository->countJournals($linkType);
         });
 
-        return view('settings.link.index', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkTypes'    => $linkTypes]);
+        return view('settings.link.index', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'linkTypes' => $linkTypes]);
     }
 
     /**
@@ -237,7 +237,7 @@ final class LinkController extends Controller
             return redirect(route('settings.links.index'));
         }
 
-        $data     = ['name'    => $request->convertString('name'), 'inward'  => $request->convertString('inward'), 'outward' => $request->convertString('outward')];
+        $data     = ['name' => $request->convertString('name'), 'inward' => $request->convertString('inward'), 'outward' => $request->convertString('outward')];
         $this->repository->update($linkType, $data);
 
         Log::channel('audit')->info(sprintf('User update link type #%d.', $linkType->id), $data);

@@ -275,7 +275,7 @@ final class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.double.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -370,7 +370,7 @@ final class DoubleController extends Controller
             }
         }
 
-        return view('reports.double.partials.accounts-per-asset', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.double.partials.accounts-per-asset', ['sums' => $sums, 'report' => $report]);
     }
 
     /**

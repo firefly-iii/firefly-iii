@@ -43,7 +43,7 @@ class ExistingTokenFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['password' => 'required|currentPassword', 'code'     => 'required|existingMfaCode'];
+        return ['password' => 'required|currentPassword', 'code' => 'required|existingMfaCode'];
     }
 
     public function withValidator(Validator $validator): void

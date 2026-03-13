@@ -188,7 +188,7 @@ class TransactionJournalFactory
 
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
-        $set     = ['journal' => $journal, 'name'    => $field, 'data'    => (string) ($data[$field] ?? '')];
+        $set     = ['journal' => $journal, 'name' => $field, 'data' => (string) ($data[$field] ?? '')];
         if (array_key_exists($field, $data) && $data[$field] instanceof Carbon) {
             $data[$field]->setTimezone(config('app.timezone'));
             Log::debug(sprintf('%s Date: %s (%s)', $field, $data[$field], $data[$field]->timezone->getName()));

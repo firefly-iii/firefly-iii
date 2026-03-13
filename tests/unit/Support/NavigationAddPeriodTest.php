@@ -64,11 +64,11 @@ final class NavigationAddPeriodTest extends TestCase
                 'from'      => Carbon::parse('2019-01-31'),
                 'expected'  => Carbon::parse('2019-02-11'),
             ],
-            '1D'                       => ['skip'      => 1, 'frequency' => '1D', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(2)],
-            'daily'                    => ['skip'      => 1, 'frequency' => 'daily', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(2)],
-            '1W'                       => ['skip'      => 1, 'frequency' => '1W', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
-            'weekly'                   => ['skip'      => 1, 'frequency' => 'weekly', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
-            'week'                     => ['skip'      => 1, 'frequency' => 'week', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addWeeks(2)],
+            '1D'                       => ['skip' => 1, 'frequency' => '1D', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(2)],
+            'daily'                    => ['skip' => 1, 'frequency' => 'daily', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(2)],
+            '1W'                       => ['skip' => 1, 'frequency' => '1W', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
+            'weekly'                   => ['skip' => 1, 'frequency' => 'weekly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
+            'week'                     => ['skip' => 1, 'frequency' => 'week', 'from' => Carbon::now(), 'expected' => Carbon::now()->addWeeks(2)],
             '1M'                       => [
                 'skip'      => 1,
                 'frequency' => '1M',
@@ -183,16 +183,16 @@ final class NavigationAddPeriodTest extends TestCase
                 'from'      => Carbon::now(),
                 'expected'  => Carbon::now()->addMonthsNoOverflow(12),
             ],
-            'year'                     => ['skip'      => 1, 'frequency' => 'year', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
-            'yearly'                   => ['skip'      => 1, 'frequency' => 'yearly', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
-            '1Y'                       => ['skip'      => 1, 'frequency' => '1Y', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            'year'                     => ['skip' => 1, 'frequency' => 'year', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
+            'yearly'                   => ['skip' => 1, 'frequency' => 'yearly', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
+            '1Y'                       => ['skip' => 1, 'frequency' => '1Y', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
             '2023-02-01 to 2023-02-15' => [
                 'skip'      => 1,
                 'frequency' => 'last7',
                 'from'      => Carbon::parse('2023-02-01'),
                 'expected'  => Carbon::parse('2023-02-15'),
             ],
-            'last7'                    => ['skip'      => 1, 'frequency' => 'last7', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addDays(14)],
+            'last7'                    => ['skip' => 1, 'frequency' => 'last7', 'from' => Carbon::now(), 'expected' => Carbon::now()->addDays(14)],
             'last30'                   => [
                 'skip'      => 1,
                 'frequency' => 'last30',
@@ -205,7 +205,7 @@ final class NavigationAddPeriodTest extends TestCase
                 'from'      => Carbon::now(),
                 'expected'  => Carbon::now()->addMonthsNoOverflow(6),
             ],
-            'last365'                  => ['skip'      => 1, 'frequency' => 'last365', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            'last365'                  => ['skip' => 1, 'frequency' => 'last365', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
             'MTD'                      => [
                 'skip'      => 1,
                 'frequency' => 'MTD',
@@ -218,7 +218,7 @@ final class NavigationAddPeriodTest extends TestCase
                 'from'      => Carbon::now(),
                 'expected'  => Carbon::now()->addMonthsNoOverflow(6),
             ],
-            'YTD'                      => ['skip'      => 1, 'frequency' => 'YTD', 'from'      => Carbon::now(), 'expected'  => Carbon::now()->addYears(2)],
+            'YTD'                      => ['skip' => 1, 'frequency' => 'YTD', 'from' => Carbon::now(), 'expected' => Carbon::now()->addYears(2)],
         ];
         foreach ($intervals as $interval) {
             yield "{$interval['frequency']} {$interval['from']->toDateString()} to {$interval['expected']->toDateString()}" => $interval;

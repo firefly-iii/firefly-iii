@@ -60,7 +60,7 @@ class UnknownUserLoginAttempt extends Notification
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
-        $link = route('index');
+        $link      = route('index');
 
         return new MailMessage()
             ->markdown('emails.owner.unknown-user', [
@@ -98,7 +98,7 @@ class UnknownUserLoginAttempt extends Notification
     {
         $ip = Request::ip();
 
-        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip'      => $ip]))->title((string) trans(
+        return PushoverMessage::create((string) trans('email.unknown_user_message', ['address' => $this->address, 'ip' => $ip]))->title((string) trans(
             'email.unknown_user_subject'
         ));
     }
@@ -110,7 +110,7 @@ class UnknownUserLoginAttempt extends Notification
     {
         $ip = Request::ip();
 
-        return new SlackMessage()->content((string) trans('email.unknown_user_body', ['address' => $this->address, 'ip'      => $ip]));
+        return new SlackMessage()->content((string) trans('email.unknown_user_body', ['address' => $this->address, 'ip' => $ip]));
     }
 
     /**

@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig;
 
-use Illuminate\Contracts\Translation\Translator;
 use Override;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;

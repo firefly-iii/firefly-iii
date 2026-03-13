@@ -84,7 +84,7 @@ class ChecksForUpdates extends Command
         }
         // if running develop, slightly different message.
         if (str_contains($version, 'develop')) {
-            $this->friendlyInfo(trans('firefly.update_current_dev_older', ['version'     => $version, 'new_version' => $info->getNewVersion()]));
+            $this->friendlyInfo(trans('firefly.update_current_dev_older', ['version' => $version, 'new_version' => $info->getNewVersion()]));
 
             return Command::SUCCESS;
         }

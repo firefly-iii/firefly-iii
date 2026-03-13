@@ -44,7 +44,7 @@ class StoreByDateRequest extends FormRequest
      */
     public function getAll(): array
     {
-        return ['from'  => $this->get('from'), 'rates' => $this->get('rates', [])];
+        return ['from' => $this->get('from'), 'rates' => $this->get('rates', [])];
     }
 
     public function getFromCurrency(): TransactionCurrency
@@ -59,7 +59,7 @@ class StoreByDateRequest extends FormRequest
      */
     public function rules(): array
     {
-        return ['from'    => 'required|exists:transaction_currencies,code', 'rates'   => 'required|array', 'rates.*' => 'required|numeric|min:0.0000000001'];
+        return ['from' => 'required|exists:transaction_currencies,code', 'rates' => 'required|array', 'rates.*' => 'required|numeric|min:0.0000000001'];
     }
 
     public function withValidator(Validator $validator): void

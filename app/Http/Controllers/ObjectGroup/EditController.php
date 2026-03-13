@@ -32,7 +32,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 
 /**
  * Class EditController
@@ -71,7 +70,7 @@ final class EditController extends Controller
         }
         session()->forget('object-groups.edit.fromUpdate');
 
-        return view('object-groups.edit', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'objectGroup'  => $objectGroup]);
+        return view('object-groups.edit', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'objectGroup' => $objectGroup]);
     }
 
     /**

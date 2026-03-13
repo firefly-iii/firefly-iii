@@ -63,7 +63,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
 
         // render!
         try {
-            $result = view('reports.tag.month', ['accountIds' => $accountIds, 'reportType' => $reportType, 'tagIds'     => $tagIds])
+            $result = view('reports.tag.month', ['accountIds' => $accountIds, 'reportType' => $reportType, 'tagIds' => $tagIds])
                 ->with('start', $this->start)
                 ->with('end', $this->end)
                 ->with('tags', $this->tags)

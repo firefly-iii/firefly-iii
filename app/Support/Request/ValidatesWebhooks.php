@@ -83,7 +83,7 @@ trait ValidatesWebhooks
                         Log::debug(sprintf('Trigger %s and response %s are forbidden.', $trigger, $response));
                         $validator->errors()->add(
                             sprintf('responses.%d', $ii),
-                            trans('validation.bad_webhook_combination', ['trigger'  => $trigger, 'response' => $response])
+                            trans('validation.bad_webhook_combination', ['trigger' => $trigger, 'response' => $response])
                         );
 
                         return;

@@ -97,7 +97,7 @@ class Steam
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $return               = ['pc_balance' => '0', 'balance'    => '0']; // this key is overwritten right away, but I must remember it is always created.
+            $return               = ['pc_balance' => '0', 'balance' => '0']; // this key is overwritten right away, but I must remember it is always created.
             $currency             = $currencies[$account->id];
 
             // second array
@@ -366,7 +366,7 @@ class Steam
         }
         $hasCurrency       = null !== $accountCurrency;
         $currency          = $hasCurrency ? $accountCurrency : $primary;
-        $return            = ['pc_balance' => '0', 'balance'    => '0']; // this key is overwritten right away, but I must remember it is always created.
+        $return            = ['pc_balance' => '0', 'balance' => '0']; // this key is overwritten right away, but I must remember it is always created.
         // balance(s) in all currencies.
         $array             = $account
             ->transactions()
@@ -459,7 +459,7 @@ class Steam
             Log::debug(sprintf('Also set start balance in %s', $primaryCurrency->code));
             $startBalance[$primaryCurrency->code] ??= '0';
         }
-        $currencies           = [$currency->id        => $currency, $primaryCurrency->id => $primaryCurrency];
+        $currencies           = [$currency->id => $currency, $primaryCurrency->id => $primaryCurrency];
 
         $balances[$formatted] = $startBalance;
         Log::debug('Final start balance: ', $startBalance);

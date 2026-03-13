@@ -30,7 +30,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -74,7 +73,7 @@ final class CreateController extends Controller
         }
         session()->forget('rule-groups.create.fromStore');
 
-        return view('rules.rule-group.create', ['subTitleIcon' => $subTitleIcon, 'subTitle'     => $subTitle]);
+        return view('rules.rule-group.create', ['subTitleIcon' => $subTitleIcon, 'subTitle' => $subTitle]);
     }
 
     /**

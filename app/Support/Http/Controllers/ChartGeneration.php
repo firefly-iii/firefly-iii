@@ -80,7 +80,7 @@ trait ChartGeneration
             $field        = $convertToPrimary ? 'pc_balance' : 'balance';
             $currency     = $usePrimary ? $primary : $currency;
             Log::debug(sprintf('Will use field %s', $field));
-            $currentSet   = ['label'           => $account->name, 'currency_symbol' => $currency->symbol, 'entries'         => []];
+            $currentSet   = ['label' => $account->name, 'currency_symbol' => $currency->symbol, 'entries' => []];
 
             $currentStart = clone $start;
             $range        = Steam::finalAccountBalanceInRange($account, clone $start, clone $end, $this->convertToPrimary);

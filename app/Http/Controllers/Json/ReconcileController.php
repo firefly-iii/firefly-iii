@@ -157,7 +157,7 @@ final class ReconcileController extends Controller
             throw new FireflyException($view, 0, $e);
         }
 
-        $return          = ['post_url' => $route, 'html'     => $view];
+        $return          = ['post_url' => $route, 'html' => $view];
 
         return response()->json($return);
     }
@@ -244,7 +244,7 @@ final class ReconcileController extends Controller
             throw new FireflyException($html, 0, $e);
         }
 
-        return response()->json(['html'         => $html, 'startBalance' => $startBalance, 'endBalance'   => $endBalance]);
+        return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
 
     private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string

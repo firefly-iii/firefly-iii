@@ -55,7 +55,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $budgetIds  = implode(',', $this->budgets->pluck('id')->toArray());
 
         try {
-            $result = view('reports.budget.month', ['accountIds' => $accountIds, 'budgetIds'  => $budgetIds])
+            $result = view('reports.budget.month', ['accountIds' => $accountIds, 'budgetIds' => $budgetIds])
                 ->with('start', $this->start)
                 ->with('end', $this->end)
                 ->with('budgets', $this->budgets)

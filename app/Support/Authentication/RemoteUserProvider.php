@@ -71,7 +71,7 @@ class RemoteUserProvider implements UserProvider
         $user = User::where('email', $identifier)->first();
         if (null === $user) {
             Log::debug(sprintf('User with email "%s" not found. Will be created.', $identifier));
-            $user = User::create(['blocked'      => false, 'blocked_code' => null, 'email'        => $identifier, 'password'     => bcrypt(Str::random(64))]);
+            $user = User::create(['blocked' => false, 'blocked_code' => null, 'email' => $identifier, 'password' => bcrypt(Str::random(64))]);
             // if this is the first user, give them admin as well.
             if (1 === User::count()) {
                 $roleObject = Role::where('name', 'owner')->first();

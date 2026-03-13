@@ -193,7 +193,7 @@ final class ReportController extends Controller
                 'currency_name'           => $currencyName,
                 'currency_decimal_places' => $currencyDecimalPlaces,
             ];
-            $data[$currencyId][$period] ??= ['period' => $period, 'spent'  => '0', 'earned' => '0'];
+            $data[$currencyId][$period] ??= ['period' => $period, 'spent' => '0', 'earned' => '0'];
             // in our outgoing?
             $key                              = 'spent';
 

@@ -74,7 +74,7 @@ final class BillController extends Controller
         foreach ($paid as $info) {
             $amount            = $info['sum'];
             $label             = (string) trans('firefly.paid_in_currency', ['currency' => $info['name']]);
-            $chartData[$label] = ['amount'          => $amount, 'currency_symbol' => $info['symbol'], 'currency_code'   => $info['code']];
+            $chartData[$label] = ['amount' => $amount, 'currency_symbol' => $info['symbol'], 'currency_code' => $info['code']];
         }
 
         /**
@@ -83,7 +83,7 @@ final class BillController extends Controller
         foreach ($unpaid as $info) {
             $amount            = $info['sum'];
             $label             = (string) trans('firefly.unpaid_in_currency', ['currency' => $info['name']]);
-            $chartData[$label] = ['amount'          => $amount, 'currency_symbol' => $info['symbol'], 'currency_code'   => $info['code']];
+            $chartData[$label] = ['amount' => $amount, 'currency_symbol' => $info['symbol'], 'currency_code' => $info['code']];
         }
 
         $data      = $this->generator->multiCurrencyPieChart($chartData);

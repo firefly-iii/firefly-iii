@@ -119,11 +119,7 @@ class RecurringEnrichment implements EnrichmentInterface
         if ('weekly' === $repetition->repetition_type) {
             $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $this->language);
             if ($repetition->repetition_skip > 0) {
-                return (string) trans(
-                    'firefly.recurring_weekly_skip',
-                    ['weekday' => $dayOfWeek, 'skip'    => $repetition->repetition_skip + 1],
-                    $this->language
-                );
+                return (string) trans('firefly.recurring_weekly_skip', ['weekday' => $dayOfWeek, 'skip' => $repetition->repetition_skip + 1], $this->language);
             }
 
             return (string) trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $this->language);
@@ -132,14 +128,14 @@ class RecurringEnrichment implements EnrichmentInterface
             if ($repetition->repetition_skip > 0) {
                 return (string) trans(
                     'firefly.recurring_monthly_skip',
-                    ['dayOfMonth' => $repetition->repetition_moment, 'skip'       => $repetition->repetition_skip + 1],
+                    ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip + 1],
                     $this->language
                 );
             }
 
             return (string) trans(
                 'firefly.recurring_monthly',
-                ['dayOfMonth' => $repetition->repetition_moment, 'skip'       => $repetition->repetition_skip - 1],
+                ['dayOfMonth' => $repetition->repetition_moment, 'skip' => $repetition->repetition_skip - 1],
                 $this->language
             );
         }
@@ -150,12 +146,12 @@ class RecurringEnrichment implements EnrichmentInterface
             if ($repetition->repetition_skip > 0) {
                 return (string) trans(
                     'firefly.recurring_ndom_skip',
-                    ['skip'       => $repetition->repetition_skip, 'weekday'    => $dayOfWeek, 'dayOfMonth' => $parts[0]],
+                    ['skip' => $repetition->repetition_skip, 'weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]],
                     $this->language
                 );
             }
 
-            return (string) trans('firefly.recurring_ndom', ['weekday'    => $dayOfWeek, 'dayOfMonth' => $parts[0]], $this->language);
+            return (string) trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $this->language);
         }
         if ('yearly' === $repetition->repetition_type) {
             $today   = today(config('app.timezone'))->endOfYear();
@@ -427,7 +423,7 @@ class RecurringEnrichment implements EnrichmentInterface
                     if ((int) $entry->value > 0) {
                         $this->transactions[$recurrenceId][$transactionId]['subscription_id'] = $entry->value;
                         if (!array_key_exists($id, $billIds)) {
-                            $billIds[$id] = ['recurrence_id'  => $recurrenceId, 'transaction_id' => $transactionId, 'bill_id'        => (int) $entry->value];
+                            $billIds[$id] = ['recurrence_id' => $recurrenceId, 'transaction_id' => $transactionId, 'bill_id' => (int) $entry->value];
                         }
                     }
 
@@ -470,7 +466,7 @@ class RecurringEnrichment implements EnrichmentInterface
                     if ('' !== (string) $entry->value) {
                         $this->transactions[$recurrenceId][$transactionId]['category_name'] = (string) $entry->value;
                         if (!array_key_exists($id, $categoryIds)) {
-                            $categoryNames[$id] = ['recurrence_id'  => $recurrenceId, 'transaction_id' => $transactionId, 'category_name'  => $entry->value];
+                            $categoryNames[$id] = ['recurrence_id' => $recurrenceId, 'transaction_id' => $transactionId, 'category_name' => $entry->value];
                         }
                     }
 
@@ -480,7 +476,7 @@ class RecurringEnrichment implements EnrichmentInterface
                     if ((int) $entry->value > 0) {
                         $this->transactions[$recurrenceId][$transactionId]['budget_id'] = (string) $entry->value;
                         if (!array_key_exists($id, $budgetIds)) {
-                            $budgetIds[$id] = ['recurrence_id'  => $recurrenceId, 'transaction_id' => $transactionId, 'budget_id'      => (int) $entry->value];
+                            $budgetIds[$id] = ['recurrence_id' => $recurrenceId, 'transaction_id' => $transactionId, 'budget_id' => (int) $entry->value];
                         }
                     }
 

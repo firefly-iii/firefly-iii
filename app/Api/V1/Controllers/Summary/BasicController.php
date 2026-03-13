@@ -89,20 +89,20 @@ final class BasicController extends Controller
     public function basic(BasicRequest $request): JsonResponse
     {
         // parameters for boxes:
-        ['start' => $start, 'end'   => $end, 'code'  => $code] = $request->attributes->all();
+        ['start' => $start, 'end' => $end, 'code' => $code] = $request->attributes->all();
         // balance information:
-        $balanceData                                           = $this->getBalanceInformation($start, $end);
-        $billData                                              = $this->getSubscriptionInformation($start, $end);
-        $spentData                                             = $this->getLeftToSpendInfo($start, $end);
-        $netWorthData                                          = $this->getNetWorthInfo($end);
+        $balanceData                                        = $this->getBalanceInformation($start, $end);
+        $billData                                           = $this->getSubscriptionInformation($start, $end);
+        $spentData                                          = $this->getLeftToSpendInfo($start, $end);
+        $netWorthData                                       = $this->getNetWorthInfo($end);
         //                        $balanceData  = [];
         //                        $billData     = [];
         //                $spentData    = [];
         //                        $netWorthData = [];
-        $total                                                 = array_merge($balanceData, $billData, $spentData, $netWorthData);
+        $total                                              = array_merge($balanceData, $billData, $spentData, $netWorthData);
 
         // give new keys
-        $return                                                = [];
+        $return                                             = [];
         foreach ($total as $entry) {
             if ('' === $code || $code === $entry['currency_code']) {
                 $return[$entry['key']] = $entry;

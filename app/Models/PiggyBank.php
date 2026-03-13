@@ -38,8 +38,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @property null|Carbon $target_date
- * @property null|Carbon $start_date
+ * @property null|Carbon         $target_date
+ * @property null|Carbon         $start_date
  * @property TransactionCurrency $transactionCurrency
  */
 #[ObservedBy([PiggyBankObserver::class])]
