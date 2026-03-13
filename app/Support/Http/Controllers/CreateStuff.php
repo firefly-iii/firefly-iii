@@ -138,6 +138,6 @@ trait CreateStuff
      */
     protected function createUser(array $data): User // create object
     {
-        return User::create(['email'    => $data['email'], 'password' => bcrypt($data['password'])]);
+        return User::create(['email' => $data['email'], 'password' => bcrypt($data['password'])]);
     }
 }

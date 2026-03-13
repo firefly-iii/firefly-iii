@@ -100,7 +100,7 @@ final class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.change_your_email');
         $subTitleIcon = 'fa-envelope';
 
-        return view('profile.change-email', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email'        => $email]);
+        return view('profile.change-email', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'email' => $email]);
     }
 
     /**
@@ -120,7 +120,7 @@ final class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.change_your_password');
         $subTitleIcon = 'fa-key';
 
-        return view('profile.change-password', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('profile.change-password', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -173,7 +173,7 @@ final class ProfileController extends Controller
         $subTitle     = (string) trans('firefly.delete_account');
         $subTitleIcon = 'fa-trash';
 
-        return view('profile.delete-account', ['title'        => $title, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('profile.delete-account', ['title' => $title, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -350,7 +350,7 @@ final class ProfileController extends Controller
 
             return redirect(route('profile.index'));
         }
-        $creds = ['email'    => auth()->user()->email, 'password' => $request->get('password')];
+        $creds = ['email' => auth()->user()->email, 'password' => $request->get('password')];
         if (Auth::once($creds)) {
             Auth::logoutOtherDevices($request->get('password'));
             session()->flash('info', (string) trans('firefly.other_sessions_logged_out'));

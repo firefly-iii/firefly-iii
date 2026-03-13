@@ -447,7 +447,7 @@ class AccountRepository implements AccountRepositoryInterface, UserGroupInterfac
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
         $currency = $this->getAccountCurrency($account) ?? Amount::getPrimaryCurrency();
-        $name     = trans('firefly.reconciliation_account_name', ['name'     => $account->name, 'currency' => $currency->code]);
+        $name     = trans('firefly.reconciliation_account_name', ['name' => $account->name, 'currency' => $currency->code]);
 
         /** @var AccountType $type */
         $type     = AccountType::where('type', AccountTypeEnum::RECONCILIATION->value)->first();

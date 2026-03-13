@@ -43,7 +43,7 @@ class TokenFormRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['password' => 'required|currentPassword', 'code'     => 'required|2faCode'];
+        return ['password' => 'required|currentPassword', 'code' => 'required|2faCode'];
     }
 
     public function withValidator(Validator $validator): void

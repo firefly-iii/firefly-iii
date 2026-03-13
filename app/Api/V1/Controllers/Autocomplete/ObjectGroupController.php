@@ -67,7 +67,7 @@ final class ObjectGroupController extends Controller
 
         /** @var ObjectGroup $objectGroup */
         foreach ($result as $objectGroup) {
-            $return[] = ['id'    => (string) $objectGroup->id, 'name'  => $objectGroup->title, 'title' => $objectGroup->title];
+            $return[] = ['id' => (string) $objectGroup->id, 'name' => $objectGroup->title, 'title' => $objectGroup->title];
         }
 
         return response()->api($return);

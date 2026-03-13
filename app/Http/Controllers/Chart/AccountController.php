@@ -271,8 +271,8 @@ final class AccountController extends Controller
         foreach ($result as $row) {
             $budgetId          = $row['budget_id'];
             $name              = $names[$budgetId];
-            $label             = (string) trans('firefly.name_in_currency', ['name'     => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount'          => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code'   => $row['currency_code']];
+            $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
         $data      = $this->generator->multiCurrencyPieChart($chartData);
@@ -354,8 +354,8 @@ final class AccountController extends Controller
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
-            $label             = (string) trans('firefly.name_in_currency', ['name'     => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount'          => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code'   => $row['currency_code']];
+            $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
 
         $data      = $this->generator->multiCurrencyPieChart($chartData);
@@ -465,8 +465,8 @@ final class AccountController extends Controller
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
             $name              = $names[$categoryId] ?? '(unknown)';
-            $label             = (string) trans('firefly.name_in_currency', ['name'     => $name, 'currency' => $row['currency_name']]);
-            $chartData[$label] = ['amount'          => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code'   => $row['currency_code']];
+            $label             = (string) trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency_name']]);
+            $chartData[$label] = ['amount' => $row['total'], 'currency_symbol' => $row['currency_symbol'], 'currency_code' => $row['currency_code']];
         }
         $data      = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);

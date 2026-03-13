@@ -80,7 +80,7 @@ class WebhookMessage extends Model
 
     protected function casts(): array
     {
-        return ['sent'    => 'boolean', 'errored' => 'boolean', 'uuid'    => 'string', 'message' => 'json', 'logs'    => 'json'];
+        return ['sent' => 'boolean', 'errored' => 'boolean', 'uuid' => 'string', 'message' => 'json', 'logs' => 'json'];
     }
 
     /**

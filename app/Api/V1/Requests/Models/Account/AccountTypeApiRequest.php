@@ -45,7 +45,7 @@ class AccountTypeApiRequest extends ApiRequest
             }
 
             $type = $this->convertString('type', 'all');
-            $this->attributes->add(['type'  => $type, 'types' => $this->mapAccountTypes($type)]);
+            $this->attributes->add(['type' => $type, 'types' => $this->mapAccountTypes($type)]);
         });
     }
 }

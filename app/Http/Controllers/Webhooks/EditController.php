@@ -65,6 +65,6 @@ final class EditController extends Controller
         $subTitle = (string) trans('firefly.edit_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.edit.url');
 
-        return view('webhooks.edit', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.edit', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

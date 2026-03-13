@@ -34,7 +34,6 @@ use FireflyIII\Support\Facades\Steam;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
@@ -75,7 +74,7 @@ final class LinkController extends Controller
         $subTitle     = (string) trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUrl('journal_links.delete.url');
 
-        return view('transactions.links.delete', ['link'         => $link, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon]);
+        return view('transactions.links.delete', ['link' => $link, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon]);
     }
 
     /**
@@ -98,7 +97,7 @@ final class LinkController extends Controller
     {
         $linkTypes = $this->repository->get();
 
-        return view('transactions.links.modal', ['journal'   => $journal, 'linkTypes' => $linkTypes]);
+        return view('transactions.links.modal', ['journal' => $journal, 'linkTypes' => $linkTypes]);
     }
 
     /**

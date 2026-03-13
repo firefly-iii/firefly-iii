@@ -68,29 +68,29 @@ final class ShowController extends Controller
      */
     public function index(PaginationDateRangeRequest $request): JsonResponse
     {
-        $manager                                                                                           = $this->getManager();
-        ['limit'  => $limit, 'offset' => $offset, 'page'   => $page, 'start'  => $start, 'end'    => $end] = $request->attributes->all();
+        $manager                                                                                    = $this->getManager();
+        ['limit' => $limit, 'offset' => $offset, 'page' => $page, 'start' => $start, 'end' => $end] = $request->attributes->all();
 
         // get list of available budgets. Count it and split it.
-        $collection                                                                                        = $this->abRepository->getAvailableBudgetsByDate($start, $end);
-        $count                                                                                             = $collection->count();
-        $availableBudgets                                                                                  = $collection->slice($offset, $limit);
+        $collection                                                                                 = $this->abRepository->getAvailableBudgetsByDate($start, $end);
+        $count                                                                                      = $collection->count();
+        $availableBudgets                                                                           = $collection->slice($offset, $limit);
 
         // enrich
         /** @var User $admin */
-        $admin                                                                                             = auth()->user();
-        $enrichment                                                                                        = new AvailableBudgetEnrichment();
+        $admin                                                                                      = auth()->user();
+        $enrichment                                                                                 = new AvailableBudgetEnrichment();
         $enrichment->setUser($admin);
-        $availableBudgets                                                                                  = $enrichment->enrich($availableBudgets);
+        $availableBudgets                                                                           = $enrichment->enrich($availableBudgets);
 
         // make paginator:
-        $paginator                                                                                         = new LengthAwarePaginator($availableBudgets, $count, $limit, $page);
+        $paginator                                                                                  = new LengthAwarePaginator($availableBudgets, $count, $limit, $page);
         $paginator->setPath(route('api.v1.available-budgets.index').$this->buildParams());
 
         /** @var AvailableBudgetTransformer $transformer */
-        $transformer                                                                                       = app(AvailableBudgetTransformer::class);
+        $transformer                                                                                = app(AvailableBudgetTransformer::class);
 
-        $resource                                                                                          = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
+        $resource                                                                                   = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

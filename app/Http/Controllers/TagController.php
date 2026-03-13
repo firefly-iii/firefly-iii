@@ -95,7 +95,7 @@ final class TagController extends Controller
         }
         session()->forget('tags.create.fromStore');
 
-        return view('tags.create', ['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'locations'    => $locations]);
+        return view('tags.create', ['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'locations' => $locations]);
     }
 
     /**
@@ -110,7 +110,7 @@ final class TagController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('tags.delete.url');
 
-        return view('tags.delete', ['tag'      => $tag, 'subTitle' => $subTitle]);
+        return view('tags.delete', ['tag' => $tag, 'subTitle' => $subTitle]);
     }
 
     /**
@@ -155,7 +155,7 @@ final class TagController extends Controller
         }
         session()->forget('tags.edit.fromUpdate');
 
-        return view('tags.edit', ['tag'          => $tag, 'subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'locations'    => $locations]);
+        return view('tags.edit', ['tag' => $tag, 'subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'locations' => $locations]);
     }
 
     /**
@@ -187,7 +187,7 @@ final class TagController extends Controller
         }
         $count           = $repository->count();
 
-        return view('tags.index', ['tags'  => $tags, 'count' => $count]);
+        return view('tags.index', ['tags' => $tags, 'count' => $count]);
     }
 
     public function massDestroy(Request $request): RedirectResponse

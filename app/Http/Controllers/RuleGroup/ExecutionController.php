@@ -84,15 +84,15 @@ final class ExecutionController extends Controller
         // add date operators.
         if (null !== $request->get('start')) {
             $startDate = new Carbon($request->get('start'));
-            $newRuleEngine->addOperator(['type'  => 'date_after', 'value' => $startDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type' => 'date_after', 'value' => $startDate->format('Y-m-d')]);
         }
         if (null !== $request->get('end')) {
             $endDate = new Carbon($request->get('end'));
-            $newRuleEngine->addOperator(['type'  => 'date_before', 'value' => $endDate->format('Y-m-d')]);
+            $newRuleEngine->addOperator(['type' => 'date_before', 'value' => $endDate->format('Y-m-d')]);
         }
 
         // add extra operators:
-        $newRuleEngine->addOperator(['type'  => 'account_id', 'value' => $accounts]);
+        $newRuleEngine->addOperator(['type' => 'account_id', 'value' => $accounts]);
 
         // set rules:
         $rules         = $this->ruleGroupRepository->getActiveRules($ruleGroup);
@@ -116,6 +116,6 @@ final class ExecutionController extends Controller
     {
         $subTitle = (string) trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
-        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle'  => $subTitle]);
+        return view('rules.rule-group.select-transactions', ['ruleGroup' => $ruleGroup, 'subTitle' => $subTitle]);
     }
 }

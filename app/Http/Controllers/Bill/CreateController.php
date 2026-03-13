@@ -81,7 +81,7 @@ final class CreateController extends Controller
         }
         $request->session()->forget('bills.create.fromStore');
 
-        return view('bills.create', ['periods'  => $periods, 'subTitle' => $subTitle]);
+        return view('bills.create', ['periods' => $periods, 'subTitle' => $subTitle]);
     }
 
     /**

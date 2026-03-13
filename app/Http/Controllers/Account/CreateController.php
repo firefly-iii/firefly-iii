@@ -34,11 +34,8 @@ use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 
 /**
  * Class CreateController
@@ -87,7 +84,7 @@ final class CreateController extends Controller
             'zoom_level'   => $hasOldInput ? old('location_zoom_level') : config('firefly.default_location.zoom_level'),
             'has_location' => $hasOldInput && 'true' === old('location_has_location'),
         ]];
-        $liabilityDirections = ['debit'  => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
+        $liabilityDirections = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
         $interestPeriods     = [];

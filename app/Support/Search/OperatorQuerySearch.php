@@ -304,12 +304,12 @@ class OperatorQuerySearch implements SearchInterface
         // must be valid operator:
         $inArray    = in_array($operator, $this->validOperators, true);
         if ($inArray && $this->updateCollector($operator, $value, $prohibited)) {
-            $this->operators->push(['type'       => self::getRootOperator($operator), 'value'      => $value, 'prohibited' => $prohibited]);
+            $this->operators->push(['type' => self::getRootOperator($operator), 'value' => $value, 'prohibited' => $prohibited]);
             Log::debug(sprintf('Added operator type "%s"', $operator));
         }
         if (!$inArray) {
             Log::debug(sprintf('Added INVALID operator type "%s"', $operator));
-            $this->invalidOperators[] = ['type'  => $operator, 'value' => $value];
+            $this->invalidOperators[] = ['type' => $operator, 'value' => $value];
         }
     }
 
@@ -381,7 +381,7 @@ class OperatorQuerySearch implements SearchInterface
             $parsedDate = $parser->parseDate($value);
         } catch (FireflyException) {
             Log::debug(sprintf('Could not parse date "%s", will return empty array.', $value));
-            $this->invalidOperators[] = ['type'  => $type, 'value' => $value];
+            $this->invalidOperators[] = ['type' => $type, 'value' => $value];
 
             return [];
         }
@@ -685,7 +685,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setAfter($value);
-                        $this->operators->push(['type'  => 'date_after', 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => 'date_after', 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -694,7 +694,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
                         $this->collector->yearAfter($value);
-                        $this->operators->push(['type'  => 'date_after_year', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_after_year', 'value' => $value]);
                     }
 
                     break;
@@ -703,7 +703,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
                         $this->collector->monthAfter($value);
-                        $this->operators->push(['type'  => 'date_after_month', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_after_month', 'value' => $value]);
                     }
 
                     break;
@@ -712,7 +712,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
                         $this->collector->dayAfter($value);
-                        $this->operators->push(['type'  => 'date_after_day', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_after_day', 'value' => $value]);
                     }
 
                     break;
@@ -741,7 +741,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setBefore($value);
-                        $this->operators->push(['type'  => 'date_before', 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => 'date_before', 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -750,7 +750,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
                         $this->collector->yearBefore($value);
-                        $this->operators->push(['type'  => 'date_before_year', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_before_year', 'value' => $value]);
                     }
 
                     break;
@@ -759,7 +759,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
                         $this->collector->monthBefore($value);
-                        $this->operators->push(['type'  => 'date_before_month', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_before_month', 'value' => $value]);
                     }
 
                     break;
@@ -768,7 +768,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
                         $this->collector->dayBefore($value);
-                        $this->operators->push(['type'  => 'date_before_day', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_before_day', 'value' => $value]);
                     }
 
                     break;
@@ -798,7 +798,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($value instanceof Carbon) {
                         Log::debug(sprintf('Set date_is_exact value "%s"', $value->format('Y-m-d')));
                         $this->collector->setRange($value, $value);
-                        $this->operators->push(['type'  => 'date_on', 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => 'date_on', 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -806,7 +806,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact_not':
                     if ($value instanceof Carbon) {
                         $this->collector->excludeRange($value, $value);
-                        $this->operators->push(['type'  => 'not_date_on', 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => 'not_date_on', 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -815,7 +815,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_exact YEAR value "%s"', $value));
                         $this->collector->yearIs($value);
-                        $this->operators->push(['type'  => 'date_on_year', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_on_year', 'value' => $value]);
                     }
 
                     break;
@@ -824,7 +824,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_exact_not YEAR value "%s"', $value));
                         $this->collector->yearIsNot($value);
-                        $this->operators->push(['type'  => 'not_date_on_year', 'value' => $value]);
+                        $this->operators->push(['type' => 'not_date_on_year', 'value' => $value]);
                     }
 
                     break;
@@ -833,7 +833,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_exact MONTH value "%s"', $value));
                         $this->collector->monthIs($value);
-                        $this->operators->push(['type'  => 'date_on_month', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_on_month', 'value' => $value]);
                     }
 
                     break;
@@ -842,7 +842,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_exact not MONTH value "%s"', $value));
                         $this->collector->monthIsNot($value);
-                        $this->operators->push(['type'  => 'not_date_on_month', 'value' => $value]);
+                        $this->operators->push(['type' => 'not_date_on_month', 'value' => $value]);
                     }
 
                     break;
@@ -851,7 +851,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_exact DAY value "%s"', $value));
                         $this->collector->dayIs($value);
-                        $this->operators->push(['type'  => 'date_on_day', 'value' => $value]);
+                        $this->operators->push(['type' => 'date_on_day', 'value' => $value]);
                     }
 
                     break;
@@ -860,7 +860,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set not date_is_exact DAY value "%s"', $value));
                         $this->collector->dayIsNot($value);
-                        $this->operators->push(['type'  => 'not_date_on_day', 'value' => $value]);
+                        $this->operators->push(['type' => 'not_date_on_day', 'value' => $value]);
                     }
 
                     break;
@@ -892,7 +892,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($value instanceof Carbon) {
                         Log::debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                         $this->collector->setMetaDateRange($value, $value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -901,7 +901,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($value instanceof Carbon) {
                         Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                         $this->collector->excludeMetaDateRange($value, $value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -910,7 +910,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                         $this->collector->metaYearIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -919,7 +919,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
                         $this->collector->metaYearIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -928,7 +928,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                         $this->collector->metaMonthIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -937,7 +937,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
                         $this->collector->metaMonthIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -946,7 +946,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                         $this->collector->metaDayIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -955,7 +955,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
                         $this->collector->metaDayIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -985,7 +985,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($value instanceof Carbon) {
                         Log::debug(sprintf('Set %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                         $this->collector->setObjectRange($value, clone $value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_on', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -994,7 +994,7 @@ class OperatorQuerySearch implements SearchInterface
                     if ($value instanceof Carbon) {
                         Log::debug(sprintf('Set NOT %s_is_exact value "%s"', $field, $value->format('Y-m-d')));
                         $this->collector->excludeObjectRange($value, clone $value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('not_%s_on', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -1003,7 +1003,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact YEAR value "%s"', $field, $value));
                         $this->collector->objectYearIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1012,7 +1012,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact YEAR value "%s"', $field, $value));
                         $this->collector->objectYearIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1021,7 +1021,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact MONTH value "%s"', $field, $value));
                         $this->collector->objectMonthIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1030,7 +1030,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact MONTH value "%s"', $field, $value));
                         $this->collector->objectMonthIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1039,7 +1039,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_exact DAY value "%s"', $field, $value));
                         $this->collector->objectDayIs($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_on_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_on_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1048,7 +1048,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set NOT %s_is_exact DAY value "%s"', $field, $value));
                         $this->collector->objectDayIsNot($value, $field);
-                        $this->operators->push(['type'  => sprintf('not_%s_on_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('not_%s_on_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1077,7 +1077,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setMetaAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -1086,7 +1086,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_after YEAR value "%s"', $field, $value));
                         $this->collector->metaYearAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1095,7 +1095,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_after MONTH value "%s"', $field, $value));
                         $this->collector->metaMonthAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1104,7 +1104,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_after DAY value "%s"', $field, $value));
                         $this->collector->metaDayAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1133,7 +1133,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setMetaBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -1142,7 +1142,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_before YEAR value "%s"', $field, $value));
                         $this->collector->metaYearBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1151,7 +1151,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_before MONTH value "%s"', $field, $value));
                         $this->collector->metaMonthBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1160,7 +1160,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set %s_is_before DAY value "%s"', $field, $value));
                         $this->collector->metaDayBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1189,7 +1189,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setObjectAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_after', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -1198,7 +1198,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after YEAR value "%s"', $value));
                         $this->collector->objectYearAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1207,7 +1207,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after MONTH value "%s"', $value));
                         $this->collector->objectMonthAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1216,7 +1216,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_after DAY value "%s"', $value));
                         $this->collector->objectDayAfter($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_after_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_after_day', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1245,7 +1245,7 @@ class OperatorQuerySearch implements SearchInterface
                 case 'exact':
                     if ($value instanceof Carbon) {
                         $this->collector->setObjectBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d')]);
+                        $this->operators->push(['type' => sprintf('%s_before', $field), 'value' => $value->format('Y-m-d')]);
                     }
 
                     break;
@@ -1254,7 +1254,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before YEAR value "%s"', $value));
                         $this->collector->objectYearBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_year', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_year', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1263,7 +1263,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before MONTH value "%s"', $value));
                         $this->collector->objectMonthBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_month', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_month', $field), 'value' => $value]);
                     }
 
                     break;
@@ -1272,7 +1272,7 @@ class OperatorQuerySearch implements SearchInterface
                     if (is_string($value)) {
                         Log::debug(sprintf('Set date_is_before DAY value "%s"', $value));
                         $this->collector->objectDayBefore($value, $field);
-                        $this->operators->push(['type'  => sprintf('%s_before_day', $field), 'value' => $value]);
+                        $this->operators->push(['type' => sprintf('%s_before_day', $field), 'value' => $value]);
                     }
 
                     break;

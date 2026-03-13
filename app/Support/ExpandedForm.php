@@ -129,7 +129,7 @@ class ExpandedForm
         unset($options['placeholder']);
 
         try {
-            $html = view('form.date', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
+            $html = view('form.date', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
             $html = 'Could not render date.';
@@ -151,7 +151,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.file', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
+            $html = view('form.file', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
             $html = 'Could not render file.';
@@ -311,7 +311,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.password', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'options' => $options])->render();
+            $html = view('form.password', ['classes' => $classes, 'name' => $name, 'label' => $label, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
@@ -395,7 +395,7 @@ class ExpandedForm
         $classes = $this->getHolderClasses($name);
 
         try {
-            $html = view('form.static', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
+            $html = view('form.static', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
             $html = 'Could not render staticText.';
@@ -419,7 +419,7 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         try {
-            $html = view('form.text', ['classes' => $classes, 'name'    => $name, 'label'   => $label, 'value'   => $value, 'options' => $options])->render();
+            $html = view('form.text', ['classes' => $classes, 'name' => $name, 'label' => $label, 'value' => $value, 'options' => $options])->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
             $html = 'Could not render text.';

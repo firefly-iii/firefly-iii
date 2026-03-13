@@ -52,7 +52,7 @@ class UserRegistrationRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['email'    => 'email|required', 'password' => 'confirmed|secure_password'];
+        return ['email' => 'email|required', 'password' => 'confirmed|secure_password'];
     }
 
     public function withValidator(Validator $validator): void

@@ -66,7 +66,7 @@ final class JavascriptController extends Controller
             $accountId                    = $account->id;
             $currency                     = (int) $repository->getMetaValue($account, 'currency_id');
             $currency                     = 0 === $currency ? $this->primaryCurrency->id : $currency;
-            $entry                        = ['preferredCurrency' => $currency, 'name'              => $account->name];
+            $entry                        = ['preferredCurrency' => $currency, 'name' => $account->name];
             $data['accounts'][$accountId] = $entry;
         }
 
@@ -84,7 +84,7 @@ final class JavascriptController extends Controller
         /** @var TransactionCurrency $currency */
         foreach ($currencies as $currency) {
             $currencyId                      = $currency->id;
-            $entry                           = ['name'   => $currency->name, 'code'   => $currency->code, 'symbol' => $currency->symbol];
+            $entry                           = ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol];
             $data['currencies'][$currencyId] = $entry;
         }
 
@@ -139,7 +139,7 @@ final class JavascriptController extends Controller
         /** @var Carbon $end */
         $end   = clone session('end', today(config('app.timezone'))->endOfMonth());
 
-        $data  = ['start' => $start->format('Y-m-d'), 'end'   => $end->format('Y-m-d')];
+        $data  = ['start' => $start->format('Y-m-d'), 'end' => $end->format('Y-m-d')];
 
         return response()->view('v2.javascript.variables', $data)->header('Content-Type', 'text/javascript');
     }

@@ -44,7 +44,7 @@ class BudgetIncomeRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['amount' => ['required', new IsValidPositiveAmount()], 'start'  => 'required|date|before:end', 'end'    => 'required|date|after:start'];
+        return ['amount' => ['required', new IsValidPositiveAmount()], 'start' => 'required|date|before:end', 'end' => 'required|date|after:start'];
     }
 
     public function withValidator(Validator $validator): void

@@ -370,7 +370,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
         $validator->source = $this->getValidSourceAccount();
-        $result            = $validator->validateDestination(['id'   => $destId, 'name' => $destName]);
+        $result            = $validator->validateDestination(['id' => $destId, 'name' => $destName]);
         Log::debug(sprintf('hasValidDestinationAccount(%d, "%s") will return %s', $destId, $destName, var_export($result, true)));
 
         // TODO typeOverrule: the account validator may have another opinion on the transaction type.
@@ -401,7 +401,7 @@ class JournalUpdateService
         $validator->setTransactionType($expectedType);
         $validator->setUser($this->transactionJournal->user);
 
-        $result       = $validator->validateSource(['id'   => $sourceId, 'name' => $sourceName]);
+        $result       = $validator->validateSource(['id' => $sourceId, 'name' => $sourceName]);
         Log::debug(sprintf('hasValidSourceAccount(%d, "%s") will return %s', $sourceId, $sourceName, var_export($result, true)));
 
         // TODO type overrule the account validator may have a different opinion on the transaction type.
@@ -558,7 +558,7 @@ class JournalUpdateService
                     'decimal_places'  => $recordCurrency->decimal_places,
                     'amount'          => $originalSourceAmount,
                 ],
-                ['currency_symbol' => $recordCurrency->symbol, 'decimal_places'  => $recordCurrency->decimal_places, 'amount'          => $value]
+                ['currency_symbol' => $recordCurrency->symbol, 'decimal_places' => $recordCurrency->decimal_places, 'amount' => $value]
             )
         );
     }
@@ -658,7 +658,7 @@ class JournalUpdateService
 
                 /** @var TransactionJournalMetaFactory $factory */
                 $factory                           = app(TransactionJournalMetaFactory::class);
-                $set                               = ['journal' => $this->transactionJournal, 'name'    => '_internal_previous_date', 'data'    => null];
+                $set                               = ['journal' => $this->transactionJournal, 'name' => '_internal_previous_date', 'data' => null];
                 if ($res) {
                     Log::debug('Transaction is set to be AFTER its current date. Save also the "_internal_previous_date"-field.');
                     $set['data'] = clone $this->transactionJournal->date;
@@ -777,7 +777,7 @@ class JournalUpdateService
                         'decimal_places'  => $recordCurrency->decimal_places,
                         'amount'          => $originalSourceAmount,
                     ],
-                    ['currency_symbol' => $recordCurrency->symbol, 'decimal_places'  => $recordCurrency->decimal_places, 'amount'          => $value]
+                    ['currency_symbol' => $recordCurrency->symbol, 'decimal_places' => $recordCurrency->decimal_places, 'amount' => $value]
                 )
             );
         }
@@ -831,10 +831,10 @@ class JournalUpdateService
                     return;
                 }
                 Log::debug(sprintf('Field "%s" is present ("%s"), try to update it.', $field, $value));
-                $set = ['journal' => $this->transactionJournal, 'name'    => $field, 'data'    => $value];
+                $set = ['journal' => $this->transactionJournal, 'name' => $field, 'data' => $value];
                 $factory->updateOrCreate($set);
                 // also set date with timezone.
-                $set = ['journal' => $this->transactionJournal, 'name'    => sprintf('%s_tz', $field), 'data'    => $value?->format('e')];
+                $set = ['journal' => $this->transactionJournal, 'name' => sprintf('%s_tz', $field), 'data' => $value?->format('e')];
                 $factory->updateOrCreate($set);
             }
         }
@@ -849,7 +849,7 @@ class JournalUpdateService
             if ($this->hasFields([$field])) {
                 $value = '' === $this->data[$field] ? null : $this->data[$field];
                 Log::debug(sprintf('Field "%s" is present ("%s"), try to update it.', $field, $value));
-                $set   = ['journal' => $this->transactionJournal, 'name'    => $field, 'data'    => $value];
+                $set   = ['journal' => $this->transactionJournal, 'name' => $field, 'data' => $value];
                 $factory->updateOrCreate($set);
             }
         }

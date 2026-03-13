@@ -38,7 +38,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -144,7 +143,7 @@ final class MfaController extends Controller
         $subTitle     = (string) trans('firefly.mfa_index_title');
         $subTitleIcon = 'fa-calculator';
 
-        return view('profile.mfa.disable-mfa')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
+        return view('profile.mfa.disable-mfa')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
 
     /**
@@ -212,7 +211,7 @@ final class MfaController extends Controller
 
         Preferences::set('temp-mfa-secret', $secret);
 
-        return view('profile.mfa.enable-mfa', ['image'  => $image, 'secret' => $secret]);
+        return view('profile.mfa.enable-mfa', ['image' => $image, 'secret' => $secret]);
     }
 
     /**
@@ -234,7 +233,7 @@ final class MfaController extends Controller
 
         // verify password.
         $password   = $request->get('password');
-        if (!auth()->validate(['email'    => $user->email, 'password' => $password])) {
+        if (!auth()->validate(['email' => $user->email, 'password' => $password])) {
             session()->flash('error', 'Bad user pw, no MFA for you!');
 
             return redirect(route('profile.mfa.index'));
@@ -286,7 +285,7 @@ final class MfaController extends Controller
         $subTitleIcon = 'fa-calculator';
         $enabledMFA   = null !== auth()->user()->mfa_secret;
 
-        return view('profile.mfa.index')->with(['subTitle'     => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA'   => $enabledMFA]);
+        return view('profile.mfa.index')->with(['subTitle' => $subTitle, 'subTitleIcon' => $subTitleIcon, 'enabledMFA' => $enabledMFA]);
     }
 
     /**

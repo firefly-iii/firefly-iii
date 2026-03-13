@@ -73,7 +73,7 @@ class JournalLinkRequest extends FormRequest
         $string       = implode(',', $combinations);
 
         // fixed
-        return ['link_type' => sprintf('required|in:%s', $string), 'opposing'  => 'belongsToUser:transaction_journals'];
+        return ['link_type' => sprintf('required|in:%s', $string), 'opposing' => 'belongsToUser:transaction_journals'];
     }
 
     public function withValidator(Validator $validator): void

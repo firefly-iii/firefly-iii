@@ -60,7 +60,7 @@ class BillReminder extends Notification
     public function toMail(User $notifiable): MailMessage
     {
         return new MailMessage()
-            ->markdown('emails.bill-warning', ['field' => $this->field, 'diff'  => $this->diff, 'bill'  => $this->bill])
+            ->markdown('emails.bill-warning', ['field' => $this->field, 'diff' => $this->diff, 'bill' => $this->bill])
             ->subject($this->getSubject())
         ;
     }

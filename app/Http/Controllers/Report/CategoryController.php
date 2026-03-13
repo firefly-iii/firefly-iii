@@ -76,7 +76,7 @@ final class CategoryController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
+            $report[$accountId] ??= ['name' => $account->name, 'id' => $account->id, 'iban' => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -143,7 +143,7 @@ final class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.account-per-category', ['report'     => $report, 'categories' => $categories]);
+        return view('reports.category.partials.account-per-category', ['report' => $report, 'categories' => $categories]);
     }
 
     /**
@@ -161,7 +161,7 @@ final class CategoryController extends Controller
         /** @var Account $account */
         foreach ($accounts as $account) {
             $accountId = $account->id;
-            $report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
+            $report[$accountId] ??= ['name' => $account->name, 'id' => $account->id, 'iban' => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -240,7 +240,7 @@ final class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.accounts', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.category.partials.accounts', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -358,7 +358,7 @@ final class CategoryController extends Controller
         /** @var Category $category */
         foreach ($categories as $category) {
             $categoryId = $category->id;
-            $report[$categoryId] ??= ['name'       => $category->name, 'id'         => $category->id, 'currencies' => []];
+            $report[$categoryId] ??= ['name' => $category->name, 'id' => $category->id, 'currencies' => []];
         }
         foreach ($spent as $currency) {
             $currencyId = $currency['currency_id'];
@@ -444,7 +444,7 @@ final class CategoryController extends Controller
             }
         }
 
-        return view('reports.category.partials.categories', ['sums'   => $sums, 'report' => $report]);
+        return view('reports.category.partials.categories', ['sums' => $sums, 'report' => $report]);
     }
 
     /**
@@ -510,7 +510,7 @@ final class CategoryController extends Controller
         $report  = $data;
 
         try {
-            $result = view('reports.partials.category-period', ['report'  => $report, 'periods' => $periods])->render();
+            $result = view('reports.partials.category-period', ['report' => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
@@ -582,7 +582,7 @@ final class CategoryController extends Controller
         $report  = $data;
 
         try {
-            $result = view('reports.partials.category-period', ['report'  => $report, 'periods' => $periods])->render();
+            $result = view('reports.partials.category-period', ['report' => $report, 'periods' => $periods])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());

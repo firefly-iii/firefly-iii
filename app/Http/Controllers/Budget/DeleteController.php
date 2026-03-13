@@ -31,7 +31,6 @@ use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\View\View;
 
 /**
@@ -70,7 +69,7 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('budgets.delete.url');
 
-        return view('budgets.delete', ['budget'   => $budget, 'subTitle' => $subTitle]);
+        return view('budgets.delete', ['budget' => $budget, 'subTitle' => $subTitle]);
     }
 
     /**

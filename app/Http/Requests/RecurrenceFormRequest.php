@@ -320,7 +320,7 @@ class RecurrenceFormRequest extends FormRequest
     private function parseRepetitionData(): array
     {
         $value  = $this->convertString('repetition_type');
-        $return = ['type'   => '', 'moment' => ''];
+        $return = ['type' => '', 'moment' => ''];
 
         if ('daily' === $value) {
             $return['type'] = $value;

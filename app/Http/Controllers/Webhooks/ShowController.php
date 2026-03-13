@@ -64,6 +64,6 @@ final class ShowController extends Controller
         Log::channel('audit')->info(sprintf('User visits webhook #%d page.', $webhook->id));
         $subTitle = (string) trans('firefly.show_webhook', ['title' => $webhook->title]);
 
-        return view('webhooks.show', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.show', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

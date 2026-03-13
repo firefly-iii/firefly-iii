@@ -72,7 +72,7 @@ class CategoryReportGenerator
         $earnedWithout  = $this->noCatRepository->listIncome($this->start, $this->end, $this->accounts);
         $spentWithout   = $this->noCatRepository->listExpenses($this->start, $this->end, $this->accounts);
 
-        $this->report   = ['categories' => [], 'sums'       => []];
+        $this->report   = ['categories' => [], 'sums' => []];
 
         // needs four for-each loops.
         foreach ([$earnedWith, $spentWith, $earnedWithout, $spentWithout, $transferredIn, $transferredOut] as $data) {

@@ -76,7 +76,7 @@ class BudgetReportGenerator
         /** @var Account $account */
         foreach ($this->accounts as $account) {
             $accountId = $account->id;
-            $this->report[$accountId] ??= ['name'       => $account->name, 'id'         => $account->id, 'iban'       => $account->iban, 'currencies' => []];
+            $this->report[$accountId] ??= ['name' => $account->name, 'id' => $account->id, 'iban' => $account->iban, 'currencies' => []];
         }
 
         // loop expenses.
@@ -91,7 +91,7 @@ class BudgetReportGenerator
      */
     public function general(): void
     {
-        $this->report = ['budgets' => [], 'sums'    => []];
+        $this->report = ['budgets' => [], 'sums' => []];
 
         $this->generalBudgetReport();
         $this->noBudgetReport();
@@ -151,7 +151,7 @@ class BudgetReportGenerator
     private function noBudgetReport(): void
     {
         // add no budget info.
-        $this->report['budgets'][0] = ['budget_id'     => null, 'budget_name'   => null, 'no_budget'     => true, 'budget_limits' => []];
+        $this->report['budgets'][0] = ['budget_id' => null, 'budget_name' => null, 'no_budget' => true, 'budget_limits' => []];
 
         $noBudget                   = $this->nbRepository->sumExpenses($this->start, $this->end, $this->accounts);
         foreach ($noBudget as $noBudgetEntry) {

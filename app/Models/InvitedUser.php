@@ -71,6 +71,6 @@ class InvitedUser extends Model
 
     protected function casts(): array
     {
-        return ['expires'       => SeparateTimezoneCaster::class, 'redeemed'      => 'boolean', 'user_id'       => 'integer', 'user_group_id' => 'integer'];
+        return ['expires' => SeparateTimezoneCaster::class, 'redeemed' => 'boolean', 'user_id' => 'integer', 'user_group_id' => 'integer'];
     }
 }

@@ -67,7 +67,7 @@ class SubscriptionsOverdueReminder extends Notification
         }
 
         return new MailMessage()
-            ->markdown('emails.subscriptions-overdue-warning', ['info'  => $info, 'count' => $count])
+            ->markdown('emails.subscriptions-overdue-warning', ['info' => $info, 'count' => $count])
             ->subject($this->getSubject())
         ;
     }

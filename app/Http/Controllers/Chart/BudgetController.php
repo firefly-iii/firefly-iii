@@ -257,7 +257,7 @@ final class BudgetController extends Controller
                 $amount = $journal['foreign_amount'];
             }
 
-            $result[$key] ??= ['amount'          => '0', 'currency_symbol' => $symbol, 'currency_code'   => $code, 'currency_name'   => $name];
+            $result[$key] ??= ['amount' => '0', 'currency_symbol' => $symbol, 'currency_code' => $code, 'currency_name' => $name];
             $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
@@ -341,7 +341,7 @@ final class BudgetController extends Controller
                 $amount = $journal['foreign_amount'];
             }
 
-            $result[$key] ??= ['amount'          => '0', 'currency_symbol' => $symbol, 'currency_code'   => $code, 'currency_name'   => $name];
+            $result[$key] ??= ['amount' => '0', 'currency_symbol' => $symbol, 'currency_code' => $code, 'currency_name' => $name];
             $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 
@@ -427,7 +427,7 @@ final class BudgetController extends Controller
                 $amount = $journal['foreign_amount'];
             }
 
-            $result[$key] ??= ['amount'          => '0', 'currency_symbol' => $symbol, 'currency_code'   => $code, 'currency_name'   => $name];
+            $result[$key] ??= ['amount' => '0', 'currency_symbol' => $symbol, 'currency_code' => $code, 'currency_name' => $name];
             $result[$key]['amount'] = bcadd((string) $amount, $result[$key]['amount']);
         }
 

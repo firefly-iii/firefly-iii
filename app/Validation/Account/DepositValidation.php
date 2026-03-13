@@ -67,7 +67,7 @@ trait DepositValidation
             $search = $this->findExistingAccount($validTypes, $array);
             if (null === $search) {
                 Log::debug('findExistingAccount() returned NULL, so the result is false.');
-                $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+                $this->destError = (string) trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
@@ -128,7 +128,7 @@ trait DepositValidation
                 Log::debug(sprintf('User submitted an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
                 Log::debug(sprintf('Firefly III does not accept ID #%d as valid account data.', $accountId));
                 // #10921 Set result false
-                $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id'   => $accountId, 'name' => $accountName]);
+                $this->sourceError = (string) trans('validation.withdrawal_source_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result            = false;
             }
             if (null !== $search && in_array($search->accountType->type, $validTypes, true)) {

@@ -107,7 +107,7 @@ class UpgradesAccountCurrencies extends Command
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
-            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $currency->id]);
+            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
             ++$this->count;
 
@@ -116,7 +116,7 @@ class UpgradesAccountCurrencies extends Command
 
         // account is set to 0, opening balance is not?
         if (0 === $accountCurrency && $obCurrency > 0) {
-            AccountMeta::create(['account_id' => $account->id, 'name'       => 'currency_id', 'data'       => $obCurrency]);
+            AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
             $this->friendlyInfo(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
             ++$this->count;
 

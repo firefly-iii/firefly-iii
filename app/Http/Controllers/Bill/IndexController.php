@@ -113,7 +113,7 @@ final class IndexController extends Controller
         $rules       = $this->repository->getRulesForBills($collection);
 
         // make bill groups:
-        $bills       = [0 => ['object_group_id'    => 0, 'object_group_title' => (string) trans('firefly.default_group_title_name'), 'bills'              => []]]; // the index is the order, not the ID.
+        $bills       = [0 => ['object_group_id' => 0, 'object_group_title' => (string) trans('firefly.default_group_title_name'), 'bills' => []]]; // the index is the order, not the ID.
 
         /** @var Bill $bill */
         foreach ($collection as $bill) {
@@ -144,7 +144,7 @@ final class IndexController extends Controller
         $totals      = $this->getTotals($sums);
         $today       = now()->startOfDay();
 
-        return view('bills.index', ['bills'  => $bills, 'sums'   => $sums, 'total'  => $total, 'totals' => $totals, 'today'  => $today]);
+        return view('bills.index', ['bills' => $bills, 'sums' => $sums, 'total' => $total, 'totals' => $totals, 'today' => $today]);
     }
 
     /**
@@ -172,7 +172,7 @@ final class IndexController extends Controller
         Log::debug(sprintf('Amount per period for bill #%d "%s"', $bill['id'], $bill['name']));
         Log::debug(sprintf('Average is %s', $avg));
         // calculate amount per year:
-        $multiplies = ['yearly'    => '1', 'half-year' => '2', 'quarterly' => '4', 'monthly'   => '12', 'weekly'    => '52.17', 'daily'     => '365.24'];
+        $multiplies = ['yearly' => '1', 'half-year' => '2', 'quarterly' => '4', 'monthly' => '12', 'weekly' => '52.17', 'daily' => '365.24'];
         $yearAmount = bcmul($avg, bcdiv($multiplies[$bill['repeat_freq']], (string) ($bill['skip'] + 1)));
         Log::debug(sprintf('Amount per year is %s (%s * %s / %s)', $yearAmount, $avg, $multiplies[$bill['repeat_freq']], (string) ($bill['skip'] + 1)));
 

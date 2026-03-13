@@ -172,7 +172,7 @@ class AccountEnrichment implements EnrichmentInterface
             $item->full_account_type      = $this->accountTypes[(int) $item->account_type_id] ?? null;
             $meta                         = [
                 'currency'               => null,
-                'location'               => ['latitude'   => null, 'longitude'  => null, 'zoom_level' => null],
+                'location'               => ['latitude' => null, 'longitude' => null, 'zoom_level' => null],
                 'object_group_id'        => null,
                 'object_group_order'     => null,
                 'object_group_title'     => null,
@@ -423,8 +423,8 @@ class AccountEnrichment implements EnrichmentInterface
         ;
         $journals  = $collector->getExtractedJournals();
         foreach ($journals as $journal) {
-            $this->openingBalances[(int) $journal['source_account_id']]      = ['amount' => Steam::negative($journal['amount']), 'date'   => $journal['date']];
-            $this->openingBalances[(int) $journal['destination_account_id']] = ['amount' => Steam::positive($journal['amount']), 'date'   => $journal['date']];
+            $this->openingBalances[(int) $journal['source_account_id']]      = ['amount' => Steam::negative($journal['amount']), 'date' => $journal['date']];
+            $this->openingBalances[(int) $journal['destination_account_id']] = ['amount' => Steam::positive($journal['amount']), 'date' => $journal['date']];
         }
     }
 

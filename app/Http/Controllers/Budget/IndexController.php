@@ -300,7 +300,7 @@ final class IndexController extends Controller
 
     private function getSums(array $budgets): array
     {
-        $sums = ['budgeted' => [], 'spent'    => [], 'left'     => []];
+        $sums = ['budgeted' => [], 'spent' => [], 'left' => []];
 
         /** @var array $budget */
         foreach ($budgets as $budget) {

@@ -130,7 +130,7 @@ final class ForgotPasswordController extends Controller
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.email')->with(['allowRegistration' => $allowRegistration, 'pageTitle'         => $pageTitle]);
+        return view('auth.passwords.email')->with(['allowRegistration' => $allowRegistration, 'pageTitle' => $pageTitle]);
     }
 
     /**

@@ -66,6 +66,6 @@ final class DeleteController extends Controller
         $subTitle = (string) trans('firefly.delete_webhook', ['title' => $webhook->title]);
         $this->rememberPreviousUrl('webhooks.delete.url');
 
-        return view('webhooks.delete', ['webhook'  => $webhook, 'subTitle' => $subTitle]);
+        return view('webhooks.delete', ['webhook' => $webhook, 'subTitle' => $subTitle]);
     }
 }

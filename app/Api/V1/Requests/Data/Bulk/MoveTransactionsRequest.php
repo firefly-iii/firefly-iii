@@ -43,7 +43,7 @@ class MoveTransactionsRequest extends FormRequest
 
     public function getAll(): array
     {
-        return ['original_account'    => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
+        return ['original_account' => $this->convertInteger('original_account'), 'destination_account' => $this->convertInteger('destination_account')];
     }
 
     /**

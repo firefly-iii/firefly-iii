@@ -43,7 +43,6 @@ use FireflyIII\User;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -164,7 +163,7 @@ final class DebugController extends Controller
             $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
         }
 
-        return view('debug', ['table'      => $table, 'now'        => $now, 'logContent' => $logContent]);
+        return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);
     }
 
     public function routes(Request $request): never
@@ -285,7 +284,7 @@ final class DebugController extends Controller
         $app    = $this->getAppInfo();
         $user   = $this->getUserInfo();
 
-        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app'    => $app, 'user'   => $user]);
+        return (string) view('partials.debug-table', ['system' => $system, 'docker' => $docker, 'app' => $app, 'user' => $user]);
     }
 
     private function getAppInfo(): array

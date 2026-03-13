@@ -108,7 +108,7 @@ final class CategoryControllerTest extends TestCase
     private function createTestCategories(int $count, User $user): void
     {
         for ($i = 1; $i <= $count; ++$i) {
-            $category = Category::create(['user_id'       => $user->id, 'name'          => 'Category '.$i, 'user_group_id' => $user->user_group_id]);
+            $category = Category::create(['user_id' => $user->id, 'name' => 'Category '.$i, 'user_group_id' => $user->user_group_id]);
         }
     }
 }

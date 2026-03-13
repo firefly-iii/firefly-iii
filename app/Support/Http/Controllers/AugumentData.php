@@ -281,7 +281,7 @@ trait AugumentData
         $total     = $assets->merge($opposing);
         $collector->setRange($start, $end)->setTypes([TransactionTypeEnum::WITHDRAWAL->value])->setAccounts($total);
         $journals  = $collector->getExtractedJournals();
-        $sum       = ['grand_sum'    => '0', 'per_currency' => []];
+        $sum       = ['grand_sum' => '0', 'per_currency' => []];
         // loop to support multi currency
         foreach ($journals as $journal) {
             $currencyId                              = (int) $journal['currency_id'];

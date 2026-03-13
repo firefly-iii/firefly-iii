@@ -42,7 +42,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Redirector;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
@@ -100,7 +99,7 @@ final class BudgetLimitController extends Controller
             return true;
         });
 
-        return view('budgets.budget-limits.create', ['start'      => $start, 'end'        => $end, 'currencies' => $currencies, 'budget'     => $budget]);
+        return view('budgets.budget-limits.create', ['start' => $start, 'end' => $end, 'currencies' => $currencies, 'budget' => $budget]);
     }
 
     public function delete(BudgetLimit $budgetLimit): RedirectResponse
@@ -118,7 +117,7 @@ final class BudgetLimitController extends Controller
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.edit', ['budgetLimit' => $budgetLimit, 'notes'       => $notes]);
+        return view('budgets.budget-limits.edit', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
@@ -128,7 +127,7 @@ final class BudgetLimitController extends Controller
     {
         $notes = $this->blRepository->getNoteText($budgetLimit);
 
-        return view('budgets.budget-limits.show', ['budgetLimit' => $budgetLimit, 'notes'       => $notes]);
+        return view('budgets.budget-limits.show', ['budgetLimit' => $budgetLimit, 'notes' => $notes]);
     }
 
     /**
@@ -259,7 +258,7 @@ final class BudgetLimitController extends Controller
             $notes = substr($notes, 0, 32768);
         }
 
-        $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes'  => $notes]);
+        $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes' => $notes]);
         Preferences::mark();
         $array                           = $limit->toArray();
 

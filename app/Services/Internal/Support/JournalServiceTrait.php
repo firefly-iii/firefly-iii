@@ -97,7 +97,7 @@ trait JournalServiceTrait
             Log::debug(sprintf('Account #%d may exist and be of the wrong type, use data to create one of the right type.', $data['id']));
             $temp = $this->findAccountById(['id' => $data['id']], []);
             if (null !== $temp) {
-                $tempData = ['name'   => $temp->name, 'iban'   => $temp->iban, 'number' => null, 'bic'    => null];
+                $tempData = ['name' => $temp->name, 'iban' => $temp->iban, 'number' => null, 'bic' => null];
                 $result   = $this->createAccount(null, $tempData, $creatableType);
             }
         }
@@ -291,13 +291,13 @@ trait JournalServiceTrait
             if (null !== $data['bic']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name'       => 'BIC', 'data'       => $data['bic']]);
+                $metaFactory->create(['account_id' => $account->id, 'name' => 'BIC', 'data' => $data['bic']]);
             }
             // store account number
             if (null !== $data['number']) {
                 /** @var AccountMetaFactory $metaFactory */
                 $metaFactory = app(AccountMetaFactory::class);
-                $metaFactory->create(['account_id' => $account->id, 'name'       => 'account_number', 'data'       => $data['number']]);
+                $metaFactory->create(['account_id' => $account->id, 'name' => 'account_number', 'data' => $data['number']]);
             }
         }
 

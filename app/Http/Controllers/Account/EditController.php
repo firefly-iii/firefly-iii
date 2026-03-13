@@ -103,7 +103,7 @@ final class EditController extends Controller
             'has_location' => $hasLocation || 'true' === old('location_has_location'),
         ]];
 
-        $liabilityDirections  = ['debit'  => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
+        $liabilityDirections  = ['debit' => trans('firefly.liability_direction_debit'), 'credit' => trans('firefly.liability_direction_credit')];
 
         // interest calculation periods:
         $interestPeriods      = [];

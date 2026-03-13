@@ -272,7 +272,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
                 continue;
             }
             $userRole = UserRole::whereTitle($enum->value)->first();
-            $user->groupMemberships()->create(['user_group_id' => $userGroup->id, 'user_role_id'  => $userRole->id]);
+            $user->groupMemberships()->create(['user_group_id' => $userGroup->id, 'user_role_id' => $userRole->id]);
         }
 
         return $userGroup;
@@ -300,7 +300,7 @@ class UserGroupRepository implements UserGroupRepositoryInterface, UserGroupInte
             if (!$existingGroup instanceof UserGroup) {
                 $exists        = false;
 
-                $existingGroup = $this->store(['user'  => $user, 'title' => $groupName]);
+                $existingGroup = $this->store(['user' => $user, 'title' => $groupName]);
             }
             $groupName     = sprintf('%s-%s', $user->email, substr(sha1(random_int(1000, 9999).microtime()), 0, 4));
             ++$loop;

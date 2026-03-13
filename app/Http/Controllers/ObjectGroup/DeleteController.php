@@ -67,7 +67,7 @@ final class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUrl('object-groups.delete.url');
 
-        return view('object-groups.delete', ['objectGroup' => $objectGroup, 'subTitle'    => $subTitle, 'piggyBanks'  => $piggyBanks]);
+        return view('object-groups.delete', ['objectGroup' => $objectGroup, 'subTitle' => $subTitle, 'piggyBanks' => $piggyBanks]);
     }
 
     /**

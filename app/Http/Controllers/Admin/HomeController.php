@@ -65,6 +65,6 @@ final class HomeController extends Controller
             $email = $pref->data;
         }
 
-        return view('settings.index', ['title'         => $title, 'mainTitleIcon' => $mainTitleIcon, 'email'         => $email]);
+        return view('settings.index', ['title' => $title, 'mainTitleIcon' => $mainTitleIcon, 'email' => $email]);
     }
 }

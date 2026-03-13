@@ -45,7 +45,7 @@ class BulkEditJournalRequest extends FormRequest
     public function rules(): array
     {
         // fixed
-        return ['journals.*'  => 'required|belongsToUser:transaction_journals,id', 'tags_action' => 'in:no_nothing,do_replace,do_append'];
+        return ['journals.*' => 'required|belongsToUser:transaction_journals,id', 'tags_action' => 'in:no_nothing,do_replace,do_append'];
     }
 
     public function withValidator(Validator $validator): void

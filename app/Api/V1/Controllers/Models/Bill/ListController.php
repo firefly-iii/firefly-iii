@@ -72,21 +72,21 @@ final class ListController extends Controller
      */
     public function attachments(PaginationRequest $request, Bill $bill): JsonResponse
     {
-        ['limit'  => $limit, 'offset' => $offset, 'page'   => $page] = $request->attributes->all();
-        $manager                                                     = $this->getManager();
-        $collection                                                  = $this->repository->getAttachments($bill);
+        ['limit' => $limit, 'offset' => $offset, 'page' => $page] = $request->attributes->all();
+        $manager                                                  = $this->getManager();
+        $collection                                               = $this->repository->getAttachments($bill);
 
-        $count                                                       = $collection->count();
-        $attachments                                                 = $collection->slice($offset, $limit);
+        $count                                                    = $collection->count();
+        $attachments                                              = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator                                                   = new LengthAwarePaginator($attachments, $count, $limit, $page);
+        $paginator                                                = new LengthAwarePaginator($attachments, $count, $limit, $page);
         $paginator->setPath(route('api.v1.bills.attachments', [$bill->id]).$this->buildParams());
 
         /** @var AttachmentTransformer $transformer */
-        $transformer                                                 = app(AttachmentTransformer::class);
+        $transformer                                              = app(AttachmentTransformer::class);
 
-        $resource                                                    = new FractalCollection($attachments, $transformer, 'attachments');
+        $resource                                                 = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -100,20 +100,20 @@ final class ListController extends Controller
      */
     public function rules(PaginationRequest $request, Bill $bill): JsonResponse
     {
-        ['limit'  => $limit, 'offset' => $offset, 'page'   => $page] = $request->attributes->all();
+        ['limit' => $limit, 'offset' => $offset, 'page' => $page] = $request->attributes->all();
 
-        $manager                                                     = $this->getManager();
-        $collection                                                  = $this->repository->getRulesForBill($bill);
-        $count                                                       = $collection->count();
-        $rules                                                       = $collection->slice($offset, $limit);
+        $manager                                                  = $this->getManager();
+        $collection                                               = $this->repository->getRulesForBill($bill);
+        $count                                                    = $collection->count();
+        $rules                                                    = $collection->slice($offset, $limit);
 
         // make paginator:
-        $paginator                                                   = new LengthAwarePaginator($rules, $count, $limit, $page);
+        $paginator                                                = new LengthAwarePaginator($rules, $count, $limit, $page);
         $paginator->setPath(route('api.v1.bills.rules', [$bill->id]).$this->buildParams());
 
         /** @var RuleTransformer $transformer */
-        $transformer                                                 = app(RuleTransformer::class);
-        $resource                                                    = new FractalCollection($rules, $transformer, 'rules');
+        $transformer                                              = app(RuleTransformer::class);
+        $resource                                                 = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);
@@ -127,16 +127,16 @@ final class ListController extends Controller
      */
     public function transactions(PaginationDateRangeRequest $request, Bill $bill): JsonResponse
     {
-        ['limit' => $limit, 'page'  => $page, 'types' => $types, 'start' => $start, 'end'   => $end] = $request->attributes->all();
+        ['limit' => $limit, 'page' => $page, 'types' => $types, 'start' => $start, 'end' => $end] = $request->attributes->all();
 
-        $manager                                                                                     = $this->getManager();
+        $manager                                                                                  = $this->getManager();
 
         /** @var User $admin */
-        $admin                                                                                       = auth()->user();
+        $admin                                                                                    = auth()->user();
 
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
-        $collector                                                                                   = app(GroupCollectorInterface::class);
+        $collector                                                                                = app(GroupCollectorInterface::class);
         $collector
             ->setUser($admin)
             // include source + destination account name and type.
@@ -159,18 +159,18 @@ final class ListController extends Controller
         }
 
         // get paginator.
-        $paginator                                                                                   = $collector->getPaginatedGroups();
+        $paginator                                                                                = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]).$this->buildParams());
 
         // enrich
-        $enrichment                                                                                  = new TransactionGroupEnrichment();
+        $enrichment                                                                               = new TransactionGroupEnrichment();
         $enrichment->setUser($admin);
-        $transactions                                                                                = $enrichment->enrich($paginator->getCollection());
+        $transactions                                                                             = $enrichment->enrich($paginator->getCollection());
 
         /** @var TransactionGroupTransformer $transformer */
-        $transformer                                                                                 = app(TransactionGroupTransformer::class);
+        $transformer                                                                              = app(TransactionGroupTransformer::class);
 
-        $resource                                                                                    = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource                                                                                 = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', self::CONTENT_TYPE);

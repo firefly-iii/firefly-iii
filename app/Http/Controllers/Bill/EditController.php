@@ -102,7 +102,7 @@ final class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
         $request->session()->forget('bills.edit.fromUpdate');
 
-        return view('bills.edit', ['subTitle'  => $subTitle, 'periods'   => $periods, 'rules'     => $rules, 'bill'      => $bill, 'preFilled' => $preFilled]);
+        return view('bills.edit', ['subTitle' => $subTitle, 'periods' => $periods, 'rules' => $rules, 'bill' => $bill, 'preFilled' => $preFilled]);
     }
 
     /**

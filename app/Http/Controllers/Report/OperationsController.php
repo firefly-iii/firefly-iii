@@ -77,7 +77,7 @@ final class OperationsController extends Controller
         $type   = 'expense-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type'   => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());
@@ -111,7 +111,7 @@ final class OperationsController extends Controller
         $type   = 'income-entry';
 
         try {
-            $result = view('reports.partials.income-expenses', ['report' => $report, 'type'   => $type])->render();
+            $result = view('reports.partials.income-expenses', ['report' => $report, 'type' => $type])->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             Log::error($e->getTraceAsString());

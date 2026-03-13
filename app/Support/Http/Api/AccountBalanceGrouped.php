@@ -211,7 +211,7 @@ class AccountBalanceGrouped
     {
         $currencyId = (int) $journal['currency_id'];
         $period     = $journal['date']->format($this->carbonFormat);
-        $this->data[$currencyId][$period] ??= ['period'    => $period, 'spent'     => '0', 'earned'    => '0', 'pc_spent'  => '0', 'pc_earned' => '0'];
+        $this->data[$currencyId][$period] ??= ['period' => $period, 'spent' => '0', 'earned' => '0', 'pc_spent' => '0', 'pc_earned' => '0'];
     }
 
     private function findCurrency(int $currencyId): TransactionCurrency

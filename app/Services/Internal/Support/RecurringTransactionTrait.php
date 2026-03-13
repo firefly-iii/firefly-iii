@@ -244,7 +244,7 @@ trait RecurringTransactionTrait
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'piggy_bank_id')->first();
             if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name'  => 'piggy_bank_id', 'value' => $piggyBank->id]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'piggy_bank_id', 'value' => $piggyBank->id]);
             }
             $entry->value = $piggyBank->id;
             $entry->save();
@@ -261,7 +261,7 @@ trait RecurringTransactionTrait
             /** @var null|RecurrenceMeta $entry */
             $entry        = $transaction->recurrenceTransactionMeta()->where('name', 'tags')->first();
             if (null === $entry) {
-                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name'  => 'tags', 'value' => json_encode($tags)]);
+                $entry = RecurrenceTransactionMeta::create(['rt_id' => $transaction->id, 'name' => 'tags', 'value' => json_encode($tags)]);
             }
             $entry->value = json_encode($tags);
             $entry->save();

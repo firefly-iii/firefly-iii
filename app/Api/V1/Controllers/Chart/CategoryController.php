@@ -153,8 +153,8 @@ final class CategoryController extends Controller
                 'end_date'                        => $end->toAtomString(),
                 'yAxisID'                         => 0,
                 'type'                            => 'bar',
-                'entries'                         => ['spent'  => '0', 'earned' => '0'],
-                'pc_entries'                      => ['spent'  => '0', 'earned' => '0'],
+                'entries'                         => ['spent' => '0', 'earned' => '0'],
+                'pc_entries'                      => ['spent' => '0', 'earned' => '0'],
             ];
 
             // add monies
