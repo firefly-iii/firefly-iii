@@ -94,13 +94,13 @@
                         <p class="search_ongoing text-center" style="margin-top:70px;">
                             {{ 'search_searching'|_ }}
                         </p>
-                        <div class="search_results" style="display: none;"></div>
+                        <div class="search_results" class="hidden"></div>
                         {# loading indicator #}
                         <div class="overlay">
                             <span class="fa fa-refresh fa-spin"></span>
                         </div>
 
-                        <div class="row mass_edit_all hidden-xs" style="display: none;">
+                        <div class="row mass_edit_all hidden-xs hidden">
                             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                                 <div class="mass_button_options btn-group btn-group" style="display:none;">
                                     <a href="#" class="btn btn-default mass_edit"><span class="fa fa-fw fa-pencil"></span> <span>{{ 'edit_selected'|_ }}</span></a>

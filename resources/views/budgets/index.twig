@@ -273,8 +273,8 @@
                                                 ---
                                                 {% endif %}
                                             </div>
-                                            <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                                  style="display:none;"></span>
+                                            <span class="hidden text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                  ></span>
                                         {% endif %}
                                         {% if budget.budgeted|length > 0 %}
                                             {% for budgetLimit in budget.budgeted %}
@@ -310,8 +310,8 @@
                                                         {% endif %}
                                                     </div>
                                                 </div>
-                                                <span class="text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
-                                                      style="display:none;"></span>
+                                                <span class="hidden text-danger budget_warning" data-id="{{ budget.id }}" data-budgetLimit="{{ budgetLimit.id }}"
+                                                      ></span>
                                             {% endfor %}
                                         {% endif %}
                                         {% if budget.budgeted|length < currencies.count() %}
