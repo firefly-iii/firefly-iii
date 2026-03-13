@@ -160,7 +160,7 @@ final class DebugController extends Controller
         }
         if ('' !== $logContent) {
             // last few lines
-            $logContent = 'Truncated from this point <----|'.substr($logContent, -16384);
+            $logContent = 'Truncated from this point <----|'.substr($logContent, -16_384);
         }
 
         return view('debug', ['table' => $table, 'now' => $now, 'logContent' => $logContent]);

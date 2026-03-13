@@ -45,7 +45,7 @@ class StoreRequest extends FormRequest
     public function getAll(): array
     {
         $active = true;
-        $order  = 31337;
+        $order  = 31_337;
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }

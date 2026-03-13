@@ -31,7 +31,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Facades\FireflyConfig;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\User;
-use Illuminate\Contracts\Foundation\Application;
+
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\RedirectResponse;

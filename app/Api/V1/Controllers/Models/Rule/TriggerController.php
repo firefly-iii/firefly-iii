@@ -98,7 +98,7 @@ final class TriggerController extends Controller
         $enrichment->setUser($rule->user);
         $transactions = $enrichment->enrich($transactions);
 
-        $paginator    = new LengthAwarePaginator($transactions, $count, 31337, $this->parameters->get('page'));
+        $paginator    = new LengthAwarePaginator($transactions, $count, 31_337, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rules.test', [$rule->id]).$this->buildParams());
 
         // resulting list is presented as JSON thing.

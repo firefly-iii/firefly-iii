@@ -54,7 +54,7 @@ class BillWarningCronjob extends AbstractCronjob
             Log::info('The bill notification cron-job has never fired before.');
         }
         // less than half a day ago:
-        if ($lastTime > 0 && $diff <= 43200) {
+        if ($lastTime > 0 && $diff <= 43_200) {
             Log::info(sprintf('It has been %s since the bill notification cron-job has fired.', $diffForHumans));
             if (false === $this->force) {
                 Log::info('The cron-job will not fire now.');
@@ -69,7 +69,7 @@ class BillWarningCronjob extends AbstractCronjob
             Log::info('Execution of the bill notification cron-job has been FORCED.');
         }
 
-        if ($lastTime > 0 && $diff > 43200) {
+        if ($lastTime > 0 && $diff > 43_200) {
             Log::info(sprintf('It has been %s since the bill notification cron-job has fired. It will fire now!', $diffForHumans));
         }
 

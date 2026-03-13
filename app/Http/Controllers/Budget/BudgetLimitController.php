@@ -172,7 +172,7 @@ final class BudgetLimitController extends Controller
             // return empty array:
             return response()->json([]);
         }
-        if ((int) $amount > 268435456) { // intentional cast to integer
+        if ((int) $amount > 268_435_456) { // intentional cast to integer
             $amount = '268435456';
         }
         if (-1 === bccomp($amount, '0')) {
@@ -232,7 +232,7 @@ final class BudgetLimitController extends Controller
         if ('' === $amount) {
             $amount = '0';
         }
-        if ((int) $amount > 268435456) { // 268 million, intentional integer
+        if ((int) $amount > 268_435_456) { // 268 million, intentional integer
             $amount = '268435456';
         }
         // sanity check on amount:
@@ -254,8 +254,8 @@ final class BudgetLimitController extends Controller
             $amount = bcmul($amount, '-1');
         }
         $notes                           = (string) $request->get('notes');
-        if (strlen($notes) > 32768) {
-            $notes = substr($notes, 0, 32768);
+        if (strlen($notes) > 32_768) {
+            $notes = substr($notes, 0, 32_768);
         }
 
         $limit                           = $this->blRepository->update($budgetLimit, ['amount' => $amount, 'notes' => $notes]);

@@ -246,7 +246,7 @@ class PiggyBankFactory
         $piggyBankData['target_date_tz']          = $piggyBankData['target_date']?->format('e');
         $piggyBankData['account_id']              = null;
         $piggyBankData['transaction_currency_id'] = $this->getCurrency($data)->id;
-        $piggyBankData['order']                   = 131337;
+        $piggyBankData['order']                   = 131_337;
 
         try {
             /** @var PiggyBank $piggyBank */
