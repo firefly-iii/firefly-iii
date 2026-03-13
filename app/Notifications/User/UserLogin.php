@@ -55,9 +55,16 @@ class UserLogin extends Notification
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $link = route('index');
 
         return new MailMessage()
-            ->markdown('emails.new-ip', ['ip'        => $ip, 'host'      => $host, 'userAgent' => $userAgent, 'time'      => $time])
+            ->markdown('emails.new-ip', [
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time,
+                'link'      => $link,
+            ])
             ->subject((string) trans('email.login_from_new_ip'))
         ;
     }

@@ -56,23 +56,20 @@ class NewAccessToken extends Notification
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $link = route('index');
 
         return new MailMessage()
-            ->markdown('emails.token-created', ['ip'        => $ip, 'host'      => $host, 'userAgent' => $userAgent, 'time'      => $time])
+            ->markdown('emails.token-created', [
+                'ip'        => $ip,
+                'host'      => $host,
+                'userAgent' => $userAgent,
+                'time'      => $time,
+                'link'      => $link,
+            ])
             ->subject((string) trans('email.access_token_created_subject'))
         ;
     }
 
-    //    public function toNtfy(User $notifiable): Message
-    //    {
-    //        $settings = ReturnsSettings::getSettings('ntfy', 'user', $notifiable);
-    //        $message  = new Message();
-    //        $message->topic($settings['ntfy_topic']);
-    //        $message->title((string) trans('email.access_token_created_subject'));
-    //        $message->body((string) trans('email.access_token_created_body'));
-    //
-    //        return $message;
-    //    }
 
     /**
      * @SuppressWarnings("PHPMD.UnusedFormalParameter")

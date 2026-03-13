@@ -60,6 +60,7 @@ class UnknownUserLoginAttempt extends Notification
         $host      = Steam::getHostName($ip);
         $userAgent = Request::userAgent();
         $time      = now(config('app.timezone'))->isoFormat((string) trans('config.date_time_js'));
+        $link = route('index');
 
         return new MailMessage()
             ->markdown('emails.owner.unknown-user', [
@@ -68,6 +69,7 @@ class UnknownUserLoginAttempt extends Notification
                 'host'      => $host,
                 'userAgent' => $userAgent,
                 'time'      => $time,
+                'link'      => $link,
             ])
             ->subject((string) trans('email.unknown_user_subject'))
         ;
