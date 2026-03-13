@@ -1,6 +1,5 @@
 <?php
 
-
 /*
  * SendTestEmail.php
  * Copyright (c) 2026 james@firefly-iii.org
@@ -40,7 +39,7 @@ class SendTestEmail extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:send-test-email
+    protected $signature   = 'firefly-iii:send-test-email
                             {--user=1 : The user ID.}
                             {--token= : The user\'s access token.}';
 
@@ -56,25 +55,25 @@ class SendTestEmail extends Command
      */
     public function handle(): int
     {
-        $user = $this->getUser();
+        $user             = $this->getUser();
         if (!$user->hasRole('owner')) {
-            $this->friendlyError((string)trans('firefly.must_be_owner'));
+            $this->friendlyError((string) trans('firefly.must_be_owner'));
 
             return Command::FAILURE;
         }
 
         /** @var int $lastNotification */
         $lastNotification = FireflyConfig::get('last_test_notification', 123)->data;
-        if (time() - $lastNotification < 120) {
-            $this->friendlyError((string)trans('firefly.test_rate_limited'));
+        if ((time() - $lastNotification) < 120) {
+            $this->friendlyError((string) trans('firefly.test_rate_limited'));
 
             return Command::FAILURE;
         }
 
-
-        $owner = new OwnerNotifiable();
+        $owner            = new OwnerNotifiable();
         event(new OwnerTestsNotificationChannel('email', $owner));
-        FireflyConfig::set('last_test_notification',time());
+        FireflyConfig::set('last_test_notification', time());
+
         return Command::SUCCESS;
     }
 }

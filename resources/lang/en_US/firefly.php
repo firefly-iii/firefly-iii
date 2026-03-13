@@ -197,7 +197,7 @@ return [
     'journals_in_period_for_category'                     => 'All transactions for category :name between :start and :end',
     'journals_in_period_for_tag'                          => 'All transactions for tag :tag between :start and :end',
     'not_available_demo_user'                             => 'The feature you try to access is not available to demo users.',
-    'test_rate_limited' => 'Please wait a moment before trying again',
+    'test_rate_limited'                                   => 'Please wait a moment before trying again',
     'exchange_rate_instructions'                          => 'Asset account "@name" only accepts transactions in @primary_currency. If you wish to use @foreign_currency instead, make sure that the amount in @primary_currency is known as well:',
     'transfer_exchange_rate_instructions'                 => 'Source asset account "@source_name" only accepts transactions in @source_currency. Destination asset account "@dest_name" only accepts transactions in @dest_currency. You must provide the transferred amount correctly in both currencies.',
     'transaction_data'                                    => 'Transaction data',
@@ -1527,7 +1527,7 @@ return [
     'administration_role_mng_currencies'                  => 'Manage currencies',
     'administration_role_view_reports'                    => 'View reports',
     'administration_role_full'                            => 'Full access',
-    'must_be_owner' => 'You must be system owner to do this',
+    'must_be_owner'                                       => 'You must be system owner to do this',
 
     // mfa
     'enable_mfa'                                          => 'Enable multi-factor authentication',
