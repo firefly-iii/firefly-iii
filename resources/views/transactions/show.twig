@@ -63,11 +63,11 @@
                     <table class="table table-hover">
                         <tbody>
                         <tr>
-                            <td style="width:40%;">{{ trans('list.id') }}</td>
+                            <td class="forty">{{ trans('list.id') }}</td>
                             <td>#{{ transactionGroup.id }}</td>
                         </tr>
                         <tr>
-                            <td style="width:40%;">{{ trans('list.type') }}</td>
+                            <td class="forty">{{ trans('list.type') }}</td>
                             <td>{{ first.transaction_type_type|_ }}</td>
                         </tr>
                         <tr>
@@ -81,7 +81,7 @@
                             </td>
                         </tr>
                         <tr>
-                            <td style="width:30%;">{{ trans('list.date') }}</td>
+                            <td class="thirty">{{ trans('list.date') }}</td>
                             <td>
                                 <span class="date-time" data-date="{{ first.date.toIso8601ZuluString() }}" title="{{ first.date.isoFormat(dateTimeFormat) }}{% if(first.date_tz != '') %} ({{ trans('firefly.stored_in_tz', {timezone: first.date_tz }) }}, {{ trans('firefly.displayed_in_tz', {timezone: config('app.timezone') }) }}){% endif %}">
                                 {{ first.date.isoFormat(dateTimeFormat) }}
@@ -119,7 +119,7 @@
                         <tbody>
                         {% if first.transaction_type_type != 'Withdrawal' or splits == 1 %}
                             <tr>
-                                <td style="width:40%;">
+                                <td class="forty">
                                     {{ trans_choice('firefly.source_accounts', accounts['source']|length ) }}
                                 </td>
                                 <td>
@@ -160,7 +160,7 @@
                             </tr>
                         {% endif %}
                         <tr>
-                            <td style="width:30%;">{{ 'total_amount'|_ }}</td>
+                            <td class="thirty">{{ 'total_amount'|_ }}</td>
                             <td>
                                 {% for amount in amounts %}
                                     {% if first.transaction_type_type == 'Withdrawal' %}
@@ -369,7 +369,7 @@
                             </tr>
                             {% if null != journal.category_id %}
                                 <tr>
-                                    <td style="width:30%;">{{ 'category'|_ }}</td>
+                                    <td class="thirty">{{ 'category'|_ }}</td>
                                     <td>
                                         <a href="{{ route('categories.show', [journal.category_id]) }}">{{ journal.category_name }}</a>
                                     </td>
@@ -377,7 +377,7 @@
                             {% endif %}
                             {% if null != journal.budget_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
-                                    <td style="width:40%;">{{ 'budget'|_ }}</td>
+                                    <td class="forty">{{ 'budget'|_ }}</td>
                                     <td>
                                         <a href="{{ route('budgets.show', [journal.budget_id]) }}">{{ journal.budget_name }}</a>
                                     </td>
@@ -385,7 +385,7 @@
                             {% endif %}
                             {% if null != journal.bill_id and first.transaction_type_type == 'Withdrawal' %}
                                 <tr>
-                                    <td style="width:40%;">{{ 'bill'|_ }}</td>
+                                    <td class="forty">{{ 'bill'|_ }}</td>
                                     <td>
                                         <a href="{{ route('subscriptions.show', [journal.bill_id]) }}">{{ journal.bill_name }}</a>
                                     </td>
@@ -395,7 +395,7 @@
                             {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
                                 {% if journalHasMeta(journal.transaction_journal_id, dateField) %}
                                     <tr>
-                                        <td style="width:40%;">{{ trans('list.'~dateField) }}</td>
+                                        <td class="forty">{{ trans('list.'~dateField) }}</td>
                                         <td>{{ journalGetMetaDate(journal.transaction_journal_id, dateField).isoFormat(monthAndDayFormat) }}</td>
                                     </tr>
                                 {% endif %}
@@ -404,7 +404,7 @@
                                 {% if journalHasMeta(journal.transaction_journal_id, metaField) %}
                                     <tr>
                                         <td>{{ trans('list.'~metaField) }}</td>
-                                        <td style="width:40%;">
+                                        <td class="forty">
                                             {% if 'external_url' == metaField %}
                                                 {% set url = journalGetMetaField(journal.transaction_journal_id, metaField) %}
                                                 <a href="{{ url }}" rel="noopener noreferrer nofollow" target="_blank">
@@ -424,7 +424,7 @@
                             {% endfor %}
                             {% if null != journal.notes and '' != journal.notes %}
                                 <tr>
-                                    <td style="width:40%;">{{ trans('list.notes') }}</td>
+                                    <td class="forty">{{ trans('list.notes') }}</td>
                                     <td class="markdown">{{ journal.notes|default('')|markdown }}</td>
                                 </tr>
                             {% endif %}
@@ -434,13 +434,13 @@
                                     {% set recurringTotal = '∞' %}
                                 {% endif %}
                                 <tr>
-                                    <td style="width:40%;">{{ trans('list.recurring_transaction') }}</td>
+                                    <td class="forty">{{ trans('list.recurring_transaction') }}</td>
                                     <td>{{ trans('firefly.recurring_info', {total: recurringTotal, count: journalGetMetaField(journal.transaction_journal_id, 'recurring_count') }) }}</td>
                                 </tr>
                             {% endif %}
                             {% if journal.tags|length > 0 %}
                                 <tr>
-                                    <td style="width:40%;">{{ 'tags'|_ }}</td>
+                                    <td class="forty">{{ 'tags'|_ }}</td>
                                     <td>
                                         {% for tag in journal.tags %}
                                             {% if null != tag.id and '' != tag.id %}
@@ -518,7 +518,7 @@
                             <table class="table table-hover">
                                 {% for event in events[journal.transaction_journal_id] %}
                                     <tr>
-                                        <td style="width:30%;">{{ event.amount|raw }}</td>
+                                        <td class="thirty">{{ event.amount|raw }}</td>
                                         <td>
                                             <a href="{{ route('piggy-banks.show', [event.piggy_id]) }}">{{ event.piggy }}</a>
                                         </td>

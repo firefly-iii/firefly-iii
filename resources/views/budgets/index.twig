@@ -207,7 +207,7 @@
                         <h3 class="box-title">{{ 'budgets'|_ }}</h3>
                     </div>
                     <div class="box-body no-padding">
-                        <div style="padding:8px;">
+                        <div class="m-1">
                             <a href="{{ route('budgets.create') }}" class="btn btn-success"><span class="fa fa-plus fa-fw"></span> {{ 'createBudget'|_ }}</a>
                         </div>
                         <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
@@ -215,7 +215,7 @@
                             <tr>
                                 <th class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
                                 <th>{{ 'budget'|_ }}</th>
-                                <th style="width:25%;">{{ 'budgeted'|_ }}</th>
+                                <th class="quarter">{{ 'budgeted'|_ }}</th>
                                 <th class="hidden-sm hidden-xs">{{ 'spent'|_ }} ({{ 'per_day'|_|lower }})</th>
                                 <th>{{ 'left'|_ }} ({{ 'per_day'|_|lower }})</th>
                             </tr>

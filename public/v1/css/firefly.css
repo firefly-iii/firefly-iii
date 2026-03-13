@@ -29,6 +29,11 @@
 .center-chart {width:100%;margin:0 auto;}
 .map-size {width:100%;height:300px;}
 
+/** tables **/
+td.quarter th.quarter {width:25%;}
+td.thirty th.thirty {width:30%;}
+td.third th.third {width:33%;}
+td.forty th.forty {width:40%;}
 
 /* spacing and padding */
 .m-0 { margin:0!important; }

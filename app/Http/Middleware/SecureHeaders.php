@@ -58,7 +58,8 @@ class SecureHeaders
             "default-src 'none'",
             "object-src 'none'",
             sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
-            sprintf("style-src 'self' 'nonce-%1s'", $nonce),
+            // sprintf("style-src 'self' 'nonce-%1s'", $nonce), // safe variant
+            "style-src 'self' 'unsafe-eval'", // unsafe variant
             "base-uri 'self'",
             "form-action 'self'",
             "font-src 'self' data:",
@@ -73,7 +74,8 @@ class SecureHeaders
                 "default-src 'none'",
                 "object-src 'none'",
                 sprintf("script-src 'unsafe-eval' 'strict-dynamic' 'nonce-%1s'", $nonce),
-                sprintf("style-src 'self' 'nonce-%1s' https://10.0.0.15:5173/", $nonce),
+                // sprintf("style-src 'self' 'nonce-%1s' https://10.0.0.15:5173/", $nonce), // safe varian
+                "style-src 'self' 'unsafe-inline' https://10.0.0.15:5173/", // unsafe variant
                 "base-uri 'self'",
                 "form-action 'self'",
                 "font-src 'self' data: https://10.0.0.15:5173/",
