@@ -22,6 +22,10 @@
 .no-margin-pagination {padding-bottom:0;padding-top:0;}
 .no-margin-pagination ul.pagination {margin:0 !important;}
 
+/* date range */
+.date-range-holder {color:#fff;padding: 15px;display: block;line-height: 20px;}
+.dropdown-holder {cursor:default;color:#fff;padding: 15px;display: block;line-height: 20px;}
+
 /** new classes because of CSP */
 .wide-chart {width:100%;height:400px;}
 .low-chart {width:100%;height:200px;}
@@ -30,10 +34,12 @@
 .map-size {width:100%;height:300px;}
 
 /** tables **/
+th.ten {width:10%;}
 td.quarter th.quarter {width:25%;}
 td.thirty th.thirty {width:30%;}
 td.third th.third {width:33%;}
 td.forty th.forty {width:40%;}
+td.half th.half {width:50%;}
 
 /* spacing and padding */
 .m-0 { margin:0!important; }
