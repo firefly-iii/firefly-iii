@@ -176,7 +176,7 @@
                     <div class="box-body">
                         <canvas class="main_tag_canvas"
                                 data-url="{{ route('chart.tag.main', [accountIds, tag.id, start.format('Ymd'), end.format('Ymd')]) }}"
-                                id="in-out-chart-{{ tag.id }}" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                                id="in-out-chart-{{ tag.id }}" class="wide-chart" height="400" width="100%"></canvas>
                     </div>
                     <div class="box-footer">
                         <p class="text-info"><em>{{ 'tag_report_chart_single_tag'|_ }}</em></p>

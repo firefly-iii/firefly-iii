@@ -22,6 +22,10 @@
 .no-margin-pagination {padding-bottom:0;padding-top:0;}
 .no-margin-pagination ul.pagination {margin:0 !important;}
 
+/** new classes because of CSP */
+.wide-chart {width:100%;height:400px;}
+.low-chart {width:100%;height:200px;}
+
 /* TODO find out where this is used. */
 input.ti-new-tag-input {
     font-size: 14px !important;
