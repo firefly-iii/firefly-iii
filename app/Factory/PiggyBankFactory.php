@@ -159,7 +159,7 @@ class PiggyBankFactory
                 }
 
                 // no amount set, use previous amount
-                $toBeLinked[$account->id] = ['current_amount' => $toBeLinked[$account->id]['current_amount']];
+                $toBeLinked[$account->id] = ['current_amount' => $toBeLinked[$account->id]['current_amount'] ?? '0'];
                 Log::debug(sprintf('[b] Will link account #%d with amount %s', $account->id, $toBeLinked[$account->id]['current_amount']));
 
                 // create event:
